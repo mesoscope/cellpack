@@ -1,0 +1,29 @@
+cellpack package
+================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   cellpack.bin
+
+Submodules
+----------
+
+cellpack.example module
+-----------------------
+
+.. automodule:: cellpack.example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack
+   :members:
+   :undoc-members:
+   :show-inheritance:

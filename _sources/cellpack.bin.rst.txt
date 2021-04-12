@@ -1,0 +1,21 @@
+cellpack.bin package
+====================
+
+Submodules
+----------
+
+cellpack.bin.my\_example module
+-------------------------------
+
+.. automodule:: cellpack.bin.my_example
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.bin
+   :members:
+   :undoc-members:
+   :show-inheritance:
