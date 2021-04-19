@@ -50,19 +50,20 @@ use_json_hook = True
 # in casesimplejson not there
 try:
     import simplejson as json
+
     # we can use the hookup at loading
-except:
+except ImportError:
     import json
 
     if sys.version[0:3] <= "2.6":
         use_json_hook = False
 try:
     from collections import OrderedDict
-except:
+except ImportError:
     from ordereddict import OrderedDict
 try:
     import urllib.request as urllib  # , urllib.parse, urllib.error
-except:
+except ImportError:
     import urllib
 
 afdir = os.path.abspath(__path__[0])
@@ -72,7 +73,7 @@ afdir = os.path.abspath(__path__[0])
 # ==============================================================================
 # the dir will have all the recipe + cache.
 APPNAME = "autoPACK"
-if sys.platform == 'darwin':
+if sys.platform == "darwin":
     # from AppKit import NSSearchPathForDirectoriesInDomains
     # http://developer.apple.com/DOCUMENTATION/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Functions/Reference/reference.html#//apple_ref/c/func/NSSearchPathForDirectoriesInDomains
     # NSApplicationSupportDirectory = 14
@@ -80,8 +81,8 @@ if sys.platform == 'darwin':
     # True for expanding the tilde into a fully qualified path
     # appdata = path.join(NSSearchPathForDirectoriesInDomains(14, 1, True)[0], APPNAME)
     appdata = os.path.expanduser("~") + "/Library/Application Support/autoPACK"
-elif sys.platform == 'win32':
-    appdata = path.join(environ['APPDATA'], APPNAME)
+elif sys.platform == "win32":
+    appdata = path.join(environ["APPDATA"], APPNAME)
 else:
     appdata = path.expanduser(path.join("~", "." + APPNAME))
 if not os.path.exists(appdata):
@@ -93,17 +94,19 @@ if not os.path.exists(appdata):
 # setup Panda directory
 # ==============================================================================
 PANDA_PATH = ""
-if sys.platform == 'darwin':
+if sys.platform == "darwin":
     PANDA_PATH = afdir + os.sep + ".." + os.sep + "Panda3D"
     sys.path.append("/Developer/Panda3D/")
     sys.path.append("/Developer/Panda3D/lib/")  # in case already installed
     # TODO need to fix the dependancy that are locally set to /Developer/Panda3D/lib/
-elif sys.platform == 'win32':
+elif sys.platform == "win32":
     PANDA_PATH = afdir + os.sep + ".." + os.sep + "Panda3d-1.9.0-x64"
     PANDA_PATH_BIN = PANDA_PATH + os.sep + "bin"
     try:
-        if PANDA_PATH_BIN not in os.environ.get('PATH', ''):
-            os.environ['PATH'] = os.pathsep.join((PANDA_PATH_BIN, os.environ.get('PATH', '')))
+        if PANDA_PATH_BIN not in os.environ.get("PATH", ""):
+            os.environ["PATH"] = os.pathsep.join(
+                (PANDA_PATH_BIN, os.environ.get("PATH", ""))
+            )
     except Exception:
         pass
     sys.path.append(PANDA_PATH_BIN)
@@ -118,10 +121,11 @@ sys.path.append(PANDA_PATH + os.sep + "lib")
 
 binvox_exe = "C:\\Users\\ludov\\Downloads\\binvox.exe"
 
+
 def checkURL(URL):
     try:
-        response = urllib.urlopen(URL)  
-    except(er):
+        response = urllib.urlopen(URL)
+    except (er):
         print(er)
         return False
     return response.code != 404
@@ -159,7 +163,7 @@ cache_dir = {
     "prefs": preferences,
 }
 
-#    
+#
 # autopack_cache_data (e.g. recipe_available.json)
 # or call this autopack_cache_recipelists
 # autopack_cache_recipes
@@ -171,11 +175,12 @@ cache_dir = {
 usePP = False
 helper = None
 LISTPLACEMETHOD = ["jitter", "spheresBHT", "RAPID"]
-try :
-   from panda3d.core import Mat4
-   LISTPLACEMETHOD = ["jitter", "spheresBHT", "pandaBullet", "RAPID"]
+try:
+    from panda3d.core import Mat4
+
+    LISTPLACEMETHOD = ["jitter", "spheresBHT", "pandaBullet", "RAPID"]
 except:
-   LISTPLACEMETHOD = ["jitter", "spheresBHT", "RAPID"]
+    LISTPLACEMETHOD = ["jitter", "spheresBHT", "RAPID"]
 
 # LISTPLACEMETHOD = ["jitter", "spring", "rigid-body", "pandaBullet", "pandaBulletRelax", "pandaDev", "RAPID"]
 
@@ -188,9 +193,9 @@ testPeriodicity = False
 biasedPeriodicity = None  # [1,1,1]
 fixpath = False
 verbose = 0
-messag = '''Welcome to autoPACK.
+messag = """Welcome to autoPACK.
 Please update to the latest version under the Help menu.
-'''
+"""
 
 # we have to change the name of theses files. and decide how to handle the
 # currated recipeList, and the dev recipeList
@@ -203,11 +208,17 @@ autopack_path_pref_file = preferences + os.sep + "path_preferences.json"
 autopack_user_path_pref_file = preferences + os.sep + "path_user_preferences.json"
 
 # Default values
-legacy_autoPACKserver = "https://autofill.googlecode.com/git/autoPACK_database_1.0.0"  # XML
-autoPACKserver = "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0"
+legacy_autoPACKserver = (
+    "https://autofill.googlecode.com/git/autoPACK_database_1.0.0"  # XML
+)
+autoPACKserver = (
+    "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0"
+)
 autoPACKserver_default = "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0"  # XML
 autoPACKserver_alt = "http://mgldev.scripps.edu/projects/autoPACK/data/cellPACK_data/cellPACK_database_1.1.0"
-filespath = "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/autoPACK_filePaths.json"
+filespath = (
+    "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/autoPACK_filePaths.json"
+)
 recipeslistes = autoPACKserver + "/autopack_recipe.json"
 
 autopackdir = str(afdir)  # copy
@@ -223,14 +234,14 @@ def checkPath():
         if checkURL(fname):
             urllib.urlretrieve(fname, autopack_path_pref_file)
         else:
-            print ("problem accessing path " + fname)
+            print("problem accessing path " + fname)
     # else:
     #     autopack_path_pref_file = fname
 
 
 # get user / default value
 if not os.path.isfile(autopack_path_pref_file):
-    print (autopack_path_pref_file + " file is not found")
+    print(autopack_path_pref_file + " file is not found")
     checkPath()
 
 doit = False
@@ -241,12 +252,12 @@ elif os.path.isfile(autopack_path_pref_file):
     f = open(autopack_path_pref_file, "r")
     doit = True
 if doit:
-    print ("autopack_path_pref_file ", autopack_path_pref_file)
+    print("autopack_path_pref_file ", autopack_path_pref_file)
     pref_path = json.load(f)
     f.close()
     if "autoPACKserver" not in pref_path:
-        print ("problem with autopack_path_pref_file ", autopack_path_pref_file)
-        print ("reset to default")
+        print("problem with autopack_path_pref_file ", autopack_path_pref_file)
+        print("reset to default")
     else:
         autoPACKserver = pref_path["autoPACKserver"]
         if "filespath" in pref_path:
@@ -304,7 +315,9 @@ def resetDefault():
     if os.path.isfile(autopack_user_path_pref_file):
         os.remove(autopack_user_path_pref_file)
     autoPACKserver = autoPACKserver_default  # "http://autofill.googlecode.com/git/autoPACK_database_1.0.0"
-    filespath = "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/autoPACK_filePaths.json"
+    filespath = (
+        "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/autoPACK_filePaths.json"
+    )
     recipeslistes = autoPACKserver + "/autopack_recipe.json"
 
 
@@ -319,7 +332,7 @@ def checkErrorInPath(p, toreplace):
     part = p.split(os.sep)
     newpath = ""
     for i, e in enumerate(part):
-        f = re.findall('{0}'.format(re.escape(e)), toreplace)
+        f = re.findall("{0}".format(re.escape(e)), toreplace)
         if not len(f):
             newpath += e + "/"
     if part[0] == "http:":
@@ -330,7 +343,7 @@ def checkErrorInPath(p, toreplace):
 def fixOnePath(p):
     for v in replace_path:
         # fix before
-        if fixpath and re.findall('{0}'.format(re.escape(v[0])), p):
+        if fixpath and re.findall("{0}".format(re.escape(v[0])), p):
             p = checkErrorInPath(p, v[1])
             # check for legacyServerautoPACK_database_1.0.0
             p = checkErrorInPath(p, "autoPACK_database_1.0.0")
@@ -355,7 +368,7 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
         force = forceFetch
     if filename.find("http") == -1 and filename.find("ftp") == -1:
         filename = fixOnePath(filename)
-    print ("autopack retrieve file ", filename)
+    print("autopack retrieve file ", filename)
     if filename.find("http") != -1 or filename.find("ftp") != -1:
         # check if usin autoPACKserver
         useAPServer = False
@@ -376,24 +389,32 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
                     urllib.urlretrieve(filename, tmpFileName, reporthook=reporthook)
                 except:
                     if useAPServer:
-                        print ("try alternate server")
-                        urllib.urlretrieve(autoPACKserver_alt + "/" + cache + "/" + name, tmpFileName,
-                                           reporthook=reporthook)
+                        print("try alternate server")
+                        urllib.urlretrieve(
+                            autoPACKserver_alt + "/" + cache + "/" + name,
+                            tmpFileName,
+                            reporthook=reporthook,
+                        )
             else:
                 if not os.path.isfile(tmpFileName):
-                    print ("not isfile ", tmpFileName)
+                    print("not isfile ", tmpFileName)
                     return None
         filename = tmpFileName
-        print ("autopack return grabbed ", filename)
+        print("autopack return grabbed ", filename)
         # check the file is not an error
         return filename
-    print ("autopack search ", filename, os.path.isfile(filename))
+    print("autopack search ", filename, os.path.isfile(filename))
     # if no folder provided, use the current_recipe_folder
-    if True: #not os.path.isfile(filename):  # use the cache system ? geom / recipes / ingredients / others ?
-        print ("search in cache", cache_dir[cache] + os.sep + filename)
-        print ("search on server", autoPACKserver + "/" + cache + "/" + filename)
-        print ("search on alternate_backup_server", autoPACKserver_alt + "/" + cache + "/" + filename)
-        print ("search in curr_dir", current_recipe_path + os.sep + filename)
+    if (
+        True
+    ):  # not os.path.isfile(filename):  # use the cache system ? geom / recipes / ingredients / others ?
+        print("search in cache", cache_dir[cache] + os.sep + filename)
+        print("search on server", autoPACKserver + "/" + cache + "/" + filename)
+        print(
+            "search on alternate_backup_server",
+            autoPACKserver_alt + "/" + cache + "/" + filename,
+        )
+        print("search in curr_dir", current_recipe_path + os.sep + filename)
         if os.path.isfile(cache_dir[cache] + os.sep + filename):
             return cache_dir[cache] + os.sep + filename
         if os.path.isfile(current_recipe_path + os.sep + filename):
@@ -405,12 +426,19 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
             name = filename.split("/")[-1]  # the recipe name
             tmpFileName = cache_dir[cache] + os.sep + destination + name
             try:
-                urllib.urlretrieve(autoPACKserver + "/" + cache + "/" + filename, tmpFileName, reporthook=reporthook)
+                urllib.urlretrieve(
+                    autoPACKserver + "/" + cache + "/" + filename,
+                    tmpFileName,
+                    reporthook=reporthook,
+                )
                 return tmpFileName
             except:
-                print ("try alternate server")
-                urllib.urlretrieve(autoPACKserver_alt + "/" + cache + "/" + filename, tmpFileName,
-                                   reporthook=reporthook)
+                print("try alternate server")
+                urllib.urlretrieve(
+                    autoPACKserver_alt + "/" + cache + "/" + filename,
+                    tmpFileName,
+                    reporthook=reporthook,
+                )
                 # check the file is not an error
                 return tmpFileName
         if checkURL(autoPACKserver_alt + "/" + cache + "/" + filename):
@@ -420,14 +448,17 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
             name = filename.split("/")[-1]  # the recipe name
             tmpFileName = cache_dir[cache] + os.sep + destination + name
             try:
-                urllib.urlretrieve(autoPACKserver_alt + "/" + cache + "/" + filename, tmpFileName,
-                                   reporthook=reporthook)
+                urllib.urlretrieve(
+                    autoPACKserver_alt + "/" + cache + "/" + filename,
+                    tmpFileName,
+                    reporthook=reporthook,
+                )
             except:
-                print ("not on alternate server")
+                print("not on alternate server")
                 return None
             # check the file is not an error
             return tmpFileName
-        print (filename, " not found ")
+        print(filename, " not found ")
     return filename
 
 
@@ -447,9 +478,10 @@ def fixPath(adict):  # , k, v):
 #        elif type(adict[key]) is dict:
 #            fixPath(adict[key], k, v)
 
+
 def updatePathJSON():
     if not os.path.isfile(autopack_path_pref_file):
-        print (autopack_path_pref_file + " file is not found")
+        print(autopack_path_pref_file + " file is not found")
         return
     if os.path.isfile(autopack_user_path_pref_file):
         f = open(autopack_user_path_pref_file, "r")
@@ -493,12 +525,12 @@ def checkRecipeAvailable():
     if checkURL(fname):
         urllib.urlretrieve(fname, recipe_web_pref_file)
     else:
-        print ("problem accessing recipe " + fname)
+        print("problem accessing recipe " + fname)
 
 
 def updateRecipAvailableJSON(recipesfile):
     if not os.path.isfile(recipesfile):
-        print (recipesfile + " was not found")
+        print(recipesfile + " was not found")
         return
     # replace shortcut pathby hard path
     f = open(recipesfile, "r")
@@ -508,13 +540,14 @@ def updateRecipAvailableJSON(recipesfile):
         recipes = json.load(f)
     f.close()
     RECIPES.update(recipes)
-    print ("recipes updated " + str(len(RECIPES)))
+    print("recipes updated " + str(len(RECIPES)))
 
 
 def updateRecipAvailableXML(recipesfile):
     if not os.path.isfile(recipesfile):
         return
     from xml.dom.minidom import parse
+
     XML = parse(recipesfile)  # parse an XML file by name
     res = XML.getElementsByTagName("recipe")
     for r in res:
@@ -523,14 +556,24 @@ def updateRecipAvailableXML(recipesfile):
         if name in RECIPES:  # update te value
             if version in RECIPES[name]:
                 for info in info_dic:
-                    text = r.getElementsByTagName(info)[0].childNodes[0].data.strip().replace("\t", "")
+                    text = (
+                        r.getElementsByTagName(info)[0]
+                        .childNodes[0]
+                        .data.strip()
+                        .replace("\t", "")
+                    )
                     if text[0] != "/" and text.find("http") == -1:
                         text = afdir + os.sep + text
                     RECIPES[name][version][info] = str(text)
             else:
                 RECIPES[name][version] = {}
                 for info in info_dic:
-                    text = r.getElementsByTagName(info)[0].childNodes[0].data.strip().replace("\t", "")
+                    text = (
+                        r.getElementsByTagName(info)[0]
+                        .childNodes[0]
+                        .data.strip()
+                        .replace("\t", "")
+                    )
                     if text[0] != "/" and text.find("http") == -1:
                         text = afdir + os.sep + text
                     RECIPES[name][version][info] = str(text)
@@ -538,11 +581,16 @@ def updateRecipAvailableXML(recipesfile):
             RECIPES[name] = {}
             RECIPES[name][version] = {}
             for info in info_dic:
-                text = r.getElementsByTagName(info)[0].childNodes[0].data.strip().replace("\t", "")
+                text = (
+                    r.getElementsByTagName(info)[0]
+                    .childNodes[0]
+                    .data.strip()
+                    .replace("\t", "")
+                )
                 if text[0] != "/" and text.find("http") == -1:
                     text = afdir + os.sep + text
                 RECIPES[name][version][info] = str(text)
-    print ("recipes updated " + str(len(RECIPES)))
+    print("recipes updated " + str(len(RECIPES)))
 
 
 def updateRecipAvailable(recipesfile):
@@ -557,11 +605,12 @@ def updateRecipAvailable(recipesfile):
     fixPath(RECIPES)
     #    fixPath(RECIPES,"wrkdir")#or autopackdata
     #    fixPath(RECIPES,"resultfile")
-    print ("recipes updated and path fixed " + str(len(RECIPES)))
+    print("recipes updated and path fixed " + str(len(RECIPES)))
 
 
 def saveRecipeAvailable(recipe_dictionary, recipefile):
     from xml.dom.minidom import getDOMImplementation
+
     impl = getDOMImplementation()
     XML = impl.createDocument(None, "autoPACK_recipe", None)
     root = XML.documentElement
@@ -582,8 +631,10 @@ def saveRecipeAvailable(recipe_dictionary, recipefile):
 
 
 def saveRecipeAvailableJSON(recipe_dictionary, filename):
-    with open(filename, 'w') as fp:  # doesnt work with symbol link ?
-        json.dump(recipe_dictionary, fp, indent=1, separators=(',', ': '))  # ,indent=4, separators=(',', ': ')
+    with open(filename, "w") as fp:  # doesnt work with symbol link ?
+        json.dump(
+            recipe_dictionary, fp, indent=1, separators=(",", ": ")
+        )  # ,indent=4, separators=(',', ': ')
 
 
 def clearCaches(*args):
@@ -593,7 +644,7 @@ def clearCaches(*args):
             shutil.rmtree(cache_dir[k])
             os.makedirs(cache_dir[k])
         except:
-            print ("problem cleaning ", cache_dir[k])
+            print("problem cleaning ", cache_dir[k])
 
 
 # we should read a file to fill the RECIPE Dictionary so we can add some and write/save setup
@@ -602,7 +653,7 @@ def clearCaches(*args):
 if checkAtstartup:
     checkPath()
     updatePathJSON()
-    print ("path are updated ")
+    print("path are updated ")
 
 if checkAtstartup:
     # get from server the list of recipe
@@ -612,7 +663,7 @@ if checkAtstartup:
     updateRecipAvailable(recipe_user_pref_file)
     updateRecipAvailable(recipe_dev_pref_file)
 
-print ("currently nb recipes is " + str(len(RECIPES)))
+print("currently nb recipes is " + str(len(RECIPES)))
 # check cach directory create if doesnt exit.abs//should be in user pref?
 # ?
 # need a distinction between autopackdir and cachdir
