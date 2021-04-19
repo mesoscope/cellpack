@@ -4,7 +4,7 @@
 [![Documentation](https://github.com/mesoscope/cellpack/workflows/Documentation/badge.svg)](https://mesoscope.github.io/cellpack/)
 [![Code Coverage](https://codecov.io/gh/mesoscope/cellpack/branch/main/graph/badge.svg)](https://codecov.io/gh/mesoscope/cellpack)
 
-algorthim to pack molecular recipes
+algorithm to pack molecular recipes
 
 ---
 
@@ -20,6 +20,10 @@ from cellpack import Example
 
 a = Example()
 a.get_value()  # 10
+
+in terminal:
+`pip install -e .` // install current dir, do one time
+`analyze` // each time to rerun script
 ```
 
 ## Installation
