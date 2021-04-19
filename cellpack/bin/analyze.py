@@ -2,16 +2,26 @@
 # -*- coding: utf-8 -*-
 
 """
-This sample script will get deployed in the bin directory of the
-users' virtualenv when the parent module is installed using pip.
+Run autopack from recipe file
 """
 
-import argparse
-import logging
+# Standard library
 import sys
+import os
+import logging
+from typing import Any, Tuple
 import traceback
 
+# Third party
+from PIL import Image
+import numpy
+import argparse
+# Relative
+import upy
 from cellpack import Example, get_module_version
+from autopack.Environment import Environment
+from autopack.Graphics import AutopackViewer as AFViewer
+from autopack.Analysis import AnalyseAP
 
 ###############################################################################
 
@@ -25,13 +35,15 @@ logging.basicConfig(
 
 class Args(argparse.Namespace):
 
-    DEFAULT_FIRST = 10
-    DEFAULT_SECOND = 20
+    DEFAULT_TWOD = True
+    DEFAULT_ANALYSIS = True
+    DEFAULT_RECIPE_FILE = "/test-recipes/NM_Analysis_FigureA1.0.xml"
 
     def __init__(self):
         # Arguments that could be passed in through the command line
-        self.first = self.DEFAULT_FIRST
-        self.second = self.DEFAULT_SECOND
+        self.twoD = self.DEFAULT_TWOD
+        self.analysis = self.DEFAULT_ANALYSIS
+        self.recipe = os.path.join(os.getcwd(), self.DEFAULT_RECIPE_FILE)
         self.debug = False
         #
         self.__parse()
@@ -49,22 +61,22 @@ class Args(argparse.Namespace):
             version="%(prog)s " + get_module_version(),
         )
         p.add_argument(
-            "-f",
-            "--first",
+            "-t",
+            "--two-d",
             action="store",
-            dest="first",
+            dest="twoD",
             type=int,
-            default=self.first,
-            help="The first argument value",
+            default=self.twoD,
+            help="The dimensions of the packing",
         )
         p.add_argument(
-            "-s",
-            "--second",
+            "-a",
+            "--analysis",
             action="store",
-            dest="second",
+            dest="analysis",
             type=int,
-            default=self.second,
-            help="The first argument value",
+            default=self.analysis,
+            help="The mode of the packing",
         )
         p.add_argument(
             "--debug",
@@ -79,17 +91,24 @@ class Args(argparse.Namespace):
 
 
 def main():
+    args = Args()
+    dbg = args.debug
     try:
-        args = Args()
-        dbg = args.debug
 
         # Do your work here - preferably in a class or function,
         # passing in your args. E.g.
-        exe = Example(args.first)
-        exe.update_value(args.second)
+        # exe = Example(args.recipe)
+        # exe.update_value(args.second)
         print(
-            "First : {}\nSecond: {}".format(exe.get_value(), exe.get_previous_value())
+            "Recipe : {}\n".format(args.recipe)
         )
+        helperClass = upy.getHelperClass()
+        helper = helperClass(vi="nogui")
+        autopack.helper = helper
+        fileName = os.path.basename(args.recipe)
+
+        evn = Environment(name=fileName)
+
 
     except Exception as e:
         log.error("=============================================")
