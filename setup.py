@@ -10,6 +10,7 @@ with open("README.md") as readme_file:
 
 setup_requirements = [
     "pytest-runner>=5.2",
+    "numpy==1.19.2"
 ]
 
 test_requirements = [
@@ -64,7 +65,7 @@ setup(
     description="algorthim to pack molecular recipes",
     entry_points={
         "console_scripts": [
-            "my_example=cellpack.bin.my_example:main"
+            "analyze=cellpack.bin.analyze:main"
         ],
     },
     install_requires=requirements,
