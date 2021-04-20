@@ -40,6 +40,7 @@
 """
 
 from .Ingredient import Ingredient
+
 # import weakref
 from random import random, seed
 
@@ -47,6 +48,7 @@ from random import random, seed
 # randint,gauss,uniform added by Graham 8/18/11
 # seedNum = 14
 # seed(seedNum)               #Mod by Graham 8/18/11
+
 
 class Recipe:
     """
@@ -90,15 +92,15 @@ class Recipe:
         if ingr in self.exclude:
             ind = self.exclude.index(ingr)
             self.exclude.pop(ind)
-        print ("add ingredient ", ingr.name)
+        print("add ingredient ", ingr.name)
 
     def setCount(self, volume, reset=True, **kw):  # area=False,
-        """ set the count of n of molecule for every ingredients 
-        in the recipe, and push them in te activeIngredient list 
+        """set the count of n of molecule for every ingredients
+        in the recipe, and push them in te activeIngredient list
         David and Graham independently worked out and corrected the molarity calculation for Å as shown in the following lines
         M = moles/L
         6.022e23 ingredients/mole
-        
+
         uPy works in Å by default (not ideal for mesoscale, but works with all molecular viewers that way), so given a volume in Å^3
         1L = (10cm)^3
         1cm = 10^(-2)m
@@ -106,12 +108,12 @@ class Recipe:
         1cm = 10^(8)Å
         10cm = 10^(9)Å
         1L = (10cm)^3 = (10^(9)Å)^3 = 10^(27)Å^3
-        
+
         M = 6.022x10^23/L = [6.022x10^23] / [10^(27)Å^3] = 6.022x10(-4)ing/Å^3
         numberIngredientsToPack = [0.0006022 ing/Å^3] * [volume Å^3]
-        
+
         volume / ingredient in 1M = 1ing / 0.0006022 ing/Å^3 = 1660Å^3 * 1nm^3/1000Å^3 = 1.6nm^3
-        
+
         Average distance between molecules is cubic root 3√(1.6nm^3) = 11.8Å = 1.18nm
         Thus the nbr should simply be
         nbr = densityInMolarity*[0.0006022 ing/Å^3] * [volume Å^3]
@@ -129,7 +131,7 @@ class Recipe:
             if reset:
                 self.resetIngr(ingr)
             #            nb = int(ingr.molarity * volume * .000602)
-            # Overridden by next 18 lines marked Mod 
+            # Overridden by next 18 lines marked Mod
             # by Graham 8/18/11 into Hybrid on 5/16/12
             # Mod by Graham 8/18/11: Needed this to give
             # ingredients an increasing chance to add one more molecule
@@ -170,11 +172,16 @@ class Recipe:
                 ingr.nbMol = ingr.overwrite_nbMol_value
             else:
                 ingr.vol_nbmol = ingr.nbMol = nb + ingr.overwrite_nbMol_value
-            print(('RECIPE IS ON' + ingr.name + 'volume' + " %d " 'nb' " %d") % (volume, nb))
+            print(
+                ("RECIPE IS ON" + ingr.name + "volume" + " %d " "nb" " %d")
+                % (volume, nb)
+            )
             # print '*************************************volume = '%(volume)
             if ingr.nbMol == 0:
-                print('WARNING GRAHAM: recipe ingredient %s has 0 molecules as target' % (
-                    ingr.name))
+                print(
+                    "WARNING GRAHAM: recipe ingredient %s has 0 molecules as target"
+                    % (ingr.name)
+                )
             else:
                 self.activeIngredients.append(i)
 
@@ -184,7 +191,9 @@ class Recipe:
         ingr.nbMol = 0
         ingr.completion = 0.0
 
-    def resetIngrs(self, ):
+    def resetIngrs(
+        self,
+    ):
         """ reset the states of all recipe ingredients """
         for ingr in self.ingredients:
             ingr.counter = 0
@@ -193,7 +202,7 @@ class Recipe:
 
     def getMinMaxProteinSize(self):
         """ get the mini and maxi radius from all recipe ingredients """
-        mini = 9999999.
+        mini = 9999999.0
         maxi = 0
         for ingr in self.ingredients:
             if ingr.encapsulatingRadius > maxi:
@@ -212,9 +221,11 @@ class Recipe:
     # Do we need to sort y.minRadius too for ellipses/Cyl?
     # This line is from August 2011 version of code
 
-
-    def printFillInfo(self, indent=''):
+    def printFillInfo(self, indent=""):
         """ print the states of all recipe ingredients """
         for ingr in self.ingredients:
-            print(indent + 'ingr: %s target: %3d placed %3d %s' % (
-                ingr.pdb, ingr.nbMol, ingr.counter, ingr.name))
+            print(
+                indent
+                + "ingr: %s target: %3d placed %3d %s"
+                % (ingr.pdb, ingr.nbMol, ingr.counter, ingr.name)
+            )
