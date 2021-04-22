@@ -54,9 +54,6 @@ try:
     # we can use the hookup at loading
 except ImportError:
     import json
-
-    if sys.version[0:3] <= "2.6":
-        use_json_hook = False
 try:
     from collections import OrderedDict
 except ImportError:
@@ -114,7 +111,6 @@ elif sys.platform == "win32":
 elif sys.platform == "linux2":  # linux ? blender and maya ?
     PANDA_PATH = "/usr/lib/python2.7/dist-packages/"
     PANDA_PATH_BIN = "/usr/lib/panda3d/"
-    # sys.path.append(PANDA_PATH)
 else:
     pass
 sys.path.append(PANDA_PATH + os.sep + "lib")
@@ -125,8 +121,7 @@ binvox_exe = "C:\\Users\\ludov\\Downloads\\binvox.exe"
 def checkURL(URL):
     try:
         response = urllib.urlopen(URL)
-    except (er):
-        print(er)
+    except:  # noqa: E722
         return False
     return response.code != 404
 
@@ -176,13 +171,11 @@ usePP = False
 helper = None
 LISTPLACEMETHOD = ["jitter", "spheresBHT", "RAPID"]
 try:
-    from panda3d.core import Mat4
+    from panda3d.core import Mat4  # noqa: F401
 
     LISTPLACEMETHOD = ["jitter", "spheresBHT", "pandaBullet", "RAPID"]
-except:
+except ImportError:
     LISTPLACEMETHOD = ["jitter", "spheresBHT", "RAPID"]
-
-# LISTPLACEMETHOD = ["jitter", "spring", "rigid-body", "pandaBullet", "pandaBulletRelax", "pandaDev", "RAPID"]
 
 
 ncpus = 2
@@ -214,8 +207,8 @@ legacy_autoPACKserver = (
 autoPACKserver = (
     "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0"
 )
-autoPACKserver_default = "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0"  # XML
-autoPACKserver_alt = "http://mgldev.scripps.edu/projects/autoPACK/data/cellPACK_data/cellPACK_database_1.1.0"
+autoPACKserver_default = "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0"  # XML # noqa: E501
+autoPACKserver_alt = "http://mgldev.scripps.edu/projects/autoPACK/data/cellPACK_data/cellPACK_database_1.1.0"  # noqa: E501
 filespath = (
     "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/autoPACK_filePaths.json"
 )
@@ -229,7 +222,7 @@ def checkPath():
     if fname.find("http") != -1 or fname.find("ftp") != -1:
         try:
             import urllib.request as urllib  # , urllib.parse, urllib.error
-        except:
+        except ImportError:
             import urllib
         if checkURL(fname):
             urllib.urlretrieve(fname, autopack_path_pref_file)
@@ -314,11 +307,6 @@ USER_RECIPES = {}
 def resetDefault():
     if os.path.isfile(autopack_user_path_pref_file):
         os.remove(autopack_user_path_pref_file)
-    autoPACKserver = autoPACKserver_default  # "http://autofill.googlecode.com/git/autoPACK_database_1.0.0"
-    filespath = (
-        "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/autoPACK_filePaths.json"
-    )
-    recipeslistes = autoPACKserver + "/autopack_recipe.json"
 
 
 def revertOnePath(p):
@@ -387,7 +375,7 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
             if checkURL(filename):
                 try:
                     urllib.urlretrieve(filename, tmpFileName, reporthook=reporthook)
-                except:
+                except:  # noqa: E722
                     if useAPServer:
                         print("try alternate server")
                         urllib.urlretrieve(
@@ -405,9 +393,7 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
         return filename
     print("autopack search ", filename, os.path.isfile(filename))
     # if no folder provided, use the current_recipe_folder
-    if (
-        True
-    ):  # not os.path.isfile(filename):  # use the cache system ? geom / recipes / ingredients / others ?
+    if True:  # use the cache system ? geom / recipes / ingredients / others ?
         print("search in cache", cache_dir[cache] + os.sep + filename)
         print("search on server", autoPACKserver + "/" + cache + "/" + filename)
         print(
@@ -432,7 +418,7 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
                     reporthook=reporthook,
                 )
                 return tmpFileName
-            except:
+            except:  # noqa: E722
                 print("try alternate server")
                 urllib.urlretrieve(
                     autoPACKserver_alt + "/" + cache + "/" + filename,
@@ -453,7 +439,7 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
                     tmpFileName,
                     reporthook=reporthook,
                 )
-            except:
+            except:  # noqa: E722
                 print("not on alternate server")
                 return None
             # check the file is not an error
@@ -494,14 +480,14 @@ def updatePathJSON():
     filespath = autoPACKserver + "/autoPACK_filePaths.json"
     if "filespath" in pref_path:
         if pref_path["filespath"] != "default":
-            filespath = pref_path["filespath"]
+            filespath = pref_path["filespath"]  # noqa: F841
     recipeslistes = autoPACKserver + "/autopack_recipe.json"
     if "recipeslistes" in pref_path:
         if pref_path["recipeslistes"] != "default":
-            recipeslistes = pref_path["recipeslistes"]
+            recipeslistes = pref_path["recipeslistes"]  # noqa: F841
     if "autopackdir" in pref_path:
         if pref_path["autopackdir"] != "default":
-            autopackdir = pref_path["autopackdir"]
+            autopackdir = pref_path["autopackdir"]  # noqa: F841
             replace_autopackdir[1] = pref_path["autopackdir"]
 
 
@@ -515,12 +501,10 @@ def updatePath():
 
 
 def checkRecipeAvailable():
-    #    fname = "http://mgldev.scripps.edu/projects/AF/datas/recipe_available.xml"
-    #    fname = "https://sites.google.com/site/autofill21/recipe_available/recipe_available.xml?attredirects=0&d=1"#revision2
     fname = fixOnePath(recipeslistes)  # autoPACKserver+"/autopack_recipe.json"
     try:
         import urllib.request as urllib  # , urllib.parse, urllib.error
-    except:
+    except ImportError:
         import urllib
     if checkURL(fname):
         urllib.urlretrieve(fname, recipe_web_pref_file)
@@ -620,7 +604,7 @@ def saveRecipeAvailable(recipe_dictionary, recipefile):
             relem.setAttribute("name", k)
             relem.setAttribute("version", v)
             root.appendChild(relem)
-            for l in recipe_dictionary[k][v]:
+            for l in recipe_dictionary[k][v]:  # noqa: E741
                 node = XML.createElement(l)
                 data = XML.createTextNode(recipe_dictionary[k][v][l])
                 node.appendChild(data)
@@ -643,11 +627,12 @@ def clearCaches(*args):
         try:
             shutil.rmtree(cache_dir[k])
             os.makedirs(cache_dir[k])
-        except:
+        except:  # noqa: E722
             print("problem cleaning ", cache_dir[k])
 
 
-# we should read a file to fill the RECIPE Dictionary so we can add some and write/save setup
+# we should read a file to fill the RECIPE Dictionary
+# so we can add some and write/save setup
 # afdir  or user_pref
 
 if checkAtstartup:
