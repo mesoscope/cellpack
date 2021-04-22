@@ -46,7 +46,7 @@
 
 try:
     from scipy import spatial
-except:
+except ImportError:
     autopack = None
 import numpy
 from numpy import matrix
@@ -57,17 +57,10 @@ from bhtree import bhtreelib
 from random import uniform, gauss, random
 from time import time, sleep
 import math
-from .ray import vlen, vdiff, vcross
 from RAPID import RAPIDlib
 from autopack.transformation import (
     euler_from_matrix,
-    matrixToEuler,
-    euler_matrix,
-    superimposition_matrix,
-    rotation_matrix,
-    affine_matrix_from_points,
 )
-from autopack.transformation import quaternion_from_matrix
 
 # RAPID require a uniq mesh. not an empty or an instance
 # need to combine the vertices and the build the rapid model
@@ -75,22 +68,15 @@ from autopack.transformation import quaternion_from_matrix
 # combining panda place with rapid place is not working properly
 
 
-import sys
-
 try:
     import urllib.request as urllib  # , urllib.parse, urllib.error
-except:
+except ImportError:
     import urllib
 
 import autopack
-from autopack import checkURL
 
 AFDIR = autopack.__path__[0]  # working dir ?
 verbose = autopack.verbose
-try:
-    helper = autopack.helper
-except:
-    helper = None
 print("helper in Ingredient is " + str(helper))
 helper = autopack.helper
 reporthook = None
@@ -101,7 +87,7 @@ try:
     import panda3d
 
     print("Should have Panda3D now because panda3d = ", panda3d)
-except:
+except ImportError:
     panda3d = None
 
 # import numpy.oldnumeric as N
@@ -151,7 +137,6 @@ KWDS = {
     "name": {"type": "string"},
     "pdb": {"type": "string"},
     "color": {"type": "vector"},
-    "principalVector": {"type": "vector"},
     "offset": {
         "name": "offset",
         "value": [0.0, 0.0, 0.0],
@@ -328,7 +313,6 @@ KWDS = {
         "type": "liste_float",
         "value": "[]",
     },
-    "proba_not_binding": {"name": "proba_not_binding", "type": "float", "value": "0.5"},
     "walkingMode": {"name": "walkingMode", "type": "string"},
     "gradient": {
         "name": "gradient",
@@ -1064,13 +1048,13 @@ class Agent:
         if i is None:
             return None, None
         # probaArray = self.getProbaArray(weightD,total)
-        ##        print "p",probaArray
+        #        print "p",probaArray
         #        probaArray=numpy.array(probaArray)
         #        #where is random in probaArray->index->ingr
         #        b = random()
         #        test = b < probaArray
         #        i = test.tolist().index(True)
-        ##        print "proba",i,test,(len(probaArray)-1)
+        #        print "proba",i,test,(len(probaArray)-1)
         #        if i == (len(probaArray)-1) :
         #            #no binding due to proba not binding....
         #            print ("no binding due to proba")
@@ -1173,7 +1157,7 @@ class Agent:
         return i
 
 
-# the ingrediant should derive from a class of Agent
+# the ingredient should derive from a class of Agent
 class Ingredient(Agent):
     static_id = 0
     """
@@ -1188,20 +1172,20 @@ class Ingredient(Agent):
         - an optional color used to draw the ingredient default (white)
         - an optional name
         - an optional pdb ID
-        - an optional packing priority. If omited the priority will be based
+        - an optional packing priority. If omitted the priority will be based
         on the radius with larger radii first
         ham here: (-)packingPriority object will pack from high to low one at a time
         (+)packingPriority will be weighted by assigned priority value
         (0)packignPriority will be weighted by complexity and appended to what is left
         of the (+) values
-        - an optional princial vector used to align the ingredient
+        - an optional principal vector used to align the ingredient
         - recipe will be a weakref to the Recipe this Ingredient belongs to
-        - compNum is th compartment number (0 for cyto plasm, positive for compartment
+        - compNum is th compartment number (0 for cytoplasm, positive for compartment
         surface and negative compartment interior
         - Attributes used by the filling algorithm:
-        - nbMol counts the number of palced ingredients during a fill
-        - counter is the target numbr of ingredients to place
-        - completion is the ratio of placxed/target
+        - nbMol counts the number of placed ingredients during a fill
+        - counter is the target number of ingredients to place
+        - completion is the ratio of placed/target
         - rejectionCounter is used to eliminate ingredients after too many failed
         attempts
 
@@ -1541,7 +1525,6 @@ class Ingredient(Agent):
             "pdb": {"type": "string"},
             "source": {},
             "color": {"type": "vector"},
-            "principalVector": {"type": "vector"},
             "meshFile": {"type": "string"},
             "meshName": {"type": "string"},
             "coordsystem": {
@@ -2396,7 +2379,7 @@ class Ingredient(Agent):
         name = filename.split("/")[-1]
         fileName, fileExtension = os.path.splitext(name)
         print("retrieve ", filename, fileExtension)
-        if fileExtension is "":
+        if fileExtension == "":
             tmpFileName1 = autopack.retrieveFile(
                 filename + ".indpolface", cache="geometries"
             )
@@ -2567,7 +2550,7 @@ class Ingredient(Agent):
                 helper.reParent(geom, p)
                 return geom
             return None
-        elif fileExtension is "":
+        elif fileExtension == "":
             geom = self.getDejaVuMesh(filename, geomname)
             p = helper.getObject("autopackHider")
             if p is None:
@@ -2630,11 +2613,9 @@ class Ingredient(Agent):
         @rtype:   DejaVu.IndexedPolygons
         @return:  the created dejavu mesh
         """
-        # filename or URL
-        from DejaVu.IndexedPolygons import IndexedPolygons
 
-        self.vertices = v = numpy.loadtxt(filename + ".indpolvert", numpy.float32)
-        self.faces = f = numpy.loadtxt(filename + ".indpolface", numpy.int32)
+        self.vertices = numpy.loadtxt(filename + ".indpolvert", numpy.float32)
+        self.faces = numpy.loadtxt(filename + ".indpolface", numpy.int32)
 
         # geom = IndexedPolygons(geomname, vertices=v[:,:3], faces=f.tolist())
 
@@ -3159,7 +3140,7 @@ class Ingredient(Agent):
                     rotMatj,
                     gridPointsCoords,
                     distance,
-                    histoVol,
+                    histoVol,  # TODO: undefined
                 ),
             )
         elif self.modelType == "Cube":
@@ -3173,7 +3154,7 @@ class Ingredient(Agent):
                     rotMatj,
                     gridPointsCoords,
                     distance,
-                    histoVol,
+                    histoVol,  # TODO: undefined
                 ),
             )
         return collisionComp
@@ -5020,7 +5001,7 @@ class Ingredient(Agent):
             v2 = compartment.surfacePointsNormals[ptInd]
             try:
                 rotMat = numpy.array(rotVectToVect(v1, v2), "f")
-            except:
+            except:  # noqa: E722
                 print("PROBLEM ", self.name)
                 rotMat = numpy.identity(4)
         else:
@@ -5450,7 +5431,7 @@ class Ingredient(Agent):
             print(insidePoints, newDistPoints)
             print("continue")
         if not collision and not (True in r):
-            ## get inside points and update distance
+            # get inside points and update distance
             # use best spherical approximation
             centT = (
                 self.centT
@@ -5879,7 +5860,7 @@ class Ingredient(Agent):
         # or the grid diagonal
         # we need to change here in case tilling, the pos,rot ade deduced fromte tilling.
         if self.packingMode[-4:] == "tile":
-            if self.tilling == None:
+            if self.tilling is None:
                 self.setTilling(compartment)
             if self.counter != 0:
                 # pick the next Hexa pos/rot.
@@ -6011,8 +5992,8 @@ class Ingredient(Agent):
                 modCent = []
                 modRad = []
 
-            ## check for collisions
-            ##
+            # check for collisions
+            #
             level = self.collisionLevel
 
             # randomize rotation about axis
@@ -6142,7 +6123,7 @@ class Ingredient(Agent):
                         #                        print ("len(liste_nodes) ",len(liste_nodes) )
                         if usePP:
                             # use self.grab_cb and self.pp_server
-                            ## Divide the task or just submit job
+                            # Divide the task or just submit job
                             n = 0
                             self.histoVol.grab_cb.reset()  # can't pickle bullet world
                             print("usePP ", autopack.ncpus)
@@ -6243,8 +6224,8 @@ class Ingredient(Agent):
         if not collision2 and not test:  # and not collision2:
             #            print("jtrans for NotCollision= ", jtrans)
             drop = True
-            ## get inside points and update distance
-            ##
+            # get inside points and update distance
+            #
             # use best sperical approcimation
 
             insidePoints = {}

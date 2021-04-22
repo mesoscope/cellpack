@@ -5,31 +5,34 @@ Created on Sun Jan 27 09:04:10 2013
 @author: Ludovic Autin
 """
 import os
+import sys
+
 import numpy
 import pickle
-import sys
+from xml.dom.minidom import getDOMImplementation
+
+from upy import transformation as tr
 import autopack
 from autopack.Ingredient import GrowIngrediant, ActinIngrediant, KWDS
 from autopack.Serializable import sCompartment
 from autopack.Serializable import sIngredientGroup
 from autopack.Serializable import sIngredient
 from autopack.Serializable import sIngredientFiber
-import struct
+from autopack.Recipe import Recipe
+from autopack.Compartment import Compartment
+from autopack import Ingredient as ingr
 
-from upy import transformation as tr
-
-from xml.dom.minidom import getDOMImplementation
 
 try:
     import simplejson as json
     from simplejson import encoder
-except:
+except ImportError:
     import json
     from json import encoder
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 try:
     from collections import OrderedDict
-except:
+except ImportError:
     from ordereddict import OrderedDict
 
 
@@ -77,7 +80,7 @@ def setValueToXMLNode(value, node, attrname):
 
 def setValueToJsonNode(value, attrname):
     vdic = OrderedDict()
-    # print (attrname,type(attrname),value,type(value))
+    #  print (attrname,type(attrname),value,type(value))
     vdic[attrname] = None
     if value is None:
         print(attrname, " is None !")
@@ -354,14 +357,14 @@ class IOingredientTool(object):
     def ingrJsonNode(self, ingr, result=False, kwds=None, transpose=False):
         # force position instead of sphereFile
         ingdic = OrderedDict()
-        if kwds == None:
+        if kwds is None:
             kwds = ingr.KWDS
         for k in kwds:
             v = getattr(ingr, str(k))
             #            if hasattr(v,"tolist"):
             #                v=v.tolist()
             #            ingdic[k] = v
-            if type(v) != type(None):
+            if v is not None:
                 ingdic.update(setValueToJsonNode(v, str(k)))
         # if sphereTree file present should not use the pos-radii keyword
         # if ingr.sphereFile is not None and not result:
@@ -492,8 +495,6 @@ class IOingredientTool(object):
 
 def addCompartments(env, compdic, i, io_ingr):
     # compdic on the form : {u'positions': [[]], u'from': u'HIV-1_0.1.6-7.json', u'rotations': [[]]}
-    from autopack.Compartment import Compartment
-    from autopack.Recipe import Recipe
 
     fname = compdic["from"]
     # retrievet the file
@@ -763,7 +764,7 @@ def save_asJson(env, setupfile, useXref=True, indent=True):
                         ingr.o_name
                     ]["name"] = ingr.o_name
     #    if sys.version_info[0] >= 3:
-    ##        convert everything to OrderedDict
+    #       convert everything to OrderedDict
 
     def default(o):
         raise TypeError(repr(o) + " is not JSON serializable ", o, type(o))
@@ -1261,9 +1262,9 @@ h1 = Environment()
 def saveSphereTreeFile(h, ingr, filename):
     wrkingdir = os.path.dirname(h.setupfile)
     ingr.sphereFile = wrkingdir + os.sep + filename
-    nbLevels = len(ingr.positions)
-    nbLinker = 0
-    mapping = None
+    # nbLevels = len(ingr.positions)
+    # nbLinker = 0
+    # mapping = None
     # use a graph ?
 
 
@@ -1465,7 +1466,7 @@ def serializedFromResult(env, transpose, use_quaternion, result=False, lefthand=
     if r:
         exterior = sCompartment("cytoplasme")
         proteins = None  # sIngredientGroup("proteins", 0)
-        fibers = None  # sIngredientGroup("fibers", 1)
+        # fibers = None  # sIngredientGroup("fibers", 1)
         for ingr_name in r["ingredients"]:
             ingr = r["ingredients"][ingr_name]
             kwds = {"nbMol": len(ingr["results"]), "source": ingr["source"]}
@@ -1504,7 +1505,6 @@ def serializedFromResult(env, transpose, use_quaternion, result=False, lefthand=
             if rs:
                 surface = sCompartment("surface")
                 proteins = None  # sIngredientGroup("proteins", 0)
-                fibers = None  # sIngredientGroup("fibers", 1)
                 for ingr_name in rs["ingredients"]:
                     ingr = rs["ingredients"][ingr_name]
                     kwds = {"nbMol": len(ingr["results"]), "source": ingr["source"]}
@@ -1539,7 +1539,6 @@ def serializedFromResult(env, transpose, use_quaternion, result=False, lefthand=
             if ri:
                 interior = sCompartment("interior")
                 proteins = None  # sIngredientGroup("proteins", 0)
-                fibers = None  # sIngredientGroup("fibers", 1)
                 for ingr_name in ri["ingredients"]:
                     ingr = ri["ingredients"][ingr_name]
                     kwds = {"nbMol": len(ingr["results"]), "source": ingr["source"]}
@@ -1574,8 +1573,8 @@ def serializedFromResult(env, transpose, use_quaternion, result=False, lefthand=
 
 
 def serializedRecipe_group_dic(env, transpose, use_quaternion, lefthand=False):
-    all_pos = []
-    all_rot = []
+    # all_pos = []
+    # all_rot = []
     root = sCompartment("root")
     r = env["cytoplasme"]
     if r:
@@ -1970,7 +1969,6 @@ def load_XML(env, setupfile):
         print("added compartment ", name)
         env.addCompartment(o)
         rsnodes = onode.getElementsByTagName("surface")
-        from autopack.Recipe import Recipe
 
         if len(rsnodes):
             rSurf = Recipe(name=o.name + "_surf")
@@ -1991,7 +1989,6 @@ def load_XML(env, setupfile):
             io_ingr.set_recipe_ingredient(rsnodes, rSurf)
             o.setSurfaceRecipe(rSurf)
         rinodes = onode.getElementsByTagName("interior")
-        from autopack.Recipe import Recipe
 
         if len(rinodes):
             rMatrix = Recipe(name=o.name + "_int")
@@ -2034,9 +2031,9 @@ def load_Json(env, setupfile):
     Setup the environment according the given json file.
     """
 
-    if setupfile == None:
+    if setupfile is None:
         setupfile = env.setupfile
-    if env.jsondic == None:
+    if env.jsondic is None:
         with open(setupfile, "r") as fp:  # doesnt work with symbol link ?
             if autopack.use_json_hook:
                 env.jsondic = json.load(
@@ -2056,7 +2053,6 @@ def setupFromJsonDic(
     from autopack.Recipe import Recipe
 
     env.current_path = os.path.dirname(os.path.abspath(env.setupfile))
-    from autopack import Ingredient as ingr
 
     io_ingr = IOingredientTool(env=env)
     env.name = env.jsondic["recipe"]["name"]
@@ -2226,7 +2222,7 @@ def setupFromJsonDic(
 
 def load_MixedasJson(env, resultfilename=None, transpose=True):
     #        from upy.hostHelper import Helper as helper
-    if resultfilename == None:
+    if resultfilename is None:
         resultfilename = env.resultfile
     # use the current dictionary ?jsondic
     with open(resultfilename, "r") as fp:  # doesnt work with symbol link ?

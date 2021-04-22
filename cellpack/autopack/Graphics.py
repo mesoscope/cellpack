@@ -33,36 +33,28 @@
 # Viewer/helper of autoPACK result.
 
 import os
-import math
 
 # DEJAVU COLORS
 
 from time import time
-
-from upy import colors as col
+import numpy
 
 import autopack
 
 # ===============================================================================
 # to do :
 #      - use layer for hiding the parent of ingredient ! probably faster than creating a specific hider object
-#      - save-restore + grid interesectnio continuation
-#          =>imply deocmpose histoVol in Grid class and HistoVol class
+#      - save-restore + grid intersecting continuation
+#          =>imply decompose histoVol in Grid class and HistoVol class
 #      - hierarchy
 #
 # ===============================================================================
-import numpy
 import upy
-from upy import colors
+from upy import colors as upyColors
 
 from DejaVu.colorTool import Map
 
 from autopack.Ingredient import GrowIngrediant, ActinIngrediant
-
-try:
-    import urllib.request as urllib  # , urllib.parse, urllib.error
-except:
-    import urllib
 
 
 class AutopackViewer:
@@ -172,12 +164,12 @@ class AutopackViewer:
 
     def timeFunction(self, function, args, kw):
         """
-        Mesure the time for performing the provided function.
+        Measure the time for performing the provided function.
 
         @type  function: function
         @param function: the function to execute
-        @type  args: liste
-        @param args: the liste of arguments for the function
+        @type  args: list
+        @param args: the list of arguments for the function
 
 
         @rtype:   list/array
@@ -243,7 +235,7 @@ class AutopackViewer:
         @type  ingr: autopack.Ingredient
         @param ingr: the ingredient
         @type  parent: hostObject
-        @param parent: specifiy a parent to insert under
+        @param parent: specify a parent to insert under
         """
         if ingr.compNum == 0:
             compartment = self.histo
@@ -258,7 +250,7 @@ class AutopackViewer:
     def prepareMaster(self):
         """
         Create all empty master/parent geometry for the cytoplasm and
-        all ingredient. If not in DejaVu prepare the meshs use for instanced
+        all ingredient. If not in DejaVu prepare the meshes use for instanced
         geometry such as spheres and cylinders
         """
 
@@ -410,7 +402,7 @@ class AutopackViewer:
             #                self.vi.viewer.GUI.clipvar[0][0].set(1)
             #                tet.AddClipPlane( cp, 1, False)
             orga.mesh = tet
-        if orga.representation != None:
+        if orga.representation is not None:
             name = "%s_Rep" % orga.name
             p = self.checkCreateEmpty(name, parent="O%s" % orga.name)
             print("orga.representation ", name, p, orga.representation)
@@ -480,7 +472,7 @@ class AutopackViewer:
         self.prepareDynamic()
         if self.vi.host.find("blender") != -1:
             # change the viewportshadr
-            from .ray import vlen, vdiff, vcross
+            from .ray import vlen, vdiff
 
             boundingBox = self.histo.boundingBox
             xl, yl, zl = boundingBox[0]
@@ -535,9 +527,9 @@ class AutopackViewer:
     def displayFill(self):
         """
         Use this function once a Box have been filled. displayFill will display
-        all placed ingredients in the Box, and affilated them according if they are
-        on surface, in cytoplasme or in the compartment. displayFill also display
-        optionally the differnt point grid.
+        all placed ingredients in the Box, and affiliated them according if they are
+        on surface, in cytoplasm or in the compartment. displayFill also display
+        optionally the different point grid.
         """
         if self.master is None:
             self.displayPreFill()
@@ -734,7 +726,7 @@ class AutopackViewer:
                 centers=ingr.positions[0],
                 materials=[ingr.color],
                 radii=ingr.radii[0],
-                visible=visible,
+                visible=visible,  # TODO: fix undefined error
             )
             self.vi.AddObject(sph, parent=ingr.mesh)
         else:
@@ -1072,10 +1064,10 @@ class AutopackViewer:
 
     def displayIngrediants(self, recipes):
         for ingr in recipes.ingredients:
-            if type(ingr.mesh) == type(None):  # mes_3d?
+            if isinstance(ingr.mesh, None):  # mes_3d?
                 # try get it
                 ingr.mesh = self.helper.getObject(ingr.name)
-            if type(ingr.mesh) != type(None):  # display mesh
+            else:  # display mesh
                 if self.ViewerType != "dejavu":
                     self.createIngrMesh(ingr)
                 else:
@@ -1094,8 +1086,6 @@ class AutopackViewer:
             vParentHiders = self.vi.newEmpty(
                 self.name + "ParentHiders", parent=self.master
             )  # g
-        #        print ("whats the parenthider")
-        #        print (type(vParentHiders),self.name+"ParentHiders")
         if self.vi.host.find("blender") == -1:
             self.vi.toggleDisplay(vParentHiders, False)
         parent = self.vi.getObject(ingr.name + "MeshsParent")
@@ -1129,7 +1119,7 @@ class AutopackViewer:
             # from DejaVu.IndexedPolygons import IndexedPolygons
             name = o.name + ingr.name + "Mesh"
             material = None
-            if ingr.color != None:
+            if ingr.color is not None:
                 material = self.vi.retrieveColorMat(ingr.color)
             #            print ("parent is ", ingr.name+"MeshsParent")
             #            print (vParentHiders,parent)
@@ -1185,14 +1175,14 @@ class AutopackViewer:
     def printIngrediants(self):
         r = self.histo.exteriorRecipe
         if r:
-            res = [self.printOneIngr(ingr) for ingr in r.ingredients]
+            [self.printOneIngr(ingr) for ingr in r.ingredients]
         for orga in self.histo.compartments:
             rs = orga.surfaceRecipe
             if rs:
-                res = [self.printOneIngr(ingr) for ingr in rs.ingredients]
+                [self.printOneIngr(ingr) for ingr in rs.ingredients]
             ri = orga.innerRecipe
             if ri:
-                res = [self.printOneIngr(ingr) for ingr in ri.ingredients]
+                [self.printOneIngr(ingr) for ingr in ri.ingredients]
 
     def collectResult(self, ingr, pos, rot):
         verts = []
@@ -1276,11 +1266,8 @@ class AutopackViewer:
                     ingredient, {ingredient: verts}, {ingredient: radii}, visible=1
                 )
         if doMesh and len(matrices):
-            # print ("build ipoly ",ingredient.o_name)
             dejavui = False
-            # recipe can be orga name or cyto_
-            # o =  ingredient.recipe.compartment
-            #            geom = ingredient.mesh
+
             if self.ViewerType != "dejavu":
                 polygon = ingredient.mesh_3d
                 if type(polygon) is type(None):
@@ -1292,16 +1279,11 @@ class AutopackViewer:
                     parent = self.vi.newEmpty(
                         name, parent=self.orgaToMasterGeom[ingredient]
                     )
-                #                    self.vi.AddObject(parent)
                 instances = self.vi.getChilds(parent)
                 dejavui = not len(instances)
             if not hasattr(ingredient, "ipoly") or ingredient.ipoly is None or dejavui:
                 color = [ingredient.color] if ingredient.color is not None else None
-                #                print o.name+self.histo.FillName[self.histo.cFill]+ingredient.name
                 axis = numpy.array(ingredient.principalVector[:])
-                #                if self.vi.host.find("blender") != -1 and self.vi.instance_dupliFace and ingredient.coordsystem == "left":
-                ##                            if self.helper.getType(self.helper.getChilds(polygon)[0]) != self.helper.EMPTY:
-                #                    axis = self.vi.rotatePoint(axis,[0.,0.,0.],[0.0,1.0,0.0,-math.pi/2.0])
                 print("build ipoly ", ingredient.o_name)
                 ingredient.ipoly = self.vi.instancePolygon(
                     o.name + self.histo.FillName[self.histo.cFill] + ingredient.o_name,
@@ -1699,50 +1681,6 @@ class AutopackViewer:
         ingr.counter = 0
         orga.molecules.extend(res)
 
-    #    def displayFreePoints(self):
-    #        # display grid points with positive distances left
-    #        verts = []
-    #        rads = []
-    #        fpts = self.histo.freePointsAfterFill[:self.histo.nbFreePointsAfterFill]
-    ##        if self.histo.use_clist :
-    ##            fpts = self.histo.lmethod.get_valuesL(self.histo.freePointsAfterFill)
-    #        #for i in xrange(self.histo.nbFreePointsAfterFill-1):
-    #        #    pt = fpts[i]
-    #        for pt in self.histo.freePointsAfterFill[:self.histo.nbFreePointsAfterFill]:
-    #            d = self.histo.distancesAfterFill[pt]
-    #            if d>self.histo.smallestProteinSize-0.001:
-    #                verts.append(self.histo.masterGridPositions[pt])
-    #                rads.append(d)
-    #        if self.ViewerType == 'dejavu':
-    #            if len(verts):
-    #                sph1 = self.vi.Spheres('unusedSph', centers=verts, radii=rads,
-    #                                       inheritFrontPolyMode=0,
-    #                                       frontPolyMode='line', visible=0)
-    #                self.vi.AddObject(sph1)
-    #
-    #        if len(verts):
-    #            #unusedPtsds
-    #            pts1 = self.vi.Points('zeroDistPts', vertices=verts, inheritPointWidth=0,
-    #                          pointWidth=self.pointWidth, inheritMaterial=0, materials=[(0,1,0)], visible=0,
-    #                          parent=None)
-    #            verts = []
-    #            for pt in fpts:#[:self.histo.nbFreePointsAfterFill]:
-    #                verts.append(self.histo.masterGridPositions[pt])
-    #
-    #            unpts = self.vi.Points('unusedGridPoints', vertices=verts, inheritMaterial=0,
-    #                          materials=[green], visible=0,parent=None)
-    #            verts = []
-    #            for pt in fpts:#[self.histo.nbFreePointsAfterFill:]:
-    #                verts.append(self.histo.masterGridPositions[pt])
-    #
-    #            uspts = self.vi.Points('usedGridPoints', vertices=verts, inheritMaterial=0,
-    #                          materials=[red], visible=0,parent=None)
-    #
-    #            if self.ViewerType == 'dejavu':
-    #                self.vi.AddObject(pts1)
-    #                self.vi.AddObject(unpts)
-    #                self.vi.AddObject(uspts)
-
     def displayFreePoints(self, vDebug=0):
         # display grid points with positive distances left
         vertsFreePts = []
@@ -1773,35 +1711,23 @@ class AutopackViewer:
                 self.vi.AddObject(sph1)
 
         if len(verts):
-            # unusedPtsds
-            #           ptsAll = self.vi.Points('AllPoints', vertices=verts, inheritPointWidth=0,
-            #                         pointWidth=self.pointWidth, inheritMaterial=0, materials=[(0,1,0)], visible=0,
-            #                         parent=None)
 
             verts0 = []
             vertsIn = []
             vertsOut = []
 
-            #      for pt in fpts:#[:self.histo.nbFreePointsAfterFill]:
             for pt in range(NPTS):
-                #            for pt in self.histo.freePointsAfterFill:
                 d = self.histo.distancesAfterFill[pt]
-                #                print("d for pt ", pt," = ", d)
                 if d == 0:
                     verts0.append(self.histo.masterGridPositions[pt])
-                    #   print("Verts0 adding d==0 for pt = ", pt)
                 elif d < 0:
                     vertsIn.append(self.histo.masterGridPositions[pt])
-                # print("VertsIn adding d<0 for pt = ", pt)
                 elif d > 0:
                     vertsOut.append(self.histo.masterGridPositions[pt])
 
             for pt in fpts:
                 vertsFreePts.append(self.histo.masterGridPositions[pt])
-                #   print("VertsOut adding d>0 for pt = ", pt)
 
-                #         ptsFull = self.vi.Points('completeDistPts', vertices=vertsAll, inheritMaterial=0,   #Graham debugTrashLine
-            #           materials=[blue], visible=0, parent=None)  #Graham debugTrashLine
             vDebug = 0  # Aug 19, 2012: Set vDebug = 1 if you want the grids to be at top of hierarchy for easy access
             vParent = self.master
             if vDebug:
@@ -1815,7 +1741,8 @@ class AutopackViewer:
             #    #define the base shape for instance objects
             if self.psph is None:
                 self.psph = self.vi.newEmpty(
-                    self.name + "base_shape", parent=vParentHiders
+                    self.name + "base_shape",
+                    parent=vParentHiders,  # TODO: figure out this undefined variable
                 )
 
             ptsAll = self.vi.Points(
@@ -1824,7 +1751,7 @@ class AutopackViewer:
                 inheritPointWidth=0,  # Graham debugTrashLine
                 pointWidth=self.pointWidth,
                 inheritMaterial=0,
-                materials=[blue],
+                materials=[upyColors.blue],
                 visible=0,
                 parent=vGridPointHider,
             )
@@ -1851,7 +1778,7 @@ class AutopackViewer:
                 inheritPointWidth=0,
                 pointWidth=self.pointWidth,
                 inheritMaterial=0,
-                materials=[green],
+                materials=[upyColors.green],
                 visible=0,
                 parent=vGridPointHider,
             )
@@ -1862,7 +1789,7 @@ class AutopackViewer:
                 inheritPointWidth=0,  # Graham debugTrashLine
                 pointWidth=self.pointWidth,
                 inheritMaterial=0,
-                materials=[orange],
+                materials=[upyColors.orange],
                 visible=0,
                 parent=vGridPointHider,
             )
@@ -1878,7 +1805,7 @@ class AutopackViewer:
                 inheritPointWidth=0,
                 pointWidth=self.pointWidth,
                 inheritMaterial=0,
-                materials=[red],
+                materials=[upyColors.red],
                 visible=0,
                 parent=vGridPointHider,
             )
@@ -2290,7 +2217,7 @@ class AutopackViewer:
         parents=None,
         data=None,
         objects=None,
-        colors=[red, black],
+        colors=[upyColors.red, upyColors.black],
         **options
     ):
 
@@ -2311,10 +2238,8 @@ class AutopackViewer:
             useObjectColors = options["useObjectColors"]
             if useObjectColors:
                 useMaterial = False
-        ramp = col.getRamp(colors)
-        #        datas = None
-        #        listeObjs = None
-        if datas is None:
+        ramp = upyColors.getRamp(colors)
+        if data is None:  # TODO: check this fix from "datas" to "data" is correct
             if mode == "distance":
                 listeObjs, datas = self.colorByDistanceFrom(
                     target,
@@ -2363,7 +2288,7 @@ class AutopackViewer:
         distances=None,
         objects=None,
         ramp=None,
-        colors=[red, black],
+        colors=[upyColors.red, upyColors.black],
         **options
     ):
         """
@@ -2380,7 +2305,7 @@ class AutopackViewer:
         if "threshold" in options:
             threshold = options["threshold"]
         if ramp is None:
-            ramp = col.getRamp(colors)
+            ramp = upyColors.getRamp(colors)
             if ramp is None:
                 return [[], []]
         o = self.vi.getObject(target)
@@ -2443,7 +2368,7 @@ class AutopackViewer:
         orders=None,
         objects=None,
         ramp=None,
-        colors=[red, black],
+        colors=[upyColors.red, upyColors.black],
         **options
     ):
         """
@@ -2459,7 +2384,7 @@ class AutopackViewer:
         if "threshold" in options:
             threshold = options["threshold"]
         if ramp is None:
-            ramp = col.getRamp(colors)
+            ramp = upyColors.getRamp(colors)
             if ramp is None:
                 return
         listeObjs = []
@@ -2797,7 +2722,7 @@ class AutopackViewer:
         for subnode in parentnode.subnodes:
             if subnode is None:
                 continue
-            b = self.helper.box(
+            self.helper.box(
                 "node" + str(i),
                 center=subnode.position,
                 size=[
@@ -2815,9 +2740,7 @@ class AutopackViewer:
         """
         Display the given gradient as sphere at each grid position with radius = weight
         """
-        #        from upy import colors as col
-        #        from DejaVu.colorTool import Map
-        ramp = col.getRamp([[1, 0, 0], [0, 0, 1]], size=255)  # color
+        ramp = upyColors.getRamp([[1, 0, 0], [0, 0, 1]], size=255)  # color
         parent = self.vi.getObject(self.histo.name + "gradient")
         if parent is None:
             parent = self.vi.newEmpty(self.histo.name + "gradient")
@@ -2848,7 +2771,7 @@ class AutopackViewer:
         distances = self.env.grid.distToClosestSurf[:]
         positions = self.env.grid.masterGridPositions[:]
         # map the color as well ?
-        ramp = col.getRamp([[1, 0, 0], [0, 0, 1]], size=255)  # color
+        ramp = upyColors.getRamp([[1, 0, 0], [0, 0, 1]], size=255)  # color
         mask = distances > cutoff
         ind = numpy.nonzero(mask)[0]
         distances[ind] = cutoff
@@ -2856,7 +2779,6 @@ class AutopackViewer:
         ind = numpy.nonzero(mask)[0]
         distances[ind] = cutoff
         colors = Map(distances, ramp)
-        #        sphs = self.helper.Spheres("distances",vertices=numpy.array(positions),radii=distances,colors=colors)
         base = self.helper.getObject(self.env.name + "distances_base")
         if base is None:
             base = self.helper.Sphere(self.env.name + "distances_base")[0]
@@ -2864,7 +2786,7 @@ class AutopackViewer:
         if p is not None:
             self.helper.deleteObject(p)  # recursif?
         p = self.helper.newEmpty(self.env.name + "distances")
-        sphs = self.helper.instancesSphere(
+        self.helper.instancesSphere(
             self.env.name + "distances",
             positions,
             distances,
@@ -2875,7 +2797,6 @@ class AutopackViewer:
         )
 
     def checkIngrSpheres(self, ingr):
-        o = ingr.recipe.compartment
         if ingr.modelType == "Spheres":
             name = "SpheresRep_" + ingr.name.replace(" ", "_")
             parent = self.vi.getObject(name)
