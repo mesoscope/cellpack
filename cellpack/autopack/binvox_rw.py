@@ -203,7 +203,6 @@ class Voxels(object):
         width = self.dims[0]
         index = ijk[0] * wxh + ijk[2] * width + ijk[1]
         # // wxh = width * height = d * d
-        value = self.data[index]
         return index
 
     def cartesian(self, arrays, out=None):
@@ -253,8 +252,8 @@ class Voxels(object):
         out[:, 0] = np.repeat(arrays[0], m)
         if arrays[1:]:
             self.cartesian(arrays[1:], out=out[0:m, 1:])
-            for j in xrange(1, arrays[0].size):
-                out[j * m : (j + 1) * m, 1:] = out[0:m, 1:]
+            for j in range(1, arrays[0].size):
+                out[j * m: (j + 1) * m, 1:] = out[0:m, 1:]
         return out
 
 
@@ -439,7 +438,7 @@ def write(voxel_model, fp):
     fp.write("translate " + " ".join(map(str, voxel_model.translate)) + "\n")
     fp.write("scale " + str(voxel_model.scale) + "\n")
     fp.write("data\n")
-    if not voxel_model.axis_order in ("xzy", "xyz"):
+    if voxel_model.axis_order not in ("xzy", "xyz"):
         raise ValueError("Unsupported voxel model axis order")
 
     if voxel_model.axis_order == "xzy":
