@@ -78,13 +78,10 @@ except:
 from .Recipe import Recipe
 
 # print "import AutoFill"
-import autopack
-from autopack import checkURL
-from autopack import transformation as tr
+import cellpack.autopack as autopack
+from cellpack.autopack import checkURL, transformation as tr, binvox_rw
 
-from RAPID import RAPIDlib
-
-from autopack import binvox_rw
+from cellpack.mgl_tools.RAPID import RAPIDlib
 
 AFDIR = autopack.__path__[0]
 

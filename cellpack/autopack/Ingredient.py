@@ -53,12 +53,12 @@ from numpy import matrix
 
 # , weakref
 from math import sqrt, pi, sin, cos, asin
-from bhtree import bhtreelib
+from cellpack.mgl_tools.bhtree import bhtreelib
 from random import uniform, gauss, random
 from time import time, sleep
 import math
-from RAPID import RAPIDlib
-from autopack.transformation import (
+from cellpack.mgl_tools.RAPID import RAPIDlib
+from cellpack.autopack.transformation import (
     euler_from_matrix,
 )
 
@@ -73,7 +73,7 @@ try:
 except ImportError:
     import urllib
 
-import autopack
+import cellpack.autopack as autopack
 
 AFDIR = autopack.__path__[0]  # working dir ?
 verbose = autopack.verbose

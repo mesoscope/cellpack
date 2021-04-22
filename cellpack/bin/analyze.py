@@ -18,13 +18,11 @@ import numpy
 import argparse
 
 # Relative
-# import upy
-from cellpack import Example, get_module_version
-from cellpack import autopack
-from autopack.Environment import Environment
-from autopack.Graphics import AutopackViewer as AFViewer
-from autopack.Analysis import AnalyseAP
-
+import cellpack.mgl_tools.upy as upy
+from cellpack import autopack, get_module_version
+from cellpack.autopack.Environment import Environment
+from cellpack.autopack.Graphics import AutopackViewer as AFViewer
+from cellpack.autopack.Analysis import AnalyseAP
 ###############################################################################
 
 log = logging.getLogger()
@@ -111,10 +109,7 @@ def main():
 
     except Exception as e:
         log.error("=============================================")
-        if dbg:
-            log.error("\n\n" + traceback.format_exc())
-            log.error("=============================================")
-        log.error("\n\n" + str(e) + "\n")
+        log.error("\n\n" + traceback.format_exc())
         log.error("=============================================")
         sys.exit(1)
 

@@ -55,16 +55,17 @@ from scipy import spatial
 import numpy
 import pickle
 from math import floor, exp, cos, sqrt, pow as mathPow, pi
-from bhtree import bhtreelib
+from cellpack.mgl_tools.bhtree import bhtreelib
 
-from autopack.Compartment import CompartmentList
-from autopack.Recipe import Recipe
-from autopack.Ingredient import GrowIngrediant, ActinIngrediant
-from autopack.ray import vlen, vdiff
-from autopack import IOutils
+import cellpack.autopack as autopack
+from .Compartment import CompartmentList
+from .Recipe import Recipe
+from .Ingredient import GrowIngrediant, ActinIngrediant
+from .ray import vlen, vdiff
+from cellpack.autopack import IOutils
 
 # backward compatibility with kevin method
-from autopack.Grid import Grid as G
+from cellpack.autopack.Grid import Grid as G
 
 try:
     from collections import OrderedDict
@@ -72,8 +73,6 @@ except ImportError:
     from ordereddict import OrderedDict
 
 from .randomRot import RandomRot
-
-import autopack
 
 try:
     helper = autopack.helper

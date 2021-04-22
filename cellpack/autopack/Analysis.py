@@ -6,13 +6,13 @@ Created on Mon May  6 22:58:44 2013
 """
 import os
 import math
-import numpy
 import numpy as np
 import scipy
 import csv
 import json
 
 from time import time
+from PIL import Image
 
 # try :
 import matplotlib
@@ -21,9 +21,8 @@ from matplotlib import pylab
 from matplotlib import pyplot
 from matplotlib.patches import Circle
 
-import autopack
-from autopack.GeometryTools import GeometriTools, Rectangle
-import Image
+import cellpack.autopack as autopack
+from cellpack.autopack.GeometryTools import GeometriTools, Rectangle
 
 
 def angle_between_vectors(v0, v1, directed=True, axis=0):

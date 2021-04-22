@@ -36,14 +36,13 @@
 @author: Ludovic Autin, Graham Johnson,  & Michel Sanner
 """
 import numpy
-import autopack
-from autopack.ldSequence import cHaltonSequence3
+import cellpack.autopack as autopack
+from cellpack.autopack.ldSequence import cHaltonSequence3
 from scipy import spatial
 import math
-from math import ceil
-from math import floor
+from math import ceil, floor
 from random import randrange
-from RAPID import RAPIDlib
+from cellpack.mgl_tools.RAPID import RAPIDlib
 
 
 # Kevin Grid point class

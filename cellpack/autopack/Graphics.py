@@ -39,7 +39,7 @@ import os
 from time import time
 import numpy
 
-import autopack
+import cellpack.autopack as autopack
 
 # ===============================================================================
 # to do :
@@ -49,12 +49,12 @@ import autopack
 #      - hierarchy
 #
 # ===============================================================================
-import upy
-from upy import colors as upyColors
+import cellpack.mgl_tools.upy as upy
+from cellpack.mgl_tools.upy import colors as upyColors
 
-from DejaVu.colorTool import Map
+from cellpack.mgl_tools.DejaVu.colorTool import Map
 
-from autopack.Ingredient import GrowIngrediant, ActinIngrediant
+from .Ingredient import GrowIngrediant, ActinIngrediant
 
 
 class AutopackViewer:

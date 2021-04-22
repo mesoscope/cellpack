@@ -11,15 +11,12 @@ import numpy
 import pickle
 from xml.dom.minidom import getDOMImplementation
 
-from upy import transformation as tr
-import autopack
-from autopack.Ingredient import GrowIngrediant, ActinIngrediant, KWDS
-from autopack.Serializable import sCompartment
-from autopack.Serializable import sIngredientGroup
-from autopack.Serializable import sIngredient
-from autopack.Serializable import sIngredientFiber
-from autopack.Recipe import Recipe
-from autopack.Compartment import Compartment
+from cellpack.mgl_tools.upy import transformation as tr
+import cellpack.autopack as autopack
+from cellpack.autopack.Ingredient import GrowIngrediant, ActinIngrediant, KWDS
+from cellpack.autopack.Serializable import sCompartment, sIngredientGroup, sIngredient, sIngredientFiber
+from cellpack.autopack.Recipe import Recipe
+from cellpack.autopack.Compartment import Compartment
 
 
 try:
