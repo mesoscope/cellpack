@@ -952,7 +952,7 @@ def affine_matrix_from_points(v0, v1, shear=True, scale=True, usesvd=True):
         u, s, vh = numpy.linalg.svd(A.T)
         vh = vh[:ndims].T
         B = vh[:ndims]
-        C = vh[ndims : 2 * ndims]
+        C = vh[ndims: 2 * ndims]
         t = numpy.dot(C, numpy.linalg.pinv(B))
         t = numpy.concatenate((t, numpy.zeros((ndims, 1))), axis=1)
         M = numpy.vstack((t, ((0.0,) * ndims) + (1.0,)))
@@ -2001,16 +2001,16 @@ def matrixToEuler(mat):
 def unbiasedRotationXYZ(ex, ey, ez):
     M = numpy.identity(3)
     e = math.sqrt((ex * ex) + (ey * ey) + (ez * ez))
-    e2 = (ex * ex) + (ey * ey) + (ez * ez)
-    M[0, 0] = M11 = ((ey * ey) + (ez * ez) * math.cos(e) + (ex * ex)) / (e * e)
-    M[0, 1] = M12 = ((ex * ey) / (e * e)) * (1 - math.cos(e)) - (ez / e) * math.sin(e)
-    M[0, 2] = M13 = ((ex * ez) / (e * e)) * (1 - math.cos(e)) - (ey / e) * math.sin(e)
-    M[1, 0] = M21 = ((ex * ey) / (e * e)) * (1 - math.cos(e)) + (ez / e) * math.sin(e)
-    M[1, 1] = M22 = ((ex * ex) + (ez * ez) * math.cos(e) + (ey * ey)) / (e * e)
-    M[1, 2] = M23 = ((ey * ez) / (e * e)) * (1 - math.cos(e)) - (ex / e) * math.sin(e)
-    M[2, 0] = M31 = ((ex * ez) / (e * e)) * (1 - math.cos(e)) - (ey / e) * math.sin(e)
-    M[2, 1] = M32 = ((ey * ez) / (e * e)) * (1 - math.cos(e)) + (ex / e) * math.sin(e)
-    M[2, 2] = M33 = ((ex * ex) + (ey * ey) * math.cos(e) + (ez * ez)) / (e * e)
+    #  e2 = (ex * ex) + (ey * ey) + (ez * ez) # Not used: probably delete
+    M[0, 0] = ((ey * ey) + (ez * ez) * math.cos(e) + (ex * ex)) / (e * e)
+    M[0, 1] = ((ex * ey) / (e * e)) * (1 - math.cos(e)) - (ez / e) * math.sin(e)
+    M[0, 2] = ((ex * ez) / (e * e)) * (1 - math.cos(e)) - (ey / e) * math.sin(e)
+    M[1, 0] = ((ex * ey) / (e * e)) * (1 - math.cos(e)) + (ez / e) * math.sin(e)
+    M[1, 1] = ((ex * ex) + (ez * ez) * math.cos(e) + (ey * ey)) / (e * e)
+    M[1, 2] = ((ey * ez) / (e * e)) * (1 - math.cos(e)) - (ex / e) * math.sin(e)
+    M[2, 0] = ((ex * ez) / (e * e)) * (1 - math.cos(e)) - (ey / e) * math.sin(e)
+    M[2, 1] = ((ey * ez) / (e * e)) * (1 - math.cos(e)) + (ex / e) * math.sin(e)
+    M[2, 2] = ((ex * ex) + (ey * ey) * math.cos(e) + (ez * ez)) / (e * e)
     return M
 
 
