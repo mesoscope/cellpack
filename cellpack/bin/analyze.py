@@ -13,12 +13,14 @@ from typing import Any, Tuple
 import traceback
 
 # Third party
-from PIL import Image
+# from PIL import Image
 import numpy
 import argparse
+
 # Relative
-import upy
+# import upy
 from cellpack import Example, get_module_version
+from cellpack import autopack
 from autopack.Environment import Environment
 from autopack.Graphics import AutopackViewer as AFViewer
 from autopack.Analysis import AnalyseAP
@@ -99,16 +101,13 @@ def main():
         # passing in your args. E.g.
         # exe = Example(args.recipe)
         # exe.update_value(args.second)
-        print(
-            "Recipe : {}\n".format(args.recipe)
-        )
+        print("Recipe : {}\n".format(args.recipe))
         helperClass = upy.getHelperClass()
         helper = helperClass(vi="nogui")
         autopack.helper = helper
         fileName = os.path.basename(args.recipe)
 
         evn = Environment(name=fileName)
-
 
     except Exception as e:
         log.error("=============================================")
