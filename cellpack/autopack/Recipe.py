@@ -4,8 +4,8 @@
 #
 # autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin,
 # and Michel Sanner
-#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010 
-#   with assistance from Mostafa Al-Alusi in 2009 and periodic input 
+#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
+#   with assistance from Mostafa Al-Alusi in 2009 and periodic input
 #   from Arthur Olson's Molecular Graphics Lab
 #
 # Recipe.py Authors: Graham Johnson & Michel Sanner with editing/
@@ -35,11 +35,9 @@
 ############################################################################
 @author: Graham Johnson, Ludovic Autin, & Michel Sanner
 
-# Hybrid version merged from Graham's Sept 6, 2011 and Ludo's April 2012 
-#version on May 16, 2012, remerged on July 5, 2012 with thesis versions
+# Hybrid version merged from Graham's Sept 6, 2011 and Ludo's April 2012
+#version on May 16, 2012, re-merged on July 5, 2012 with thesis versions
 """
-
-from .Ingredient import Ingredient
 
 # import weakref
 from random import random, seed
@@ -225,7 +223,5 @@ class Recipe:
         """ print the states of all recipe ingredients """
         for ingr in self.ingredients:
             print(
-                indent
-                + "ingr: %s target: %3d placed %3d %s"
-                % (ingr.pdb, ingr.nbMol, ingr.counter, ingr.name)
+                indent + "ingr: %s target: %3d placed %3d %s" % (ingr.pdb, ingr.nbMol, ingr.counter, ingr.name)
             )

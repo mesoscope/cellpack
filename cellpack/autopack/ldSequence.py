@@ -3,8 +3,8 @@
 ###############################################################################
 #
 # autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
-#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010 
-#   with assistance from Mostafa Al-Alusi in 2009 and periodic input 
+#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
+#   with assistance from Mostafa Al-Alusi in 2009 and periodic input
 #   from Arthur Olson's Molecular Graphics Lab
 #
 # ldSequence.py Authors: Ludovic Autin
@@ -21,7 +21,7 @@ import math
 """\
     QuasiRandom.py - Generators for quasirandom sequences
 DESCRIPTION
-    Use a Halton sequence to generate quasirandom sequences. 
+    Use a Halton sequence to generate quasirandom sequences.
 
 Copyright (c) 2003 Richard P. Muller (rmuller@sandia.gov). All rights
 reserved. See the LICENSE file for licensing details.
@@ -736,7 +736,7 @@ def SphereHalton(n, p2, marge=math.radians(45.0)):
 
 # see http://packinon.sourceforge.net/programs/index.html
 #
-def HaltonSequence(n, b):
+def halton_sequence(n, b):
     # /// return term i of the base b Halton sequence
     # /// You can think of this as, for example, just a generalization of Heckbert's bit-
     # /// reversal distribution trick.
@@ -810,7 +810,7 @@ class cHaltonSequence3:
         #        // expected iterations: 1.5
         while True:
             if (self.mBase3 & mask) == mask:
-                self.mBase3 += add  #         // force carry into next 2-bit digit
+                self.mBase3 += add  # force carry into next 2-bit digit
                 self.mY -= 2 * s
 
                 mask = mask << 2
@@ -824,8 +824,8 @@ class cHaltonSequence3:
         #        /////////////////////////////////////
         #        // base 5: use 3 bits for each base 5 digit.
         mask = 0x7
-        add = 0x3  #  // amount to add to force carry once digit==dmax
-        dmax = 0x5  #  // max digit
+        add = 0x3  # amount to add to force carry once digit==dmax
+        dmax = 0x5  # max digit
 
         s = kOneOverFive
 
@@ -843,10 +843,10 @@ class cHaltonSequence3:
 
                 s *= kOneOverFive
             else:
-                self.mZ += s  #     // we know digit n has gone from a to a + 1
+                self.mZ += s  # we know digit n has gone from a to a + 1
                 break
 
-        return self.mBase2  # // return the index of this sequence point
+        return self.mBase2  # return the index of this sequence point
 
     def reset(
         self,
