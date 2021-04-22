@@ -31,10 +31,9 @@ Created on Fri Jul 20 23:53:00 2012
 ###############################################################################
 Name: 'autoPACK'
 Define here some usefull variable and setup filename path that facilitate
-AF 
+AF
 @author: Ludovic Autin with editing by Graham Johnson
 """
-packageContainsVFCommands = 1
 
 import sys
 import os
@@ -44,10 +43,7 @@ from os import path, environ
 
 import ssl
 
-ssl._create_default_https_context = ssl._create_unverified_context
-
-use_json_hook = True
-# in casesimplejson not there
+# in case simplejson not there
 try:
     import simplejson as json
 
@@ -63,6 +59,9 @@ try:
 except ImportError:
     import urllib
 
+packageContainsVFCommands = 1
+ssl._create_default_https_context = ssl._create_unverified_context
+use_json_hook = True
 afdir = os.path.abspath(__path__[0])
 
 # ==============================================================================
@@ -95,7 +94,7 @@ if sys.platform == "darwin":
     PANDA_PATH = afdir + os.sep + ".." + os.sep + "Panda3D"
     sys.path.append("/Developer/Panda3D/")
     sys.path.append("/Developer/Panda3D/lib/")  # in case already installed
-    # TODO need to fix the dependancy that are locally set to /Developer/Panda3D/lib/
+    # TODO need to fix the dependency that are locally set to /Developer/Panda3D/lib/
 elif sys.platform == "win32":
     PANDA_PATH = afdir + os.sep + ".." + os.sep + "Panda3d-1.9.0-x64"
     PANDA_PATH_BIN = PANDA_PATH + os.sep + "bin"
@@ -114,8 +113,6 @@ elif sys.platform == "linux2":  # linux ? blender and maya ?
 else:
     pass
 sys.path.append(PANDA_PATH + os.sep + "lib")
-
-binvox_exe = "C:\\Users\\ludov\\Downloads\\binvox.exe"
 
 
 def checkURL(URL):
@@ -138,9 +135,6 @@ if not os.path.exists(cache_geoms):
 cache_sphere = appdata + os.sep + "cache_collisionTrees"
 if not os.path.exists(cache_sphere):
     os.makedirs(cache_sphere)
-# cacheo = appdata+os.sep+"cache_organelles"
-# if not os.path.exists(cacheo):
-#    os.makedirs(cacheo)
 cache_recipes = appdata + os.sep + "cache_recipes"
 if not os.path.exists(cache_recipes):
     os.makedirs(cache_recipes)
@@ -218,18 +212,16 @@ autopackdir = str(afdir)  # copy
 
 
 def checkPath():
-    fname = filespath  # autoPACKserver+"/autoPACK_filePaths.json"
-    if fname.find("http") != -1 or fname.find("ftp") != -1:
+    fileName = filespath  # autoPACKserver+"/autoPACK_filePaths.json"
+    if fileName.find("http") != -1 or fileName.find("ftp") != -1:
         try:
             import urllib.request as urllib  # , urllib.parse, urllib.error
         except ImportError:
             import urllib
-        if checkURL(fname):
-            urllib.urlretrieve(fname, autopack_path_pref_file)
+        if checkURL(fileName):
+            urllib.urlretrieve(fileName, autopack_path_pref_file)
         else:
-            print("problem accessing path " + fname)
-    # else:
-    #     autopack_path_pref_file = fname
+            print("problem accessing path " + fileName)
 
 
 # get user / default value
@@ -271,7 +263,7 @@ replace_path = [replace_autoPACKserver, replace_autopackdir, replace_autopackdat
 global current_recipe_path
 current_recipe_path = appdata
 # we keep the file here, it come with the distribution
-# wonder if the cache shouldn use the version like other appDAta
+# wonder if the cache shouldn't use the version like other appDAta
 # ie appData/AppName/Version/etc...
 if not os.path.isfile(afdir + os.sep + "version.txt"):
     f = open(afdir + os.sep + "version.txt", "w")
@@ -290,15 +282,6 @@ info_dic = ["setupfile", "resultfile", "wrkdir"]
 # hard code recipe here is possible
 global RECIPES
 RECIPES = OrderedDict()
-# = {
-# "Test_CylindersSpheres2D":{
-#    "1.0":
-#    {
-#    "setupfile":afdir+os.sep+"autoFillRecipeScripts"+os.sep+"2DcylinderSphereFill"+os.sep+"2DCylindersSpheres_setup_recipe.py",
-#    "resultfile":afdir+os.sep+"autoFillRecipeScripts"+os.sep+"2DcylinderSphereFill"+os.sep+"results"+os.sep+"CylSpherefillResult.afr.txt",
-#    "wrkdir":afdir+os.sep+"autoFillRecipeScripts"+os.sep+"2DcylinderSphereFill"
-#    }
-# }
 
 
 USER_RECIPES = {}
@@ -358,7 +341,7 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
         filename = fixOnePath(filename)
     print("autopack retrieve file ", filename)
     if filename.find("http") != -1 or filename.find("ftp") != -1:
-        # check if usin autoPACKserver
+        # check if using autoPACKserver
         useAPServer = False
         if filename.find(autoPACKserver) != -1:
             useAPServer = True
@@ -649,11 +632,11 @@ if checkAtstartup:
     updateRecipAvailable(recipe_dev_pref_file)
 
 print("currently nb recipes is " + str(len(RECIPES)))
-# check cach directory create if doesnt exit.abs//should be in user pref?
+# check cache directory create if doesnt exit.abs//should be in user pref?
 # ?
 # need a distinction between autopackdir and cachdir
 wkr = afdir
-# in the preefined working directory
+# in the predefined working directory
 
 BD_BOX_PATH = "/home/ludo/Tools/bd_box-2.2"  # or /Users/ludo/DEV/bd_box-2.1/
 GMODE = "Simple"
