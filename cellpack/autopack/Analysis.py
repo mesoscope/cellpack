@@ -17,20 +17,9 @@ from time import time
 # try :
 import matplotlib
 
-# Force matplotlib to not use any Xwindows backend.
-# matplotlib.use('Agg')
 from matplotlib import pylab
 from matplotlib import pyplot
-import matplotlib.mlab as mlab
 from matplotlib.patches import Circle
-
-# except :
-#     print("FAILED TO LOAD MATPLOTLIB")
-#     matplotlib=None
-#     pylab = None
-#     pyplot = None
-#     Circle = None
-#     mlab = None
 
 import autopack
 from autopack.GeometryTools import GeometriTools, Rectangle
