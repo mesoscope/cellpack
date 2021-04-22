@@ -91,8 +91,9 @@ True
 
 import numpy as np
 
+
 class Voxels(object):
-    """ Holds a binvox model.
+    """Holds a binvox model.
     data is either a three-dimensional numpy boolean array (dense representation)
     or a two-dimensional numpy float array (coordinate representation).
 
@@ -118,14 +119,15 @@ class Voxels(object):
         self.dims = dims
         self.translate = translate
         self.scale = scale
-        assert (axis_order in ('xzy', 'xyz'))
+        assert axis_order in ("xzy", "xyz")
         self.axis_order = axis_order
         nx, ny, nz = dims
-#        self.ijk = self.cartesian([range(nx), range(ny), range(nz)])
-#        self.index = np.apply_along_axis(self.getIndex,1,self.ijk)
-#        self.ordered_data_sparse = np.apply_along_axis(self.getIndexData,1,self.ijk)
-#        self.data = self.data[self.index].reshape(self.dims)
-        
+
+    #        self.ijk = self.cartesian([range(nx), range(ny), range(nz)])
+    #        self.index = np.apply_along_axis(self.getIndex,1,self.ijk)
+    #        self.ordered_data_sparse = np.apply_along_axis(self.getIndexData,1,self.ijk)
+    #        self.data = self.data[self.index].reshape(self.dims)
+
     def clone(self):
         data = self.data.copy()
         dims = self.dims[:]
@@ -136,137 +138,140 @@ class Voxels(object):
         write(self, fp)
 
     def ijkToxyz(self):
-        #depends on axis_order
-        sz = self.dims[0]*self.dims[0]*self.dims[0]
+        # depends on axis_order
+        sz = self.dims[0] * self.dims[0] * self.dims[0]
         if self.axis_order == "xyz":
-            x_n = (self.data[0]+0.5)/self.dims[0]
-            y_n = (self.data[1]+0.5)/self.dims[1]
-            z_n = (self.data[2]+0.5)/self.dims[2]
-            x = self.scale*x_n + self.translate[0]
-            y = self.scale*y_n + self.translate[1]
-            z = self.scale*z_n + self.translate[2]
-        else :
-            x_n = (self.data[0]+.5)/self.dims[0]
-            y_n = (self.data[2]+.5)/self.dims[2]
-            z_n = (self.data[1]+.5)/self.dims[1]
-            x = self.scale*x_n + self.translate[0]
-            y = self.scale*y_n + self.translate[2]
-            z = self.scale*z_n + self.translate[1]           
+            x_n = (self.data[0] + 0.5) / self.dims[0]
+            y_n = (self.data[1] + 0.5) / self.dims[1]
+            z_n = (self.data[2] + 0.5) / self.dims[2]
+            x = self.scale * x_n + self.translate[0]
+            y = self.scale * y_n + self.translate[1]
+            z = self.scale * z_n + self.translate[2]
+        else:
+            x_n = (self.data[0] + 0.5) / self.dims[0]
+            y_n = (self.data[2] + 0.5) / self.dims[2]
+            z_n = (self.data[1] + 0.5) / self.dims[1]
+            x = self.scale * x_n + self.translate[0]
+            y = self.scale * y_n + self.translate[2]
+            z = self.scale * z_n + self.translate[1]
         return np.vstack((x, y, z)).transpose()
 
-    
     def xyzToijk(self, xyz):
-        xyz = xyz.transpose()        
-        x=xyz[0]
-        y=xyz[1]
-        z=xyz[2]
-        x_n = (x-self.translate[0])/self.scale
-        y_n = (y-self.translate[1])/self.scale
-        z_n = (z-self.translate[2])/self.scale
-        i = (x_n*self.dims[0])-0.5
-        j = (y_n*self.dims[1])-0.5
-        k = (z_n*self.dims[2])-0.5
+        xyz = xyz.transpose()
+        x = xyz[0]
+        y = xyz[1]
+        z = xyz[2]
+        x_n = (x - self.translate[0]) / self.scale
+        y_n = (y - self.translate[1]) / self.scale
+        z_n = (z - self.translate[2]) / self.scale
+        i = (x_n * self.dims[0]) - 0.5
+        j = (y_n * self.dims[1]) - 0.5
+        k = (z_n * self.dims[2]) - 0.5
         return np.vstack((i, j, k)).transpose()
-        
+
     def ijkToIndex(self, ijk):
         ijk = ijk.transpose()
-        wxh = self.dims[0]*self.dims[2]
+        wxh = self.dims[0] * self.dims[2]
         width = self.dims[0]
-        index = ijk[0] * wxh + ijk[2] * width + ijk[1];  #// wxh = width * height = d * d
-        return index
-        
-    def getIndex(self, ijk):
-        wxh = self.dims[0]*self.dims[2]
-        width = self.dims[0]
-        index = ijk[0] * wxh + ijk[2] * width + ijk[1];  #// wxh = width * height = d * d
+        index = ijk[0] * wxh + ijk[2] * width + ijk[1]
+        # // wxh = width * height = d * d
         return index
 
-#    def getIJK(self, index):
-#        wxh = self.dims[0]*self.dims[2]
-#        width = self.dims[0]
-#        index = xyz[0] * wxh + xyz[2] * width + xyz[1];  #// wxh = width * height = d * d
-#        x=index / wxh
-#        zp=index % wxh
-#        z = zp / self.dims[0]
-#        y = zp % self.dims[0]
-#        x = nz_voxels / (dims[0]*dims[2])
-#        zwpy = nz_voxels % (dims[0]*dims[2]) # z*w + y
-#        z = zwpy / dims[0]
-#        y = zwpy % dims[0]
-#        return index
+    def getIndex(self, ijk):
+        wxh = self.dims[0] * self.dims[2]
+        width = self.dims[0]
+        index = ijk[0] * wxh + ijk[2] * width + ijk[1]
+        # // wxh = width * height = d * d
+        return index
+
+    #    def getIJK(self, index):
+    #        wxh = self.dims[0]*self.dims[2]
+    #        width = self.dims[0]
+    #        index = xyz[0] * wxh + xyz[2] * width + xyz[1];  #// wxh = width * height = d * d
+    #        x=index / wxh
+    #        zp=index % wxh
+    #        z = zp / self.dims[0]
+    #        y = zp % self.dims[0]
+    #        x = nz_voxels / (dims[0]*dims[2])
+    #        zwpy = nz_voxels % (dims[0]*dims[2]) # z*w + y
+    #        z = zwpy / dims[0]
+    #        y = zwpy % dims[0]
+    #        return index
 
     def getIndexData(self, ijk):
-        wxh = self.dims[0]*self.dims[2]
+        wxh = self.dims[0] * self.dims[2]
         width = self.dims[0]
-        index = ijk[0] * wxh + ijk[2] * width + ijk[1];  #// wxh = width * height = d * d
+        index = ijk[0] * wxh + ijk[2] * width + ijk[1]
+        # // wxh = width * height = d * d
         value = self.data[index]
         return index
 
     def cartesian(self, arrays, out=None):
-            """
-            #http://stackoverflow.com/questions/1208118/using-numpy-to-build-an-array-of-all-combinations-of-two-arrays
-            Generate a cartesian product of input arrays.
-        
-            Parameters
-            ----------
-            arrays : list of array-like
-                1-D arrays to form the cartesian product of.
-            out : ndarray
-                Array to place the cartesian product in.
-        
-            Returns
-            -------
-            out : ndarray
-                2-D array of shape (M, len(arrays)) containing cartesian products
-                formed of input arrays.
-        
-            Examples
-            --------
-            >>> cartesian(([1, 2, 3], [4, 5], [6, 7]))
-            array([[1, 4, 6],
-                   [1, 4, 7],
-                   [1, 5, 6],
-                   [1, 5, 7],
-                   [2, 4, 6],
-                   [2, 4, 7],
-                   [2, 5, 6],
-                   [2, 5, 7],
-                   [3, 4, 6],
-                   [3, 4, 7],
-                   [3, 5, 6],
-                   [3, 5, 7]])
-        
-            """
-    
-            arrays = [np.asarray(x) for x in arrays]
-            dtype = arrays[0].dtype
-    
-            n = np.prod([x.size for x in arrays])
-            if out is None:
-                out = np.zeros([n, len(arrays)], dtype=dtype)
-    
-            m = n / arrays[0].size
-            out[:, 0] = np.repeat(arrays[0], m)
-            if arrays[1:]:
-                self.cartesian(arrays[1:], out=out[0:m, 1:])
-                for j in xrange(1, arrays[0].size):
-                    out[j * m:(j + 1) * m, 1:] = out[0:m, 1:]
-            return out         
-            
+        """
+        #http://stackoverflow.com/questions/1208118/using-numpy-to-build-an-array-of-all-combinations-of-two-arrays
+        Generate a cartesian product of input arrays.
+
+        Parameters
+        ----------
+        arrays : list of array-like
+            1-D arrays to form the cartesian product of.
+        out : ndarray
+            Array to place the cartesian product in.
+
+        Returns
+        -------
+        out : ndarray
+            2-D array of shape (M, len(arrays)) containing cartesian products
+            formed of input arrays.
+
+        Examples
+        --------
+        >>> cartesian(([1, 2, 3], [4, 5], [6, 7]))
+        array([[1, 4, 6],
+               [1, 4, 7],
+               [1, 5, 6],
+               [1, 5, 7],
+               [2, 4, 6],
+               [2, 4, 7],
+               [2, 5, 6],
+               [2, 5, 7],
+               [3, 4, 6],
+               [3, 4, 7],
+               [3, 5, 6],
+               [3, 5, 7]])
+
+        """
+
+        arrays = [np.asarray(x) for x in arrays]
+        dtype = arrays[0].dtype
+
+        n = np.prod([x.size for x in arrays])
+        if out is None:
+            out = np.zeros([n, len(arrays)], dtype=dtype)
+
+        m = n / arrays[0].size
+        out[:, 0] = np.repeat(arrays[0], m)
+        if arrays[1:]:
+            self.cartesian(arrays[1:], out=out[0:m, 1:])
+            for j in xrange(1, arrays[0].size):
+                out[j * m : (j + 1) * m, 1:] = out[0:m, 1:]
+        return out
+
+
 def read_header(fp):
-    """ Read binvox header. Mostly meant for internal use.
-    """
+    """Read binvox header. Mostly meant for internal use."""
     line = fp.readline().strip()
-    if not line.startswith(b'#binvox'):
-        raise IOError('Not a binvox file')
-    dims = list(map(int, fp.readline().strip().split(b' ')[1:]))
-    translate = list(map(float, fp.readline().strip().split(b' ')[1:]))
-    scale = list(map(float, fp.readline().strip().split(b' ')[1:]))[0]
+    if not line.startswith(b"#binvox"):
+        raise IOError("Not a binvox file")
+    dims = list(map(int, fp.readline().strip().split(b" ")[1:]))
+    translate = list(map(float, fp.readline().strip().split(b" ")[1:]))
+    scale = list(map(float, fp.readline().strip().split(b" ")[1:]))[0]
     line = fp.readline()
     return dims, translate, scale
 
+
 def read(fp):
-    """ Read binary binvox format as array.
+    """Read binary binvox format as array.
 
     Returns the model with accompanying metadata.
 
@@ -279,23 +284,24 @@ def read(fp):
     """
     dims, translate, scale = read_header(fp)
     raw_data = np.frombuffer(fp.read(), dtype=np.uint8)
-    #  The first byte of each pair is the value byte and is either 0 or 1 
-    # (1 signifies the presence of a voxel). The second byte is the count byte 
+    #  The first byte of each pair is the value byte and is either 0 or 1
+    # (1 signifies the presence of a voxel). The second byte is the count byte
     sz = np.prod(dims)
     data = np.empty(sz, dtype=np.bool)
     index, end_index = 0, 0
     i = 0
     while i < len(raw_data):
-        value, count = map(int, (raw_data[i], raw_data[i+1]))
-        end_index = index+count
+        value, count = map(int, (raw_data[i], raw_data[i + 1]))
+        end_index = index + count
         data[index:end_index] = value
         index = end_index
         i += 2
     # data = data.reshape(dims)
-    return Voxels(data, dims, translate, scale, 'xzy'),raw_data
-    
+    return Voxels(data, dims, translate, scale, "xzy"), raw_data
+
+
 def read_as_3d_array(fp, fix_coords=True):
-    """ Read binary binvox format as array.
+    """Read binary binvox format as array.
 
     Returns the model with accompanying metadata.
 
@@ -322,15 +328,16 @@ def read_as_3d_array(fp, fix_coords=True):
     values, counts = raw_data[::2], raw_data[1::2]
     data = np.repeat(values, counts).astype(np.bool)
     data = data.reshape(dims)
-    if fix_coords:            
+    if fix_coords:
         data = np.transpose(data, (0, 2, 1))
-        axis_order = 'xyz'
+        axis_order = "xyz"
     else:
-        axis_order = 'xzy'
+        axis_order = "xzy"
     return Voxels(data, dims, translate, scale, axis_order)
 
+
 def read_as_coord_array(fp, fix_coords=True):
-    """ Read binary binvox format as coordinates.
+    """Read binary binvox format as coordinates.
 
     Returns binvox model with voxels in a "coordinate" representation, i.e.  an
     3 x N array where N is the number of nonzero voxels. Each column
@@ -365,51 +372,55 @@ def read_as_coord_array(fp, fix_coords=True):
     # according to docs,
     # index = x * wxh + z * width + y; // wxh = width * height = d * d
 
-    x = nz_voxels / (dims[0]*dims[2])
-    zwpy = nz_voxels % (dims[0]*dims[2]) # z*w + y
+    x = nz_voxels / (dims[0] * dims[2])
+    zwpy = nz_voxels % (dims[0] * dims[2])  # z*w + y
     z = zwpy / dims[0]
     y = zwpy % dims[0]
     if fix_coords:
         data = np.vstack((x, y, z))
-        axis_order = 'xyz'
+        axis_order = "xyz"
     else:
         data = np.vstack((x, z, y))
-        axis_order = 'xzy'
+        axis_order = "xzy"
 
-    #return Voxels(data, dims, translate, scale, axis_order)
+    # return Voxels(data, dims, translate, scale, axis_order)
     return Voxels(np.ascontiguousarray(data), dims, translate, scale, axis_order)
 
+
 def dense_to_sparse(voxel_data, dtype=np.int):
-    """ From dense representation to sparse (coordinate) representation.
+    """From dense representation to sparse (coordinate) representation.
     No coordinate reordering.
     """
-    if voxel_data.ndim!=3:
-        raise ValueError('voxel_data is wrong shape; should be 3D array.')
+    if voxel_data.ndim != 3:
+        raise ValueError("voxel_data is wrong shape; should be 3D array.")
     return np.asarray(np.nonzero(voxel_data), dtype)
 
+
 def sparse_to_dense(voxel_data, dims, dtype=np.bool):
-    if voxel_data.ndim!=2 or voxel_data.shape[0]!=3:
-        raise ValueError('voxel_data is wrong shape; should be 3xN array.')
+    if voxel_data.ndim != 2 or voxel_data.shape[0] != 3:
+        raise ValueError("voxel_data is wrong shape; should be 3xN array.")
     if np.isscalar(dims):
-        dims = [dims]*3
+        dims = [dims] * 3
     dims = np.atleast_2d(dims).T
     # truncate to integers
     xyz = voxel_data.astype(np.int)
     # discard voxels that fall outside dims
     valid_ix = ~np.any((xyz < 0) | (xyz >= dims), 0)
-    xyz = xyz[:,valid_ix]
+    xyz = xyz[:, valid_ix]
     out = np.zeros(dims.flatten(), dtype=dtype)
     out[tuple(xyz)] = True
     return out
 
-#def get_linear_index(x, y, z, dims):
-    #""" Assuming xzy order. (y increasing fastest.
-    #TODO ensure this is right when dims are not all same
-    #"""
-    #return x*(dims[1]*dims[2]) + z*dims[1] + y
+
+# def get_linear_index(x, y, z, dims):
+# """ Assuming xzy order. (y increasing fastest.
+# TODO ensure this is right when dims are not all same
+# """
+# return x*(dims[1]*dims[2]) + z*dims[1] + y
+
 
 def write(voxel_model, fp):
-    """ Write binary binvox format.
+    """Write binary binvox format.
 
     Note that when saving a model in sparse (coordinate) format, it is first
     converted to dense format.
@@ -417,33 +428,33 @@ def write(voxel_model, fp):
     Doesn't check if the model is 'sane'.
 
     """
-    if voxel_model.data.ndim==2:
+    if voxel_model.data.ndim == 2:
         # TODO avoid conversion to dense
         dense_voxel_data = sparse_to_dense(voxel_model.data, voxel_model.dims)
     else:
         dense_voxel_data = voxel_model.data
 
-    fp.write('#binvox 1\n')
-    fp.write('dim '+' '.join(map(str, voxel_model.dims))+'\n')
-    fp.write('translate '+' '.join(map(str, voxel_model.translate))+'\n')
-    fp.write('scale '+str(voxel_model.scale)+'\n')
-    fp.write('data\n')
-    if not voxel_model.axis_order in ('xzy', 'xyz'):
-        raise ValueError('Unsupported voxel model axis order')
+    fp.write("#binvox 1\n")
+    fp.write("dim " + " ".join(map(str, voxel_model.dims)) + "\n")
+    fp.write("translate " + " ".join(map(str, voxel_model.translate)) + "\n")
+    fp.write("scale " + str(voxel_model.scale) + "\n")
+    fp.write("data\n")
+    if not voxel_model.axis_order in ("xzy", "xyz"):
+        raise ValueError("Unsupported voxel model axis order")
 
-    if voxel_model.axis_order=='xzy':
+    if voxel_model.axis_order == "xzy":
         voxels_flat = dense_voxel_data.flatten()
-    elif voxel_model.axis_order=='xyz':
+    elif voxel_model.axis_order == "xyz":
         voxels_flat = np.transpose(dense_voxel_data, (0, 2, 1)).flatten()
 
     # keep a sort of state machine for writing run length encoding
     state = voxels_flat[0]
     ctr = 0
     for c in voxels_flat:
-        if c==state:
+        if c == state:
             ctr += 1
             # if ctr hits max, dump
-            if ctr==255:
+            if ctr == 255:
                 fp.write(chr(state))
                 fp.write(chr(ctr))
                 ctr = 0
@@ -458,7 +469,8 @@ def write(voxel_model, fp):
         fp.write(chr(state))
         fp.write(chr(ctr))
 
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
 
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()

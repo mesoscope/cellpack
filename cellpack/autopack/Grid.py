@@ -51,13 +51,19 @@ class gridPoint:
     def __init__(self, i, globalC, isPolyhedron):
         self.index = int(i)
         self.isOutside = None
-        self.minDistance = 99999  # Only store a number here if within certain distance from polyhedron
+        self.minDistance = (
+            99999  # Only store a number here if within certain distance from polyhedron
+        )
         self.representsPolyhedron = isPolyhedron
         self.closeFaces = []
         self.closestFaceIndex = 0
         self.testedEndpoint = None
-        self.allDistances = []  # Stores a tuple list of distances to all points. (point,distance) = (5,2.5)
-        self.globalCoord = numpy.array(globalC)  # Stores the global coordinate associated with this point
+        self.allDistances = (
+            []
+        )  # Stores a tuple list of distances to all points. (point,distance) = (5,2.5)
+        self.globalCoord = numpy.array(
+            globalC
+        )  # Stores the global coordinate associated with this point
 
 
 class Grid:
@@ -69,8 +75,9 @@ class Grid:
     NOTE : thi class could be completly replace if openvdb is wrapped to python.
     """
 
-    def __init__(self, boundingBox=([0, 0, 0], [.1, .1, .1]), space=1, setup=True,
-                 lookup=0):
+    def __init__(
+        self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=True, lookup=0
+    ):
         # a grid is attached to an environement
         self.boundingBox = boundingBox
         # this list provides the id of the component this grid points belongs
@@ -92,7 +99,7 @@ class Grid:
         self.distToClosestSurf_store = []
 
         self.diag = self.getDiagonal()
-        self.gridSpacing = space# * 1.1547#cubic grid with a diagonal spacing equal to that smallest packing radius 
+        self.gridSpacing = space  # * 1.1547#cubic grid with a diagonal spacing equal to that smallest packing radius
         self.nbGridPoints = None
         self.nbSurfacePoints = 0
         self.gridVolume = 0  # will be the toatl number of grid points
@@ -124,7 +131,7 @@ class Grid:
             # what about collision ?
 
     def setup(self, boundingBox, space):
-        self.gridSpacing = space# * 1.1547
+        self.gridSpacing = space  # * 1.1547
         self.boundingBox = boundingBox
         # self.gridVolume,self.nbGridPoints=self.computeGridNumberOfPoint(boundingBox,self.gridSpacing)
         #        self.create3DPointLookup()
@@ -141,29 +148,48 @@ class Grid:
 
         self.getDiagonal()
         self.nbSurfacePoints = 0
-        print ("$$$$$$", self.gridVolume, self.gridSpacing)
-        self.gridPtId = numpy.zeros(self.gridVolume, 'i')  # [0]*nbPoints
+        print("$$$$$$", self.gridVolume, self.gridSpacing)
+        self.gridPtId = numpy.zeros(self.gridVolume, "i")  # [0]*nbPoints
         # self.distToClosestSurf = [self.diag]*self.gridVolume#surface point too?
-        self.distToClosestSurf = numpy.ones(self.gridVolume) * self.diag  # (self.distToClosestSurf)
+        self.distToClosestSurf = (
+            numpy.ones(self.gridVolume) * self.diag
+        )  # (self.distToClosestSurf)
         self.freePoints = list(range(self.gridVolume))
         self.nbFreePoints = len(self.freePoints)
-        print ("$$$$$$$$  1 ", self.lookup, boundingBox, space, self.gridSpacing, len(self.gridPtId))
+        print(
+            "$$$$$$$$  1 ",
+            self.lookup,
+            boundingBox,
+            space,
+            self.gridSpacing,
+            len(self.gridPtId),
+        )
         #        self.create3DPointLookup()
         #        self.create3DPointLookup_loop()#whatdoI do it twice ?
-        print("$$$$$$$$  gridVolume = nbPoints = ", self.gridVolume,
-              " grid.nbGridPoints = ", self.nbGridPoints,
-              "gridPId = ", len(self.gridPtId),
-              "self.nbFreePoints =", self.nbFreePoints)
+        print(
+            "$$$$$$$$  gridVolume = nbPoints = ",
+            self.gridVolume,
+            " grid.nbGridPoints = ",
+            self.nbGridPoints,
+            "gridPId = ",
+            len(self.gridPtId),
+            "self.nbFreePoints =",
+            self.nbFreePoints,
+        )
         self.setupBoundaryPeriodicity()
         return self.gridSpacing
 
-    def reset(self, ):
+    def reset(
+        self,
+    ):
         # reset the  distToClosestSurf and the freePoints
         # boundingBox should be the same otherwise why keeping the grid
         # self.gridPtId = numpy.zeros(self.gridVolume,'i')
         # self.distToClosestSurf = numpy.ones(self.gridVolume)*self.diag#(self.distToClosestSurf)
-        print ("reset Grid distance to closest surface and freePoints",self.diag)
-        self.distToClosestSurf = (numpy.array(self.distToClosestSurf[:])*0.0)+self.diag
+        print("reset Grid distance to closest surface and freePoints", self.diag)
+        self.distToClosestSurf = (
+            numpy.array(self.distToClosestSurf[:]) * 0.0
+        ) + self.diag
         # self.distToClosestSurf[:] = self.diag  # numpy.array([self.diag]*len(self.distToClosestSurf))#surface point too?
         self.freePoints = list(range(len(self.freePoints)))
         self.nbFreePoints = len(self.freePoints)
@@ -198,7 +224,9 @@ class Grid:
     def getDiagonal(self, boundingBox=None):
         if boundingBox is None:
             boundingBox = self.boundingBox
-        self.diag = numpy.sqrt((numpy.array(boundingBox[0]) - numpy.array(boundingBox[1])) ** 2).sum()
+        self.diag = numpy.sqrt(
+            (numpy.array(boundingBox[0]) - numpy.array(boundingBox[1])) ** 2
+        ).sum()
         return self.diag
 
     def create3DPointLookup_loop(self, boundingBox=None):
@@ -210,10 +238,12 @@ class Grid:
             boundingBox = self.boundingBox
         xl, yl, zl = boundingBox[0]
         xr, yr, zr = boundingBox[1]
-        self.gridVolume, self.nbGridPoints = self.computeGridNumberOfPoint(boundingBox, self.gridSpacing)
+        self.gridVolume, self.nbGridPoints = self.computeGridNumberOfPoint(
+            boundingBox, self.gridSpacing
+        )
         nx, ny, nz = self.nbGridPoints
-        pointArrayRaw = numpy.zeros((nx * ny * nz, 3), 'f')
-        self.ijkPtIndice = numpy.zeros((nx * ny * nz, 3), 'i')  # this is unused
+        pointArrayRaw = numpy.zeros((nx * ny * nz, 3), "f")
+        self.ijkPtIndice = numpy.zeros((nx * ny * nz, 3), "i")  # this is unused
         # try :
         # self.ijkPtIndice = numpy.ndindex(nx,ny,nz)
         space = self.gridSpacing
@@ -222,7 +252,11 @@ class Grid:
         for zi in range(nz):
             for yi in range(ny):
                 for xi in range(nx):
-                    pointArrayRaw[i] = (xl + xi * space + space/2.0, yl + yi * space+ space/2.0, zl + zi * space+ space/2.0)
+                    pointArrayRaw[i] = (
+                        xl + xi * space + space / 2.0,
+                        yl + yi * space + space / 2.0,
+                        zl + zi * space + space / 2.0,
+                    )
                     self.ijkPtIndice[i] = (xi, yi, zi)
                     # print ("add i",i,xi,yi,zi,nx,ny,nz)
                     i += 1
@@ -241,21 +275,32 @@ class Grid:
         environmentBoxEqualFillBox = False
         # np.linspace(2.0, 3.0, num=5)
         if environmentBoxEqualFillBox:  # environment.environmentBoxEqualFillBox:
-            self._x = x = numpy.arange(boundingBox[0][0], boundingBox[1][0],
-                                       space)  # *1.1547) gridspacing is already multiplied by 1.1547
-            self._y = y = numpy.arange(boundingBox[0][1], boundingBox[1][1], space)  # *1.1547)
-            self._z = z = numpy.arange(boundingBox[0][2], boundingBox[1][2], space)  # *1.1547)
+            self._x = x = numpy.arange(
+                boundingBox[0][0], boundingBox[1][0], space
+            )  # *1.1547) gridspacing is already multiplied by 1.1547
+            self._y = y = numpy.arange(
+                boundingBox[0][1], boundingBox[1][1], space
+            )  # *1.1547)
+            self._z = z = numpy.arange(
+                boundingBox[0][2], boundingBox[1][2], space
+            )  # *1.1547)
         else:
-            self._x = x = numpy.arange(boundingBox[0][0] - space, boundingBox[1][0] + space,
-                                       space)  # *1.1547) gridspacing is already multiplied by 1.1547
-            self._y = y = numpy.arange(boundingBox[0][1] - space, boundingBox[1][1] + space, space)  # *1.1547)
-            self._z = z = numpy.arange(boundingBox[0][2] - space, boundingBox[1][2] + space, space)  # *1.1547)
+            self._x = x = numpy.arange(
+                boundingBox[0][0] - space, boundingBox[1][0] + space, space
+            )  # *1.1547) gridspacing is already multiplied by 1.1547
+            self._y = y = numpy.arange(
+                boundingBox[0][1] - space, boundingBox[1][1] + space, space
+            )  # *1.1547)
+            self._z = z = numpy.arange(
+                boundingBox[0][2] - space, boundingBox[1][2] + space, space
+            )  # *1.1547)
         #        self._x = x = numpy.ogrid(boundingBox[0][0]: boundingBox[1][0]: space*1.1547j)
         #        self._y = y = numpy.ogrid(boundingBox[0][1]: boundingBox[1][1]: space*1.1547j)
         #        self._z = z = numpy.ogrid(boundingBox[0][2]: boundingBox[1][2]: space*1.1547j)
         # nx,ny,nz = self.nbGridPoints
         nx = len(
-            x)  # sizes must be +1 or the right, top, and back edges don't get any points using this numpy.arange method
+            x
+        )  # sizes must be +1 or the right, top, and back edges don't get any points using this numpy.arange method
         ny = len(y)
         nz = len(z)
         # Dec 5 2013, we need to confirm that the getPointsInBox function is also using +1, or potential neighbors will be missed
@@ -267,7 +312,9 @@ class Grid:
         # this is 60% faster than the for loop
         #        self.masterGridPositions = numpy.array(list(numpy.broadcast(*numpy.ix_(x, y, z))))
         #        self.masterGridPositions = numpy.vstack(numpy.meshgrid(x,y,z)).reshape(3,-1).T
-        self.masterGridPositions = numpy.vstack(numpy.meshgrid(x, y, z, copy=False)).reshape(3, -1).T
+        self.masterGridPositions = (
+            numpy.vstack(numpy.meshgrid(x, y, z, copy=False)).reshape(3, -1).T
+        )
         # this ay be faster but dont kno the implication
 
     #        np.vstack((ndmesh(x_p,y_p,z_p,copy=False))).reshape(3,-1).T
@@ -283,27 +330,41 @@ class Grid:
             boundingBox = self.boundingBox
         space = self.gridSpacing
         S = numpy.array(boundingBox[1]) - numpy.array(boundingBox[0])
-        NX, NY, NZ = numpy.around(S / (self.gridSpacing))# / 1.1547))
-        if NX == 0: NX = 1
-        if NY == 0: NY = 1
-        if NZ == 0: NZ = 1
-        print (NX, NY, NZ)
+        NX, NY, NZ = numpy.around(S / (self.gridSpacing))  # / 1.1547))
+        if NX == 0:
+            NX = 1
+        if NY == 0:
+            NY = 1
+        if NZ == 0:
+            NZ = 1
+        print(NX, NY, NZ)
         # we want the diagonal of the voxel, not the diagonal of the plane, so the second 1.1547 is was incorrect
         environmentBoxEqualFillBox = True
         # np.linspace(2.0, 3.0, num=5)
         if environmentBoxEqualFillBox:  # environment.environmentBoxEqualFillBox:
-            self._x = x = numpy.linspace(boundingBox[0][0], boundingBox[1][0],
-                                         int(NX))  # *1.1547) gridspacing is already multiplied by 1.1547
-            self._y = y = numpy.linspace(boundingBox[0][1], boundingBox[1][1], int(NY))  # *1.1547)
-            self._z = z = numpy.linspace(boundingBox[0][2], boundingBox[1][2], int(NZ))  # *1.1547)
+            self._x = x = numpy.linspace(
+                boundingBox[0][0], boundingBox[1][0], int(NX)
+            )  # *1.1547) gridspacing is already multiplied by 1.1547
+            self._y = y = numpy.linspace(
+                boundingBox[0][1], boundingBox[1][1], int(NY)
+            )  # *1.1547)
+            self._z = z = numpy.linspace(
+                boundingBox[0][2], boundingBox[1][2], int(NZ)
+            )  # *1.1547)
         else:
-            self._x = x = numpy.arange(boundingBox[0][0], boundingBox[1][0] + space,
-                                       space)  # *1.1547) gridspacing is already multiplied by 1.1547
-            self._y = y = numpy.arange(boundingBox[0][1], boundingBox[1][1] + space, space)  # *1.1547)
-            self._z = z = numpy.arange(boundingBox[0][2], boundingBox[1][2] + space, space)  # *1.1547)
+            self._x = x = numpy.arange(
+                boundingBox[0][0], boundingBox[1][0] + space, space
+            )  # *1.1547) gridspacing is already multiplied by 1.1547
+            self._y = y = numpy.arange(
+                boundingBox[0][1], boundingBox[1][1] + space, space
+            )  # *1.1547)
+            self._z = z = numpy.arange(
+                boundingBox[0][2], boundingBox[1][2] + space, space
+            )  # *1.1547)
         xyz = numpy.meshgrid(x, y, z, copy=False)
         nx = len(
-            x)  # sizes must be +1 or the right, top, and back edges don't get any points using this numpy.arange method
+            x
+        )  # sizes must be +1 or the right, top, and back edges don't get any points using this numpy.arange method
         ny = len(y)
         nz = len(z)
         self.gridSpacing = (x[1] - x[0]) * 1.1547  # ? should I multiply here ?
@@ -321,8 +382,12 @@ class Grid:
         if ncomp:
             comp = ncomp
             for i in range(ncomp):
-                inside = checkPointInside_rapid(self.histoVol.compartments[i],
-                                                point, self.histoVol.grid.diag, ray=ray)
+                inside = checkPointInside_rapid(
+                    self.histoVol.compartments[i],
+                    point,
+                    self.histoVol.grid.diag,
+                    ray=ray,
+                )
                 if inside:
                     return -(i + 1)
                     # comp=comp-1
@@ -339,8 +404,10 @@ class Grid:
         distance, nb = self.tree.query(pt3d)  # len of ingr posed so far
         return distance, nb
 
-    def getClosestFreeGridPoint(self, pt3d, compId=None, updateTree=True, ball=0.0, distance=0.0):
-        free_indices = self.freePoints[:self.nbFreePoints]
+    def getClosestFreeGridPoint(
+        self, pt3d, compId=None, updateTree=True, ball=0.0, distance=0.0
+    ):
+        free_indices = self.freePoints[: self.nbFreePoints]
         arr = numpy.array(self.masterGridPositions[free_indices])
         indices = numpy.nonzero(numpy.equal(self.gridPtId[free_indices], compId))
         distances = self.distToClosestSurf[free_indices]
@@ -355,24 +422,33 @@ class Grid:
         all_distances = distances[res]
         all_pts = arr[res]
         ind = numpy.nonzero(
-            numpy.logical_and(numpy.greater_equal(all_distances, distance), numpy.less(all_distances, distance * 1.5)))[
-            0]
+            numpy.logical_and(
+                numpy.greater_equal(all_distances, distance),
+                numpy.less(all_distances, distance * 1.5),
+            )
+        )[0]
         if not len(ind):
             return None
         # should pick closest ?
-        targetPoint = all_pts[ind[randrange(len(ind))]]  # randomly pick free surface point at given distance
+        targetPoint = all_pts[
+            ind[randrange(len(ind))]
+        ]  # randomly pick free surface point at given distance
         return targetPoint
 
-        free_indices = self.freePoints[:self.nbFreePoints]
+        free_indices = self.freePoints[: self.nbFreePoints]
         arr = numpy.array(self.masterGridPositions[free_indices])
         if self.tree_free is None or updateTree:
             if compId != None:
                 arr = numpy.array(self.masterGridPositions[free_indices])
-                indices = numpy.nonzero(numpy.equal(self.gridPtId[free_indices], compId))
+                indices = numpy.nonzero(
+                    numpy.equal(self.gridPtId[free_indices], compId)
+                )
                 self.tree_free = spatial.cKDTree(arr[indices], leafsize=10)
                 arr = arr[indices]
             else:
-                self.tree_free = spatial.cKDTree(self.masterGridPositions[:self.nbFreePoints], leafsize=10)
+                self.tree_free = spatial.cKDTree(
+                    self.masterGridPositions[: self.nbFreePoints], leafsize=10
+                )
         if distance != 0.0:
             res = self.tree_free.query_ball_point(pt3d, distance)  #
             return 0, res, arr
@@ -384,20 +460,20 @@ class Grid:
         """
         #http://stackoverflow.com/questions/1208118/using-numpy-to-build-an-array-of-all-combinations-of-two-arrays
         Generate a cartesian product of input arrays.
-    
+
         Parameters
         ----------
         arrays : list of array-like
             1-D arrays to form the cartesian product of.
         out : ndarray
             Array to place the cartesian product in.
-    
+
         Returns
         -------
         out : ndarray
             2-D array of shape (M, len(arrays)) containing cartesian products
             formed of input arrays.
-    
+
         Examples
         --------
         >>> cartesian(([1, 2, 3], [4, 5], [6, 7]))
@@ -413,7 +489,7 @@ class Grid:
                [3, 4, 7],
                [3, 5, 6],
                [3, 5, 7]])
-    
+
         """
 
         arrays = [numpy.asarray(x) for x in arrays]
@@ -428,7 +504,7 @@ class Grid:
         if arrays[1:]:
             self.cartesian(arrays[1:], out=out[0:m, 1:])
             for j in range(1, arrays[0].size):
-                out[j * m:(j + 1) * m, 1:] = out[0:m, 1:]
+                out[j * m : (j + 1) * m, 1:] = out[0:m, 1:]
         return out
 
     def getPointFrom3D(self, pt3d):
@@ -436,8 +512,16 @@ class Grid:
         get point number from 3d coordinates
         """
         x, y, z = pt3d  # Continuous 3D point to be discretized
-        spacing1 = 1. / self.gridSpacing  # Grid spacing = diagonal of the voxel determined by smalled packing radius
-        NX, NY, NZ = self.nbGridPoints  # vector = [length, height, depth] of grid, units = gridPoints
+        spacing1 = (
+            1.0 / self.gridSpacing
+        )  # Grid spacing = diagonal of the voxel determined by smalled packing radius
+        (
+            NX,
+            NY,
+            NZ,
+        ) = (
+            self.nbGridPoints
+        )  # vector = [length, height, depth] of grid, units = gridPoints
         OX, OY, OZ = self.boundingBox[0]  # origin of fill grid
         # Algebra gives nearest gridPoint ID to pt3D
         i = min(NX - 1, max(0, round((x - OX) * spacing1)))
@@ -457,10 +541,16 @@ class Grid:
 
     def setupBoundaryPeriodicity(self):
         # we create a dictionary for the adjacent cell of the current grid.
-        self.sizeXYZ = numpy.array(self.boundingBox[1]) - numpy.array(self.boundingBox[0])
+        self.sizeXYZ = numpy.array(self.boundingBox[1]) - numpy.array(
+            self.boundingBox[0]
+        )
         self.preriodic_table = {}
-        self.preriodic_table["left"] = numpy.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]]) * self.sizeXYZ
-        self.preriodic_table["right"] = numpy.array([[-1, 0, 0], [0, -1, 0], [0, 0, -1]]) * self.sizeXYZ
+        self.preriodic_table["left"] = (
+            numpy.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]]) * self.sizeXYZ
+        )
+        self.preriodic_table["right"] = (
+            numpy.array([[-1, 0, 0], [0, -1, 0], [0, 0, -1]]) * self.sizeXYZ
+        )
 
     def getPositionPeridocity(self, pt3d, jitter, cutoff):
         #        print ("getPositionPeridocity")
@@ -541,9 +631,18 @@ class Grid:
             tr.append(pt3d + corner[0])
         if len(i1) == 3:
             # in a corner need total 7 pos, never happen in 2D
-            corner[1] = self.preriodic_table["left"][0] * pxyz[0] + self.preriodic_table["left"][1] * pxyz[1]
-            corner[2] = self.preriodic_table["left"][0] * pxyz[0] + self.preriodic_table["left"][2] * pxyz[2]
-            corner[3] = self.preriodic_table["left"][1] * pxyz[1] + self.preriodic_table["left"][2] * pxyz[2]
+            corner[1] = (
+                self.preriodic_table["left"][0] * pxyz[0]
+                + self.preriodic_table["left"][1] * pxyz[1]
+            )
+            corner[2] = (
+                self.preriodic_table["left"][0] * pxyz[0]
+                + self.preriodic_table["left"][2] * pxyz[2]
+            )
+            corner[3] = (
+                self.preriodic_table["left"][1] * pxyz[1]
+                + self.preriodic_table["left"][2] * pxyz[2]
+            )
             for i in range(4):  # 4+1=5
                 # print i,corner[i],sum(corner[i])
                 # if sum(corner[i]) != 0 :
@@ -551,7 +650,7 @@ class Grid:
         if len(tr):
             translation = tr
             if autopack.verbose > 1:
-                print ("periodicity ", len(translation), tr)
+                print("periodicity ", len(translation), tr)
         return translation
 
     def getPositionPeridocityBroke(self, pt3d, jitter, cutoff):
@@ -593,9 +692,15 @@ class Grid:
             if len(i1) == 2:
                 tr.append(pt3d + corner[0])
             if len(i1) == 3:
-                corner[1] = self.preriodic_table["left"][0] + self.preriodic_table["left"][1]
-                corner[2] = self.preriodic_table["left"][0] + self.preriodic_table["left"][2]
-                corner[3] = self.preriodic_table["left"][1] + self.preriodic_table["left"][2]
+                corner[1] = (
+                    self.preriodic_table["left"][0] + self.preriodic_table["left"][1]
+                )
+                corner[2] = (
+                    self.preriodic_table["left"][0] + self.preriodic_table["left"][2]
+                )
+                corner[3] = (
+                    self.preriodic_table["left"][1] + self.preriodic_table["left"][2]
+                )
                 for i in range(4):
                     if sum(corner[i]) != 0:
                         tr.append(pt3d + corner[i])
@@ -613,9 +718,15 @@ class Grid:
             if len(i2) == 2:
                 tr.append(pt3d + corner[0])
             if len(i2) == 3:
-                corner[1] = self.preriodic_table["right"][0] + self.preriodic_table["right"][1]
-                corner[2] = self.preriodic_table["right"][0] + self.preriodic_table["right"][2]
-                corner[3] = self.preriodic_table["right"][1] + self.preriodic_table["right"][2]
+                corner[1] = (
+                    self.preriodic_table["right"][0] + self.preriodic_table["right"][1]
+                )
+                corner[2] = (
+                    self.preriodic_table["right"][0] + self.preriodic_table["right"][2]
+                )
+                corner[3] = (
+                    self.preriodic_table["right"][1] + self.preriodic_table["right"][2]
+                )
                 for i in range(4):
                     if sum(corner[i]) != 0:
                         tr.append(pt3d + corner[i])
@@ -640,7 +751,7 @@ class Grid:
         if True in test1 or True in test2:
             # outside
             if autopack.verbose > 1:
-                print ("outside", P, bb)
+                print("outside", P, bb)
             return False
         else:
             if dist is not None:
@@ -664,9 +775,9 @@ class Grid:
         Get the center of the grid
         """
         if self.center is None:
-            self.center = [0., 0., 0.]
+            self.center = [0.0, 0.0, 0.0]
             for i in range(3):
-                self.center[i] = (self.boundingBox[0][i] + self.boundingBox[1][i]) / 2.
+                self.center[i] = (self.boundingBox[0][i] + self.boundingBox[1][i]) / 2.0
         return self.center
 
     def getRadius(self):
@@ -681,8 +792,8 @@ class Grid:
         diag = abs(bb[0][0] - bb[1][0]) / 2.0
         if self.tree is None:
             self.tree = spatial.cKDTree(self.masterGridPositions, leafsize=10)
-         # add surface points
-        ptIndices = self.tree.query_ball_point(pt, radius)  #, n_jobs=-1)
+        # add surface points
+        ptIndices = self.tree.query_ball_point(pt, radius)  # , n_jobs=-1)
         # if addSP and self.nbSurfacePoints != 0:
         #     result = numpy.zeros((self.nbSurfacePoints,), 'i')
         #     nb = self.surfPtsBht.closePoints(tuple(pt), radius, result)
@@ -700,9 +811,11 @@ class Grid:
         Return all grid points indices inside the given bouding box.
         NOTE : need to fix with grid build with numpy arrange
         """
-        spacing1 = 1. / self.gridSpacing
+        spacing1 = 1.0 / self.gridSpacing
         NX, NY, NZ = self.nbGridPoints
-        OX, OY, OZ = self.boundingBox[0]  # origin of fill grid-> bottom lef corner not origin
+        OX, OY, OZ = self.boundingBox[
+            0
+        ]  # origin of fill grid-> bottom lef corner not origin
         ox, oy, oz = bb[0]
         ex, ey, ez = bb[1]
 
@@ -747,12 +860,13 @@ class Grid:
         #        print "coordi",ptIndices[0],self.masterGridPositions[ptIndices[0]]
         # add surface points
         if addSP and self.nbSurfacePoints != 0:
-            result = numpy.zeros((self.nbSurfacePoints,), 'i')
+            result = numpy.zeros((self.nbSurfacePoints,), "i")
             nb = self.surfPtsBht.closePoints(tuple(pt), radius, result)
             #            nb = self.surfPtsBht.query(tuple(pt),k=self.nbSurfacePoints)
             dimx, dimy, dimz = self.nbGridPoints
-            ptIndices.extend(list(map(lambda x, length=self.gridVolume: x + length,
-                                      result[:nb])))
+            ptIndices.extend(
+                list(map(lambda x, length=self.gridVolume: x + length, result[:nb]))
+            )
         return ptIndices
 
     def test_points_in_bb(self, bb, pt):
@@ -775,18 +889,22 @@ class Grid:
         """
         # print ("get grid points ", bb, pt, radius)
         # return self.getPointsInCubeFillBB(bb, pt, radius,addSP=addSP,info=info)
-        return self.getPointsInSphere(bb, pt, radius,addSP=addSP,info=info)
-        spacing1 = 1. / (self.gridSpacing) # / 1.1547)
+        return self.getPointsInSphere(bb, pt, radius, addSP=addSP, info=info)
+        spacing1 = 1.0 / (self.gridSpacing)  # / 1.1547)
 
         NX, NY, NZ = self.nbGridPoints
-        OX, OY, OZ = self.boundingBox[0]  # origin of fill grid-> bottom lef corner not origin. can be or
+        OX, OY, OZ = self.boundingBox[
+            0
+        ]  # origin of fill grid-> bottom lef corner not origin. can be or
         ox, oy, oz = bb[0]
         ex, ey, ez = bb[1]
 
         #        i0 = max(0, int((ox-OX)*spacing1)+1)
         # use floor or round ?
         i0 = int(max(0, round((ox - OX) * spacing1)))
-        i1 = int(min(NX, round((ex - OX) * spacing1) + 1))  # +! ? +1 is when the grid doesnt cover everything.
+        i1 = int(
+            min(NX, round((ex - OX) * spacing1) + 1)
+        )  # +! ? +1 is when the grid doesnt cover everything.
         #        j0 = max(0, int((oy-OY)*spacing1)+1)
         j0 = int(max(0, round((oy - OY) * spacing1)))
         j1 = int(min(NY, int((ey - OY) * spacing1) + 1))
@@ -806,15 +924,16 @@ class Grid:
                     ptIndices.append(x + off)
         # add surface points
         if addSP and self.nbSurfacePoints != 0:
-            result = numpy.zeros((self.nbSurfacePoints,), 'i')
+            result = numpy.zeros((self.nbSurfacePoints,), "i")
             nb = self.surfPtsBht.closePoints(tuple(pt), radius, result)
             #            nb = self.surfPtsBht.query(tuple(pt),k=self.nbSurfacePoints)
             dimx, dimy, dimz = self.nbGridPoints
             # divide by 1.1547?
             #            ptIndices.extend(list(map(lambda x, length=(self.gridVolume/1.1547):x+length,
             #                             result[:nb])) )
-            ptIndices.extend(list(map(lambda x, length=self.gridVolume: x + length,
-                                      result[:nb])))
+            ptIndices.extend(
+                list(map(lambda x, length=self.gridVolume: x + length, result[:nb]))
+            )
         return ptIndices
 
     def computeGridNumberOfPoint(self, boundingBox, space):
@@ -829,13 +948,14 @@ class Grid:
         nx = int(ceil((xr - xl) / space)) + encapsulatingGrid
         ny = int(ceil((yr - yl) / space)) + encapsulatingGrid
         nz = int(ceil((zr - zl) / space)) + encapsulatingGrid
-#        nx = nx if (nx == 1) else nx-1
-#        ny = ny if (ny == 1) else ny-1
-#        nz = nz if (nz == 1) else nz-1
+        #        nx = nx if (nx == 1) else nx-1
+        #        ny = ny if (ny == 1) else ny-1
+        #        nz = nz if (nz == 1) else nz-1
         return nx * ny * nz, (nx, ny, nz)
 
     def set_surfPtsBht(self, verts):
         from bhtree import bhtreelib
+
         self.surfPtsBht = None
         if verts != None and len(verts):
             self.surfPtsBht = bhtreelib.BHtree(verts, None, 10)
@@ -843,13 +963,14 @@ class Grid:
 
     def set_surfPtscht(self, verts):
         from scipy import spatial
+
         self.surfPtsBht = None
         if verts != None and len(verts):
             self.surfPtsBht = spatial.cKDTree(verts, leafsize=10)
         self.nbSurfacePoints = len(verts)
 
     def computeExteriorVolume(self, compartments=None, space=None, fbox_bb=None):
-        # compute exterior volume, totaVolume without compartments volume 
+        # compute exterior volume, totaVolume without compartments volume
         unitVol = self.gridSpacing ** 3
         totalVolume = self.gridVolume * unitVol
         if fbox_bb is not None:
@@ -862,7 +983,7 @@ class Grid:
         return totalVolume
 
     def computeVolume(self, space=None, fbox_bb=None):
-        # compute exterior volume, totaVolume without compartments volume 
+        # compute exterior volume, totaVolume without compartments volume
         unitVol = self.gridSpacing ** 3
         totalVolume = self.gridVolume * unitVol
         if fbox_bb is not None:
@@ -874,11 +995,13 @@ class Grid:
         self.rapid_model = RAPIDlib.RAPID_model()
         # need triangle and vertices
         # faces,vertices,vnormals = helper.DecomposeMesh(self.mesh,
-        #                   edit=False,copy=False,tri=True,transform=True) 
-        self.rapid_model.addTriangles(numpy.array(self.vertices, 'f'), numpy.array(self.faces, 'i'))
+        #                   edit=False,copy=False,tri=True,transform=True)
+        self.rapid_model.addTriangles(
+            numpy.array(self.vertices, "f"), numpy.array(self.faces, "i")
+        )
 
     def get_rapid_model(self):
-        if (self.rapid_model is None):
+        if self.rapid_model is None:
             self.create_rapid_model()
         return self.rapid_model
 
@@ -890,16 +1013,31 @@ class Grid:
         direction = helper.unit_vector(pt2 - pt1) * diag
         v2 = v1 + direction
         if sum(v1) == 0.0:
-            v3 = v2 + numpy.array([0., 1., 0.])
+            v3 = v2 + numpy.array([0.0, 1.0, 0.0])
         else:
             v3 = v2 + helper.unit_vector(numpy.cross(v1, v2))
         f = [0, 1, 2]
         ray_model = RAPIDlib.RAPID_model()
-        ray_model.addTriangles(numpy.array([v1, v2, v3], 'f'), numpy.array([f, ], 'i'))
-        RAPIDlib.RAPID_Collide_scaled(numpy.identity(3), numpy.array([0.0, 0.0, 0.0], 'f'),
-                                      1.0, rm, numpy.identity(3),
-                                      numpy.array([0.0, 0.0, 0.0], 'f'), 1.0, ray_model,
-                                      RAPIDlib.cvar.RAPID_ALL_CONTACTS);
+        ray_model.addTriangles(
+            numpy.array([v1, v2, v3], "f"),
+            numpy.array(
+                [
+                    f,
+                ],
+                "i",
+            ),
+        )
+        RAPIDlib.RAPID_Collide_scaled(
+            numpy.identity(3),
+            numpy.array([0.0, 0.0, 0.0], "f"),
+            1.0,
+            rm,
+            numpy.identity(3),
+            numpy.array([0.0, 0.0, 0.0], "f"),
+            1.0,
+            ray_model,
+            RAPIDlib.cvar.RAPID_ALL_CONTACTS,
+        )
         # could display it ?
         # print numpy.array([v1,v2,v3],'f')
         return RAPIDlib.cvar.RAPID_num_contacts
@@ -911,14 +1049,14 @@ class Grid:
         inside = False
         v1 = numpy.array(point)
         self.getCenter()
-        count1 = self.one_rapid_ray(v1, v1 + numpy.array([0., 0.0, 1.1]), diag)
-        r = ((count1 % 2) == 1)  # inside ?
+        count1 = self.one_rapid_ray(v1, v1 + numpy.array([0.0, 0.0, 1.1]), diag)
+        r = (count1 % 2) == 1  # inside ?
         # we need 2 out of 3 ?
         if ray == 3:
             count2 = self.one_rapid_ray(v1, numpy.array(self.center), diag)
             if (count2 % 2) == 1 and r:
                 return True
-            count3 = self.one_rapid_ray(v1, v1 + numpy.array([0.0, 1.1, 0.]), diag)
+            count3 = self.one_rapid_ray(v1, v1 + numpy.array([0.0, 1.1, 0.0]), diag)
             if (count3 % 2) == 1 and r:
                 return True
             return False
@@ -948,14 +1086,17 @@ class Grid:
         # otherwise, regard vertices as surface points.
         #        from bhtree import bhtreelib
         from scipy import spatial
-        self.ogsurfacePoints = vertices[:]  # Makes a copy of the vertices and vnormals lists
+
+        self.ogsurfacePoints = vertices[
+            :
+        ]  # Makes a copy of the vertices and vnormals lists
         surfacePoints = srfPts = self.ogsurfacePoints
 
         # self.OGsrfPtsBht = bht =  bhtreelib.BHtree(tuple(srfPts), None, 10)
         self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)
 
-        res = numpy.zeros(len(srfPts), 'f')
-        dist2 = numpy.zeros(len(srfPts), 'f')
+        res = numpy.zeros(len(srfPts), "f")
+        dist2 = numpy.zeros(len(srfPts), "f")
         number = 1  # Integer when compartment is added to a Environment. Positivefor surface pts. negative for interior points
         insidePoints = []
         grdPos = self.masterGridPositions
@@ -963,7 +1104,7 @@ class Grid:
 
         self.closestId = closest[1]
         new_distances = closest[0]
-        mask = distances[:len(grdPos)] > new_distances
+        mask = distances[: len(grdPos)] > new_distances
         nindices = numpy.nonzero(mask)
         distances[nindices] = new_distances[nindices]
         self.grid_distances = distances
@@ -971,16 +1112,33 @@ class Grid:
         for ptInd in range(len(grdPos)):  # len(grdPos)):
             inside = False  # inside defaults to False (meaning outside), unless evidence is found otherwise.
             # t2=time()
-            coord = [grdPos.item((ptInd, 0)), grdPos.item((ptInd, 1)), grdPos.item((ptInd, 2))]  # grdPos[ptInd]
-            insideBB = self.checkPointInside(coord, dist=new_distances.item(ptInd))  # inside the BB of the surface ?
+            coord = [
+                grdPos.item((ptInd, 0)),
+                grdPos.item((ptInd, 1)),
+                grdPos.item((ptInd, 2)),
+            ]  # grdPos[ptInd]
+            insideBB = self.checkPointInside(
+                coord, dist=new_distances.item(ptInd)
+            )  # inside the BB of the surface ?
             if insideBB:
                 r = self.checkPointInside_rapid(coord, diag, ray=ray)
                 if r:  # odd inside
                     # idarray[ptInd] = -number
-                    insidePoints.append(grdPos[ptInd])  # Append the index to the list of inside indices.
+                    insidePoints.append(
+                        grdPos[ptInd]
+                    )  # Append the index to the list of inside indices.
             p = (ptInd / float(len(grdPos))) * 100.0
             if (ptInd % 100) == 0:
-                print(int(p), str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(inside) + " " + str(insideBB))
+                print(
+                    int(p),
+                    str(ptInd)
+                    + "/"
+                    + str(len(grdPos))
+                    + " inside "
+                    + str(inside)
+                    + " "
+                    + str(insideBB),
+                )
         return insidePoints, surfacePoints
 
         # ==============================================================================
@@ -996,7 +1154,7 @@ class Grid:
 
 # dont forget to use spatial.distance.cdist
 class HaltonGrid(Grid):
-    def __init__(self, boundingBox=([0, 0, 0], [.1, .1, .1]), space=1, setup=False):
+    def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=False):
         Grid.__init__(self, boundingBox=boundingBox, space=space, setup=setup, lookup=1)
         self.haltonseq = cHaltonSequence3()
         self.tree = None
@@ -1024,7 +1182,9 @@ class HaltonGrid(Grid):
         scalexyz = numpy.array(boundingBox[1]) - txyz
         return scalexyz, txyz
 
-    def getNBgridPoints(self, ):
+    def getNBgridPoints(
+        self,
+    ):
         a = numpy.array(self.boundingBox[0])
         b = numpy.array(self.boundingBox[1])
         lx = abs(int((a[0] - b[0]) / self.gridSpacing))
@@ -1038,20 +1198,19 @@ class HaltonGrid(Grid):
         self.haltonseq.reset()
         self.nbGridPoints = self.getNBgridPoints()
         nx, ny, nz = self.nbGridPoints
-        pointArrayRaw = numpy.zeros((nx * ny * nz, 3), 'f')
-        self.ijkPtIndice = numpy.zeros((nx * ny * nz, 3), 'i')
+        pointArrayRaw = numpy.zeros((nx * ny * nz, 3), "f")
+        self.ijkPtIndice = numpy.zeros((nx * ny * nz, 3), "i")
         scalexyz, txyz = self.getScale()
         i = 0
         for zi in range(nz):
             for yi in range(ny):
                 for xi in range(nx):
                     self.haltonseq.inc()
-                    pointArrayRaw[i] = numpy.array([self.haltonseq.mX,
-                                                    self.haltonseq.mY,
-                                                    self.haltonseq.mZ])
+                    pointArrayRaw[i] = numpy.array(
+                        [self.haltonseq.mX, self.haltonseq.mY, self.haltonseq.mZ]
+                    )
                     self.ijkPtIndice[i] = (xi, yi, zi)
                     i += 1
         # scale the value from the halton(0...1) to grid boundin box
         self.masterGridPositions = pointArrayRaw * scalexyz + txyz
         self.tree = spatial.cKDTree(self.masterGridPositions, leafsize=10)
-        
