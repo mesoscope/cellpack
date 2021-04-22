@@ -1,4 +1,4 @@
-## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by 
+## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by
 
 ########################################################################
 #
@@ -35,56 +35,55 @@ from .Geom import Geom
 
 
 class IndexedGeom(Geom):
-    """Geometry specified by a VertexSet and a FaceSet
-"""
+    """Geometry specified by a VertexSet and a FaceSet"""
 
     keywords = Geom.keywords + [
-        'type',
-        'faces',
-        'fnormals',
-        'freshape',
-        ]
-
+        "type",
+        "faces",
+        "fnormals",
+        "freshape",
+    ]
 
     def __init__(self, name=None, check=1, **kw):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
 
-        #self.outlList = GL.glGenLists(1)
+        # self.outlList = GL.glGenLists(1)
         self.numOfHighlightedIndex = 0
 
-        if not kw.get('shape'):
-            kw['shape'] = (0,3)    # default shape for sphere set
+        if not kw.get("shape"):
+            kw["shape"] = (0, 3)  # default shape for sphere set
 
-        self.faceSet = FaceSet( shape= (0,0) )
+        self.faceSet = FaceSet(shape=(0, 0))
         Geom.__init__(*(self, name, check), **kw)
 
         self._modified = False
 
-        
     def getState(self, full=False):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         state = Geom.getState(self, full)
         if full:
-            state['faces'] = self.getFaces()
-            state['fnormals'] = self.getFNormals()
-            
-        return state
+            state["faces"] = self.getFaces()
+            state["fnormals"] = self.getFNormals()
 
+        return state
 
     def getFaces(self):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         """returns a handle to the faces array"""
-        if len(self.faceSet.faces.array)== 0:
+        if len(self.faceSet.faces.array) == 0:
             return []
         return self.faceSet.faces.array
 
-
     def getFNormals(self):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         """returns a handle to the face normals"""
         if self.faceSet.normals.status == viewerConst.NONE:
             self.faceSet.normals.GetProperty()
@@ -93,66 +92,68 @@ class IndexedGeom(Geom):
             return []
         return self.faceSet.normals.array
 
-
     def splitFacesOnHighlightedVertices(self):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
-        #print "splitFacesOnHighlightedVertices", self.name
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
+        # print "splitFacesOnHighlightedVertices", self.name
         if len(self.highlight) > 0:
             lFacesWithHighlightedVertices = []
             lFacesWithoutHighlightedVertices = []
             for face in self.faceSet.faces.array:
-               for lVertexIndex in face:
-                   if self.highlight[lVertexIndex]:
-                       lFacesWithHighlightedVertices.append(face)
-                       break
-               else: # we didn't break
-                   lFacesWithoutHighlightedVertices.append(face)
+                for lVertexIndex in face:
+                    if self.highlight[lVertexIndex]:
+                        lFacesWithHighlightedVertices.append(face)
+                        break
+                else:  # we didn't break
+                    lFacesWithoutHighlightedVertices.append(face)
             lFaces = lFacesWithHighlightedVertices + lFacesWithoutHighlightedVertices
             self.numOfHighlightedIndex = len(lFacesWithHighlightedVertices)
             self.faceSet.faces.SetValues(lFaces)
         else:
             self.numOfHighlightedIndex = 0
 
-
     def removeFacesWithoutHighlightedVertices(self):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         if self.numOfHighlightedIndex > 0:
-            self.Set(faces=self.faceSet.faces.array[:self.numOfHighlightedIndex])
+            self.Set(faces=self.faceSet.faces.array[: self.numOfHighlightedIndex])
 
-#    def removeFacesWithoutHighlightedVertices(self):
-#        if len(self.highlight) > 0:
-#            lFacesWithHighlightedVertices = []
-#            for face in self.faceSet.faces.array:
-#               for lVertexIndex in face:
-#                   if self.highlight[lVertexIndex]:
-#                       lFacesWithHighlightedVertices.append(face)
-#                       break
-#            self.Set(faces=lFacesWithHighlightedVertices)
-
+    #    def removeFacesWithoutHighlightedVertices(self):
+    #        if len(self.highlight) > 0:
+    #            lFacesWithHighlightedVertices = []
+    #            for face in self.faceSet.faces.array:
+    #               for lVertexIndex in face:
+    #                   if self.highlight[lVertexIndex]:
+    #                       lFacesWithHighlightedVertices.append(face)
+    #                       break
+    #            self.Set(faces=lFacesWithHighlightedVertices)
 
     def _FixedLengthFaces(self):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         """sets self.fixedLength to the number of vertices perface if all faces
         have the same number of vertices, else self.fixedLength=0.
         Check if there are negative indices finishing faces lists"""
 
         ind = self.faceSet.faces.array
-        min = Numeric.minimum.reduce( Numeric.minimum.reduce (ind) )
-        if min > -1 and ind.shape[1] < 5: self.fixedLength = ind.shape[1]
-        else: self.fixedLength = False
-
+        min = Numeric.minimum.reduce(Numeric.minimum.reduce(ind))
+        if min > -1 and ind.shape[1] < 5:
+            self.fixedLength = ind.shape[1]
+        else:
+            self.fixedLength = False
 
     def _PrimitiveType(self, type=None):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         """Set the geometric primitives type for indexed geometries
         Type can be: None, GL_LINES, GL_LINE_STRIP, GL_LINE_LOOP
                            GL_TRIANGLES, GL_QUADS, GL_POLYGON, GL_TRIANGLE_FAN
 """
-        #print "IndexedGeom._PrimitiveType", self, type
+        # print "IndexedGeom._PrimitiveType", self, type
         #
         # - GL_POINTS, GL_TRIANGLE_STRIP and GL_QUAD_STRIP are not
         #   considered because they are not indexed geometries
@@ -162,11 +163,12 @@ class IndexedGeom(Geom):
         # - GL_LINE_STRIP, GL_LINE_LOOPS, GL_POLYGON, GL_TRIANGLE_FAN
         #   return per primitive picking info
         #
-        try :
-            assert type in viewerConst.PRIMITIVES+(None,)
-        except :
+        try:
+            assert type in viewerConst.PRIMITIVES + (None,)
+        except:
             pass
-        if len(self.faceSet)==0: return
+        if len(self.faceSet) == 0:
+            return
         self._FixedLengthFaces()
         old = self.primitiveType
 
@@ -174,47 +176,48 @@ class IndexedGeom(Geom):
         # so use the most efficient primitive
         if type is None:
             if not self.pickableVertices:
-                if self.fixedLength==2:
+                if self.fixedLength == 2:
                     self.primitiveType = GL.GL_LINES
-                elif self.fixedLength==3:
+                elif self.fixedLength == 3:
                     self.primitiveType = GL.GL_TRIANGLES
-                elif self.fixedLength==4:
+                elif self.fixedLength == 4:
                     self.primitiveType = GL.GL_QUADS
                 else:
                     self.primitiveType = GL.GL_POLYGON
-                    self.pickableVertices = True # it will pickable
+                    self.pickableVertices = True  # it will pickable
             else:
-                if self.fixedLength==2:
+                if self.fixedLength == 2:
                     # MS DEC 02: we make it a line strip so the display list
                     # build by the *DSPL function will let pick parts
                     self.primitiveType = GL.GL_LINE_STRIP
-                elif self.fixedLength==3:
+                elif self.fixedLength == 3:
                     self.primitiveType = GL.GL_TRIANGLES
-                elif self.fixedLength==4:
+                elif self.fixedLength == 4:
                     self.primitiveType = GL.GL_QUADS
                 else:
                     self.primitiveType = GL.GL_POLYGON
-                
-        else: # type has been provided
+
+        else:  # type has been provided
             if type == GL.GL_LINES:
-                if self.fixedLength==2: 
+                if self.fixedLength == 2:
                     self.primitiveType = GL.GL_LINES
                     self.pickableVertices = False
                 else:
-                    raise AttributeError('Bad faces for GL.GL_LINES')
+                    raise AttributeError("Bad faces for GL.GL_LINES")
 
             elif type == GL.GL_TRIANGLES:
-                if self.fixedLength==3: 
+                if self.fixedLength == 3:
                     self.primitiveType = GL.GL_TRIANGLES
                     self.pickableVertices = False
                 else:
-                    raise AttributeError('Bad faces for GL.GL_TRIANGLES')
+                    raise AttributeError("Bad faces for GL.GL_TRIANGLES")
 
             elif type == GL.GL_QUADS:
-                if self.fixedLength==4:
+                if self.fixedLength == 4:
                     self.primitiveType = GL.GL_QUADS
                     self.pickableVertices = False
-                else: raise AttributeError('Bad faces for GL.GL_QUADS')
+                else:
+                    raise AttributeError("Bad faces for GL.GL_QUADS")
 
             elif type == GL.GL_TRIANGLE_FAN:
                 self.primitiveType = GL.GL_QUADS
@@ -227,120 +230,136 @@ class IndexedGeom(Geom):
         if old != self.primitiveType:
             self.redoDspLst = 1
 
-
     def Add(self, check=1, redo=1, **kw):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         """add faces (polygon or lines) to this object
 """
-        #print "IndexedGeom.Add"
+        # print "IndexedGeom.Add"
 
         if __debug__:
             if check:
-                checkKeywords(*(self.name,self.keywords), **kw)
-            
-        t = kw.get( 'type')
-        f = kw.get( 'faces')
-        fn = kw.get( 'fnormals')
+                checkKeywords(*(self.name, self.keywords), **kw)
+
+        t = kw.get("type")
+        f = kw.get("faces")
+        fn = kw.get("fnormals")
         if f:
             self.redoDspLst = 1
-            self.faceSet.faces.AddValues( f )
+            self.faceSet.faces.AddValues(f)
 
         if fn:
             self.redoDspLst = 1
             self.faceSet.faces.AddValues(fn)
 
-        Geom.Add(self, check=0, redo=0,
-                 vertices = kw.get( 'vertices'),
-                 vnormals = kw.get( 'vnormals'),
-                 materials = kw.get( 'materials'),
-                 polyFace = kw.get( 'polyFace'),
-                 matBind = kw.get( 'matBind'),
-                 propName = kw.get( 'propName') )
+        Geom.Add(
+            self,
+            check=0,
+            redo=0,
+            vertices=kw.get("vertices"),
+            vnormals=kw.get("vnormals"),
+            materials=kw.get("materials"),
+            polyFace=kw.get("polyFace"),
+            matBind=kw.get("matBind"),
+            propName=kw.get("propName"),
+        )
 
         if f:
-            pf = kw.get( 'polyFace')
-            pn = kw.get( 'propName')
-            mbm = kw.get( 'matBind')
+            pf = kw.get("polyFace")
+            pn = kw.get("propName")
+            mbm = kw.get("matBind")
             self._PrimitiveType(t)
             self.MaterialBindingMode(pn, face=pf, mode=mbm)
-            
+
         if f or fn:
-            if self.shading==GL.GL_FLAT:
+            if self.shading == GL.GL_FLAT:
                 self.GetNormals()
 
         if self.viewer and redo:
             if self.redoDspLst:
                 self.viewer.objectsNeedingRedo[self] = None
-#                self.RedoDisplayList()
 
+    #                self.RedoDisplayList()
 
     def Set(self, check=1, redo=1, updateOwnGui=True, **kw):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         """set data for this object: add faces (polygon or lines) to this object
 check=1 : verify that all the keywords present can be handle by this func 
 redo=1 : append self to viewer.objectsNeedingRedo
 updateOwnGui=True : allow to update owngui at the end this func
 """
-        #print "IndexedPolygons.Set"
+        # print "IndexedPolygons.Set"
 
-        #import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
 
         redoFlags = 0
 
         # Exceptionnaly this has to be before the call to Geom.Set
         # because we want to override the treatment of it by Geom.Set
-        invertNormals = kw.get('invertNormals')
+        invertNormals = kw.get("invertNormals")
         if invertNormals is not None:
-            kw.pop('invertNormals')
+            kw.pop("invertNormals")
             if self.invertNormals != invertNormals:
                 self.invertNormals = invertNormals
-                redoFlags |= self._redoFlags['redoDisplayListFlag']
+                redoFlags |= self._redoFlags["redoDisplayListFlag"]
 
-                if hasattr(self, 'vertexArrayFlag') \
-                  and self.vertexArrayFlag is True \
-                  and len(self.vertexSet.normals.array) > 0:
-                   if self.invertNormals:
-                       lnormals = -self.vertexSet.normals.array
-                   else:
-                       lnormals = self.vertexSet.normals.array
-                   if hasattr(DejaVu, 'enableVBO') and DejaVu.enableVBO is True:
-                       from opengltk.extent import _glextlib 
-                       _glextlib.glBindBufferARB(_glextlib.GL_ARRAY_BUFFER_ARB,
-                                              int(self.vertexArrayFlagBufferList[1]))
-                       _glextlib.glBufferDataARB(_glextlib.GL_ARRAY_BUFFER_ARB,
-                             4*len(self.vertexSet.normals.array)*len(self.vertexSet.normals.array[0]),
-                                              lnormals,
-                                              _glextlib.GL_STATIC_DRAW_ARB)
-                       _gllib.glNormalPointer(GL.GL_FLOAT, 0, 0)
-                   elif DejaVu.enableVertexArray is True:
-                       _gllib.glNormalPointer(GL.GL_FLOAT, 0, lnormals)
+                if (
+                    hasattr(self, "vertexArrayFlag")
+                    and self.vertexArrayFlag is True
+                    and len(self.vertexSet.normals.array) > 0
+                ):
+                    if self.invertNormals:
+                        lnormals = -self.vertexSet.normals.array
+                    else:
+                        lnormals = self.vertexSet.normals.array
+                    if hasattr(DejaVu, "enableVBO") and DejaVu.enableVBO is True:
+                        from opengltk.extent import _glextlib
+
+                        _glextlib.glBindBufferARB(
+                            _glextlib.GL_ARRAY_BUFFER_ARB,
+                            int(self.vertexArrayFlagBufferList[1]),
+                        )
+                        _glextlib.glBufferDataARB(
+                            _glextlib.GL_ARRAY_BUFFER_ARB,
+                            4
+                            * len(self.vertexSet.normals.array)
+                            * len(self.vertexSet.normals.array[0]),
+                            lnormals,
+                            _glextlib.GL_STATIC_DRAW_ARB,
+                        )
+                        _gllib.glNormalPointer(GL.GL_FLOAT, 0, 0)
+                    elif DejaVu.enableVertexArray is True:
+                        _gllib.glNormalPointer(GL.GL_FLOAT, 0, lnormals)
 
         # Exceptionnaly this has to be before the call to Geom.Set
         # because we want to complete the treatment of it by Geom.Set
-        highlight = kw.get('highlight', None)
+        highlight = kw.get("highlight", None)
 
         redoFlags |= Geom.Set(*(self, check, 0), **kw)
 
-        if 'faces' in kw:
+        if "faces" in kw:
             self.numOfHighlightedIndex = 0
-            self.faceSet.faces.SetValues( [] )
-            if hasattr(self, 'edges'): del self.edges
-            if hasattr(self, 'faceEdges'): del self.faceEdges
+            self.faceSet.faces.SetValues([])
+            if hasattr(self, "edges"):
+                del self.edges
+            if hasattr(self, "faceEdges"):
+                del self.faceEdges
 
-        t = kw.get( 'type')
-        f = kw.get( 'faces')
-        reshape = kw.get( 'freshape')
-        fn = kw.get( 'fnormals')
+        t = kw.get("type")
+        f = kw.get("faces")
+        reshape = kw.get("freshape")
+        fn = kw.get("fnormals")
 
         if not f is None:
             try:
                 len(f)
             except TypeError:
-                raise TypeError ("faces should be sequences of integers")
+                raise TypeError("faces should be sequences of integers")
 
-            if len(f)==1 and len(f[0])==0:  # handle [[]]
+            if len(f) == 1 and len(f[0]) == 0:  # handle [[]]
                 f = []
 
             ind = Numeric.array(f)
@@ -349,38 +368,40 @@ updateOwnGui=True : allow to update owngui at the end this func
                 if m.size > 1:
                     m = min(m)
                 m = max(0, m)
-                if ( m < 0 ):
-                    raise ValueError ("vertex index %d out of range" % m)
+                if m < 0:
+                    raise ValueError("vertex index %d out of range" % m)
 
                 m = Numeric.maximum.reduce(ind)
                 if m.size > 1:
                     m = max(m)
-                if ( m >= len(self.vertexSet) ):
-                    raise ValueError ("vertex index %d out of range, max %d" %
-                                      (m, len(self.vertexSet)-1) )
+                if m >= len(self.vertexSet):
+                    raise ValueError(
+                        "vertex index %d out of range, max %d"
+                        % (m, len(self.vertexSet) - 1)
+                    )
 
-            redoFlags |= self._redoFlags['redoDisplayListFlag']
-            self.faceSet.faces.SetValues( f, reshape)
-            assert len(self.faceSet.faces.ashape)==2
+            redoFlags |= self._redoFlags["redoDisplayListFlag"]
+            self.faceSet.faces.SetValues(f, reshape)
+            assert len(self.faceSet.faces.ashape) == 2
 
-        if highlight is not None: #len(self.highlight) > 0:
+        if highlight is not None:  # len(self.highlight) > 0:
             # the rest of the treatment was done in Geom.Set
             self.splitFacesOnHighlightedVertices()
 
         if not fn is None:
-            redoFlags |= self._redoFlags['redoDisplayListFlag']
+            redoFlags |= self._redoFlags["redoDisplayListFlag"]
             self.faceSet.normals.SetValues(fn)
 
-        if not f is None or t or kw.get( 'pickableVertices'):
-            pf = kw.get( 'polyFace')
-            pn = kw.get( 'propName')
-            mbm = kw.get( 'matBind')
+        if not f is None or t or kw.get("pickableVertices"):
+            pf = kw.get("polyFace")
+            pn = kw.get("propName")
+            mbm = kw.get("matBind")
             self._PrimitiveType(t)
             self.MaterialBindingMode(pn, face=pf, mode=mbm)
 
         if f is not None or fn is not None:
-            if self.shading==GL.GL_FLAT:
-                redoFlags |= self._redoFlags['redoDisplayListFlag']
+            if self.shading == GL.GL_FLAT:
+                redoFlags |= self._redoFlags["redoDisplayListFlag"]
                 self.faceSet.normals.PropertyStatus(len(self.faceSet))
                 if self.lighting:
                     self.GetNormals()
@@ -389,103 +410,120 @@ updateOwnGui=True : allow to update owngui at the end this func
             if self.lighting:
                 self.GetNormals()
 
-        if (f is not None or highlight is not None) and \
-           hasattr(DejaVu, 'enableVBO') and \
-           DejaVu.enableVBO is True and \
-           self.vertexArrayFlag is True and \
-           hasattr(self, 'faceSet') and \
-           len(self.faceSet.faces.array) > 0:
+        if (
+            (f is not None or highlight is not None)
+            and hasattr(DejaVu, "enableVBO")
+            and DejaVu.enableVBO is True
+            and self.vertexArrayFlag is True
+            and hasattr(self, "faceSet")
+            and len(self.faceSet.faces.array) > 0
+        ):
 
             # faces
-            #print "contiguous", self.faceSet.faces.array.flags.contiguous
-            #if self.faceSet.faces.array.flags.contiguous is False:
+            # print "contiguous", self.faceSet.faces.array.flags.contiguous
+            # if self.faceSet.faces.array.flags.contiguous is False:
             #    self.faceSet.faces.array = numpy.array(self.faceSet.faces.array,copy=1)
             from opengltk.extent import _glextlib
-            _glextlib.glBindBufferARB(_glextlib.GL_ELEMENT_ARRAY_BUFFER,
-                                      int(self.vertexArrayFlagBufferList[2]))
-            _glextlib.glBufferDataARB(_glextlib.GL_ELEMENT_ARRAY_BUFFER,
-                  4*len(self.faceSet.faces.array)*len(self.faceSet.faces.array[0]),
-                            self.faceSet.faces.array, _glextlib.GL_STATIC_DRAW_ARB)
+
+            _glextlib.glBindBufferARB(
+                _glextlib.GL_ELEMENT_ARRAY_BUFFER,
+                int(self.vertexArrayFlagBufferList[2]),
+            )
+            _glextlib.glBufferDataARB(
+                _glextlib.GL_ELEMENT_ARRAY_BUFFER,
+                4 * len(self.faceSet.faces.array) * len(self.faceSet.faces.array[0]),
+                self.faceSet.faces.array,
+                _glextlib.GL_STATIC_DRAW_ARB,
+            )
             _glextlib.glBindBufferARB(_glextlib.GL_ELEMENT_ARRAY_BUFFER, 0)
 
         return self.redoNow(redo, updateOwnGui, redoFlags)
 
-
     def ComputeVertexNormals(self):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         """Compute the vertex normals"""
         v = self.vertexSet.vertices.array
         f = self.faceSet.faces.array
         if len(v) > 2 and len(f) > 1:
-            return TriangleNormals( v, f[:,:3], 'PER_VERTEX')
-        else: return None
-
+            return TriangleNormals(v, f[:, :3], "PER_VERTEX")
+        else:
+            return None
 
     def ComputeFaceNormals(self):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         """Compute the face normals"""
 
         v = self.vertexSet.vertices.array
         f = self.faceSet.faces.array
         if len(v) > 2 and len(f) > 0:
-            return TriangleNormals( v, f[:,:3], 'PER_FACE')
-        else: return None
-
+            return TriangleNormals(v, f[:, :3], "PER_FACE")
+        else:
+            return None
 
     def VertexNormalFunction(self, func=None, args=()):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         """Set the function used to compute vertices normals"""
-        if func is None: return self.vertexSet.normals.Compute
-        assert hasattr(func, '__call__')
-        self.vertexSet.normals.ComputeFunction( func, args )
-
+        if func is None:
+            return self.vertexSet.normals.Compute
+        assert hasattr(func, "__call__")
+        self.vertexSet.normals.ComputeFunction(func, args)
 
     def FaceNormalFunction(self, func=None, args=()):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         """Set the function used to compute faces normal"""
 
-        if func is None: return self.faceSet.normals.Compute
-        assert hasattr(func, '__call__')
-        self.faceSet.normals.ComputeFunction( func, args )
+        if func is None:
+            return self.faceSet.normals.Compute
+        assert hasattr(func, "__call__")
+        self.faceSet.normals.ComputeFunction(func, args)
 
-            
     def DisplayFunction(self):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         """display a set of indexed geometric primitives"""
-        
+
         if self.dpyList:
 
-#            print "DisplayFunction", self.dpyList, self.fullName
+            #            print "DisplayFunction", self.dpyList, self.fullName
 
-            lDrawOutline = (self.getDrawOutlineMode('front'), self.getDrawOutlineMode('back'))
+            lDrawOutline = (
+                self.getDrawOutlineMode("front"),
+                self.getDrawOutlineMode("back"),
+            )
             if (lDrawOutline[0] or lDrawOutline[1]) and self.viewer.hasOffsetExt:
 
                 outl = self.outline
 
-                if   self.GetPolyMode('front') == GL.GL_FILL \
-                  or self.GetPolyMode('back') == GL.GL_FILL:
+                if (
+                    self.GetPolyMode("front") == GL.GL_FILL
+                    or self.GetPolyMode("back") == GL.GL_FILL
+                ):
 
                     mode = GL.GL_POLYGON_OFFSET_FILL
 
                     GL.glEnable(mode)
-                    self.viewer.polyOffset( outl.factor, outl.unit)
+                    self.viewer.polyOffset(outl.factor, outl.unit)
                     Geom.DisplayFunction(self)
                     GL.glDisable(mode)
 
                     GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
                     if not outl.colorAsMaterial:
                         if outl.lighting:
-                            GL.glMaterialfv( GL.GL_FRONT_AND_BACK,
-                                             GL.GL_EMISSION,
-                                             outl.color )
+                            GL.glMaterialfv(
+                                GL.GL_FRONT_AND_BACK, GL.GL_EMISSION, outl.color
+                            )
                         else:
                             GL.glDisable(GL.GL_LIGHTING)
-                            GL.glColor4fv (outl.color)
+                            GL.glColor4fv(outl.color)
 
                     GL.glLineWidth(outl.lineWidth)
 
@@ -499,12 +537,16 @@ updateOwnGui=True : allow to update owngui at the end this func
                         GL.glDisable(GL.GL_CULL_FACE)
 
                     if outl.dpyList:
-                        currentcontext = self.viewer.currentCamera.tk.call(self.viewer.currentCamera._w, 'contexttag')
+                        currentcontext = self.viewer.currentCamera.tk.call(
+                            self.viewer.currentCamera._w, "contexttag"
+                        )
                         if currentcontext != outl.dpyList[1]:
-                            warnings.warn("""DisplayFunction failed because the current context is the wrong one""")
-                            #print "currentcontext != outl.dpyList[1]", currentcontext, outl.dpyList[1]
+                            warnings.warn(
+                                """DisplayFunction failed because the current context is the wrong one"""
+                            )
+                            # print "currentcontext != outl.dpyList[1]", currentcontext, outl.dpyList[1]
                         else:
-                            #print '#%d'%outl.dpyList[0], currentcontext, "glCallList IndexedGeom"
+                            # print '#%d'%outl.dpyList[0], currentcontext, "glCallList IndexedGeom"
                             GL.glCallList(outl.dpyList[0])
 
                     GL.glEnable(GL.GL_CULL_FACE)
@@ -515,22 +557,22 @@ updateOwnGui=True : allow to update owngui at the end this func
             else:
                 Geom.DisplayFunction(self)
 
-
     def Draw(self):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         """ draw geom
 """
-        #print "IndexedGeom.Draw", self.name
-        if self.vertexArrayFlag is True \
-          and DejaVu.enableVertexArray is True:
-            if not (hasattr(self.vertexSet, "texCoords") \
-              and self.vertexSet.texCoords.status >= viewerConst.COMPUTED):
+        # print "IndexedGeom.Draw", self.name
+        if self.vertexArrayFlag is True and DejaVu.enableVertexArray is True:
+            if not (
+                hasattr(self.vertexSet, "texCoords")
+                and self.vertexSet.texCoords.status >= viewerConst.COMPUTED
+            ):
                 return self.drawVertexArray()
 
         if len(self.faceSet) and len(self.vertexSet):
-            if self.materials[GL.GL_FRONT] and \
-                   not self.inheritMaterial:
+            if self.materials[GL.GL_FRONT] and not self.inheritMaterial:
                 mat = self.materials[GL.GL_FRONT]
                 fpProp = []
                 fpBind = []
@@ -544,8 +586,7 @@ updateOwnGui=True : allow to update owngui at the end this func
                 fpProp = None
                 fpBind = None
 
-            if self.materials[GL.GL_BACK] and \
-               not self.inheritMaterial:
+            if self.materials[GL.GL_BACK] and not self.inheritMaterial:
                 mat = self.materials[GL.GL_BACK]
                 bpProp = []
                 bpBind = []
@@ -567,13 +608,14 @@ updateOwnGui=True : allow to update owngui at the end this func
 
             if self.lighting and self.normals is not None:
                 if self.invertNormals:
-                    norms = - self.normals
+                    norms = -self.normals
                 else:
                     norms = self.normals
             else:
                 norms = None
 
             from DejaVu import preventIntelBug_BlackTriangles
+
             if preventIntelBug_BlackTriangles:
                 preventIntelBug = 1
             else:
@@ -590,136 +632,169 @@ updateOwnGui=True : allow to update owngui at the end this func
                 self.faceSet.faces.array,
                 norms,
                 texCoords,
-                fpProp, bpProp, fpBind, bpBind,
-                self.frontAndBack, 1,
+                fpProp,
+                bpProp,
+                fpBind,
+                bpBind,
+                self.frontAndBack,
+                1,
                 lsharpColorBoundaries,
                 preventIntelBug,
                 highlight=self.highlight,
-                )
+            )
 
             if self.disableStencil is True:
                 GL.glEnable(GL.GL_STENCIL_TEST)
 
             return status
 
-
     def drawVertexArray(self):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         """ drawVertexArray
 """
-        #print "drawVertexArray", self.name
-        if hasattr(self, 'faceSet') and len(self.faceSet.faces.array) > 0:
+        # print "drawVertexArray", self.name
+        if hasattr(self, "faceSet") and len(self.faceSet.faces.array) > 0:
             # vertices
             GL.glEnableClientState(GL.GL_VERTEX_ARRAY)
-            
+
             # normals
             if len(self.vertexSet.normals.array) > 0:
                 GL.glEnableClientState(GL.GL_NORMAL_ARRAY)
-        
+
             # colors
-            if hasattr(self, 'colorPointerIsOn') and self.colorPointerIsOn is True:
+            if hasattr(self, "colorPointerIsOn") and self.colorPointerIsOn is True:
                 GL.glEnableClientState(GL.GL_COLOR_ARRAY)
                 from DejaVu import preventIntelBug_WhiteTriangles
+
                 if preventIntelBug_WhiteTriangles:
                     GL.glColorMaterial(GL.GL_FRONT_AND_BACK, GL.GL_DIFFUSE)
                 else:
                     GL.glColorMaterial(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE)
-                GL.glEnable( GL.GL_COLOR_MATERIAL )
-                
+                GL.glEnable(GL.GL_COLOR_MATERIAL)
+
             if DejaVu.enableVBO is True:
                 from opengltk.extent import _glextlib
+
                 # vertices
-                _glextlib.glBindBufferARB(_glextlib.GL_ARRAY_BUFFER_ARB,
-                                 int(self.vertexArrayFlagBufferList[0]))
-                _gllib.glVertexPointer(len(self.vertexSet.vertices.array[0]),
-                                              GL.GL_FLOAT, 0, 0)
+                _glextlib.glBindBufferARB(
+                    _glextlib.GL_ARRAY_BUFFER_ARB,
+                    int(self.vertexArrayFlagBufferList[0]),
+                )
+                _gllib.glVertexPointer(
+                    len(self.vertexSet.vertices.array[0]), GL.GL_FLOAT, 0, 0
+                )
                 # normals
                 if len(self.vertexSet.normals.array) > 0:
-                    _glextlib.glBindBufferARB(_glextlib.GL_ARRAY_BUFFER_ARB,
-                                              int(self.vertexArrayFlagBufferList[1]))
+                    _glextlib.glBindBufferARB(
+                        _glextlib.GL_ARRAY_BUFFER_ARB,
+                        int(self.vertexArrayFlagBufferList[1]),
+                    )
                     _gllib.glNormalPointer(GL.GL_FLOAT, 0, 0)
                 # colors
-                if hasattr(self, 'colorPointerIsOn') and self.colorPointerIsOn is True:
-                    _glextlib.glBindBufferARB(_glextlib.GL_ARRAY_BUFFER_ARB,
-                                              int(self.vertexArrayFlagBufferList[3]))
+                if hasattr(self, "colorPointerIsOn") and self.colorPointerIsOn is True:
+                    _glextlib.glBindBufferARB(
+                        _glextlib.GL_ARRAY_BUFFER_ARB,
+                        int(self.vertexArrayFlagBufferList[3]),
+                    )
                     _gllib.glColorPointer(4, GL.GL_FLOAT, 0, 0)
             else:
                 # vertices
-                _gllib.glVertexPointer(len(self.vertexSet.vertices.array[0]),
-                                   GL.GL_FLOAT, 0, self.vertexSet.vertices.array)
+                _gllib.glVertexPointer(
+                    len(self.vertexSet.vertices.array[0]),
+                    GL.GL_FLOAT,
+                    0,
+                    self.vertexSet.vertices.array,
+                )
                 # normals
                 if len(self.vertexSet.normals.array) > 0:
                     _gllib.glNormalPointer(GL.GL_FLOAT, 0, self.vertexSet.normals.array)
                 # colors
-                if hasattr(self, 'colorPointerIsOn') and self.colorPointerIsOn is True:
+                if hasattr(self, "colorPointerIsOn") and self.colorPointerIsOn is True:
                     _gllib.glColorPointer(4, GL.GL_FLOAT, 0, self.colorArray)
 
             # Draw faces
             if self.primitiveType == GL.GL_LINE_STRIP:
                 lPrimitiveType = GL.GL_LINES
             elif self.primitiveType == GL.GL_TRIANGLES:
-                #print "triangles' length:", len(self.faceSet.faces.array[0])
+                # print "triangles' length:", len(self.faceSet.faces.array[0])
                 lPrimitiveType = GL.GL_TRIANGLES
             elif self.primitiveType == GL.GL_QUADS:
-                #print "quads' length:", len(self.faceSet.faces.array[0])
+                # print "quads' length:", len(self.faceSet.faces.array[0])
                 lPrimitiveType = GL.GL_QUADS
             else:
-                #print "what's that ?" , self.primitiveType
+                # print "what's that ?" , self.primitiveType
                 lPrimitiveType = self.primitiveType
 
-            lNumOfNonHighlightedIndices = len(self.faceSet.faces.array) - self.numOfHighlightedIndex
+            lNumOfNonHighlightedIndices = (
+                len(self.faceSet.faces.array) - self.numOfHighlightedIndex
+            )
             if DejaVu.enableVBO is True:
-                _glextlib.glBindBufferARB(_glextlib.GL_ELEMENT_ARRAY_BUFFER, 
-                                      int(self.vertexArrayFlagBufferList[2])) #this protect from unexplained segfault
+                _glextlib.glBindBufferARB(
+                    _glextlib.GL_ELEMENT_ARRAY_BUFFER,
+                    int(self.vertexArrayFlagBufferList[2]),
+                )  # this protect from unexplained segfault
                 if self.disableStencil is False and self.numOfHighlightedIndex > 0:
                     # highlighted
                     GL.glStencilFunc(GL.GL_ALWAYS, 1, 1)
-                    _gllib.glDrawElements(lPrimitiveType,
-                                  self.numOfHighlightedIndex*len(self.faceSet.faces.array[0]),
-                                  GL.GL_UNSIGNED_INT,
-                                  0 
-                                 )
+                    _gllib.glDrawElements(
+                        lPrimitiveType,
+                        self.numOfHighlightedIndex * len(self.faceSet.faces.array[0]),
+                        GL.GL_UNSIGNED_INT,
+                        0,
+                    )
                     GL.glStencilFunc(GL.GL_ALWAYS, 0, 1)
 
                     # non highlighted
-                    _gllib.glDrawElements(lPrimitiveType,
-                                  lNumOfNonHighlightedIndices * len(self.faceSet.faces.array[0]),
-                                  GL.GL_UNSIGNED_INT,
-                                  self.numOfHighlightedIndex * len(self.faceSet.faces.array[0]) * 4
-                                 )
+                    _gllib.glDrawElements(
+                        lPrimitiveType,
+                        lNumOfNonHighlightedIndices * len(self.faceSet.faces.array[0]),
+                        GL.GL_UNSIGNED_INT,
+                        self.numOfHighlightedIndex
+                        * len(self.faceSet.faces.array[0])
+                        * 4,
+                    )
                 else:
-                    _gllib.glDrawElements(lPrimitiveType,
-                                  len(self.faceSet.faces.array)*len(self.faceSet.faces.array[0]),
-                                  GL.GL_UNSIGNED_INT,
-                                  0 
-                                 )
-                _glextlib.glBindBufferARB(_glextlib.GL_ELEMENT_ARRAY_BUFFER, 0 ) #this protect from unexplained segfault
+                    _gllib.glDrawElements(
+                        lPrimitiveType,
+                        len(self.faceSet.faces.array)
+                        * len(self.faceSet.faces.array[0]),
+                        GL.GL_UNSIGNED_INT,
+                        0,
+                    )
+                _glextlib.glBindBufferARB(
+                    _glextlib.GL_ELEMENT_ARRAY_BUFFER, 0
+                )  # this protect from unexplained segfault
             else:
                 if self.disableStencil is False and self.numOfHighlightedIndex > 0:
                     # highlighted
                     GL.glStencilFunc(GL.GL_ALWAYS, 1, 1)
-                    _gllib.glDrawElements(lPrimitiveType,
-                                  self.numOfHighlightedIndex*len(self.faceSet.faces.array[0]),
-                                  GL.GL_UNSIGNED_INT,
-                                  self.faceSet.faces.array 
-                                 )
+                    _gllib.glDrawElements(
+                        lPrimitiveType,
+                        self.numOfHighlightedIndex * len(self.faceSet.faces.array[0]),
+                        GL.GL_UNSIGNED_INT,
+                        self.faceSet.faces.array,
+                    )
                     GL.glStencilFunc(GL.GL_ALWAYS, 0, 1)
 
                     # non highlighted
-                    _gllib.glDrawElements(lPrimitiveType,
-                                  lNumOfNonHighlightedIndices * len(self.faceSet.faces.array[0]),
-                                  GL.GL_UNSIGNED_INT,
-                                  self.faceSet.faces.array[self.numOfHighlightedIndex: ]
-                                 )
+                    _gllib.glDrawElements(
+                        lPrimitiveType,
+                        lNumOfNonHighlightedIndices * len(self.faceSet.faces.array[0]),
+                        GL.GL_UNSIGNED_INT,
+                        self.faceSet.faces.array[self.numOfHighlightedIndex :],
+                    )
                 else:
-                    _gllib.glDrawElements(lPrimitiveType,
-                                  len(self.faceSet.faces.array)*len(self.faceSet.faces.array[0]),
-                                  GL.GL_UNSIGNED_INT,
-                                  self.faceSet.faces.array
-                                 )
-            if hasattr(self, 'colorPointerIsOn') and self.colorPointerIsOn is True:
-                GL.glDisable( GL.GL_COLOR_MATERIAL )
+                    _gllib.glDrawElements(
+                        lPrimitiveType,
+                        len(self.faceSet.faces.array)
+                        * len(self.faceSet.faces.array[0]),
+                        GL.GL_UNSIGNED_INT,
+                        self.faceSet.faces.array,
+                    )
+            if hasattr(self, "colorPointerIsOn") and self.colorPointerIsOn is True:
+                GL.glDisable(GL.GL_COLOR_MATERIAL)
                 GL.glDisableClientState(GL.GL_COLOR_ARRAY)
             if len(self.vertexSet.normals.array) > 0:
                 GL.glDisableClientState(GL.GL_NORMAL_ARRAY)
@@ -727,26 +802,30 @@ updateOwnGui=True : allow to update owngui at the end this func
 
         return 1
 
-
     def RedoDisplayList(self):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
-            #print "IndexedGeom.RedoDisplayList", self.name
-##          if __debug__:
-##              print 'IndexedGeom RedoDisplayList for', self.fullName
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
+            # print "IndexedGeom.RedoDisplayList", self.name
+        ##          if __debug__:
+        ##              print 'IndexedGeom RedoDisplayList for', self.fullName
 
         Geom.RedoDisplayList(self)
 
-        if len(self.faceSet) and len(self.vertexSet) \
-          and (   self.primitiveType == GL.GL_TRIANGLES \
-               or self.primitiveType == GL.GL_QUADS \
-               or self.primitiveType == GL.GL_POLYGON):
+        if (
+            len(self.faceSet)
+            and len(self.vertexSet)
+            and (
+                self.primitiveType == GL.GL_TRIANGLES
+                or self.primitiveType == GL.GL_QUADS
+                or self.primitiveType == GL.GL_POLYGON
+            )
+        ):
 
             # we always build this, that way we don't have to built on demand
             outl = self.outline
             if outl.colorAsMaterial:
-                if self.materials[GL.GL_FRONT] and \
-                       not self.inheritMaterial:
+                if self.materials[GL.GL_FRONT] and not self.inheritMaterial:
                     mat = self.materials[GL.GL_FRONT]
                     fpProp = []
                     fpBind = []
@@ -760,8 +839,7 @@ updateOwnGui=True : allow to update owngui at the end this func
                     fpProp = None
                     fpBind = None
 
-                if self.materials[GL.GL_BACK] and \
-                   not self.inheritMaterial:
+                if self.materials[GL.GL_BACK] and not self.inheritMaterial:
                     mat = self.materials[GL.GL_BACK]
                     bpProp = []
                     bpBind = []
@@ -793,53 +871,62 @@ updateOwnGui=True : allow to update owngui at the end this func
             # calling with too many arguments segaults too
             # just add  None, None, None, None, after the line with colors
 
-            if hasattr(outl, 'dpyList') and outl.dpyList is not None:
+            if hasattr(outl, "dpyList") and outl.dpyList is not None:
                 lNewList = outl.dpyList[0]
             else:
                 lNewList = GL.glGenLists(1)
                 self.viewer.deleteOpenglList()
 
-            #print "lNewList IndexedGeom.RedoDisplayList", lNewList, self.name
-            lCurrentContext = self.viewer.currentCamera.tk.call(self.viewer.currentCamera._w, 'contexttag')
-            outl.dpyList = ( lNewList, lCurrentContext)
-                             
+            # print "lNewList IndexedGeom.RedoDisplayList", lNewList, self.name
+            lCurrentContext = self.viewer.currentCamera.tk.call(
+                self.viewer.currentCamera._w, "contexttag"
+            )
+            outl.dpyList = (lNewList, lCurrentContext)
+
             GL.glNewList(outl.dpyList[0], GL.GL_COMPILE)
-            #print '+%d'%outl.dpyList[0], lCurrentContext, "glNewList IndexedGeom"
-            status=glDrawIndexedGeom(
+            # print '+%d'%outl.dpyList[0], lCurrentContext, "glNewList IndexedGeom"
+            status = glDrawIndexedGeom(
                 GL.GL_TRIANGLES,
                 self.vertexSet.vertices.array,
                 self.faceSet.faces.array,
                 norms,
                 texCoords,
-                fpProp, bpProp, fpBind, bpBind,
+                fpProp,
+                bpProp,
+                fpBind,
+                bpBind,
                 self.frontAndBack,
-                1)  # 1 means use diffuse component if no lighting
-            #print '*%d'%GL.glGetIntegerv(GL.GL_LIST_INDEX), "glEndList IndexedGeom"
+                1,
+            )  # 1 means use diffuse component if no lighting
+            # print '*%d'%GL.glGetIntegerv(GL.GL_LIST_INDEX), "glEndList IndexedGeom"
             GL.glEndList()
             if not status:
-                #print '-%d'%outl.dpyList[0], "glDeleteLists IndexedGeom"
+                # print '-%d'%outl.dpyList[0], "glDeleteLists IndexedGeom"
                 GL.glDeleteLists(outl.dpyList[0], 1)
                 outl.dpyList = None
 
-
     def _setTransparent(self, val):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
-        #print "IndexedGeom._setTransparent", self.name, val
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
+        # print "IndexedGeom._setTransparent", self.name, val
         t1 = self.materials[GL.GL_FRONT].fixOpacity()
         t2 = self.materials[GL.GL_BACK].fixOpacity()
-        lDetectedTransparency =  t1 or t2
+        lDetectedTransparency = t1 or t2
 
-        if val == 'implicit':
-            val = lDetectedTransparency \
-                   or ( (self.getDrawOutlineMode('front') is True or \
-                         self.getDrawOutlineMode('back') is True)
-                        and self.outline.color[3]<1.0)
+        if val == "implicit":
+            val = lDetectedTransparency or (
+                (
+                    self.getDrawOutlineMode("front") is True
+                    or self.getDrawOutlineMode("back") is True
+                )
+                and self.outline.color[3] < 1.0
+            )
         if val is True:
             val = 1
         elif val is False:
             val = 0
-        assert val in [0,1], "only 0 or 1 are possible"
+        assert val in [0, 1], "only 0 or 1 are possible"
         self.transparent = val
 
         if self.viewer:
@@ -851,8 +938,10 @@ updateOwnGui=True : allow to update owngui at the end this func
                     if self.sortPoly_cb in c.onButtonUpCBlist:
                         c.delButtonUpCB(self.sortPoly_cb)
 
-        return self._redoFlags['redoDisplayListFlag'] | self._redoFlags['redoViewerDisplayListFlag'] # if container we force rebuilding main dpyList
-
+        return (
+            self._redoFlags["redoDisplayListFlag"]
+            | self._redoFlags["redoViewerDisplayListFlag"]
+        )  # if container we force rebuilding main dpyList
 
     def buildEdgeList(self):
         """
@@ -864,64 +953,63 @@ updateOwnGui=True : allow to update owngui at the end this func
         en = 0
         faces = self.getFaces()
         for f in faces:
-            s1,s2,s3 = f
-            if s1<s2:
-                edges.append( (s1,s2) )
-                edgeKey['%d,%d'%(s1,s2)] = en
+            s1, s2, s3 = f
+            if s1 < s2:
+                edges.append((s1, s2))
+                edgeKey["%d,%d" % (s1, s2)] = en
                 en += 1
-            if s2<s3:
-                edges.append( (s2,s3) )
-                edgeKey['%d,%d'%(s2,s3)] = en
+            if s2 < s3:
+                edges.append((s2, s3))
+                edgeKey["%d,%d" % (s2, s3)] = en
                 en += 1
-            if s3<s1:
-                edges.append( (s3,s1) )
-                edgeKey['%d,%d'%(s3,s1)] = en
+            if s3 < s1:
+                edges.append((s3, s1))
+                edgeKey["%d,%d" % (s3, s1)] = en
                 en += 1
 
         faceEdges = [[] for x in faces]
         for fn, f in enumerate(faces):
-            s1,s2,s3 = f
-            key = '%d,%d'%(s1,s2)
+            s1, s2, s3 = f
+            key = "%d,%d" % (s1, s2)
             if key in edgeKey:
                 faceEdges[fn].append(edgeKey[key])
             else:
-                key = '%d,%d'%(s2,s1)
+                key = "%d,%d" % (s2, s1)
                 faceEdges[fn].append(edgeKey[key])
 
-            key = '%d,%d'%(s2,s3)
+            key = "%d,%d" % (s2, s3)
             if key in edgeKey:
                 faceEdges[fn].append(edgeKey[key])
             else:
-                key = '%d,%d'%(s3,s2)
+                key = "%d,%d" % (s3, s2)
                 faceEdges[fn].append(edgeKey[key])
 
-            key = '%d,%d'%(s3,s1)
+            key = "%d,%d" % (s3, s1)
             if key in edgeKey:
                 faceEdges[fn].append(edgeKey[key])
             else:
-                key = '%d,%d'%(s1,s3)
+                key = "%d,%d" % (s1, s3)
                 faceEdges[fn].append(edgeKey[key])
 
         return edges, faceEdges
 
-
     def getEdges(self):
-        if not hasattr(self, 'edges') or not hasattr(self, 'faceEdges'):
-           edges, faceEdges = self.buildEdgeList()
-           self.edges = edges
-           self.faceEdges = faceEdges
+        if not hasattr(self, "edges") or not hasattr(self, "faceEdges"):
+            edges, faceEdges = self.buildEdgeList()
+            self.edges = edges
+            self.faceEdges = faceEdges
 
         return self.edges, self.faceEdges
 
-    
     def removeDuplicatedVertices(self):
         if __debug__:
-         if hasattr(DejaVu, 'functionName'): DejaVu.functionName()
+            if hasattr(DejaVu, "functionName"):
+                DejaVu.functionName()
         """find duplicated vertices and remove them, re-index face list"""
         # hash vertices
         d = {}
         for vert in self.vertexSet.vertices.array:
-            d['%f,%f,%f'%tuple(vert)] = []
+            d["%f,%f,%f" % tuple(vert)] = []
 
         # build list of unique vertices and lookup table
         lookup = {}
@@ -939,7 +1027,7 @@ updateOwnGui=True : allow to update owngui at the end this func
         for face in self.faceSet.faces.array:
             nf = []
             for vind in face:
-                nf.append(lookup['%f,%f,%f'%tuple(v[vind])])
+                nf.append(lookup["%f,%f,%f" % tuple(v[vind])])
             nflist.append(nf)
 
         return nv, nflist
@@ -961,12 +1049,12 @@ updateOwnGui=True : allow to update owngui at the end this func
 #                 or ( fpBind [ 3 ] == PER_VERTEX ) \
 #                 or ( fpBind [ 4 ] == PER_VERTEX ) \
 #                 or (    ( not self.frontAndBack )
-#                     and ( backMatBind ) 
+#                     and ( backMatBind )
 #                     and (   ( backMatBind [ 0 ] == PER_VERTEX )
 #                          or ( backMatBind [ 1 ] == PER_VERTEX )
 #                          or ( backMatBind [ 2 ] == PER_VERTEX )
 #                          or ( backMatBind [ 3 ] == PER_VERTEX )
-#                          or ( backMatBind [ 4 ] == PER_VERTEX ) 
+#                          or ( backMatBind [ 4 ] == PER_VERTEX )
 #                         )
 #                    )
 #                )
@@ -975,15 +1063,14 @@ updateOwnGui=True : allow to update owngui at the end this func
 #
 #        if self.normals:
 #  {
-#                if (lennorm[0] == lencoord) 
+#                if (lennorm[0] == lencoord)
 #                        normBinding = PER_VERTEX;
-#    else if (lennorm[0] == lenind[0]) 
+#    else if (lennorm[0] == lenind[0])
 #                        normBinding = PER_PART;
-#    else if (lennorm[0] == 1) 
+#    else if (lennorm[0] == 1)
 #            normBinding = OVERALL;
 #    else normBinding = NONE;
 #  }
 #  else normBinding = NONE;
 #
 #
-

@@ -4,10 +4,10 @@
 
 """GL module
 """
-try :
+try:
     from opengltk.extent._gllib import *
     from opengltk.wrapper.gl_wrapper import *
-except :
+except:
     GL_FRONT = None
     GL_ZERO = None
     GL_ONE = None
@@ -29,9 +29,9 @@ except :
     GL_LIGHT6 = None
     GL_LIGHT7 = None
     GL_BACK = None
-    GL_FILL=None
-    GL_FLAT=None
-    GL_NONE=None
+    GL_FILL = None
+    GL_FLAT = None
+    GL_NONE = None
     GL_SMOOTH = None
     GL_FRONT_AND_BACK = None
     GL_POINT = None
@@ -39,6 +39,5 @@ except :
     GL_LINE_STRIP = None
     GL_LINE = None
     GL_LINES = None
-    GL_QUADS= None
+    GL_QUADS = None
     GL_POLYGON = None
-    

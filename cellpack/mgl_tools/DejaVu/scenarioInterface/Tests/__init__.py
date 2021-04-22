@@ -1,4 +1,2 @@
 #
-ignore = {
-          'test_actor' : []
-     }
+ignore = {"test_actor": []}

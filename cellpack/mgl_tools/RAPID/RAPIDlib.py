@@ -5,24 +5,30 @@
 # the SWIG interface file instead.
 
 
-
 from sys import version_info
-if version_info >= (2,6,0):
+
+if version_info >= (2, 6, 0):
+
     def swig_import_helper():
         from os.path import dirname
         import imp
+
         fp = None
         try:
-            fp, pathname, description = imp.find_module('_RAPIDlib', [dirname(__file__)])
+            fp, pathname, description = imp.find_module(
+                "_RAPIDlib", [dirname(__file__)]
+            )
         except ImportError:
             import _RAPIDlib
+
             return _RAPIDlib
         if fp is not None:
             try:
-                _mod = imp.load_module('_RAPIDlib', fp, pathname, description)
+                _mod = imp.load_module("_RAPIDlib", fp, pathname, description)
             finally:
                 fp.close()
             return _mod
+
     _RAPIDlib = swig_import_helper()
     del swig_import_helper
 else:
@@ -31,58 +37,93 @@ del version_info
 try:
     _swig_property = property
 except NameError:
-    pass # Python < 2.2 doesn't have 'property'.
-def _swig_setattr_nondynamic(self,class_type,name,value,static=1):
-    if (name == "thisown"): return self.this.own(value)
-    if (name == "this"):
-        if type(value).__name__ == 'SwigPyObject':
+    pass  # Python < 2.2 doesn't have 'property'.
+
+
+def _swig_setattr_nondynamic(self, class_type, name, value, static=1):
+    if name == "thisown":
+        return self.this.own(value)
+    if name == "this":
+        if type(value).__name__ == "SwigPyObject":
             self.__dict__[name] = value
             return
-    method = class_type.__swig_setmethods__.get(name,None)
-    if method: return method(self,value)
-    if (not static):
+    method = class_type.__swig_setmethods__.get(name, None)
+    if method:
+        return method(self, value)
+    if not static:
         self.__dict__[name] = value
     else:
         raise AttributeError("You cannot add attributes to %s" % self)
 
-def _swig_setattr(self,class_type,name,value):
-    return _swig_setattr_nondynamic(self,class_type,name,value,0)
 
-def _swig_getattr(self,class_type,name):
-    if (name == "thisown"): return self.this.own()
-    method = class_type.__swig_getmethods__.get(name,None)
-    if method: return method(self)
+def _swig_setattr(self, class_type, name, value):
+    return _swig_setattr_nondynamic(self, class_type, name, value, 0)
+
+
+def _swig_getattr(self, class_type, name):
+    if name == "thisown":
+        return self.this.own()
+    method = class_type.__swig_getmethods__.get(name, None)
+    if method:
+        return method(self)
     raise AttributeError(name)
 
+
 def _swig_repr(self):
-    try: strthis = "proxy of " + self.this.__repr__()
-    except: strthis = ""
-    return "<%s.%s; %s >" % (self.__class__.__module__, self.__class__.__name__, strthis,)
+    try:
+        strthis = "proxy of " + self.this.__repr__()
+    except:
+        strthis = ""
+    return "<%s.%s; %s >" % (
+        self.__class__.__module__,
+        self.__class__.__name__,
+        strthis,
+    )
+
 
 try:
     _object = object
     _newclass = 1
 except AttributeError:
-    class _object : pass
+
+    class _object:
+        pass
+
     _newclass = 0
 
 
 class RAPID_model(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, RAPID_model, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(
+        self, RAPID_model, name, value
+    )
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, RAPID_model, name)
     __repr__ = _swig_repr
-    def __init__(self): 
+
+    def __init__(self):
         this = _RAPIDlib.new_RAPID_model()
-        try: self.this.append(this)
-        except: self.this = this
+        try:
+            self.this.append(this)
+        except:
+            self.this = this
+
     __swig_destroy__ = _RAPIDlib.delete_RAPID_model
-    __del__ = lambda self : None;
-    def BeginModel(self): return _RAPIDlib.RAPID_model_BeginModel(self)
-    def AddTri(self, *args): return _RAPIDlib.RAPID_model_AddTri(self, *args)
-    def EndModel(self): return _RAPIDlib.RAPID_model_EndModel(self)
-    def addTriangles(self, *args): return _RAPIDlib.RAPID_model_addTriangles(self, *args)
+    __del__ = lambda self: None
+
+    def BeginModel(self):
+        return _RAPIDlib.RAPID_model_BeginModel(self)
+
+    def AddTri(self, *args):
+        return _RAPIDlib.RAPID_model_AddTri(self, *args)
+
+    def EndModel(self):
+        return _RAPIDlib.RAPID_model_EndModel(self)
+
+    def addTriangles(self, *args):
+        return _RAPIDlib.RAPID_model_addTriangles(self, *args)
+
+
 RAPID_model_swigregister = _RAPIDlib.RAPID_model_swigregister
 RAPID_model_swigregister(RAPID_model)
 cvar = _RAPIDlib.cvar
@@ -95,26 +136,44 @@ RAPID_ERR_BUILD_EMPTY_MODEL = cvar.RAPID_ERR_BUILD_EMPTY_MODEL
 
 
 def RAPID_Collide_scaled(*args):
-  return _RAPIDlib.RAPID_Collide_scaled(*args)
+    return _RAPIDlib.RAPID_Collide_scaled(*args)
+
+
 RAPID_Collide_scaled = _RAPIDlib.RAPID_Collide_scaled
+
+
 class collision_pair(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, collision_pair, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(
+        self, collision_pair, name, value
+    )
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, collision_pair, name)
     __repr__ = _swig_repr
     __swig_setmethods__["id1"] = _RAPIDlib.collision_pair_id1_set
     __swig_getmethods__["id1"] = _RAPIDlib.collision_pair_id1_get
-    if _newclass:id1 = _swig_property(_RAPIDlib.collision_pair_id1_get, _RAPIDlib.collision_pair_id1_set)
+    if _newclass:
+        id1 = _swig_property(
+            _RAPIDlib.collision_pair_id1_get, _RAPIDlib.collision_pair_id1_set
+        )
     __swig_setmethods__["id2"] = _RAPIDlib.collision_pair_id2_set
     __swig_getmethods__["id2"] = _RAPIDlib.collision_pair_id2_get
-    if _newclass:id2 = _swig_property(_RAPIDlib.collision_pair_id2_get, _RAPIDlib.collision_pair_id2_set)
-    def __init__(self): 
+    if _newclass:
+        id2 = _swig_property(
+            _RAPIDlib.collision_pair_id2_get, _RAPIDlib.collision_pair_id2_set
+        )
+
+    def __init__(self):
         this = _RAPIDlib.new_collision_pair()
-        try: self.this.append(this)
-        except: self.this = this
+        try:
+            self.this.append(this)
+        except:
+            self.this = this
+
     __swig_destroy__ = _RAPIDlib.delete_collision_pair
-    __del__ = lambda self : None;
+    __del__ = lambda self: None
+
+
 collision_pair_swigregister = _RAPIDlib.collision_pair_swigregister
 collision_pair_swigregister(collision_pair)
 RAPID_ALL_CONTACTS = cvar.RAPID_ALL_CONTACTS
@@ -122,9 +181,10 @@ RAPID_FIRST_CONTACT = cvar.RAPID_FIRST_CONTACT
 
 
 def RAPID_Get_Pair(*args):
-  return _RAPIDlib.RAPID_Get_Pair(*args)
+    return _RAPIDlib.RAPID_Get_Pair(*args)
+
+
 RAPID_Get_Pair = _RAPIDlib.RAPID_Get_Pair
 # This file is compatible with both classic and new-style classes.
 
 RAPID_Get_All_Pairs = _RAPIDlib.RAPID_Get_All_Pairs
-

@@ -1,4 +1,3 @@
-
 """
     Copyright (C) <2010>  Autin L. TSRI
     
@@ -27,10 +26,12 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 import hou
 
+
 class IntegratedEventLoop(object):
     """This class behaves like QEventLoop except it allows PyQt to run inside
-       Houdini's event loop on the main thread.  You probably just want to
-       call exec_() below instead of using this class directly."""
+    Houdini's event loop on the main thread.  You probably just want to
+    call exec_() below instead of using this class directly."""
+
     def __init__(self, application, dialogs):
         # We need the application to send posted events.  We hold a reference
         # to any dialogs to ensure that they don't get garbage collected
@@ -56,12 +57,13 @@ class IntegratedEventLoop(object):
         self.event_loop.processEvents()
         self.application.sendPostedEvents(None, 0)
 
+
 def exec_(application, *args):
     """You cannot call QApplication.exec_, or Houdini will freeze while PyQt
-       waits for and processes events.  Instead, call this function to allow
-       Houdini's and PyQt's event loops to coexist.  Pass in any dialogs as
-       extra arguments, if you want to ensure that something holds a reference
-       to them while the event loop runs.
+    waits for and processes events.  Instead, call this function to allow
+    Houdini's and PyQt's event loops to coexist.  Pass in any dialogs as
+    extra arguments, if you want to ensure that something holds a reference
+    to them while the event loop runs.
 
-       This function returns right away."""
+    This function returns right away."""
     IntegratedEventLoop(application, args).exec_()

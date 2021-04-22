@@ -1,2 +1,3 @@
-ignore = {'test_tester':[], #'test_dependencytester':[]
-         }
+ignore = {
+    "test_tester": [],  #'test_dependencytester':[]
+}

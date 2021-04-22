@@ -4,51 +4,72 @@
 # Don't modify this file, modify the SWIG interface instead.
 # This file is compatible with both classic and new-style classes.
 uLib = False
-try :
+try:
     import _utillib
+
     uLib = True
-except :
+except:
     uLib = False
-#import new
-#new_instancemethod = new.instancemethod
+# import new
+# new_instancemethod = new.instancemethod
 
 try:
     _swig_property = property
 except NameError:
-    pass # Python < 2.2 doesn't have 'property'.
-def _swig_setattr_nondynamic(self,class_type,name,value,static=1):
-    if (name == "thisown"): return self.this.own(value)
-    if (name == "this"):
-        if type(value).__name__ == 'PySwigObject':
+    pass  # Python < 2.2 doesn't have 'property'.
+
+
+def _swig_setattr_nondynamic(self, class_type, name, value, static=1):
+    if name == "thisown":
+        return self.this.own(value)
+    if name == "this":
+        if type(value).__name__ == "PySwigObject":
             self.__dict__[name] = value
             return
-    method = class_type.__swig_setmethods__.get(name,None)
-    if method: return method(self,value)
-    if (not static) or hasattr(self,name):
+    method = class_type.__swig_setmethods__.get(name, None)
+    if method:
+        return method(self, value)
+    if (not static) or hasattr(self, name):
         self.__dict__[name] = value
     else:
         raise AttributeError("You cannot add attributes to %s" % self)
 
-def _swig_setattr(self,class_type,name,value):
-    return _swig_setattr_nondynamic(self,class_type,name,value,0)
 
-def _swig_getattr(self,class_type,name):
-    if (name == "thisown"): return self.this.own()
-    method = class_type.__swig_getmethods__.get(name,None)
-    if method: return method(self)
-    raise (AttributeError,name)
+def _swig_setattr(self, class_type, name, value):
+    return _swig_setattr_nondynamic(self, class_type, name, value, 0)
+
+
+def _swig_getattr(self, class_type, name):
+    if name == "thisown":
+        return self.this.own()
+    method = class_type.__swig_getmethods__.get(name, None)
+    if method:
+        return method(self)
+    raise (AttributeError, name)
+
 
 def _swig_repr(self):
-    try: strthis = "proxy of " + self.this.__repr__()
-    except: strthis = ""
-    return "<%s.%s; %s >" % (self.__class__.__module__, self.__class__.__name__, strthis,)
+    try:
+        strthis = "proxy of " + self.this.__repr__()
+    except:
+        strthis = ""
+    return "<%s.%s; %s >" % (
+        self.__class__.__module__,
+        self.__class__.__name__,
+        strthis,
+    )
+
 
 import types
+
 try:
     _object = types.ObjectType
     _newclass = 1
 except AttributeError:
-    class _object : pass
+
+    class _object:
+        pass
+
     _newclass = 0
 del types
 
@@ -74,7 +95,9 @@ if uLib:
     void_unsignedchar_int_int_array_get = _utillib.void_unsignedchar_int_int_array_get
     void_unsignedchar_int_int_dim = _utillib.void_unsignedchar_int_int_dim
     void_unsignedchar_int_int_NULL = _utillib.void_unsignedchar_int_int_NULL
-    void_unsignedint_int_int_int_array_get = _utillib.void_unsignedint_int_int_int_array_get
+    void_unsignedint_int_int_int_array_get = (
+        _utillib.void_unsignedint_int_int_int_array_get
+    )
     void_unsignedint_int_int_int_dim = _utillib.void_unsignedint_int_int_int_dim
     void_unsignedint_int_int_int_NULL = _utillib.void_unsignedint_int_int_int_NULL
     void_int_voidstar_array_get = _utillib.void_int_voidstar_array_get
@@ -104,20 +127,20 @@ if uLib:
     triangleNormalsPerFace = _utillib.triangleNormalsPerFace
     triangleNormalsPerVertex = _utillib.triangleNormalsPerVertex
     triangleNormalsBoth = _utillib.triangleNormalsBoth
-    def glTriangleNormals(vertices, triangles, mode = "PER_FACE" ):
+
+    def glTriangleNormals(vertices, triangles, mode="PER_FACE"):
         if mode == "PER_FACE":
             return triangleNormalsPerFace(vertices, triangles)
         elif mode == "PER_VERTEX":
             return triangleNormalsPerVertex(vertices, triangles)
         elif mode == "BOTH":
             return triangleNormalsBoth(vertices, triangles)
-    
-    
+
     attachCurrentThread = _utillib.attachCurrentThread
     detachCurrentThread = _utillib.detachCurrentThread
     attachedThread = _utillib.attachedThread
     glTrackball = _utillib.glTrackball
-else :
+else:
     extractedGlutSolidSphere = None
     glCleanRotMat = None
     glDrawSphereSet = None
@@ -125,4 +148,3 @@ else :
     glDrawIndexedGeom = None
     solidCylinder = None
     glTrackball = None
-    

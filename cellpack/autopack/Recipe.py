@@ -223,5 +223,7 @@ class Recipe:
         """ print the states of all recipe ingredients """
         for ingr in self.ingredients:
             print(
-                indent + "ingr: %s target: %3d placed %3d %s" % (ingr.pdb, ingr.nbMol, ingr.counter, ingr.name)
+                indent
+                + "ingr: %s target: %3d placed %3d %s"
+                % (ingr.pdb, ingr.nbMol, ingr.counter, ingr.name)
             )

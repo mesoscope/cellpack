@@ -1,4 +1,3 @@
-
 """
 do not add any dependancy on this file
 """
@@ -6,9 +5,8 @@ import unittest
 from opengltk.OpenGL import GL
 from DejaVu.Viewer import Viewer
 
+
 class MaterialEditor_BaseTests(unittest.TestCase):
-
-
     def test_MaterialEditorDependancies(self):
 
         vi = Viewer()
@@ -20,7 +18,5 @@ class MaterialEditor_BaseTests(unittest.TestCase):
         assert mated
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
-
-

@@ -1,4 +1,4 @@
-## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by 
+## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by
 
 ##  Copyright 1997-1999 by Konrad Hinsen, except as noted below.
 
@@ -28,7 +28,8 @@ _undocumented = 1
 
 import numpy.oldnumeric as Numeric, types
 from mglutil.math import TensorModule
-#from . import TensorModule
+
+# from . import TensorModule
 
 
 class Vector:
@@ -41,7 +42,7 @@ class Vector:
     - Vector(|coordinates|)   (from any sequence containing three coordinates)
 
     Vectors support the usual arithmetic operations
-    ('v1', 'v2': vectors, 's': scalar): 
+    ('v1', 'v2': vectors, 's': scalar):
 
     -  'v1+v2'           (addition)
     -  'v1-v2'           (subtraction)
@@ -61,11 +62,11 @@ class Vector:
 
     def __init__(self, x=None, y=None, z=None):
         if x is None:
-            self.array = [0.,0.,0.]
+            self.array = [0.0, 0.0, 0.0]
         elif y is None and z is None:
             self.array = x
         else:
-            self.array = [x,y,z]
+            self.array = [x, y, z]
         self.array = Numeric.array(self.array)
 
     def __getstate__(self):
@@ -74,33 +75,38 @@ class Vector:
     def __setstate__(self, state):
         self.array = Numeric.array(state)
 
-    def __copy__(self, memo = None):
+    def __copy__(self, memo=None):
         return self
+
     __deepcopy__ = __copy__
 
     def __repr__(self):
-        return 'Vector(%s,%s,%s)' % (repr(self.array[0]),\
-                     repr(self.array[1]),repr(self.array[2]))
+        return "Vector(%s,%s,%s)" % (
+            repr(self.array[0]),
+            repr(self.array[1]),
+            repr(self.array[2]),
+        )
 
     def __str__(self):
         return repr(list(self.array))
 
     def __add__(self, other):
-        return Vector(self.array+other.array)
+        return Vector(self.array + other.array)
+
     __radd__ = __add__
 
     def __neg__(self):
         return Vector(-self.array)
 
     def __sub__(self, other):
-        return Vector(self.array-other.array)
+        return Vector(self.array - other.array)
 
     def __rsub__(self, other):
-        return Vector(other.array-self.array)
+        return Vector(other.array - self.array)
 
     def __mul__(self, other):
         if isVector(other):
-            return Numeric.add.reduce(self.array*other.array)
+            return Numeric.add.reduce(self.array * other.array)
         elif TensorModule.isTensor(other):
             product = TensorModule.Tensor(self.array).dot(other)
             if product.rank == 1:
@@ -126,13 +132,13 @@ class Vector:
         if isVector(other):
             raise TypeError("Can't divide by a vector")
         else:
-            return Vector(Numeric.divide(self.array,1.*other))
-        
+            return Vector(Numeric.divide(self.array, 1.0 * other))
+
     def __rdiv__(self, other):
         raise TypeError("Can't divide by a vector")
 
     def __cmp__(self, other):
-        return cmp(Numeric.add.reduce(abs(self.array-other.array)), 0)
+        return cmp(Numeric.add.reduce(abs(self.array - other.array)), 0)
 
     def __len__(self):
         return 3
@@ -143,20 +149,22 @@ class Vector:
     def x(self):
         "Returns the x coordinate."
         return self.array[0]
+
     def y(self):
         "Returns the y coordinate."
         return self.array[1]
+
     def z(self):
         "Returns the z coordinate."
         return self.array[2]
 
     def length(self):
         "Returns the length (norm)."
-        return Numeric.sqrt(Numeric.add.reduce(self.array*self.array))
+        return Numeric.sqrt(Numeric.add.reduce(self.array * self.array))
 
     def normal(self):
         "Returns a normalized copy."
-        len = Numeric.sqrt(Numeric.add.reduce(self.array*self.array))
+        len = Numeric.sqrt(Numeric.add.reduce(self.array * self.array))
         if len == 0:
             raise ZeroDivisionError("Can't normalize a zero-length vector")
         return Vector(Numeric.divide(self.array, len))
@@ -165,12 +173,11 @@ class Vector:
         "Returns the cross product with vector |other|."
         if not isVector(other):
             raise TypeError("Cross product with non-vector")
-        return Vector(self.array[1]*other.array[2]
-                                    -self.array[2]*other.array[1],
-                  self.array[2]*other.array[0]
-                                    -self.array[0]*other.array[2],
-                  self.array[0]*other.array[1]
-                                    -self.array[1]*other.array[0])
+        return Vector(
+            self.array[1] * other.array[2] - self.array[2] * other.array[1],
+            self.array[2] * other.array[0] - self.array[0] * other.array[2],
+            self.array[0] * other.array[1] - self.array[1] * other.array[0],
+        )
 
     def asTensor(self):
         "Returns an equivalent tensor object of rank 1."
@@ -179,34 +186,37 @@ class Vector:
     def dyadicProduct(self, other):
         "Returns the dyadic product with vector or tensor |other|."
         if isVector(other):
-            return TensorModule.Tensor(self.array, 1) * \
-                       TensorModule.Tensor(other.array, 1)
+            return TensorModule.Tensor(self.array, 1) * TensorModule.Tensor(
+                other.array, 1
+            )
         elif TensorModule.isTensor(other):
-            return TensorModule.Tensor(self.array, 1)*other
+            return TensorModule.Tensor(self.array, 1) * other
         else:
             raise TypeError("Dyadic product with non-vector")
-    
+
     def angle(self, other):
         "Returns the angle to vector |other|."
         if not isVector(other):
             raise TypeError("Angle between vector and non-vector")
-        cosa = Numeric.add.reduce(self.array*other.array) / \
-               Numeric.sqrt(Numeric.add.reduce(self.array*self.array) * \
-                                Numeric.add.reduce(other.array*other.array))
-        cosa = max(-1.,min(1.,cosa))
+        cosa = Numeric.add.reduce(self.array * other.array) / Numeric.sqrt(
+            Numeric.add.reduce(self.array * self.array)
+            * Numeric.add.reduce(other.array * other.array)
+        )
+        cosa = max(-1.0, min(1.0, cosa))
         return Numeric.arccos(cosa)
 
 
 # Type check
 
+
 def isVector(x):
     "Return 1 if |x| is a vector."
-    return hasattr(x,'is_vector')
+    return hasattr(x, "is_vector")
 
 
 # Some useful constants
 
-ex = Vector(1,0,0)
-ey = Vector(0,1,0)
-ez = Vector(0,0,1)
-null = Vector(0.,0.,0.)
+ex = Vector(1, 0, 0)
+ey = Vector(0, 1, 0)
+ez = Vector(0, 0, 1)
+null = Vector(0.0, 0.0, 0.0)

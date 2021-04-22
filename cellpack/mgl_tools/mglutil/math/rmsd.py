@@ -1,4 +1,4 @@
-## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by 
+## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by
 
 #############################################################################
 #
@@ -22,12 +22,13 @@ class RMSDCalculator:
     This class implements method to compute RMSD and distance vector
     between two given lists of coordinates.
     """
-    def __init__(self, refCoords = None):
+
+    def __init__(self, refCoords=None):
         self.refCoords = refCoords
 
     def setRefCoords(self, refCoords):
         self.refCoords = refCoords
-        
+
     def computeRMSD(self, listCoords):
         """rmsd <- computRMSD(listCoords)
         rmsd returns the overall root mean square distance (rmsd) and
@@ -40,7 +41,7 @@ class RMSDCalculator:
             raise ValueError("input vector length mismatch")
 
         deltaVect = Numeric.array(self.refCoords) - Numeric.array(listCoords)
-        distSquaredVect = Numeric.sum(Numeric.transpose(deltaVect*deltaVect))
+        distSquaredVect = Numeric.sum(Numeric.transpose(deltaVect * deltaVect))
         self.distVect = Numeric.sqrt(distSquaredVect)
-        self.rmsd = math.sqrt(Numeric.sum(distSquaredVect)/len(self.refCoords))
+        self.rmsd = math.sqrt(Numeric.sum(distSquaredVect) / len(self.refCoords))
         return self.rmsd

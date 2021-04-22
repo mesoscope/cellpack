@@ -1,4 +1,4 @@
-## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by 
+## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by
 
 #############################################################################
 #
@@ -18,10 +18,10 @@ import types
 import sys
 import oldnumeric as Numeric
 
+
 def issequence(a):
-    return type(a) is tuple or \
-           type(a) is list or \
-           isinstance(a, Numeric.ArrayType)
+    return type(a) is tuple or type(a) is list or isinstance(a, Numeric.ArrayType)
+
 
 def isnumericstring(a):
     try:
@@ -30,9 +30,10 @@ def isnumericstring(a):
     except:
         return 0
 
+
 def uniq(objectSequence):
     """Remove the duplicates from a list while keeping the original
-    list order """
+    list order"""
     l = []
     d = {}
     for o in objectSequence:
@@ -46,8 +47,9 @@ def deepCopySeq(sequence):
     """ returns the deep copy of the given sequence """
     import numpy.oldnumeric as Numeric
     from types import TupleType, ListType
-    assert type(sequence) in (TupleType, ListType, type(Numeric.array([1,2,3])))
-    if hasattr(sequence, 'copy'):
+
+    assert type(sequence) in (TupleType, ListType, type(Numeric.array([1, 2, 3])))
+    if hasattr(sequence, "copy"):
         dcSeq = sequence.copy()
     else:
         dcSeq = sequence[:]
@@ -57,6 +59,8 @@ def deepCopySeq(sequence):
 
 def ensureFontCase(font):
     return font
+
+
 #    from Tkinter import TkVersion
 #    lFont = font[0].upper() + font[1:].lower()
 #    if TkVersion == '8.4' and sys.platform != "win32":
@@ -67,35 +71,38 @@ def ensureFontCase(font):
 def isInstance(lObject):
 
     import types
-    if sys.version.startswith('2.5'): #detect python25
+
+    if sys.version.startswith("2.5"):  # detect python25
         if type(lObject) == types.InstanceType:
             return True
         else:
             return False
     else:
-            import inspect
-            ltype = type(lObject)
-            if ltype == types.InstanceType:
+        import inspect
+
+        ltype = type(lObject)
+        if ltype == types.InstanceType:
+            return True
+        elif inspect.isclass(lObject) is False and isinstance(lObject, ltype) is True:
+            from abc import ABCMeta
+
+            if ltype == type is True:
                 return True
-            elif inspect.isclass(lObject) is False \
-              and isinstance(lObject, ltype) is True:
-                from abc import ABCMeta
-                if ltype == type is True:
-                    return True
-                elif type(ltype) == ABCMeta:
-                    return True
-                else:
-                    return False
+            elif type(ltype) == ABCMeta:
+                return True
             else:
                 return False
+        else:
+            return False
 
 
 def importMainOrIPythonMain():
     try:
         from IPython import ipapi
+
         mainDict = ipapi.get().user_ns
     except:
-        mainDict = __import__('__main__').__dict__
+        mainDict = __import__("__main__").__dict__
     return mainDict
 
 
@@ -105,9 +112,9 @@ def suppressMultipleQuotes(aString):
     while type(lStringToSimplify) == bytes:
         lSimplifiedString = lStringToSimplify
         try:
-           lStringToSimplify = eval(lSimplifiedString)
+            lStringToSimplify = eval(lSimplifiedString)
         except:
-           break
+            break
     return lSimplifiedString
 
 
@@ -118,7 +125,7 @@ class IntVar:
     def get(self):
         return self.val
 
-    def set(self,val):
+    def set(self, val):
         self.val = int(val)
 
 
@@ -129,7 +136,7 @@ class StringVar:
     def get(self):
         return self.val
 
-    def set(self,val):
+    def set(self, val):
         self.val = str(val)
 
 
@@ -140,5 +147,5 @@ class BooleanVar:
     def get(self):
         return self.val
 
-    def set(self,val):
-        self.val = (val==True)
+    def set(self, val):
+        self.val = val == True

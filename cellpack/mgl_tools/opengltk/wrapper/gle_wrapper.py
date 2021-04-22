@@ -5,7 +5,6 @@
 """gle wrappers
 """
 
-__all__ = (
-    )
+__all__ = ()
 
 from opengltk.extent import glelib, utillib

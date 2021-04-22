@@ -5,7 +5,6 @@
 """smap wrappers
 """
 
-__all__ = (
-    )
+__all__ = ()
 
 from opengltk.extent import smaplib, utillib

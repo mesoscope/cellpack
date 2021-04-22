@@ -1,1 +1,1 @@
-ignore={'test_htmlparser':[]}
+ignore = {"test_htmlparser": []}

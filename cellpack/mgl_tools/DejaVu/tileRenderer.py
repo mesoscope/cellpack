@@ -67,344 +67,369 @@ from cellpack.mgl_tools.opengltk.OpenGL import GL
 from cellpack.mgl_tools.opengltk.OpenGL.GLU import gluProject
 from cellpack.mgl_tools.opengltk.extent import _gllib as gllib
 
+
 class TRctx:
-   """Tile Rendring context object
-"""
+    """Tile Rendring context object"""
 
-   DEFAULT_TILE_WIDTH = 256
-   DEFAULT_TILE_HEIGHT = 256
-   DEFAULT_TILE_BORDER = 0
+    DEFAULT_TILE_WIDTH = 256
+    DEFAULT_TILE_HEIGHT = 256
+    DEFAULT_TILE_BORDER = 0
 
-   def __init__(self, zmin, zmax):
+    def __init__(self, zmin, zmax):
 
-      self.zmin = zmin
-      self.zmax = zmax
+        self.zmin = zmin
+        self.zmax = zmax
 
-      # Final image parameters
-      self.ImageWidth = 1000
-      self.ImageHeight = 1000
-      self.ImageFormat = None
-      self.ImageType = None
-      self.ImageBuffer = None
+        # Final image parameters
+        self.ImageWidth = 1000
+        self.ImageHeight = 1000
+        self.ImageFormat = None
+        self.ImageType = None
+        self.ImageBuffer = None
 
-      # Tile parameters
-      self.TileWidth = self.DEFAULT_TILE_WIDTH
-      self.TileHeight = self.DEFAULT_TILE_HEIGHT
-      self.TileWidthNB = self.DEFAULT_TILE_BORDER
-      self.TileHeightNB = 0
-      self.TileBorder = 0
-      self.TileFormat = None
-      self.TileType = None
-      self.TileBuffer = None
+        # Tile parameters
+        self.TileWidth = self.DEFAULT_TILE_WIDTH
+        self.TileHeight = self.DEFAULT_TILE_HEIGHT
+        self.TileWidthNB = self.DEFAULT_TILE_BORDER
+        self.TileHeightNB = 0
+        self.TileBorder = 0
+        self.TileFormat = None
+        self.TileType = None
+        self.TileBuffer = None
 
-      # tile projection params used to get global antialiasing to work
-      self.tileleft = None
-      self.tileright = None
-      self.tilebottom = None
-      self.tiletop = None
+        # tile projection params used to get global antialiasing to work
+        self.tileleft = None
+        self.tileright = None
+        self.tilebottom = None
+        self.tiletop = None
 
-      # Projection parameters
-      self.Perspective = True
-      self.Left = -1.
-      self.Right = 1.
-      self.Bottom = -1.
-      self.Top = 1.
-      self.Near = 0.1
-      self.Far = 50
+        # Projection parameters
+        self.Perspective = True
+        self.Left = -1.0
+        self.Right = 1.0
+        self.Bottom = -1.0
+        self.Top = 1.0
+        self.Near = 0.1
+        self.Far = 50
 
-      # Misc
-      self.RowOrder = TR_BOTTOM_TO_TOP
-      self.Rows = 2
-      self.Columns = 2
-      self.CurrentTile = -1
-      self.CurrentTileWidth = 100
-      self.CurrentTileHeight = 100
-      self.CurrentRow = 0
-      self.CurrentColumn = 0
-      self.backBuffer = True   # render tiles using back buffer
-      
-      self.ViewportSave = (0,0,100,100)
+        # Misc
+        self.RowOrder = TR_BOTTOM_TO_TOP
+        self.Rows = 2
+        self.Columns = 2
+        self.CurrentTile = -1
+        self.CurrentTileWidth = 100
+        self.CurrentTileHeight = 100
+        self.CurrentRow = 0
+        self.CurrentColumn = 0
+        self.backBuffer = True  # render tiles using back buffer
+
+        self.ViewportSave = (0, 0, 100, 100)
+
+    # Misc setup including computing number of tiles (rows and columns).
+
+    def setup(self):
+        self.Columns = (self.ImageWidth + self.TileWidthNB - 1) / self.TileWidthNB
+        self.Rows = (self.ImageHeight + self.TileHeightNB - 1) / self.TileHeightNB
+        self.CurrentTile = 0
+
+        assert self.Columns >= 0
+        assert self.Rows >= 0
+
+    def tileSize(self, width, height, border):
+
+        assert border >= 0
+        assert width >= 1
+        assert height >= 1
+        assert width >= 2 * border
+        assert height >= 2 * border
+
+        self.TileBorder = border
+        self.TileWidth = width
+        self.TileHeight = height
+        self.TileWidthNB = width - 2 * border
+        self.TileHeightNB = height - 2 * border
+        self.setup()
+
+    def tileBuffer(self, format, type, image):
+        self.TileFormat = format
+        self.TileType = type
+        self.TileBuffer = image
+
+    def imageSize(self, width, height):
+        self.ImageWidth = width
+        self.ImageHeight = height
+        self.setup()
+
+    def imageBuffer(self, format, type, image):
+        self.ImageFormat = format
+        self.ImageType = type
+        self.ImageBuffer = image
+
+    def get(self, param):
+        if param == TR_TILE_WIDTH:
+            return self.TileWidth
+        elif param == TR_TILE_HEIGHT:
+            return self.TileHeight
+        elif param == TR_TILE_BORDER:
+            return self.TileBorder
+        elif param == TR_IMAGE_WIDTH:
+            return self.ImageWidth
+        elif param == TR_IMAGE_HEIGHT:
+            return self.ImageHeight
+        elif param == TR_ROWS:
+            return self.Rows
+        elif param == TR_COLUMNS:
+            return self.Columns
+        elif param == TR_CURRENT_ROW:
+            if self.CurrentTile < 0:
+                return -1
+            else:
+                return self.CurrentRow
+        elif param == TR_CURRENT_COLUMN:
+            if self.CurrentTile < 0:
+                return -1
+            else:
+                return self.CurrentColumn
+        elif param == TR_CURRENT_TILE_WIDTH:
+            return self.CurrentTileWidth
+        elif param == TR_CURRENT_TILE_HEIGHT:
+            return self.CurrentTileHeight
+        elif param == TR_ROW_ORDER:
+            return int(self.RowOrder)
+        else:
+            return 0
+
+    def rowOrder(self, order):
+        if order == TR_TOP_TO_BOTTOM or order == TR_BOTTOM_TO_TOP:
+            self.RowOrder = order
+
+    def ortho(self, left, right, bottom, top, zNear, zFar):
+        self.Perspective = False
+        self.Left = left
+        self.Right = right
+        self.Bottom = bottom
+        self.Top = top
+        self.Near = zNear
+        self.Far = zFar
+
+    def frustum(self, left, right, bottom, top, zNear, zFar):
+        self.Perspective = True
+        self.Left = left
+        self.Right = right
+        self.Bottom = bottom
+        self.Top = top
+        self.Near = zNear
+        self.Far = zFar
+
+    def perspective(self, fovy, aspect, zNear, zFar):
+        from math import tan
+
+        ymax = zNear * tan(fovy * 3.14159265 / 360.0)
+        ymin = -ymax
+        xmin = ymin * aspect
+        xmax = ymax * aspect
+        self.frustum(xmin, xmax, ymin, ymax, zNear, zFar)
+
+    def beginTile(self):
+
+        if self.CurrentTile <= 0:
+            self.setup()
+        # Save user's viewport, will be restored after last tile rendered
+        self.ViewportSave = GL.glGetIntegerv(GL.GL_VIEWPORT)
+
+        # which tile (by row and column) we're about to render
+        if self.RowOrder == TR_BOTTOM_TO_TOP:
+            self.CurrentRow = self.CurrentTile / self.Columns
+            self.CurrentColumn = self.CurrentTile % self.Columns
+        elif self.RowOrder == TR_TOP_TO_BOTTOM:
+            self.CurrentRow = self.Rows - (self.CurrentTile / self.Columns) - 1
+            self.CurrentColumn = self.CurrentTile % self.Columns
+        else:
+            raise RuntimeError
+
+        assert self.CurrentRow < self.Rows
+        assert self.CurrentColumn < self.Columns
+
+        border = self.TileBorder
+
+        # Compute actual size of this tile with border
+        if self.CurrentRow < self.Rows - 1:
+            tileHeight = self.TileHeight
+        else:
+            tileHeight = (
+                self.ImageHeight - (self.Rows - 1) * (self.TileHeightNB) + 2 * border
+            )
+
+        if self.CurrentColumn < self.Columns - 1:
+            tileWidth = self.TileWidth
+        else:
+            tileWidth = (
+                self.ImageWidth - (self.Columns - 1) * (self.TileWidthNB) + 2 * border
+            )
+
+        # Save tile size, with border
+        self.CurrentTileWidth = tileWidth
+        self.CurrentTileHeight = tileHeight
+
+        GL.glViewport(0, 0, tileWidth, tileHeight)  # tile size including border
+
+        # save current matrix mode
+        matrixMode = GL.glGetIntegerv(GL.GL_MATRIX_MODE)[0]
+        GL.glMatrixMode(GL.GL_PROJECTION)
+        GL.glLoadIdentity()
+
+        # compute projection parameters
+        self.tileleft = left = (
+            self.Left
+            + (self.Right - self.Left)
+            * (self.CurrentColumn * self.TileWidthNB - border)
+            / self.ImageWidth
+        )
+        self.tileright = right = (
+            left + (self.Right - self.Left) * self.TileWidth / self.ImageWidth
+        )
+        self.tilebottom = bottom = (
+            self.Bottom
+            + (self.Top - self.Bottom)
+            * (self.CurrentRow * self.TileHeightNB - border)
+            / self.ImageHeight
+        )
+        self.tiletop = top = (
+            bottom + (self.Top - self.Bottom) * self.TileHeight / self.ImageHeight
+        )
+
+        if self.Perspective:
+            GL.glFrustum(
+                float(left),
+                float(right),
+                float(bottom),
+                float(top),
+                float(self.Near),
+                float(self.Far),
+            )
+        else:
+            GL.glOrtho(
+                float(left),
+                float(right),
+                float(bottom),
+                float(top),
+                float(self.Near),
+                float(self.Far),
+            )
+
+        # restore user's matrix mode
+        GL.glMatrixMode(int(matrixMode))
+
+    def endTile(self):
+        assert self.CurrentTile >= 0
+
+        # be sure OpenGL rendering is finished
+        GL.glFinish()  # was glFlush()
+
+        # save current glPixelStore values
+        prevRowLength = GL.glGetIntegerv(GL.GL_PACK_ROW_LENGTH)[0]
+        prevSkipRows = GL.glGetIntegerv(GL.GL_PACK_SKIP_ROWS)[0]
+        prevSkipPixels = GL.glGetIntegerv(GL.GL_PACK_SKIP_PIXELS)[0]
+        # prevAlignment = GL.glGetIntegerv(GL_PACK_ALIGNMENT)[0]
+
+        if self.TileBuffer is not None:
+            srcX = self.TileBorder
+            srcY = self.TileBorder
+            srcWidth = self.TileWidthNB
+            srcHeight = self.TileHeightNB
+            GL.glReadPixels(
+                srcX,
+                srcY,
+                srcWidth,
+                srcHeight,
+                self.TileFormat,
+                self.TileType,
+                self.TileBuffer,
+            )
+
+        if self.ImageBuffer is not None:
+            srcX = self.TileBorder
+            srcY = self.TileBorder
+            srcWidth = self.CurrentTileWidth - 2 * self.TileBorder
+            srcHeight = self.CurrentTileHeight - 2 * self.TileBorder
+            destX = self.TileWidthNB * self.CurrentColumn
+            destY = self.TileHeightNB * self.CurrentRow
+
+            ##          #save single tile
+            ##          # setup pixel store for glReadPixels
+            ##          GL.glPixelStorei(GL.GL_PACK_ROW_LENGTH, self.CurrentTileWidth)
+            ##          GL.glPixelStorei(GL.GL_PACK_SKIP_ROWS, 0)
+            ##          GL.glPixelStorei(GL.GL_PACK_SKIP_PIXELS, 0)
+            ##          #GL.glPixelStorei(GL.GL_PACK_ALIGNMENT, 1)
+
+            ##          # read the tile into buffer
+            ##          gllib.glReadPixels(srcX, srcY, srcWidth, srcHeight,
+            ##                             self.ImageFormat, self.ImageType, self.oneTileRenderBuffer)
+            ##          import Image, sys
+            ##          im = Image.fromstring('RGB', (srcWidth, srcHeight),
+            ##                                self.oneTileRenderBuffer)
+            ##          if sys.platform!='win32':
+            ##             im = im.transpose(Image.FLIP_TOP_BOTTOM)
+            ##          im.save('tile%d_%d.tif'%(self.CurrentRow, self.CurrentColumn))
+
+            # setup pixel store for glReadPixels
+            GL.glPixelStorei(GL.GL_PACK_ROW_LENGTH, self.ImageWidth)
+            GL.glPixelStorei(GL.GL_PACK_SKIP_ROWS, destY)
+            GL.glPixelStorei(GL.GL_PACK_SKIP_PIXELS, destX)
+            # GL.glPixelStorei(GL.GL_PACK_ALIGNMENT, 1)
+
+            # read the tile into the final image
+            # print 'DEBUG Tile renderer'
+            # print 'column, row:', self.CurrentColumn, self.CurrentRow
+            # print 'srcWidth,srcHeight,destX, destY',srcWidth,srcHeight,destX, destY
+            gllib.glReadPixels(
+                srcX,
+                srcY,
+                srcWidth,
+                srcHeight,
+                self.ImageFormat,
+                self.ImageType,
+                self.ImageBuffer,
+            )
+
+        # restore previous glPixelStore values
+        GL.glPixelStorei(GL.GL_PACK_ROW_LENGTH, int(prevRowLength))
+        GL.glPixelStorei(GL.GL_PACK_SKIP_ROWS, int(prevSkipRows))
+        GL.glPixelStorei(GL.GL_PACK_SKIP_PIXELS, int(prevSkipPixels))
+        # GL.glPixelStorei(GL.GL_PACK_ALIGNMENT, prevAlignment)
+
+        # increment tile counter, return 1 if more tiles left to render
+        self.CurrentTile += 1
+        if self.CurrentTile >= self.Rows * self.Columns:
+            # restore user's viewport
+            GL.glViewport(
+                int(self.ViewportSave[0]),
+                int(self.ViewportSave[1]),
+                int(self.ViewportSave[2]),
+                int(self.ViewportSave[3]),
+            )
+            self.CurrentTile = -1  # all done
+            return 0
+        else:
+            return 1
+
+    def trRasterPos3f(self, x, y, z):
+        """
+        Replacement for glRastePos3f() which avoids the problem with invalid
+        raster pos."""
+        if self.CurrentTile < 0:
+            # not doing tile rendering right now.  Let OpenGL do this.
+            GL.glRasterPos3f(float(x), float(y), float(z))
+        else:
+            # Get modelview, projection and viewport
+            modelview = GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX)
+            proj = GL.glGetDoublev(GL.GL_PROJECTION_MATRIX)
+            viewport = [0, 0, self.CurrentTileWidth, self.CurrentTileHeight]
+
+            ## FIXME, need to finish this
+            # Project object coord to window coordinate
 
 
-   #Misc setup including computing number of tiles (rows and columns).
-
-   def setup(self):
-      self.Columns = (self.ImageWidth + self.TileWidthNB - 1) / \
-                     self.TileWidthNB
-      self.Rows = (self.ImageHeight + self.TileHeightNB - 1) / \
-                  self.TileHeightNB;
-      self.CurrentTile = 0
-
-      assert(self.Columns >= 0)
-      assert(self.Rows >= 0)
-
-
-   def tileSize(self, width, height, border):
-
-      assert(border >= 0)
-      assert(width >= 1)
-      assert(height >= 1)
-      assert(width >= 2*border)
-      assert(height >= 2*border)
-
-      self.TileBorder = border
-      self.TileWidth = width
-      self.TileHeight = height
-      self.TileWidthNB = width - 2 * border
-      self.TileHeightNB = height - 2 * border
-      self.setup()
-
-
-   def tileBuffer(self, format, type, image):
-      self.TileFormat = format
-      self.TileType = type
-      self.TileBuffer = image
-
-
-   def imageSize(self, width, height):
-      self.ImageWidth = width
-      self.ImageHeight = height
-      self.setup()
-
-
-   def imageBuffer(self, format, type, image):
-      self.ImageFormat = format
-      self.ImageType = type
-      self.ImageBuffer = image
-
-
-   def get(self, param):
-      if param==TR_TILE_WIDTH:
-         return self.TileWidth
-      elif param==TR_TILE_HEIGHT:
-         return self.TileHeight
-      elif param==TR_TILE_BORDER:
-         return self.TileBorder
-      elif param==TR_IMAGE_WIDTH:
-         return self.ImageWidth
-      elif param==TR_IMAGE_HEIGHT:
-         return self.ImageHeight
-      elif param==TR_ROWS:
-         return self.Rows
-      elif param==TR_COLUMNS:
-         return self.Columns
-      elif param==TR_CURRENT_ROW:
-         if (self.CurrentTile<0):
-            return -1
-         else:
-            return self.CurrentRow
-      elif param==TR_CURRENT_COLUMN:
-         if (self.CurrentTile<0):
-            return -1
-         else:
-            return self.CurrentColumn
-      elif param==TR_CURRENT_TILE_WIDTH:
-         return self.CurrentTileWidth
-      elif param==TR_CURRENT_TILE_HEIGHT:
-         return self.CurrentTileHeight
-      elif param==TR_ROW_ORDER:
-         return int(self.RowOrder)
-      else:
-         return 0
-
-
-   def rowOrder(self, order):
-      if order==TR_TOP_TO_BOTTOM or order==TR_BOTTOM_TO_TOP:
-         self.RowOrder = order
-
-
-   def ortho(self, left, right, bottom, top, zNear, zFar):
-      self.Perspective = False
-      self.Left = left
-      self.Right = right
-      self.Bottom = bottom
-      self.Top = top
-      self.Near = zNear
-      self.Far = zFar
-
-
-   def frustum(self, left, right, bottom, top, zNear, zFar):
-      self.Perspective = True
-      self.Left = left
-      self.Right = right
-      self.Bottom = bottom
-      self.Top = top
-      self.Near = zNear
-      self.Far = zFar
-
-
-   def perspective(self, fovy, aspect, zNear, zFar):
-      from math import tan
-      ymax = zNear * tan(fovy * 3.14159265 / 360.0)
-      ymin = -ymax
-      xmin = ymin * aspect
-      xmax = ymax * aspect
-      self.frustum(xmin, xmax, ymin, ymax, zNear, zFar)
-
-
-   def beginTile(self):
-
-      if self.CurrentTile <= 0:
-         self.setup()
-      # Save user's viewport, will be restored after last tile rendered
-      self.ViewportSave = GL.glGetIntegerv(GL.GL_VIEWPORT)
-
-      # which tile (by row and column) we're about to render
-      if self.RowOrder==TR_BOTTOM_TO_TOP:
-         self.CurrentRow = self.CurrentTile / self.Columns
-         self.CurrentColumn = self.CurrentTile % self.Columns
-      elif self.RowOrder==TR_TOP_TO_BOTTOM:
-         self.CurrentRow = self.Rows - (self.CurrentTile / self.Columns) - 1
-         self.CurrentColumn = self.CurrentTile % self.Columns
-      else:
-         raise RuntimeError
-
-      assert(self.CurrentRow < self.Rows)
-      assert(self.CurrentColumn < self.Columns)
-
-      border = self.TileBorder
-
-      # Compute actual size of this tile with border
-      if self.CurrentRow < self.Rows-1:
-         tileHeight = self.TileHeight
-      else:
-         tileHeight = self.ImageHeight - (self.Rows-1) * \
-                      (self.TileHeightNB) + 2 * border
-
-      if self.CurrentColumn < self.Columns-1:
-         tileWidth = self.TileWidth
-      else:
-         tileWidth = self.ImageWidth - (self.Columns-1) * \
-                     (self.TileWidthNB) + 2 * border
-
-      # Save tile size, with border
-      self.CurrentTileWidth = tileWidth
-      self.CurrentTileHeight = tileHeight
-
-      GL.glViewport(0, 0, tileWidth, tileHeight) #tile size including border
-
-      # save current matrix mode
-      matrixMode = GL.glGetIntegerv(GL.GL_MATRIX_MODE)[0]
-      GL.glMatrixMode(GL.GL_PROJECTION)
-      GL.glLoadIdentity()
-
-      # compute projection parameters
-      self.tileleft = left = self.Left + (self.Right - self.Left) \
-                      * (self.CurrentColumn * self.TileWidthNB - border) \
-                      / self.ImageWidth
-      self.tileright = right = left + (self.Right - self.Left) * \
-                       self.TileWidth / self.ImageWidth
-      self.tilebottom = bottom = self.Bottom + (self.Top - self.Bottom) \
-                        * (self.CurrentRow * self.TileHeightNB - border) / \
-                        self.ImageHeight
-      self.tiletop = top = bottom + (self.Top - self.Bottom) * self.TileHeight / \
-                     self.ImageHeight
-
-      if self.Perspective:
-         GL.glFrustum(float(left), float(right),
-                      float(bottom), float(top),
-                      float(self.Near), float(self.Far))
-      else:
-         GL.glOrtho(float(left), float(right),
-                    float(bottom), float(top),
-                    float(self.Near), float(self.Far))
-
-      # restore user's matrix mode
-      GL.glMatrixMode(int(matrixMode))
-
-
-   def endTile(self):
-      assert(self.CurrentTile>=0)
-
-      # be sure OpenGL rendering is finished
-      GL.glFinish() #was glFlush()
-
-      # save current glPixelStore values
-      prevRowLength = GL.glGetIntegerv(GL.GL_PACK_ROW_LENGTH)[0]
-      prevSkipRows = GL.glGetIntegerv(GL.GL_PACK_SKIP_ROWS)[0]
-      prevSkipPixels = GL.glGetIntegerv(GL.GL_PACK_SKIP_PIXELS)[0]
-      #prevAlignment = GL.glGetIntegerv(GL_PACK_ALIGNMENT)[0]
-
-      if self.TileBuffer is not None:
-         srcX = self.TileBorder
-         srcY = self.TileBorder
-         srcWidth = self.TileWidthNB
-         srcHeight = self.TileHeightNB
-         GL.glReadPixels(srcX, srcY, srcWidth, srcHeight,
-                         self.TileFormat, self.TileType, self.TileBuffer)
-
-      if self.ImageBuffer is not None:
-         srcX = self.TileBorder
-         srcY = self.TileBorder
-         srcWidth = self.CurrentTileWidth - 2 * self.TileBorder
-         srcHeight = self.CurrentTileHeight - 2 * self.TileBorder
-         destX = self.TileWidthNB * self.CurrentColumn
-         destY = self.TileHeightNB * self.CurrentRow
-
-##          #save single tile
-##          # setup pixel store for glReadPixels
-##          GL.glPixelStorei(GL.GL_PACK_ROW_LENGTH, self.CurrentTileWidth)
-##          GL.glPixelStorei(GL.GL_PACK_SKIP_ROWS, 0)
-##          GL.glPixelStorei(GL.GL_PACK_SKIP_PIXELS, 0)
-##          #GL.glPixelStorei(GL.GL_PACK_ALIGNMENT, 1)
-
-##          # read the tile into buffer
-##          gllib.glReadPixels(srcX, srcY, srcWidth, srcHeight,
-##                             self.ImageFormat, self.ImageType, self.oneTileRenderBuffer)
-##          import Image, sys
-##          im = Image.fromstring('RGB', (srcWidth, srcHeight),
-##                                self.oneTileRenderBuffer) 
-##          if sys.platform!='win32':
-##             im = im.transpose(Image.FLIP_TOP_BOTTOM)
-##          im.save('tile%d_%d.tif'%(self.CurrentRow, self.CurrentColumn))
-         
-         # setup pixel store for glReadPixels
-         GL.glPixelStorei(GL.GL_PACK_ROW_LENGTH, self.ImageWidth)
-         GL.glPixelStorei(GL.GL_PACK_SKIP_ROWS, destY)
-         GL.glPixelStorei(GL.GL_PACK_SKIP_PIXELS, destX)
-         #GL.glPixelStorei(GL.GL_PACK_ALIGNMENT, 1)
-
-         # read the tile into the final image
-         #print 'DEBUG Tile renderer'
-         #print 'column, row:', self.CurrentColumn, self.CurrentRow
-         #print 'srcWidth,srcHeight,destX, destY',srcWidth,srcHeight,destX, destY
-         gllib.glReadPixels(srcX, srcY, srcWidth, srcHeight,
-                            self.ImageFormat, self.ImageType, self.ImageBuffer)
-
-      # restore previous glPixelStore values
-      GL.glPixelStorei(GL.GL_PACK_ROW_LENGTH, int(prevRowLength))
-      GL.glPixelStorei(GL.GL_PACK_SKIP_ROWS, int(prevSkipRows))
-      GL.glPixelStorei(GL.GL_PACK_SKIP_PIXELS, int(prevSkipPixels))
-      #GL.glPixelStorei(GL.GL_PACK_ALIGNMENT, prevAlignment)
-
-      # increment tile counter, return 1 if more tiles left to render
-      self.CurrentTile+=1
-      if self.CurrentTile >= self.Rows * self.Columns:
-         # restore user's viewport
-         GL.glViewport(int(self.ViewportSave[0]), int(self.ViewportSave[1]),
-                       int(self.ViewportSave[2]), int(self.ViewportSave[3]))
-         self.CurrentTile = -1  # all done
-         return 0
-      else:
-         return 1
-
-
-   def trRasterPos3f(self, x, y, z):
-      """
-Replacement for glRastePos3f() which avoids the problem with invalid
-raster pos.
-"""
-      if self.CurrentTile<0:
-         # not doing tile rendering right now.  Let OpenGL do this.
-         GL.glRasterPos3f(float(x), float(y), float(z))
-      else:
-         # Get modelview, projection and viewport
-         modelview = GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX)
-         proj = GL.glGetDoublev(GL.GL_PROJECTION_MATRIX)
-         viewport = [0, 0, self.CurrentTileWidth, self.CurrentTileHeight]
-
-         ## FIXME, need to finish this
-         # Project object coord to window coordinate
 ##          projpoint = gluProject(x, y, z, modelview, proj, viewport)
 ##          if gluProject(x, y, z, modelview, proj, viewport, &winX, &winY, &winZ)){
 
@@ -429,5 +454,3 @@ raster pos.
 ##          glPopMatrix() /*proj*/
 ##          glMatrixMode(GL_MODELVIEW)
 ##          glPopMatrix()
-
-

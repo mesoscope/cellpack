@@ -14,7 +14,12 @@ from xml.dom.minidom import getDOMImplementation
 from cellpack.mgl_tools.upy import transformation as tr
 import cellpack.autopack as autopack
 from cellpack.autopack.Ingredient import GrowIngrediant, ActinIngrediant, KWDS
-from cellpack.autopack.Serializable import sCompartment, sIngredientGroup, sIngredient, sIngredientFiber
+from cellpack.autopack.Serializable import (
+    sCompartment,
+    sIngredientGroup,
+    sIngredient,
+    sIngredientFiber,
+)
 from cellpack.autopack.Recipe import Recipe
 from cellpack.autopack.Compartment import Compartment
 

@@ -86,46 +86,47 @@ import numpy
 from numpy.random import RandomState
 from random import uniform
 import math
+
 # epsilon for testing whether a number is close to zero
 _EPS = numpy.finfo(float).eps * 4.0
 
 
 class RandomRot:
+    def __init__(self, seed=16):
+        self.seedTable = RandomState(seed)
 
-    def __init__(self,seed=16):
-        self.seedTable= RandomState(seed)
-#        from .deg06Rot import allRtotations
-#        self.rot = allRtotations
-#        self.nbRot = len(allRtotations)-1
+    #        from .deg06Rot import allRtotations
+    #        self.rot = allRtotations
+    #        self.nbRot = len(allRtotations)-1
 
     def getOld(self):
         n = int(uniform(0, self.nbRot))
         return self.rot[n]
 
-    def setSeed(self,seed=16):
-        self.seedTable= RandomState(seed)
+    def setSeed(self, seed=16):
+        self.seedTable = RandomState(seed)
 
     def get(self):
         return self.random_rotation_matrix()
 
-    def random_quaternion(self,rand=None):
+    def random_quaternion(self, rand=None):
         """Return uniform random unit quaternion.
-    
+
         rand: array like or None
             Three independent random variables that are uniformly distributed
             between 0 and 1.
-    
+
         >>> q = random_quaternion()
         >>> numpy.allclose(1, vector_norm(q))
         True
         >>> q = random_quaternion(numpy.random.random(3))
         >>> len(q.shape), q.shape[0]==4
         (1, True)
-    
+
         """
         if rand is None:
             rand = self.seedTable.rand(3)
-#            rand = numpy.random.rand(3)
+        #            rand = numpy.random.rand(3)
         else:
             assert len(rand) == 3
         r1 = numpy.sqrt(1.0 - rand[0])
@@ -133,12 +134,18 @@ class RandomRot:
         pi2 = math.pi * 2.0
         t1 = pi2 * rand[1]
         t2 = pi2 * rand[2]
-        return numpy.array([numpy.cos(t2)*r2, numpy.sin(t1)*r1,
-                            numpy.cos(t1)*r1, numpy.sin(t2)*r2])
-                            
-    def quaternion_matrix(self,quaternion):
+        return numpy.array(
+            [
+                numpy.cos(t2) * r2,
+                numpy.sin(t1) * r1,
+                numpy.cos(t1) * r1,
+                numpy.sin(t2) * r2,
+            ]
+        )
+
+    def quaternion_matrix(self, quaternion):
         """Return homogeneous rotation matrix from quaternion.
-    
+
         >>> M = quaternion_matrix([0.99810947, 0.06146124, 0, 0])
         >>> numpy.allclose(M, rotation_matrix(0.123, [1, 0, 0]))
         True
@@ -148,7 +155,7 @@ class RandomRot:
         >>> M = quaternion_matrix([0, 1, 0, 0])
         >>> numpy.allclose(M, numpy.diag([1, -1, -1, 1]))
         True
-    
+
         """
         q = numpy.array(quaternion, dtype=numpy.float64, copy=True)
         n = numpy.dot(q, q)
@@ -156,25 +163,30 @@ class RandomRot:
             return numpy.identity(4)
         q *= math.sqrt(2.0 / n)
         q = numpy.outer(q, q)
-        return numpy.array([
-            [1.0-q[2, 2]-q[3, 3],     q[1, 2]-q[3, 0],     q[1, 3]+q[2, 0], 0.0],
-            [    q[1, 2]+q[3, 0], 1.0-q[1, 1]-q[3, 3],     q[2, 3]-q[1, 0], 0.0],
-            [    q[1, 3]-q[2, 0],     q[2, 3]+q[1, 0], 1.0-q[1, 1]-q[2, 2], 0.0],
-            [                0.0,                 0.0,                 0.0, 1.0]])
+        return numpy.array(
+            [
+                [1.0 - q[2, 2] - q[3, 3], q[1, 2] - q[3, 0], q[1, 3] + q[2, 0], 0.0],
+                [q[1, 2] + q[3, 0], 1.0 - q[1, 1] - q[3, 3], q[2, 3] - q[1, 0], 0.0],
+                [q[1, 3] - q[2, 0], q[2, 3] + q[1, 0], 1.0 - q[1, 1] - q[2, 2], 0.0],
+                [0.0, 0.0, 0.0, 1.0],
+            ]
+        )
 
-    def random_rotation_matrix(self,rand=None):
+    def random_rotation_matrix(self, rand=None):
         """Return uniform random rotation matrix.
-    
+
         rand: array like
             Three independent random variables that are uniformly distributed
             between 0 and 1 for each returned quaternion.
-    
+
         >>> R = random_rotation_matrix()
         >>> numpy.allclose(numpy.dot(R.T, R), numpy.identity(4))
         True
-    
+
         """
         return self.quaternion_matrix(self.random_quaternion(rand))
+
+
 ## def getRotations(filename):
 
 ##     #read rotations
@@ -189,18 +201,16 @@ class RandomRot:
 ##         rot.shape = (3,3)
 ##         allRot.append( rot )
 
-if __name__=='__main__':
-    #from time import time
-    #t1 = time()
-    #allRot = getRotations('deg06.matrix')
-    #print 'time to read rotation', time()-t1
+if __name__ == "__main__":
+    # from time import time
+    # t1 = time()
+    # allRot = getRotations('deg06.matrix')
+    # print 'time to read rotation', time()-t1
 
-##     t1 = time()
-##     from deg06Rotations import allRtotations
-##     print 'time to import rotation', time()-t1
+    ##     t1 = time()
+    ##     from deg06Rotations import allRtotations
+    ##     print 'time to import rotation', time()-t1
 
-    
     rr = RandomRot()
     mat = rr.get()
     print(mat)
-    

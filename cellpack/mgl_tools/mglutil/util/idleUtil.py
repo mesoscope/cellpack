@@ -1,9 +1,18 @@
 from idlelib import PyShell
-#from idlelib.PyShell import PyShell, PyShellFileList, use_subprocess
+
+# from idlelib.PyShell import PyShell, PyShellFileList, use_subprocess
 from idlelib.EditorWindow import fixwordbreaks
 import tkinter, sys, os
-def getShell(thread, rootTk = None, subprocess = False, debug=False,
-             enable_shell=False, enable_edit=True):
+
+
+def getShell(
+    thread,
+    rootTk=None,
+    subprocess=False,
+    debug=False,
+    enable_shell=False,
+    enable_edit=True,
+):
     """
     This function creates and returns a shell PyShell instance
     required arguments:
@@ -25,17 +34,17 @@ def getShell(thread, rootTk = None, subprocess = False, debug=False,
     cmd = None
     script = None
     startup = False
-    
-#    try:
-#        sys.ps1
-#    except AttributeError:
-#        sys.ps1 = '>>> '
 
-    if hasattr(sys, 'ps1') is False:
-        sys.ps1 = '>>> '
+    #    try:
+    #        sys.ps1
+    #    except AttributeError:
+    #        sys.ps1 = '>>> '
+
+    if hasattr(sys, "ps1") is False:
+        sys.ps1 = ">>> "
 
     global mainThread
-    
+
     PyShell.use_subprocess = subprocess
     mainThread = thread
     for i in range(len(sys.path)):
@@ -48,21 +57,21 @@ def getShell(thread, rootTk = None, subprocess = False, debug=False,
             sys.path.insert(0, dir)
 
     global flist, root
-    if rootTk is None: root = tkinter.Tk()
-    else: root = rootTk
+    if rootTk is None:
+        root = tkinter.Tk()
+    else:
+        root = rootTk
     fixwordbreaks(root)
 
     flist = PyShell.PyShellFileList(root)
     if enable_edit:
         flist.new()
-        if enable_shell :
+        if enable_shell:
             flist.open_shell()
     elif enable_shell:
         flist.pyshell = PyShell.PyShell()
-        #flist.pyshell.begin()
+        # flist.pyshell.begin()
     shell = flist.pyshell
     if debug:
-       shell.open_debugger()
+        shell.open_debugger()
     return shell
-
-

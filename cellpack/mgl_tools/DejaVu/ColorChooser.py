@@ -1,4 +1,4 @@
-## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by 
+## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by
 
 #############################################################################
 #
@@ -19,32 +19,30 @@ import Pmw
 import tkinter, oldnumeric as Numeric
 from . import Slider, ColorWheel
 
+
 class ColorChooser:
-    """Class of a color picker
-"""
+    """Class of a color picker"""
 
-# example of valid targetDict
-#        lTargetDict = {
-#                       'ambient light':   
-#                           (self.viewer.lightModel.ambient[:3],
-#                            'RGB',
-#                            self.viewer.LMColor
-#                           ),
-#                       'background':
-#                           (self.viewer.currentCamera.backgroundColor[:3],
-#                            'RGB',
-#                            self.viewer.CurrentCameraBackgroundColor
-#                           ),
-#                      }
+    # example of valid targetDict
+    #        lTargetDict = {
+    #                       'ambient light':
+    #                           (self.viewer.lightModel.ambient[:3],
+    #                            'RGB',
+    #                            self.viewer.LMColor
+    #                           ),
+    #                       'background':
+    #                           (self.viewer.currentCamera.backgroundColor[:3],
+    #                            'RGB',
+    #                            self.viewer.CurrentCameraBackgroundColor
+    #                           ),
+    #                      }
 
-
-    def __init__(self, master=None, targetDict={}, 
-                 targetKey=None, gridCfg=None):
+    def __init__(self, master=None, targetDict={}, targetKey=None, gridCfg=None):
 
         self.master = master
-        if hasattr(self.master, 'withdraw'):
-            self.master.title('Color Chooser')
-            self.master.protocol('WM_DELETE_WINDOW', self.master.withdraw )
+        if hasattr(self.master, "withdraw"):
+            self.master.title("Color Chooser")
+            self.master.protocol("WM_DELETE_WINDOW", self.master.withdraw)
         self.frame = tkinter.Frame(self.master, relief=tkinter.RIDGE, borderwidth=3)
         self.topFrame = tkinter.Frame(self.frame)
 
@@ -55,71 +53,88 @@ class ColorChooser:
         lTargetDictKeys.sort()
         if targetKey is not None:
             self.comboBoxTarget = Pmw.ComboBox(
-                self.master, 
-                label_text='target:',
-                labelpos='w',
-                #entryfield_value=,
+                self.master,
+                label_text="target:",
+                labelpos="w",
+                # entryfield_value=,
                 scrolledlist_items=lTargetDictKeys,
-                selectioncommand=self.setTarget
-                )
-            self.comboBoxTarget.pack(side='top', fill='x')
+                selectioncommand=self.setTarget,
+            )
+            self.comboBoxTarget.pack(side="top", fill="x")
 
         self.saveCol = tkinter.Frame(self.topFrame)
-        self.currentColor = tkinter.Label(self.saveCol, text='Current',
-                 width=10, relief = tkinter.SUNKEN, background = '#FFFFFF',
-                 foreground = '#FF988E', borderwidth=3 )
+        self.currentColor = tkinter.Label(
+            self.saveCol,
+            text="Current",
+            width=10,
+            relief=tkinter.SUNKEN,
+            background="#FFFFFF",
+            foreground="#FF988E",
+            borderwidth=3,
+        )
         self.currentColor.pack()
         f = tkinter.Frame(self.saveCol)
-        self.save = tkinter.Button(f, text='Save', relief = tkinter.RAISED,
-                                   command=self.SaveColor,width=7)
+        self.save = tkinter.Button(
+            f, text="Save", relief=tkinter.RAISED, command=self.SaveColor, width=7
+        )
         self.save.pack(side=tkinter.TOP)
-        self.swap = tkinter.Button(f, text='Swap', relief = tkinter.RAISED,
-                                      command=self.SwapColor,width=7)
+        self.swap = tkinter.Button(
+            f, text="Swap", relief=tkinter.RAISED, command=self.SwapColor, width=7
+        )
         self.swap.pack(side=tkinter.TOP)
-        self.restore = tkinter.Button(f, text='Restore', relief = tkinter.RAISED,
-                                      command=self.RestoreColor,width=7)
+        self.restore = tkinter.Button(
+            f, text="Restore", relief=tkinter.RAISED, command=self.RestoreColor, width=7
+        )
         self.restore.pack(side=tkinter.TOP)
         f.pack()
-        self.savedColor = tkinter.Label(self.saveCol, text='Saved', 
-                width=10, relief = tkinter.SUNKEN, background = '#FFFFFF',
-                foreground = '#FF988E', borderwidth=3 )
+        self.savedColor = tkinter.Label(
+            self.saveCol,
+            text="Saved",
+            width=10,
+            relief=tkinter.SUNKEN,
+            background="#FFFFFF",
+            foreground="#FF988E",
+            borderwidth=3,
+        )
         self.savedColor.pack()
-        self.saveCol.pack(side = tkinter.LEFT)
+        self.saveCol.pack(side=tkinter.LEFT)
 
         # target
         if targetKey is not None:
             startingColorRGB = self.targetDict[targetKey][0]
         else:
-            startingColorRGB = (1,1,1,1)
+            startingColorRGB = (1, 1, 1, 1)
 
-        self.hsWheel = ColorWheel.ColorWheel(self.topFrame, circles=6, 
-                                             stripes=30,
-                                             startingColorRGB=startingColorRGB )
+        self.hsWheel = ColorWheel.ColorWheel(
+            self.topFrame, circles=6, stripes=30, startingColorRGB=startingColorRGB
+        )
         self.hsWheel.AddCallback(self.UpdateCurrentColor)
-        self.hsWheel.canvas.pack(side = tkinter.LEFT)
+        self.hsWheel.canvas.pack(side=tkinter.LEFT)
         self.topFrame.pack()
 
         self.savedHsvColor = deepcopy(self.hsWheel.Get())
         if len(startingColorRGB) == 4:
             self.savedHsvColor[3] = startingColorRGB[3]
 
-        coltk = self.hsWheel.Get(mode='TkRGB')
-        self.currentColor.config( background = coltk )
-        self.savedColor.config( background = coltk )
+        coltk = self.hsWheel.Get(mode="TkRGB")
+        self.currentColor.config(background=coltk)
+        self.savedColor.config(background=coltk)
 
-        self.value = Slider.Slider(self.frame, label='Value', immediate=1,
-                                   minval=0.0, maxval = 1.0, init=1.0)
+        self.value = Slider.Slider(
+            self.frame, label="Value", immediate=1, minval=0.0, maxval=1.0, init=1.0
+        )
 
         self.value.frame.pack()
         self.value.AddCallback(self.NewValue)
 
-        self.alpha = Slider.Slider(self.frame, label='Alpha', immediate=1,
-                                   minval=0.0, maxval = 1.0, init=1.0)
+        self.alpha = Slider.Slider(
+            self.frame, label="Alpha", immediate=1, minval=0.0, maxval=1.0, init=1.0
+        )
         self.alpha.frame.pack()
         self.alpha.AddCallback(self.NewValue)
-        
+
         if gridCfg:
-            self.frame.grid( **gridCfg)
+            self.frame.grid(**gridCfg)
         else:
             self.frame.pack(ipadx=2, ipady=2, padx=2, pady=2)
 
@@ -127,117 +142,101 @@ class ColorChooser:
         if targetKey is not None:
             self.setTarget(targetKey)
 
-
     def setTarget(self, val):
-        #print "setTarget", val
+        # print "setTarget", val
         if self.targetKey is not None:
             self.RemoveCallback(self.targetDict[self.targetKey][2])
         self.targetKey = val
         self.comboBoxTarget.setentry(val)
         lTargetTuple = self.targetDict[val]
         self.Set(lTargetTuple[0], mode=lTargetTuple[1])
-        self.AddCallback( lTargetTuple[2] )
-        
+        self.AddCallback(lTargetTuple[2])
 
     def AddCallback(self, func):
         """Add a callback fuction"""
-    
-        self.hsWheel.AddCallback(func)
 
+        self.hsWheel.AddCallback(func)
 
     def RemoveCallback(self, func):
         """Delete a callback fuction"""
-    
-        self.hsWheel.RemoveCallback(func)
 
+        self.hsWheel.RemoveCallback(func)
 
     def UpdateCurrentColor(self, color):
         """Change the color of the current color label"""
-        col = self.hsWheel.Get(mode='TkRGB')
-        self.currentColor.config( background = col )
-
+        col = self.hsWheel.Get(mode="TkRGB")
+        self.currentColor.config(background=col)
 
     def NewValue(self, event):
         """Redo the color wheel with a new value, update color boxes"""
-    
+
         v = self.value.Get()
-        hsv = self.hsWheel.Get('HSV')
-    
+        hsv = self.hsWheel.Get("HSV")
+
         if len(hsv) == 4:
-            hsv[3] = self.alpha.Get() 
-    
+            hsv[3] = self.alpha.Get()
+
         if v != hsv[2]:
-            hsv[2]=v
-            self.hsWheel.Set(hsv, 'HSV')
+            hsv[2] = v
+            self.hsWheel.Set(hsv, "HSV")
             self.hsWheel.Callbacks()
         elif len(hsv) == 4:
-            self.hsWheel.Set(hsv, 'HSV')
+            self.hsWheel.Set(hsv, "HSV")
             self.hsWheel.Callbacks()
-    
 
     def SaveColor(self):
         """Save current color into second color box"""
-    
+
         self.savedHsvColor = deepcopy(self.hsWheel.Get())
         self.savedHsvColor[3] = self.alpha.Get()
-        col = self.hsWheel.Get(mode='TkRGB')
-        self.savedColor.config( background = col )
-
+        col = self.hsWheel.Get(mode="TkRGB")
+        self.savedColor.config(background=col)
 
     def RestoreColor(self):
-        """Restore color from second color box
-    """
-        self.Set(deepcopy(self.savedHsvColor), 'HSV')
-
+        """Restore color from second color box"""
+        self.Set(deepcopy(self.savedHsvColor), "HSV")
 
     def SwapColor(self):
         """Exchange colors in first and second box"""
-    
-        coltk = self.hsWheel.Get(mode='TkRGB')
-        self.savedColor.config( background = coltk )
+
+        coltk = self.hsWheel.Get(mode="TkRGB")
+        self.savedColor.config(background=coltk)
         saved_col = deepcopy(self.savedHsvColor)
         self.savedHsvColor = deepcopy(self.hsWheel.Get())
         self.savedHsvColor[3] = self.alpha.Get()
-        self.Set(saved_col, 'HSV')
+        self.Set(saved_col, "HSV")
 
-
-    def Set(self, col, mode='RGB', run=True):
-        """Set the color chooser to a given RGB or HSV triplet (0. to 1.)
-    """
-        assert mode in ('HSV', 'RGB')
-        assert len(col) in (3,4)
-        self.hsWheel.Set( col, mode, run )
-        self.value.Set( self.hsWheel.Get('HSV')[2], update=0 )
+    def Set(self, col, mode="RGB", run=True):
+        """Set the color chooser to a given RGB or HSV triplet (0. to 1.)"""
+        assert mode in ("HSV", "RGB")
+        assert len(col) in (3, 4)
+        self.hsWheel.Set(col, mode, run)
+        self.value.Set(self.hsWheel.Get("HSV")[2], update=0)
         if len(col) == 4:
-            self.alpha.Set( col[3], update=0 )
+            self.alpha.Set(col[3], update=0)
         self.UpdateCurrentColor(None)
-
 
     def Wysiwyg(self, onOff):
         """Toggle Wysiwyg mode for color wheel. When this flag iset,
         the colors of the wheel are recomputed for each new value"""
-        assert onOff in (0,1)
+        assert onOff in (0, 1)
         self.hsWheel.Wysiwyg(onOff)
 
-
     def showColorChooser(self, target=None):
-        """
-"""
+        """"""
         if self.master.winfo_ismapped() == 0:
             self.master.deiconify()
         self.master.lift()
         if target is not None:
             self.setTarget(target)
 
-
     def hideColorChooser(self, event=None):
-        #print "hideColorChooser", self
+        # print "hideColorChooser", self
         if self.master.winfo_ismapped() == 1:
             self.master.withdraw()
 
-
     def toggleColorChooser(self, event=None):
-        #print "toggleColorChooser", self
+        # print "toggleColorChooser", self
         if self.master.winfo_ismapped() == 1:
             self.master.withdraw()
         else:
@@ -245,10 +244,11 @@ class ColorChooser:
             self.master.lift()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     root = tkinter.Tk()
     cc = ColorChooser(root)
-    def MyCallback(col):
-        print('col', col)
-    cc.AddCallback(MyCallback)
 
+    def MyCallback(col):
+        print("col", col)
+
+    cc.AddCallback(MyCallback)

@@ -1,4 +1,4 @@
-## Automatically adapted for numpy.oldnumeric Jul 30, 2007 by 
+## Automatically adapted for numpy.oldnumeric Jul 30, 2007 by
 
 #
 # copyright_notice
@@ -9,24 +9,24 @@
 import numpy.oldnumeric as Numeric
 from opengltk import util
 from opengltk.extent import _gllib, _glulib
-from opengltk.util import gltypmap, revtypmap ,\
-     GLdouble, GLfloat, GLint, readModProjView
+from opengltk.util import gltypmap, revtypmap, GLdouble, GLfloat, GLint, readModProjView
 from opengltk.ccallback import swigptrcallback
 import gl_wrapper
 
 
-def gluBuild1DMipMaps( target, component, format, data):
+def gluBuild1DMipMaps(target, component, format, data):
     """
     target - GLenum
     component - GLint
     format - GLenum
     data - Numeric array
     """
-    _glulib.gluBuild1DMipMaps( target, component, len( data), format,
-                              gltypmap[ data.dtype.char], data)
+    _glulib.gluBuild1DMipMaps(
+        target, component, len(data), format, gltypmap[data.dtype.char], data
+    )
 
 
-def gluBuild2DMipMaps( target, component, width, format, data):
+def gluBuild2DMipMaps(target, component, width, format, data):
     """
     target - GLenum
     component - GLint
@@ -34,54 +34,58 @@ def gluBuild2DMipMaps( target, component, width, format, data):
     format - GLenum
     data - Numeric array
     """
-    lendat = len( data)
+    lendat = len(data)
     if lendat % width:
-        raise TypeError( (width, len( data)),
-                         'len( data) nota multiple of "width"')
-    _glulib.gluBuild2DMipMaps( target, component, width, lendat/width, format,
-                              gltypmap[ data.dtype.char], data)
+        raise TypeError((width, len(data)), 'len( data) nota multiple of "width"')
+    _glulib.gluBuild2DMipMaps(
+        target,
+        component,
+        width,
+        lendat / width,
+        format,
+        gltypmap[data.dtype.char],
+        data,
+    )
 
 
-def gluGetNurbsProperty( nurb, property):
+def gluGetNurbsProperty(nurb, property):
     """
-    nurb - GLUnurbs*
-    property - GLenum
-return - GLfloat
-"""
-    data = Numeric.zeros( 1, 'f')
-    _glulib.gluGetNurbsProperty( nurb, property, data)
-    return data[ 0]
+        nurb - GLUnurbs*
+        property - GLenum
+    return - GLfloat"""
+    data = Numeric.zeros(1, "f")
+    _glulib.gluGetNurbsProperty(nurb, property, data)
+    return data[0]
 
 
-def gluGetTessProperty( tess, property):
+def gluGetTessProperty(tess, property):
     """
-    tess - GLUtesselator*
-    property - GLenum
-return - GLdouble
-"""
-    data = Numeric.zeros( 1, 'd')
-    _glulib.gluGetTessProperty( nurb, property, data)
-    return data[ 0]
+        tess - GLUtesselator*
+        property - GLenum
+    return - GLdouble"""
+    data = Numeric.zeros(1, "d")
+    _glulib.gluGetTessProperty(nurb, property, data)
+    return data[0]
 
 
-def gluLoadSamplingMatrices( nurb, model, perspective, view):
+def gluLoadSamplingMatrices(nurb, model, perspective, view):
     """
     nurb - GLUnurb
     model - sequence of 16 floats
     perspective - sequence of 16 floats
     view - sequence of 4 floats
     """
-    model, perspective, view = readModProjView( model, perspective, view)
-    _glulib.gluLoadSamplingMatrices( nurb, model, perspective, view)
-    
+    model, perspective, view = readModProjView(model, perspective, view)
+    _glulib.gluLoadSamplingMatrices(nurb, model, perspective, view)
 
-def gluNurbsCallback( element, which, callback):
-    return _glulib.gluNurbsCallback( element, which,
-                                    swigptrcallback( util,
-                                                     ('void', ['GLenum']),
-                                                     callback))
 
-def gluNurbsCurve( nurb, type, knots, order, control, stride):
+def gluNurbsCallback(element, which, callback):
+    return _glulib.gluNurbsCallback(
+        element, which, swigptrcallback(util, ("void", ["GLenum"]), callback)
+    )
+
+
+def gluNurbsCurve(nurb, type, knots, order, control, stride):
     """
     nurb - GLUnurbs
     type - GLenum
@@ -91,23 +95,23 @@ def gluNurbsCurve( nurb, type, knots, order, control, stride):
     stride - GLint
     """
 
-    lknot = len( knots)
+    lknot = len(knots)
     assert stride
     if lknot % stride:
-        raise TypeError( (len( knots), stride),
-                         "(len( knots), stride) not compatible")
+        raise TypeError((len(knots), stride), "(len( knots), stride) not compatible")
     nknot = lknot / stride
-    if len( control) != nknot - order:
-        raise TypeError( (len( knots), order, stride, len( control)),
-                         '(len( knots), order, stride, len( control))'
-                         ' not compatible')
-    
-    _glulib.gluNurbsCurve( nurb, nknot, knots, stride,
-                          control, order, type)
+    if len(control) != nknot - order:
+        raise TypeError(
+            (len(knots), order, stride, len(control)),
+            "(len( knots), order, stride, len( control))" " not compatible",
+        )
+
+    _glulib.gluNurbsCurve(nurb, nknot, knots, stride, control, order, type)
 
 
-def gluNurbsSurface( nurb, type, sKnots, tKnots, sOrder, tOrder, control,
-                     sStride, tStride):
+def gluNurbsSurface(
+    nurb, type, sKnots, tKnots, sOrder, tOrder, control, sStride, tStride
+):
     """
     nurb - GLUnurbs
     type - GLenum
@@ -119,41 +123,53 @@ def gluNurbsSurface( nurb, type, sKnots, tKnots, sOrder, tOrder, control,
     assert sStride
     assert tStride
 
-    lsknot = len( sKnots)
+    lsknot = len(sKnots)
     if lsknot % sStride:
-        raise TypeError( (len( sKnots), sStride),
-                         "(len( sKnots), sStride) not compatible")
+        raise TypeError(
+            (len(sKnots), sStride), "(len( sKnots), sStride) not compatible"
+        )
     nsknot = lsknot / sStride
 
-    
-    ltknot = len( tKnots)
+    ltknot = len(tKnots)
     if ltknot % sStride:
-        raise TypeError( (len( tKnots), sStride),
-                         "(len( tKnots), sStride) not compatible")
+        raise TypeError(
+            (len(tKnots), sStride), "(len( tKnots), sStride) not compatible"
+        )
     ntknot = ltknot / sStride
 
-    
-    if len( control) != (nsknot - sOrder)*(ntknot - tOrder):
-        raise TypeError( (len( control), (nsknot, sOrder), (ntknot, tOrder)),
-                         '(len( control), (nsknot, sOrder), (ntknot, tOrder))'
-                         ' not compatible')
-    
-    _glulib.gluNurbsSurface( nurb, nsknot, sKnots, ntknot, tKnots,
-                            sStride, tStride, control, sOrder, tOrder, type)
+    if len(control) != (nsknot - sOrder) * (ntknot - tOrder):
+        raise TypeError(
+            (len(control), (nsknot, sOrder), (ntknot, tOrder)),
+            "(len( control), (nsknot, sOrder), (ntknot, tOrder))" " not compatible",
+        )
+
+    _glulib.gluNurbsSurface(
+        nurb,
+        nsknot,
+        sKnots,
+        ntknot,
+        tKnots,
+        sStride,
+        tStride,
+        control,
+        sOrder,
+        tOrder,
+        type,
+    )
 
 
-def gluPickMatrix( x, y, delX, delY, view):
+def gluPickMatrix(x, y, delX, delY, view):
     """
     x, y, delX, delY - GLdouble
     """
-    if len( view) != 4:
-        raise TypeError( view, len( view), '4 expected')
-    if not isinstance(view , Numeric.ArrayType):
+    if len(view) != 4:
+        raise TypeError(view, len(view), "4 expected")
+    if not isinstance(view, Numeric.ArrayType):
         view = Numeric.array(view, GLint)
-    _glulib.gluPickMatrix( x, y, delX, delY, view)
+    _glulib.gluPickMatrix(x, y, delX, delY, view)
 
 
-def gluProject( obj, model, proj, view):
+def gluProject(obj, model, proj, view):
     """
     obj - seq( 3, GLdouble)
     model - seq( gl.MODELVIEW_MATRIX, GLfloat)
@@ -161,11 +177,12 @@ def gluProject( obj, model, proj, view):
     view - seq( gl.VIEWPORT, GLfloat)
     return - Numeric array (shape: (3,), type: GLdouble)
     """
-    win = Numeric.zeros( 3, GLdouble)
-    gluProjectv( obj, model, proj, view, win[0:1], win[ 1:2], win[ 2:3])
+    win = Numeric.zeros(3, GLdouble)
+    gluProjectv(obj, model, proj, view, win[0:1], win[1:2], win[2:3])
     return win
 
-def gluProjectv( obj, model, proj, view, win):
+
+def gluProjectv(obj, model, proj, view, win):
     """
     obj - seq( 3, GLdouble)
     model - seq( gl.MODELVIEW_MATRIX, GLfloat)
@@ -174,14 +191,15 @@ def gluProjectv( obj, model, proj, view, win):
     win - Numeric array (shape: (3,), type: GLdouble): gets the new coordinates
     """
 
-    if 3 != len( obj):
-        raise TypeError( len( obj), "obj not 3-array")
-    model, proj, view = readModProjView( model, proj, view)
-    _glulib.gluProject( obj[ 0], obj[ 1], obj[ 2], model, proj, view,
-                     win[0:1], win[ 1:2], win[ 2:3])
+    if 3 != len(obj):
+        raise TypeError(len(obj), "obj not 3-array")
+    model, proj, view = readModProjView(model, proj, view)
+    _glulib.gluProject(
+        obj[0], obj[1], obj[2], model, proj, view, win[0:1], win[1:2], win[2:3]
+    )
 
 
-def gluPwlCurve( nurb, type, data, stride):
+def gluPwlCurve(nurb, type, data, stride):
     """
     nurb - GLUnurbs*
     type - GLenum
@@ -189,21 +207,19 @@ def gluPwlCurve( nurb, type, data, stride):
     stride - GLint
     """
     assert stride
-    ldata = len( data)
+    ldata = len(data)
     if ldata % stride:
-        raise TypeError( (len( data), stride),
-                         "len( data) not a multiple of stride")
-    _glulib.gluPwlCurve( nurb, len( data) / stride, data, stride, type)
+        raise TypeError((len(data), stride), "len( data) not a multiple of stride")
+    _glulib.gluPwlCurve(nurb, len(data) / stride, data, stride, type)
 
 
-def gluQuadricCallback( element, which, callback):
-    return _glulib.gluQuadricCallback( element, which,
-                                      swigptrcallback( util,
-                                                       ('void', ['GLenum']),
-                                                       callback))
+def gluQuadricCallback(element, which, callback):
+    return _glulib.gluQuadricCallback(
+        element, which, swigptrcallback(util, ("void", ["GLenum"]), callback)
+    )
 
 
-def gluScaleImage( format, wIn, dataIn, wOut, hOut, typeOut):
+def gluScaleImage(format, wIn, dataIn, wOut, hOut, typeOut):
     """
     format - GLenum
     wIn - GLsizei
@@ -212,68 +228,74 @@ def gluScaleImage( format, wIn, dataIn, wOut, hOut, typeOut):
     typeOut - GLenum
     return - Numeric array(shape: wOut*hOut, type; typeOut)
     """
-    lin = len( dataIn)
+    lin = len(dataIn)
     if lin % wIn:
-        raise TypeError( (len( dataIn), wIn),
-                         "len( dataIn) not multiple of wIn")
+        raise TypeError((len(dataIn), wIn), "len( dataIn) not multiple of wIn")
 
     gltout = typeOut
-    typeOut = revtypmap[ typeout]
-    result = Numeric.zeros( wOut * hOut, typeOut)
-    _glulib.gluScaleImage( format,
-                          wIn, lin / wIn, gltypmap[ dataIn.dtype.char], dataIn,
-                          wOut, hOut, gltout, result)
+    typeOut = revtypmap[typeout]
+    result = Numeric.zeros(wOut * hOut, typeOut)
+    _glulib.gluScaleImage(
+        format,
+        wIn,
+        lin / wIn,
+        gltypmap[dataIn.dtype.char],
+        dataIn,
+        wOut,
+        hOut,
+        gltout,
+        result,
+    )
     return result
 
-        
-def gluTessCallback( element, which, callback):
-    return _glulib.gluTessCallback( element, which,
-                                   swigptrcallback( util,
-                                                    ('void', ['GLenum']),
-                                                    callback))
+
+def gluTessCallback(element, which, callback):
+    return _glulib.gluTessCallback(
+        element, which, swigptrcallback(util, ("void", ["GLenum"]), callback)
+    )
 
 
-def gluTessNormaldv( tess, normale):
+def gluTessNormaldv(tess, normale):
     """
     tess - GLUtesselator*
     normale - seq( 3, GLdouble)
     """
-    _glulib.gluTessNormal( tess, normale[ 0], normale[ 1], normale[ 2])
+    _glulib.gluTessNormal(tess, normale[0], normale[1], normale[2])
 
 
-def gluTessNormalfv( tess, normale):
+def gluTessNormalfv(tess, normale):
     """
     tess - GLUtesselator*
     normale - seq( 3, GLfloat)
     """
-    _glulib.gluTessNormal( tess, normale[ 0], normale[ 1], normale[ 2])
+    _glulib.gluTessNormal(tess, normale[0], normale[1], normale[2])
 
 
-def gluTessVertex( tess, location, data):
+def gluTessVertex(tess, location, data):
     """
     tess - GLUtesselator*
     location - seq( 3, GLdouble)
     data - GLvoid*
     """
-    if 3 != len( location):
-        raise TypeError( len( location), "location not a 3-array")
-    _glulib.gluTessVertex( tess, location, data)
+    if 3 != len(location):
+        raise TypeError(len(location), "location not a 3-array")
+    _glulib.gluTessVertex(tess, location, data)
 
 
-def gluUnProject( obj, model, proj, view):
+def gluUnProject(obj, model, proj, view):
     """
-    obj - seq( 3, GLdouble)
-    model - seq( gl.MODELVIEW_MATRIX, GLfloat)
-    perspective - seq( gl.PROJECTION_MATRIX, GLfloat)
-    view - seq( gl.VIEWPORT, GLfloat)
-return - Numeric.array ( 3, GLdouble)
+        obj - seq( 3, GLdouble)
+        model - seq( gl.MODELVIEW_MATRIX, GLfloat)
+        perspective - seq( gl.PROJECTION_MATRIX, GLfloat)
+        view - seq( gl.VIEWPORT, GLfloat)
+    return - Numeric.array ( 3, GLdouble)
     """
-    win = Numeric.zeros( 3, GLdouble)
-    gluUnProjectv( obj, model, proj, view, win )
+    win = Numeric.zeros(3, GLdouble)
+    gluUnProjectv(obj, model, proj, view, win)
     return win[:3]
 
 
-def gluUnProjectv( obj, model, proj, view, win):
+def gluUnProjectv(obj, model, proj, view, win):
     """
     obj - seq( 3, GLdouble)
     model - seq( gl.MODELVIEW_MATRIX, GLfloat)
@@ -282,33 +304,33 @@ def gluUnProjectv( obj, model, proj, view, win):
     win - Numeric array( 3, GLdouble): gets the new coordinates
     """
 
-    if 3 != len( obj):
-        raise TypeError( len( obj), "obj not 3-array")
-    model, proj, view = readModProjView( model, proj, view)
-    _glulib.gluUnProject( obj[ 0], obj[ 1], obj[ 2], model, proj, view,
-                         win[0:1], win[ 1:2], win[ 2:9])
-
+    if 3 != len(obj):
+        raise TypeError(len(obj), "obj not 3-array")
+    model, proj, view = readModProjView(model, proj, view)
+    _glulib.gluUnProject(
+        obj[0], obj[1], obj[2], model, proj, view, win[0:1], win[1:2], win[2:9]
+    )
 
 
 __all__ = [
-    'gluBuild1DMipMaps',
-    'gluBuild2DMipMaps',
-    'gluGetNurbsProperty',
-    'gluGetTessProperty',
-    'gluLoadSamplingMatrices',
-    'gluNurbsCallback',
-    'gluNurbsCurve',
-    'gluNurbsSurface',
-    'gluPickMatrix',
-    'gluProject',
-    'gluProjectv',
-    'gluPwlCurve',
-    'gluQuadricCallback',
-    'gluScaleImage',
-    'gluTessCallback',
-    'gluTessNormaldv',
-    'gluTessNormalfv',
-    'gluTessVertex',
-    'gluUnProject',
-    'gluUnProjectv',
-    ]
+    "gluBuild1DMipMaps",
+    "gluBuild2DMipMaps",
+    "gluGetNurbsProperty",
+    "gluGetTessProperty",
+    "gluLoadSamplingMatrices",
+    "gluNurbsCallback",
+    "gluNurbsCurve",
+    "gluNurbsSurface",
+    "gluPickMatrix",
+    "gluProject",
+    "gluProjectv",
+    "gluPwlCurve",
+    "gluQuadricCallback",
+    "gluScaleImage",
+    "gluTessCallback",
+    "gluTessNormaldv",
+    "gluTessNormalfv",
+    "gluTessVertex",
+    "gluUnProject",
+    "gluUnProjectv",
+]

@@ -1,8 +1,10 @@
 import Pmw, tkinter
+
 # Pmw_0_8_5
 
+
 class VFRadioSelect(Pmw.RadioSelect):
-    """ This class is a wrapper for the Pmw.RadioSlect class.
+    """This class is a wrapper for the Pmw.RadioSlect class.
     It implements :
     - get method: to get the current value.
     - set method: to set the radioslect to a given value.
@@ -20,12 +22,13 @@ class VFRadioSelect(Pmw.RadioSelect):
         buttonText = [] list of the label for each button contained in the
                         RadioSelect widget.
     """
+
     def __init__(self, parent, buttonText=[], **kw):
-        """ New constructor argument:
+        """New constructor argument:
         - buttonText: label for the button in the RadioSelect"""
 
         # 1- Define optionDefs
-        optiondefs = (())
+        optiondefs = ()
         # 2 Call the self.defineOptions method
         self.defineoptions(kw, optiondefs)
         # 3- Call the constructor of the base class Pmw.EntryField
@@ -63,10 +66,11 @@ class VFButtonBox(Pmw.ButtonBox):
     orient='vertical'
     padx=3, pady=3
     """
+
     def __init__(self, parent, buttonText=[], **kw):
 
         # 1- Define optionDefs
-        optiondefs = (())
+        optiondefs = ()
         # 2 Call the self.defineOptions method
         self.defineoptions(kw, optiondefs)
         # NO NEED of the new label_text argument already existing !
@@ -90,7 +94,6 @@ class VFButtonBox(Pmw.ButtonBox):
         self.setdefault(buttonName)
 
 
-
 class VFEntryField(Pmw.EntryField):
     """
     This class is a wrapper for the Pmw.EntryField class.
@@ -111,9 +114,10 @@ class VFEntryField(Pmw.EntryField):
       to a given value.
     - get method: to get the current value in the entry field
     """
+
     def __init__(self, parent=None, **kw):
         # 1- Define optionDefs
-        optiondefs = (())
+        optiondefs = ()
         # 2 Call the self.defineOptions method
         self.defineoptions(kw, optiondefs)
         # NO NEED of the new label_text argument already existing !
@@ -122,21 +126,20 @@ class VFEntryField(Pmw.EntryField):
         # 4- Call the initialiseoption method
         self.initialiseoptions(VFEntryField)
 
-        
     def set(self, defaultvalue):
         self.setentry(defaultvalue)
-
-
 
     def get(self):
         curValue = self.invoke()
         return curValue
 
+
 class VFNoteBook(Pmw.NoteBook):
     """ The VFNoteBookR class is a wrapper for the Pmw.NoteBookR class."""
-    def __init__(self, parent, listLevel, pagesDescr= {}, **kw):
-        #self.listLevel = listLevel
-        Pmw.NoteBook.__init__(*(self,parent), **kw)
+
+    def __init__(self, parent, listLevel, pagesDescr={}, **kw):
+        # self.listLevel = listLevel
+        Pmw.NoteBook.__init__(*(self, parent), **kw)
         print(pagesDescr)
         # Creates the pages
         self.pages = {}
@@ -145,8 +148,6 @@ class VFNoteBook(Pmw.NoteBook):
             if level not in pagesDescr:
                 continue
             descr = pagesDescr[level]
-            widget = descr['widgetType'](*(self.pages[level],), **descr['wcfg'])
-            widget.grid(*(), **descr['gridcfg'])
-        #print self.pages
-
-        
+            widget = descr["widgetType"](*(self.pages[level],), **descr["wcfg"])
+            widget.grid(*(), **descr["gridcfg"])
+        # print self.pages

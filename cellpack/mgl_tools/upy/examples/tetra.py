@@ -1,4 +1,3 @@
-
 """
     Copyright (C) <2010>  Autin L. TSRI
     
@@ -23,16 +22,19 @@ Created on Thu Feb 17 10:02:01 2011
 
 @author: -
 """
-#example for a script not a plugin ....
-import sys,os
-#pyubic have to be in the pythonpath, if not add it
-#upypath = "/Users/ludo/pathtoupy/"
-#sys.path.append(upypath)
+# example for a script not a plugin ....
+import sys, os
+
+# pyubic have to be in the pythonpath, if not add it
+# upypath = "/Users/ludo/pathtoupy/"
+# sys.path.append(upypath)
 
 import upy
+
 upy.setUIClass()
 
 from upy import uiadaptor
+
 helperClass = upy.getHelperClass()
 
 import numpy
@@ -40,23 +42,24 @@ import math
 
 import os
 import types
-#import Tkinter
+
+# import Tkinter
 import Pmw
-from weakref import ref 
+from weakref import ref
 from copy import deepcopy
 import string
 
-#from mglutil.gui.BasicWidgets.Tk.thumbwheel import ThumbWheel
-#from DejaVu.viewerFns import checkKeywords
-#from opengltk.OpenGL import GL
-#from DejaVu.IndexedGeom import IndexedGeom
-#from DejaVu.colorTool import RGBRamp, resetMaterialMemory
-#from DejaVu.Insert2d import Insert2d
-#import DejaVu.viewerConst
-#from pyglf import glf
+# from mglutil.gui.BasicWidgets.Tk.thumbwheel import ThumbWheel
+# from DejaVu.viewerFns import checkKeywords
+# from opengltk.OpenGL import GL
+# from DejaVu.IndexedGeom import IndexedGeom
+# from DejaVu.colorTool import RGBRamp, resetMaterialMemory
+# from DejaVu.Insert2d import Insert2d
+# import DejaVu.viewerConst
+# from pyglf import glf
 
 
-#class ColorMapLegend(Insert2d):
+# class ColorMapLegend(Insert2d):
 #    """Class for displaying a colormap legend.
 #    arguments for the constructor or Set method are:
 #       ramp: Numeric array of shape Nx3 or Nx4 (default is RBGRamp())
@@ -65,7 +68,7 @@ import string
 #       interp: 1 or 0 to turn color interpolation on and off resp.
 #       mini:   minimum values (i.e which corresponds to the first color)
 #       maxi:   maximum values (i.e which corresponds to the last color)
-#    
+#
 #    If interp is set to 1 QUAD_STRIPS are used and colors are interpolated,
 #    else one QUAD is drawn for each entry in the colormap.
 #    If the color provide alpha values, a chechered background is drawn.
@@ -76,7 +79,7 @@ import string
 #        'height',
 #        'width',
 #        'interp',       # 1: for color interpolation, or 0
-#        'mini',         # 
+#        'mini',         #
 #        'maxi',         #
 #        'labelValues',  # floating point numbers to be written below cml
 #        'glfFont',
@@ -86,7 +89,7 @@ import string
 #        'interp',
 #        'visibleFrame',
 #        'invertLabelsColor',
-#        ]    
+#        ]
 #
 #    glfVectorFontList = [
 #        'arial1.glf',
@@ -117,19 +120,19 @@ import string
 #        lPathToFonts = lGlfModulePath+os.sep+'fonts'+os.sep
 #        self.glfVectorFontLoadIdDict = {}
 #        for font in self.glfVectorFontList:
-#            self.glfVectorFontLoadIdDict[font] = glf.glfLoadFont(lPathToFonts+font)   
+#            self.glfVectorFontLoadIdDict[font] = glf.glfLoadFont(lPathToFonts+font)
 #        self.fontScale = 8
 #        self.glfFontID = 0
 #
 #        # other initialisations
-##        self.colormapguiRef = ref(colormapgui) 
-#        self.resizeSpotRadius = 5 
+##        self.colormapguiRef = ref(colormapgui)
+#        self.resizeSpotRadius = 5
 #        self.resizeSpot = None
 #        self.verticalLegend = True
 #
 #        self.mini = None
 #        self.maxi = None
-#        
+#
 #        kw['ramp'] = RGBRamp()
 #        kw['height'] = 1.
 #        kw['width'] = len(kw['ramp'])
@@ -153,7 +156,7 @@ import string
 #
 #        apply( Insert2d.__init__, (self, name, check), kw)
 #
-#        # Insert2d initialisations 
+#        # Insert2d initialisations
 #        # (need to be done after the Insert2d.__init__ otherwise it overrides)
 #        self.needsRedoDpyListOnResize = True
 #        self.initialPosition = [1, 350] # override the default value in Insert2d
@@ -163,13 +166,13 @@ import string
 #
 #    def Set(self, check=1, redo=1, updateOwnGui=True, **kw):
 #        """set data for this object: add faces (polygon or lines) to this object
-#        check=1 : verify that all the keywords present can be handle by this func 
+#        check=1 : verify that all the keywords present can be handle by this func
 #        redo=1 : append self to viewer.objectsNeedingRedo
 #        updateOwnGui=True : allow to update owngui at the end this func
 #        """
 #        #print "colorMapLegend.Set"
 #        redoFlags = apply( Insert2d.Set, (self, check, 0), kw)
-#        
+#
 #        ramp=kw.get('ramp')
 #        if ramp is not None:
 #            assert len(ramp) > 0
@@ -284,7 +287,7 @@ import string
 #                           .5)
 #
 #        from DejaVu.Legend import drawSelfOrientedLegend
-#        self.polygonContour , self.resizeSpot , self.verticalLegend = drawSelfOrientedLegend( 
+#        self.polygonContour , self.resizeSpot , self.verticalLegend = drawSelfOrientedLegend(
 #                fullWidth=fullWidth,
 #                fullHeight=fullHeight,
 #                tile=tile,
@@ -318,9 +321,9 @@ import string
 #        #print "colorMapLegend.pickDraw", self
 #        # we draw just flat quad of the insert2d
 #        GL.glMatrixMode(GL.GL_PROJECTION)
-#        GL.glPushMatrix()       
+#        GL.glPushMatrix()
 #        #GL.glLoadIdentity()
-#        GL.glLoadMatrixf(self.viewer.currentCamera.pickMatrix) 
+#        GL.glLoadMatrixf(self.viewer.currentCamera.pickMatrix)
 #        GL.glOrtho(0, float(self.viewer.currentCamera.width),
 #                   0, float(self.viewer.currentCamera.height), -1, 1)
 #        GL.glMatrixMode(GL.GL_MODELVIEW)
@@ -383,7 +386,7 @@ import string
 #        """
 #        #print "colorMapLegend.setSize", self
 #        if self.verticalLegend is True:
-#            self.size[0] = event.x - self.coord2d[0]        
+#            self.size[0] = event.x - self.coord2d[0]
 #            self.size[1] = self.coord2d[1] - event.y
 #
 #            if self.size[0] > self.viewer.currentCamera.width:
@@ -391,7 +394,7 @@ import string
 #            if self.size[1] > self.viewer.currentCamera.height:
 #                self.size[1] = self.viewer.currentCamera.height
 #        else:
-#            self.size[1] = event.x - self.coord2d[0]        
+#            self.size[1] = event.x - self.coord2d[0]
 #            self.size[0] = self.coord2d[1] - event.y
 #
 #            if self.size[1] > self.viewer.currentCamera.width:
@@ -437,7 +440,7 @@ import string
 #
 #        if ( len(pick.hits) == 1) and  pick.hits.has_key(self):
 #            if self.viewer.currentObject != self:
-#                    # if the only hit is the legend, 
+#                    # if the only hit is the legend,
 #                    # it becomes the current object
 #                    self.viewer.SetCurrentObject(self)
 #                    self.isMoving = True
@@ -449,7 +452,7 @@ import string
 #                #print "resize"
 #                self.isMoving = False
 #            elif pick.hits[self][0][0] == 0:
-#                # the click in inside the legend but outside 
+#                # the click in inside the legend but outside
 #                # the resize button
 #                self.isMoving = True
 #                self.clickPosFromLegendBottomLeft = [pick.event.x - self.coord2d[0],
@@ -478,7 +481,7 @@ import string
 #        frame1.pack(side='top')
 #
 #        #unit
-#        self.unitsEnt = Pmw.EntryField(frame1, 
+#        self.unitsEnt = Pmw.EntryField(frame1,
 #                                       label_text='Units  ',
 #                                       labelpos='w',
 #                                       value=self.unitsString,
@@ -498,12 +501,12 @@ import string
 #        #fontScale
 #        self.fontScaleThumb = ThumbWheel(frame1,
 #                                    labCfg={'text':'font scale            ', 'side':'left'},
-#                                    showLabel=1, 
+#                                    showLabel=1,
 #                                    width=90,
 #                                    height=14,
-#                                    min=0, 
+#                                    min=0,
 #                                    max=200,
-#                                    type=int, 
+#                                    type=int,
 #                                    value=self.fontScale,
 #                                    callback=self.setWithOwnGui,
 #                                    continuous=True,
@@ -516,7 +519,7 @@ import string
 #        for lLabelValue in self.labelValues:
 #            lLabelValuesString += str(lLabelValue) + ' '
 #        self.labelValsEnt = Pmw.EntryField(
-#                                frame1, 
+#                                frame1,
 #                                label_text='Numeric labels    ',
 #                                labelpos='w',
 #                                value=lLabelValuesString,
@@ -527,12 +530,12 @@ import string
 #        #numOfLabel
 #        self.numOfLabelsCtr = ThumbWheel(frame1,
 #                                    labCfg={'text':'Automatic labels', 'side':'left'},
-#                                    showLabel=1, 
+#                                    showLabel=1,
 #                                    width=90,
 #                                    height=14,
-#                                    min=0, 
+#                                    min=0,
 #                                    max=200,
-#                                    type=int, 
+#                                    type=int,
 #                                    value=self.numOfLabels,
 #                                    callback=self.setWithOwnGui,
 #                                    continuous=True,
@@ -544,9 +547,9 @@ import string
 #        self.interpVar = Tkinter.IntVar()
 #        self.interpVar.set(0)
 #        self.checkBoxFrame = Tkinter.Checkbutton(
-#                                frame1, 
+#                                frame1,
 #                                text='Interpolate',
-#                                variable=self.interpVar, 
+#                                variable=self.interpVar,
 #                                command=self.setWithOwnGui)
 #        self.checkBoxFrame.pack(side='top')
 #
@@ -554,9 +557,9 @@ import string
 #        self.frameVar = Tkinter.IntVar()
 #        self.frameVar.set(1)
 #        self.checkBoxFrame = Tkinter.Checkbutton(
-#                                frame1, 
+#                                frame1,
 #                                text='Frame',
-#                                variable=self.frameVar, 
+#                                variable=self.frameVar,
 #                                command=self.setWithOwnGui)
 #        self.checkBoxFrame.pack(side='top')
 #
@@ -564,18 +567,18 @@ import string
 #        self.invertLabelsColorVar = Tkinter.IntVar()
 #        self.invertLabelsColorVar.set(0)
 #        self.checkBoxinvertLabelsColor = Tkinter.Checkbutton(
-#                                frame1, 
+#                                frame1,
 #                                text='Invert labels color',
-#                                variable=self.invertLabelsColorVar, 
+#                                variable=self.invertLabelsColorVar,
 #                                command=self.setWithOwnGui)
 #        #self.checkBoxFrame.pack(side='top')
 #        self.checkBoxinvertLabelsColor.pack(side='top')
 #
 #        # colormapguiwidget:
 ##        self.launchColormapWidget = Tkinter.Button(
-##                                        frame1, 
+##                                        frame1,
 ##                                        text="Show colormap settings",
-##                                        command=self.colormapguiRef().showColormapSettings_cb 
+##                                        command=self.colormapguiRef().showColormapSettings_cb
 ##                                        )
 ##        self.launchColormapWidget.pack(side='top', fill='x')
 #
@@ -607,7 +610,7 @@ import string
 #        self.Set(
 #                glfFont=glfFont,
 #                fontScale=fontScale,
-#                labelValues=labelValues, 
+#                labelValues=labelValues,
 #                numOfLabels=numOfLabels,
 #                unitsString=unitsString,
 #                interp=interp,
@@ -633,7 +636,7 @@ import string
 #        self.invertLabelsColorVar.set(self.visibleFrame)
 #        self.invertLabelsColorVar.set(self.invertLabelsColor)
 #
-#def animateColors(listeColor,obj,nb=None):
+# def animateColors(listeColor,obj,nb=None):
 #    #require DejaVu object, didnt work properly yet
 #    from opengltk.extent import _glextlib
 #    from opengltk.OpenGL import GL
@@ -660,583 +663,716 @@ import string
 #        if icolor >= len(listeColor):
 #            icolor=0
 
+
 class Tetra:
-    def __init__(self,name=None,filename=None,helper=None,**kw):
-        self.filename=filename
-        self.name=name
-        self.nodes=None
-        self.cells=None
-        self.nvars=None
-        self.cvars=None
-        self.ncolors={}
-        self.ccolors={}
+    def __init__(self, name=None, filename=None, helper=None, **kw):
+        self.filename = filename
+        self.name = name
+        self.nodes = None
+        self.cells = None
+        self.nvars = None
+        self.cvars = None
+        self.ncolors = {}
+        self.ccolors = {}
         self.mesh = {}
-        #self.meshs= None
+        # self.meshs= None
         self.faces = None
         self.helper = helper
-        self.mode ='gmv'
-        self.current_mesh= ""
-        if helper is None :
+        self.mode = "gmv"
+        self.current_mesh = ""
+        if helper is None:
             self.helper = helperClass(**kw)
         if self.filename is not None:
             fileName, fileExtension = os.path.splitext(self.filename)
             if fileExtension == ".gmv":
                 self.nodes, self.cells, self.nvars, self.cvars = self.parse()
                 self.getColors()
-            elif fileExtension == "" :
-                self.mode ='c'
-                self.nodes, self.cells, self.nvars, self.cvars = self.parseTxt() 
+            elif fileExtension == "":
+                self.mode = "c"
+                self.nodes, self.cells, self.nvars, self.cvars = self.parseTxt()
                 self.getColors()
             if self.name is None:
                 self.name = os.path.splitext(os.path.basename(filename))[0]
 
-    def setFromArray(self,nodes=None,cells=None,nvars=None,cvars=None):
+    def setFromArray(self, nodes=None, cells=None, nvars=None, cvars=None):
         if nodes is not None:
             self.setNodes(nodes)
         if cells is not None:
             self.setCells(cells)
         if nvars is not None:
             for k in nvars.keys():
-                self.setNodeVars(k,nvars[k])
+                self.setNodeVars(k, nvars[k])
         if cvars is not None:
             for k in cvars.keys():
-                self.setCellVars(k,nvars[k])
+                self.setCellVars(k, nvars[k])
 
-    def setNodeVars(self,name,values):
+    def setNodeVars(self, name, values):
         self.nvars[name] = values
-        
-    def setCellVars(self,name,values):
+
+    def setCellVars(self, name, values):
         self.cvars[name] = values
-        
-    def setNodes(self,values):
+
+    def setNodes(self, values):
         self.nodes = values
-        
-    def setCells(self,values):
+
+    def setCells(self, values):
         self.cells = values
-        
-    def Set(self,**kw):
+
+    def Set(self, **kw):
         if kw.has_key("name"):
             self.name = kw["name"]
         if kw.has_key("filename"):
             self.filename = kw["filename"]
         if kw.has_key("parse"):
-            if kw["parse"] :
+            if kw["parse"]:
                 if self.filename is not None:
                     fileName, fileExtension = os.path.splitext(self.filename)
                     if fileExtension == ".gmv":
                         self.nodes, self.cells, self.nvars, self.cvars = self.parse()
                         self.getColors()
-                    elif fileExtension == "" :
-                        self.mode ='c'
-                        self.nodes, self.cells, self.nvars, self.cvars = self.parseTxt() 
+                    elif fileExtension == "":
+                        self.mode = "c"
+                        self.nodes, self.cells, self.nvars, self.cvars = self.parseTxt()
                         self.getColors()
                     if self.name is None:
                         self.name = os.path.splitext(os.path.basename(filename))[0]
-    
-    def parseTxt(self,filename=None):
-        if filename is None :
+
+    def parseTxt(self, filename=None):
+        if filename is None:
             filename = self.filename
-        if filename is None :
-            return None,None,None,None
-        #parse the vertices
-        f = open(filename+"_vertices.txt")
+        if filename is None:
+            return None, None, None, None
+        # parse the vertices
+        f = open(filename + "_vertices.txt")
         lines = f.readlines()
         f.close()
-        nodes =[]
-        for i in range(1,len(lines)) :
+        nodes = []
+        for i in range(1, len(lines)):
             l = lines[i].split()
-            nodes.append([float(l[0]),float(l[1]),float(l[2])])
-        #parse the quad
-        f = open(filename+"_elements.txt")
+            nodes.append([float(l[0]), float(l[1]), float(l[2])])
+        # parse the quad
+        f = open(filename + "_elements.txt")
         lines = f.readlines()
         f.close()
-        quads=[]
-        for i in range(1,len(lines)) :
+        quads = []
+        for i in range(1, len(lines)):
             l = lines[i].split()
-            quads.append([int(l[3])-1,int(l[1])-1,int(l[0])-1,int(l[2])-1])
+            quads.append([int(l[3]) - 1, int(l[1]) - 1, int(l[0]) - 1, int(l[2]) - 1])
         nvars = {}
-        data = numpy.load(filename+"_wave.npy")
-        dt = data.transpose()#invert ?
+        data = numpy.load(filename + "_wave.npy")
+        dt = data.transpose()  # invert ?
         for i in range(len(dt)):
             nvars[str(i)] = dt[i]
-        return nodes,quads,nvars,None
-        
-    def parse(self,filename=None):
-        if filename is None :
+        return nodes, quads, nvars, None
+
+    def parse(self, filename=None):
+        if filename is None:
             filename = self.filename
-        if filename is None :
-            return None,None,None,None
+        if filename is None:
+            return None, None, None, None
         f = open(filename)
         lines = f.readlines()
         f.close()
-    
+
         cells = []
         nvars = {}
         cvars = {}
-    
+
         mode = None
         for line in lines:
-            if len(line)<2:
+            if len(line) < 2:
                 continue
-    
-            if line[:6]=='nodes ':
-                mode='nodesX'
-            elif line[:6]=='cells ':
-                mode='cells'
-            #elif line[:8]=='variable':
+
+            if line[:6] == "nodes ":
+                mode = "nodesX"
+            elif line[:6] == "cells ":
+                mode = "cells"
+            # elif line[:8]=='variable':
             #    mode='variable'
-            elif line[:5]=='node_': #FIXME handle the following number
-                mode='nvar'
+            elif line[:5] == "node_":  # FIXME handle the following number
+                mode = "nvar"
                 name = line.split()[0]
-            elif line[:5]=='cell_': #FIXME handle the following number
-                mode='cvar'
+            elif line[:5] == "cell_":  # FIXME handle the following number
+                mode = "cvar"
                 name = line.split()[0]
-            elif line[:7]=='endvars' or line[:7]=='endgmv':
+            elif line[:7] == "endvars" or line[:7] == "endgmv":
                 mode = None
-    
-            elif mode=='nodesX':
+
+            elif mode == "nodesX":
                 nodesX = [float(x) for x in line.split()]
-                mode='nodesY'
-            elif mode=='nodesY':
+                mode = "nodesY"
+            elif mode == "nodesY":
                 nodesY = [float(x) for x in line.split()]
-                mode='nodesZ'
-            elif mode=='nodesZ':
+                mode = "nodesZ"
+            elif mode == "nodesZ":
                 nodesZ = [float(x) for x in line.split()]
                 mode = None
-            elif mode=='cells':
-                tet = [int(x)-1 for x in line.split()[2:]]
-                if len(tet)==4:
+            elif mode == "cells":
+                tet = [int(x) - 1 for x in line.split()[2:]]
+                if len(tet) == 4:
                     cells.append(tet)
-            #elif mode=='variable':
+            # elif mode=='variable':
             #    name = line[:-1]
-            elif mode=='nvar':
+            elif mode == "nvar":
                 nvars[name] = [float(x) for x in line.split()]
-            elif mode=='cvar':
+            elif mode == "cvar":
                 cvars[name] = [float(x) for x in line.split()]
-    
+
         nodes = zip(nodesX, nodesY, nodesZ)
         return nodes, cells, nvars, cvars
 
     def getColors(self):
-        from DejaVu.colorTool import Map, RGBRamp#,RedWhiteBlueRamp
+        from DejaVu.colorTool import Map, RGBRamp  # ,RedWhiteBlueRamp
         from DejaVu.colorMap import ColorMap
         from upy.colors import RedWhiteBlueRamp
-        #from DejaVu.colorMapLegend import ColorMapLegend
-        ramp = RedWhiteBlueRamp()#RGBRamp()
+
+        # from DejaVu.colorMapLegend import ColorMapLegend
+        ramp = RedWhiteBlueRamp()  # RGBRamp()
         self.cmap = ColorMap(name="tetra", ramp=ramp)
-        cmlOptions = {'width':10, 'height':1,
-                      'name':"tetra", 'ramp':ramp,"visible":True}
-#        self.legend = ColorMapLegend(**cmlOptions)
-#        self.helper.AddObject(self.legend)
+        cmlOptions = {
+            "width": 10,
+            "height": 1,
+            "name": "tetra",
+            "ramp": ramp,
+            "visible": True,
+        }
+        #        self.legend = ColorMapLegend(**cmlOptions)
+        #        self.helper.AddObject(self.legend)
         self.ncolors = {}
-        if self.nvars is not None :
-            for k,v in self.nvars.items():
+        if self.nvars is not None:
+            for k, v in self.nvars.items():
                 self.ncolors[k] = Map(v, ramp)
-        
+
         self.ccolors = {}
-        if self.cvars is not None :
-            for k,v in self.cvars.items():
+        if self.cvars is not None:
+            for k, v in self.cvars.items():
                 colors = Map(v, ramp)
                 cols = []
                 for c in colors:
-                    cols.extend( (c,)*4 )
+                    cols.extend((c,) * 4)
                 self.ccolors[k] = cols
-   
-    def makeFaces(self,cells=None):
-        if cells is None :
+
+    def makeFaces(self, cells=None):
+        if cells is None:
             cells = self.cells
-            if self.cells is None :
+            if self.cells is None:
                 return None
-        if self.mode =='c' : 
+        if self.mode == "c":
             return cells
         # faces are counter clockwise in the file
-        faces = {} # dict used to avoid duplicates
-        allFaceList = [] # list of triangular faces
-        allTetFaces = [] # list of face indices for faces of each tet
-                         # negative index means reverse indices to make clockwise
+        faces = {}  # dict used to avoid duplicates
+        allFaceList = []  # list of triangular faces
+        allTetFaces = []  # list of face indices for faces of each tet
+        # negative index means reverse indices to make clockwise
         nbf = 0
         nbt = 0
         n = 0
         allTetFaces = []
-        for i,j,k,l in cells:
-            allTetFaces.extend([ [i,k,j], [k,l,j], [l,k,i] , [l,i,j] ])
+        for i, j, k, l in cells:
+            allTetFaces.extend([[i, k, j], [k, l, j], [l, k, i], [l, i, j]])
         return allTetFaces
-        
-    def createMesh(self,name=None,cells=None):
-        if self.helper is None :
-            return  
+
+    def createMesh(self, name=None, cells=None):
+        if self.helper is None:
+            return
         if name is None:
             name = self.name
         if name not in self.mesh:
             if cells is None:
                 f = self.faces
-                if f is None :
+                if f is None:
                     f = self.makeFaces()
-            else :
+            else:
                 f = self.makeFaces(cells=cells)
-#            if cells is not None :
-#                v=[]
-#                for c in cells :
-#                    for vi in c :
-#                        if vi not in v :
-#                            v.append(self.nodes[vi])
-#                numpy.array([self.getVerticesTetra(c) for c in cells]).flatten()
-#            else :
-#                v = self.nodes
-            self.mesh[name] = self.helper.createsNmesh(name,self.nodes,None,f)
-            self.helper.addObjectToScene(None,self.mesh[name][0])
-        else :
-            #update ?
+            #            if cells is not None :
+            #                v=[]
+            #                for c in cells :
+            #                    for vi in c :
+            #                        if vi not in v :
+            #                            v.append(self.nodes[vi])
+            #                numpy.array([self.getVerticesTetra(c) for c in cells]).flatten()
+            #            else :
+            #                v = self.nodes
+            self.mesh[name] = self.helper.createsNmesh(name, self.nodes, None, f)
+            self.helper.addObjectToScene(None, self.mesh[name][0])
+        else:
+            # update ?
             pass
 
-    def retrievePropertiesFromName(self,name):
+    def retrievePropertiesFromName(self, name):
         for k in self.ncolors:
-            if k == name :
+            if k == name:
                 return self.nvars[k]
         for k in self.ccolors:
-            if k == name :
+            if k == name:
                 return self.cvars[k]
-                
-    def retrieveColorFromName(self,name):
+
+    def retrieveColorFromName(self, name):
         for k in self.ncolors:
-            if k == name :
+            if k == name:
                 return self.ncolors[k]
         for k in self.ccolors:
-            if k == name :
+            if k == name:
                 return self.ccolors[k]
-        
-    def setMeshColor(self,name,key):
-        if self.helper is None :
+
+    def setMeshColor(self, name, key):
+        if self.helper is None:
             return
         var = self.retrieveColorFromName(key)
         if name in self.mesh:
-            self.helper.changeColor(self.mesh[name][1],var)#front Line, back fill??
-            self.current_colors=var
+            self.helper.changeColor(self.mesh[name][1], var)  # front Line, back fill??
+            self.current_colors = var
 
-    def loopOverColor(self,meshname,listeColors=None,nb=None,interpolate=False,interpolateR=10):
+    def loopOverColor(
+        self, meshname, listeColors=None, nb=None, interpolate=False, interpolateR=10
+    ):
         if listeColors is None:
             listeColors = list(self.ncolors.values())
         N = len(listeColors)
         if nb is not None:
-            N =nb
-        #loop over?
-        i=0
+            N = nb
+        # loop over?
+        i = 0
         icolor = 0
-        curentcol = self.current_colors#self.mesh[meshname][1].materials[1028].GetProperty(1)[1][:,:3]#current vcolor ?
-        while  i < N:
+        curentcol = (
+            self.current_colors
+        )  # self.mesh[meshname][1].materials[1028].GetProperty(1)[1][:,:3]#current vcolor ?
+        while i < N:
             col1 = listeColors[icolor]
-            if interpolate :
+            if interpolate:
                 for j in range(interpolateR):
-                    rcol = curentcol + float(j)/float(interpolateR)*(col1-curentcol) 
-                    self.helper.changeColor(self.mesh[meshname][1],rcol)
+                    rcol = curentcol + float(j) / float(interpolateR) * (
+                        col1 - curentcol
+                    )
+                    self.helper.changeColor(self.mesh[meshname][1], rcol)
                     self.updateViewer()
-#                    vi.OneRedraw()
-#                    vi.update()
-            else :
-                self.helper.changeColor(self.mesh[meshname][1],col1)
+            #                    vi.OneRedraw()
+            #                    vi.update()
+            else:
+                self.helper.changeColor(self.mesh[meshname][1], col1)
                 self.updateViewer()
-#                vi.OneRedraw()
-#                vi.update()
-            i+=1
+            #                vi.OneRedraw()
+            #                vi.update()
+            i += 1
             icolor += 1
             if icolor >= len(listeColors):
-                icolor=0
+                icolor = 0
             curentcol = col1
-            
-    def selectCells(self,var,cutoff,cells=None):
-        #ex:cellsOn, cellsOff = selectCells(cells, nvars['node_0'], 0.2)
+
+    def selectCells(self, var, cutoff, cells=None):
+        # ex:cellsOn, cellsOff = selectCells(cells, nvars['node_0'], 0.2)
         if cells is None:
             cells = self.cells
         selectedCells = []
         notSelected = []
         for cell in cells:
-            i,j,k,l = cell
-            if var[i]>cutoff or var[j]>cutoff or var[k]>cutoff or var[l]>cutoff:
+            i, j, k, l = cell
+            if var[i] > cutoff or var[j] > cutoff or var[k] > cutoff or var[l] > cutoff:
                 selectedCells.append(cell)
             else:
                 notSelected.append(cell)
         return selectedCells, notSelected
 
-    def setColorPropertyInt(self,i):
-        if self.mode == 'c':
-            c=self.ncolors[str(i)]
-        else :
-            c=list(self.ncolors.values())[i]        
-        self.helper.changeColor(self.mesh[self.current_mesh][1],c)                
+    def setColorPropertyInt(self, i):
+        if self.mode == "c":
+            c = self.ncolors[str(i)]
+        else:
+            c = list(self.ncolors.values())[i]
+        self.helper.changeColor(self.mesh[self.current_mesh][1], c)
+
 
 class TetraTools:
     def __init__(self):
-        self.listTetra=[]
-        self.listMesh=[]
-        
+        self.listTetra = []
+        self.listMesh = []
 
-#add slider player for properties
+
+# add slider player for properties
 class TetraToolsGui(uiadaptor):
-    def setup(self,**kw):
-        #uiadaptor.__init__(self,**kw)
-        #self.title = "Tetrahedron"
+    def setup(self, **kw):
+        # uiadaptor.__init__(self,**kw)
+        # self.title = "Tetrahedron"
         self.initWidget(id=10)
         self.setupLayout()
-        self.helper = helperClass(**kw) 
-        self.listeTetra={}
-        self.listeTetraName=[]
+        self.helper = helperClass(**kw)
+        self.listeTetra = {}
+        self.listeTetraName = []
         self.currentTetra = None
-        self.listeColors=[]
-        self.currentColor=None
-        
-    #theses two function are for c4d
+        self.listeColors = []
+        self.currentColor = None
+
+    # theses two function are for c4d
     def CreateLayout(self):
         self._createLayout()
         return 1
 
-    def Command(self,*args):
-#        print args
+    def Command(self, *args):
+        #        print args
         self._command(args)
         return 1
 
-            
-    def initWidget(self,id=None):
-        #this where we define the buttons
-        if id is not None :
-            id=id
+    def initWidget(self, id=None):
+        # this where we define the buttons
+        if id is not None:
+            id = id
         else:
             id = self.bid
-        self.id = id   
-        self.LABELS={}
-        self.LABELS["load"] = self._addElemt(label="to a GMV file",width=60)
-        self.LABELS["curT"] = self._addElemt(label="current tetrahedre",width=60)
-        self.LABELS["curP"] = self._addElemt(label="current properties",width=60)
-        
-        self.LABELS["min"] = self._addElemt(label="min:",width=60)
-        self.LABELS["max"] = self._addElemt(label="max:",width=60)
-        self.LABELS["makeOff"] = self._addElemt(label="Make cells using cutoff",width=60)
-        self.LABELS["lengthInter"] = self._addElemt(label="Interpolation length",width=60)
-        self.LABELS["nLoop"] = self._addElemt(label="Nb of loop",width=60)
+        self.id = id
+        self.LABELS = {}
+        self.LABELS["load"] = self._addElemt(label="to a GMV file", width=60)
+        self.LABELS["curT"] = self._addElemt(label="current tetrahedre", width=60)
+        self.LABELS["curP"] = self._addElemt(label="current properties", width=60)
 
-        #we need a File load 
-        self.LOADFILE = self._addElemt(name="Browse",width=40,height=10,
-                         action=self.browseGMV,type="button")
-        #we need a File load 
-        self.CLOSEBTN = self._addElemt(name="Close",width=40,height=10,
-                         action=self.close,type="button")
-                         
-        self.PMENU={}
-        #current Tetra menu
-        self._cTetra = self.addVariable("int",1)
-        self.PMENU["tetra"] = self._addElemt(name="Current",value=[],
-                                    width=60,height=10,action=self.setCurTetra,
-                                    variable=self._cTetra,
-                                    type="pullMenu")
-        #we need pulldown for color method
-        self._colors = self.addVariable("int",1)
-        self.PMENU["properties"] = self._addElemt(name="Properties",value=[],
-                                    width=60,height=10,action=self.setCurTetraProperties,
-                                    variable=self._colors,
-                                    type="pullMenu")
-        #we need pulldown for color method
-        self._comp = self.addVariable("int",1)
-        self.listeMesh=[]
-        self.PMENU["comp"] = self._addElemt(name="Meshes",value=[],
-                                    width=60,height=10,action=None,#self.setCurCompMesh,
-                                    variable=self._comp,
-                                    type="pullMenu")
-        self.IN={}
-        self.IN["nbComp"] = self._addElemt(name='nbComp',width=100,height=10,
-                                              action=None,
-                                              type="inputInt",icon=None,
-                                              value = 100.,
-                                              variable=self.addVariable("int",1),
-                                              mini=1,maxi=10,step=1)
-        self.IN["lengthInter"] = self._addElemt(name='lengthInter',width=100,height=10,
-                                              action=None,
-                                              type="inputInt",icon=None,
-                                              value = 5,
-                                              variable=self.addVariable("int",5),
-                                              mini=1,maxi=50,step=1)
-        self.IN["nLoop"] = self._addElemt(name='nLoop',width=100,height=10,
-                                              action=None,
-                                              type="inputInt",icon=None,
-                                              value = 10,
-                                              variable=self.addVariable("int",10),
-                                              mini=1,maxi=100,step=1)
-        #we need separator ? different mesh?
-        self.BTN={}
-        self.BTN["build"] = self._addElemt(name="Build All",width=40,height=10,
-                         action=self.buildMesh,type="button")
-        self.BTN["buildC"] = self._addElemt(name="Build Compartiments",width=40,height=10,
-                         action=self.buildPropertiesMesh,type="button")
-        self.BTN["color"] = self._addElemt(name="Apply Properties as VColors",width=40,height=10,
-                         action=self.setCurTetraColors,type="button")
-        self.BTN["loopcolor"] = self._addElemt(name="Loop over Properties as VColors",width=40,height=10,
-                         action=self.loopOverPropertiesColor,type="button")
-        #need the slider with min max display to build need a properties and a cutoff
-        self.IN["cutoff"] = self._addElemt(name='cutoff',width=20,height=10,
-                                              action=None,
-                                              type="inputFloat",icon=None,
-                                              value = 0.,
-                                              variable=self.addVariable("float",0.),
-                                              mini=0.,maxi=0.1,step=0.1)
-        self.IN["makeOff"] = self._addElemt(name="OffCells",width=80,height=10,
-                                              action=None,type="checkbox",icon=None,
-                                              variable=self.addVariable("int",0))
-        self.IN["interpolate"] = self._addElemt(name="Interpolate",width=80,height=10,
-                                              action=None,type="checkbox",icon=None,
-                                              variable=self.addVariable("int",0))
-        self.IN["timeline"]= self._addElemt(name="Timeline",width=80,height=10,
-                                              action=self.toggleSynchroTimeLine,type="checkbox",icon=None,
-                                              variable=self.addVariable("int",0))
+        self.LABELS["min"] = self._addElemt(label="min:", width=60)
+        self.LABELS["max"] = self._addElemt(label="max:", width=60)
+        self.LABELS["makeOff"] = self._addElemt(
+            label="Make cells using cutoff", width=60
+        )
+        self.LABELS["lengthInter"] = self._addElemt(
+            label="Interpolation length", width=60
+        )
+        self.LABELS["nLoop"] = self._addElemt(label="Nb of loop", width=60)
+
+        # we need a File load
+        self.LOADFILE = self._addElemt(
+            name="Browse", width=40, height=10, action=self.browseGMV, type="button"
+        )
+        # we need a File load
+        self.CLOSEBTN = self._addElemt(
+            name="Close", width=40, height=10, action=self.close, type="button"
+        )
+
+        self.PMENU = {}
+        # current Tetra menu
+        self._cTetra = self.addVariable("int", 1)
+        self.PMENU["tetra"] = self._addElemt(
+            name="Current",
+            value=[],
+            width=60,
+            height=10,
+            action=self.setCurTetra,
+            variable=self._cTetra,
+            type="pullMenu",
+        )
+        # we need pulldown for color method
+        self._colors = self.addVariable("int", 1)
+        self.PMENU["properties"] = self._addElemt(
+            name="Properties",
+            value=[],
+            width=60,
+            height=10,
+            action=self.setCurTetraProperties,
+            variable=self._colors,
+            type="pullMenu",
+        )
+        # we need pulldown for color method
+        self._comp = self.addVariable("int", 1)
+        self.listeMesh = []
+        self.PMENU["comp"] = self._addElemt(
+            name="Meshes",
+            value=[],
+            width=60,
+            height=10,
+            action=None,  # self.setCurCompMesh,
+            variable=self._comp,
+            type="pullMenu",
+        )
+        self.IN = {}
+        self.IN["nbComp"] = self._addElemt(
+            name="nbComp",
+            width=100,
+            height=10,
+            action=None,
+            type="inputInt",
+            icon=None,
+            value=100.0,
+            variable=self.addVariable("int", 1),
+            mini=1,
+            maxi=10,
+            step=1,
+        )
+        self.IN["lengthInter"] = self._addElemt(
+            name="lengthInter",
+            width=100,
+            height=10,
+            action=None,
+            type="inputInt",
+            icon=None,
+            value=5,
+            variable=self.addVariable("int", 5),
+            mini=1,
+            maxi=50,
+            step=1,
+        )
+        self.IN["nLoop"] = self._addElemt(
+            name="nLoop",
+            width=100,
+            height=10,
+            action=None,
+            type="inputInt",
+            icon=None,
+            value=10,
+            variable=self.addVariable("int", 10),
+            mini=1,
+            maxi=100,
+            step=1,
+        )
+        # we need separator ? different mesh?
+        self.BTN = {}
+        self.BTN["build"] = self._addElemt(
+            name="Build All", width=40, height=10, action=self.buildMesh, type="button"
+        )
+        self.BTN["buildC"] = self._addElemt(
+            name="Build Compartiments",
+            width=40,
+            height=10,
+            action=self.buildPropertiesMesh,
+            type="button",
+        )
+        self.BTN["color"] = self._addElemt(
+            name="Apply Properties as VColors",
+            width=40,
+            height=10,
+            action=self.setCurTetraColors,
+            type="button",
+        )
+        self.BTN["loopcolor"] = self._addElemt(
+            name="Loop over Properties as VColors",
+            width=40,
+            height=10,
+            action=self.loopOverPropertiesColor,
+            type="button",
+        )
+        # need the slider with min max display to build need a properties and a cutoff
+        self.IN["cutoff"] = self._addElemt(
+            name="cutoff",
+            width=20,
+            height=10,
+            action=None,
+            type="inputFloat",
+            icon=None,
+            value=0.0,
+            variable=self.addVariable("float", 0.0),
+            mini=0.0,
+            maxi=0.1,
+            step=0.1,
+        )
+        self.IN["makeOff"] = self._addElemt(
+            name="OffCells",
+            width=80,
+            height=10,
+            action=None,
+            type="checkbox",
+            icon=None,
+            variable=self.addVariable("int", 0),
+        )
+        self.IN["interpolate"] = self._addElemt(
+            name="Interpolate",
+            width=80,
+            height=10,
+            action=None,
+            type="checkbox",
+            icon=None,
+            variable=self.addVariable("int", 0),
+        )
+        self.IN["timeline"] = self._addElemt(
+            name="Timeline",
+            width=80,
+            height=10,
+            action=self.toggleSynchroTimeLine,
+            type="checkbox",
+            icon=None,
+            variable=self.addVariable("int", 0),
+        )
+
     def setupLayout(self):
-        #this where we define the Layout
-        #this wil make three button on a row
+        # this where we define the Layout
+        # this wil make three button on a row
         self._layout = []
-        self._layout.append([self.LOADFILE,self.LABELS["load"],self.CLOSEBTN])
-        #Mesh options layout
-        elemFrame1=[]
-        elemFrame1.append([self.LABELS["curT"],self.PMENU["tetra"],])
-        elemFrame1.append([self.LABELS["curP"],self.PMENU["properties"]])
+        self._layout.append([self.LOADFILE, self.LABELS["load"], self.CLOSEBTN])
+        # Mesh options layout
+        elemFrame1 = []
+        elemFrame1.append(
+            [
+                self.LABELS["curT"],
+                self.PMENU["tetra"],
+            ]
+        )
+        elemFrame1.append([self.LABELS["curP"], self.PMENU["properties"]])
         elemFrame1.append([self.BTN["build"]])
-        elemFrame1.append([self.LABELS["min"],self.IN["cutoff"],self.LABELS["max"]])
-        elemFrame1.append([self.LABELS["makeOff"],self.BTN["buildC"],self.IN["makeOff"]])
-        elemFrame1.append([self.PMENU["comp"],self.BTN["color"]])
-        elemFrame1.append([self.IN["interpolate"],self.LABELS["lengthInter"],self.IN["lengthInter"],])
-        elemFrame1.append([self.BTN["loopcolor"],self.LABELS["nLoop"],self.IN["nLoop"],self.IN["timeline"]])
-        frame1 = self._addLayout(name="Mesh options",elems=elemFrame1)
+        elemFrame1.append([self.LABELS["min"], self.IN["cutoff"], self.LABELS["max"]])
+        elemFrame1.append(
+            [self.LABELS["makeOff"], self.BTN["buildC"], self.IN["makeOff"]]
+        )
+        elemFrame1.append([self.PMENU["comp"], self.BTN["color"]])
+        elemFrame1.append(
+            [
+                self.IN["interpolate"],
+                self.LABELS["lengthInter"],
+                self.IN["lengthInter"],
+            ]
+        )
+        elemFrame1.append(
+            [
+                self.BTN["loopcolor"],
+                self.LABELS["nLoop"],
+                self.IN["nLoop"],
+                self.IN["timeline"],
+            ]
+        )
+        frame1 = self._addLayout(name="Mesh options", elems=elemFrame1)
         self._layout.append(frame1)
-        
-    def loadGMV(self,filename):
-        if not filename : return
-        gmvname,ext=os.path.splitext(os.path.basename(filename))
-#        if ext != ".gmv":
-#            self.drawError("Sorry, the plugin required a file withj gmv extension\n")
-#            return
-        tetra = Tetra(name = gmvname,filename = filename,helper=self.helper)
+
+    def loadGMV(self, filename):
+        if not filename:
+            return
+        gmvname, ext = os.path.splitext(os.path.basename(filename))
+        #        if ext != ".gmv":
+        #            self.drawError("Sorry, the plugin required a file withj gmv extension\n")
+        #            return
+        tetra = Tetra(name=gmvname, filename=filename, helper=self.helper)
         self.listeTetra[gmvname] = tetra
         self.listeTetraName.append(gmvname)
         self.currentTetra = tetra
-        self.addItemToPMenu(self.PMENU["tetra"],str(gmvname))
-        #need to update the color PMENU
-        self.listeColors=[]
-        key=None
-        for key in tetra.ccolors :
+        self.addItemToPMenu(self.PMENU["tetra"], str(gmvname))
+        # need to update the color PMENU
+        self.listeColors = []
+        key = None
+        for key in tetra.ccolors:
             self.listeColors.append(key)
-            self.addItemToPMenu(self.PMENU["properties"],str(key))
-        for key in tetra.ncolors :
+            self.addItemToPMenu(self.PMENU["properties"], str(key))
+        for key in tetra.ncolors:
             self.listeColors.append(key)
-            self.addItemToPMenu(self.PMENU["properties"],str(key))
+            self.addItemToPMenu(self.PMENU["properties"], str(key))
         self.currentColor = key
-        #create the mesh, need the split option? or later
-        #tetra.createMesh()
+        # create the mesh, need the split option? or later
+        # tetra.createMesh()
         self.updateViewer()
-        
-    def browseGMV(self,*args):
-        #first need to call the ui fileDialog
-        self.fileDialog(label="choose a file",callback=self.loadGMV)
+
+    def browseGMV(self, *args):
+        # first need to call the ui fileDialog
+        self.fileDialog(label="choose a file", callback=self.loadGMV)
         return True
 
-    def buildMesh(self,*args):
-        #get curren tetra
+    def buildMesh(self, *args):
+        # get curren tetra
         self.currentTetra.createMesh()
         name = self.currentTetra.name
-        self.addItemToPMenu(self.PMENU["comp"],str(name))
+        self.addItemToPMenu(self.PMENU["comp"], str(name))
         self.listeMesh.append(name)
         self.updateViewer()
 
-    def buildPropertiesMesh(self,*args):
-        cutoff=self.getReal(self.IN["cutoff"])
+    def buildPropertiesMesh(self, *args):
+        cutoff = self.getReal(self.IN["cutoff"])
         key = self.listeColors[self.getLong(self.PMENU["properties"])]
         var = self.currentTetra.retrievePropertiesFromName(key)
-        cellsOn, cellsOff = self.currentTetra.selectCells(var,cutoff)
+        cellsOn, cellsOff = self.currentTetra.selectCells(var, cutoff)
         doCellOff = self.getBool(self.IN["makeOff"])
-        #make selected cells
-#        print len(cellsOn),len(self.currentTetra.cells)
-        name = key+"_"+str(cutoff)+"_On"
-        self.currentTetra.createMesh(name=name,cells=cellsOn)
-        self.addItemToPMenu(self.PMENU["comp"],str(name))
+        # make selected cells
+        #        print len(cellsOn),len(self.currentTetra.cells)
+        name = key + "_" + str(cutoff) + "_On"
+        self.currentTetra.createMesh(name=name, cells=cellsOn)
+        self.addItemToPMenu(self.PMENU["comp"], str(name))
         self.listeMesh.append(name)
         if doCellOff:
-#            print doCellOff
-            name = key+"_"+str(cutoff)+"_Off"
-            self.currentTetra.createMesh(name=name,cells=cellsOff)
-            self.addItemToPMenu(self.PMENU["comp"],str(name))
+            #            print doCellOff
+            name = key + "_" + str(cutoff) + "_Off"
+            self.currentTetra.createMesh(name=name, cells=cellsOff)
+            self.addItemToPMenu(self.PMENU["comp"], str(name))
             self.listeMesh.append(name)
         self.updateViewer()
 
-    def setCurTetra(self,*args):
+    def setCurTetra(self, *args):
         name = self.listeTetraName[self.getLong(self.PMENU["tetra"])]
         self.currentTetra = self.listeTetra[name]
         self.currentTetra.current_mesh = self.getVal(self.PMENU["comp"])
-        #what else to do , update slider ? and other pulldown menu
+        # what else to do , update slider ? and other pulldown menu
         return True
 
-    def setCurTetraProperties(self,*args):
+    def setCurTetraProperties(self, *args):
         key = self.listeColors[self.getLong(self.PMENU["properties"])]
         var = self.currentTetra.retrievePropertiesFromName(key)
         mini = min(var)
         maxi = max(var)
-        self.updateSlider(self.IN["cutoff"],mini,maxi,0.,1.)
-        self.setString(self.LABELS["min"],str(mini))
-        self.setString(self.LABELS["max"],str(maxi))
-        if hasattr(self.currentTetra,"legend") and self.currentTetra.legend is not None:
-            #update cmLegend
-            self.currentTetra.legend.Set(mini=mini,maxi=maxi,visible=1)
-        self.updateViewer()
-        
-    def setCurTetraColors(self,*args):
-        tetra = self.currentTetra
-        key = self.getVal(self.PMENU["properties"])#self.listeColors[self.getLong(self.PMENU["properties"])]
-        name = self.getVal(self.PMENU["comp"])#self.listeMesh[self.getLong(self.PMENU["comp"])]
-        self.current_mesh = self.getVal(self.PMENU["comp"])
-        tetra.setMeshColor(name,key)
+        self.updateSlider(self.IN["cutoff"], mini, maxi, 0.0, 1.0)
+        self.setString(self.LABELS["min"], str(mini))
+        self.setString(self.LABELS["max"], str(maxi))
+        if (
+            hasattr(self.currentTetra, "legend")
+            and self.currentTetra.legend is not None
+        ):
+            # update cmLegend
+            self.currentTetra.legend.Set(mini=mini, maxi=maxi, visible=1)
         self.updateViewer()
 
-    def loopOverPropertiesColor(self,*args):
-        #whats the list
+    def setCurTetraColors(self, *args):
         tetra = self.currentTetra
-        name = self.getVal(self.PMENU["comp"])#self.listeMesh[self.getLong(self.PMENU["comp"])]
+        key = self.getVal(
+            self.PMENU["properties"]
+        )  # self.listeColors[self.getLong(self.PMENU["properties"])]
+        name = self.getVal(
+            self.PMENU["comp"]
+        )  # self.listeMesh[self.getLong(self.PMENU["comp"])]
+        self.current_mesh = self.getVal(self.PMENU["comp"])
+        tetra.setMeshColor(name, key)
+        self.updateViewer()
+
+    def loopOverPropertiesColor(self, *args):
+        # whats the list
+        tetra = self.currentTetra
+        name = self.getVal(
+            self.PMENU["comp"]
+        )  # self.listeMesh[self.getLong(self.PMENU["comp"])]
         self.current_mesh = self.getVal(self.PMENU["comp"])
         interpolate = self.getBool(self.IN["interpolate"])
         nbLoop = self.getLong(self.IN["nLoop"])
         nbInter = self.getLong(self.IN["lengthInter"])
-        tetra.loopOverColor(name,nb=nbLoop,interpolate=interpolate,interpolateR=nbInter)
+        tetra.loopOverColor(
+            name, nb=nbLoop, interpolate=interpolate, interpolateR=nbInter
+        )
 
-    def toggleSynchroTimeLine(self,*args):
+    def toggleSynchroTimeLine(self, *args):
         tetra = self.currentTetra
-        name = self.getVal(self.PMENU["comp"])#self.listeMesh[self.getLong(self.PMENU["comp"])]
+        name = self.getVal(
+            self.PMENU["comp"]
+        )  # self.listeMesh[self.getLong(self.PMENU["comp"])]
         tetra.current_mesh = self.getVal(self.PMENU["comp"])
         interpolate = self.getBool(self.IN["interpolate"])
         nbLoop = self.getLong(self.IN["nLoop"])
         nbInter = self.getLong(self.IN["lengthInter"])
-        toggle = self.getBool(self.IN["timeline"])     
+        toggle = self.getBool(self.IN["timeline"])
         cb = tetra.setColorPropertyInt
-        if toggle :
+        if toggle:
             self.helper.synchronize(cb)
-        else :
+        else:
             self.helper.unsynchronize(cb)
-            
-        
+
+
 if uiadaptor.host == "tk":
     import DejaVu
-    DejaVu.enableVBO = True    
+
+    DejaVu.enableVBO = True
     from DejaVu import Viewer
-    vi = Viewer()    
-    #require a master   
-    tetraui = TetraToolsGui(title= "Tetrahedron",master=vi)
+
+    vi = Viewer()
+    # require a master
+    tetraui = TetraToolsGui(title="Tetrahedron", master=vi)
     tetraui.setup(master=vi)
-    #tetraui.helper.setViewer(vi)
-else :
-    tetraui = TetraToolsGui(title= "Tetrahedron")
+    # tetraui.helper.setViewer(vi)
+else:
+    tetraui = TetraToolsGui(title="Tetrahedron")
     tetraui.setup()
-#call it
+# call it
 tetraui.display()
-#tetraui.loadGMV("/Users/ludo/DEV/upy/trunk/upy/examples/out_010.gmv")
+# tetraui.loadGMV("/Users/ludo/DEV/upy/trunk/upy/examples/out_010.gmv")
 tetraui.loadGMV("/Users/ludo/DEV/continuity/quads800")
 tetraui.buildMesh()
-lcolors=list(tetraui.currentTetra.ncolors.values())
-#tetra = tetraui.currentTetrams=tetraui.currentTetra.mesh.values()[0][0]
-#T=tetraui.currentTetra
+lcolors = list(tetraui.currentTetra.ncolors.values())
+# tetra = tetraui.currentTetrams=tetraui.currentTetra.mesh.values()[0][0]
+# T=tetraui.currentTetra
 
-#execfile("/Users/ludo/testTetraPanda.py")
-#this is the command to loop over the different colors properties
-#if the colors is not provide the script will loop over all properties associate to the mesh.
-#tetra.loopOverColor("out_010",listeColors=lcolors,nb=10,interpolate=True,interpolateR=10)
-#execfile("/Users/ludo/DEV/upy/examples/tetra.py")
+# execfile("/Users/ludo/testTetraPanda.py")
+# this is the command to loop over the different colors properties
+# if the colors is not provide the script will loop over all properties associate to the mesh.
+# tetra.loopOverColor("out_010",listeColors=lcolors,nb=10,interpolate=True,interpolateR=10)
+# execfile("/Users/ludo/DEV/upy/examples/tetra.py")

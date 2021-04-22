@@ -1,17 +1,17 @@
-## Automatically adapted for numpy.oldnumeric Jul 30, 2007 by 
+## Automatically adapted for numpy.oldnumeric Jul 30, 2007 by
 
 #
 # copyright_notice
 #
 
-'''util module
-'''
+"""util module
+"""
 
 __all__ = (
     #'glarray',
-    'attachCurrentThread',
-    'detachCurrentThread',
-    )
+    "attachCurrentThread",
+    "detachCurrentThread",
+)
 import numpy.oldnumeric as Numeric
 from extent._utillib import *
 from extent import _utillib, _gllib
@@ -21,12 +21,14 @@ import threading
 attachLock = threading.Lock()
 attachedThread = None
 
-def attachCurrentThread( blocking=1):
+
+def attachCurrentThread(blocking=1):
     global attachedThread
-    attachLock.acquire( blocking)
+    attachLock.acquire(blocking)
     assert attachedThread is None
     _utillib.attachCurrentThread()
     attachedThread = threading.currentThread()
+
 
 def detachCurrentThread():
     global attachedThread
@@ -36,62 +38,75 @@ def detachCurrentThread():
     attachLock.release()
 
 
-def sizedict( types):
+def sizedict(types):
     lst = []
     for type in types:
         lst.append((Numeric.ones(1, type).itemsize, type))
     lst.sort()
     result = {}
     for sz, typ in lst:
-        if not result.has_key( sz):
-            result[ sz] = typ
+        if not result.has_key(sz):
+            result[sz] = typ
     return result
 
-def importstripped( globs, module, preflist):
+
+def importstripped(globs, module, preflist):
     import re
-    if hasattr( module, '__all__'):
+
+    if hasattr(module, "__all__"):
         symbs = module.__all__
     else:
-        exppat = re.compile( '__')
-        symbs = [x for x in dir( module) if not exppat.match( x)]
-    subpat = re.compile( '^(%s)' % reduce( lambda x, y: '%s|%s' % (x, y),
-                                           preflist[ 1:], preflist[ 0]))
+        exppat = re.compile("__")
+        symbs = [x for x in dir(module) if not exppat.match(x)]
+    subpat = re.compile(
+        "^(%s)" % reduce(lambda x, y: "%s|%s" % (x, y), preflist[1:], preflist[0])
+    )
     for symb in symbs:
-        globs[ subpat.sub( '', symb)] = getattr( module, symb)
+        globs[subpat.sub("", symb)] = getattr(module, symb)
 
 
 for mtyp in [
-    'GLbitfield',
-    'GLboolean',
-    'GLubyte',
-    'GLuint',
-    'GLushort',
-    ]:
-    globals()[ mtyp] = sizedict( [Numeric.UnsignedInt8,
-                                  Numeric.UnsignedInt16,
-                                  Numeric.UnsignedInt32,
-                                  ])[ getattr( _utillib, 'sizeof_%s' % mtyp)]
+    "GLbitfield",
+    "GLboolean",
+    "GLubyte",
+    "GLuint",
+    "GLushort",
+]:
+    globals()[mtyp] = sizedict(
+        [
+            Numeric.UnsignedInt8,
+            Numeric.UnsignedInt16,
+            Numeric.UnsignedInt32,
+        ]
+    )[getattr(_utillib, "sizeof_%s" % mtyp)]
 for mtyp in [
-    'GLbyte',
-    'GLint',
-    'GLshort',
-    ]:
-    globals()[ mtyp] = sizedict( [Numeric.Int8,
-                                  Numeric.Int16,
-                                  Numeric.Int32,
-                                  ])[ getattr( _utillib, 'sizeof_%s' % mtyp)]
+    "GLbyte",
+    "GLint",
+    "GLshort",
+]:
+    globals()[mtyp] = sizedict(
+        [
+            Numeric.Int8,
+            Numeric.Int16,
+            Numeric.Int32,
+        ]
+    )[getattr(_utillib, "sizeof_%s" % mtyp)]
 for mtyp in [
-    'GLclampd',
-    'GLclampf',
-    'GLdouble',
-    'GLfloat',
-    ]:
-    globals()[ mtyp] = sizedict( [Numeric.Float32,
-                                  Numeric.Float64,
-                                  ])[ getattr( _utillib, 'sizeof_%s' % mtyp)]
-    for mtyp in ['GLenum', 'GLsizei']:
-        globals()[ mtyp] = sizedict([Numeric.UInt
-                                    ])[getattr(_utillib, 'sizeof_%s' % mtyp)] 
+    "GLclampd",
+    "GLclampf",
+    "GLdouble",
+    "GLfloat",
+]:
+    globals()[mtyp] = sizedict(
+        [
+            Numeric.Float32,
+            Numeric.Float64,
+        ]
+    )[getattr(_utillib, "sizeof_%s" % mtyp)]
+    for mtyp in ["GLenum", "GLsizei"]:
+        globals()[mtyp] = sizedict([Numeric.UInt])[
+            getattr(_utillib, "sizeof_%s" % mtyp)
+        ]
 
 gltypmap = {
     GLbyte: _gllib.GL_BYTE,
@@ -102,7 +117,7 @@ gltypmap = {
     GLuint: _gllib.GL_UNSIGNED_INT,
     GLfloat: _gllib.GL_FLOAT,
     GLdouble: _gllib.GL_DOUBLE,
-    }
+}
 
 ##  gltypmap = {
 ##      Numeric.Int8: _gllib.GL_BYTE,
@@ -117,7 +132,7 @@ gltypmap = {
 
 revtypmap = {}
 for ctype, econst in gltypmap.items():
-    revtypmap[ econst] = ctype
+    revtypmap[econst] = ctype
 
 # GL_[234]_BYTES not supported ... ?
 
@@ -355,84 +370,87 @@ if __debug__:
         "GL_ZOOM_X",
         "GL_ZOOM_Y",
         # add glGetTexLevelParameter pnames (all on 1)
-        ): # not exhausitve... see Xxdim
+    ):  # not exhausitve... see Xxdim
         if hasattr(_gllib, param):
-            glXXDim[ getattr(_gllib, param)] = 1
+            glXXDim[getattr(_gllib, param)] = 1
 
 for param in (
-    'GL_DEPTH_RANGE',
-    'GL_LINE_WIDTH_RANGE',
-    'GL_MAP1_GRID_DOMAIN',
-    'GL_MAP2_GRID_SEGMENTS',
-    'GL_MAX_VIEWPORT_DIMS',
-    'GL_POINT_SIZE_RANGE',
-    'GL_POLYGON_MODE'
-    ):
+    "GL_DEPTH_RANGE",
+    "GL_LINE_WIDTH_RANGE",
+    "GL_MAP1_GRID_DOMAIN",
+    "GL_MAP2_GRID_SEGMENTS",
+    "GL_MAX_VIEWPORT_DIMS",
+    "GL_POINT_SIZE_RANGE",
+    "GL_POLYGON_MODE",
+):
     if hasattr(_gllib, param):
-        assert not glXXDim.has_key( param), (param, glXXDim[ param])
-        glXXDim[ getattr(_gllib, param)] = 2
+        assert not glXXDim.has_key(param), (param, glXXDim[param])
+        glXXDim[getattr(_gllib, param)] = 2
 
 for param in (
-    'GL_COLOR_INDEXES',
-    'GL_CURRENT_NORMAL',
-    'GL_SPOT_DIRECTION',
-    ):
+    "GL_COLOR_INDEXES",
+    "GL_CURRENT_NORMAL",
+    "GL_SPOT_DIRECTION",
+):
     if hasattr(_gllib, param):
-        assert not glXXDim.has_key( param), (param, glXXDim[ param])
-        glXXDim[ getattr(_gllib, param)] = 3
+        assert not glXXDim.has_key(param), (param, glXXDim[param])
+        glXXDim[getattr(_gllib, param)] = 3
 
 for param in (
-    'GL_ACCUM_CLEAR_VALUE',
-    'GL_AMBIENT',
-    'GL_BLEND_COLOR_EXT',
-    'GL_COLOR_CLEAR_VALUE',
-    'GL_COLOR_WRITEMASK',
-    'GL_CURRENT_COLOR',
-    'GL_CURRENT_RASTER_COLOR',
-    'GL_CURRENT_RASTER_POSITION',
-    'GL_CURRENT_RASTER_TEXTURE_COORDS',
-    'GL_CURRENT_TEXTURE_COORDS',
-    'GL_DIFFUSE',
-    'GL_EMISSION',
-    'GL_EYE_PLANE',
-    'GL_FOG_COLOR',
-    'GL_LIGHT_MODEL_AMBIENT',
-    'GL_MAP2_GRID_DOMAIN',
-    'GL_OBJECT_PLANE',
-    'GL_POSITION',
-    'GL_SCISSOR_BOX',
-    'GL_SPECULAR',
-    'GL_TEXTURE_ENV_COLOR',
-    'GL_TEXTURE_BORDER_COLOR',
-    'GL_VIEWPORT',
-    ):
+    "GL_ACCUM_CLEAR_VALUE",
+    "GL_AMBIENT",
+    "GL_BLEND_COLOR_EXT",
+    "GL_COLOR_CLEAR_VALUE",
+    "GL_COLOR_WRITEMASK",
+    "GL_CURRENT_COLOR",
+    "GL_CURRENT_RASTER_COLOR",
+    "GL_CURRENT_RASTER_POSITION",
+    "GL_CURRENT_RASTER_TEXTURE_COORDS",
+    "GL_CURRENT_TEXTURE_COORDS",
+    "GL_DIFFUSE",
+    "GL_EMISSION",
+    "GL_EYE_PLANE",
+    "GL_FOG_COLOR",
+    "GL_LIGHT_MODEL_AMBIENT",
+    "GL_MAP2_GRID_DOMAIN",
+    "GL_OBJECT_PLANE",
+    "GL_POSITION",
+    "GL_SCISSOR_BOX",
+    "GL_SPECULAR",
+    "GL_TEXTURE_ENV_COLOR",
+    "GL_TEXTURE_BORDER_COLOR",
+    "GL_VIEWPORT",
+):
     if hasattr(_gllib, param):
-        assert not glXXDim.has_key( param), (param, glXXDim[ param])
-        glXXDim[ getattr(_gllib, param)] = 4
+        assert not glXXDim.has_key(param), (param, glXXDim[param])
+        glXXDim[getattr(_gllib, param)] = 4
 
 for param in (
-    'GL_MODELVIEW_MATRIX',
-    'GL_PROJECTION_MATRIX',
-    'GL_TEXTURE_MATRIX',
-    ):
+    "GL_MODELVIEW_MATRIX",
+    "GL_PROJECTION_MATRIX",
+    "GL_TEXTURE_MATRIX",
+):
     if hasattr(_gllib, param):
-        assert not glXXDim.has_key( param), (param, glXXDim[ param])
-        glXXDim[ getattr(_gllib, param)] = 16
+        assert not glXXDim.has_key(param), (param, glXXDim[param])
+        glXXDim[getattr(_gllib, param)] = 16
 
 
 class Xxdim:
-    def __getitem__( self, key):
+    def __getitem__(self, key):
         if __debug__:
             try:
-                return glXXDim[ key]
+                return glXXDim[key]
             except KeyError:
                 from warnings import warn
-                warn( 'key %s not in glXXXDim, return default %i' % (key,
-                                                                     default),
-                      RuntimeWarning)
+
+                warn(
+                    "key %s not in glXXXDim, return default %i" % (key, default),
+                    RuntimeWarning,
+                )
                 return 1
         else:
-            return glXXDim.get( key, 1)
+            return glXXDim.get(key, 1)
+
 
 glGetXXDim = Xxdim()
 
@@ -456,18 +474,19 @@ mapDim = {
     _gllib.GL_MAP2_TEXTURE_COORD_4: 4,
     _gllib.GL_MAP2_VERTEX_3: 3,
     _gllib.GL_MAP2_VERTEX_4: 4,
-    }
+}
 
-def readModProjView( model, projection, view):
-    if len( model) != glGetXXDim[ _gllib.GL_MODELVIEW_MATRIX]:
-        raise TypeError( (len( model),
-                          glGetXXDim[ _gllib.GL_MODELVIEW_MATRIX]),
-                         'len( model) wrong')
-    if len( projection) != glGetXXDim[ _gllib.GL_PROJECTION_MATRIX]:
-        raise TypeError( (len( projection),
-                          glGetXXDim[ _gllib.GL_PROJECTION_MATRIX]),
-                         'len( projection) wrong')
-    if len( view) != glGetXXDim[ _gllib.GL_VIEWPORT]:
-        raise TypeError( (len( view), glGetXXDim[ _gllib.GL_VIEWPORT]),
-                         'len( view) wrong')
+
+def readModProjView(model, projection, view):
+    if len(model) != glGetXXDim[_gllib.GL_MODELVIEW_MATRIX]:
+        raise TypeError(
+            (len(model), glGetXXDim[_gllib.GL_MODELVIEW_MATRIX]), "len( model) wrong"
+        )
+    if len(projection) != glGetXXDim[_gllib.GL_PROJECTION_MATRIX]:
+        raise TypeError(
+            (len(projection), glGetXXDim[_gllib.GL_PROJECTION_MATRIX]),
+            "len( projection) wrong",
+        )
+    if len(view) != glGetXXDim[_gllib.GL_VIEWPORT]:
+        raise TypeError((len(view), glGetXXDim[_gllib.GL_VIEWPORT]), "len( view) wrong")
     return model, projection, view

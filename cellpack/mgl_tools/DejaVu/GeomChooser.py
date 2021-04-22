@@ -6,14 +6,23 @@ from DejaVu import Viewer
 from mglutil.gui.BasicWidgets.Tk.customizedWidgets import ObjectChooser
 import tkinter
 
+
 class GeomChooser:
     """
     The GeomChooser object display a list of geometry object present in a given
     DejaVu.Viewer object.
     """
 
-    def __init__(self, viewer, showAll=True, filterFunction=None, root=None,
-                 command=None, refreshButton=False, showAllButton=False):
+    def __init__(
+        self,
+        viewer,
+        showAll=True,
+        filterFunction=None,
+        root=None,
+        command=None,
+        refreshButton=False,
+        showAllButton=False,
+    ):
         """
         GeomChooser constructor
 
@@ -37,57 +46,65 @@ class GeomChooser:
         if refreshButton or showAllButton:
             f1 = self.frame1 = tkinter.Frame(root)
             if refreshButton:
-                self.refresh = tkinter.Button(f1, text='Refresh Lists',
-                                              command=self.updateList)
-                self.refresh.pack(side='left', fill="x", expand=1)
+                self.refresh = tkinter.Button(
+                    f1, text="Refresh Lists", command=self.updateList
+                )
+                self.refresh.pack(side="left", fill="x", expand=1)
             if showAllButton:
                 self.showAllVar = tkinter.IntVar()
                 self.showAllVar.set(0)
                 self.show = tkinter.Checkbutton(
-                    f1, text='Show all objects', variable=self.showAllVar,
-                    command=self.showAll_cb)
-                self.show.pack(side='left', fill="x", expand=1)
-            self.frame1.pack(side = 'top', fill='x', expand=1)
-            
+                    f1,
+                    text="Show all objects",
+                    variable=self.showAllVar,
+                    command=self.showAll_cb,
+                )
+                self.show.pack(side="left", fill="x", expand=1)
+            self.frame1.pack(side="top", fill="x", expand=1)
+
         assert isinstance(showAll, bool)
         self.showAll = showAll
-        
+
         if filterFunction is not None:
-            assert hasattr(filterFunction, '__call__')
+            assert hasattr(filterFunction, "__call__")
         self.filterFunction = filterFunction
         self.geomList = []
         self.root = root
-        
+
         self.chooserW = ObjectChooser(
-            self.frame, mode='single', title='Choose Object',
-            command=command, lbpackcfg={'fill':'both', 'expand':1} )
-        self.chooserW.pack(side='left', fill='both', expand=1)
+            self.frame,
+            mode="single",
+            title="Choose Object",
+            command=command,
+            lbpackcfg={"fill": "both", "expand": 1},
+        )
+        self.chooserW.pack(side="left", fill="both", expand=1)
         self.buildListOfGeoms()
         self.setList()
-        self.chooserW.widget.configure(exportselection = False) # this is done to prevent disappearing
-#of the ListBox selection  when a text is selected in another widget or window.
+        self.chooserW.widget.configure(
+            exportselection=False
+        )  # this is done to prevent disappearing
+
+    # of the ListBox selection  when a text is selected in another widget or window.
 
     def onSelect(self, event):
         pass
-    
 
     def buildListOfGeoms(self):
         self.geomList = []
         if self.showAll or self.filterFunction is None:
             for g in self.viewer.rootObject.AllObjects():
-                self.geomList.append( (g.fullName, [g]) )
+                self.geomList.append((g.fullName, [g]))
 
         else:
             self.geomList = self.filterFunction(self.viewer)
 
-        #for n, g in self.geomList:
+        # for n, g in self.geomList:
         #    print n
 
-            
     def setList(self):
         self.chooserW.clear()
         self.chooserW.setObjects(self.geomList)
-
 
     def updateList(self):
         lb = self.chooserW.lb
@@ -96,69 +113,58 @@ class GeomChooser:
         self.setList()
         for i in selection:
             lb.selection_set(i)
-            
 
-    #def get(self):
+    # def get(self):
     #    return self.chooserW.get()
-    def get(self, event = None):
+    def get(self, event=None):
         res = []
         sel = self.chooserW.lb.curselection()
         if not sel:
             return res
 
-        for ent in map( int, sel ):
-            obj= self.geomList[ent][1]
+        for ent in map(int, sel):
+            obj = self.geomList[ent][1]
             res.append(obj)
-        if self.chooserW.mode=='single' and res:
+        if self.chooserW.mode == "single" and res:
             res = res[0]
 
         return res
-    
-
 
     def showAll_cb(self, even=None):
         val = self.showAllVar.get()
         self.showAll = val
         self.updateList()
 
-
-    def grid(self,**kw):
+    def grid(self, **kw):
         """Applies the specified keywords (kw) to the grid method of the frame
         containing geometry chooser"""
         self.frame.grid(kw)
-        if 'row' not in kw:
+        if "row" not in kw:
             row = 0
         else:
-            row = kw['row']
-        if 'column' not in kw:
-            column=0
+            row = kw["row"]
+        if "column" not in kw:
+            column = 0
         else:
-            column=kw['column']
-        if 'weight' in kw:
-            weight = kw['weight']
+            column = kw["column"]
+        if "weight" in kw:
+            weight = kw["weight"]
         else:
             weight = 1
         self.frame.rowconfigure(row, weight=weight)
         self.frame.columnconfigure(column, weight=weight)
-
 
     def grid_forget(self):
         """Calls grid_forget() method of the frame containing
         geometry chooser"""
         self.frame.grid_forget()
 
-
     def pack(self, **kw):
         """Applies the specified keywords (kw) to the pack method of the frame
         containing geometry chooser"""
         self.frame.pack(kw)
 
-        
     def pack_forget(self):
         """Calls pack_forget() method of the frame containing
         geometry chooser"""
         self.frame.pack_forget()
-
-
-
-

@@ -1,4 +1,3 @@
-
 """
     Copyright (C) <2010>  Autin L. TSRI
     
@@ -17,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with upy.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.
 """
-tree="""
+tree = """
 |____init__.py
 |____colors.py
 |____hostHelper.py
@@ -46,4 +45,4 @@ tree="""
 | |____tkUI.py
 |____qtUI.py
 """
-print (tree)
+print(tree)

@@ -50,31 +50,34 @@ import os
 widgetsOnBackWindowsCanGrabFocus = (os.name != 'nt') # True, False
 
 """
-        
-def ensureMglutilResourceFile():
-    """verify or generate _mglutilrc file
-"""
-    #print "ensureMglutilResourceFile"
 
-    from cellpack.mgl_tools.mglutil.util.packageFilePath import getResourceFolderWithVersion
+
+def ensureMglutilResourceFile():
+    """verify or generate _mglutilrc file"""
+    # print "ensureMglutilResourceFile"
+
+    from cellpack.mgl_tools.mglutil.util.packageFilePath import (
+        getResourceFolderWithVersion,
+    )
+
     rcFolder = getResourceFolderWithVersion()
     if rcFolder is None:
         return None
-    rcFolder += os.sep + 'mglutil'
+    rcFolder += os.sep + "mglutil"
     if not os.path.isdir(rcFolder):
         try:
             os.mkdir(rcFolder)
         except:
-            txt = "Cannot create the Resource Folder %s" %rcFolder
+            txt = "Cannot create the Resource Folder %s" % rcFolder
             warnings.warn(txt)
             return None
 
-    rcFile = rcFolder + os.sep + '_mglutilrc'
+    rcFile = rcFolder + os.sep + "_mglutilrc"
     if os.path.isfile(rcFile) is False:
         try:
             f = open(rcFile, "w")
             global mglutilrcText
-            list(map( lambda x, f=f: f.write(x), mglutilrcText ))
+            list(map(lambda x, f=f: f.write(x), mglutilrcText))
             f.close()
         except:
             txt = "can not create _mglutilrc"
@@ -88,24 +91,31 @@ def ensureMglutilResourceFile():
 # from mglutil.gui import widgetsOnBackWindowsCanGrabFocus
 rcFile = ensureMglutilResourceFile()
 if rcFile is None:
-    exec( mglutilrcText )
+    exec(mglutilrcText)
 else:
-    exec(compile(open( rcFile ).read(), rcFile, 'exec'))
+    exec(compile(open(rcFile).read(), rcFile, "exec"))
 
-    if os.name != 'nt': #sys.platform != 'win32':
+    if os.name != "nt":  # sys.platform != 'win32':
         # we create a symbolic link to the shell script that launch python
         # this is link is used by the self-running saved vision network to
         # find mgltools
         # (we create this each time we run mglutils,
         # this way the last running vision will be used)
-        mgltoolsDir = os.path.split(os.path.split(os.path.split(os.path.split(
-            __file__)[0])[0])[0])[0]
-        pythonshFile = os.path.join(mgltoolsDir, 'bin', 'pythonsh')
+        mgltoolsDir = os.path.split(
+            os.path.split(os.path.split(os.path.split(__file__)[0])[0])[0]
+        )[0]
+        pythonshFile = os.path.join(mgltoolsDir, "bin", "pythonsh")
         if os.path.isfile(pythonshFile) is False:
-            pythonshFile = os.path.realpath(sys.executable)+'sh'
+            pythonshFile = os.path.realpath(sys.executable) + "sh"
         try:
-            os.system('ln -f -s ' + pythonshFile + ' ~' + os.sep +'.mgltools'+ os.sep +'pythonsh')
+            os.system(
+                "ln -f -s "
+                + pythonshFile
+                + " ~"
+                + os.sep
+                + ".mgltools"
+                + os.sep
+                + "pythonsh"
+            )
         except:
             pass
-    
-

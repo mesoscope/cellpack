@@ -1,4 +1,4 @@
-## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by 
+## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by
 
 ##  Copyright 1997-1999 by Konrad Hinsen, except as noted below.
 
@@ -25,12 +25,10 @@
 
 _undocumented = 1
 
-#from . import VectorModule
+# from . import VectorModule
 
 import numpy.oldnumeric as Numeric, types
 from mglutil.math import VectorModule
-
-
 
 
 class Tensor:
@@ -40,7 +38,7 @@ class Tensor:
     Constructor: Tensor([[xx, xy, xz], [yx, yy, yz], [zx, zy, zz]])
 
     Tensors support the usual arithmetic operations
-    ('t1', 't2': tensors, 'v': vector, 's': scalar): 
+    ('t1', 't2': tensors, 'v': vector, 's': scalar):
 
     -  't1+t2'        (addition)
     -  't1-t2'        (subtraction)
@@ -61,51 +59,53 @@ class Tensor:
 
     is_tensor = 1
 
-    def __init__(self, elements, nocheck = None):
+    def __init__(self, elements, nocheck=None):
         self.array = Numeric.array(elements)
         if nocheck is None:
             if not Numeric.logical_and.reduce(
-            Numeric.equal(Numeric.array(self.array.shape), 3)):
-                raise ValueError('Tensor must have length 3 along any axis')
+                Numeric.equal(Numeric.array(self.array.shape), 3)
+            ):
+                raise ValueError("Tensor must have length 3 along any axis")
         self.rank = len(self.array.shape)
 
     def __repr__(self):
-        return 'Tensor(' + str(self) + ')'
+        return "Tensor(" + str(self) + ")"
 
     def __str__(self):
         return str(self.array)
 
     def __add__(self, other):
-        return Tensor(self.array+other.array, 1)
+        return Tensor(self.array + other.array, 1)
+
     __radd__ = __add__
 
     def __neg__(self):
         return Tensor(-self.array, 1)
 
     def __sub__(self, other):
-        return Tensor(self.array-other.array, 1)
+        return Tensor(self.array - other.array, 1)
 
     def __rsub__(self, other):
-        return Tensor(other.array-self.array, 1)
+        return Tensor(other.array - self.array, 1)
 
     def __mul__(self, other):
         if isTensor(other):
-            a = self.array[self.rank*(slice(None),)+(Numeric.NewAxis,)]
-            b = other.array[other.rank*(slice(None),)+(Numeric.NewAxis,)]
+            a = self.array[self.rank * (slice(None),) + (Numeric.NewAxis,)]
+            b = other.array[other.rank * (slice(None),) + (Numeric.NewAxis,)]
             return Tensor(Numeric.innerproduct(a, b), 1)
         elif VectorModule.isVector(other):
             return other.__rmul__(self)
         else:
-            return Tensor(self.array*other, 1)
+            return Tensor(self.array * other, 1)
 
     def __rmul__(self, other):
-        return Tensor(self.array*other, 1)
+        return Tensor(self.array * other, 1)
 
     def __div__(self, other):
         if isTensor(other):
             raise TypeError("Can't divide by a tensor")
         else:
-            return Tensor(self.array/(1.*other), 1)
+            return Tensor(self.array / (1.0 * other), 1)
 
     def __rdiv__(self, other):
         raise TypeError("Can't divide by a tensor")
@@ -115,7 +115,8 @@ class Tensor:
             return 1
         else:
             return not Numeric.logical_and.reduce(
-            Numeric.equal(self.array, other.array).ravel())
+                Numeric.equal(self.array, other.array).ravel()
+            )
 
     def __len__(self):
         return 3
@@ -132,30 +133,31 @@ class Tensor:
         if self.rank == 1:
             return VectorModule.Vector(self.array)
         else:
-            raise ValueError('rank > 1')
+            raise ValueError("rank > 1")
 
     def dot(self, other):
         "Returns the contraction with |other|."
         if isTensor(other):
             a = self.array
-            b =  Numeric.transpose(other.array, list(range(1, other.rank))+[0])
+            b = Numeric.transpose(other.array, list(range(1, other.rank)) + [0])
             return Tensor(Numeric.innerproduct(a, b), 1)
         else:
-            return Tensor(self.array*other, 1)
+            return Tensor(self.array * other, 1)
 
     def diagonal(self, axis1=0, axis2=1):
         if self.rank == 2:
-            return Tensor([self.array[0,0], self.array[1,1], self.array[2,2]])
+            return Tensor([self.array[0, 0], self.array[1, 1], self.array[2, 2]])
         else:
-            if axis2 < axis1: axis1, axis2 = axis2, axis1
-            raise ValueError('Not yet implemented')
+            if axis2 < axis1:
+                axis1, axis2 = axis2, axis1
+            raise ValueError("Not yet implemented")
 
     def trace(self, axis1=0, axis2=1):
         "Returns the trace of a rank-2 tensor."
         if self.rank == 2:
-            return self.array[0,0]+self.array[1,1]+self.array[2,2]
+            return self.array[0, 0] + self.array[1, 1] + self.array[2, 2]
         else:
-            raise ValueError('Not yet implemented')
+            raise ValueError("Not yet implemented")
 
     def transpose(self):
         "Returns the transposed (index reversed) tensor."
@@ -164,65 +166,72 @@ class Tensor:
     def symmetricalPart(self):
         "Returns the symmetrical part of a rank-2 tensor."
         if self.rank == 2:
-            return Tensor(0.5*(self.array + \
-                       Numeric.transpose(self.array,
-                                Numeric.array([1,0]))),
-                  1)
+            return Tensor(
+                0.5
+                * (self.array + Numeric.transpose(self.array, Numeric.array([1, 0]))),
+                1,
+            )
         else:
-            raise ValueError('Not yet implemented')
+            raise ValueError("Not yet implemented")
 
     def asymmetricalPart(self):
         "Returns the asymmetrical part of a rank-2 tensor."
         if self.rank == 2:
-            return Tensor(0.5*(self.array - \
-                       Numeric.transpose(self.array,
-                                Numeric.array([1,0]))),
-                  1)
+            return Tensor(
+                0.5
+                * (self.array - Numeric.transpose(self.array, Numeric.array([1, 0]))),
+                1,
+            )
         else:
-            raise ValueError('Not yet implemented')
+            raise ValueError("Not yet implemented")
 
     def eigenvalues(self):
         "Returns the eigenvalues of a rank-2 tensor in an array."
         if self.rank == 2:
             from numpy.oldnumeric.linear_algebra import eigenvalues
+
             return eigenvalues(self.array)
         else:
-            raise ValueError('Undefined operation')
+            raise ValueError("Undefined operation")
 
     def diagonalization(self):
         """Returns the eigenvalues of a rank-2 tensor and a tensor
         representing the rotation matrix to the diagonalized form."""
         if self.rank == 2:
             from numpy.oldnumeric.linear_algebra import eigenvectors
+
             ev, vectors = eigenvectors(self.array)
             return ev, Tensor(vectors)
         else:
-            raise ValueError('Undefined operation')
+            raise ValueError("Undefined operation")
 
     def inverse(self):
         "Returns the inverse of a rank-2 tensor."
         if self.rank == 2:
             from numpy.oldnumeric.linear_algebra import inverse
+
             return Tensor(inverse(self.array))
         else:
-            raise ValueError('Undefined operation')
+            raise ValueError("Undefined operation")
+
 
 # Type check
 
+
 def isTensor(x):
     "Return 1 if |x| is a tensor."
-    return hasattr(x,'is_tensor')
+    return hasattr(x, "is_tensor")
 
 
 # Some useful constant tensors
 
-delta = Tensor([[1,0,0], [0,1,0], [0,0,1]])
-_epsilon = Numeric.zeros((3,3,3))
-_epsilon[0,1,2] = 1
-_epsilon[1,2,0] = 1
-_epsilon[2,0,1] = 1
-_epsilon[0,2,1] = -1
-_epsilon[2,1,0] = -1
-_epsilon[1,0,2] = -1
+delta = Tensor([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+_epsilon = Numeric.zeros((3, 3, 3))
+_epsilon[0, 1, 2] = 1
+_epsilon[1, 2, 0] = 1
+_epsilon[2, 0, 1] = 1
+_epsilon[0, 2, 1] = -1
+_epsilon[2, 1, 0] = -1
+_epsilon[1, 0, 2] = -1
 epsilon = Tensor(_epsilon)
 del _epsilon

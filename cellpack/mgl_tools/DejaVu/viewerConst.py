@@ -1,4 +1,4 @@
-## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by 
+## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by
 
 #############################################################################
 #
@@ -30,10 +30,10 @@ PER_PART = 12
 PER_INSTANCE = 13
 
 ## FIXME these constances are defined here AND in Materials.py !
-propConst = None#( GL.GL_AMBIENT, GL.GL_DIFFUSE,
-#	      GL.GL_EMISSION, GL.GL_SPECULAR, GL.GL_SHININESS )
-propNum = None#{ GL.GL_AMBIENT:0, GL.GL_DIFFUSE:1,
-#            GL.GL_EMISSION:2, GL.GL_SPECULAR:3, 
+propConst = None  # ( GL.GL_AMBIENT, GL.GL_DIFFUSE,
+# 	      GL.GL_EMISSION, GL.GL_SPECULAR, GL.GL_SHININESS )
+propNum = None  # { GL.GL_AMBIENT:0, GL.GL_DIFFUSE:1,
+#            GL.GL_EMISSION:2, GL.GL_SPECULAR:3,
 #            GL.GL_SHININESS:4
 #            }
 # constants for properties status and computation
@@ -48,57 +48,69 @@ SET = 25
 NO_COMPUTATION = 30
 AUTO = 31
 
-#drawBB values
+# drawBB values
 NO = NO
-ONLY = 41   # BB only
-WITHOBJECT = 42   # BB and object
+ONLY = 41  # BB only
+WITHOBJECT = 42  # BB and object
 BB_MODES = (NO, ONLY, WITHOBJECT)
 
 OUTLINED = 50
 
-Front_POLYGON_MODES_keys = ('point', 'line', 'fill', 'outlined', 'inherit')
+Front_POLYGON_MODES_keys = ("point", "line", "fill", "outlined", "inherit")
 Front_POLYGON_MODES_values = (GL.GL_POINT, GL.GL_LINE, GL.GL_FILL, OUTLINED, INHERIT)
-Back_POLYGON_MODES_keys = ('point', 'line', 'fill', 'outlined', 'inherit', 'as front')
-Back_POLYGON_MODES_values = (GL.GL_POINT, GL.GL_LINE, GL.GL_FILL, OUTLINED, INHERIT, GL.GL_FRONT_AND_BACK)
+Back_POLYGON_MODES_keys = ("point", "line", "fill", "outlined", "inherit", "as front")
+Back_POLYGON_MODES_values = (
+    GL.GL_POINT,
+    GL.GL_LINE,
+    GL.GL_FILL,
+    OUTLINED,
+    INHERIT,
+    GL.GL_FRONT_AND_BACK,
+)
 POLYGON_MODES = dict(list(zip(Back_POLYGON_MODES_keys, Back_POLYGON_MODES_values)))
 POLYGON_MODES_REV = dict(list(zip(Back_POLYGON_MODES_values, Back_POLYGON_MODES_keys)))
-#POLYGON_MODES['as front'] = GL.GL_FRONT_AND_BACK
-#POLYGON_MODES[GL.GL_FRONT_AND_BACK] = 'as front'
+# POLYGON_MODES['as front'] = GL.GL_FRONT_AND_BACK
+# POLYGON_MODES[GL.GL_FRONT_AND_BACK] = 'as front'
 
-POINTS_PRIMITIVES = None#(GL.GL_POINTS, )
-LINES_PRIMITIVES = None#(GL.GL_LINES, GL.GL_LINE_LOOP,
-#		    GL.GL_LINE_STRIP )
-POLYGON_PRIMITIVES = None#(GL.GL_TRIANGLES, GL.GL_TRIANGLE_STRIP,
-#		      GL.GL_TRIANGLE_FAN, GL.GL_QUADS,
-#		      GL.GL_QUAD_STRIP, GL.GL_POLYGON)
-PRIMITIVES = None#POINTS_PRIMITIVES + LINES_PRIMITIVES + POLYGON_PRIMITIVES
-MINIMUM_LENGTH = None#{
+POINTS_PRIMITIVES = None  # (GL.GL_POINTS, )
+LINES_PRIMITIVES = None  # (GL.GL_LINES, GL.GL_LINE_LOOP,
+# 		    GL.GL_LINE_STRIP )
+POLYGON_PRIMITIVES = None  # (GL.GL_TRIANGLES, GL.GL_TRIANGLE_STRIP,
+# 		      GL.GL_TRIANGLE_FAN, GL.GL_QUADS,
+# 		      GL.GL_QUAD_STRIP, GL.GL_POLYGON)
+PRIMITIVES = None  # POINTS_PRIMITIVES + LINES_PRIMITIVES + POLYGON_PRIMITIVES
+MINIMUM_LENGTH = None  # {
 # GL.GL_POINTS:1,
 # GL.GL_LINES:2, GL.GL_LINE_LOOP:3, GL.GL_LINE_STRIP:3,
 # GL.GL_TRIANGLES:3, GL.GL_TRIANGLE_STRIP:4, GL.GL_TRIANGLE_FAN:4,
 # GL.GL_QUADS:4, GL.GL_QUAD_STRIP:5, GL.GL_POLYGON:3
-#}
+# }
 
-SHADINGS = None#{'flat':GL.GL_FLAT, 'smooth':GL.GL_SMOOTH, 'inherit':INHERIT}
-SHADINGS_REV = None#{GL.GL_FLAT:'flat', GL.GL_SMOOTH:'smooth', INHERIT:'inherit'}
+SHADINGS = None  # {'flat':GL.GL_FLAT, 'smooth':GL.GL_SMOOTH, 'inherit':INHERIT}
+SHADINGS_REV = None  # {GL.GL_FLAT:'flat', GL.GL_SMOOTH:'smooth', INHERIT:'inherit'}
 
-CULLINGS_keys = ('none', 'back', 'front', 'front_and_back', 'inherit')
-CULLINGS_values = None#(GL.GL_NONE, GL.GL_BACK, GL.GL_FRONT,
+CULLINGS_keys = ("none", "back", "front", "front_and_back", "inherit")
+CULLINGS_values = None  # (GL.GL_NONE, GL.GL_BACK, GL.GL_FRONT,
 #                   GL.GL_FRONT_AND_BACK, INHERIT)
-CULLINGS = None#dict(list(zip(CULLINGS_keys, CULLINGS_values)))
-CULLINGS_REV = None#dict(list(zip(CULLINGS_values, CULLINGS_keys)))
+CULLINGS = None  # dict(list(zip(CULLINGS_keys, CULLINGS_values)))
+CULLINGS_REV = None  # dict(list(zip(CULLINGS_values, CULLINGS_keys)))
 
 
-srcBFnames_keys = ( 'GL_ZERO', 'GL_ONE',
-               'GL_DST_COLOR', 'GL_ONE_MINUS_DST_COLOR',
-               'GL_SRC_ALPHA', 'GL_ONE_MINUS_SRC_ALPHA',
-               'GL_DST_ALPHA', 'GL_ONE_MINUS_DST_ALPHA',
-               'GL_SRC_ALPHA_SATURATE' )
-srcBFnames_values = None#( GL.GL_ZERO, GL.GL_ONE,
+srcBFnames_keys = (
+    "GL_ZERO",
+    "GL_ONE",
+    "GL_DST_COLOR",
+    "GL_ONE_MINUS_DST_COLOR",
+    "GL_SRC_ALPHA",
+    "GL_ONE_MINUS_SRC_ALPHA",
+    "GL_DST_ALPHA",
+    "GL_ONE_MINUS_DST_ALPHA",
+    "GL_SRC_ALPHA_SATURATE",
+)
+srcBFnames_values = None  # ( GL.GL_ZERO, GL.GL_ONE,
 #               GL.GL_DST_COLOR, GL.GL_ONE_MINUS_DST_COLOR,
 #               GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA,
 #               GL.GL_DST_ALPHA, GL.GL_ONE_MINUS_DST_ALPHA,
 #               GL.GL_SRC_ALPHA_SATURATE )
-srcBFnames = None#dict(list(zip(srcBFnames_keys, srcBFnames_values)))
-srcBFnames_REV = None#dict(list(zip(srcBFnames_values, srcBFnames_keys)))
-
+srcBFnames = None  # dict(list(zip(srcBFnames_keys, srcBFnames_values)))
+srcBFnames_REV = None  # dict(list(zip(srcBFnames_values, srcBFnames_keys)))

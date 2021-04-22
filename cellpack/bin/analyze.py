@@ -23,6 +23,7 @@ from cellpack import autopack, get_module_version
 from cellpack.autopack.Environment import Environment
 from cellpack.autopack.Graphics import AutopackViewer as AFViewer
 from cellpack.autopack.Analysis import AnalyseAP
+
 ###############################################################################
 
 log = logging.getLogger()

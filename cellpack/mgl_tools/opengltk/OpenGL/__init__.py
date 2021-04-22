@@ -5,4 +5,4 @@
 """module ensuring backward compatibility with PyOpenGL
 """
 
-__all__ = ('GL', 'GLU')
+__all__ = ("GL", "GLU")

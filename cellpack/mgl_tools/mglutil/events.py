@@ -1,9 +1,9 @@
 from time import time
 import warnings
 
+
 class Event:
-    """Base class for ViewerFramework events.
-"""
+    """Base class for ViewerFramework events."""
 
     def __init__(self, *args, **kw):
         """  """
@@ -14,12 +14,10 @@ class Event:
 
 class EventHandler:
     """This mix-in class adds methods for registening functions called
-listeners to be called upon a particular Event.
-"""
+    listeners to be called upon a particular Event."""
 
     def __init__(self):
         self.eventListeners = {}
-
 
     def registerListener(self, event, function):
         """
@@ -34,25 +32,23 @@ listeners to be called upon a particular Event.
                       event instance as an argument.
         """
         assert issubclass(event, Event)
-        assert hasattr(function, '__call__')
+        assert hasattr(function, "__call__")
 
         if event not in self.eventListeners:
             self.eventListeners[event] = [function]
         else:
             if function in self.eventListeners[event]:
-                warnings.warn('function %s already registered for event %s'%(
-                    function,event))
+                warnings.warn(
+                    "function %s already registered for event %s" % (function, event)
+                )
             else:
                 self.eventListeners[event].append(function)
 
-
     def dispatchEvent(self, event):
         """call all registered listeners for this event type.
-arguments:
-    event: instance of an event
-"""
+        arguments:
+            event: instance of an event"""
         assert isinstance(event, Event)
         if event.__class__ in self.eventListeners:
             for func in self.eventListeners[event.__class__]:
                 func(event)
- 

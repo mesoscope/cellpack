@@ -9,14 +9,14 @@
 # $Header: /opt/cvs/python/packages/share1.5/mglutil/gui/InputForm/Tk/gui.py,v 1.47 2009/05/12 17:07:40 sargis Exp $
 #
 # $Id: gui.py,v 1.47 2009/05/12 17:07:40 sargis Exp $
-#      
+#
 
 #
 """
 This module implements a bunch of objects useful for user interaction
 """
-#from DejaVu.extendedSlider import ExtendedSlider
-#from DejaVu.Slider import Slider
+# from DejaVu.extendedSlider import ExtendedSlider
+# from DejaVu.Slider import Slider
 import tkinter
 import tkinter.scrolledtext
 import Pmw
@@ -24,9 +24,10 @@ import warnings
 from cellpack.mgl_tools.mglutil.util.packageFilePath import findFilePath
 from cellpack.mgl_tools.mglutil.util.misc import ensureFontCase, isInstance
 
+
 def autoPlaceWidget(master, relx=0.5, rely=0.3):
     """Auto center the window rooted at master"""
-    
+
     if master.winfo_ismapped():
         m_width = master.winfo_width()
         m_height = master.winfo_height()
@@ -40,11 +41,11 @@ def autoPlaceWidget(master, relx=0.5, rely=0.3):
     w_height = master.winfo_reqheight()
     x = m_x + (m_width - w_width) * relx
     y = m_y + (m_height - w_height) * rely
-    if x+w_width > master.winfo_screenwidth():
+    if x + w_width > master.winfo_screenwidth():
         x = master.winfo_screenwidth() - w_width
     elif x < 0:
         x = 0
-    if y+w_height > master.winfo_screenheight():
+    if y + w_height > master.winfo_screenheight():
         y = master.winfo_screenheight() - w_height
     elif y < 0:
         y = 0
@@ -53,13 +54,13 @@ def autoPlaceWidget(master, relx=0.5, rely=0.3):
 
 class AutoPlaceWidget:
     """defines method _set_transient used to place a widget automatically
-       to the center of the screen"""
-    
+    to the center of the screen"""
+
     def _set_transient(self, master, relx=0.5, rely=0.3):
         widget = self.root
-        widget.withdraw() # Remain invisible while we figure out the geometry
+        widget.withdraw()  # Remain invisible while we figure out the geometry
         widget.transient(master)
-        widget.update_idletasks() # Actualize geometry information
+        widget.update_idletasks()  # Actualize geometry information
         if master.winfo_ismapped():
             m_width = master.winfo_width()
             m_height = master.winfo_height()
@@ -73,16 +74,17 @@ class AutoPlaceWidget:
         w_height = widget.winfo_reqheight()
         x = m_x + (m_width - w_width) * relx
         y = m_y + (m_height - w_height) * rely
-        if x+w_width > master.winfo_screenwidth():
+        if x + w_width > master.winfo_screenwidth():
             x = master.winfo_screenwidth() - w_width
         elif x < 0:
             x = 0
-        if y+w_height > master.winfo_screenheight():
+        if y + w_height > master.winfo_screenheight():
             y = master.winfo_screenheight() - w_height
         elif y < 0:
             y = 0
         widget.geometry("+%d+%d" % (x, y))
-        widget.deiconify() # Become visible at the desired location
+        widget.deiconify()  # Become visible at the desired location
+
 
 ##             self.info()
 
@@ -91,61 +93,67 @@ class ListChooser:
     """class to present a list of objects in a scrolled listbox.
     entries are given as a list of items associated with a description.
     double clicking on an entry display the associated comment"""
-    
-    def __init__(self, root, mode='single', title='Choose',
-                 entries = None, width=20, defaultValue=None,
-                 lbpackcfg={'fill':'x', 'expand':1}, lbwcfg={}):
 
-        assert mode in ['single', 'browse', 'multiple', 'extended' ]
+    def __init__(
+        self,
+        root,
+        mode="single",
+        title="Choose",
+        entries=None,
+        width=20,
+        defaultValue=None,
+        lbpackcfg={"fill": "x", "expand": 1},
+        lbwcfg={},
+    ):
+
+        assert mode in ["single", "browse", "multiple", "extended"]
         # put everything inside a Frame
         self.top = tkinter.Frame(root, bd=4)
 
-
         # add a scrolled text widget to display comments
-        self.comments = tkinter.scrolledtext.ScrolledText(self.top, width=width,
-                                                  height=4)
-        self.comments.pack(fill='both', expand=1)
+        self.comments = tkinter.scrolledtext.ScrolledText(
+            self.top, width=width, height=4
+        )
+        self.comments.pack(fill="both", expand=1)
 
         # add a title
-        self.title = tkinter.Label(self.top,text=title)
-        self.title.pack(side='top', anchor='n')
+        self.title = tkinter.Label(self.top, text=title)
+        self.title.pack(side="top", anchor="n")
 
         # build the scroll list
         f = tkinter.Frame(self.top)
         self.mode = mode
-        scrollbar = tkinter.Scrollbar(f, orient='vertical')
-        lbwcfg['selectmode'] = mode
-        lbwcfg['yscrollcommand'] = scrollbar.set
-        self.lb = tkinter.Listbox(*(f, ), **lbwcfg)
+        scrollbar = tkinter.Scrollbar(f, orient="vertical")
+        lbwcfg["selectmode"] = mode
+        lbwcfg["yscrollcommand"] = scrollbar.set
+        self.lb = tkinter.Listbox(*(f,), **lbwcfg)
         scrollbar.config(command=self.lb.yview)
-        scrollbar.pack(side='right', fill='y')
+        scrollbar.pack(side="right", fill="y")
         self.lb.pack(*(), **lbpackcfg)
-        f.pack(fill='x', expand=1)
+        f.pack(fill="x", expand=1)
         self.hasInfo = 0
 
         self.entries = []
         # add entries
         if entries:
             for e in entries:
-                if type(e)==list or type(e)==tuple:
+                if type(e) == list or type(e) == tuple:
                     self.add(e[0], e[1])
                 else:
                     self.add(e)
 
-        if self.hasInfo==0:
+        if self.hasInfo == 0:
             self.comments.forget()
 
         if defaultValue:
             if self.hasInfo:
                 assert defaultValue in [x[0] for x in entries]
                 # get the entry of the listBox corresponding to the defaultValue.
-                defaultEntry = filter(lambda x, df = defaultValue:
-                                  x[0] == df, entries)[0]
+                defaultEntry = filter(lambda x, df=defaultValue: x[0] == df, entries)[0]
             else:
                 assert defaultValue in [x for x in entries]
                 # get the entry of the listBox corresponding to the defaultValue.
-                defaultEntry = filter(lambda x, df = defaultValue:
-                                  x == df, entries)[0]
+                defaultEntry = filter(lambda x, df=defaultValue: x == df, entries)[0]
             # Get its index
             indexDefaultValue = entries.index(defaultEntry)
             # Set the the selection at this index using the select_set of the
@@ -154,80 +162,68 @@ class ListChooser:
 
     def add(self, entry, comment=None):
         """add an entry to the list"""
-        self.entries.append( (entry, comment) )
+        self.entries.append((entry, comment))
         if type(entry) is not bytes:
             entry = repr(entry)
-        self.lb.insert('end', entry)
+        self.lb.insert("end", entry)
         if not comment is None:
-            self.lb.bind("<ButtonRelease-1>", self.info, '+')
-            self.hasInfo=1
+            self.lb.bind("<ButtonRelease-1>", self.info, "+")
+            self.hasInfo = 1
             self.comments.pack()
 
-            
     def insert(self, pos, entry, comment=None):
         """insert an entry to the list"""
-        #assert pos < len(self.entries)
-        if pos == 'end':
-            self.entries.append( (entry, comment) )
+        # assert pos < len(self.entries)
+        if pos == "end":
+            self.entries.append((entry, comment))
         else:
             self.entries.insert(pos, (entry, comment))
         if type(entry) is not bytes:
             entry = repr(entry)
         self.lb.insert(pos, entry)
 
-
     def info(self, event=None):
         """dispaly information about the curent selection"""
-        self.comments.delete(0.0, 'end')
-        s=self.entries[map( int, self.lb.curselection())[0]][1]
-        self.comments.insert('end', s+'\n')
-
+        self.comments.delete(0.0, "end")
+        s = self.entries[map(int, self.lb.curselection())[0]][1]
+        self.comments.insert("end", s + "\n")
 
     def clear(self):
         """clear all entries"""
-        #self.lb.delete(0.0, 'end')
-        self.lb.delete(0, 'end')
+        # self.lb.delete(0.0, 'end')
+        self.lb.delete(0, "end")
         self.entries = []
 
-        
     def clearComments(self):
         """clear all entries"""
-        #self.comments.delete(0.0, 'end')
-        self.comments.delete(0, 'end')
+        # self.comments.delete(0.0, 'end')
+        self.comments.delete(0, "end")
 
-        
     def remove(self, entry):
         """remove an entry"""
-        ind = map(lambda x: x[0],self.entries).index(entry)
+        ind = map(lambda x: x[0], self.entries).index(entry)
         self.entries.remove(self.entries[ind])
-        self.lb.delete( ind )
+        self.lb.delete(ind)
 
-    
     def get(self, event=None):
         """get the current selection"""
         res = []
-        for ent in map( int, self.lb.curselection() ):
-            res.append( self.entries[ ent ][0] )
+        for ent in map(int, self.lb.curselection()):
+            res.append(self.entries[ent][0])
         return res
 
-    
     def select(self, first, last=None):
         """add an entry to the current selection"""
-        if last and self.mode!='single':
+        if last and self.mode != "single":
             self.lb.select_set(first, last)
         else:
             self.lb.select_set(first)
             self.info()
 
 
-
-
-
-
-
 from tkinter.simpledialog import SimpleDialog
 import string
-        
+
 ##  class InputFormItem:
 ##      """Class to describe things that can be put inside an inputForm"""
 
@@ -272,6 +268,7 @@ import string
 
 from collections import UserList
 
+
 class InputFormDescr(UserList):
     """
     InputFormDescr is a list of dictionary describing the widgets to be placed
@@ -295,8 +292,8 @@ class InputFormDescr(UserList):
     * tooltip   : string describing the widget which will be displayed in
                   a balloon when the mouse is over it.
     * wcfg      : The widget configuration dictionary must contain all the
-        couple keyword:value you want to use to describe your widget. 
-        For a list of the option available to describe widgets:  
+        couple keyword:value you want to use to describe your widget.
+        For a list of the option available to describe widgets:
         o Tkinter widgets options
         http://www.pythonware.com/library/tkinter/introduction/index.htm
         o Pmw widgets options
@@ -331,10 +328,10 @@ class InputFormDescr(UserList):
         Frame
         'container':{'myFrame':'w'}
 
-        (see colorCommands.py, APBSCommand.py, fileCommands for example)  
+        (see colorCommands.py, APBSCommand.py, fileCommands for example)
     * parent    : allows to specify in which container to pack the current
-      widget.(see colorCommands.py, APBSCommand.py, fileCommands for example) 
-        
+      widget.(see colorCommands.py, APBSCommand.py, fileCommands for example)
+
     * componentcfg: dictionnary allowing the developer to describe the
         components of the current widget.
         o key   : is the name of the component
@@ -368,17 +365,18 @@ class InputFormDescr(UserList):
                             'activebackground' : 'Green'},
                      'gridcfg':{'sticky':'we'}})
 
-    
+
     """
-    def __init__(self, title='Form'):
+
+    def __init__(self, title="Form"):
         UserList.__init__(self)
         self.title = title
-        self.entryByName = {} # reverse lookup to find an item using a name
+        self.entryByName = {}  # reverse lookup to find an item using a name
+
 
 class CallBackFunction:
     """
-Class to allow to specify arguments to a callback function bound to a widget
-"""
+    Class to allow to specify arguments to a callback function bound to a widget"""
 
     def __init__(self, function, *args, **kw):
         self.function = function
@@ -390,113 +388,130 @@ Class to allow to specify arguments to a callback function bound to a widget
         kw.update(self.kw)
         self.function(*args, **kw)
 
+
 def getkw(kw, name):
     """ function to get a dictionary entry and remove it from the dictionary"""
 
     v = kw.get(name)
-    if name in list(kw.keys()): del kw[name]
+    if name in list(kw.keys()):
+        del kw[name]
     return v
 
 
 class InputForm(AutoPlaceWidget):
-    
+
     """
-Class to create a inputForm to collect values from users and
-return these values.
-More information and examples can be found at
-http://www.scripps.edu/~sanner/software/inputform/tableOfContent.html
+    Class to create a inputForm to collect values from users and
+    return these values.
+    More information and examples can be found at
+    http://www.scripps.edu/~sanner/software/inputform/tableOfContent.html
 
-required arguments:
-   master  -- argument to specify the master of the widget to be created
-              which means that the current form will be a 'slave' of the
-              given master
+    required arguments:
+       master  -- argument to specify the master of the widget to be created
+                  which means that the current form will be a 'slave' of the
+                  given master
 
-   root    --  If None is specified then a Tkinter.TopLevel object is
-               created.
+       root    --  If None is specified then a Tkinter.TopLevel object is
+                   created.
 
-   descr   -- (instance of InputFormDescr) which is a list of dictionary
-               describing the widgets to be added to the form.
-               see the documentation string for InputFormDescr
+       descr   -- (instance of InputFormDescr) which is a list of dictionary
+                   describing the widgets to be added to the form.
+                   see the documentation string for InputFormDescr
 
-optional arguments :
+    optional arguments :
 
-    modal  -- Flag specifying if the form is modal or not. When a form
-      is modal it grabs the focus and only releases it when the
-      form is dismissed. When a form is modal an OK and a CANCEL
-      button will be automatically added to the form.
-      (default = 1)
+        modal  -- Flag specifying if the form is modal or not. When a form
+          is modal it grabs the focus and only releases it when the
+          form is dismissed. When a form is modal an OK and a CANCEL
+          button will be automatically added to the form.
+          (default = 1)
 
-    blocking -- Flag specifying if the form is blocking or not. When set to
-      1 the form is blocking and the calling code will be stopped until the
-      form is dismissed. An OK and a CANCEL button will be automatically
-      added to the form. (default = 0)
+        blocking -- Flag specifying if the form is blocking or not. When set to
+          1 the form is blocking and the calling code will be stopped until the
+          form is dismissed. An OK and a CANCEL button will be automatically
+          added to the form. (default = 0)
 
-    defaultDirection -- ('row', 'col') specifies the direction in
-      which widgets are gridded  into the form by default. (default='row')
+        defaultDirection -- ('row', 'col') specifies the direction in
+          which widgets are gridded  into the form by default. (default='row')
 
-    closeWithWindow -- Flag specifying whether or not the form should be
-      minimized/maximized  when the master window is. (default=1)
+        closeWithWindow -- Flag specifying whether or not the form should be
+          minimized/maximized  when the master window is. (default=1)
 
-    okCfg -- dictionnary specifying the configuration of the OK button.
-             if a callback function is specified using the keyword
-             command this callback will be added to the default callback
-             Ok_cb
+        okCfg -- dictionnary specifying the configuration of the OK button.
+                 if a callback function is specified using the keyword
+                 command this callback will be added to the default callback
+                 Ok_cb
 
-    cancelCfg -- dictionnary specifying the configuration of the CANCEL button
-             if a callback function is specified using the keyword
-             command this callback will be added to the default callback
-             Ok_cb
+        cancelCfg -- dictionnary specifying the configuration of the CANCEL button
+                 if a callback function is specified using the keyword
+                 command this callback will be added to the default callback
+                 Ok_cb
 
-    initFunc  -- specifies a function to initialize the form.
+        initFunc  -- specifies a function to initialize the form.
 
-    onDestroy -- specifies a function to be called when using the close
-       widget of a window.
+        onDestroy -- specifies a function to be called when using the close
+           widget of a window.
 
-    okcancel -- Boolean Flag to specify whether or not to create the OK and CANCEL
-                button.
-    scrolledFrame -- Flag when set to 1 the main frame is a scrollable frame
-                     else it is static Frame (default 0)
-    width -- specifies the width of the main frame (400)
-    height -- specifies the height of the main frame. (200)
-    help   -- specifies the web adress to a help page. If this is provided
-              a Help (?) button will be created which will open a
-              web browser to the given adress.
+        okcancel -- Boolean Flag to specify whether or not to create the OK and CANCEL
+                    button.
+        scrolledFrame -- Flag when set to 1 the main frame is a scrollable frame
+                         else it is static Frame (default 0)
+        width -- specifies the width of the main frame (400)
+        height -- specifies the height of the main frame. (200)
+        help   -- specifies the web adress to a help page. If this is provided
+                  a Help (?) button will be created which will open a
+                  web browser to the given adress.
 
-    If the list of argument of the constructor changes please update
-    the showForm method of the ViewerFramework.VFCommand
-    class to present a form for the user to fill out.
-    After building the form the entryByName dictionary has been built
-    and the InputFormDescr has been extended with a 'widget' entry..
+        If the list of argument of the constructor changes please update
+        the showForm method of the ViewerFramework.VFCommand
+        class to present a form for the user to fill out.
+        After building the form the entryByName dictionary has been built
+        and the InputFormDescr has been extended with a 'widget' entry..
 
-    The form can be constructed to be modal, i.e. the form grabs the focus
-    and requires the form to be dissmissed using the OK or CANCEL button
-    before the user can proceed. (this is the default behavior)
-    When the form is NOT modal, it can still block and require the user to
-    dismiss the form. The difference with modal is that other forms remain
-    active, allowing for instance to pick something in a nother window.
-    The program however blocks until the form is dismissed.
-    When both the modal and blocking are 0, the form is displayed and
-    worksasynchronously. The OK and Cancel buttons are not displayed.
-    The form descriptor should provide a button to dismiss the form. The
-    call back function for that button should call the destroy method. In
-    this mode the current value of widgets have to retrieved manually.
-    This can be done either by accessiing the widget directly:
-    ipf[i]['widget'].get() or ipf.entryByName['mywidget'][widget].get();
-    or by calling the checkValues() method that returns a dictionary.
-    You can also by giving to the argument defaultDirection the values
-    'col' or 'row', choose the direction to build the whole inputForm.
-    For example if row is choosen all the widget if not specifies
-    otherwise will be added row after row..
-    When the flag closeWidthWindow is set to 1 then the form created is
-    closed simultaneously with the main window. It is set to 1 by default.
+        The form can be constructed to be modal, i.e. the form grabs the focus
+        and requires the form to be dissmissed using the OK or CANCEL button
+        before the user can proceed. (this is the default behavior)
+        When the form is NOT modal, it can still block and require the user to
+        dismiss the form. The difference with modal is that other forms remain
+        active, allowing for instance to pick something in a nother window.
+        The program however blocks until the form is dismissed.
+        When both the modal and blocking are 0, the form is displayed and
+        worksasynchronously. The OK and Cancel buttons are not displayed.
+        The form descriptor should provide a button to dismiss the form. The
+        call back function for that button should call the destroy method. In
+        this mode the current value of widgets have to retrieved manually.
+        This can be done either by accessiing the widget directly:
+        ipf[i]['widget'].get() or ipf.entryByName['mywidget'][widget].get();
+        or by calling the checkValues() method that returns a dictionary.
+        You can also by giving to the argument defaultDirection the values
+        'col' or 'row', choose the direction to build the whole inputForm.
+        For example if row is choosen all the widget if not specifies
+        otherwise will be added row after row..
+        When the flag closeWidthWindow is set to 1 then the form created is
+        closed simultaneously with the main window. It is set to 1 by default.
     """
-    def __init__(self, master, root, descr, modal=1, blocking=0,
-                 defaultDirection='row', closeWithWindow=1,
-                 okCfg={'text':'OK'}, cancelCfg={'text':'Cancel'},
-                 initFunc=None, onDestroy = None, okcancel=1,
-                 scrolledFrame=0, width=None, height=None, okOnEnter=True,
-                 help=None):
-        
+
+    def __init__(
+        self,
+        master,
+        root,
+        descr,
+        modal=1,
+        blocking=0,
+        defaultDirection="row",
+        closeWithWindow=1,
+        okCfg={"text": "OK"},
+        cancelCfg={"text": "Cancel"},
+        initFunc=None,
+        onDestroy=None,
+        okcancel=1,
+        scrolledFrame=0,
+        width=None,
+        height=None,
+        okOnEnter=True,
+        help=None,
+    ):
+
         assert isinstance(descr, InputFormDescr)
 
         # master is the container widget
@@ -507,15 +522,13 @@ optional arguments :
             self.root = tkinter.Toplevel(self.master)
 
         # Setting the title of self.root with the one provided.
-        if isinstance(self.root, tkinter.Tk) or \
-           isinstance(self.root, tkinter.Toplevel):
+        if isinstance(self.root, tkinter.Tk) or isinstance(self.root, tkinter.Toplevel):
             self.root.title(descr.title)
-
 
         self.modal = modal  # when true, form will grab focus AND block
         self.blocking = blocking  # when true and form is not modal,
-                                  # make the form block
-                                  
+        # make the form block
+
         self.okcancel = okcancel  # When true an OK/CANCEL button will be created.
 
         # Variable used to grid the given widgets
@@ -539,7 +552,7 @@ optional arguments :
         if height is None:
             height = 200
             autoSize = True
-        
+
         # MAIN FRAME
         self.mf = tkinter.Frame(self.root, bd=4)
 
@@ -548,38 +561,37 @@ optional arguments :
             if autoSize:
                 self.sf = Pmw.ScrolledFrame(self.mf)
             else:
-                self.sf = Pmw.ScrolledFrame(self.mf, usehullsize = 1,
-                                            hull_width = width,
-                                            hull_height = height)
+                self.sf = Pmw.ScrolledFrame(
+                    self.mf, usehullsize=1, hull_width=width, hull_height=height
+                )
 
-            self.sf.pack(padx = 5, pady = 3, fill = 'both', expand = 1)
+            self.sf.pack(padx=5, pady=3, fill="both", expand=1)
             self.f = self.sf.interior()
-            
+
         else:
-            self.f = tkinter.Frame(self.mf, bd=4, relief='groove',
-                                   width=width, height=height)
+            self.f = tkinter.Frame(
+                self.mf, bd=4, relief="groove", width=width, height=height
+            )
 
-
-        
         # Create the parentName dictionnary with the name of the parent
         # and the container object
-        self.parentName = {'mainContainer':{'container':self.f, 'widgets':[]}}
+        self.parentName = {"mainContainer": {"container": self.f, "widgets": []}}
 
-        #if not hasattr(self, 'last'): self.last = {}
+        # if not hasattr(self, 'last'): self.last = {}
 
         # Keep track of all the notebooks widget contained in the form and
         # all the Pmw widgets.
         self.notebooks = []
-        self.wwidgets=[]
+        self.wwidgets = []
 
         wnum = 0
         for e in descr:
             # build reverse lookup dictionary
-            if 'name' in e:
-                descr.entryByName[e['name']] = e
+            if "name" in e:
+                descr.entryByName[e["name"]] = e
             else:
                 descr.entryByName[wnum] = e
-            wnum=wnum+1
+            wnum = wnum + 1
             self.addEntry(e)
 
         # Call the initFunc method if not none.
@@ -587,13 +599,13 @@ optional arguments :
             initFunc(self)
 
         # Pack the frames.
-        self.f.pack(fill='both', expand=1)
-        self.mf.pack(fill='both', expand=1)
+        self.f.pack(fill="both", expand=1)
+        self.mf.pack(fill="both", expand=1)
 
         # Build the ok and cancel buttons with the information
         # provided.
         if (self.blocking or self.modal) and self.okcancel:
-            self.buildOkCancelButtons( okCfg, cancelCfg, help=help )
+            self.buildOkCancelButtons(okCfg, cancelCfg, help=help)
             self._set_transient(self.master)
             if okOnEnter:
                 self.root.bind("<Return>", self.OK_cb)
@@ -601,23 +613,24 @@ optional arguments :
             if help:
                 self.buildHelpButton(help)
         # FIXME: Need to find all the possibilities....
-        # bind the [x] button of the inputform 
+        # bind the [x] button of the inputform
         if onDestroy is None:
             if (self.blocking or self.modal) and self.okcancel:
                 # self Cancel_cb is modal or blocking
-                self.root.protocol('WM_DELETE_WINDOW', self.Cancel_cb)
+                self.root.protocol("WM_DELETE_WINDOW", self.Cancel_cb)
             else:
                 # to just withdraw
-                if isinstance(self.root, tkinter.Tk) or \
-                    isinstance(self.root, tkinter.Toplevel):
-                    self.root.protocol('WM_DELETE_WINDOW', self.withdraw)
+                if isinstance(self.root, tkinter.Tk) or isinstance(
+                    self.root, tkinter.Toplevel
+                ):
+                    self.root.protocol("WM_DELETE_WINDOW", self.withdraw)
         else:
             # or finally the specified function.
-            self.root.protocol('WM_DELETE_WINDOW', onDestroy)
-        if closeWithWindow :
+            self.root.protocol("WM_DELETE_WINDOW", onDestroy)
+        if closeWithWindow:
             if hasattr(self.root, "transient"):
                 self.root.transient(self.master)
-            #self._set_transient(self.master)
+            # self._set_transient(self.master)
 
         ## Set the notebook widget to their natural size.
         for nb in self.notebooks:
@@ -628,83 +641,84 @@ optional arguments :
 
         if autoSize:
             self.autoSize()
-        
+
     def autoSize(self):
-        self.root.update() # force packing to happen to size are right
+        self.root.update()  # force packing to happen to size are right
         # self.root can be Tkinter.Frame instance. Frames do not have geometry attribute.
         if hasattr(self.root, "geometry"):
             w = self.root.winfo_reqwidth()
             h = self.root.winfo_reqheight()
-            self.root.geometry('%dx%d'%(w,h))
-
+            self.root.geometry("%dx%d" % (w, h))
 
     ## ###########################################################
     ## # Methods handling the creation of each widgets
-        
-    def addEntry(self, entry = {}):
+
+    def addEntry(self, entry={}):
         """
         optional argument:
         entry -- ({}) Dictionary describing the widget to be added.
                  See the InputFormDescr documentation for the accepted
                  format.
-                 
+
         This method creates each given widgets, find their position
         in the form, grid them, sets their default values etc...
         """
         w = None
-        if 'gridcfg' not in entry: entry['gridcfg'] = {}
+        if "gridcfg" not in entry:
+            entry["gridcfg"] = {}
 
         # dealing with the fact that the given widget belongs to
         # another container than the default mainContainer.
-        if 'parent' in entry and \
-           entry['parent'] in self.parentName:
-            parent = self.parentName[entry['parent']]['container']
-            
+        if "parent" in entry and entry["parent"] in self.parentName:
+            parent = self.parentName[entry["parent"]]["container"]
+
         else:
             parent = self.f
-            entry['parent'] = 'mainContainer'
+            entry["parent"] = "mainContainer"
 
         # widget type
-        if 'widgetType' in entry: wtype = entry['widgetType']
-        else: entry['widgetType'] = wtype = tkinter.Entry
+        if "widgetType" in entry:
+            wtype = entry["widgetType"]
+        else:
+            entry["widgetType"] = wtype = tkinter.Entry
 
         # InputForm
-        if wtype == 'InputForm':
+        if wtype == "InputForm":
             w = self.addInputForm(parent, entry, wtype)
         # Container
-        elif wtype == 'Container':
+        elif wtype == "Container":
             w = self.addContainer(parent, entry, wtype)
-            
+
         # FunctionCheckButton or FunctionRadiobutton:
-        elif wtype in ['FunctionCheckbutton', 'FunctionRadiobutton']:
+        elif wtype in ["FunctionCheckbutton", "FunctionRadiobutton"]:
             w = self.addFunctionButton(parent, entry, wtype)
 
         # Save Button
-        elif wtype == 'SaveButton':
-            w = self.addSaveButton( parent, entry)
+        elif wtype == "SaveButton":
+            w = self.addSaveButton(parent, entry)
 
         # Open Button
-        elif wtype == 'OpenButton':
-            w = self.addOpenButton( self.f, entry)
+        elif wtype == "OpenButton":
+            w = self.addOpenButton(self.f, entry)
 
         # ScrolledText
-        elif wtype == 'ScrolledText':
+        elif wtype == "ScrolledText":
             w = self.addScrolledText(parent, entry)
 
         # ListChooser:
-        elif wtype ==  'ListChooser':
-            w = self.addListChooser( parent, entry )
+        elif wtype == "ListChooser":
+            w = self.addListChooser(parent, entry)
 
         # Entry
-        elif issubclass( wtype, tkinter.Entry):
-            w = self.addTkinterEntry( parent, entry )
+        elif issubclass(wtype, tkinter.Entry):
+            w = self.addTkinterEntry(parent, entry)
 
         # other Tkinter Widget:
-        elif issubclass( wtype, tkinter.Widget):
-            if 'listtext' in entry:
+        elif issubclass(wtype, tkinter.Widget):
+            if "listtext" in entry:
                 w = self.addGroupWidget(parent, entry)
             else:
-                w = self.addTkinterWidget( parent, entry )
+                w = self.addTkinterWidget(parent, entry)
 
         # Python Mega Widgets  :
         elif issubclass(wtype, Pmw.MegaWidget):
@@ -718,59 +732,61 @@ optional arguments :
 
         else:
             # You can add any customized widget if you pass the class in wtype
-            if type(wtype)==type:
-                if 'wcfg' not in entry:
-                    entry['wcfg'] = {}
-                #w = apply(wtype, (self.f,),entry['wcfg'])
-                w = wtype(*(parent,), **entry['wcfg'])
-                if hasattr(w, 'set') and 'defaultValue' in entry:
-                    w.set(entry['defaultValue'])
-                #w = wtype(self.f,entry['wcfg'])
-                if 'gridcfg' not in entry:
-                    entry['gridcfg']={}
+            if type(wtype) == type:
+                if "wcfg" not in entry:
+                    entry["wcfg"] = {}
+                # w = apply(wtype, (self.f,),entry['wcfg'])
+                w = wtype(*(parent,), **entry["wcfg"])
+                if hasattr(w, "set") and "defaultValue" in entry:
+                    w.set(entry["defaultValue"])
+                # w = wtype(self.f,entry['wcfg'])
+                if "gridcfg" not in entry:
+                    entry["gridcfg"] = {}
             else:
-                raise ValueError("%s unsupported widget type"%str(wtype))
+                raise ValueError("%s unsupported widget type" % str(wtype))
 
-        if w :
+        if w:
             # Once the widgets has been created
             # If a parent has been specified for this widgets
-            if entry['parent'] in self.parentName and \
-               'name' in entry:
-                widgets = self.parentName[entry['parent']]['widgets']
-                widgets.append(entry['name'])
+            if entry["parent"] in self.parentName and "name" in entry:
+                widgets = self.parentName[entry["parent"]]["widgets"]
+                widgets.append(entry["name"])
 
             # The widget is a container widget
-            if 'container' in entry:
-                for key, cont in list(entry['container'].items()):
+            if "container" in entry:
+                for key, cont in list(entry["container"].items()):
                     if type(cont) is bytes:
-                        exec("self.parentName['%s'] = {'container':%s, 'widgets':[]}"%(key,cont))
+                        exec(
+                            "self.parentName['%s'] = {'container':%s, 'widgets':[]}"
+                            % (key, cont)
+                        )
                         # print self.parentName[key]
-                    #elif type(cont) is types.InstanceType:
+                    # elif type(cont) is types.InstanceType:
                     elif isInstance(cont) is True:
-                        self.parentName[key]= {'container':cont, 'widgets':[]}
+                        self.parentName[key] = {"container": cont, "widgets": []}
 
             # If tooltip string has been specified creating a Balloon
             # widget to display the tooltip
-            if 'tooltip' in entry:
+            if "tooltip" in entry:
                 balloon = Pmw.Balloon(parent, yoffset=30)
                 try:
-                    balloon.bind(w, entry['tooltip'])
-                    entry['balloon'] = balloon
+                    balloon.bind(w, entry["tooltip"])
+                    entry["balloon"] = balloon
                 except:
-                    entry['balloon'] = None
+                    entry["balloon"] = None
 
             # Finding the position of the widget in the form
-            gridcfg = self.findGridPosition(entry['gridcfg'])
-            if 'sticky' not in gridcfg:
-                gridcfg['sticky']='wens'
-            if 'weight' in gridcfg:
-                weight=gridcfg['weight']
-                del gridcfg['weight']
+            gridcfg = self.findGridPosition(entry["gridcfg"])
+            if "sticky" not in gridcfg:
+                gridcfg["sticky"] = "wens"
+            if "weight" in gridcfg:
+                weight = gridcfg["weight"]
+                del gridcfg["weight"]
             else:
-                weight=1
+                weight = 1
 
             # Grid the widget.
-            if hasattr(w, 'grid'):
+            if hasattr(w, "grid"):
                 w.grid(*(), **gridcfg)
 
             # the 2 following lines mean that the frame self.f
@@ -778,76 +794,87 @@ optional arguments :
             # gridcfg['column'] to resize with the corresponding
             # weight with itself only if the sticky option of the
             # grid method is specified.
-            self.f.rowconfigure(gridcfg['row'], weight = weight)
-            self.f.columnconfigure(gridcfg['column'], weight = weight)
+            self.f.rowconfigure(gridcfg["row"], weight=weight)
+            self.f.columnconfigure(gridcfg["column"], weight=weight)
             # Same for container widget
             if not parent == self.f:
-                parent.rowconfigure(gridcfg['row'], weight = weight)
-                parent.columnconfigure(gridcfg['column'], weight = weight)
+                parent.rowconfigure(gridcfg["row"], weight=weight)
+                parent.columnconfigure(gridcfg["column"], weight=weight)
 
         # Keep track of the different notebooks
-        if wtype in [Pmw.NoteBook,]:
+        if wtype in [
+            Pmw.NoteBook,
+        ]:
             self.notebooks.append(w)
 
         # Handle some widgets a particular way
-        if wtype not in ['ListChooser','ScrolledText', tkinter.Entry]:
-            entry['widget'] = w
+        if wtype not in ["ListChooser", "ScrolledText", tkinter.Entry]:
+            entry["widget"] = w
             self.widgetID_entries[w] = entry
         else:
-            self.widgetID_entries[entry['widget']] = entry
+            self.widgetID_entries[entry["widget"]] = entry
 
     def addContainer(self, f, entry, wtype):
         """
         Method handling container widgets
         """
-        if 'wcfg' in entry: wcfg = entry['wcfg']
-        if 'frameType' in entry and entry['frameType']=='scrolledFrame':
+        if "wcfg" in entry:
+            wcfg = entry["wcfg"]
+        if "frameType" in entry and entry["frameType"] == "scrolledFrame":
             parent = Pmw.ScrolledFrame(*(f,), **wcfg)
-            self.parentName[entry['name']] = {'container':parent.interior(),
-                                              'widgets':[]}
+            self.parentName[entry["name"]] = {
+                "container": parent.interior(),
+                "widgets": [],
+            }
         else:
             parent = tkinter.Frame(*(f,), **wcfg)
-            self.parentName[entry['name']] = {'container':parent,
-                                              'widgets':[]}
+            self.parentName[entry["name"]] = {"container": parent, "widgets": []}
         return parent
 
     def addInputForm(self, f, entry, wtype):
         """
         Method handling InputForm widgets
         """
-        if 'wcfg' in entry: wcfg = entry['wcfg']
-        else: wcfg = {}
+        if "wcfg" in entry:
+            wcfg = entry["wcfg"]
+        else:
+            wcfg = {}
         frame = tkinter.Frame(f)
-        description = entry['description']
-        wcfg['modal'] = 0
-        wcfg['blocking'] = 0
-        frame.form = InputForm(*( frame, description), **wcfg)
+        description = entry["description"]
+        wcfg["modal"] = 0
+        wcfg["blocking"] = 0
+        frame.form = InputForm(*(frame, description), **wcfg)
         return frame
-    
 
     def addFunctionButton(self, f, e, wtype):
         """Add a FunctionCheckbutton or FunctionRadiobutton"""
 
-        if 'wcfg' in e: wcfg = e['wcfg']
-        else: wcfg = {}
-        # if a variable is bound to the widget 
-        if 'variable' not in e:
-            if wtype=='FunctionCheckbutton': f.var=tkinter.IntVar()
-            elif wtype=='FunctionRadiobutton': f.var=tkinter.StringVar()
-
-            e['variable'] = f.var
-            wcfg['variable'] = e['variable']
+        if "wcfg" in e:
+            wcfg = e["wcfg"]
         else:
-            wcfg['variable'] = e['variable']
-            if 'defaultValue' in e:
-                wcfg['variable'].set(e['defaultValue'])
+            wcfg = {}
+        # if a variable is bound to the widget
+        if "variable" not in e:
+            if wtype == "FunctionCheckbutton":
+                f.var = tkinter.IntVar()
+            elif wtype == "FunctionRadiobutton":
+                f.var = tkinter.StringVar()
 
-        if 'text' in e: wcfg['text'] = e['text']
-        if 'value' in e: wcfg['value'] = e['value']
+            e["variable"] = f.var
+            wcfg["variable"] = e["variable"]
+        else:
+            wcfg["variable"] = e["variable"]
+            if "defaultValue" in e:
+                wcfg["variable"].set(e["defaultValue"])
 
-        if wtype=='FunctionCheckbutton':
+        if "text" in e:
+            wcfg["text"] = e["text"]
+        if "value" in e:
+            wcfg["value"] = e["value"]
+
+        if wtype == "FunctionCheckbutton":
             w = tkinter.Checkbutton(*(f,), **wcfg)
-        elif wtype=='FunctionRadiobutton':
+        elif wtype == "FunctionRadiobutton":
             w = tkinter.Radiobutton(*(f,), **wcfg)
         w.bind("<Button-1>", self.FuncButton_cb, "+")
 
@@ -856,77 +883,76 @@ optional arguments :
     def addScrolledText(self, f, e):
         """Method handling ScrolledText widgets"""
         f1 = tkinter.Frame(f)
-        if 'label' in e:
-            tkinter.Label(f1, text=e['label']).pack(anchor = 'w')
+        if "label" in e:
+            tkinter.Label(f1, text=e["label"]).pack(anchor="w")
         w = tkinter.Text(f1)
-        w.vbar = tkinter.Scrollbar(f1, name='vbar')
-        w.vbar['width'] = 15
-        w.vbar.pack(side = tkinter.LEFT, fill = 'y')
-        if 'size' in e:
-            w['width'] = e['size'][0]
-            w['height'] = e['size'][1]
+        w.vbar = tkinter.Scrollbar(f1, name="vbar")
+        w.vbar["width"] = 15
+        w.vbar.pack(side=tkinter.LEFT, fill="y")
+        if "size" in e:
+            w["width"] = e["size"][0]
+            w["height"] = e["size"][1]
         else:
-            w['width'] = 80
-            w['height'] = 2
-        if 'defaultValue' in e:
-            w.insert(tkinter.END, e['defaultValue'])
-        if 'writeButton' in e:
+            w["width"] = 80
+            w["height"] = 2
+        if "defaultValue" in e:
+            w.insert(tkinter.END, e["defaultValue"])
+        if "writeButton" in e:
             wb = self.addWriteButton(f1)
             # Bind the descr to the Button write, will be used
             # by the write_cb function to write in the appropriate Text
             # zone.
             self.widgetID_entries[wb] = e
-            wb.pack(side = 'right')
+            wb.pack(side="right")
 
-        if 'readButton' in e:
+        if "readButton" in e:
             rb = self.addReadButton(f1)
             # Bind the descr to the Button read, will be used
             # by the read_cb function to read in the appropriate Text
             # zone.
             self.widgetID_entries[rb] = e
-            rb.pack(side = 'right')
+            rb.pack(side="right")
         w.pack()
-        w['yscrollcommand'] = w.vbar.set
-        w.vbar['command'] = w.yview
-        e['widget'] = w
+        w["yscrollcommand"] = w.vbar.set
+        w.vbar["command"] = w.yview
+        e["widget"] = w
         return f1
 
-    def addReadButton(self,frame):
-        """ Method to add a button to read text from file and add it in a
-        scrolled Text or a text zone. """
-        readBut = tkinter.Button(frame, text = 'Read')
+    def addReadButton(self, frame):
+        """Method to add a button to read text from file and add it in a
+        scrolled Text or a text zone."""
+        readBut = tkinter.Button(frame, text="Read")
         readBut.bind("<Button-1>", self.read_cb, "+")
         return readBut
 
-    def addWriteButton(self,frame):
-        """ Method to add a button to write the text contained in a scrolled
+    def addWriteButton(self, frame):
+        """Method to add a button to write the text contained in a scrolled
         text or a text zone in a file."""
-        
-        writeBut = tkinter.Button(frame, text = 'Write')
+
+        writeBut = tkinter.Button(frame, text="Write")
         writeBut.bind("<Button-1>", self.write_cb, "+")
         return writeBut
 
     def addSaveButton(self, frame, wdescr):
-        """ Method to add a button or a checkbutton or a radiobutton  to open
+        """Method to add a button or a checkbutton or a radiobutton  to open
         a Save
         fileBrowser.
         """
-##          wdescr['widgetType'] = Tkinter.Button
-        if 'typeofwidget' in wdescr:
-            wdescr['widgetType'] = wdescr['typeofwidget']
+        ##          wdescr['widgetType'] = Tkinter.Button
+        if "typeofwidget" in wdescr:
+            wdescr["widgetType"] = wdescr["typeofwidget"]
         else:
-            wdescr['widgetType'] = tkinter.Button
+            wdescr["widgetType"] = tkinter.Button
         saveBut = self.addTkinterWidget(frame, wdescr)
-        wdescr['widgetType'] = 'SaveButton'
+        wdescr["widgetType"] = "SaveButton"
         saveBut.bind("<Button-1>", self.save_cb, "+")
         return saveBut
 
     def addOpenButton(self, frame, wdescr):
-        """ Method to add a button , checkbutton or radiobutton to open file browser.
-        """
-        wdescr['widgetType'] = tkinter.Button
+        """Method to add a button , checkbutton or radiobutton to open file browser."""
+        wdescr["widgetType"] = tkinter.Button
         openBut = self.addTkinterWidget(frame, wdescr)
-        wdescr['widgetType'] = 'OpenButton'
+        wdescr["widgetType"] = "OpenButton"
         openBut.bind("<Button-1>", self.open_cb, "+")
         return openBut
 
@@ -934,349 +960,397 @@ optional arguments :
         """
         Method handling any Tkinter widgets
         """
-        if 'wcfg' in e: wcfg = e['wcfg']
-        else: wcfg = {}
-        if 'text' in e: wcfg['text'] = e['text']
+        if "wcfg" in e:
+            wcfg = e["wcfg"]
+        else:
+            wcfg = {}
+        if "text" in e:
+            wcfg["text"] = e["text"]
 
-        if 'variable' in e:
-            wcfg['variable'] = e['variable']
+        if "variable" in e:
+            wcfg["variable"] = e["variable"]
 
-        elif 'variable' not in wcfg and \
-             (issubclass(e['widgetType'],tkinter.Radiobutton) or \
-             issubclass(e['widgetType'],tkinter.Checkbutton)):
-            e['variable'] = wcfg['variable'] = tkinter.StringVar()
+        elif "variable" not in wcfg and (
+            issubclass(e["widgetType"], tkinter.Radiobutton)
+            or issubclass(e["widgetType"], tkinter.Checkbutton)
+        ):
+            e["variable"] = wcfg["variable"] = tkinter.StringVar()
 
-        if 'textvariable' in e:
-            wcfg['textvariable'] = e['textvariable']
-            e['variable'] = e['textvariable']
-                    
-        if 'command' in e: wcfg['command'] = e['command']
+        if "textvariable" in e:
+            wcfg["textvariable"] = e["textvariable"]
+            e["variable"] = e["textvariable"]
 
-        if 'value' in e: wcfg['value'] = e['value']
+        if "command" in e:
+            wcfg["command"] = e["command"]
 
-        w = e['widgetType'](*(f,), **wcfg)
+        if "value" in e:
+            wcfg["value"] = e["value"]
 
-        if 'defaultValue' in e:
-            if  hasattr(e['widgetType'], 'set') :
-                w.set(e['defaultValue'])
-            elif hasattr(e['widgetType'], 'insert') \
-                 and ('textvariable' not in e or \
-                      'textvariable' not in wcfg):
-                #Text case but not Entry
-                w.insert(tkinter.END, e['defaultValue'])
+        w = e["widgetType"](*(f,), **wcfg)
 
-            elif 'textvariable' in wcfg:
-                #Entry widget case.
-                wcfg['textvariable'].set(e['defaultValue'])
+        if "defaultValue" in e:
+            if hasattr(e["widgetType"], "set"):
+                w.set(e["defaultValue"])
+            elif hasattr(e["widgetType"], "insert") and (
+                "textvariable" not in e or "textvariable" not in wcfg
+            ):
+                # Text case but not Entry
+                w.insert(tkinter.END, e["defaultValue"])
 
-            elif 'variable' in wcfg:
-                wcfg['variable'].set(e['defaultValue'])
+            elif "textvariable" in wcfg:
+                # Entry widget case.
+                wcfg["textvariable"].set(e["defaultValue"])
+
+            elif "variable" in wcfg:
+                wcfg["variable"].set(e["defaultValue"])
         return w
 
     def addPMegaWidget(self, f, e):
         """
-        Method handling any Python Mega Widgets (Pmw)
-'-' character are replaced by '-' to avoid Pmw exceptions, the oppposite
-translation is done in checkValues()
+                Method handling any Python Mega Widgets (Pmw)
+        '-' character are replaced by '-' to avoid Pmw exceptions, the oppposite
+        translation is done in checkValues()
         """
         # - pass directly the python mega widget dictionary as an argument
-        if 'wcfg' in e:
-            wcfg = e['wcfg']
+        if "wcfg" in e:
+            wcfg = e["wcfg"]
         else:
             wcfg = {}
-        w = e['widgetType'](*(f,), **wcfg)
-        w.pack(fill = 'x', padx = 10, pady = 10)
+        w = e["widgetType"](*(f,), **wcfg)
+        w.pack(fill="x", padx=10, pady=10)
         # This mega widget can have components to be added to it
         # This will replace the listtext and listoption.
-        if 'componentcfg' in e:
-            for compcfg in e['componentcfg']:
-                w.add(*(compcfg['name'].replace('_','-'),), **compcfg['cfg'])
+        if "componentcfg" in e:
+            for compcfg in e["componentcfg"]:
+                w.add(*(compcfg["name"].replace("_", "-"),), **compcfg["cfg"])
 
-        elif 'listtext' in e:
-            if 'listoption' in e and \
-               type(e['listoption']) is dict:
-                for name in e['listtext']:
-                    if name in e['listoption']:
-                        w.add(*(name.replace('_','-'),), **e['listoption'][name])
+        elif "listtext" in e:
+            if "listoption" in e and type(e["listoption"]) is dict:
+                for name in e["listtext"]:
+                    if name in e["listoption"]:
+                        w.add(*(name.replace("_", "-"),), **e["listoption"][name])
             else:
-                for name in e['listtext']:
-                    w.add(name.replace('_','-'))
+                for name in e["listtext"]:
+                    w.add(name.replace("_", "-"))
 
-##         if e.has_key('container'):
-##             for key, cont in e['container'].items():
-##                 if type(cont) is types.StringType:
-##                     exec("self.parentName['%s'] = {'container':%s, 'widgets':[]}"%(key,cont))
-##                     #print self.parentName[key]
-##                 elif type(cont) is types.InstanceType:
-##                     self.parentName[key]= {'container':cont, 'widgets':[]}
+        ##         if e.has_key('container'):
+        ##             for key, cont in e['container'].items():
+        ##                 if type(cont) is types.StringType:
+        ##                     exec("self.parentName['%s'] = {'container':%s, 'widgets':[]}"%(key,cont))
+        ##                     #print self.parentName[key]
+        ##                 elif type(cont) is types.InstanceType:
+        ##                     self.parentName[key]= {'container':cont, 'widgets':[]}
 
-        if 'defaultValue' in e:
+        if "defaultValue" in e:
             if isinstance(w, Pmw.ScrolledText):
-                w.settext(e['defaultValue'])
-            elif isinstance(w, Pmw.ScrolledListBox) \
-                     or isinstance(w, Pmw.ScrolledText):
-                w.setvalue(e['defaultValue'])
-            elif hasattr(w,'set'):
-                w.set(e['defaultValue'])
-            elif hasattr(w,'invoke'):
+                w.settext(e["defaultValue"])
+            elif isinstance(w, Pmw.ScrolledListBox) or isinstance(w, Pmw.ScrolledText):
+                w.setvalue(e["defaultValue"])
+            elif hasattr(w, "set"):
+                w.set(e["defaultValue"])
+            elif hasattr(w, "invoke"):
                 try:
-                    w.invoke(e['defaultValue'])
+                    w.invoke(e["defaultValue"])
                 except:
-                    if hasattr(w,'selectitem'):
+                    if hasattr(w, "selectitem"):
                         try:
-                            w.selectitem(e['defaultValue'])
+                            w.selectitem(e["defaultValue"])
                         except:
-                            print('Could not use %s as the defaultValue!'%e['defaultValue'])
+                            print(
+                                "Could not use %s as the defaultValue!"
+                                % e["defaultValue"]
+                            )
                     else:
-                        print('sorry cannot set to the defaultValue', e['defaultValue'])
-            elif hasattr(w,'insert'):
-                w.insert('end',e['defaultValue'])
+                        print("sorry cannot set to the defaultValue", e["defaultValue"])
+            elif hasattr(w, "insert"):
+                w.insert("end", e["defaultValue"])
         return w
 
-    def addGroupWidget(self,f,e):
+    def addGroupWidget(self, f, e):
         """
         Method handling GroupWidgets
         """
-        if 'wcfg' not in e:
-            e['wcfg'] = {}
+        if "wcfg" not in e:
+            e["wcfg"] = {}
 
-        if 'gridcfg' not in e:e['gridcfg'] = {}
-        
+        if "gridcfg" not in e:
+            e["gridcfg"] = {}
+
         j = 0
-        if 'direction' in e:
-            direction = e['direction']
+        if "direction" in e:
+            direction = e["direction"]
         else:
             direction = self.defaultDirection
-        if 'groupedBy' in e:
-            groupedBy=e['groupedBy']
+        if "groupedBy" in e:
+            groupedBy = e["groupedBy"]
         else:
-            groupedBy = len(e['listtext'])
-        number=len(e['listtext'])/groupedBy
+            groupedBy = len(e["listtext"])
+        number = len(e["listtext"]) / groupedBy
 
-        if len(e['listtext'])%groupedBy != 0:
-            number=number+1
+        if len(e["listtext"]) % groupedBy != 0:
+            number = number + 1
 
-        if j==0:
+        if j == 0:
             # For the first radiobutton, use findGridPosition to get
             # the widget's position.
-            gridcfg = self.findGridPosition(e['gridcfg'])
-            firstrow = e['gridcfg']['row']
-            firstcolumn = e['gridcfg']['column']
+            gridcfg = self.findGridPosition(e["gridcfg"])
+            firstrow = e["gridcfg"]["row"]
+            firstcolumn = e["gridcfg"]["column"]
         for n in range(number):
-            if j!= 0:
-                if direction == 'col':
+            if j != 0:
+                if direction == "col":
                     self.lastUsedRow = firstrow + n
                     self.lastUsedCol = firstcolumn - 1
                 else:
                     self.lastUsedRow = firstrow - 1
                     self.lastUsedCol = firstcolumn + n
-                
-            while j<(groupedBy*(n+1)) and j<len(e['listtext']):
-                e['wcfg']['text'] = e['listtext'][j]
-                e['wcfg']['value'] = e['listtext'][j]
-                #w = apply(e['widgetType'], (f,), wcfg)
-                if j!=0:
-                    if direction == 'col':
-                        e['gridcfg']['column'] = self.lastUsedCol+1
-                        e['gridcfg']['row']= self.lastUsedRow
-                        gridcfg = self.findGridPosition(e['gridcfg'])
+
+            while j < (groupedBy * (n + 1)) and j < len(e["listtext"]):
+                e["wcfg"]["text"] = e["listtext"][j]
+                e["wcfg"]["value"] = e["listtext"][j]
+                # w = apply(e['widgetType'], (f,), wcfg)
+                if j != 0:
+                    if direction == "col":
+                        e["gridcfg"]["column"] = self.lastUsedCol + 1
+                        e["gridcfg"]["row"] = self.lastUsedRow
+                        gridcfg = self.findGridPosition(e["gridcfg"])
 
                     else:
-                        e['gridcfg']['row'] = self.lastUsedRow+1
-                        e['gridcfg']['column'] = self.lastUsedCol
+                        e["gridcfg"]["row"] = self.lastUsedRow + 1
+                        e["gridcfg"]["column"] = self.lastUsedCol
                         self.lastUsedRow = self.lastUsedRow + 1
-                        gridcfg = self.findGridPosition(e['gridcfg'])
-                
-                w = self.addTkinterWidget(f,e)
-                if w:
-                    if e['parent'] in self.parentName and \
-                       'name' in e:
-                        widgets = self.parentName[e['parent']]['widgets']
-                        widgets.append(e['name'])
-                    
-                w.grid(*(), **gridcfg)
-                j=j+1
+                        gridcfg = self.findGridPosition(e["gridcfg"])
 
-        if 'defaultValue' in e:
-            e['wcfg']['variable'].set(e['defaultValue'])
+                w = self.addTkinterWidget(f, e)
+                if w:
+                    if e["parent"] in self.parentName and "name" in e:
+                        widgets = self.parentName[e["parent"]]["widgets"]
+                        widgets.append(e["name"])
+
+                w.grid(*(), **gridcfg)
+                j = j + 1
+
+        if "defaultValue" in e:
+            e["wcfg"]["variable"].set(e["defaultValue"])
         else:
-            e['wcfg']['variable'].set(e['listtext'][0])
-                
-                
+            e["wcfg"]["variable"].set(e["listtext"][0])
+
         return None
 
-
-    def addTkinterEntry(self, f, e ):
+    def addTkinterEntry(self, f, e):
         """
         add an Entry widget with a possible label
         """
-        if 'textvariable' not in e['wcfg']:
-            e['wcfg']['textvariable'] = tkinter.StringVar()
+        if "textvariable" not in e["wcfg"]:
+            e["wcfg"]["textvariable"] = tkinter.StringVar()
 
-        command = getkw(e['wcfg'], 'command')
-        eventType = getkw(e['wcfg'], 'eventType')
-        commandArgs = getkw(e['wcfg'], 'commandArgs')
-        label = getkw(e['wcfg'],'label')
+        command = getkw(e["wcfg"], "command")
+        eventType = getkw(e["wcfg"], "eventType")
+        commandArgs = getkw(e["wcfg"], "commandArgs")
+        label = getkw(e["wcfg"], "label")
         if label:
             f1 = tkinter.Frame(f)
-            tkinter.Label(f1, text=label).grid(row=0,
-                                                    column=0,sticky='e')
+            tkinter.Label(f1, text=label).grid(row=0, column=0, sticky="e")
             w = self.addTkinterWidget(f1, e)
-            w.grid(row=0, column=1, sticky='w')
-            e['widget'] = w
+            w.grid(row=0, column=1, sticky="w")
+            e["widget"] = w
             self.widgetID_entries[w] = e
-            returnVal =  f1
+            returnVal = f1
 
         else:
             w = self.addTkinterWidget(f, e)
-            e['widget'] = w
+            e["widget"] = w
             self.widgetID_entries[w] = e
             returnVal = w
-    
+
         if command:
-            if eventType is None: eventType = '<Return>'
+            if eventType is None:
+                eventType = "<Return>"
             if commandArgs:
                 w.bind(eventType, CallBackFunction(command, commandArgs))
             else:
                 w.bind(eventType, command)
 
         return returnVal
-        
+
     def addListChooser(self, f, entry={}):
-        mode = 'single'
-        if 'mode' in entry: mode = entry['mode']
-        title = 'Title'
-        if 'title' in entry: title = entry['title']
+        mode = "single"
+        if "mode" in entry:
+            mode = entry["mode"]
+        title = "Title"
+        if "title" in entry:
+            title = entry["title"]
         width = 40
-        if 'width' in entry: width = entry['width']
-        if 'defaultValue' in entry:
-            defaultValue = entry['defaultValue']
+        if "width" in entry:
+            width = entry["width"]
+        if "defaultValue" in entry:
+            defaultValue = entry["defaultValue"]
         else:
             defaultValue = None
 
-        if 'lbpackcfg' in entry: lbpackcfg=entry['lbpackcfg']
-        else: lbpackcfg= {'fill':'x', 'expand':1}
+        if "lbpackcfg" in entry:
+            lbpackcfg = entry["lbpackcfg"]
+        else:
+            lbpackcfg = {"fill": "x", "expand": 1}
 
-        if 'lbwcfg' in entry: lbwcfg=entry['lbwcfg']
-        else: lbwcfg = {}
-        
-        lc = entry['widget'] = ListChooser(f, mode, title=title,
-                                           entries = entry['entries'],
-                                           width=width,
-                                           defaultValue = defaultValue,
-                                           lbpackcfg = lbpackcfg,
-                                           lbwcfg = lbwcfg)
-        if 'command' in entry:
-            lc.lb.bind("<ButtonRelease-1>", entry['command'], '+')
+        if "lbwcfg" in entry:
+            lbwcfg = entry["lbwcfg"]
+        else:
+            lbwcfg = {}
+
+        lc = entry["widget"] = ListChooser(
+            f,
+            mode,
+            title=title,
+            entries=entry["entries"],
+            width=width,
+            defaultValue=defaultValue,
+            lbpackcfg=lbpackcfg,
+            lbwcfg=lbwcfg,
+        )
+        if "command" in entry:
+            lc.lb.bind("<ButtonRelease-1>", entry["command"], "+")
         return lc.top
-
-        
 
     ## #############################################################
     ## CALLBACK FUNCTIONS
-    
-    def open_cb(self, event = None):
+
+    def open_cb(self, event=None):
         from ViewerFramework.VFGUI import fileOpenAsk
+
         self.releaseFocus()
         entry = self.widgetID_entries[event.widget]
 
-        if 'idir' in entry: idir = entry['idir']
-        else: idir = None
-
-        if 'ifile' in entry: ifile = entry['ifile']
-        else: ifile = None
-
-        if 'title' in entry: title = entry['title']
-        else: title = ''
-
-        if 'types' in entry: types = entry['types']
-        else: types = [('All types', '*.*')]
-        
-        newfile = fileOpenAsk(self.root, idir = idir, ifile = ifile,
-                              types = types,
-                              title = title)
-        if 'callback' in entry and newfile:
-            entry['callback'](newfile)
-        entry['filename'] = newfile
-        self.grabFocus()
-
-        
-    def save_cb(self, event = None):
-        from ViewerFramework.VFGUI import fileSaveAsk
-        self.releaseFocus()
-        entry = self.widgetID_entries[event.widget]
-
-        if 'idir' in entry: idir = entry['idir']
-        else: idir = None
-
-        if 'ifile' in entry: ifile = entry['ifile']
-        else: ifile = None
-
-        if 'title' in entry: title = entry['title']
-        else: title = ''
-
-        if 'types' in entry: types = entry['types']
-        else: types = [('All types', '*.*')]
-        
-        newfile = fileSaveAsk(self.root,idir=idir,ifile=ifile,types= types,
-                              title = title)
-        if 'callback' in entry and newfile:
-            entry['callback'](newfile)
-        entry['filename'] = newfile
-        self.grabFocus()
-
-
-    def read_cb(self, event = None):
-        from ViewerFramework.VFGUI import fileOpenAsk
-        self.releaseFocus()
-        entry = self.widgetID_entries[event.widget]
-        if 'readFileType' in entry:
-            fileType = entry['readFileType']
+        if "idir" in entry:
+            idir = entry["idir"]
         else:
-            fileType = [ ('Python Files', '*.py')]
+            idir = None
 
-        if 'idir' in entry: idir = entry['idir']
-        else: idir = None
+        if "ifile" in entry:
+            ifile = entry["ifile"]
+        else:
+            ifile = None
 
-        if 'ifile' in entry: ifile = entry['ifile']
-        else: ifile = None
+        if "title" in entry:
+            title = entry["title"]
+        else:
+            title = ""
 
-        newfile = fileOpenAsk(self.root,idir=idir,ifile=ifile,
-                              types = fileType,
-                              title = 'Read function from file: ')
+        if "types" in entry:
+            types = entry["types"]
+        else:
+            types = [("All types", "*.*")]
+
+        newfile = fileOpenAsk(
+            self.root, idir=idir, ifile=ifile, types=types, title=title
+        )
+        if "callback" in entry and newfile:
+            entry["callback"](newfile)
+        entry["filename"] = newfile
+        self.grabFocus()
+
+    def save_cb(self, event=None):
+        from ViewerFramework.VFGUI import fileSaveAsk
+
+        self.releaseFocus()
+        entry = self.widgetID_entries[event.widget]
+
+        if "idir" in entry:
+            idir = entry["idir"]
+        else:
+            idir = None
+
+        if "ifile" in entry:
+            ifile = entry["ifile"]
+        else:
+            ifile = None
+
+        if "title" in entry:
+            title = entry["title"]
+        else:
+            title = ""
+
+        if "types" in entry:
+            types = entry["types"]
+        else:
+            types = [("All types", "*.*")]
+
+        newfile = fileSaveAsk(
+            self.root, idir=idir, ifile=ifile, types=types, title=title
+        )
+        if "callback" in entry and newfile:
+            entry["callback"](newfile)
+        entry["filename"] = newfile
+        self.grabFocus()
+
+    def read_cb(self, event=None):
+        from ViewerFramework.VFGUI import fileOpenAsk
+
+        self.releaseFocus()
+        entry = self.widgetID_entries[event.widget]
+        if "readFileType" in entry:
+            fileType = entry["readFileType"]
+        else:
+            fileType = [("Python Files", "*.py")]
+
+        if "idir" in entry:
+            idir = entry["idir"]
+        else:
+            idir = None
+
+        if "ifile" in entry:
+            ifile = entry["ifile"]
+        else:
+            ifile = None
+
+        newfile = fileOpenAsk(
+            self.root,
+            idir=idir,
+            ifile=ifile,
+            types=fileType,
+            title="Read function from file: ",
+        )
         if newfile != None:
-            f = open(newfile, 'r')
+            f = open(newfile, "r")
             lines = f.read()
-            entry['widget'].insert(tkinter.END,lines)
+            entry["widget"].insert(tkinter.END, lines)
             f.close()
         self.grabFocus()
 
-
-    def write_cb(self, event = None):
+    def write_cb(self, event=None):
         from ViewerFramework.VFGUI import fileSaveAsk
+
         self.releaseFocus()
         entry = self.widgetID_entries[event.widget]
-        if 'writeFileType' in entry:
-            fileType = entry['writeFileType']
+        if "writeFileType" in entry:
+            fileType = entry["writeFileType"]
         else:
-            fileType = [ ('Python Files', '*.py')]
+            fileType = [("Python Files", "*.py")]
 
-        if 'idir' in entry: idir = entry['idir']
-        else: idir = None
+        if "idir" in entry:
+            idir = entry["idir"]
+        else:
+            idir = None
 
-        if 'ifile' in entry: ifile = entry['ifile']
-        else: ifile = None
+        if "ifile" in entry:
+            ifile = entry["ifile"]
+        else:
+            ifile = None
 
-        newfile = fileSaveAsk(self.root,idir=idir,ifile=ifile,types = fileType,
-                              title = 'Save function in file: ')
+        newfile = fileSaveAsk(
+            self.root,
+            idir=idir,
+            ifile=ifile,
+            types=fileType,
+            title="Save function in file: ",
+        )
         if newfile != None:
-            f = open(newfile, 'w')
-            f.write(entry['widget'].get(1.0, tkinter.END))
+            f = open(newfile, "w")
+            f.write(entry["widget"].get(1.0, tkinter.END))
             f.close()
         self.grabFocus()
 
-
-    def FuncButton_cb(self,event = None):
+    def FuncButton_cb(self, event=None):
         """
         method used to display a window allowing the user to type in
         Python code
@@ -1284,71 +1358,89 @@ translation is done in checkValues()
         import tkinter.messagebox
 
         # get the widget's description
-        assert 'variable' in self.widgetID_entries[event.widget]
+        assert "variable" in self.widgetID_entries[event.widget]
         widget = self.widgetID_entries[event.widget]
 
         # code typein widget is modal
         self.releaseFocus()
-        if 'defaultText' not in widget: widget['defaultText']=''
-        if widget['widgetType']=='FunctionRadiobutton':
-            widget['variable'].set(widget['text'])
-        v = widget['variable'].get()
-        
-        # create a form description
-        ifd = InputFormDescr(title = 'Define a function')
-        if 'readFileType' not in widget:
-            widget['readFileType']= [('Python Files','*.py')]
-        if 'writeFileType' not in widget:
-            widget['writeFileType']= [('Python Files','*.py')]
-        
-        if v or v == 'function' or v == 'mapfunction':
-            if 'size' in widget:
+        if "defaultText" not in widget:
+            widget["defaultText"] = ""
+        if widget["widgetType"] == "FunctionRadiobutton":
+            widget["variable"].set(widget["text"])
+        v = widget["variable"].get()
 
-                ifd.append({'name': 'UserFunction',
-                            'label':widget['label'],
-                            'widgetType':'ScrolledText',
-                            'readFileType':widget['readFileType'],
-                            'writeFileType': widget['writeFileType'],
-                            'readButton':1,'writeButton':1,
-                            'size':widget['size'],
-                            'defaultValue':widget['defaultText']})
+        # create a form description
+        ifd = InputFormDescr(title="Define a function")
+        if "readFileType" not in widget:
+            widget["readFileType"] = [("Python Files", "*.py")]
+        if "writeFileType" not in widget:
+            widget["writeFileType"] = [("Python Files", "*.py")]
+
+        if v or v == "function" or v == "mapfunction":
+            if "size" in widget:
+
+                ifd.append(
+                    {
+                        "name": "UserFunction",
+                        "label": widget["label"],
+                        "widgetType": "ScrolledText",
+                        "readFileType": widget["readFileType"],
+                        "writeFileType": widget["writeFileType"],
+                        "readButton": 1,
+                        "writeButton": 1,
+                        "size": widget["size"],
+                        "defaultValue": widget["defaultText"],
+                    }
+                )
             else:
-                ifd.append({'name': 'UserFunction',
-                            'label':widget['label'],
-                            'widgetType':'ScrolledText',
-                            'readFileType':widget['readFileType'],
-                            'writeFileType': widget['writeFileType'],
-                            'readButton':1,'writeButton':1,
-                            'defaultValue':widget['defaultText']})
+                ifd.append(
+                    {
+                        "name": "UserFunction",
+                        "label": widget["label"],
+                        "widgetType": "ScrolledText",
+                        "readFileType": widget["readFileType"],
+                        "writeFileType": widget["writeFileType"],
+                        "readButton": 1,
+                        "writeButton": 1,
+                        "defaultValue": widget["defaultText"],
+                    }
+                )
         else:
-           ifd.append({'name': 'UserFunction',
-                       'label':'type in zone' ,
-                       'widgetType':'ScrolledText',
-                       'readFileType':widget['readFileType'],
-                       'writeFileType': widget['writeFileType'],
-                       'readButton':1,'writeButton':1,
-                       'defaultValue':widget['defaultText']})
+            ifd.append(
+                {
+                    "name": "UserFunction",
+                    "label": "type in zone",
+                    "widgetType": "ScrolledText",
+                    "readFileType": widget["readFileType"],
+                    "writeFileType": widget["writeFileType"],
+                    "readButton": 1,
+                    "writeButton": 1,
+                    "defaultValue": widget["defaultText"],
+                }
+            )
 
         window = InputForm(self.master, self.root, ifd)
         vals = window.go()
         self.grabFocus()
-        if widget['widgetType']=='FunctionCheckbutton':
-            widget['variable'].set('0')
-                                   
-        if len(vals)==0: return
-        widget['userFunction'] = vals['UserFunction']
-        function = evalString(vals['UserFunction'])
-        
-        if widget['userFunction'] is None:
-            tkinter.messagebox.showwarning('Color by properties',
-                                     'no function definied')
+        if widget["widgetType"] == "FunctionCheckbutton":
+            widget["variable"].set("0")
+
+        if len(vals) == 0:
+            return
+        widget["userFunction"] = vals["UserFunction"]
+        function = evalString(vals["UserFunction"])
+
+        if widget["userFunction"] is None:
+            tkinter.messagebox.showwarning(
+                "Color by properties", "no function definied"
+            )
             return
 
-        if 'command' in widget:
-            values = widget['command'](function)
-            widget['result'] = values
+        if "command" in widget:
+            values = widget["command"](function)
+            widget["result"] = values
         else:
-            widget['result'] = function
+            widget["result"] = function
 
     def PMWnameToReal(self, e, name):
         # PMW does not accept names containing '_' for widgets
@@ -1356,32 +1448,31 @@ translation is done in checkValues()
         # this functions is called by checkValues to fo the opposite
         # i.e. replace '-' by '_' if needed
         names = []
-        if 'componentcfg' in e:
-            names = list(map( lambda x, e=e: e['componentcfg']['name'], e))
-        elif 'listtext' in e:
-            if 'listoption' in e and \
-               type(e['listoption']) is dict:
-                for name in e['listtext']:
-                    if name in e['listoption']:
+        if "componentcfg" in e:
+            names = list(map(lambda x, e=e: e["componentcfg"]["name"], e))
+        elif "listtext" in e:
+            if "listoption" in e and type(e["listoption"]) is dict:
+                for name in e["listtext"]:
+                    if name in e["listoption"]:
                         names.append(name)
             else:
-                names = e['listtext']
+                names = e["listtext"]
 
         # len of names can be 0, for instance the widget listing the MSMS
         # surfaces has an empty list for names
-        if len(names)==0 or name in names:
+        if len(names) == 0 or name in names:
             return name
         else:
-            return name.replace('-','_')
+            return name.replace("-", "_")
 
     ## #####################################################################
-    ## 
+    ##
 
-    def checkValues(self, container='all'):
+    def checkValues(self, container="all"):
         """
         optional argument:
-        container -- ('all') specifies the name of a container 
-                     
+        container -- ('all') specifies the name of a container
+
         Method which gets the values of each widgets in the given container
         It will return a dictionary where the key is the name of the widget
         and the value is the value of the widget.
@@ -1391,156 +1482,170 @@ translation is done in checkValues()
         implemented in this method.
         """
         values = {}
-        if container == 'all':
+        if container == "all":
             contNames = list(self.parentName.keys())
 
         elif type(container) is bytes:
-            contNames = [container,]
+            contNames = [
+                container,
+            ]
         else:
             contNames = container
-        
+
         pN = self.parentName
-        
+
         entryBN = self.descr.entryByName
         wNames = []
         for name in contNames:
-            wNames = wNames + pN[name]['widgets']
+            wNames = wNames + pN[name]["widgets"]
         if len(wNames) == 0:
             print("WARNING: No widgets in these containers")
-            
+
         for wName in wNames:
-            wtype = entryBN[wName]['widgetType']
+            wtype = entryBN[wName]["widgetType"]
             e = entryBN[wName]
-            if wtype == 'Container':
+            if wtype == "Container":
                 continue
 
-            elif wtype == 'InputForm':
-                val = e['widget'].form.checkValues()
-                
-            elif wtype in['SaveButton','OpenButton']:
-                if 'filename' in e:
-                    val = e['filename']
+            elif wtype == "InputForm":
+                val = e["widget"].form.checkValues()
+
+            elif wtype in ["SaveButton", "OpenButton"]:
+                if "filename" in e:
+                    val = e["filename"]
                 else:
                     val = None
-            elif wtype in ['FunctionCheckbutton', 'FunctionRadiobutton']:
-                if 'result' in e:
-                    val = (e['text'], e['result'], e['userFunction'])
+            elif wtype in ["FunctionCheckbutton", "FunctionRadiobutton"]:
+                if "result" in e:
+                    val = (e["text"], e["result"], e["userFunction"])
             # ScrolledText
-            elif wtype in ['ScrolledText', tkinter.Text]:
-                val = e['widget'].get(1.0, tkinter.END)
+            elif wtype in ["ScrolledText", tkinter.Text]:
+                val = e["widget"].get(1.0, tkinter.END)
 
             # ListChooser:
-            elif wtype ==  'ListChooser':
-                val = e['widget'].get()
+            elif wtype == "ListChooser":
+                val = e["widget"].get()
 
             # Tkinter Widget:
-            elif issubclass( wtype, tkinter.Widget):
-                if hasattr(e['widget'], 'get'):
-                    val = e['widget'].get()
-                elif 'wcfg' in e and 'variable' in e['wcfg']:
-                    val = e['wcfg']['variable'].get()
-                elif 'variable' in e:
+            elif issubclass(wtype, tkinter.Widget):
+                if hasattr(e["widget"], "get"):
+                    val = e["widget"].get()
+                elif "wcfg" in e and "variable" in e["wcfg"]:
+                    val = e["wcfg"]["variable"].get()
+                elif "variable" in e:
                     # Here right now because all the descr don't have a wcfg.
-                    val = e['variable'].get()
+                    val = e["variable"].get()
                 else:
                     # Add this else for the widget with a
                     # name but no variable.
                     val = None
 
             elif issubclass(wtype, Pmw.ComboBox):
-                getVal  = e['widget'].get()
-                selVal = e['widget'].getcurselection()
+                getVal = e["widget"].get()
+                selVal = e["widget"].getcurselection()
                 if not getVal in selVal:
                     val = (getVal,)
                 else:
                     val = selVal
-                        
+
             elif issubclass(wtype, Pmw.MegaWidget):
-                if (hasattr(e['widget'],'get') and \
-                   hasattr(e['widget'],'getcurselection')) or \
-                   hasattr(e['widget'],'getcurselection'):
-                    res=e['widget'].getcurselection()
+                if (
+                    hasattr(e["widget"], "get")
+                    and hasattr(e["widget"], "getcurselection")
+                ) or hasattr(e["widget"], "getcurselection"):
+                    res = e["widget"].getcurselection()
                     val = []
                     if type(res) != bytes:
                         for name in res:
-                            val.append( self.PMWnameToReal(e, name) )
+                            val.append(self.PMWnameToReal(e, name))
                     else:
                         val = self.PMWnameToReal(e, res)
-                       
-                elif hasattr(e['widget'],'get'):
-                    val = e['widget'].get()
-                    val = self.PMWnameToReal(e, e['widget'].get())
-                elif hasattr(e['widget'],'getint'):
-                    val = e['widget'].getint()
-                elif hasattr(e['widget'],'getstring'):
-                    val = self.PMWnameToReal(e, e['widget'].getstring())
+
+                elif hasattr(e["widget"], "get"):
+                    val = e["widget"].get()
+                    val = self.PMWnameToReal(e, e["widget"].get())
+                elif hasattr(e["widget"], "getint"):
+                    val = e["widget"].getint()
+                elif hasattr(e["widget"], "getstring"):
+                    val = self.PMWnameToReal(e, e["widget"].getstring())
                 else:
-                    val=None
-                
-            elif hasattr(e['widget'],'get'):
-                val = e['widget'].get()
+                    val = None
+
+            elif hasattr(e["widget"], "get"):
+                val = e["widget"].get()
             else:
                 val = None
-                    
-            if val==None:
+
+            if val == None:
                 continue
 
-            if 'required' in e:
+            if "required" in e:
                 if len(val) == 0:
                     self.releaseFocus()
-                    t = 'missing value for field %s' % e['name']
-                    
-                    SimpleDialog(self.root, text=t,
-                                 buttons=["Continue"],
-                                 default=0,
-                                 title="Missing required field").go()
-                    self.grabFocus()
-                    return 'Error'
+                    t = "missing value for field %s" % e["name"]
 
-            if 'type' in e:
+                    SimpleDialog(
+                        self.root,
+                        text=t,
+                        buttons=["Continue"],
+                        default=0,
+                        title="Missing required field",
+                    ).go()
+                    self.grabFocus()
+                    return "Error"
+
+            if "type" in e:
                 try:
-                    val = e['type'](val)
+                    val = e["type"](val)
                 except:
                     self.releaseFocus()
-                    t = 'invalid value for field %s' % e['name']
-                    SimpleDialog(self.root, text=t,
-                                 buttons=["Continue"],
-                                 default=0,
-                                 title="Invalid value").go()
+                    t = "invalid value for field %s" % e["name"]
+                    SimpleDialog(
+                        self.root,
+                        text=t,
+                        buttons=["Continue"],
+                        default=0,
+                        title="Invalid value",
+                    ).go()
                     self.grabFocus()
-                    return 'Error'
+                    return "Error"
             ok = 1
-            if 'validateFunc' in e:
-                if 'validateArgs' in e:
-                    arguments = e['validateArgs']
+            if "validateFunc" in e:
+                if "validateArgs" in e:
+                    arguments = e["validateArgs"]
                 else:
-                    arguments  = ()
-                if 'err_msg' in e:
-                    err_msg = e['err_msg']
+                    arguments = ()
+                if "err_msg" in e:
+                    err_msg = e["err_msg"]
                 else:
-                    err_msg  = 'invalid value for field %s' % e['name']
-                    
-                v =  e['validateFunc'](*(val,) + arguments)
-                
-                if not v: ok = 0
+                    err_msg = "invalid value for field %s" % e["name"]
 
-            elif 'validValues' in e:
-                if not val in e['validValues']: ok = 0
+                v = e["validateFunc"](*(val,) + arguments)
 
+                if not v:
+                    ok = 0
+
+            elif "validValues" in e:
+                if not val in e["validValues"]:
+                    ok = 0
 
             if ok:
-                values[e['name']] = val
+                values[e["name"]] = val
             else:
                 self.releaseFocus()
-                t=err_msg
-                SimpleDialog(self.root, text=t, buttons=["Continue"],
-                             default=0, title="Invalid value").go()
+                t = err_msg
+                SimpleDialog(
+                    self.root,
+                    text=t,
+                    buttons=["Continue"],
+                    default=0,
+                    title="Invalid value",
+                ).go()
                 self.grabFocus()
                 return None
         return values
 
-
-    def testForm(self, setWidget={}, container='all'):
+    def testForm(self, setWidget={}, container="all"):
         """This method can be called by tests instead of the go method, It will
         first set the widgets to the given values provided by the setWidgets dictionary
         then the checkValues method will be called and the val dictionary returned.
@@ -1551,61 +1656,61 @@ translation is done in checkValues()
             print("SETTING THE WIDGETS VALUE....")
             for name, val in list(setWidget.items()):
                 if name in self.descr.entryByName:
-                    widget = self.descr.entryByName[name]['widget']
-                    if hasattr(widget, 'set'):
-                        print('setting')
+                    widget = self.descr.entryByName[name]["widget"]
+                    if hasattr(widget, "set"):
+                        print("setting")
                         widget.set(val)
-                    elif hasattr(widget, 'setvalue'):
-                        print('setvalue')
+                    elif hasattr(widget, "setvalue"):
+                        print("setvalue")
                         widget.setvalue(val)
-                    elif hasattr(widget, 'selectitem'):
-                        print('selectitem')
+                    elif hasattr(widget, "selectitem"):
+                        print("selectitem")
                         widget.selectitem(val)
-                    elif hasattr(widget, 'invoke'):
+                    elif hasattr(widget, "invoke"):
                         try:
-                            print('invoking with val')
+                            print("invoking with val")
                             widget.invoke(val)
                         except:
-                            print('invoking without')
+                            print("invoking without")
                             widget.invoke()
                     else:
                         print("Could not set the value of ", name, val)
             print("=================================================")
         from time import sleep
+
         self.master.update()
         sleep(0.5)
-        if hasattr(self, 'ok'):
+        if hasattr(self, "ok"):
             self.ok.invoke()
         else:
             self.values = self.checkValues(container)
         return self.values
 
-##  Creates problems on MacOSX, th form gets lifted but not the combobox
-##  pull down menus (see bindGeometry command)
-##  Also is anoying with some other forms
-##     def autoLift(self, event=None):
-##         self.lift()
-##         self.autoRaiseID = self.root.after(1000, self.autoLift)
-
+    ##  Creates problems on MacOSX, th form gets lifted but not the combobox
+    ##  pull down menus (see bindGeometry command)
+    ##  Also is anoying with some other forms
+    ##     def autoLift(self, event=None):
+    ##         self.lift()
+    ##         self.autoRaiseID = self.root.after(1000, self.autoLift)
 
     def go(self):
         """This method starts the inputform in modal mode"""
         # FIXME WHEN BLOCKING NOT NECESSARILY MODAL.
         if (self.modal or self.blocking) and self.okcancel == 1:
-##            self.autoRaiseID = self.root.after(1000, self.autoLift)
-            self.grabFocus()               # grabs the focus because modal
-            self.root.mainloop()           # wait for the OK      
+            ##            self.autoRaiseID = self.root.after(1000, self.autoLift)
+            self.grabFocus()  # grabs the focus because modal
+            self.root.mainloop()  # wait for the OK
             self.releaseFocus()
-##             if self.autoRaiseID is not None:
-##                 self.root.after_cancel(self.autoRaiseID)
-##                 self.autoRaiseID = None
-                
+            ##             if self.autoRaiseID is not None:
+            ##                 self.root.after_cancel(self.autoRaiseID)
+            ##                 self.autoRaiseID = None
+
             return self.values
-        
+
     ## #########################################################3
     ## HELPER METHODS.
     def buildHelpButton(self, help, frame=None):
-        """ Method which builds the HELP button.
+        """Method which builds the HELP button.
         required argument:
         help == String providing the URL of the help. The callback function
                 bound to the help button will open a webbrowser at this adress.
@@ -1614,17 +1719,24 @@ translation is done in checkValues()
                  added, If None provided then a new frame will be created.
         """
         if not isinstance(frame, tkinter.Frame):
-            frame = tkinter.Frame(self.root, bd=4, relief='groove')
-            frame.pack(side='bottom', fill='x', expand=0)
-        ICONPATH = findFilePath('Icons', 'ViewerFramework')
-        iconfile = os.path.join(ICONPATH,'32x32','info.gif')
+            frame = tkinter.Frame(self.root, bd=4, relief="groove")
+            frame.pack(side="bottom", fill="x", expand=0)
+        ICONPATH = findFilePath("Icons", "ViewerFramework")
+        iconfile = os.path.join(ICONPATH, "32x32", "info.gif")
         self.Icon = tkinter.PhotoImage(file=iconfile, master=self.master)
-        self.help = tkinter.Button(*(frame,), **{'text':'?','image':self.Icon,'height':22,'width':24,
-                           'command':CallBackFunction(self.showHelp_cb,
-                                                      help=help)})
-        self.help.grid(sticky='we', row=0, column=2)
+        self.help = tkinter.Button(
+            *(frame,),
+            **{
+                "text": "?",
+                "image": self.Icon,
+                "height": 22,
+                "width": 24,
+                "command": CallBackFunction(self.showHelp_cb, help=help),
+            }
+        )
+        self.help.grid(sticky="we", row=0, column=2)
         self.balloon = Pmw.Balloon(frame)
-        self.balloon.bind(self.help, "Click to open help link:\n"+help)
+        self.balloon.bind(self.help, "Click to open help link:\n" + help)
         frame.rowconfigure(0, weight=1)
         frame.columnconfigure(0, weight=1)
 
@@ -1635,14 +1747,16 @@ translation is done in checkValues()
         If it can't open the page then a warning message will be displayed.
         """
         import urllib.parse, webbrowser
-        if help is None: return
+
+        if help is None:
+            return
         try:
             webbrowser.open(help)
         except:
             import warning
-            warnings.warn("Error opening %s"%help)
-        
-        
+
+            warnings.warn("Error opening %s" % help)
+
     def buildOkCancelButtons(self, okCfg, cancelCfg, help=None):
         """
         This method creates an OK button and a CANCEL button.
@@ -1655,45 +1769,44 @@ translation is done in checkValues()
                 with the f1 frame so that the 3 buttons are in the same frame.
         """
         from types import DictType
+
         # Frame for the buttons.
-        f1 = tkinter.Frame(self.root, bd=4, relief='groove')
-        f1.pack(side='bottom', fill ='x', expand=0)
+        f1 = tkinter.Frame(self.root, bd=4, relief="groove")
+        f1.pack(side="bottom", fill="x", expand=0)
         # Ok button
-        okopts = {'text':'OK', 'command':self.OK_cb}
+        okopts = {"text": "OK", "command": self.OK_cb}
         okFunc = None
         cancelFunc = None
         if type(okCfg) is DictType and not okCfg == {}:
-            if 'command' in okCfg:
-                okFunc = okCfg['command']
-                del okCfg['command']
-                okopts['command'] = CallBackFunction(self.OK_cb,
-                                                     func=okFunc)
+            if "command" in okCfg:
+                okFunc = okCfg["command"]
+                del okCfg["command"]
+                okopts["command"] = CallBackFunction(self.OK_cb, func=okFunc)
             okopts.update(okCfg)
         self.ok = tkinter.Button(*(f1,), **okopts)
-        self.ok.grid(row = 0, sticky='we')
+        self.ok.grid(row=0, sticky="we")
 
         # Cancel Button
-        cancelopts = {'text':'Cancel', 'command':self.Cancel_cb}
+        cancelopts = {"text": "Cancel", "command": self.Cancel_cb}
         if type(cancelCfg) is DictType and not cancelCfg == {}:
-            if 'command' in cancelCfg:
-                cancelFunc = cancelCfg['command']
-                del cancelCfg['command']
-                cancelCfg['command'] = CallBackFunction(self.Cancel_cb,
-                                                        func=cancelFunc)
+            if "command" in cancelCfg:
+                cancelFunc = cancelCfg["command"]
+                del cancelCfg["command"]
+                cancelCfg["command"] = CallBackFunction(self.Cancel_cb, func=cancelFunc)
             cancelopts.update(cancelCfg)
         self.cancel = tkinter.Button(*(f1,), **cancelopts)
 
-        self.cancel.grid(row = 0, column = 1, sticky='we')
+        self.cancel.grid(row=0, column=1, sticky="we")
         if help:
             self.buildHelpButton(help, frame=f1)
-        f1.rowconfigure(0, weight = 1)
-        f1.columnconfigure(0, weight = 1)
-        f1.columnconfigure(1, weight = 1)
+        f1.rowconfigure(0, weight=1)
+        f1.columnconfigure(0, weight=1)
+        f1.columnconfigure(1, weight=1)
 
     def OK_cb(self, event=None, func=None):
         """call back for OK button"""
         self.values = self.checkValues()
-        if self.values=='Error':
+        if self.values == "Error":
             return
         self.root.quit()
         self.withdraw()
@@ -1701,7 +1814,7 @@ translation is done in checkValues()
         if not func is None:
             func()
 
-    def Cancel_cb(self, event = None, func=None):
+    def Cancel_cb(self, event=None, func=None):
         """call back for Cancel button"""
         self.values = {}
         # If a func is specified the func is then called
@@ -1710,80 +1823,80 @@ translation is done in checkValues()
         if not func is None:
             func()
 
-
     def findGridPosition(self, gridcfg):
         """find next available position in grid"""
-        if 'col' in gridcfg and 'column' not in gridcfg:
-            gridcfg['column'] = gridcfg['col']
-            
-        if 'column' in gridcfg and 'row' in gridcfg:
-            requestedRow = gridcfg['row']
-            if requestedRow < 0: requestedRow=self.lastRow+requestedRow
+        if "col" in gridcfg and "column" not in gridcfg:
+            gridcfg["column"] = gridcfg["col"]
+
+        if "column" in gridcfg and "row" in gridcfg:
+            requestedRow = gridcfg["row"]
+            if requestedRow < 0:
+                requestedRow = self.lastRow + requestedRow
             if requestedRow < 0 or requestedRow >= self.lastRow:
                 requestedRow = self.lastRow
-                self.lastRow = self.lastRow+1              
-            requestedCol = gridcfg['column']
-            if requestedCol < 0: requestedCol=self.lastCol + requestedCol
+                self.lastRow = self.lastRow + 1
+            requestedCol = gridcfg["column"]
+            if requestedCol < 0:
+                requestedCol = self.lastCol + requestedCol
             if requestedCol < 0 or requestedCol >= self.lastCol:
                 requestedCol = self.lastCol
-                self.lastCol = self.lastCol+1
- 
-        elif 'row' in gridcfg:
-            requestedRow = gridcfg['row']
+                self.lastCol = self.lastCol + 1
+
+        elif "row" in gridcfg:
+            requestedRow = gridcfg["row"]
             self.lastUsedCol = self.lastUsedCol + 1
             requestedCol = self.lastUsedCol
-            if requestedRow < 0: requestedRow=self.lastRow + requestedRow
+            if requestedRow < 0:
+                requestedRow = self.lastRow + requestedRow
             if requestedRow < 0 or requestedRow >= self.lastRow:
                 requestedRow = self.lastRow
-                self.lastRow = self.lastRow+1
+                self.lastRow = self.lastRow + 1
 
-        elif 'column' in gridcfg:
-            requestedCol = gridcfg['column']
+        elif "column" in gridcfg:
+            requestedCol = gridcfg["column"]
             self.lastUsedRow = self.lastUsedRow + 1
             requestedRow = self.lastUsedRow
-            if requestedCol < 0: requestedCol = self.lastCol + requestedCol
+            if requestedCol < 0:
+                requestedCol = self.lastCol + requestedCol
             if requestedCol < 0 or requestedCol >= self.lastCol:
                 requestedCol = self.lastCol
-                self.lastCol = self.lastCol+1
-                
+                self.lastCol = self.lastCol + 1
+
         else:
-            if self.defaultDirection == 'col':
-                #requestedRow = self.lastUsedRow
+            if self.defaultDirection == "col":
+                # requestedRow = self.lastUsedRow
                 requestedRow = 0
-                #self.lastRow = self.lastRow+1
-        #NB: lastCol is always 1 more than biggest used
+                # self.lastRow = self.lastRow+1
+                # NB: lastCol is always 1 more than biggest used
                 requestedCol = self.lastCol
-                self.lastCol = self.lastCol+1
+                self.lastCol = self.lastCol + 1
             else:
-                #requestedCol = self.lastUsedCol
-                requestedCol =  0
-                #self.lastCol = self.lastCol+1
-        #NB: lastRow is always 1 more than biggest used
+                # requestedCol = self.lastUsedCol
+                requestedCol = 0
+                # self.lastCol = self.lastCol+1
+                # NB: lastRow is always 1 more than biggest used
                 requestedRow = self.lastRow
-                self.lastRow = self.lastRow+1
+                self.lastRow = self.lastRow + 1
 
-
-        gridcfg['row'] = self.lastUsedRow = requestedRow
-        gridcfg['column'] = self.lastUsedCol = requestedCol
+        gridcfg["row"] = self.lastUsedRow = requestedRow
+        gridcfg["column"] = self.lastUsedCol = requestedCol
 
         # make sure we point to first empty column and first empty line
         if self.lastRow <= requestedRow:
             self.lastRow = requestedRow + 1
         if self.lastCol <= requestedCol:
             self.lastCol = requestedCol + 1
-            
-        if 'columnspan' in gridcfg:
-            extraCol = gridcfg['columnspan']-1
+
+        if "columnspan" in gridcfg:
+            extraCol = gridcfg["columnspan"] - 1
             self.lastCol = self.lastCol + extraCol
             self.lastUsedCol = self.lastUsedCol + extraCol
-        if 'rowspan' in gridcfg:
-            extraRow = gridcfg['rowspan']-1
+        if "rowspan" in gridcfg:
+            extraRow = gridcfg["rowspan"] - 1
             self.lastRow = self.lastRow + extraRow
             self.lastUsedRow = self.lastUsedRow + extraRow
 
         return gridcfg
-
-
 
     ###################################################################
     ### Tkinter methods.
@@ -1819,35 +1932,38 @@ translation is done in checkValues()
         Method to deiconify the inputform.
         """
         self.root.winfo_toplevel().deiconify()
-        
+
 
 def evalString(str):
-    if len(str)==0:
+    if len(str) == 0:
         return
     try:
-        function = eval("%s"%str)
+        function = eval("%s" % str)
     except:
-        #try:
-            obj = compile(str, '<string>', 'exec')
-            exec(obj)
-            function = eval(obj.co_names[0])
-        #except:
-        #    raise ValueError
+        # try:
+        obj = compile(str, "<string>", "exec")
+        exec(obj)
+        function = eval(obj.co_names[0])
+    # except:
+    #    raise ValueError
     return function
 
 
 from tkinter.filedialog import FileDialog
 import os
 
+
 class ModuleDialog(FileDialog):
 
     title = "Module Selection Dialog"
+
     def ok_command(self):
         file = self.get_selection()
         if not os.path.isfile(file):
             self.master.bell()
         else:
             self.quit(file)
+
 
 class CommandDialog(FileDialog):
 
@@ -1861,37 +1977,41 @@ class CommandDialog(FileDialog):
             self.quit(file)
 
 
-
-if __name__=='__main__':
+if __name__ == "__main__":
     import os
+
     root = tkinter.Tk()
-##      lb = ListChooser(root, title='Choose a letter',
-##                       entries=[ ('a','comment a'),
-##                                 ('b','comment b'),
-##                                 ('c','comment c'),
-##                                 ('d','comment a')] )
-##      lb.insert(1, 'Hello', 'value inserted')
-##      lb.select(1)
-##      result = lb.get()
-##      print result
-##      res = lb.go()
-##      print res
+    ##      lb = ListChooser(root, title='Choose a letter',
+    ##                       entries=[ ('a','comment a'),
+    ##                                 ('b','comment b'),
+    ##                                 ('c','comment c'),
+    ##                                 ('d','comment a')] )
+    ##      lb.insert(1, 'Hello', 'value inserted')
+    ##      lb.select(1)
+    ##      result = lb.get()
+    ##      print result
+    ##      res = lb.go()
+    ##      print res
 
     # should allow to pass a function to check validity
-    f = InputForm(root, title='input 2 strings a float and an int',
-                  entries = [ {'label':'string 1'},
-                              {'label':'string 2', 'defaultValue':'Hello'},
-                              {'label':'float', 'type':float, 'required':1},
-                              {'label':'int', 'type':int, 'defaultValue':7},
-                              {'label':'check', 'widgetType':'Checkbutton'} ] )
+    f = InputForm(
+        root,
+        title="input 2 strings a float and an int",
+        entries=[
+            {"label": "string 1"},
+            {"label": "string 2", "defaultValue": "Hello"},
+            {"label": "float", "type": float, "required": 1},
+            {"label": "int", "type": int, "defaultValue": 7},
+            {"label": "check", "widgetType": "Checkbutton"},
+        ],
+    )
 
     val = f.go()
     md = ModuleDialog(root)
-    modulefile = md.go(key='modulekey', pattern = '*Module.py')
+    modulefile = md.go(key="modulekey", pattern="*Module.py")
     if modulefile:
         print("important string is:", os.path.split(modulefile)[-1])
     cd = CommandDialog(root)
-    commandfile = cd.go(key='commandkey', pattern = '*Commands.py')
+    commandfile = cd.go(key="commandkey", pattern="*Commands.py")
     if commandfile:
         print("important string is:", os.path.split(commandfile)[-1])
-                                                                               

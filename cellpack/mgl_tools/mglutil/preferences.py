@@ -20,8 +20,10 @@ import os
 import pickle
 import types
 from collections import UserDict
-#from UserDict import UserDict
+
+# from UserDict import UserDict
 from mglutil.util.packageFilePath import getResourceFolderWithVersion
+
 
 class UserPreference(UserDict):
     """
@@ -32,14 +34,16 @@ class UserPreference(UserDict):
     and set using the set method
     """
 
-    def __init__(self, ):
+    def __init__(
+        self,
+    ):
         UserDict.__init__(self)
-        self.dirty = 0 # used to remember that something changed
+        self.dirty = 0  # used to remember that something changed
         self.resourceFile = None
         resourceFolder = getResourceFolderWithVersion()
         if resourceFolder is None:
             return
-        self.resourceFile =  os.path.join(resourceFolder, '.settings')
+        self.resourceFile = os.path.join(resourceFolder, ".settings")
         self.defaults = {}
         self.settings = {}
         if os.path.exists(self.resourceFile):
@@ -49,35 +53,46 @@ class UserPreference(UserDict):
                 pkl_file.close()
             except Exception as inst:
                 print(inst, "Error in ", __file__)
-                
-    def add(self, name, value, validValues = [], validateFunc=None,
-            callbackFunc=[], doc='', category="General"):
+
+    def add(
+        self,
+        name,
+        value,
+        validValues=[],
+        validateFunc=None,
+        callbackFunc=[],
+        doc="",
+        category="General",
+    ):
         """add a userpreference. A name and a value are required,
         a list of valide values can be provoded as well as a function that
         can be called to validate the value. A callback function can be
         specified, it will be called when the value is set with the old value
         and the new value passed as an argument"""
 
-#        if name in self.data.keys():
-#            # doesn't create the userpreference if the name already exists:
-#            return
+        #        if name in self.data.keys():
+        #            # doesn't create the userpreference if the name already exists:
+        #            return
         if len(validValues):
             assert value in validValues
         if validateFunc:
-            assert hasattr(validateFunc, '__call__')
+            assert hasattr(validateFunc, "__call__")
         if callbackFunc != []:
-            assert type(callbackFunc) is list and \
-                   len([x for x in callbackFunc if not hasattr(x, '__call__')])==0
-        
+            assert (
+                type(callbackFunc) is list
+                and len([x for x in callbackFunc if not hasattr(x, "__call__")]) == 0
+            )
 
-        self[name] = { 'value':value, 'validValues':validValues,
-                       'validateFunc': validateFunc,
-                       'callbackFunc': callbackFunc,
-                       'doc':doc ,
-                       'category':category}
+        self[name] = {
+            "value": value,
+            "validValues": validValues,
+            "validateFunc": validateFunc,
+            "callbackFunc": callbackFunc,
+            "doc": doc,
+            "category": category,
+        }
         self.set(name, value)
         self.dirty = 1
-        
 
     def set(self, name, value):
         if name not in self.data:
@@ -87,61 +102,60 @@ class UserPreference(UserDict):
         self.settings[name] = value
         entry = self.data[name]
         try:
-            if 'validValues' in entry and len(entry['validValues']):
-                if not value in entry['validValues']:
-                    msg = " is not a valid value, value has to be in %s" % str(entry['validValues'])
+            if "validValues" in entry and len(entry["validValues"]):
+                if not value in entry["validValues"]:
+                    msg = " is not a valid value, value has to be in %s" % str(
+                        entry["validValues"]
+                    )
                     print(value, msg)
                     return
-            if 'validateFunc' in entry and entry['validateFunc']:
-                if not entry['validateFunc'](value):
+            if "validateFunc" in entry and entry["validateFunc"]:
+                if not entry["validateFunc"](value):
                     msg = " is not a valid value, try the Info button"
-                    #print value, msg
+                    # print value, msg
                     return
         except Exception as inst:
             print(__file__, inst)
 
-        oldValue = entry['value']
-        entry['value'] = value
-        if entry['callbackFunc']!=[]:
-            for cb in  entry['callbackFunc']:
-                cb(name,oldValue, value)
+        oldValue = entry["value"]
+        entry["value"] = value
+        if entry["callbackFunc"] != []:
+            for cb in entry["callbackFunc"]:
+                cb(name, oldValue, value)
         self.dirty = 1
- 
+
     def addCallback(self, name, func):
-        assert hasattr(func, '__call__')
+        assert hasattr(func, "__call__")
         assert name in self.data
         entry = self.data[name]
-        entry['callbackFunc'].append(func)
+        entry["callbackFunc"].append(func)
 
     def removeCallback(self, name, func):
-        assert name in self.data and \
-               func in self.data[name]['callbackFunc']
+        assert name in self.data and func in self.data[name]["callbackFunc"]
         entry = self.data[name]
-        entry['callbackFunc'].remove(func)
-        
-        
+        entry["callbackFunc"].remove(func)
+
     def save(self, filename):
         """save the preferences to a file"""
         pass
-        self.dirty = 0 # clean now !
-
+        self.dirty = 0  # clean now !
 
     def loadSettings(self):
         if self.resourceFile is None:
             return
-        settings = {}        
+        settings = {}
         if os.path.exists(self.resourceFile):
             pkl_file = open(self.resourceFile)
             settings = pickle.load(pkl_file)
             pkl_file.close()
         for key, value in list(settings.items()):
             self.set(key, value)
-        
+
     def saveAllSettings(self):
-        output = open(self.resourceFile, 'w')
+        output = open(self.resourceFile, "w")
         pickle.dump(self.settings, output)
         output.close()
-    
+
     def saveSingleSetting(self, name, value):
         if os.path.exists(self.resourceFile):
             pkl_file = open(self.resourceFile)
@@ -150,17 +164,16 @@ class UserPreference(UserDict):
         else:
             settings = {}
         settings[name] = value
-        output = open(self.resourceFile, 'w')
+        output = open(self.resourceFile, "w")
         pickle.dump(settings, output)
         output.close()
-        
+
     def saveDefaults(self):
         if self.resourceFile is None:
             return
         for key, value in list(self.data.items()):
             self.defaults[key] = value
-    
+
     def restoreDefaults(self):
         for key, value in list(self.defaults.items()):
             self.set(key, value)
-    

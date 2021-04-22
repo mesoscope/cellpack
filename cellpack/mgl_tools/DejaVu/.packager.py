@@ -1,6 +1,6 @@
 # The .packager.py is used by the DistTools package to get the files to be
 # included in a distribution.
-def getFiles(root, what = 'all', plat=None):
+def getFiles(root, what="all", plat=None):
     """
     files <- getFiles(root, what='all', plat=None)
 
@@ -15,8 +15,9 @@ def getFiles(root, what = 'all', plat=None):
     """
     import os
     from glob import glob
+
     # 1- Specify the list of all the Python module
-    allPyModule = ["*.py", "ViPEr/*.py", "materialsDef/*.py", 'gui/*.py']
+    allPyModule = ["*.py", "ViPEr/*.py", "materialsDef/*.py", "gui/*.py"]
 
     # 2- Specify the list of the non supported Python module. These files
     # will be removed from the release of the supported python modules.
@@ -25,19 +26,20 @@ def getFiles(root, what = 'all', plat=None):
     # 3- Specify the documentation files and directories to be included in the
     # release
     docFiles = ["Tutorial"]
-    
+
     # 4-Specify the extraFiles to be included in the release.
-    extraFiles = ["*.ppm",
-                  'CVS',
-                  "ViPEr/CVS", "materialsDef/CVS", 'gui/CVS',
-                  "RELNOTES"]
- 
+    extraFiles = [
+        "*.ppm",
+        "CVS",
+        "ViPEr/CVS",
+        "materialsDef/CVS",
+        "gui/CVS",
+        "RELNOTES",
+    ]
+
     # 5-Specify the testFiles to be included in the release.
-    testFiles = ["Tests","ViPEr/Tests"]
+    testFiles = ["Tests", "ViPEr/Tests"]
 
-
-
-    
     #########################################################
     ## Where things are done for you .
     #########################################################
@@ -58,25 +60,21 @@ def getFiles(root, what = 'all', plat=None):
         pynotsupported = files
         os.chdir(olddir)
     # Creation of the proper list of files depending on the value of what
-    
-    if what == 'supported' and len(pynotsupported):
+
+    if what == "supported" and len(pynotsupported):
         # need to remove the non supported python files from all the python
         # files
         # These are the keys used for to make the releases...
-        supportedFiles = filter(lambda x, l = pynotsupported:
-                                    not x in l, allPyModule)
-        
+        supportedFiles = filter(lambda x, l=pynotsupported: not x in l, allPyModule)
+
         return supportedFiles + testFiles + extraFiles
-    
-    elif what == 'all' or ( what == 'supported' and not len(pynotsupported)):
+
+    elif what == "all" or (what == "supported" and not len(pynotsupported)):
         # Other wise just add the documentation, test and extra files to all
         # the python modules.
-        allFiles= allPyModule + docFiles + testFiles + extraFiles
+        allFiles = allPyModule + docFiles + testFiles + extraFiles
         return allFiles
-    elif what == 'documentation':
+    elif what == "documentation":
         return docFiles
     else:
         return []
-
-
-

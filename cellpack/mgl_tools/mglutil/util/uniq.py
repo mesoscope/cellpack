@@ -12,14 +12,17 @@
 ##     else: l3.sort()
 ##     return l3
 
-def uniq(alist):    # Fastest order preserving
+
+def uniq(alist):  # Fastest order preserving
     set = {}
-    return [set.setdefault(e,e) for e in alist if e not in set]
- 
-def uniq3(alist):    # Fastest without order preserving
+    return [set.setdefault(e, e) for e in alist if e not in set]
+
+
+def uniq3(alist):  # Fastest without order preserving
     set = {}
     list(map(set.__setitem__, alist, []))
     return list(set.keys())
+
 
 """
 from mglutil.util.uniq import uniq, uniq2, uniq3

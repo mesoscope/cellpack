@@ -32,7 +32,7 @@ import warnings
 ##       print 'FATAL ERROR: DejaVu requires the OpenGL Package to be compiled \
 ##  with the the NUMERIC option turned on'
 ##       sys.exit(1)
-      
+
 ## except:
 ##     import sys
 ##     print 'FATAL ERROR: OpenGL Package not found'
@@ -59,48 +59,53 @@ import warnings
 
 ##     # load Togl extension into TCL interpreter
 ##     master.tk.call('package', 'require', 'Togl')
-#=======
+# =======
 ##  try:
 ##    from bufarray import bufarray_Numeric
 ##  except ImportError:
 ##    raise RuntimeError('FATAL ERROR: bufarray_Numeric not found')
-  
+
 ## import bufarray_array
 
 ## from bufarray import bufarray_array
 
 try:
-  from opengltk import OpenGL
+    from opengltk import OpenGL
 except ImportError:
-    print('no opengltk')#('FATAL ERROR: opengltk.OpenGL Package not found')
-    #raise RuntimeError('FATAL ERROR: opengltk.OpenGL Package not found')
+    print("no opengltk")  # ('FATAL ERROR: opengltk.OpenGL Package not found')
+    # raise RuntimeError('FATAL ERROR: opengltk.OpenGL Package not found')
 
 from tkinter import _default_root, Tk
+
 
 def loadTogl(master):
     # simulate the setting of TCLLIPATH
 
     import sys, os
     from os import path
-    # Togl is expected to be 
+
+    # Togl is expected to be
 
     # build path to directory containing Togl
     from opengltk.OpenGL import Tk
+
     ToglPath = path.dirname(path.abspath(Tk.__file__))
     # get TCL interpreter auto_path variable
-    tclpath = master.tk.globalgetvar('auto_path')
+    tclpath = master.tk.globalgetvar("auto_path")
 
     # ToglPath not already in there, add it
     from string import split
+
     if ToglPath not in tclpath:
         tclpath = (ToglPath,) + tclpath
-        master.tk.globalsetvar('auto_path', tclpath )
+        master.tk.globalsetvar("auto_path", tclpath)
     # load Togl extension into TCL interpreter
 
-    if os.name == 'nt':
-        master.tk.call('package', 'require', 'Togl','1.7')  
+    if os.name == "nt":
+        master.tk.call("package", "require", "Togl", "1.7")
     else:
-        master.tk.call('package', 'require', 'Togl','2.0')  
+        master.tk.call("package", "require", "Togl", "2.0")
+
 
 dejavurcText = """########################################################################
 #
@@ -152,31 +157,34 @@ def functionName0(level=1):
         print (functionname, filename, linenumber)
 """
 
+
 def ensureDejaVuResourceFile():
-    """verify or generate _dejavurc file
-"""
-    #print "ensureDejaVuResourceFile"
-    
-    #import pdb;pdb.set_trace()
-    
-    from cellpack.mgl_tools.mglutil.util.packageFilePath import getResourceFolderWithVersion
+    """verify or generate _dejavurc file"""
+    # print "ensureDejaVuResourceFile"
+
+    # import pdb;pdb.set_trace()
+
+    from cellpack.mgl_tools.mglutil.util.packageFilePath import (
+        getResourceFolderWithVersion,
+    )
+
     rcFolder = getResourceFolderWithVersion()
     if rcFolder is None:
         return
-    rcFolder += os.sep + 'DejaVu'
+    rcFolder += os.sep + "DejaVu"
     if not os.path.isdir(rcFolder):
         try:
             os.mkdir(rcFolder)
         except:
-            txt = "Cannot create the Resource Folder %s" %rcFolder
+            txt = "Cannot create the Resource Folder %s" % rcFolder
             warnings.warn(txt)
             return None
 
-    rcFile = rcFolder + os.sep + '_dejavurc'
+    rcFile = rcFolder + os.sep + "_dejavurc"
     if os.path.isfile(rcFile) is False:
         try:
             f = open(rcFile, "w")
-            list(map( lambda x, f=f: f.write(x), dejavurcText ))
+            list(map(lambda x, f=f: f.write(x), dejavurcText))
             f.close()
         except:
             txt = "can not create _dejavurc"
@@ -186,18 +194,38 @@ def ensureDejaVuResourceFile():
     return rcFile
 
 
-
 # after this we can access variables in _dejavurc with
 # from DejaVu import preventIntelBug_BlackTriangles
 rcFile = ensureDejaVuResourceFile()
 if rcFile is None:
-    exec( dejavurcText )
+    exec(dejavurcText)
 else:
-    exec(compile(open( rcFile ).read(), rcFile, 'exec'))
+    exec(compile(open(rcFile).read(), rcFile, "exec"))
 
 from .Viewer import Viewer
 from .viewerConst import *
 
-CRITICAL_DEPENDENCIES = ['opengltk', 'numpy', 'mglutil','geomutils']
-NONCRITICAL_DEPENDENCIES = ['PIL', 'numarray', 'Pmw', 'gle', 'UTpackages', 'NetworkEditor', 'symserv', 'Vision', 'Volume', 'QSlimLib', 'bhtree','pyglf', 'pymedia','Scenario2', 'SimPy', 'mslib', 'pytz', 'Pmv', 'bpy', 'BPyMesh', 'MolKit']
-
+CRITICAL_DEPENDENCIES = ["opengltk", "numpy", "mglutil", "geomutils"]
+NONCRITICAL_DEPENDENCIES = [
+    "PIL",
+    "numarray",
+    "Pmw",
+    "gle",
+    "UTpackages",
+    "NetworkEditor",
+    "symserv",
+    "Vision",
+    "Volume",
+    "QSlimLib",
+    "bhtree",
+    "pyglf",
+    "pymedia",
+    "Scenario2",
+    "SimPy",
+    "mslib",
+    "pytz",
+    "Pmv",
+    "bpy",
+    "BPyMesh",
+    "MolKit",
+]

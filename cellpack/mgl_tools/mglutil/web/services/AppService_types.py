@@ -8,12 +8,19 @@
 
 import ZSI
 import ZSI.TCcompound
-from ZSI.schema import LocalElementDeclaration, ElementDeclaration, TypeDefinition, GTD, GED
+from ZSI.schema import (
+    LocalElementDeclaration,
+    ElementDeclaration,
+    TypeDefinition,
+    GTD,
+    GED,
+)
 
 ##############################
 # targetNamespace
 # http://nbcr.sdsc.edu/opal/types
 ##############################
+
 
 class ns0:
     targetNamespace = "http://nbcr.sdsc.edu/opal/types"
@@ -21,33 +28,85 @@ class ns0:
     class ParamType_Def(ZSI.TC.String, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "ParamType")
+
         def __init__(self, pname, **kw):
             ZSI.TC.String.__init__(self, pname, pyclass=None, **kw)
+
             class Holder(str):
                 typecode = self
+
             self.pyclass = Holder
 
     class IOType_Def(ZSI.TC.String, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "IOType")
+
         def __init__(self, pname, **kw):
             ZSI.TC.String.__init__(self, pname, pyclass=None, **kw)
+
             class Holder(str):
                 typecode = self
+
             self.pyclass = Holder
 
     class FlagsType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "FlagsType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.FlagsType_Def.schema
-            TClist = [ZSI.TC.String(pname="id", aname="_id", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="tag", aname="_tag", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.Boolean(pname="default", aname="_default", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="textDesc", aname="_textDesc", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TC.String(
+                    pname="id",
+                    aname="_id",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="tag",
+                    aname="_tag",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.Boolean(
+                    pname="default",
+                    aname="_default",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="textDesc",
+                    aname="_textDesc",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._id = None
@@ -55,21 +114,113 @@ class ns0:
                     self._default = None
                     self._textDesc = None
                     return
+
             Holder.__name__ = "FlagsType_Holder"
             self.pyclass = Holder
 
     class ParamsType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "ParamsType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.ParamsType_Def.schema
-            TClist = [ZSI.TC.String(pname="id", aname="_id", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="tag", aname="_tag", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="default", aname="_default", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), GTD("http://nbcr.sdsc.edu/opal/types","ParamType",lazy=False)(pname="paramType", aname="_paramType", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), GTD("http://nbcr.sdsc.edu/opal/types","IOType",lazy=False)(pname="ioType", aname="_ioType", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.Boolean(pname="required", aname="_required", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="value", aname="_value", minOccurs=0, maxOccurs="unbounded", nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="semanticType", aname="_semanticType", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="textDesc", aname="_textDesc", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TC.String(
+                    pname="id",
+                    aname="_id",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="tag",
+                    aname="_tag",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="default",
+                    aname="_default",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                GTD("http://nbcr.sdsc.edu/opal/types", "ParamType", lazy=False)(
+                    pname="paramType",
+                    aname="_paramType",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                GTD("http://nbcr.sdsc.edu/opal/types", "IOType", lazy=False)(
+                    pname="ioType",
+                    aname="_ioType",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.Boolean(
+                    pname="required",
+                    aname="_required",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="value",
+                    aname="_value",
+                    minOccurs=0,
+                    maxOccurs="unbounded",
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="semanticType",
+                    aname="_semanticType",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="textDesc",
+                    aname="_textDesc",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._id = None
@@ -82,21 +233,86 @@ class ns0:
                     self._semanticType = None
                     self._textDesc = None
                     return
+
             Holder.__name__ = "ParamsType_Holder"
             self.pyclass = Holder
 
     class GroupsType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "GroupsType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.GroupsType_Def.schema
-            TClist = [ZSI.TC.String(pname="name", aname="_name", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="elements", aname="_elements", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.Boolean(pname="required", aname="_required", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.Boolean(pname="exclusive", aname="_exclusive", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="semanticType", aname="_semanticType", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="textDesc", aname="_textDesc", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TC.String(
+                    pname="name",
+                    aname="_name",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="elements",
+                    aname="_elements",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.Boolean(
+                    pname="required",
+                    aname="_required",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.Boolean(
+                    pname="exclusive",
+                    aname="_exclusive",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="semanticType",
+                    aname="_semanticType",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="textDesc",
+                    aname="_textDesc",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._name = None
@@ -106,21 +322,113 @@ class ns0:
                     self._semanticType = None
                     self._textDesc = None
                     return
+
             Holder.__name__ = "GroupsType_Holder"
             self.pyclass = Holder
 
     class ImplicitParamsType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "ImplicitParamsType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.ImplicitParamsType_Def.schema
-            TClist = [ZSI.TC.String(pname="id", aname="_id", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="name", aname="_name", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="extension", aname="_extension", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), GTD("http://nbcr.sdsc.edu/opal/types","IOType",lazy=False)(pname="ioType", aname="_ioType", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.Boolean(pname="required", aname="_required", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="semanticType", aname="_semanticType", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="textDesc", aname="_textDesc", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TCnumbers.Iint(pname="min", aname="_min", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TCnumbers.Iint(pname="max", aname="_max", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TC.String(
+                    pname="id",
+                    aname="_id",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="name",
+                    aname="_name",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="extension",
+                    aname="_extension",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                GTD("http://nbcr.sdsc.edu/opal/types", "IOType", lazy=False)(
+                    pname="ioType",
+                    aname="_ioType",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.Boolean(
+                    pname="required",
+                    aname="_required",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="semanticType",
+                    aname="_semanticType",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="textDesc",
+                    aname="_textDesc",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TCnumbers.Iint(
+                    pname="min",
+                    aname="_min",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TCnumbers.Iint(
+                    pname="max",
+                    aname="_max",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._id = None
@@ -133,98 +441,249 @@ class ns0:
                     self._min = None
                     self._max = None
                     return
+
             Holder.__name__ = "ImplicitParamsType_Holder"
             self.pyclass = Holder
 
     class FlagsArrayType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "FlagsArrayType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.FlagsArrayType_Def.schema
-            TClist = [GTD("http://nbcr.sdsc.edu/opal/types","FlagsType",lazy=False)(pname="flag", aname="_flag", minOccurs=0, maxOccurs="unbounded", nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                GTD("http://nbcr.sdsc.edu/opal/types", "FlagsType", lazy=False)(
+                    pname="flag",
+                    aname="_flag",
+                    minOccurs=0,
+                    maxOccurs="unbounded",
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                )
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._flag = []
                     return
+
             Holder.__name__ = "FlagsArrayType_Holder"
             self.pyclass = Holder
 
     class ParamsArrayType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "ParamsArrayType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.ParamsArrayType_Def.schema
-            TClist = [ZSI.TC.String(pname="separator", aname="_separator", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), GTD("http://nbcr.sdsc.edu/opal/types","ParamsType",lazy=False)(pname="param", aname="_param", minOccurs=0, maxOccurs="unbounded", nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TC.String(
+                    pname="separator",
+                    aname="_separator",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                GTD("http://nbcr.sdsc.edu/opal/types", "ParamsType", lazy=False)(
+                    pname="param",
+                    aname="_param",
+                    minOccurs=0,
+                    maxOccurs="unbounded",
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._separator = None
                     self._param = []
                     return
+
             Holder.__name__ = "ParamsArrayType_Holder"
             self.pyclass = Holder
 
     class GroupsArrayType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "GroupsArrayType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.GroupsArrayType_Def.schema
-            TClist = [GTD("http://nbcr.sdsc.edu/opal/types","GroupsType",lazy=False)(pname="group", aname="_group", minOccurs=0, maxOccurs="unbounded", nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                GTD("http://nbcr.sdsc.edu/opal/types", "GroupsType", lazy=False)(
+                    pname="group",
+                    aname="_group",
+                    minOccurs=0,
+                    maxOccurs="unbounded",
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                )
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._group = []
                     return
+
             Holder.__name__ = "GroupsArrayType_Holder"
             self.pyclass = Holder
 
     class ImplicitParamsArrayType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "ImplicitParamsArrayType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.ImplicitParamsArrayType_Def.schema
-            TClist = [GTD("http://nbcr.sdsc.edu/opal/types","ImplicitParamsType",lazy=False)(pname="param", aname="_param", minOccurs=0, maxOccurs="unbounded", nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                GTD(
+                    "http://nbcr.sdsc.edu/opal/types", "ImplicitParamsType", lazy=False
+                )(
+                    pname="param",
+                    aname="_param",
+                    minOccurs=0,
+                    maxOccurs="unbounded",
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                )
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._param = []
                     return
+
             Holder.__name__ = "ImplicitParamsArrayType_Holder"
             self.pyclass = Holder
 
     class ArgumentsType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "ArgumentsType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.ArgumentsType_Def.schema
-            TClist = [GTD("http://nbcr.sdsc.edu/opal/types","FlagsArrayType",lazy=False)(pname="flags", aname="_flags", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), GTD("http://nbcr.sdsc.edu/opal/types","ParamsArrayType",lazy=False)(pname="taggedParams", aname="_taggedParams", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), GTD("http://nbcr.sdsc.edu/opal/types","ParamsArrayType",lazy=False)(pname="untaggedParams", aname="_untaggedParams", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), GTD("http://nbcr.sdsc.edu/opal/types","ImplicitParamsArrayType",lazy=False)(pname="implicitParams", aname="_implicitParams", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), GTD("http://nbcr.sdsc.edu/opal/types","GroupsArrayType",lazy=False)(pname="groups", aname="_groups", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                GTD("http://nbcr.sdsc.edu/opal/types", "FlagsArrayType", lazy=False)(
+                    pname="flags",
+                    aname="_flags",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                GTD("http://nbcr.sdsc.edu/opal/types", "ParamsArrayType", lazy=False)(
+                    pname="taggedParams",
+                    aname="_taggedParams",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                GTD("http://nbcr.sdsc.edu/opal/types", "ParamsArrayType", lazy=False)(
+                    pname="untaggedParams",
+                    aname="_untaggedParams",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                GTD(
+                    "http://nbcr.sdsc.edu/opal/types",
+                    "ImplicitParamsArrayType",
+                    lazy=False,
+                )(
+                    pname="implicitParams",
+                    aname="_implicitParams",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                GTD("http://nbcr.sdsc.edu/opal/types", "GroupsArrayType", lazy=False)(
+                    pname="groups",
+                    aname="_groups",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._flags = None
@@ -233,42 +692,99 @@ class ns0:
                     self._implicitParams = None
                     self._groups = None
                     return
+
             Holder.__name__ = "ArgumentsType_Holder"
             self.pyclass = Holder
 
     class AppMetadataInputType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "AppMetadataInputType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.AppMetadataInputType_Def.schema
             TClist = []
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     return
+
             Holder.__name__ = "AppMetadataInputType_Holder"
             self.pyclass = Holder
 
     class AppMetadataType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "AppMetadataType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.AppMetadataType_Def.schema
-            TClist = [ZSI.TC.String(pname="usage", aname="_usage", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="info", aname="_info", minOccurs=0, maxOccurs="unbounded", nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="version", aname="_version", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), GTD("http://nbcr.sdsc.edu/opal/types","ArgumentsType",lazy=False)(pname="types", aname="_types", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TC.String(
+                    pname="usage",
+                    aname="_usage",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="info",
+                    aname="_info",
+                    minOccurs=0,
+                    maxOccurs="unbounded",
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="version",
+                    aname="_version",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                GTD("http://nbcr.sdsc.edu/opal/types", "ArgumentsType", lazy=False)(
+                    pname="types",
+                    aname="_types",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
             else:
                 # attribute handling code
                 self.attribute_typecode_dict["appName"] = ZSI.TC.String()
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._usage = None
@@ -276,39 +792,132 @@ class ns0:
                     self._version = None
                     self._types = None
                     return
+
             Holder.__name__ = "AppMetadataType_Holder"
             self.pyclass = Holder
 
     class AppConfigInputType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "AppConfigInputType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.AppConfigInputType_Def.schema
             TClist = []
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     return
+
             Holder.__name__ = "AppConfigInputType_Holder"
             self.pyclass = Holder
 
     class AppConfigType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "AppConfigType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.AppConfigType_Def.schema
-            TClist = [GTD("http://nbcr.sdsc.edu/opal/types","AppMetadataType",lazy=False)(pname="metadata", aname="_metadata", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="binaryLocation", aname="_binaryLocation", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="defaultArgs", aname="_defaultArgs", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.Boolean(pname="validateArgs", aname="_validateArgs", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="jobManagerFQCN", aname="_jobManagerFQCN", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.URI(pname="globusGatekeeper", aname="_globusGatekeeper", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.URI(pname="gridftpBase", aname="_gridftpBase", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.Boolean(pname="parallel", aname="_parallel", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                GTD("http://nbcr.sdsc.edu/opal/types", "AppMetadataType", lazy=False)(
+                    pname="metadata",
+                    aname="_metadata",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="binaryLocation",
+                    aname="_binaryLocation",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="defaultArgs",
+                    aname="_defaultArgs",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.Boolean(
+                    pname="validateArgs",
+                    aname="_validateArgs",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="jobManagerFQCN",
+                    aname="_jobManagerFQCN",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.URI(
+                    pname="globusGatekeeper",
+                    aname="_globusGatekeeper",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.URI(
+                    pname="gridftpBase",
+                    aname="_gridftpBase",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.Boolean(
+                    pname="parallel",
+                    aname="_parallel",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._metadata = None
@@ -320,21 +929,68 @@ class ns0:
                     self._gridftpBase = None
                     self._parallel = None
                     return
+
             Holder.__name__ = "AppConfigType_Holder"
             self.pyclass = Holder
 
     class InputFileType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "InputFileType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.InputFileType_Def.schema
-            TClist = [ZSI.TC.String(pname="name", aname="_name", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.Base64String(pname="contents", aname="_contents", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.URI(pname="location", aname="_location", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TCapache.AttachmentRef(pname="attachment", aname="_attachment", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TC.String(
+                    pname="name",
+                    aname="_name",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.Base64String(
+                    pname="contents",
+                    aname="_contents",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.URI(
+                    pname="location",
+                    aname="_location",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TCapache.AttachmentRef(
+                    pname="attachment",
+                    aname="_attachment",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._name = None
@@ -342,21 +998,68 @@ class ns0:
                     self._location = None
                     self._attachment = None
                     return
+
             Holder.__name__ = "InputFileType_Holder"
             self.pyclass = Holder
 
     class JobInputType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "JobInputType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.JobInputType_Def.schema
-            TClist = [ZSI.TC.String(pname="argList", aname="_argList", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TCnumbers.Iint(pname="numProcs", aname="_numProcs", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TCnumbers.InonNegativeInteger(pname="wallClockTime", aname="_wallClockTime", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), GTD("http://nbcr.sdsc.edu/opal/types","InputFileType",lazy=False)(pname="inputFile", aname="_inputFile", minOccurs=0, maxOccurs="unbounded", nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TC.String(
+                    pname="argList",
+                    aname="_argList",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TCnumbers.Iint(
+                    pname="numProcs",
+                    aname="_numProcs",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TCnumbers.InonNegativeInteger(
+                    pname="wallClockTime",
+                    aname="_wallClockTime",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                GTD("http://nbcr.sdsc.edu/opal/types", "InputFileType", lazy=False)(
+                    pname="inputFile",
+                    aname="_inputFile",
+                    minOccurs=0,
+                    maxOccurs="unbounded",
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._argList = None
@@ -364,168 +1067,419 @@ class ns0:
                     self._wallClockTime = None
                     self._inputFile = []
                     return
+
             Holder.__name__ = "JobInputType_Holder"
             self.pyclass = Holder
 
     class StatusOutputType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "StatusOutputType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.StatusOutputType_Def.schema
-            TClist = [ZSI.TCnumbers.Iint(pname="code", aname="_code", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="message", aname="_message", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.URI(pname="baseURL", aname="_baseURL", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TCnumbers.Iint(
+                    pname="code",
+                    aname="_code",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="message",
+                    aname="_message",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.URI(
+                    pname="baseURL",
+                    aname="_baseURL",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._code = None
                     self._message = None
                     self._baseURL = None
                     return
+
             Holder.__name__ = "StatusOutputType_Holder"
             self.pyclass = Holder
 
     class JobSubOutputType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "JobSubOutputType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.JobSubOutputType_Def.schema
-            TClist = [ZSI.TC.String(pname="jobID", aname="_jobID", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), GTD("http://nbcr.sdsc.edu/opal/types","StatusOutputType",lazy=False)(pname="status", aname="_status", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TC.String(
+                    pname="jobID",
+                    aname="_jobID",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                GTD("http://nbcr.sdsc.edu/opal/types", "StatusOutputType", lazy=False)(
+                    pname="status",
+                    aname="_status",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._jobID = None
                     self._status = None
                     return
+
             Holder.__name__ = "JobSubOutputType_Holder"
             self.pyclass = Holder
 
     class OutputsByNameInputType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "OutputsByNameInputType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.OutputsByNameInputType_Def.schema
-            TClist = [ZSI.TC.String(pname="jobID", aname="_jobID", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.String(pname="fileName", aname="_fileName", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TC.String(
+                    pname="jobID",
+                    aname="_jobID",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.String(
+                    pname="fileName",
+                    aname="_fileName",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._jobID = None
                     self._fileName = None
                     return
+
             Holder.__name__ = "OutputsByNameInputType_Holder"
             self.pyclass = Holder
 
     class OutputFileType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "OutputFileType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.OutputFileType_Def.schema
-            TClist = [ZSI.TC.String(pname="name", aname="_name", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.URI(pname="url", aname="_url", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TC.String(
+                    pname="name",
+                    aname="_name",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.URI(
+                    pname="url",
+                    aname="_url",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._name = None
                     self._url = None
                     return
+
             Holder.__name__ = "OutputFileType_Holder"
             self.pyclass = Holder
 
     class JobOutputType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "JobOutputType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.JobOutputType_Def.schema
-            TClist = [ZSI.TC.URI(pname="stdOut", aname="_stdOut", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TC.URI(pname="stdErr", aname="_stdErr", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), GTD("http://nbcr.sdsc.edu/opal/types","OutputFileType",lazy=False)(pname="outputFile", aname="_outputFile", minOccurs=0, maxOccurs="unbounded", nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TC.URI(
+                    pname="stdOut",
+                    aname="_stdOut",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TC.URI(
+                    pname="stdErr",
+                    aname="_stdErr",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                GTD("http://nbcr.sdsc.edu/opal/types", "OutputFileType", lazy=False)(
+                    pname="outputFile",
+                    aname="_outputFile",
+                    minOccurs=0,
+                    maxOccurs="unbounded",
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._stdOut = None
                     self._stdErr = None
                     self._outputFile = []
                     return
+
             Holder.__name__ = "JobOutputType_Holder"
             self.pyclass = Holder
 
     class JobStatisticsType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "JobStatisticsType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.JobStatisticsType_Def.schema
-            TClist = [ZSI.TCtimes.gDateTime(pname="startTime", aname="_startTime", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TCtimes.gDateTime(pname="activationTime", aname="_activationTime", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), ZSI.TCtimes.gDateTime(pname="completionTime", aname="_completionTime", minOccurs=0, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TCtimes.gDateTime(
+                    pname="startTime",
+                    aname="_startTime",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TCtimes.gDateTime(
+                    pname="activationTime",
+                    aname="_activationTime",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                ZSI.TCtimes.gDateTime(
+                    pname="completionTime",
+                    aname="_completionTime",
+                    minOccurs=0,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._startTime = None
                     self._activationTime = None
                     self._completionTime = None
                     return
+
             Holder.__name__ = "JobStatisticsType_Holder"
             self.pyclass = Holder
 
     class BlockingOutputType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "BlockingOutputType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.BlockingOutputType_Def.schema
-            TClist = [GTD("http://nbcr.sdsc.edu/opal/types","StatusOutputType",lazy=False)(pname="status", aname="_status", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded")), GTD("http://nbcr.sdsc.edu/opal/types","JobOutputType",lazy=False)(pname="jobOut", aname="_jobOut", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                GTD("http://nbcr.sdsc.edu/opal/types", "StatusOutputType", lazy=False)(
+                    pname="status",
+                    aname="_status",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+                GTD("http://nbcr.sdsc.edu/opal/types", "JobOutputType", lazy=False)(
+                    pname="jobOut",
+                    aname="_jobOut",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                ),
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._status = None
                     self._jobOut = None
                     return
+
             Holder.__name__ = "BlockingOutputType_Holder"
             self.pyclass = Holder
 
     class FaultType_Def(ZSI.TCcompound.ComplexType, TypeDefinition):
         schema = "http://nbcr.sdsc.edu/opal/types"
         type = (schema, "FaultType")
-        def __init__(self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw):
+
+        def __init__(
+            self, pname, ofwhat=(), attributes=None, extend=False, restrict=False, **kw
+        ):
             ns = ns0.FaultType_Def.schema
-            TClist = [ZSI.TC.String(pname="message", aname="_message", minOccurs=1, maxOccurs=1, nillable=False, typed=False, encoded=kw.get("encoded"))]
+            TClist = [
+                ZSI.TC.String(
+                    pname="message",
+                    aname="_message",
+                    minOccurs=1,
+                    maxOccurs=1,
+                    nillable=False,
+                    typed=False,
+                    encoded=kw.get("encoded"),
+                )
+            ]
             self.attribute_typecode_dict = attributes or {}
-            if extend: TClist += ofwhat
-            if restrict: TClist = ofwhat
-            ZSI.TCcompound.ComplexType.__init__(self, None, TClist, pname=pname, inorder=0, **kw)
+            if extend:
+                TClist += ofwhat
+            if restrict:
+                TClist = ofwhat
+            ZSI.TCcompound.ComplexType.__init__(
+                self, None, TClist, pname=pname, inorder=0, **kw
+            )
+
             class Holder:
                 typecode = self
+
                 def __init__(self):
                     # pyclass
                     self._message = None
                     return
+
             Holder.__name__ = "FaultType_Holder"
             self.pyclass = Holder
 
@@ -533,23 +1487,29 @@ class ns0:
         literal = "getAppMetadataInput"
         schema = "http://nbcr.sdsc.edu/opal/types"
         substitutionGroup = None
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'getAppMetadataInput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "getAppMetadataInput")
             kw["aname"] = "_getAppMetadataInput"
-            if ns0.AppMetadataInputType_Def not in ns0.getAppMetadataInput_Dec.__bases__:
+            if (
+                ns0.AppMetadataInputType_Def
+                not in ns0.getAppMetadataInput_Dec.__bases__
+            ):
                 bases = list(ns0.getAppMetadataInput_Dec.__bases__)
                 bases.insert(0, ns0.AppMetadataInputType_Def)
                 ns0.getAppMetadataInput_Dec.__bases__ = tuple(bases)
 
             ns0.AppMetadataInputType_Def.__init__(self, **kw)
-            if self.pyclass is not None: self.pyclass.__name__ = "getAppMetadataInput_Dec_Holder"
+            if self.pyclass is not None:
+                self.pyclass.__name__ = "getAppMetadataInput_Dec_Holder"
 
     class getAppMetadataOutput_Dec(ElementDeclaration):
         literal = "getAppMetadataOutput"
         schema = "http://nbcr.sdsc.edu/opal/types"
         substitutionGroup = None
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'getAppMetadataOutput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "getAppMetadataOutput")
             kw["aname"] = "_getAppMetadataOutput"
             if ns0.AppMetadataType_Def not in ns0.getAppMetadataOutput_Dec.__bases__:
                 bases = list(ns0.getAppMetadataOutput_Dec.__bases__)
@@ -557,14 +1517,16 @@ class ns0:
                 ns0.getAppMetadataOutput_Dec.__bases__ = tuple(bases)
 
             ns0.AppMetadataType_Def.__init__(self, **kw)
-            if self.pyclass is not None: self.pyclass.__name__ = "getAppMetadataOutput_Dec_Holder"
+            if self.pyclass is not None:
+                self.pyclass.__name__ = "getAppMetadataOutput_Dec_Holder"
 
     class getAppConfigInput_Dec(ElementDeclaration):
         literal = "getAppConfigInput"
         schema = "http://nbcr.sdsc.edu/opal/types"
         substitutionGroup = None
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'getAppConfigInput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "getAppConfigInput")
             kw["aname"] = "_getAppConfigInput"
             if ns0.AppConfigInputType_Def not in ns0.getAppConfigInput_Dec.__bases__:
                 bases = list(ns0.getAppConfigInput_Dec.__bases__)
@@ -572,14 +1534,16 @@ class ns0:
                 ns0.getAppConfigInput_Dec.__bases__ = tuple(bases)
 
             ns0.AppConfigInputType_Def.__init__(self, **kw)
-            if self.pyclass is not None: self.pyclass.__name__ = "getAppConfigInput_Dec_Holder"
+            if self.pyclass is not None:
+                self.pyclass.__name__ = "getAppConfigInput_Dec_Holder"
 
     class getAppConfigOutput_Dec(ElementDeclaration):
         literal = "getAppConfigOutput"
         schema = "http://nbcr.sdsc.edu/opal/types"
         substitutionGroup = None
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'getAppConfigOutput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "getAppConfigOutput")
             kw["aname"] = "_getAppConfigOutput"
             if ns0.AppConfigType_Def not in ns0.getAppConfigOutput_Dec.__bases__:
                 bases = list(ns0.getAppConfigOutput_Dec.__bases__)
@@ -587,14 +1551,16 @@ class ns0:
                 ns0.getAppConfigOutput_Dec.__bases__ = tuple(bases)
 
             ns0.AppConfigType_Def.__init__(self, **kw)
-            if self.pyclass is not None: self.pyclass.__name__ = "getAppConfigOutput_Dec_Holder"
+            if self.pyclass is not None:
+                self.pyclass.__name__ = "getAppConfigOutput_Dec_Holder"
 
     class launchJobInput_Dec(ElementDeclaration):
         literal = "launchJobInput"
         schema = "http://nbcr.sdsc.edu/opal/types"
         substitutionGroup = None
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'launchJobInput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "launchJobInput")
             kw["aname"] = "_launchJobInput"
             if ns0.JobInputType_Def not in ns0.launchJobInput_Dec.__bases__:
                 bases = list(ns0.launchJobInput_Dec.__bases__)
@@ -602,14 +1568,16 @@ class ns0:
                 ns0.launchJobInput_Dec.__bases__ = tuple(bases)
 
             ns0.JobInputType_Def.__init__(self, **kw)
-            if self.pyclass is not None: self.pyclass.__name__ = "launchJobInput_Dec_Holder"
+            if self.pyclass is not None:
+                self.pyclass.__name__ = "launchJobInput_Dec_Holder"
 
     class launchJobOutput_Dec(ElementDeclaration):
         literal = "launchJobOutput"
         schema = "http://nbcr.sdsc.edu/opal/types"
         substitutionGroup = None
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'launchJobOutput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "launchJobOutput")
             kw["aname"] = "_launchJobOutput"
             if ns0.JobSubOutputType_Def not in ns0.launchJobOutput_Dec.__bases__:
                 bases = list(ns0.launchJobOutput_Dec.__bases__)
@@ -617,14 +1585,16 @@ class ns0:
                 ns0.launchJobOutput_Dec.__bases__ = tuple(bases)
 
             ns0.JobSubOutputType_Def.__init__(self, **kw)
-            if self.pyclass is not None: self.pyclass.__name__ = "launchJobOutput_Dec_Holder"
+            if self.pyclass is not None:
+                self.pyclass.__name__ = "launchJobOutput_Dec_Holder"
 
     class launchJobBlockingInput_Dec(ElementDeclaration):
         literal = "launchJobBlockingInput"
         schema = "http://nbcr.sdsc.edu/opal/types"
         substitutionGroup = None
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'launchJobBlockingInput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "launchJobBlockingInput")
             kw["aname"] = "_launchJobBlockingInput"
             if ns0.JobInputType_Def not in ns0.launchJobBlockingInput_Dec.__bases__:
                 bases = list(ns0.launchJobBlockingInput_Dec.__bases__)
@@ -632,30 +1602,40 @@ class ns0:
                 ns0.launchJobBlockingInput_Dec.__bases__ = tuple(bases)
 
             ns0.JobInputType_Def.__init__(self, **kw)
-            if self.pyclass is not None: self.pyclass.__name__ = "launchJobBlockingInput_Dec_Holder"
+            if self.pyclass is not None:
+                self.pyclass.__name__ = "launchJobBlockingInput_Dec_Holder"
 
     class launchJobBlockingOutput_Dec(ElementDeclaration):
         literal = "launchJobBlockingOutput"
         schema = "http://nbcr.sdsc.edu/opal/types"
         substitutionGroup = None
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'launchJobBlockingOutput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "launchJobBlockingOutput")
             kw["aname"] = "_launchJobBlockingOutput"
-            if ns0.BlockingOutputType_Def not in ns0.launchJobBlockingOutput_Dec.__bases__:
+            if (
+                ns0.BlockingOutputType_Def
+                not in ns0.launchJobBlockingOutput_Dec.__bases__
+            ):
                 bases = list(ns0.launchJobBlockingOutput_Dec.__bases__)
                 bases.insert(0, ns0.BlockingOutputType_Def)
                 ns0.launchJobBlockingOutput_Dec.__bases__ = tuple(bases)
 
             ns0.BlockingOutputType_Def.__init__(self, **kw)
-            if self.pyclass is not None: self.pyclass.__name__ = "launchJobBlockingOutput_Dec_Holder"
+            if self.pyclass is not None:
+                self.pyclass.__name__ = "launchJobBlockingOutput_Dec_Holder"
 
     class queryStatusInput_Dec(ZSI.TC.String, ElementDeclaration):
         literal = "queryStatusInput"
         schema = "http://nbcr.sdsc.edu/opal/types"
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'queryStatusInput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "queryStatusInput")
             kw["aname"] = "_queryStatusInput"
-            class IHolder(str): typecode=self
+
+            class IHolder(str):
+                typecode = self
+
             kw["pyclass"] = IHolder
             IHolder.__name__ = "_queryStatusInput_immutable_holder"
             ZSI.TC.String.__init__(self, **kw)
@@ -664,8 +1644,9 @@ class ns0:
         literal = "queryStatusOutput"
         schema = "http://nbcr.sdsc.edu/opal/types"
         substitutionGroup = None
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'queryStatusOutput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "queryStatusOutput")
             kw["aname"] = "_queryStatusOutput"
             if ns0.StatusOutputType_Def not in ns0.queryStatusOutput_Dec.__bases__:
                 bases = list(ns0.queryStatusOutput_Dec.__bases__)
@@ -673,15 +1654,20 @@ class ns0:
                 ns0.queryStatusOutput_Dec.__bases__ = tuple(bases)
 
             ns0.StatusOutputType_Def.__init__(self, **kw)
-            if self.pyclass is not None: self.pyclass.__name__ = "queryStatusOutput_Dec_Holder"
+            if self.pyclass is not None:
+                self.pyclass.__name__ = "queryStatusOutput_Dec_Holder"
 
     class getJobStatisticsInput_Dec(ZSI.TC.String, ElementDeclaration):
         literal = "getJobStatisticsInput"
         schema = "http://nbcr.sdsc.edu/opal/types"
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'getJobStatisticsInput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "getJobStatisticsInput")
             kw["aname"] = "_getJobStatisticsInput"
-            class IHolder(str): typecode=self
+
+            class IHolder(str):
+                typecode = self
+
             kw["pyclass"] = IHolder
             IHolder.__name__ = "_getJobStatisticsInput_immutable_holder"
             ZSI.TC.String.__init__(self, **kw)
@@ -690,24 +1676,33 @@ class ns0:
         literal = "getJobStatisticsOutput"
         schema = "http://nbcr.sdsc.edu/opal/types"
         substitutionGroup = None
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'getJobStatisticsOutput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "getJobStatisticsOutput")
             kw["aname"] = "_getJobStatisticsOutput"
-            if ns0.JobStatisticsType_Def not in ns0.getJobStatisticsOutput_Dec.__bases__:
+            if (
+                ns0.JobStatisticsType_Def
+                not in ns0.getJobStatisticsOutput_Dec.__bases__
+            ):
                 bases = list(ns0.getJobStatisticsOutput_Dec.__bases__)
                 bases.insert(0, ns0.JobStatisticsType_Def)
                 ns0.getJobStatisticsOutput_Dec.__bases__ = tuple(bases)
 
             ns0.JobStatisticsType_Def.__init__(self, **kw)
-            if self.pyclass is not None: self.pyclass.__name__ = "getJobStatisticsOutput_Dec_Holder"
+            if self.pyclass is not None:
+                self.pyclass.__name__ = "getJobStatisticsOutput_Dec_Holder"
 
     class getOutputsInput_Dec(ZSI.TC.String, ElementDeclaration):
         literal = "getOutputsInput"
         schema = "http://nbcr.sdsc.edu/opal/types"
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'getOutputsInput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "getOutputsInput")
             kw["aname"] = "_getOutputsInput"
-            class IHolder(str): typecode=self
+
+            class IHolder(str):
+                typecode = self
+
             kw["pyclass"] = IHolder
             IHolder.__name__ = "_getOutputsInput_immutable_holder"
             ZSI.TC.String.__init__(self, **kw)
@@ -716,8 +1711,9 @@ class ns0:
         literal = "getOutputsOutput"
         schema = "http://nbcr.sdsc.edu/opal/types"
         substitutionGroup = None
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'getOutputsOutput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "getOutputsOutput")
             kw["aname"] = "_getOutputsOutput"
             if ns0.JobOutputType_Def not in ns0.getOutputsOutput_Dec.__bases__:
                 bases = list(ns0.getOutputsOutput_Dec.__bases__)
@@ -725,30 +1721,46 @@ class ns0:
                 ns0.getOutputsOutput_Dec.__bases__ = tuple(bases)
 
             ns0.JobOutputType_Def.__init__(self, **kw)
-            if self.pyclass is not None: self.pyclass.__name__ = "getOutputsOutput_Dec_Holder"
+            if self.pyclass is not None:
+                self.pyclass.__name__ = "getOutputsOutput_Dec_Holder"
 
     class getOutputAsBase64ByNameInput_Dec(ElementDeclaration):
         literal = "getOutputAsBase64ByNameInput"
         schema = "http://nbcr.sdsc.edu/opal/types"
         substitutionGroup = None
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'getOutputAsBase64ByNameInput')
+            kw["pname"] = (
+                "http://nbcr.sdsc.edu/opal/types",
+                "getOutputAsBase64ByNameInput",
+            )
             kw["aname"] = "_getOutputAsBase64ByNameInput"
-            if ns0.OutputsByNameInputType_Def not in ns0.getOutputAsBase64ByNameInput_Dec.__bases__:
+            if (
+                ns0.OutputsByNameInputType_Def
+                not in ns0.getOutputAsBase64ByNameInput_Dec.__bases__
+            ):
                 bases = list(ns0.getOutputAsBase64ByNameInput_Dec.__bases__)
                 bases.insert(0, ns0.OutputsByNameInputType_Def)
                 ns0.getOutputAsBase64ByNameInput_Dec.__bases__ = tuple(bases)
 
             ns0.OutputsByNameInputType_Def.__init__(self, **kw)
-            if self.pyclass is not None: self.pyclass.__name__ = "getOutputAsBase64ByNameInput_Dec_Holder"
+            if self.pyclass is not None:
+                self.pyclass.__name__ = "getOutputAsBase64ByNameInput_Dec_Holder"
 
     class getOutputAsBase64ByNameOutput_Dec(ZSI.TC.Base64String, ElementDeclaration):
         literal = "getOutputAsBase64ByNameOutput"
         schema = "http://nbcr.sdsc.edu/opal/types"
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'getOutputAsBase64ByNameOutput')
+            kw["pname"] = (
+                "http://nbcr.sdsc.edu/opal/types",
+                "getOutputAsBase64ByNameOutput",
+            )
             kw["aname"] = "_getOutputAsBase64ByNameOutput"
-            class IHolder(str): typecode=self
+
+            class IHolder(str):
+                typecode = self
+
             kw["pyclass"] = IHolder
             IHolder.__name__ = "_getOutputAsBase64ByNameOutput_immutable_holder"
             ZSI.TC.Base64String.__init__(self, **kw)
@@ -756,10 +1768,14 @@ class ns0:
     class destroyInput_Dec(ZSI.TC.String, ElementDeclaration):
         literal = "destroyInput"
         schema = "http://nbcr.sdsc.edu/opal/types"
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'destroyInput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "destroyInput")
             kw["aname"] = "_destroyInput"
-            class IHolder(str): typecode=self
+
+            class IHolder(str):
+                typecode = self
+
             kw["pyclass"] = IHolder
             IHolder.__name__ = "_destroyInput_immutable_holder"
             ZSI.TC.String.__init__(self, **kw)
@@ -768,8 +1784,9 @@ class ns0:
         literal = "destroyOutput"
         schema = "http://nbcr.sdsc.edu/opal/types"
         substitutionGroup = None
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'destroyOutput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "destroyOutput")
             kw["aname"] = "_destroyOutput"
             if ns0.StatusOutputType_Def not in ns0.destroyOutput_Dec.__bases__:
                 bases = list(ns0.destroyOutput_Dec.__bases__)
@@ -777,14 +1794,16 @@ class ns0:
                 ns0.destroyOutput_Dec.__bases__ = tuple(bases)
 
             ns0.StatusOutputType_Def.__init__(self, **kw)
-            if self.pyclass is not None: self.pyclass.__name__ = "destroyOutput_Dec_Holder"
+            if self.pyclass is not None:
+                self.pyclass.__name__ = "destroyOutput_Dec_Holder"
 
     class opalFaultOutput_Dec(ElementDeclaration):
         literal = "opalFaultOutput"
         schema = "http://nbcr.sdsc.edu/opal/types"
         substitutionGroup = None
+
         def __init__(self, **kw):
-            kw["pname"] = ('http://nbcr.sdsc.edu/opal/types', 'opalFaultOutput')
+            kw["pname"] = ("http://nbcr.sdsc.edu/opal/types", "opalFaultOutput")
             kw["aname"] = "_opalFaultOutput"
             if ns0.FaultType_Def not in ns0.opalFaultOutput_Dec.__bases__:
                 bases = list(ns0.opalFaultOutput_Dec.__bases__)
@@ -792,6 +1811,8 @@ class ns0:
                 ns0.opalFaultOutput_Dec.__bases__ = tuple(bases)
 
             ns0.FaultType_Def.__init__(self, **kw)
-            if self.pyclass is not None: self.pyclass.__name__ = "opalFaultOutput_Dec_Holder"
+            if self.pyclass is not None:
+                self.pyclass.__name__ = "opalFaultOutput_Dec_Holder"
+
 
 # end class ns0 (tns: http://nbcr.sdsc.edu/opal/types)

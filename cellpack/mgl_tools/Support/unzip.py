@@ -1,4 +1,4 @@
-#http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/252508
+# http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/252508
 """ unzip.py
     Version: 1.1
 
@@ -25,13 +25,14 @@ import os
 import os.path
 import getopt
 
+
 class unzip:
-    def __init__(self, verbose = False, percent = 10):
+    def __init__(self, verbose=False, percent=10):
         self.verbose = verbose
         self.percent = percent
-        
+
     def extract(self, file, directory):
-        if not directory.endswith(':') and not os.path.exists(directory):
+        if not directory.endswith(":") and not os.path.exists(directory):
             os.mkdir(directory)
 
         zf = zipfile.ZipFile(file)
@@ -49,31 +50,29 @@ class unzip:
             if self.verbose == True:
                 print("Extracting %s" % name)
             elif perc > 0 and (i % perc) == 0 and i > 0:
-                complete = int (i / perc) * percent
+                complete = int(i / perc) * percent
                 print("%s%% complete" % complete)
 
-            if not name.endswith('/'):
-                if os.name == 'nt': #sys.platform =='win32':
-                    name1 = name.replace("/","\\")
+            if not name.endswith("/"):
+                if os.name == "nt":  # sys.platform =='win32':
+                    name1 = name.replace("/", "\\")
                 else:
                     name1 = name
-                outfile = open(os.path.join(directory, name1), 'wb')
+                outfile = open(os.path.join(directory, name1), "wb")
                 outfile.write(zf.read(name))
                 outfile.flush()
                 outfile.close()
 
-
     def _createstructure(self, file, directory):
         self._makedirs(self._listdirs(file), directory)
-
 
     def _makedirs(self, directories, basedirectory):
         """ Create any directoryectories that don't currently exist """
         for directory in directories:
-            if os.name == 'nt': #sys.platform=='win32':
-                dirlist = directory.split('\\')
+            if os.name == "nt":  # sys.platform=='win32':
+                dirlist = directory.split("\\")
             else:
-                dirlist = directory.split('/')
+                dirlist = directory.split("/")
             curdirectory = basedirectory
             for direct in dirlist:
                 newdir = os.path.join(curdirectory, direct)
@@ -86,35 +85,36 @@ class unzip:
                         os.mkdir(newdir)
                 curdirectory = newdir
 
-                
     def _listdirs(self, file):
-        """ Grabs all the directoryectories in the zip structure
+        """Grabs all the directoryectories in the zip structure
         This is necessary to create the structure before trying
-        to extract the file to it. """
+        to extract the file to it."""
         zf = zipfile.ZipFile(file)
 
         directories = {}
 
         for name in zf.namelist():
             direct, filename = os.path.split(name)
-            if os.name == 'nt': #sys.platform=='win32':
-                direct = direct.replace('/', '\\')
+            if os.name == "nt":  # sys.platform=='win32':
+                direct = direct.replace("/", "\\")
             try:
                 a = directories[direct]
             except KeyError:
                 directories[direct] = 1
-                
-            #if sys.platform == 'win32':
+
+            # if sys.platform == 'win32':
             #    if name.endswith('\\'):
             #        directorys.append(name)
-            #elif name.endswith('/'):
+            # elif name.endswith('/'):
             #    directorys.append(name)
         directories = list(directories.keys())
         directories.sort()
         return directories
 
+
 def usage():
-    print("""usage: unzip.py -z <zipfile> -o <targetdirectory>
+    print(
+        """usage: unzip.py -z <zipfile> -o <targetdirectory>
     <zipfile> is the source zipfile to extract
     <targetdirectory> is the target destination
 
@@ -127,12 +127,13 @@ def usage():
     --verbose
     --percent=10
     --zipfile=<zipfile>
-    --outdirectory=<targetdirectory>""")
-    
+    --outdirectory=<targetdirectory>"""
+    )
+
 
 def main():
-    shortargs = 'vhp:z:o:'
-    longargs = ['verbose', 'help', 'percent=', 'zipfile=', 'outdir=']
+    shortargs = "vhp:z:o:"
+    longargs = ["verbose", "help", "percent=", "zipfile=", "outdir="]
 
     unzipper = unzip()
 
@@ -162,7 +163,9 @@ def main():
     if zipsource == "" or zipdest == "":
         usage()
         sys.exit()
-            
+
     unzipper.extract(zipsource, zipdest)
 
-if __name__ == '__main__': main()
+
+if __name__ == "__main__":
+    main()

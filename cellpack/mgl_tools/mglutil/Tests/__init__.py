@@ -1,1 +1,1 @@
-ignore = {"test_dependencies" : []}
+ignore = {"test_dependencies": []}
