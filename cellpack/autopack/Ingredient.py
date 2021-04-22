@@ -77,7 +77,6 @@ import autopack
 
 AFDIR = autopack.__path__[0]  # working dir ?
 verbose = autopack.verbose
-print("helper in Ingredient is " + str(helper))
 helper = autopack.helper
 reporthook = None
 if helper is not None:
@@ -1221,7 +1220,7 @@ class Ingredient(Agent):
         self.molarity = molarity
         self.packingPriority = packingPriority
         print(packingPriority, self.packingPriority)
-        if name == None:
+        if name is None:
             name = "%f" % molarity
         print("CREATE INGREDIENT", str(name), ("rejectionThreshold" in kw))
         self.name = str(name)

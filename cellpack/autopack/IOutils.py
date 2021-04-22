@@ -20,7 +20,6 @@ from autopack.Serializable import sIngredient
 from autopack.Serializable import sIngredientFiber
 from autopack.Recipe import Recipe
 from autopack.Compartment import Compartment
-from autopack import Ingredient as ingr
 
 
 try:
@@ -2394,6 +2393,6 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
         rfile = open(resultfilename + "freePoints", "rb")
         freePoint = pickle.load(rfile)
         rfile.close()
-    except:
+    except:  # noqa: E722
         pass
     return result, orgaresult, freePoint
