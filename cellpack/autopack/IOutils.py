@@ -5,10 +5,9 @@ Created on Sun Jan 27 09:04:10 2013
 @author: Ludovic Autin
 """
 import os
-import sys
+import pickle
 
 import numpy
-import pickle
 from xml.dom.minidom import getDOMImplementation
 
 from cellpack.mgl_tools.upy import transformation as tr
@@ -2095,14 +2094,10 @@ def setupFromJsonDic(
         if len(gridnode):
             env.grid_filename = str(gridnode["grid_storage"])
             env.grid_result_filename = str(gridnode["grid_result"])
-    sortkey = None
-    if sys.version[0:3] < "3.0":
-        sortkey = unicode.lower
-    else:
-        sortkey = str.lower
+
+    sortkey = str.lower
 
     if "cytoplasme" in env.jsondic:
-        rnode = env.jsondic["cytoplasme"]
         ingrs_dic = env.jsondic["cytoplasme"]["ingredients"]
         if len(ingrs_dic):
             rCyto = Recipe()

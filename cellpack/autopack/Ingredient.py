@@ -67,12 +67,6 @@ from cellpack.autopack.transformation import (
 
 # combining panda place with rapid place is not working properly
 
-
-try:
-    import urllib.request as urllib  # , urllib.parse, urllib.error
-except ImportError:
-    import urllib
-
 import cellpack.autopack as autopack
 
 AFDIR = autopack.__path__[0]  # working dir ?
@@ -775,24 +769,30 @@ class Partner:
         if properties is not None:
             self.properties = properties
 
-    def setup(
-        self,
-    ):
-        # setup the marge accordin the pt properties
-        pt1 = numpy.array(self.getProperties("pt1"))
-        pt2 = numpy.array(self.getProperties("pt2"))
-        pt3 = numpy.array(self.getProperties("pt3"))
-        pt4 = numpy.array(self.getProperties("pt4"))
+    # def setup(
+    #     self,
+    # ):
+        # QUESTION: why is this commented out?
+        # # setup the marge according the pt properties
+        # pt1 = numpy.array(self.getProperties("pt1"))
+        # pt2 = numpy.array(self.getProperties("pt2"))
+        # pt3 = numpy.array(self.getProperties("pt3"))
+        # pt4 = numpy.array(self.getProperties("pt4"))
 
-    #        #print the angles
-    #        #length = autopack.helper.measure_distance(pt2,pt3)#length
-    #        margein = math.degrees(autopack.helper.angle_between_vectors(pt2-pt1,pt3-pt2)) # 4
-    #        margeout = math.degrees(autopack.helper.angle_between_vectors(pt3-pt2,pt4-pt3)) #113
-    #        dihedral = math.degrees(autopack.helper.angle_between_vectors(pt2-pt1,pt4-pt2)) #79
-    #        dihedral = autopack.helper.dihedral(pt1,pt2,pt3,pt4)
-    #        self.properties["marge_in"]=[margein-1,margein+1]
-    #        self.properties["marge_out"]=[margeout-1,margeout+1]
-    #        self.properties["diehdral"]=[dihedral-1,dihedral+1]
+        # # length = autopack.helper.measure_distance(pt2,pt3)#length
+        # margein = math.degrees(
+        #     autopack.helper.angle_between_vectors(pt2 - pt1, pt3 - pt2)
+        # )  # 4
+        # margeout = math.degrees(
+        #     autopack.helper.angle_between_vectors(pt3 - pt2, pt4 - pt3)
+        # )  # 113
+        # dihedral = math.degrees(
+        #     autopack.helper.angle_between_vectors(pt2 - pt1, pt4 - pt2)
+        # )  # 79
+        # dihedral = autopack.helper.dihedral(pt1, pt2, pt3, pt4)
+        # self.properties["marge_in"] = [margein - 1, margein + 1]
+        # self.properties["marge_out"] = [margeout - 1, margeout + 1]
+        # self.properties["diehdral"] = [dihedral - 1, dihedral + 1]
 
     def addProperties(self, name, value):
         self.properties[name] = value
@@ -2381,9 +2381,6 @@ class Ingredient(Agent):
         if fileExtension == "":
             tmpFileName1 = autopack.retrieveFile(
                 filename + ".indpolface", cache="geometries"
-            )
-            tmpFileName2 = autopack.retrieveFile(
-                filename + ".indpolvert", cache="geometries"
             )
             filename = os.path.splitext(tmpFileName1)[0]
         else:

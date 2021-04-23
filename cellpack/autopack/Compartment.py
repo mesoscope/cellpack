@@ -55,71 +55,33 @@
 
 # NOTE changing smallest molecule radius changes grid spacing and invalidates
 #      arrays saved to file
-import sys
-
-# import numpy.oldnumeric as N
-import numpy
-import numpy as np
-import pickle
-import weakref
-import pdb
-from time import time, sleep
-import math
-from math import sqrt, ceil
 import os
+import pickle
 
-try:
-    import urllib.request as urllib  # , urllib.parse, urllib.error
-except:
-    import urllib
-
-# from .Ingredient import Ingredient
-from .Recipe import Recipe
-# from .ray import 
-
-import cellpack.autopack as autopack
-from cellpack.autopack import checkURL, transformation as tr, binvox_rw
+import numpy
+import pdb
+from time import time
+import math
 
 from cellpack.mgl_tools.RAPID import RAPIDlib
-
-AFDIR = autopack.__path__[0]
-
-try:
-    helper = autopack.helper
-except:
-    helper = None
-print("helper is " + str(helper))
+import cellpack.autopack as autopack
+from cellpack.autopack import transformation as tr, binvox_rw
+from .Recipe import Recipe
+from .ray import makeMarchingCube, vcross, vlen, findPointsCenter, f_ray_intersect_polyhedron, vdiff
 
 try:
     import panda3d
-
-    print("Should have Panda3D now because panda3d = ", panda3d)
-
-    from panda3d.core import Mat3, Mat4, Vec3, Point3
-    from panda3d.core import TransformState
-    from panda3d.core import BitMask32
+    from panda3d.core import Mat3, Mat4, Point3, TransformState, BitMask32
     from panda3d.bullet import (
-        BulletSphereShape,
-        BulletBoxShape,
-        BulletCylinderShape,
         BulletCapsuleShape,
+        BulletRigidBodyNode
     )
-
-    #        from panda3d.bullet import BulletUpAxis
-    from panda3d.bullet import BulletRigidBodyNode
-    from panda3d.ode import OdeBody, OdeMass
-    from panda3d.ode import OdeSphereGeom
-    from panda3d.core import NodePath
-
-    print("Got Panda3D Except")
-except:
+except Exception as e:
     panda3d = None
-    print("Failed to get Panda, because panda3d = ", panda3d)
+    print("Failed to get Panda ", e)
 
-# from autopack import intersect_RayTriangle as iRT
-# from autopack.Environment import Grid
-if sys.version > "3.0.0":
-    xrange = range
+helper = autopack.helper
+AFDIR = autopack.__path__[0]
 
 
 class CompartmentList:
@@ -220,7 +182,6 @@ class Compartment(CompartmentList):
             # if "filename" in kw :
             #        aradius = float(kw["filename"]["radii"][0])
             self.buildSphere(aradius, gname)
-        print("after buildSphere")
         self.encapsulatingRadius = 9999.9
         if self.vertices is not None and len(self.vertices):
             # can be dae/fbx file, object name that have to be in the scene or dejaVu indexedpolygon file
@@ -228,13 +189,11 @@ class Compartment(CompartmentList):
             v = numpy.array(self.vertices, "f")
             l = numpy.sqrt((v * v).sum(axis=1))
             self.encapsulatingRadius = max(l)
-        print("after getboudningbox")
         self.checkinside = True
         self.representation = None
         self.representation_file = None
         if "object_name" in kw:
             if kw["object_name"] is not None:
-                print("rep", kw["object_name"], kw["object_filename"])
                 self.representation = kw["object_name"]
                 self.representation_file = kw["object_filename"]
                 self.getMesh(filename=self.representation_file, rep=self.representation)
@@ -280,7 +239,6 @@ class Compartment(CompartmentList):
             self.axis = kw["axis"]
         self.grid_type = "regular"
         self.grid_distances = None  # signed closest distance for each point
-        print("finished")
         # TODO Add openVDB
         if self.filename is None:
             self.saveDejaVuMesh(autopack.cache_geoms + os.sep + self.name)
@@ -448,16 +406,16 @@ class Compartment(CompartmentList):
         tris.closePrimitive()
 
     #        #form = GeomVertexFormat.getV3()
-    ##        form = GeomVertexArrayFormat.getV3()
+    #        form = GeomVertexArrayFormat.getV3()
     #        vdata = GeomVertexData("vertices", form, Geom.UHDynamic)#UHStatic)
     #
     #        vdatastring = npdata.tostring()
-    ##        vdata = GeomVertexArrayData ("vertices", form, Geom.UHStatic)
+    #        vdata = GeomVertexArrayData ("vertices", form, Geom.UHStatic)
     #        vdata.modifyArray(0).modifyHandle().setData(vdatastring)
     #
     #        pts = GeomPoints(Geom.UHStatic)
     #        geomFaceNumpyData = numpy.array(range(count),dtype=numpy.uint32)
-    ##        #add some data to face-array
+    #        #add some data to face-array
     #        pts.setIndexType(GeomEnums.NTUint32)
     #        faceDataString = geomFaceNumpyData.tostring()
     #        geomFacesDataArray = pts.modifyVertices()
@@ -468,22 +426,16 @@ class Compartment(CompartmentList):
     def addMeshRB(
         self,
     ):
-        #        inodenp = self.parent.worldNP.attachNewNode(BulletRigidBodyNode(self.name))
-        #        inodenp.node().setMass(1.0)
-        helper = autopack.helper
         from panda3d.core import GeomEnums
         from panda3d.core import (
             GeomVertexFormat,
-            GeomVertexWriter,
             GeomVertexData,
             Geom,
             GeomTriangles,
         )
-        from panda3d.core import GeomVertexReader
         from panda3d.bullet import (
             BulletTriangleMesh,
             BulletTriangleMeshShape,
-            BulletConvexHullShape,
         )
 
         # step 1) create GeomVertexData and add vertex information
@@ -559,7 +511,6 @@ class Compartment(CompartmentList):
         pMat = TransformState.makeMat(pmat)
         if self.parent.panda_solver == "ode":
             pMat = mat3x3
-        shape = None
         inodenp = self.addMeshRB(pMat, trans, rotMat)
         if self.panda_solver == "bullet":
             inodenp.setCollideMask(BitMask32.allOn())
@@ -606,12 +557,9 @@ class Compartment(CompartmentList):
         # identify extension
         name = filename.split("/")[-1]
         fileName, fileExtension = os.path.splitext(name)
-        if fileExtension is "":
+        if fileExtension == "":
             tmpFileName1 = autopack.retrieveFile(
                 filename + ".indpolface", cache="geometries"
-            )
-            tmpFileName2 = autopack.retrieveFile(
-                filename + ".indpolvert", cache="geometries"
             )
             filename = os.path.splitext(tmpFileName1)[0]
         else:
@@ -642,7 +590,7 @@ class Compartment(CompartmentList):
                     helper.resetTransformation(
                         geom
                     )  # remove rotation and scale from importing
-                if helper.host != "c4d" and rep == None and helper.host != "softimage":
+                if helper.host != "c4d" and rep is None and helper.host != "softimage":
                     # need to rotate the transform that carry the shape
                     helper.rotateObj(geom, [0.0, -math.pi / 2.0, 0.0])
                 if helper.host == "softimage":
@@ -686,7 +634,7 @@ class Compartment(CompartmentList):
                     helper.read(filename)
                     geom = helper.getObject(gname)
                     # what if wrong name ?
-                    if geom == None:
+                    if geom is None:
                         geom = helper.getCurrentSelection()[0]
                         gname = helper.getName(geom)
                         # rename
@@ -713,7 +661,7 @@ class Compartment(CompartmentList):
                 #                    helper.toggleDisplay(p,False)
                 #                return geom
                 #            return None
-        elif fileExtension is "":
+        elif fileExtension == "":
             geom = self.getDejaVuMesh(filename, gname)
         else:  # speficif host file
             if helper is not None:  # neeed the helper
@@ -777,9 +725,7 @@ class Compartment(CompartmentList):
 
     def saveGridToFile(self, f):
         """Save insidePoints and surfacePoints to file"""
-        # print 'surface', len(self.surfacePoints)
         pickle.dump(self.insidePoints, f)
-        # print 'interior', len(self.surfacePoints)
         pickle.dump(self.surfacePoints, f)
         pickle.dump(self.surfacePointsNormals, f)
         pickle.dump(self.surfacePointsCoords, f)
@@ -880,7 +826,7 @@ class Compartment(CompartmentList):
     #            return True
 
     def checkPointInsideBB(self, pt3d, dist=None):
-        """check if the given 3d coordinate is inside the compartment bouding box"""
+        """check if the given 3d coordinate is inside the compartment bounding box"""
         O = numpy.array(self.bb[0])
         E = numpy.array(self.bb[1])
         P = numpy.array(pt3d)
@@ -1527,7 +1473,7 @@ class Compartment(CompartmentList):
 
         helper.resetProgressBar()
         # the main loop
-        for ptInd in xrange(len(grdPos)):  # len(grdPos)):
+        for ptInd in range(len(grdPos)):  # len(grdPos)):
             coord = [
                 grdPos.item((ptInd, 0)),
                 grdPos.item((ptInd, 1)),
@@ -1710,7 +1656,6 @@ class Compartment(CompartmentList):
         #        closest = bht.closestPointsArray(tuple(grdPos), diag,
         #                                         returnNullIfFail)
         closest = bht.query(tuple(grdPos))  # return both indices and distances
-        helper = autopack.helper
         self.closestId = closest[1]
         new_distances = closest[0]
         mask = distances[: len(grdPos)] > new_distances
@@ -1725,11 +1670,11 @@ class Compartment(CompartmentList):
         m3 = m1 | m2
         # outside indice
         # outsidebb = np.nonzero(m3)[0]
-        insidebb = np.nonzero(m3 == False)[0]
+        insidebb = numpy.nonzero(m3 == False)[0]
 
-        ijk = np.rint(m.xyzToijk(grdPos[insidebb])).astype(int)
+        ijk = numpy.rint(m.xyzToijk(grdPos[insidebb])).astype(int)
         i = m.ijkToIndex(ijk).astype(int)
-        inbb_inside = np.nonzero(m.data[i] == True)[0]
+        inbb_inside = numpy.nonzero(m.data[i] == True)[0]
         print("found this many ", len(inbb_inside))
         inside_points = insidebb[inbb_inside]
         idarray[inside_points] = -number
@@ -1879,12 +1824,12 @@ class Compartment(CompartmentList):
         # voxelized
         from trimesh.voxel import Voxel
 
-        trimesh_grid = Voxel(mesh, env.grid.gridSpacing / 1.1547, size_max=np.inf)
+        trimesh_grid = Voxel(mesh, env.grid.gridSpacing / 1.1547, size_max=numpy.inf)
 
         helper.resetProgressBar()
         # the main loop
 
-        for ptInd in xrange(len(grdPos)):  # len(grdPos)):
+        for ptInd in range(len(grdPos)):  # len(grdPos)):
             coord = [
                 grdPos.item((ptInd, 0)),
                 grdPos.item((ptInd, 1)),
@@ -2055,7 +2000,7 @@ class Compartment(CompartmentList):
         # voxelized
         from trimesh.voxel import Voxel
 
-        trimesh_grid = Voxel(mesh, env.grid.gridSpacing / 1.1547, size_max=np.inf)
+        trimesh_grid = Voxel(mesh, env.grid.gridSpacing / 1.1547, size_max=numpy.inf)
 
         helper.resetProgressBar()
         # the main loop
@@ -2482,7 +2427,7 @@ class Compartment(CompartmentList):
                 # pdb.set_trace()#???  Can be used to debug with http://docs.python.org/library/pdb.html
             if sptInd < len(srfPts):
                 sx, sy, sz = srfPts[sptInd]
-                d = sqrt(
+                d = math.sqrt(
                     (gx - sx) * (gx - sx)
                     + (gy - sy) * (gy - sy)
                     + (gz - sz) * (gz - sz)
@@ -2661,9 +2606,8 @@ class Compartment(CompartmentList):
             print(
                 "compartment build grid jordan",
                 diag,
-                " nb points in grid ",
-                len(grdPos),
-            )  # [],None
+         
+            )
 
         helper = autopack.helper
 
@@ -2723,11 +2667,11 @@ class Compartment(CompartmentList):
             # Minimum is one because range(1) gives us [0]
             uSubunits, vSubunits, wSubunits = 1, 1, 1
             if vlen(u) > gridSpacingTempFine:
-                uSubunits = ceil(vlen(u) / gridSpacingTempFine) + 1
+                uSubunits = math.ceil(vlen(u) / gridSpacingTempFine) + 1
             if vlen(v) > gridSpacingTempFine:
-                vSubunits = ceil(vlen(v) / gridSpacingTempFine) + 1
+                vSubunits = math.ceil(vlen(v) / gridSpacingTempFine) + 1
             if vlen(w) > gridSpacingTempFine:
-                wSubunits = ceil(vlen(w) / gridSpacingTempFine) + 1
+                wSubunits = math.ceil(vlen(w) / gridSpacingTempFine) + 1
             # Because we have observed leakage, maybe we want to try trying a denser interpolation, using numpy's linspace?
             # Interpolate face of triangle into a fine mesh.
             for uSub in range(int(uSubunits)):
@@ -2800,7 +2744,7 @@ class Compartment(CompartmentList):
                     # if desiredPointIndex == 54199:
                     #     print('HIT with face ' + str(face) + ' and polygon point ' + str(P))
                     desiredPoint = gridPoints[desiredPointIndex]
-                    if desiredPoint.representsPolyhedron == True:
+                    if desiredPoint.representsPolyhedron:
                         continue
                     # Add the current face to the its list of closest faces
                     if face not in desiredPoint.closeFaces:
@@ -2846,14 +2790,14 @@ class Compartment(CompartmentList):
                     emptyPointIndicies = []
 
             # There's no point testing inside/outside for points that are on the surface.
-            if g.representsPolyhedron == True:
+            if g.representsPolyhedron:
                 g.isOutside = None
                 continue
 
             if len(g.closeFaces) == 0:
                 # If it's not close to any faces, and we don't know if this row is inside/outside, then
                 # we have to wait till later to figure it out
-                if isOutsideTracker == None:
+                if isOutsideTracker is None:
                     emptyPointIndicies.append(g.index)
                 # However, if we do know , we can just use the previous one to fill
                 else:
@@ -2881,7 +2825,7 @@ class Compartment(CompartmentList):
 
                 # We can check the other face as well if we want to be super precise. If they dont' agree, we then check against the entire polyhedron.
                 # We have not found any cases in which this is necessary, but it is included just in case.
-                if superFine == True:
+                if superFine:
                     if len(g.closeFaces) > 1:
                         uniquePoints2 = []
                         [
@@ -2932,17 +2876,17 @@ class Compartment(CompartmentList):
 
         # Final pass through for sanity checks.
         for g in gridPoints:
-            if g.representsPolyhedron == True:
+            if g.representsPolyhedron:
                 assert g.isOutside == None
             else:
-                if g.isOutside == None:
+                if g.isOutside is None:
                     g.isOutside = True
         print(
             "Flood filling grid inside/outside took "
             + str(time() - timeFinishProjection)
             + " seconds."
         )
-        insidePoints = [g.globalCoord for g in gridPoints if g.isOutside == False]
+        insidePoints = [g.globalCoord for g in gridPoints if g.isOutside is False]
         # outsidePoints = [g.index for g in gridPoints if g.isOutside == True]
         #        surfacePoints = [g.globalCoord for g in gridPoints if g.representsPolyhedron == True]
 
@@ -3267,7 +3211,7 @@ class Compartment(CompartmentList):
             sx, sy, sz = srfPts[sptInd]
 
             # update distance field
-            d = sqrt(
+            d = math.sqrt(
                 (gx - sx) * (gx - sx) + (gy - sy) * (gy - sy) + (gz - sz) * (gz - sz)
             )
             if distances[ptInd] > d:
@@ -3544,7 +3488,6 @@ class Compartment(CompartmentList):
         dim1 = dim + 1
         print("ok2 dim ", dim)
         size = dim1 * dim1 * dim1
-        from UTpackages.UTsdf import utsdf
 
         verts = numpy.array(self.vertices, dtype="f")
 
@@ -3583,7 +3526,7 @@ class Compartment(CompartmentList):
         #        self.sdfGridSpacing = (gSizeX, gSizeY, gSizeZ)
         #        self.sdfDims = (dimx, dimy, dimz)
 
-        ## update histoVol.distToClosestSurf
+        # update histoVol.distToClosestSurf
         distance = histoVol.grid.distToClosestSurf
         for i, d in enumerate(distFromSurf):
             if distance[i] > d:
@@ -3742,7 +3685,7 @@ class Compartment(CompartmentList):
         self.sdfGridSpacing = (gSizeX, gSizeY, gSizeZ)
         self.sdfDims = (dimx, dimy, dimz)
 
-        ## update histoVol.distToClosestSurf
+        # update histoVol.distToClosestSurf
         distance = histoVol.distToClosestSurf
         for i, d in enumerate(distFromSurf):
             if distance[i] > d:
@@ -4146,11 +4089,11 @@ class Compartment(CompartmentList):
             # Minimum is one because range(1) gives us [0]
             uSubunits, vSubunits, wSubunits = 1, 1, 1
             if vlen(u) > gridSpacingTempFine:
-                uSubunits = ceil(vlen(u) / gridSpacingTempFine) + 1
+                uSubunits = math.ceil(vlen(u) / gridSpacingTempFine) + 1
             if vlen(v) > gridSpacingTempFine:
-                vSubunits = ceil(vlen(v) / gridSpacingTempFine) + 1
+                vSubunits = math.ceil(vlen(v) / gridSpacingTempFine) + 1
             if vlen(w) > gridSpacingTempFine:
-                wSubunits = ceil(vlen(w) / gridSpacingTempFine) + 1
+                wSubunits = math.ceil(vlen(w) / gridSpacingTempFine) + 1
             # Because we have observed leakage, maybe we want to try trying a denser interpolation, using numpy's linspace?
             # Interpolate face of triangle into a fine mesh.
             for uSub in range(uSubunits):
@@ -4648,7 +4591,7 @@ class Compartment(CompartmentList):
                 return
             if sptInd < len(srfPts):
                 sx, sy, sz = srfPts[sptInd]
-                d = sqrt(
+                d = math.sqrt(
                     (gx - sx) * (gx - sx)
                     + (gy - sy) * (gy - sy)
                     + (gz - sz) * (gz - sz)

@@ -139,7 +139,6 @@ class Voxels(object):
 
     def ijkToxyz(self):
         # depends on axis_order
-        sz = self.dims[0] * self.dims[0] * self.dims[0]
         if self.axis_order == "xyz":
             x_n = (self.data[0] + 0.5) / self.dims[0]
             y_n = (self.data[1] + 0.5) / self.dims[1]
@@ -253,7 +252,7 @@ class Voxels(object):
         if arrays[1:]:
             self.cartesian(arrays[1:], out=out[0:m, 1:])
             for j in range(1, arrays[0].size):
-                out[j * m : (j + 1) * m, 1:] = out[0:m, 1:]
+                out[j * m: (j + 1) * m, 1:] = out[0:m, 1:]
         return out
 
 
@@ -354,7 +353,6 @@ def read_as_coord_array(fp, fix_coords=True):
 
     values, counts = raw_data[::2], raw_data[1::2]
 
-    sz = np.prod(dims)
     index, end_index = 0, 0
     end_indices = np.cumsum(counts)
     indices = np.concatenate(([0], end_indices[:-1])).astype(end_indices.dtype)

@@ -6,11 +6,11 @@ Created on Mon May  6 22:58:44 2013
 """
 import os
 import math
+
 import numpy
 import scipy
 import csv
 import json
-
 from time import time
 from PIL import Image
 
@@ -190,7 +190,7 @@ def autolabels(loci1, loci2, loci3, ax, yerr1, yerr2, yerr3):
 
 
 def getRndWeighted(listPts, weight, yerr):
-    w = [yerr[i] * np.random.random() + weight[i] for i in range(len(weight))]
+    w = [yerr[i] * numpy.random.random() + weight[i] for i in range(len(weight))]
     t = numpy.cumsum(w)
     s = numpy.sum(w)
     i = numpy.searchsorted(t, numpy.random.rand(1) * s)[0]

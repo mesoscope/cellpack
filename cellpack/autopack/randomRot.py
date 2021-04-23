@@ -187,19 +187,19 @@ class RandomRot:
         return self.quaternion_matrix(self.random_quaternion(rand))
 
 
-## def getRotations(filename):
+# def getRotations(filename):
 
-##     #read rotations
-##     f = open(filename)
-##     data = f.readlines()
-##     f.close()
+#     #read rotations
+#     f = open(filename)
+#     data = f.readlines()
+#     f.close()
 
-##     allRot = []
-##     for line in data:
-##         rotString = line
-##         rot = numpy.array( map(float, line.split()))
-##         rot.shape = (3,3)
-##         allRot.append( rot )
+#     allRot = []
+#     for line in data:
+#         rotString = line
+#         rot = numpy.array( map(float, line.split()))
+#         rot.shape = (3,3)
+#         allRot.append( rot )
 
 if __name__ == "__main__":
     # from time import time
@@ -207,9 +207,9 @@ if __name__ == "__main__":
     # allRot = getRotations('deg06.matrix')
     # print 'time to read rotation', time()-t1
 
-    ##     t1 = time()
-    ##     from deg06Rotations import allRtotations
-    ##     print 'time to import rotation', time()-t1
+    #     t1 = time()
+    #     from deg06Rotations import allRtotations
+    #     print 'time to import rotation', time()-t1
 
     rr = RandomRot()
     mat = rr.get()

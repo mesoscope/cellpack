@@ -85,10 +85,9 @@ def ray_intersect_polygon(
     vHitCount = 0
 
     vTriPoints = pQuadranglePointPositions
-    vEpsilon = 0.00001
     j = 0
 
-    vQuadrangle = 1  # Default says polygon is a quadrangle.
+    # vQuadrangle = 1  # Default says polygon is a quadrangle.
     vLoopLimit = 2  # Default k will loop through polygon assuming its a quad.
 
     # FIXME handle quads
@@ -104,7 +103,7 @@ def ray_intersect_polygon(
         # Get point 1 for a tri and a quad's first pass,
         # but skip for a quad's second pass
         vTriPt1 = vTriPoints[vTriPolys[j + 1 + k]]
-        # Get pontt 2 for a tri and a quad's first pass,
+        # Get point 2 for a tri and a quad's first pass,
         # but get point 3 only for a quad on its second pass.
         vTriPt2 = vTriPoints[vTriPolys[j + 2 + k]]
 
@@ -191,24 +190,22 @@ def ray_intersect_polyhedron(
     vLineSlope = vdiff(pRayEndPos, pRayStartPos)
     # vPolyhedronPos = GetGlobalPosition(pPolyhedron)
     vTriPoints = vertices
-    vTriPolys = faces
+    # vTriPolys = faces
     vHitCount = 0
 
     # FIXME
     # for v in range(vTriPoints) i++):  # Lets globalize the polyhedron.
     #   vTriPoints[i] = vTriPoints[i] + vPolyhedronPos
 
-    vEpsilon = 0.00001
-
     print("------------------------")
     print("ray", pRayStartPos, pRayEndPos)
     # Walk through each polygon in a polyhedron
     for fn, f in enumerate(faces):
         if len(f) == 3:
-            vQuadrangle = 0  # polygon is a triangle
+            # vQuadrangle = 0  # polygon is a triangle
             vLoopLimit = 1
         else:
-            vQuadrangle = 1  # Default says polygon is a quadrangle.
+            # vQuadrangle = 1  # Default says polygon is a quadrangle.
             vLoopLimit = 2
 
         for k in range(vLoopLimit):
@@ -276,7 +273,7 @@ def ray_intersect_polyhedron(
             print("COllision", fn, vCollidePos)
             # The ray is hitting a triangle, now test to see if its a
             # triangle hit by the ray.
-            vBackface = False
+            # vBackface = False # TODO: figure out if this was supposed to be returned
 
             # This truncates our infinite line to a ray pointing from
             # start THROUGH end positions.
@@ -292,7 +289,7 @@ def ray_intersect_polyhedron(
                 # Test to see if the triangle hit is a backface.
                 if a < 0.00001:
                     # set master grid to organelle->getname inside
-                    vBackface = True
+                    # vBackface = True  # TODO: figure out if this was supposed to be returned
 
                     # This stuff is specific to our Point inside goals.
                     # To see if a point is inside, I can stop at the
@@ -322,7 +319,7 @@ def f_ray_intersect_polyhedron(
     vLineSlope = (
         pRayEndPos - pRayStartPos
     )  # This line segment defines an infinite line to test for intersection
-    vPolyhedronPos = numpy.array((0, 0, 0))
+    # vPolyhedronPos = numpy.array((0, 0, 0))
     vTriPoints = vertices
     vTriPolys = faces
     vBackface = None
@@ -331,7 +328,7 @@ def f_ray_intersect_polyhedron(
     vHitCount = 0
 
     vEpsilon = 0.00001
-    vBreakj = False
+    # vBreakj = False  # TODO: figure out if this was supposed to be used
     vCollidePos = None
 
     # Walk through each polygon in a polyhedron
@@ -341,7 +338,7 @@ def f_ray_intersect_polyhedron(
         # vLoopLimit = 2  # Default k will loop through polygon assuming its a quad.
         # if (vTriPolys[j+3] == vTriPolys[j+2])  # Test to see if quad is actually just a triangle.
         #  {
-        vQuadrangle = 0  # Current polygon is not a quad, it's a triangle.
+        # vQuadrangle = 0  # Current polygon is not a quad, it's a triangle.
         vLoopLimit = 1  # Set k loop to only cycle one time.
 
         for k in range(vLoopLimit):
@@ -412,10 +409,11 @@ def f_ray_intersect_polyhedron(
                     # set master grid to organelle->getname inside
                     vBackface = True
                     # This stuff is specific to our Point inside goals.
-                    vBreakj = True  # To see if a point is inside, I can stop at the first backface hit.
+                    # vBreakj = True  # To see if a point is inside, I can stop at the first backface hit.
                     # break
-                else:
-                    vBreakj = True
+                # else:
+                    # vBreakj = True
+
                 vBackfaceFinal = vBackface
                 maxDistance = d
     # vBackfaceFinal = vBackfaces[distances.index(min(distances))]
