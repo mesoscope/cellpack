@@ -65,10 +65,10 @@ from upy import hostHelper
 # from upy import ray
 
 try:
-    import collada
+    import pycollada as collada
 except:
     collada = None
-    print("can't import pycollada ")
+    print("can't import pycollada dejav helper_mgl")
 
 # Problem instance doesnt really exist as its. Or its instance of mesh/sphere/cylinder directly.
 # check autofill display

@@ -268,7 +268,7 @@ class Displayable:
         self.lineWidth = 2
         self.pointWidth = 2
 
-        from DejaVu.Transformable import Transformable
+        from .Transformable import Transformable
 
         if isinstance(self, Transformable):
             self.drawOutline = (False, False)

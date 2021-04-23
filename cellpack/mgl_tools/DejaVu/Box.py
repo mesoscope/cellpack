@@ -15,14 +15,14 @@
 #
 
 import oldnumeric as Numeric
-from opengltk.OpenGL import GL
+from cellpack.mgl_tools.opengltk.OpenGL import GL
 
-from DejaVu.IndexedPolygons import IndexedPolygons
-from DejaVu.Geom import Geom
-from DejaVu.IndexedGeom import IndexedGeom
+from .IndexedPolygons import IndexedPolygons
+from .Geom import Geom
+from .IndexedGeom import IndexedGeom
 from . import datamodel
 from . import viewerConst
-from DejaVu.viewerFns import checkKeywords
+from .viewerFns import checkKeywords
 
 
 def uniq(objectSequence):

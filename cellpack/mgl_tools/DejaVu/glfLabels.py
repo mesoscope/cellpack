@@ -27,17 +27,17 @@ import warnings
 import tkinter
 import Pmw
 
-from opengltk.OpenGL import GL
-from opengltk.extent.utillib import glCleanRotMat
-from mglutil.math import rotax
+from cellpack.mgl_tools.opengltk.OpenGL import GL
+from cellpack.mgl_tools.opengltk.extent.utillib import glCleanRotMat
+from cellpack.mgl_tools.mglutil.math import rotax
 
 # from mglutil.math.VectorModule import Vector
-from mglutil.gui.BasicWidgets.Tk.thumbwheel import ThumbWheel
-from DejaVu.Geom import Geom
-from DejaVu.viewerFns import checkKeywords
-from DejaVu import viewerConst
-from DejaVu.colorTool import glMaterialWithCheck, resetMaterialMemory
-from DejaVu.IndexedPolygons import IndexedPolygons
+from cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.thumbwheel import ThumbWheel
+from .Geom import Geom
+from .viewerFns import checkKeywords
+from . import viewerConst
+from .colorTool import glMaterialWithCheck, resetMaterialMemory
+from .IndexedPolygons import IndexedPolygons
 
 try:
     from pyglf import glf

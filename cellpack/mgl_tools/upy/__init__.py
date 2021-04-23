@@ -132,7 +132,7 @@ def retrieveHost():
                                     host = "chimera"
                                 except:
                                     try:
-                                        import DejaVu
+                                        import cellpack.mgl_tools.DejaVu
 
                                         host = "dejavu"
                                     except:
@@ -243,19 +243,19 @@ def getHClass(host):
     """
     # print globals()
     if host == "blender24":
-        from upy.blender.v249.blenderHelper import blenderHelper as helper
+        from .blender.v249.blenderHelper import blenderHelper as helper
     elif host == "blender25":
         import bpy
 
         blender_version = bpy.app.version
         if blender_version < (2, 60, 0):
-            from upy.blender.v257.blenderHelper import blenderHelper as helper
+            from .blender.v257.blenderHelper import blenderHelper as helper
         elif blender_version >= (2, 60, 0) and blender_version < (2, 63, 0):  # 2.62
-            from upy.blender.v262.blenderHelper import blenderHelper as helper
+            from .blender.v262.blenderHelper import blenderHelper as helper
         elif blender_version >= (2, 63, 0) and blender_version < (2, 71, 0):  # 2.62
-            from upy.blender.v263.blenderHelper import blenderHelper as helper
+            from .blender.v263.blenderHelper import blenderHelper as helper
         elif blender_version >= (2, 71, 0):  # 2.62
-            from upy.blender.v271.blenderHelper import blenderHelper as helper
+            from .blender.v271.blenderHelper import blenderHelper as helper
         else:
             print(blender_version)
     elif host == "c4d":
@@ -269,7 +269,7 @@ def getHClass(host):
         elif c4d_version > 14000:
             from upy.cinema4d.r14.c4dHelper import c4dHelper as helper
     elif host == "maya":
-        from upy.autodeskmaya.mayaHelper import mayaHelper as helper
+        from .autodeskmaya.mayaHelper import mayaHelper as helper
     elif host == "softimage":
         from siutils import si
 
@@ -280,26 +280,26 @@ def getHClass(host):
             Application = sipyutils.si()
         v = Application.version()
         if v >= (11, 0, 525, 0):
-            from upy.softimage.v2013.softimageHelper import softimageHelper as helper
+            from .softimage.v2013.softimageHelper import softimageHelper as helper
     elif host == "3dsmax":
         import MaxPlus
 
         release = MaxPlus.Core.EvalMAXScript("getDir #maxData").Get()
         # from upy.autodesk3dsmax.v2013.maxUI import maxUIDialog as adaptor
         if release.find("2015") != -1:
-            from upy.autodesk3dsmax.v2015.maxHelper import maxHelper as helper
+            from .autodesk3dsmax.v2015.maxHelper import maxHelper as helper
         elif release.find("2016") != -1:
-            from upy.autodesk3dsmax.v2016.maxHelper import maxHelper as helper
+            from .autodesk3dsmax.v2016.maxHelper import maxHelper as helper
         else:
             print(release)
             print("not suppported")
             helper = None
     elif host == "dejavu":
-        from upy.dejavuTk.dejavuHelper import dejavuHelper as helper
+        from .dejavuTk.dejavuHelper import dejavuHelper as helper
     elif host == "chimera":
-        from upy.ucsfchimera.chimeraHelper import chimeraHelper as helper
+        from .ucsfchimera.chimeraHelper import chimeraHelper as helper
     elif host == "houdini":
-        from upy.houdini.houdiniHelper import houdiniHelper as helper
+        from .houdini.houdiniHelper import houdiniHelper as helper
     else:
         helper = None
     return helper

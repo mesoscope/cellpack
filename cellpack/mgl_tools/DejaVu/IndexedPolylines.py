@@ -8,10 +8,10 @@
 
 from inspect import isclass
 
-from DejaVu.IndexedGeom import IndexedGeom
+from .IndexedGeom import IndexedGeom
 from . import datamodel
 from . import viewerConst
-from DejaVu.viewerFns import checkKeywords
+from .viewerFns import checkKeywords
 
 
 class IndexedPolylines(IndexedGeom):
@@ -42,7 +42,7 @@ class IndexedPolylines(IndexedGeom):
             self.FaceNormalFunction(self.ComputeFaceNormals)
             self.faceSet.normals.ComputeMode(viewerConst.AUTO)
             self.GetNormals()
-            from opengltk.OpenGL.GL import GL_LINE_STRIP
+            from cellpack.mgl_tools.opengltk.OpenGL.GL import GL_LINE_STRIP
 
             self._PrimitiveType(type=GL_LINE_STRIP)
 

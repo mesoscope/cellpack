@@ -1,4 +1,4 @@
-## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by
+# Automatically adapted for numpy.oldnumeric Jul 23, 2007 by
 
 #############################################################################
 #
@@ -19,17 +19,18 @@
 #
 
 import warnings
-import oldnumeric as Numeric, math
+import oldnumeric as Numeric
+import math
 
-from opengltk.OpenGL import GL, GLU
-from opengltk.extent.utillib import glDrawSphereSet, extractedGlutSolidSphere
+from cellpack.mgl_tools.opengltk.OpenGL import GL, GLU
+from cellpack.mgl_tools.opengltk.extent.utillib import glDrawSphereSet, extractedGlutSolidSphere
 
-import DejaVu
-from DejaVu.Geom import Geom
-from DejaVu import datamodel, viewerConst
-from DejaVu.viewerFns import checkKeywords
-from DejaVu.colorTool import glMaterialWithCheck, resetMaterialMemory
-from DejaVu.IndexedPolygons import IndexedPolygons
+import cellpack.mgl_tools.DejaVu as DejaVu
+from cellpack.mgl_tools.DejaVu.Geom import Geom
+from cellpack.mgl_tools.DejaVu import datamodel, viewerConst
+from cellpack.mgl_tools.DejaVu.viewerFns import checkKeywords
+from cellpack.mgl_tools.DejaVu.colorTool import glMaterialWithCheck, resetMaterialMemory
+from cellpack.mgl_tools.DejaVu.IndexedPolygons import IndexedPolygons
 
 if hasattr(DejaVu, "enableVertexArrayNonVBO") is False:
     DejaVu.enableVertexArrayNonVBO = False

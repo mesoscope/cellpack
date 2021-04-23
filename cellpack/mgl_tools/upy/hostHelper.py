@@ -40,7 +40,7 @@ try:
 except:
     usePIL = False
 
-from upy import colors
+from cellpack.mgl_tools.upy import colors
 
 if sys.version_info >= (3, 0, 0):
     unicode = str

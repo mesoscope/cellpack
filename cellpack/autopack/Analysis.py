@@ -6,7 +6,7 @@ Created on Mon May  6 22:58:44 2013
 """
 import os
 import math
-import numpy as np
+import numpy
 import scipy
 import csv
 import json

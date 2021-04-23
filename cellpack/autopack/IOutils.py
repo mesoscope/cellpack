@@ -431,12 +431,13 @@ class IOingredientTool(object):
         return inrStr
 
     def makeIngredient(self, **kw):
-        from autopack.Ingredient import (
+        from cellpack.autopack.Ingredient import (
             SingleSphereIngr,
             MultiSphereIngr,
             SingleCubeIngr,
+            MultiCylindersIngr,
+            GrowIngrediant
         )
-        from autopack.Ingredient import MultiCylindersIngr, GrowIngrediant
 
         ingr = None
         if kw["Type"] == "SingleSphere":
@@ -1905,7 +1906,7 @@ def load_XML(env, setupfile):
         env.grid_filename = str(gridn.getAttribute("grid_storage"))
         env.grid_result_filename = str(gridn.getAttribute("grid_result"))
 
-    from autopack.Recipe import Recipe
+    from cellpack.autopack.Recipe import Recipe
 
     rnode = root.getElementsByTagName("cytoplasme")
     if len(rnode):
@@ -1934,7 +1935,7 @@ def load_XML(env, setupfile):
     if not len(onodes):
         # backward compatibility
         onodes = root.getElementsByTagName("organelle")  # Change to Compartment
-    from autopack.Compartment import Compartment
+    from cellpack.autopack.Compartment import Compartment
 
     for onode in onodes:
         name = str(onode.getAttribute("name"))

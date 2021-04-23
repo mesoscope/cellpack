@@ -9,8 +9,11 @@ with open("README.md") as readme_file:
     readme = readme_file.read()
 
 setup_requirements = [
-    "pytest-runner>=5.2",
-    "numpy==1.19.2"
+    "matplotlib=3.3.4",
+    "numpy==1.19.2",
+    "panda3d==1.10.9",
+    "pmw==2.0.1" "pytest-runner>=5.2",
+    "scipy==1.6.2",
 ]
 
 test_requirements = [
@@ -47,7 +50,7 @@ extra_requirements = {
     "all": [
         *requirements,
         *dev_requirements,
-    ]
+    ],
 }
 
 setup(
@@ -64,9 +67,7 @@ setup(
     ],
     description="algorthim to pack molecular recipes",
     entry_points={
-        "console_scripts": [
-            "analyze=cellpack.bin.analyze:main"
-        ],
+        "console_scripts": ["analyze=cellpack.bin.analyze:main"],
     },
     install_requires=requirements,
     license="MIT license",

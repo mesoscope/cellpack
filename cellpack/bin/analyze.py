@@ -38,7 +38,7 @@ class Args(argparse.Namespace):
 
     DEFAULT_TWOD = True
     DEFAULT_ANALYSIS = True
-    DEFAULT_RECIPE_FILE = "/test-recipes/NM_Analysis_FigureA1.0.xml"
+    DEFAULT_RECIPE_FILE = "cellpack/test-recipes/NM_Analysis_FigureA1.0.xml"
 
     def __init__(self):
         # Arguments that could be passed in through the command line
@@ -101,12 +101,20 @@ def main():
         # exe = Example(args.recipe)
         # exe.update_value(args.second)
         print("Recipe : {}\n".format(args.recipe))
+        print("HELPER CLASS", upy.getHelperClass())
+        recipePath = args.recipe
         helperClass = upy.getHelperClass()
+
         helper = helperClass(vi="nogui")
         autopack.helper = helper
-        fileName = os.path.basename(args.recipe)
+        fileName = os.path.basename(recipePath)
 
-        evn = Environment(name=fileName)
+        env = Environment(name=fileName)
+        env.helper = helper
+        recipe = fileName
+        env.loadRecipe(recipePath)
+        env.saveResult = False
+        resultfilename = env.resultfile = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_A2_2/results"
 
     except Exception as e:
         log.error("=============================================")

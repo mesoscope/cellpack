@@ -15,11 +15,11 @@
 #
 
 import sys, os
-import Image
+from PIL import Image
 import oldnumeric as Numeric
 import warnings
 
-from opengltk.OpenGL import GL
+from cellpack.mgl_tools.opengltk.OpenGL import GL
 from . import viewerConst
 import math
 from .colorTool import OneColor

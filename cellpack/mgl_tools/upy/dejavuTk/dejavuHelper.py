@@ -30,17 +30,18 @@ Created on Sun Dec  5 23:30:44 2010
 @author: Ludovic Autin - ludovic.autin@gmail.com
 """
 # DejaVu module
-import DejaVu
-from DejaVu.Viewer import Viewer
-from DejaVu.Geom import Geom
-from DejaVu.Spheres import Spheres
-from DejaVu.Cylinders import Cylinders
-from DejaVu.Box import Box
-from DejaVu.glfLabels import GlfLabels as Labels
-from DejaVu.IndexedPolygons import IndexedPolygons
-from DejaVu.Polylines import Polylines as dejavuPolylines
-from DejaVu.Texture import Texture
-from DejaVu import Viewer
+from cellpack.mgl_tools.upy import hostHelper
+import cellpack.mgl_tools.DejaVu as DejaVu
+from cellpack.mgl_tools.DejaVu.Viewer import Viewer
+from cellpack.mgl_tools.DejaVu.Geom import Geom
+from cellpack.mgl_tools.DejaVu.Spheres import Spheres
+from cellpack.mgl_tools.DejaVu.Cylinders import Cylinders
+from cellpack.mgl_tools.DejaVu.Box import Box
+from cellpack.mgl_tools.DejaVu.glfLabels import GlfLabels as Labels
+from cellpack.mgl_tools.DejaVu.IndexedPolygons import IndexedPolygons
+from cellpack.mgl_tools.DejaVu.Polylines import Polylines as dejavuPolylines
+from cellpack.mgl_tools.DejaVu.Texture import Texture
+from cellpack.mgl_tools.DejaVu import Viewer
 
 # standardmodule
 import sys
@@ -57,18 +58,17 @@ from math import *
 
 import numpy
 from numpy import matrix
-import Image
+from PIL import Image
 
 # base helper class
-from upy import hostHelper
 
 # from upy import ray
 
 try:
-    import collada
+    import pycollada as collada
 except:
     collada = None
-    print("can't import pycollada ")
+    print("can't import pycollada upy")
 
 # Problem instance doesnt really exist as its. Or its instance of mesh/sphere/cylinder directly.
 # check autofill display

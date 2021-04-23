@@ -119,7 +119,7 @@ class Materials:
         # for example, by default the ambient component is obtained by
         # multiplying the diffuse component by 0.2 the diffuse component.
 
-        from DejaVu import preventIntelBug_WhiteTriangles
+        from . import preventIntelBug_WhiteTriangles
 
         if preventIntelBug_WhiteTriangles:
             self.getFrom = [

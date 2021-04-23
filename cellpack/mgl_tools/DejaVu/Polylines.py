@@ -12,16 +12,16 @@
 # $Id: Polylines.py,v 1.31 2009/08/05 22:44:04 vareille Exp $
 #
 
-from opengltk.OpenGL import GL
-from opengltk.extent import _gllib as gllib
+from cellpack.mgl_tools.opengltk.OpenGL import GL
+from cellpack.mgl_tools.opengltk.extent import _gllib as gllib
 
 from .Geom import Geom
-from . import datamodel, viewerConst
+from . import viewerConst
 import types
 import oldnumeric as Numeric
 from .viewerFns import checkKeywords
 
-import DejaVu
+import cellpack.mgl_tools.DejaVu as DejaVu
 
 
 class Polylines(Geom):

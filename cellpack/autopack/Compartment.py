@@ -47,14 +47,14 @@
 #   forcing them to calculate- "I need to place 0.00071M of 1xyz.pdb to get 3 of them
 #   in an compartment A of volume=V."
 
-## IDEAS
+# IDEAS
 
-## randomly select recipe and then randomly select free point in set of free
-## points corresponding to this recipe would allow giving surface more
-## chances to get filled
+# randomly select recipe and then randomly select free point in set of free
+# points corresponding to this recipe would allow giving surface more
+# chances to get filled
 
-## NOTE changing smallest molecule radius changes grid spacing and invalidates
-##      arrays saved to file
+# NOTE changing smallest molecule radius changes grid spacing and invalidates
+#      arrays saved to file
 import sys
 
 # import numpy.oldnumeric as N
@@ -64,7 +64,6 @@ import pickle
 import weakref
 import pdb
 from time import time, sleep
-from .ray import *
 import math
 from math import sqrt, ceil
 import os
@@ -76,8 +75,8 @@ except:
 
 # from .Ingredient import Ingredient
 from .Recipe import Recipe
+# from .ray import 
 
-# print "import AutoFill"
 import cellpack.autopack as autopack
 from cellpack.autopack import checkURL, transformation as tr, binvox_rw
 
