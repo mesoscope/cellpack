@@ -14,14 +14,17 @@ import json
 from time import time
 from PIL import Image
 
-# try :
 import matplotlib
 
 from matplotlib import pylab
 from matplotlib import pyplot
 from matplotlib.patches import Circle
 
+from cellpack.mgl_tools.upy import colors as col
+from cellpack.mgl_tools.DejaVu.colorTool import Map
 import cellpack.autopack as autopack
+from cellpack.autopack.ldSequence import halton
+
 from cellpack.autopack.GeometryTools import GeometriTools, Rectangle
 
 
@@ -343,8 +346,7 @@ class AnalyseAP:
         distances = numpy.array(self.env.grid.distToClosestSurf[:])
         positions = numpy.array(self.env.grid.masterGridPositions[:])
         # map the color as well ?
-        from upy import colors as col
-        from DejaVu.colorTool import Map
+
 
         ramp = col.getRamp([ramp_color1, ramp_color2], size=255)  # color
         mask = distances > cutoff
@@ -394,8 +396,7 @@ class AnalyseAP:
         distances = numpy.array(self.env.grid.distToClosestSurf[:])
         positions = numpy.array(self.env.grid.masterGridPositions[:])
         # map the color as well ?
-        from upy import colors as col
-        from DejaVu.colorTool import Map
+
 
         ramp = col.getRamp([ramp_color1, ramp_color2], size=255)  # color
         mask = distances > cutoff
@@ -1274,7 +1275,6 @@ class AnalyseAP:
     #        res=plotOneResult(None,filename="results_seed_8.json")
 
     def getHaltonUnique(self, n):
-        from autopack.ldSequence import halton
 
         seeds_f = numpy.array(halton(int(n * 1.5))) * int(n * 1.5)
         seeds_int = numpy.array(numpy.round(seeds_f), "int")

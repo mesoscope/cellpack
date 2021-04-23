@@ -1692,7 +1692,7 @@ class Environment(CompartmentList):
         @return:  the center of mass of the coordinates
         """
 
-        t1 = time()
+        t1 = time.time()
         if len(kw):
             res = function(*args, **kw)
         else:
@@ -2127,11 +2127,11 @@ class Environment(CompartmentList):
         or restored using given file.
         """
         if self.use_halton:
-            from autopack.Grid import HaltonGrid as Grid
+            from cellpack.autopack.Grid import HaltonGrid as Grid
         elif self.innerGridMethod == "floodfill":
-            from autopack.Environment import Grid
+            from cellpack.autopack.Environment import Grid
         else:
-            from autopack.Grid import Grid
+            from cellpack.autopack.Grid import Grid
         # check viewer, and setup the progress bar
         self.reportprogress(label="Building the Master Grid")
         if self.smallestProteinSize == 0:
@@ -3036,7 +3036,7 @@ class Environment(CompartmentList):
         verbose = autopack.verbose
         radius = ingr.encapsulatingRadius
         if ingr.packingMode == "close":
-            t1 = time()
+            t1 = time.time()
             allIngrPts = []
             allIngrDist = []
             if ingr.modelType == "Cylinders" and ingr.useLength:
@@ -3066,7 +3066,7 @@ class Environment(CompartmentList):
             # if verbose > 1:
             #    print("time to filter using for loop ", time() - t1)
         else:
-            t1 = time()
+            t1 = time.time()
             allIngrPts = []
             #            print("allIngrPts = ", allIngrPts)
             #            print("len (allIngrPts) = ", len(allIngrPts))
@@ -3110,7 +3110,7 @@ class Environment(CompartmentList):
         if verbose > 1:
             print("len (allIngrPts) = ", len(allIngrPts))
         if len(allIngrPts) == 0:
-            t = time()
+            t = time.time()
             ingr.completion = 1.0
             ind = self.activeIngr.index(ingr)
             # if ind == 0:
@@ -3186,7 +3186,7 @@ class Environment(CompartmentList):
             # self.thresholdPriorities.pop(ind)
             # self.normalizedPriorities.pop(ind)
             if verbose > 1:
-                print("time to reject the picking", time() - t)
+                print("time to reject the picking", time.time() - t)
             # End of massive overruling section from corrected thesis file of Sept. 25, 2011
             # this chunk overwrites the next three lines from July version. July 5, 2012
             #            self.thresholdPriorities.pop(ind)
@@ -3195,7 +3195,7 @@ class Environment(CompartmentList):
             return False, vRangeStart
 
         if self.pickRandPt:
-            t2 = time()
+            t2 = time.time()
             if ingr.packingMode == "close":
                 order = numpy.argsort(allIngrDist)
                 # pick point with closest distance
@@ -3224,7 +3224,7 @@ class Environment(CompartmentList):
                 ptIndr = int(uniform(0.0, 1.0) * len(allIngrPts))
                 ptInd = allIngrPts[ptIndr]
             if ptInd is None:
-                t = time()
+                t = time.time()
                 if verbose > 1:
                     print(
                         "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d"
@@ -3248,7 +3248,7 @@ class Environment(CompartmentList):
                 self.thresholdPriorities.pop(ind)
                 self.normalizedPriorities.pop(ind)
                 if verbose > 1:
-                    print(("time to reject the picking", time() - t))
+                    print(("time to reject the picking", time.time() - t))
                     print(("vRangeStart", vRangeStart))
                 return False, vRangeStart
 
@@ -3308,7 +3308,6 @@ class Environment(CompartmentList):
         autopack.verbose = verbose
         autopack.testPeriodicity = self.use_periodicity
         self.grid.testPeriodicity = self.use_periodicity
-        import time
 
         t1 = time.time()
         self.timeUpDistLoopTotal = 0  # Graham added to try to make universal "global variable Verbose" on Aug 28

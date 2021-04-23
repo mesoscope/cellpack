@@ -45,7 +45,7 @@ class Args(argparse.Namespace):
         self.twoD = self.DEFAULT_TWOD
         self.analysis = self.DEFAULT_ANALYSIS
         self.recipe = os.path.join(os.getcwd(), self.DEFAULT_RECIPE_FILE)
-        self.debug = False
+        self.debug = True
         #
         self.__parse()
 
@@ -102,7 +102,11 @@ def main():
         # exe.update_value(args.second)
         print("Recipe : {}\n".format(args.recipe))
         print("HELPER CLASS", upy.getHelperClass())
+        localdir = wrkDir = autopack.__path__[0]
+        print("LOCAL DIR", localdir)
         recipePath = args.recipe
+        doAnalysis = args.analysis
+        twoD = args.twoD
         helperClass = upy.getHelperClass()
 
         helper = helperClass(vi="nogui")
@@ -111,10 +115,36 @@ def main():
 
         env = Environment(name=fileName)
         env.helper = helper
-        recipe = fileName
         env.loadRecipe(recipePath)
+        afviewer = None
+
         env.saveResult = False
-        resultfilename = env.resultfile = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_A2_2/results"
+
+        def setCompartment(ingr):
+            ingr.rejectionThreshold = 60  # [1,1,0]#
+            ingr.nbJitter = 6
+
+        env.loopThroughIngr(setCompartment)
+
+        if doAnalysis:
+            env.placeMethod = "RAPID"
+            env.encapsulatingGrid = 0
+            autopack.testPeriodicity = False
+            analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
+            output = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_A2_2/"
+            analyse.g.Resolution = 1.0
+            env.boundingBox = numpy.array(env.boundingBox)
+            analyse.doloop(10, env.boundingBox, wrkDir, output, rdf=True, render=False, twod=twoD, use_file=True)  # ,fbox_bb=fbox_bb)
+
+        else:
+            gridfile = localdir + os.sep + "autoFillRecipeScripts/Mycoplasma/results/grid_store"
+            env.placeMethod = "RAPID"
+            env.saveResult = True
+            env.innerGridMethod = "bhtree"  # jordan pure python ? sdf ?
+            env.boundingBox = [[-2482, -2389.0, 100.0], [2495, 2466, 2181.0]]
+            env.buildGrid(boundingBox=env.boundingBox, gridFileIn=gridfile, rebuild=True, gridFileOut=None, previousFill=False)
+            env.fill5(verbose=0, usePP=False)
+
 
     except Exception as e:
         log.error("=============================================")
