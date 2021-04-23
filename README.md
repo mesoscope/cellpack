@@ -21,10 +21,17 @@ from cellpack import Example
 a = Example()
 a.get_value()  # 10
 
-in terminal:
-`pip install -e .` // install current dir, do one time
-`analyze` // each time to rerun script
 ```
+
+in terminal:
+
+### Setup 
+1. create a virtual env: `conda create -n autopack`
+2. `activate autopack`
+3. `pip install -e .[dev]`
+
+### Run analysis code
+1. `analyze -o [PATH/TO/OUTPUT/FOLDER]` // needs to exist, won't create a folder
 
 ## Installation
 
