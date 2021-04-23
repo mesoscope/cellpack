@@ -9,11 +9,9 @@ Run autopack from recipe file
 import sys
 import os
 import logging
-from typing import Any, Tuple
 import traceback
 
 # Third party
-# from PIL import Image
 import numpy
 import argparse
 
@@ -21,7 +19,6 @@ import argparse
 import cellpack.mgl_tools.upy as upy
 from cellpack import autopack, get_module_version
 from cellpack.autopack.Environment import Environment
-from cellpack.autopack.Graphics import AutopackViewer as AFViewer
 from cellpack.autopack.Analysis import AnalyseAP
 
 ###############################################################################
@@ -39,12 +36,14 @@ class Args(argparse.Namespace):
     DEFAULT_TWOD = True
     DEFAULT_ANALYSIS = True
     DEFAULT_RECIPE_FILE = "cellpack/test-recipes/NM_Analysis_FigureA1.0.xml"
+    DEFAULT_OUTPUT_FILE = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_A2_2/"
 
     def __init__(self):
         # Arguments that could be passed in through the command line
         self.twoD = self.DEFAULT_TWOD
         self.analysis = self.DEFAULT_ANALYSIS
         self.recipe = os.path.join(os.getcwd(), self.DEFAULT_RECIPE_FILE)
+        self.output = self.DEFAULT_OUTPUT_FILE
         self.debug = True
         #
         self.__parse()
@@ -62,6 +61,24 @@ class Args(argparse.Namespace):
             version="%(prog)s " + get_module_version(),
         )
         p.add_argument(
+            "-r",
+            "--recipe",
+            action="store",
+            dest="recpie",
+            type=str,
+            default=self.recipe,
+            help="Relative path to the recipe file for packing",
+        )
+        p.add_argument(
+            "-o",
+            "--output",
+            action="store",
+            dest="output",
+            type=str,
+            default=self.output,
+            help="Full path for where to store the results file",
+        )
+        p.add_argument(
             "-t",
             "--two-d",
             action="store",
@@ -75,7 +92,7 @@ class Args(argparse.Namespace):
             "--analysis",
             action="store",
             dest="analysis",
-            type=int,
+            type=bool,
             default=self.analysis,
             help="The mode of the packing",
         )
@@ -95,18 +112,13 @@ def main():
     args = Args()
     dbg = args.debug
     try:
-
-        # Do your work here - preferably in a class or function,
-        # passing in your args. E.g.
-        # exe = Example(args.recipe)
-        # exe.update_value(args.second)
-        print("Recipe : {}\n".format(args.recipe))
-        print("HELPER CLASS", upy.getHelperClass())
-        localdir = wrkDir = autopack.__path__[0]
-        print("LOCAL DIR", localdir)
         recipePath = args.recipe
         doAnalysis = args.analysis
+        output = args.output
         twoD = args.twoD
+
+        print("Recipe : {}\n".format(args.recipe))
+        localdir = wrkDir = autopack.__path__[0]
         helperClass = upy.getHelperClass()
 
         helper = helperClass(vi="nogui")
@@ -131,7 +143,6 @@ def main():
             env.encapsulatingGrid = 0
             autopack.testPeriodicity = False
             analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
-            output = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_A2_2/"
             analyse.g.Resolution = 1.0
             env.boundingBox = numpy.array(env.boundingBox)
             analyse.doloop(10, env.boundingBox, wrkDir, output, rdf=True, render=False, twod=twoD, use_file=True)  # ,fbox_bb=fbox_bb)
@@ -145,10 +156,12 @@ def main():
             env.buildGrid(boundingBox=env.boundingBox, gridFileIn=gridfile, rebuild=True, gridFileOut=None, previousFill=False)
             env.fill5(verbose=0, usePP=False)
 
-
     except Exception as e:
         log.error("=============================================")
-        log.error("\n\n" + traceback.format_exc())
+        if dbg:
+            log.error("\n\n" + traceback.format_exc())
+            log.error("=============================================")
+        log.error("\n\n" + str(e) + "\n")
         log.error("=============================================")
         sys.exit(1)
 
