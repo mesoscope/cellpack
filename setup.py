@@ -9,10 +9,11 @@ with open("README.md") as readme_file:
     readme = readme_file.read()
 
 setup_requirements = [
-    "matplotlib=3.3.4",
+    "matplotlib==3.3.4",
     "numpy==1.19.2",
     "panda3d==1.10.9",
-    "pmw==2.0.1" "pytest-runner>=5.2",
+    "pmw==2.0.1",
+    "pytest-runner>=5.2",
     "scipy==1.6.2",
 ]
 
