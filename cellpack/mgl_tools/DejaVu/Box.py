@@ -14,15 +14,11 @@
 # $Id: Box.py,v 1.36 2009/09/03 19:24:15 annao Exp $
 #
 
-import oldnumeric as Numeric
 from cellpack.mgl_tools.opengltk.OpenGL import GL
+import cellpack.mgl_tools.oldnumeric as Numeric
 
 from .IndexedPolygons import IndexedPolygons
-from .Geom import Geom
-from .IndexedGeom import IndexedGeom
-from . import datamodel
 from . import viewerConst
-from .viewerFns import checkKeywords
 
 
 def uniq(objectSequence):

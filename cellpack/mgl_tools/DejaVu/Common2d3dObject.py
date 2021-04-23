@@ -23,8 +23,7 @@
 #
 # modified by Stefano Forli 2009
 
-import types
-import oldnumeric as Numeric
+import cellpack.mgl_tools.oldnumeric as Numeric
 import warnings
 
 from cellpack.mgl_tools.opengltk.OpenGL import GL

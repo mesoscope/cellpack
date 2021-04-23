@@ -19,12 +19,11 @@
 #
 
 import warnings
-import oldnumeric as Numeric
 import math
 
-from cellpack.mgl_tools.opengltk.OpenGL import GL, GLU
+import cellpack.mgl_tools.oldnumeric as Numeric
+from cellpack.mgl_tools.opengltk.OpenGL import GL
 from cellpack.mgl_tools.opengltk.extent.utillib import glDrawSphereSet, extractedGlutSolidSphere
-
 import cellpack.mgl_tools.DejaVu as DejaVu
 from cellpack.mgl_tools.DejaVu.Geom import Geom
 from cellpack.mgl_tools.DejaVu import datamodel, viewerConst

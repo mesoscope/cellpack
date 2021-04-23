@@ -25,7 +25,8 @@ except:
     gllib = None
     gluProject = None
 
-import oldnumeric as Numeric, math
+import cellpack.mgl_tools.oldnumeric as Numeric
+import math
 
 import cellpack.mgl_tools.DejaVu as DejaVu
 from cellpack.mgl_tools.mglutil.events import Event

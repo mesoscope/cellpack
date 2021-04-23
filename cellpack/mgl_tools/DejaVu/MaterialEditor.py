@@ -25,17 +25,17 @@
 import tkinter
 import os
 import math
-import oldnumeric as Numeric
 import Pmw
 import tkinter.filedialog
 
+import cellpack.mgl_tools.oldnumeric as Numeric
 from cellpack.mgl_tools.opengltk.OpenGL import GL
 from cellpack.mgl_tools.opengltk.extent.utillib import extractedGlutSolidSphere
 from .colorTool import ToHSV, ToRGB, OneColor, TkColor
 from .extendedSlider import ExtendedSlider
 from .Materials import Materials
 from . import loadTogl
-from oldnumeric import array
+from cellpack.mgl_tools.oldnumeric import array
 import cellpack.mgl_tools.DejaVu as DejaVu
 
 

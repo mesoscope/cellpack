@@ -16,7 +16,8 @@
 
 from copy import deepcopy
 import Pmw
-import tkinter, oldnumeric as Numeric
+import tkinter
+
 from . import Slider, ColorWheel
 
 

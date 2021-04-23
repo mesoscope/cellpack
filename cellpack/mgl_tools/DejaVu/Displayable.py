@@ -17,9 +17,8 @@ from math import pi, exp, sin
 from time import time
 
 from cellpack.mgl_tools.opengltk.OpenGL import GL
-import types
 import numpy
-import oldnumeric as Numeric
+import cellpack.mgl_tools.oldnumeric as Numeric
 from . import Materials, viewerConst
 from .viewerFns import getkw
 from .colorTool import OneColor, glMaterialWithCheck, resetMaterialMemory

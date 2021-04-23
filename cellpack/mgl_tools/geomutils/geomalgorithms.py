@@ -6,6 +6,8 @@
 
 
 from sys import version_info
+import cellpack.mgl_tools.oldnumeric as Numeric
+import numpy
 
 if version_info >= (2, 6, 0):
 
@@ -128,8 +130,7 @@ computeRMSD = _geomalgorithms.computeRMSD
 
 
 def TriangleNormals(vertices, triangles, mode="PER_FACE"):
-    import oldnumeric as Numeric
-    import numpy
+
 
     if (type(vertices) == Numeric.arraytype) or (type(vertices) == numpy.ndarray):
         vertices = vertices.astype("f")

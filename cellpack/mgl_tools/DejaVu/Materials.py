@@ -15,7 +15,7 @@
 #
 
 import types
-from oldnumeric import array, ones, concatenate, minimum, maximum
+from cellpack.mgl_tools.oldnumeric import array, ones, concatenate, minimum, maximum
 
 try:
     from opengltk.OpenGL import GL

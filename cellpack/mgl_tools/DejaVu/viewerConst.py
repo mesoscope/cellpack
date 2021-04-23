@@ -12,7 +12,7 @@
 #
 # $Id: viewerConst.py,v 1.18 2009/08/12 19:09:58 vareille Exp $
 #
-import oldnumeric as Numeric
+import cellpack.mgl_tools.oldnumeric as Numeric
 from cellpack.mgl_tools.opengltk.OpenGL import GL
 
 FPRECISION = Numeric.Float32

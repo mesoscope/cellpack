@@ -14,9 +14,8 @@
 # $Id: misc.py,v 1.18 2009/11/06 21:08:50 annao Exp $
 #
 
-import types
 import sys
-import oldnumeric as Numeric
+import cellpack.mgl_tools.oldnumeric as Numeric
 
 
 def issequence(a):

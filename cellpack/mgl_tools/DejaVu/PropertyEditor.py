@@ -13,8 +13,9 @@
 # $Id: PropertyEditor.py,v 1.5 2007/07/24 17:30:41 vareille Exp $
 #
 
-import tkinter, oldnumeric as Numeric
-from . import Slider, ColorWheel, ColorChooser, colorTool
+import tkinter
+import cellpack.mgl_tools.oldnumeric as Numeric
+from . import Slider, ColorChooser, colorTool
 from .EventHandler import CallbackFunctions
 
 

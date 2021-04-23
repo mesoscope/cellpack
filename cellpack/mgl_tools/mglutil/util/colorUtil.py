@@ -14,8 +14,7 @@
 # $Id: colorUtil.py,v 1.15 2007/07/24 17:30:40 vareille Exp $
 #
 
-import oldnumeric as Numeric, math
-from types import FunctionType
+import cellpack.mgl_tools.oldnumeric as Numeric
 
 """ This Python module implements a set of methods and classes to manipulate
 colors representation.

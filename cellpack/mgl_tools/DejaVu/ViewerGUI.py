@@ -14,19 +14,19 @@
 #
 # $Id: ViewerGUI.py,v 1.233 2010/10/22 19:38:16 sanner Exp $
 #
+import string
+import os
 
-import types, numpy
+import numpy
 import tkinter
 import Pmw
+
 from cellpack.mgl_tools.opengltk.OpenGL import GL
 from .Slider import Slider
 from .ColorChooser import ColorChooser
-import string, os
 from . import viewerConst
 from . import jitter
-from . import colorTool
-from . import PropertyEditor
-import oldnumeric as Numeric
+import cellpack.mgl_tools.oldnumeric as Numeric
 from cellpack.mgl_tools.mglutil.util.callback import CallBackFunction
 from cellpack.mgl_tools.mglutil.util.colorUtil import TkColor
 from cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.fileBrowsers import (

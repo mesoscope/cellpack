@@ -14,7 +14,7 @@
 # $Id: jitter.py,v 1.4 2007/07/24 17:30:42 vareille Exp $
 #
 
-from oldnumeric import array
+from cellpack.mgl_tools.oldnumeric import array
 
 # 2 jitter points
 _jitter2 = array(((0.246490, 0.249999), (-0.246490, -0.249999)), "f")

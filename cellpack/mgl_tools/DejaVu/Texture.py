@@ -14,17 +14,16 @@
 # $Id: Texture.py,v 1.28 2009/06/18 20:05:19 sargis Exp $
 #
 
-import sys, os
+import os
 from PIL import Image
-import oldnumeric as Numeric
 import warnings
 
+import cellpack.mgl_tools.oldnumeric as Numeric
 from cellpack.mgl_tools.opengltk.OpenGL import GL
 from . import viewerConst
 import math
 from .colorTool import OneColor
 from .Transformable import Transformable
-from .Geom import Geom
 from .viewerFns import checkKeywords, getkw
 
 

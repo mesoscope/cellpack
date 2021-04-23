@@ -14,12 +14,11 @@
 # $Id: ColorWheel.py,v 1.10 2008/12/11 00:24:02 vareille Exp $
 #
 
-import types
 import tkinter
-import oldnumeric as Numeric
 import math
+
+import cellpack.mgl_tools.oldnumeric as Numeric
 from . import colorTool
-from . import Slider
 from .EventHandler import CallbackFunctions
 from .colorTool import ToHSV
 

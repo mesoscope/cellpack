@@ -16,17 +16,11 @@
 # $Id: Geom.py,v 1.262 2010/10/22 19:36:31 sanner Exp $
 #
 
-from cellpack.mgl_tools import DejaVu as DejaVu
 import numpy
-import oldnumeric as Numeric, types, warnings
+import warnings
 
-lib = True
-try:
-    from cellpack.mgl_tools.opengltk.OpenGL import GL
-    from cellpack.mgl_tools.opengltk.extent import _gllib
-except:
-    lib = False
-
+from cellpack.mgl_tools import DejaVu as DejaVu
+import cellpack.mgl_tools.oldnumeric as Numeric
 from . import Materials, datamodel, Clip
 from .colorTool import OneColor, resetMaterialMemory
 from .Transformable import Transformable
@@ -34,6 +28,13 @@ from .Displayable import Displayable
 from .viewerFns import checkKeywords
 from . import viewerConst
 from .Common2d3dObject import Common2d3dObject
+
+lib = True
+try:
+    from cellpack.mgl_tools.opengltk.OpenGL import GL
+    from cellpack.mgl_tools.opengltk.extent import _gllib
+except:
+    lib = False
 
 
 class Geom(Common2d3dObject, Transformable, Displayable):

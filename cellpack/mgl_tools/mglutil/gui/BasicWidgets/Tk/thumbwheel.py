@@ -11,17 +11,14 @@
 #
 #########################################################################
 
-import tkinter
-import oldnumeric as Numeric
-import math
-import types
-import sys
 import os
+import tkinter
+import math
 
+import cellpack.mgl_tools.oldnumeric as Numeric
 from cellpack.mgl_tools.mglutil.util.callback import CallbackManager
 from cellpack.mgl_tools.mglutil.util.misc import ensureFontCase
 from .optionsPanel import OptionsPanel
-
 from .KeyboardEntry import KeyboardEntry
 
 

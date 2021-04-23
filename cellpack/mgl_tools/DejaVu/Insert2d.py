@@ -22,8 +22,8 @@
 # $Id$
 #
 
-import oldnumeric as Numeric
 from copy import deepcopy
+import cellpack.mgl_tools.oldnumeric as Numeric
 from cellpack.mgl_tools.opengltk.OpenGL import GL
 from .Common2d3dObject import Common2d3dObject
 

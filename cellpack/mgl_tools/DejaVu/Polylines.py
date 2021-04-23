@@ -14,13 +14,8 @@
 
 from cellpack.mgl_tools.opengltk.OpenGL import GL
 from cellpack.mgl_tools.opengltk.extent import _gllib as gllib
-
 from .Geom import Geom
 from . import viewerConst
-import types
-import oldnumeric as Numeric
-from .viewerFns import checkKeywords
-
 import cellpack.mgl_tools.DejaVu as DejaVu
 
 

@@ -83,7 +83,6 @@ try:
 except ImportError:
     panda3d = None
 
-# import numpy.oldnumeric as N
 degtorad = pi / 180.0
 KWDS = {
     "molarity": {

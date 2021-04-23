@@ -22,11 +22,11 @@ except:
 from cellpack.mgl_tools.mglutil.math.rotax import rotVectToVect
 
 import numpy
-import oldnumeric as Numeric
+import cellpack.mgl_tools.oldnumeric as Numeric
 from .viewerFns import getkw
 from math import sqrt
 from .Transformable import Transformable
-from .colorTool import OneColor, glMaterialWithCheck, resetMaterialMemory
+from .colorTool import OneColor, resetMaterialMemory
 from .capGeom import capMesh
 
 

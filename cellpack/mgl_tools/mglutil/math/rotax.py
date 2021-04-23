@@ -11,7 +11,7 @@ interpolate3DTransform
 
 
 from math import pi, sin, cos, sqrt
-import oldnumeric as N
+import cellpack.mgl_tools.oldnumeric as N
 
 degtorad = pi / 180.0
 

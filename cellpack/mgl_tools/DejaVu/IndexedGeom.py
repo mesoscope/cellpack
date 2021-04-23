@@ -21,8 +21,8 @@
 #
 
 
-import oldnumeric as Numeric
 import warnings
+import cellpack.mgl_tools.oldnumeric as Numeric
 from cellpack.mgl_tools.opengltk.OpenGL import GL
 from cellpack.mgl_tools.opengltk.extent import _gllib
 from cellpack.mgl_tools.opengltk.extent.utillib import glDrawIndexedGeom

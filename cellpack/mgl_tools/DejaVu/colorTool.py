@@ -14,7 +14,7 @@
 #
 
 
-import oldnumeric as Numeric
+import cellpack.mgl_tools.oldnumeric as Numeric
 from . import viewerConst
 
 try:

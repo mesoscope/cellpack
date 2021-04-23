@@ -12,15 +12,13 @@
 #
 # $Id: Light.py,v 1.42 2009/04/24 19:34:38 vareille Exp $
 #
+from math import sqrt
 
 from cellpack.mgl_tools.opengltk.OpenGL import GL, GLU
 from cellpack.mgl_tools.opengltk.extent.utillib import glCleanRotMat
-
-import types
-import oldnumeric as Numeric
-from math import sqrt
+import cellpack.mgl_tools.oldnumeric as Numeric
 from .colorTool import OneColor
-from .viewerFns import GetArray, getkw
+from .viewerFns import getkw
 from .Transformable import Transformable
 
 

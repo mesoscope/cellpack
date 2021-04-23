@@ -20,13 +20,11 @@
 # $Id$
 #
 import os
-import oldnumeric as Numeric
-import types
-import math
 import warnings
 import tkinter
 import Pmw
 
+import cellpack.mgl_tools.oldnumeric as Numeric
 from cellpack.mgl_tools.opengltk.OpenGL import GL
 from cellpack.mgl_tools.opengltk.extent.utillib import glCleanRotMat
 from cellpack.mgl_tools.mglutil.math import rotax

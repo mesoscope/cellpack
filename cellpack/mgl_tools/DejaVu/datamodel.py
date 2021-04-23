@@ -18,7 +18,7 @@
 
 """Classes to store data such as vertices, faces, properties etc..."""
 
-import oldnumeric as Numeric
+import cellpack.mgl_tools.oldnumeric as Numeric
 from . import viewerConst
 import types
 

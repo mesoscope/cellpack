@@ -30,14 +30,6 @@ import os
 import importlib
 import sys
 
-spec = importlib.util.spec_from_file_location(
-    "oldnumeric",
-    "/Applications/cellpack-blender/MGLToolsPckgs/numpy/oldnumeric/__init__.py",
-)
-Numeric = importlib.util.module_from_spec(spec)
-sys.modules[spec.name] = Numeric
-spec.loader.exec_module(Numeric)
-print("Numeric", Numeric)
 import numpy
 import math
 import string
@@ -61,7 +53,7 @@ import cellpack.mgl_tools.DejaVu as DejaVu
 from cellpack.mgl_tools.DejaVu import loadTogl, viewerConst
 from cellpack.mgl_tools.DejaVu.MaterialEditor import MaterialEditor
 from cellpack.mgl_tools.DejaVu.Geom import Geom
-
+import cellpack.mgl_tools.oldnumeric as Numeric 
 # from DejaVu.Camera import Camera
 from cellpack.mgl_tools.DejaVu.ViewerGUI import ViewerGUI
 from cellpack.mgl_tools.DejaVu.Clip import ClippingPlane

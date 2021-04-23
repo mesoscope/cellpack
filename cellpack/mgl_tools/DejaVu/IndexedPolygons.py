@@ -15,20 +15,12 @@
 #
 
 import os
-import oldnumeric as Numeric
+import cellpack.mgl_tools.oldnumeric as Numeric
 
 from cellpack.mgl_tools.opengltk.OpenGL import GL
 
-try:
-    from cellpack.mgl_tools.opengltk.extent import _gllib
-except:
-    pass
 import cellpack.mgl_tools.DejaVu as DejaVu
 from .IndexedPolylines import IndexedPolylines
-from .Geom import Geom
-from .IndexedGeom import IndexedGeom
-from . import datamodel, viewerConst
-from .viewerFns import checkKeywords
 
 if hasattr(DejaVu, "enableVertexArray") is False:
     DejaVu.enableVertexArray = False

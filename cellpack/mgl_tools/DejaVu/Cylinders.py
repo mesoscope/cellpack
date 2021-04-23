@@ -21,20 +21,18 @@
 # 6 - KNOWN BUG: color (0,0,0) per vertex does seem to work
 
 import numpy
-import oldnumeric as Numeric
 import math
 import sys
-from oldnumeric import array
 
+import cellpack.mgl_tools.oldnumeric as Numeric
+from cellpack.mgl_tools.oldnumeric import array
 from cellpack.mgl_tools.opengltk.OpenGL import GL
 from cellpack.mgl_tools.opengltk.extent.utillib import solidCylinder
-from cellpack.mgl_tools.mglutil.math.rotax import rotax
-
 import cellpack.mgl_tools.DejaVu as DejaVu
 from .IndexedGeom import IndexedGeom
 from . import datamodel, viewerConst
 from .viewerFns import checkKeywords
-from .colorTool import glMaterialWithCheck, resetMaterialMemory
+from .colorTool import glMaterialWithCheck
 from .Materials import Materials
 
 try:

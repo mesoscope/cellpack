@@ -13,9 +13,8 @@
 # $Id: viewerFns.py,v 1.7 2007/07/24 17:30:41 vareille Exp $
 #
 
-import oldnumeric as Numeric
+import cellpack.mgl_tools.oldnumeric as Numeric
 from . import viewerConst
-import types
 
 
 def checkKeywords(_name, keywords, **kw):

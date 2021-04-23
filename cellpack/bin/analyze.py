@@ -116,7 +116,6 @@ def main():
         doAnalysis = args.analysis
         output = args.output
         twoD = args.twoD
-
         print("Recipe : {}\n".format(args.recipe))
         localdir = wrkDir = autopack.__path__[0]
         helperClass = upy.getHelperClass()

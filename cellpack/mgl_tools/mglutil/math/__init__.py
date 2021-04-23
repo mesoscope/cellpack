@@ -1,6 +1,6 @@
 ## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by
 
-import oldnumeric as Numeric
+import cellpack.mgl_tools.oldnumeric as Numeric
 
 N = Numeric
 import types
