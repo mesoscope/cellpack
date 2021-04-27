@@ -807,12 +807,12 @@ class AnalyseAP:
         # dispersion if the data follow a homogeneous Poisson process.
         N = len(positions)
         V = 1000 ** 2
-        diag = maxdist = np.sqrt(1000 ** 2 + 1000 ** 2)
+        diag = maxdist = numpy.sqrt(1000 ** 2 + 1000 ** 2)
         dr = dr  # all_distance.min()
         if rMax is None:
             rMax = diag
-        edges = np.arange(dr, rMax + 1.1 * dr, dr)
-        k = np.zeros((N, len(edges)))
+        edges = numpy.arange(dr, rMax + 1.1 * dr, dr)
+        k = numpy.zeros((N, len(edges)))
         dv = []
         density = float(N) / float(V)
         for i, p in enumerate(positions):
@@ -829,21 +829,21 @@ class AnalyseAP:
                 area1 = self.rectangle_circle_area(self.bbox, p, e)
                 w = area1 / area0
                 print(w, area1, area0, e, p)
-                k[i, j] = w * len(np.nonzero(di < e)[0]) / N ** 2
-        Kt = V * np.sum(k, axis=0)
-        Lt = (Kt / np.pi) ** 0.5
+                k[i, j] = w * len(numpy.nonzero(di < e)[0]) / N ** 2
+        Kt = V * numpy.sum(k, axis=0)
+        Lt = (Kt / numpy.pi) ** 0.5
         return Kt, Lt
 
     #        pos=numpy.array(self.env.ingrpositions[ingr.name])#np.array([np.array(p[0]) for p in h.molecules])
     def rdf(self, positions, dr=10, rMax=None):
         N = len(positions)
         V = 1000 ** 2
-        diag = np.sqrt(1000 ** 2 + 1000 ** 2)
+        diag = numpy.sqrt(1000 ** 2 + 1000 ** 2)
         dr = dr  # all_distance.min()
         if rMax is None:
             rMax = diag
-        edges = np.arange(0.0, rMax + 1.1 * dr, dr)
-        g = np.zeros((N, len(edges) - 1))
+        edges = numpy.arange(0.0, rMax + 1.1 * dr, dr)
+        g = numpy.zeros((N, len(edges) - 1))
         dv = []
         density = float(N) / float(V)
         for i, p in enumerate(positions):
@@ -854,13 +854,11 @@ class AnalyseAP:
                 ],
                 "euclidean",
             )
-            dN, bins = np.histogram(di, bins=edges)
-            dV = np.array(self.getAreaShell(self.bbox, edges, p))
+            dN, bins = numpy.histogram(di, bins=edges)
+            dV = numpy.array(self.getAreaShell(self.bbox, edges, p))
             dv.append(dV)
             g[i] = dN / (dV * density)
-            # print "pos i",i
-        avg = np.average(g, axis=0)  # /np.array(dv)
-        #        avg[np.isnan(avg)]=0.0
+        avg = numpy.average(g, axis=0)  # /np.array(dv)
         return avg
 
     def rdf_2d(self, ingr):
@@ -1106,7 +1104,7 @@ class AnalyseAP:
     def histo(self, distances, filename, bins=100, size=1000.0):
         pylab.clf()
         mu, sigma = numpy.mean(distances), numpy.std(distances)
-        ## the histogram of the data
+        # the histogram of the data
         #        b=numpy.arange(distances.min(), distances.max(), 2)
         #        n, bins, patches = pyplot.hist(distances, bins=bins, normed=1, facecolor='green')#, alpha=0.75)
         y, binEdges = numpy.histogram(distances, bins=bins)
