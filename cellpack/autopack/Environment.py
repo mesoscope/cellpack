@@ -582,6 +582,7 @@ class Gradient:
         (linear, gauss, etc...)
         """
         N = len(MasterPosition)
+        NW = N / 3
         self.bb = bb
         ind = self.axes[self.mode]
         maxi = max(bb[1][ind], bb[0][ind])
