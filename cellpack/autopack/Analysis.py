@@ -15,13 +15,11 @@ from time import time
 from PIL import Image
 
 import matplotlib
-
 from matplotlib import pylab
 from matplotlib import pyplot
 from matplotlib.patches import Circle
 
 from cellpack.mgl_tools.upy import colors as col
-from cellpack.mgl_tools.DejaVu.colorTool import Map
 import cellpack.autopack as autopack
 from cellpack.autopack.ldSequence import halton
 
@@ -275,16 +273,10 @@ class AnalyseAP:
         # get distance from object to the target.
         # all object are in h.molecules and orga.molecules
         # get options
-        targetPos = [0, 0, 0]
-        usePoint = False
-        threshold = 99999.0
-        if "usePoint" in options:
-            usePoint = options["usePoint"]
-        if "threshold" in options:
-            threshold = options["threshold"]
+
         if type(target) == list or type(target) == tuple:
             targetPos = target
-        elif type(target) == unicode or type(target) == str:
+        elif type(target) == str:
             o = self.helper.getObject(target)
             if o is not None:
                 targetPos = self.helper.ToVec(self.helper.getTranslation(o))  # hostForm
@@ -292,8 +284,6 @@ class AnalyseAP:
             o = self.helper.getObject(target)
             if o is not None:
                 targetPos = self.helper.ToVec(self.helper.getTranslation(o))  # hostForm
-        listeObjs = []
-        listeDistances = []
         listeCenters = []
         if self.resutl_file is None:
             if parents is None and self.resutl_file is None:
@@ -344,21 +334,12 @@ class AnalyseAP:
         cutoff=60.0,
     ):
         distances = numpy.array(self.env.grid.distToClosestSurf[:])
-        positions = numpy.array(self.env.grid.masterGridPositions[:])
-        # map the color as well ?
-
-
-        ramp = col.getRamp([ramp_color1, ramp_color2], size=255)  # color
         mask = distances > cutoff
         ind = numpy.nonzero(mask)[0]
         distances[ind] = cutoff
         mask = distances < 0  # -cutoff
         ind = numpy.nonzero(mask)[0]
         distances[ind] = 0  # cutoff
-        newd = numpy.append(distances, cutoff)
-        colors = Map(newd, ramp)[:-1]  # 1D array of the grid x,y,1
-        #        colors = Map(distances, ramp)
-        #        sphs = self.helper.Spheres("distances",vertices=numpy.array(positions),radii=distances,colors=colors)
         base = self.helper.getObject(self.env.name + "distances_base")
         if base is None:
             base = self.helper.Sphere(self.env.name + "distances_base")[0]
@@ -366,20 +347,7 @@ class AnalyseAP:
         if p is not None:
             self.helper.deleteObject(p)  # recursif?
         p = self.helper.newEmpty(self.env.name + "distances")
-        sphs = self.helper.instancesSphere(
-            self.env.name + "distances",
-            positions,
-            distances,
-            base,
-            colors,
-            None,
-            parent=p,
-        )
         # can use cube also
-
-    #    def displayFillBoxCubeGrid(self,):
-    #        bb_insidepoint = self.env.grid.getPointsInCubeFillBB(self.env.fbox, [0,0,0], 1.0)[:]#center and radius ?3,runTime=self.runTimeDisplay
-    #        positions = numpy.array(self.env.grid.masterGridPositions[bb_insidepoint])
 
     def displayDistanceCube(
         self,
@@ -388,27 +356,14 @@ class AnalyseAP:
         ramp_color3=None,
         cutoff=60.0,
     ):
-        #        if self.env.fbox is not None :
-        #            bb_insidepoint = self.env.grid.getPointsInCubeFillBB(self.env.fbox, [0,0,0], 1.0)[:]#center and radius ?3,runTime=self.runTimeDisplay
-        #            distances = numpy.array(self.env.grid.distToClosestSurf[bb_insidepoint])
-        #            positions = numpy.array(self.env.grid.masterGridPositions[bb_insidepoint])
-        #        else :
+   
         distances = numpy.array(self.env.grid.distToClosestSurf[:])
-        positions = numpy.array(self.env.grid.masterGridPositions[:])
-        # map the color as well ?
-
-
-        ramp = col.getRamp([ramp_color1, ramp_color2], size=255)  # color
         mask = distances > cutoff
         ind = numpy.nonzero(mask)[0]
         distances[ind] = cutoff
         mask = distances < 0  # -cutoff
         ind = numpy.nonzero(mask)[0]
         distances[ind] = 0  # cutoff
-        newd = numpy.append(distances, cutoff)
-        colors = Map(newd, ramp)[:-1]  # 1D array of the grid x,y,1
-        #        colors = Map(distances, ramp)
-        #        sphs = self.helper.Spheres("distances",vertices=numpy.array(positions),radii=distances,colors=colors)
         base = self.helper.getObject(self.env.name + "distances_base_cube")
         if base is None:
             #            base=self.helper.Sphere(self.env.name+"distances_base")[0]
@@ -422,17 +377,6 @@ class AnalyseAP:
         if parent_cube is not None:
             self.helper.deleteObject(parent_cube)  # recursif?
         parent_cube = self.helper.newEmpty(self.env.name + "distances_cubes")
-        # sphs=self.helper.instancesSphere(self.env.name+"distances_cubes",positions,distances,base,colors,None,parent=p)
-        # can use cube also
-        for i, p in enumerate(positions):
-            mat = self.helper.addMaterial("matcube" + str(i), colors[i])
-            c = self.helper.newInstance(
-                self.env.name + "distances_cubes_" + str(i),
-                base,
-                location=p,
-                material=mat,
-                parent=parent_cube,
-            )
 
     def displayDistancePlane(
         self,
@@ -443,10 +387,7 @@ class AnalyseAP:
     ):
         # which axis ?
         distances = numpy.array(self.env.grid.distToClosestSurf[:])
-        max_distance = max(distances)
-        min_distance = min(distances)
 
-        from upy import colors as col
         from DejaVu.colorTool import Map
 
         ramp = col.getRamp([ramp_color1, ramp_color2], size=255)  # color
@@ -538,16 +479,14 @@ class AnalyseAP:
 
         ingrrot = {}
         ingrpos = {}
-        ingrpos3 = []
-        ingrrot3 = []
         for i in range(1000):
             print(i)
             files = open("results_seed_" + str(i) + ".txt", "r")
             lines = files.readlines()
             files.close()
-            for l in lines:
-                l = l.replace("<", " ").replace(">", " ")
-                elem = l.split()
+            for line in lines:
+                line = line.replace("<", " ").replace(">", " ")
+                elem = line.split()
                 ingrname = elem[-5]
                 if ingrname not in ingrrot:
                     ingrrot[ingrname] = []
@@ -671,54 +610,15 @@ class AnalyseAP:
         ]
         ingrrotation = numpy.array(ingrrotation)
         if len(ingrpositions):
-            # thats m
-            orientationX = numpy.array(
-                [
-                    autopack.helper.ApplyMatrix(
-                        [
-                            [1, 0, 0],
-                        ],
-                        m,
-                    )[0]
-                    for m in ingrrotation
-                ]
-            )
-            orientationY = numpy.array(
-                [
-                    autopack.helper.ApplyMatrix(
-                        [
-                            [0, 1, 0],
-                        ],
-                        m,
-                    )[0]
-                    for m in ingrrotation
-                ]
-            )
-            orientationZ = numpy.array(
-                [
-                    autopack.helper.ApplyMatrix(
-                        [
-                            [0, 0, 1],
-                        ],
-                        m,
-                    )[0]
-                    for m in ingrrotation
-                ]
-            )
+ 
             #            orientationX = numpy.array([m[0][:3] for m in ingrrotation])
             #            orientationY = numpy.array([m[1][:3] for m in ingrrotation])
             #            orientationZ = numpy.array([m[2][:3] for m in ingrrotation])
             delta = numpy.array(ingrpositions) - numpy.array(center)
             # lets do it on X,Y,Z and also per positions ?
-            anglesX = signed_angle_between_vectors(
-                [0, 0, 1], m[0][:3], -delta, directed=False, axis=1
-            )
-            anglesY = signed_angle_between_vectors(
-                [0, 0, 1], m[1][:3], -delta, directed=False, axis=1
-            )
-            anglesZ = signed_angle_between_vectors(
-                [1, 0, 0], m[2][:3], -delta, directed=False, axis=1
-            )
+            anglesX = anglesX = numpy.array([signed_angle_between_vectors([0, 0, 1], m[0][:3], -delta, directed=False, axis=1) for m in ingrrotation]) 
+            anglesY = numpy.array([signed_angle_between_vectors([0, 1, 0], m[1][:3], -delta, directed=False, axis=1)for m in ingrrotation]) 
+            anglesZ = numpy.array([signed_angle_between_vectors([1, 0, 0], m[2][:3], -delta, directed=False, axis=1)for m in ingrrotation])
             delta *= delta
             distA = numpy.sqrt(delta.sum(1)).tolist()
             angles = numpy.array([distA, anglesX, anglesY, anglesZ])
@@ -774,8 +674,6 @@ class AnalyseAP:
             * self.env.grid.nbGridPoints[2]
             * self.env.grid.gridSpacing ** 3
         )
-        density = 1  # len(x)/1000.0**2
-        #        Vshell = (4./3.)*numpy.pi*(numpy.power(radii[1:],3)-numpy.power(radii[:-1], 3))
         Vshell = numpy.array(self.getVolumeShell(self.bbox, radii, self.center))
         gr = (dnr * V) / (N * Vshell)
         numpy.savetxt(basename + ingr.name + "_rdf.csv", numpy.array(gr), delimiter=",")
@@ -807,14 +705,12 @@ class AnalyseAP:
         # dispersion if the data follow a homogeneous Poisson process.
         N = len(positions)
         V = 1000 ** 2
-        diag = maxdist = numpy.sqrt(1000 ** 2 + 1000 ** 2)
+        diag = numpy.sqrt(1000 ** 2 + 1000 ** 2)
         dr = dr  # all_distance.min()
         if rMax is None:
             rMax = diag
         edges = numpy.arange(dr, rMax + 1.1 * dr, dr)
         k = numpy.zeros((N, len(edges)))
-        dv = []
-        density = float(N) / float(V)
         for i, p in enumerate(positions):
             di = scipy.spatial.distance.cdist(
                 positions,
@@ -878,7 +774,6 @@ class AnalyseAP:
         )
         # the bin should be not less than the biggest ingredient radius
         #        b=int(distances.max()/self.largest)
-        b = 100
         new_rdf, edges = numpy.histogramdd(
             distances
         )  # , bins=b, range=[(distances.min(), distances.max())],normed=0)
@@ -897,7 +792,6 @@ class AnalyseAP:
             * self.env.grid.nbGridPoints[1]
             * self.env.grid.gridSpacing ** 2
         )
-        density = 1  # len(x)/1000.0**2
         Vshell = numpy.array(self.getAreaShell(self.bbox, radii, self.center))
         #        print Vshell
         #        Vshell1 = numpy.pi*density*(numpy.power(radii[1:],2)-numpy.power(radii[:-1], 2))
@@ -1103,7 +997,7 @@ class AnalyseAP:
 
     def histo(self, distances, filename, bins=100, size=1000.0):
         pylab.clf()
-        mu, sigma = numpy.mean(distances), numpy.std(distances)
+        numpy.mean(distances), numpy.std(distances)
         # the histogram of the data
         #        b=numpy.arange(distances.min(), distances.max(), 2)
         #        n, bins, patches = pyplot.hist(distances, bins=bins, normed=1, facecolor='green')#, alpha=0.75)
@@ -1227,7 +1121,7 @@ class AnalyseAP:
     def plotNResult2D(self, n, bbox=[[0.0, 0, 0.0], [1000.0, 1000.0, 1000.0]]):
         for i in range(n):
             f = "results_seed_" + str(i) + ".json"
-            self.plotOneResult2D(filename="f", bbox=bbox)
+            self.plotOneResult2D(filename=f, bbox=bbox)
 
     def plotOneResult2D(
         self, data=None, filename=None, bbox=[[0.0, 0, 0.0], [1000.0, 1000.0, 1000.0]]
@@ -1237,7 +1131,6 @@ class AnalyseAP:
         elif data is None and filename is not None:
             with open(filename) as data_file:
                 data = json.load(data_file)
-        width = 1000.0  # should be the boundary here ?
         fig = pyplot.figure()
         ax = fig.add_subplot(111)
         radius = {}
@@ -1308,8 +1201,6 @@ class AnalyseAP:
         angle_file = output + os.sep + "angle"
         position_file = output + os.sep + "pos"
         distance_file = output + os.sep + "dist"
-        position_files = output + os.sep + "pos.json"
-        distance_files = output + os.sep + "dist.json"
         occurences_file = output + os.sep + "occurence"
         rangeseed = range(n)
         distances = {}
@@ -1326,8 +1217,6 @@ class AnalyseAP:
         for si in range(n):
             #            if i > 0 : rebuild = False #bu need to reset ...
             basename = output + os.sep + "results_seed_" + str(si)
-            #            self.env.saveResult = False
-            resultfilename = self.env.resultfile = basename
             # Clear
             if self.afviewer:
                 self.afviewer.clearFill("Test_Spheres2D")
@@ -1578,7 +1467,7 @@ class AnalyseAP:
             total_positions = numpy.genfromtxt(position_file, delimiter=",")
             try:
                 total_angles = numpy.genfromtxt(angle_file, delimiter=",")
-            except:
+            except Exception:
                 total_angles = []
             # gatherall result
             ingrpositions = {}
