@@ -3,8 +3,8 @@
 ###############################################################################
 #
 # autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
-#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010 
-#   with assistance from Mostafa Al-Alusi in 2009 and periodic input 
+#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
+#   with assistance from Mostafa Al-Alusi in 2009 and periodic input
 #   from Arthur Olson's Molecular Graphics Lab
 #
 # HistoVol.py Authors: Graham Johnson & Michel Sanner with editing/enhancement from Ludovic Autin
@@ -16,17 +16,17 @@
 # Copyright: Graham Johnson ©2010
 #
 # This file "HistoVol.py" is part of autoPACK, cellPACK.
-#    
+#
 #    autoPACK is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
-#    
+#
 #    autoPACK is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
-#    
+#
 #    You should have received a copy of the GNU General Public License
 #    along with autoPACK (See "CopyingGNUGPL" in the installation.
 #    If not, see <http://www.gnu.org/licenses/>.
@@ -379,9 +379,8 @@ class Grid:
         # surface point ?
         ncomp = len(self.histoVol.compartments)
         if ncomp:
-            comp = ncomp
             for i in range(ncomp):
-                inside = checkPointInside_rapid(
+                inside = self.checkPointInside_rapid(
                     self.histoVol.compartments[i],
                     point,
                     self.histoVol.grid.diag,
@@ -437,7 +436,7 @@ class Grid:
         free_indices = self.freePoints[: self.nbFreePoints]
         arr = numpy.array(self.masterGridPositions[free_indices])
         if self.tree_free is None or updateTree:
-            if compId != None:
+            if compId is not None:
                 arr = numpy.array(self.masterGridPositions[free_indices])
                 indices = numpy.nonzero(
                     numpy.equal(self.gridPtId[free_indices], compId)
@@ -503,7 +502,7 @@ class Grid:
         if arrays[1:]:
             self.cartesian(arrays[1:], out=out[0:m, 1:])
             for j in range(1, arrays[0].size):
-                out[j * m : (j + 1) * m, 1:] = out[0:m, 1:]
+                out[j * m: (j + 1) * m, 1:] = out[0:m, 1:]
         return out
 
     def getPointFrom3D(self, pt3d):
@@ -552,17 +551,12 @@ class Grid:
         )
 
     def getPositionPeridocity(self, pt3d, jitter, cutoff):
-        #        print ("getPositionPeridocity")
-        #       max number of p position is 7, if lie in the corner
-        if autopack.biasedPeriodicity != None:
+
+        if autopack.biasedPeriodicity:
             biased = numpy.array(autopack.biasedPeriodicity)
         else:
             biased = numpy.array(jitter)
-        O = numpy.array(self.boundingBox[0])
-        E = numpy.array(self.boundingBox[1])
-        P = numpy.array(pt3d)
         translation = None
-        #        print ("doit ? ",autopack.testPeriodicity)
         if not autopack.testPeriodicity:
             return None
         ox, oy, oz = self.boundingBox[0]
@@ -631,16 +625,13 @@ class Grid:
         if len(i1) == 3:
             # in a corner need total 7 pos, never happen in 2D
             corner[1] = (
-                self.preriodic_table["left"][0] * pxyz[0]
-                + self.preriodic_table["left"][1] * pxyz[1]
+                self.preriodic_table["left"][0] * pxyz[0] + self.preriodic_table["left"][1] * pxyz[1]
             )
             corner[2] = (
-                self.preriodic_table["left"][0] * pxyz[0]
-                + self.preriodic_table["left"][2] * pxyz[2]
+                self.preriodic_table["left"][0] * pxyz[0] + self.preriodic_table["left"][2] * pxyz[2]
             )
             corner[3] = (
-                self.preriodic_table["left"][1] * pxyz[1]
-                + self.preriodic_table["left"][2] * pxyz[2]
+                self.preriodic_table["left"][1] * pxyz[1] + self.preriodic_table["left"][2] * pxyz[2]
             )
             for i in range(4):  # 4+1=5
                 # print i,corner[i],sum(corner[i])
@@ -653,18 +644,18 @@ class Grid:
         return translation
 
     def getPositionPeridocityBroke(self, pt3d, jitter, cutoff):
-        if autopack.biasedPeriodicity != None:
+        if autopack.biasedPeriodicity is not None:
             biased = autopack.biasedPeriodicity
         else:
             biased = jitter
-        O = numpy.array(self.boundingBox[0])
+        origin = numpy.array(self.boundingBox[0])
         E = numpy.array(self.boundingBox[1])
         P = numpy.array(pt3d)
         translation = None
         if not autopack.testPeriodicity:
             return None
         # distance to front-lower-left
-        d1 = (P - O) * biased
+        d1 = (P - origin) * biased
         s1 = min(x for x in d1[d1 != 0] if x != 0)
         #        i1=list(d1).index(s1)
         m1 = numpy.logical_and(numpy.less(d1, cutoff), numpy.greater(d1, 0.0))
@@ -704,9 +695,6 @@ class Grid:
                     if sum(corner[i]) != 0:
                         tr.append(pt3d + corner[i])
             translation = tr
-            # i1 is the axis to use for the boundary
-            #            if s1 < cutoff :
-            #                translation=self.preriodic_table["left"][i1]
             return translation
         else:
             tr = []
@@ -730,9 +718,6 @@ class Grid:
                     if sum(corner[i]) != 0:
                         tr.append(pt3d + corner[i])
             translation = tr
-            # i1 is the axis to use for the boundary
-            #            if s2 < cutoff :
-            #                translation=self.preriodic_table["right"][i2]
             return translation
         return None
 
@@ -742,10 +727,10 @@ class Grid:
         """
         if bb is None:
             bb = self.boundingBox
-        O = numpy.array(bb[0])
+        origin = numpy.array(bb[0])
         E = numpy.array(bb[1])
         P = numpy.array(pt3d)  # *jitter
-        test1 = P < O
+        test1 = P < origin
         test2 = P > E
         if True in test1 or True in test2:
             # outside
@@ -754,18 +739,12 @@ class Grid:
             return False
         else:
             if dist is not None:
-                #                print "ok distance ",dist,P
                 # distance to closest wall
-                d1 = (P - O) * jitter
+                d1 = (P - origin) * jitter
                 s1 = min(x for x in d1[d1 != 0] if x != 0)
-                #                print d1,s1,s1<=dist
-                # s1 = numpy.sum(d1*d1)
                 d2 = (E - P) * jitter
                 s2 = min(x for x in d2[d2 != 0] if x != 0)
-                #                print d2,s2,s2<=dist
-                # s2 = numpy.sum(d2*d2)
                 if s1 <= dist or s2 <= dist:
-                    #                    print ("too close")
                     return False
             return True
 
@@ -788,21 +767,10 @@ class Grid:
         return math.sqrt(s)
 
     def getPointsInSphere(self, bb, pt, radius, addSP=True, info=False):
-        diag = abs(bb[0][0] - bb[1][0]) / 2.0
         if self.tree is None:
             self.tree = spatial.cKDTree(self.masterGridPositions, leafsize=10)
         # add surface points
         ptIndices = self.tree.query_ball_point(pt, radius)  # , n_jobs=-1)
-        # if addSP and self.nbSurfacePoints != 0:
-        #     result = numpy.zeros((self.nbSurfacePoints,), 'i')
-        #     nb = self.surfPtsBht.closePoints(tuple(pt), radius, result)
-        #     #            nb = self.surfPtsBht.query(tuple(pt),k=self.nbSurfacePoints)
-        #     dimx, dimy, dimz = self.nbGridPoints
-        #     # divide by 1.1547?
-        #     #            ptIndices.extend(list(map(lambda x, length=(self.gridVolume/1.1547):x+length,
-        #     #                             result[:nb])) )
-        #     ptIndices.extend(list(map(lambda x, length=self.gridVolume: x + length,
-        #                               result[:nb])))
         return ptIndices
 
     def getPointsInCubeFillBB(self, bb, pt, radius, addSP=True, info=False):
@@ -870,10 +838,10 @@ class Grid:
 
     def test_points_in_bb(self, bb, pt):
         # given a bounding box, does the point is contains in it
-        O = numpy.array(bb[0])
+        origin = numpy.array(bb[0])
         E = numpy.array(bb[1])
         P = numpy.array(pt)  # *jitter
-        test1 = P < O
+        test1 = P < origin
         test2 = P > E
         inside = False
         if True in test1 or True in test2:
@@ -956,7 +924,7 @@ class Grid:
         from bhtree import bhtreelib
 
         self.surfPtsBht = None
-        if verts != None and len(verts):
+        if verts is not None and len(verts):
             self.surfPtsBht = bhtreelib.BHtree(verts, None, 10)
         self.nbSurfacePoints = len(verts)
 
@@ -964,7 +932,7 @@ class Grid:
         from scipy import spatial
 
         self.surfPtsBht = None
-        if verts != None and len(verts):
+        if verts is not None and len(verts):
             self.surfPtsBht = spatial.cKDTree(verts, leafsize=10)
         self.nbSurfacePoints = len(verts)
 
@@ -1078,7 +1046,6 @@ class Grid:
         xr, yr, zr = self.boundingBox[1]  # upper right bounding box corner
         # distToClosestSurf is set to self.diag initially
         distances = self.distToClosestSurf
-        idarray = self.gridPtId
         diag = self.diag
 
         # Get surface points using bhtree (stored in bht and OGsrfPtsBht)
@@ -1094,9 +1061,6 @@ class Grid:
         # self.OGsrfPtsBht = bht =  bhtreelib.BHtree(tuple(srfPts), None, 10)
         self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)
 
-        res = numpy.zeros(len(srfPts), "f")
-        dist2 = numpy.zeros(len(srfPts), "f")
-        number = 1  # Integer when compartment is added to a Environment. Positivefor surface pts. negative for interior points
         insidePoints = []
         grdPos = self.masterGridPositions
         closest = bht.query(tuple(grdPos))
@@ -1130,13 +1094,7 @@ class Grid:
             if (ptInd % 100) == 0:
                 print(
                     int(p),
-                    str(ptInd)
-                    + "/"
-                    + str(len(grdPos))
-                    + " inside "
-                    + str(inside)
-                    + " "
-                    + str(insideBB),
+                    str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(inside) + " " + str(insideBB),
                 )
         return insidePoints, surfacePoints
 
