@@ -3117,7 +3117,7 @@ class Ingredient(Agent):
                     rotMatj,
                     gridPointsCoords,
                     distance,
-                    histoVol,  # TODO: undefined
+                    self.histoVol,
                 ),
             )
         elif self.modelType == "Cube":
@@ -3131,7 +3131,7 @@ class Ingredient(Agent):
                     rotMatj,
                     gridPointsCoords,
                     distance,
-                    histoVol,  # TODO: undefined
+                    self.histoVol,
                 ),
             )
         return collisionComp
@@ -3927,9 +3927,9 @@ class Ingredient(Agent):
                 x2, y2, z2 = p2
                 vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
                 lengthsq = vx * vx + vy * vy + vz * vz
-                l = sqrt(lengthsq)
+                length = sqrt(lengthsq)
                 cx, cy, cz = posc = x1 + vx * 0.5, y1 + vy * 0.5, z1 + vz * 0.5
-                radt = l + radc + dpad
+                radt = length + radc + dpad
                 # bb = ( [cx-radt, cy-radt, cz-radt], [cx+radt, cy+radt, cz+radt] )
                 #                print (p1,p2,posc,radc)
                 bb = self.correctBB(posc, posc, radt)  # p1,p2,radc
@@ -4945,7 +4945,7 @@ class Ingredient(Agent):
         spacing = histoVol.smallestProteinSize
         spacing = histoVol.grid.gridSpacing
         jx, jy, jz = self.jitterMax
-        jitter = self.getMaxJitter(spacing)
+        self.getMaxJitter(spacing)
 
         if self.compNum == 0:
             compartment = self.histoVol
@@ -4986,7 +4986,6 @@ class Ingredient(Agent):
         collD2 = []
 
         trans = gridPointsCoords[ptInd]  # drop point
-        gridDropPoint = trans
         jtrans, rotMatj = self.oneJitter(spacing, trans, rotMat)
 
         ok = False
@@ -5223,7 +5222,6 @@ class Ingredient(Agent):
         """
         verbose = histoVol.verbose
         afvi = histoVol.afviewer
-        rejectionCount = 0
         spacing = histoVol.smallestProteinSize
         jx, jy, jz = self.jitterMax
         jitter = histoVol.callFunction(self.getMaxJitter, (spacing,))
@@ -5234,8 +5232,6 @@ class Ingredient(Agent):
             compartment = histoVol
         else:
             compartment = histoVol.compartments[abs(self.compNum) - 1]
-        comp_num = self.compNum
-        radius = self.minRadius
 
         rot_mat = self.get_rotation(ptInd, histoVol)
 
@@ -5394,9 +5390,6 @@ class Ingredient(Agent):
         if not collision and not (True in r):
             # get inside points and update distance
             # use best spherical approximation
-            centT = (
-                self.centT
-            )  # self.transformPoints(jtrans, rotMatj, self.positions[-1])
 
             t3 = time()
             # should be replace by self.getPointInside
@@ -5717,7 +5710,6 @@ class Ingredient(Agent):
         """
         histoVol.setupPanda()
         afvi = histoVol.afviewer
-        rejectionCount = 0
         spacing = histoVol.grid.gridSpacing  # /1.1547#  histoVol.smallestProteinSize
         jx, jy, jz = self.jitterMax
         jitter = spacing / 2.0  # histoVol.callFunction(self.getMaxJitter,(spacing,))
@@ -5729,7 +5721,6 @@ class Ingredient(Agent):
             organelle = histoVol.compartments[abs(self.compNum) - 1]
         compartment = organelle
         compNum = self.compNum
-        radius = self.minRadius
         runTimeDisplay = histoVol.runTimeDisplay
 
         gridPointsCoords = histoVol.masterGridPositions
@@ -5865,12 +5856,10 @@ class Ingredient(Agent):
                 #                    afvi.vi.setObjectMatrix(moving,mat,transpose=True)
                 #                    afvi.vi.update()
         tx, ty, tz = jtrans = targetPoint
-        gridDropPoint = targetPoint
         # we may increase the jitter, or pick from xyz->Id free for its radius
         # create the rb only once and not at ever jitter
         # rbnode = histoVol.callFunction(self.histoVol.addRB,(self, jtrans, rotMat,),{"rtype":self.Type},)
         # jitter loop
-        t1 = time()
         collision2 = False
         for jitterPos in range(
             self.nbJitter
@@ -5919,7 +5908,6 @@ class Ingredient(Agent):
                     dx = jx * jitter * uniform(-1.0, 1.0)
                     dy = jy * jitter * uniform(-1.0, 1.0)
                     dz = jz * jitter * uniform(-1.0, 1.0)
-                    d2 = dx * dx + dy * dy + dz * dz
                     if True:  # d2 < jitter2:
                         if compNum > 0:  # jitter less among normal
                             # if self.name=='2uuh C4 SYNTHASE':
@@ -6322,7 +6310,6 @@ class Ingredient(Agent):
         """
         histoVol.setupPanda()
         afvi = histoVol.afviewer
-        rejectionCount = 0
         spacing = histoVol.grid.gridSpacing  # /1.1547#  histoVol.smallestProteinSize
         jx, jy, jz = self.jitterMax
         jitter = spacing / 2.0  # histoVol.callFunction(self.getMaxJitter,(spacing,))
@@ -6425,7 +6412,7 @@ class Ingredient(Agent):
         # or the grid diagonal
         # we need to change here in case tilling, the pos,rot ade deduced fromte tilling.
         if self.packingMode[-4:] == "tile":
-            if self.tilling == None:
+            if self.tilling is None:
                 self.setTilling(compartment)
             if self.counter != 0:
                 # pick the next Hexa pos/rot.
@@ -6445,7 +6432,6 @@ class Ingredient(Agent):
             else:
                 self.tilling.init_seed(histoVol.seed_used)
         tx, ty, tz = jtrans = targetPoint
-        gridDropPoint = targetPoint
         # we may increase the jitter, or pick from xyz->Id free for its radius
         # create the rb only once and not at ever jitter
         # rbnode = histoVol.callFunction(self.histoVol.addRB,(self, jtrans, rotMat,),{"rtype":self.Type},)
@@ -6497,7 +6483,6 @@ class Ingredient(Agent):
                     dx = jx * jitter * uniform(-1.0, 1.0)
                     dy = jy * jitter * uniform(-1.0, 1.0)
                     dz = jz * jitter * uniform(-1.0, 1.0)
-                    d2 = dx * dx + dy * dy + dz * dz
                     if True:  # d2 < jitter2:
                         if compNum > 0:  # jitter less among normal
                             # if self.name=='2uuh C4 SYNTHASE':
@@ -6831,7 +6816,6 @@ class Ingredient(Agent):
 
             collideFunc = OdeUtil.collide
         afvi = histoVol.afviewer
-        rejectionCount = 0
         spacing = histoVol.grid.gridSpacing  # smallestProteinSize
         jx, jy, jz = self.jitterMax
         jitter = spacing / 2.0  # histoVol.callFunction(self.getMaxJitter, (spacing,))
@@ -6947,7 +6931,6 @@ class Ingredient(Agent):
                     targetPoint = trans
                     # if partner:pickNewPoit like in fill3
         tx, ty, tz = jtrans = targetPoint
-        gridDropPoint = targetPoint
         # we may increase the jitter, or pick from xyz->Id free for its radius
         # create the rb only once and not at ever jitter
         rbnode = histoVol.callFunction(
@@ -7004,19 +6987,12 @@ class Ingredient(Agent):
             histoVol.totnbJitter += 1
             histoVol.jitterLength += dx * dx + dy * dy + dz * dz
             jitterList.append((dx, dy, dz))
-
-            # print 'j%d %.2f,%.2f,%.2f,'%(jitterPos,tx, ty, tz),
-            #            if verbose :
-            #                print('j%d'%jitterPos)# end=' '
-
             # loop over all spheres representing ingredient
-            modSphNum = 1
             if sphGeom is not None:
                 modCent = []
                 modRad = []
 
             # check for collisions
-            ##
             level = self.collisionLevel
 
             # randomize rotation about axis
@@ -7435,7 +7411,6 @@ class Ingredient(Agent):
         """
         # histoVol.setupPanda()
         afvi = histoVol.afviewer
-        rejectionCount = 0
         spacing = (
             histoVol.grid.gridSpacing
         )  # histoVol.smallestProteinSize#or the gridSpace?
@@ -7448,7 +7423,6 @@ class Ingredient(Agent):
         else:
             organelle = histoVol.compartments[abs(self.compNum) - 1]
         compNum = self.compNum
-        radius = self.minRadius
         runTimeDisplay = histoVol.runTimeDisplay
 
         gridPointsCoords = histoVol.masterGridPositions
@@ -10101,7 +10075,7 @@ class GrowIngrediant(MultiCylindersIngr):
                             )
                             if usePP:
                                 # use self.grab_cb and self.pp_server
-                                ## Divide the task or just submit job
+                                # Divide the task or just submit job
                                 n = 0
                                 self.histoVol.grab_cb.reset()
                                 for i in range(len(liste_nodes) / autopack.ncpus):
@@ -10346,8 +10320,6 @@ class GrowIngrediant(MultiCylindersIngr):
                     continue
                 # optionally check for collision
                 if checkcollision:
-                    a = numpy.array(newPt) - numpy.array(pt2).flatten()
-                    b = numpy.array(pt2).flatten() + a
                     # this s where we use panda
                     rotMatj = [
                         [1.0, 0.0, 0.0, 0.0],
@@ -10619,19 +10591,8 @@ class GrowIngrediant(MultiCylindersIngr):
                 self.vi.update()
             print("time to pick point ", time() - t1)
             if test:
-                r = [False]
                 test = self.testPoint(newPt)
-                #                if alternate or self.prev_alt is not None :
-                #                    print ("do nothing")
-                #                    test2 = self.testPoint(newPts[1])
-                # collide
-                # print ("problem2")
-                #                    if test :#r test2:
-                #                        print ("problem")
-                #                        return None,False
-                #                else :
                 if test:
-                    #                    print "inside,closeS ",not inside,closeS,not inComp,newPt,marge
                     if not self.constraintMarge:
                         if marge >= 175:
                             print("no second point not constraintMarge 1 ", marge)
@@ -10639,8 +10600,6 @@ class GrowIngrediant(MultiCylindersIngr):
                             #                        print ("increase marge because inside,closeS ",inside,closeS,inComp,newPt,marge)
                         marge += 1
                     else:
-                        #                             print "newAttempt"
-                        #                            print ("inside,closeS ",inside,closeS,inComp,newPt,marge)
                         attempted += 1
                     print("rejected boundary")
                     continue
@@ -10653,8 +10612,6 @@ class GrowIngrediant(MultiCylindersIngr):
                         prev = None
                         if len(histoVol.rTrans) > 2:
                             prev = histoVol.rTrans[-1]
-                        a = numpy.array(newPt) - numpy.array(pt2).flatten()
-                        b = numpy.array(pt2).flatten() + a
                         # this s where we use panda
                         rotMatj = [
                             [1.0, 0.0, 0.0, 0.0],
@@ -10817,7 +10774,6 @@ class GrowIngrediant(MultiCylindersIngr):
         found = False
         attempted = 0
         pt = [0.0, 0.0, 0.0]
-        angle = 0.0
         safetycutoff = self.rejectionThreshold  # angle  / 360
         sp = None
         pc = None
@@ -10968,7 +10924,6 @@ class GrowIngrediant(MultiCylindersIngr):
             if newPt is None:
                 print("no  points available")
                 return None, False
-            r = [False]
             test = self.testPoint(newPt)
             if test:
                 if not self.constraintMarge:
@@ -11359,7 +11314,7 @@ class GrowIngrediant(MultiCylindersIngr):
                         name = (
                             str(len(listePtLinear) + 1) + self.name + str(ptInd) + "cyl"
                         )
-                    cyl = self.vi.oneCylinder(
+                    self.vi.oneCylinder(
                         name,
                         cent1T,
                         cent2T,
@@ -11367,8 +11322,6 @@ class GrowIngrediant(MultiCylindersIngr):
                         instance=histoVol.afviewer.becyl,
                         radius=self.radii[0][0],
                     )
-
-                    # self.vi.updateTubeMesh(cyl,cradius=self.radii[0][0])
                     self.vi.update()
                 if r:
                     listePtCurve.insert(0, jtrans)
@@ -11532,7 +11485,6 @@ class GrowIngrediant(MultiCylindersIngr):
             if inside and self.compNum <= 0:
                 # only if not surface ingredient
                 closeS = self.checkPointSurface(secondPoint, cutoff=self.cutoff_surface)
-            success = False
             if not inside or closeS:
                 safety = 30
                 k = 0
@@ -11569,7 +11521,7 @@ class GrowIngrediant(MultiCylindersIngr):
                     sp = self.vi.Sphere(name, radius=self.radii[0][0], parent=parent)[0]
                     self.vi.setTranslation(sp, pos=self.startingpoint)
                     #            sp.SetAbsPos(self.vi.FromVec(startingPoint))
-                cyl = self.vi.oneCylinder(
+                self.vi.oneCylinder(
                     name + "cyl",
                     self.startingpoint,
                     secondPoint,
@@ -11577,8 +11529,7 @@ class GrowIngrediant(MultiCylindersIngr):
                     parent=parent,
                     radius=self.radii[0][0],
                 )
-                #            self.vi.updateTubeMesh(cyl,cradius=self.radii[0][0])
-                # laenge,mx=self.getTubeProperties(head,tail)
+    
                 self.vi.update()
         return secondPoint
 
