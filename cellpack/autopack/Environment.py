@@ -3,8 +3,8 @@
 ###############################################################################
 #
 # autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
-#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010 
-#   with assistance from Mostafa Al-Alusi in 2009 and periodic input 
+#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
+#   with assistance from Mostafa Al-Alusi in 2009 and periodic input
 #   from Arthur Olson's Molecular Graphics Lab
 #
 # Environment.py Authors: Graham Johnson & Michel Sanner with editing/enhancement
@@ -19,17 +19,17 @@
 # Copyright: Graham Johnson ©2010
 #
 # This file "Environment.py" is part of autoPACK, cellPACK.
-#    
+#
 #    autoPACK is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
-#    
+#
 #    autoPACK is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
-#    
+#
 #    You should have received a copy of the GNU General Public License
 #    along with autoPACK (See "CopyingGNUGPL" in the installation.
 #    If not, see <http://www.gnu.org/licenses/>.
@@ -38,9 +38,9 @@
 ###############################################################################
 @author: Graham Johnson, Ludovic Autin, & Michel Sanner
 
-# Hybrid version merged from Graham's Sept 2011 and Ludo's April 2012 
+# Hybrid version merged from Graham's Sept 2011 and Ludo's April 2012
 # version on May 16, 2012
-# Updated with final thesis HistoVol.py file from Sept 25, 2012 on July 5, 2012 
+# Updated with final thesis HistoVol.py file from Sept 25, 2012 on July 5, 2012
 # with correct analysis tools
 
 # TODO: fix the save/restore grid
@@ -2292,50 +2292,41 @@ class Environment(CompartmentList):
                 print("The size of the grid I build = ", len(a))
 
             if (
-                self.innerGridMethod == "sdf"
-                and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "sdf" and compartment.isOrthogonalBoudingBox != 1
             ):  # A fillSelection can now be a mesh too... it can use either of these methods
                 a, b = compartment.BuildGrid_utsdf(
                     self
                 )  # to make the outer most selection from the master and then the compartment
             elif (
-                self.innerGridMethod == "bhtree"
-                and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "bhtree" and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid(self)
             elif (
-                self.innerGridMethod == "jordan"
-                and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "jordan" and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_jordan(self)
             elif (
-                self.innerGridMethod == "jordan3"
-                and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "jordan3" and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_jordan(self, ray=3)
             elif (
-                self.innerGridMethod == "pyray"
-                and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "pyray" and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_pyray(self)
             elif (
-                self.innerGridMethod == "floodfill"
-                and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "floodfill" and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_kevin(self)
             elif (
-                self.innerGridMethod == "binvox"
-                and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "binvox" and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_binvox(self)
             elif (
-                self.innerGridMethod == "trimesh"
-                and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "trimesh" and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_trimesh(self)
             elif (
-                self.innerGridMethod == "scanline"
-                and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "scanline" and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_scanline(self)
 
@@ -3037,7 +3028,6 @@ class Environment(CompartmentList):
         verbose = autopack.verbose
         radius = ingr.encapsulatingRadius
         if ingr.packingMode == "close":
-            t1 = time.time()
             allIngrPts = []
             allIngrDist = []
             if ingr.modelType == "Cylinders" and ingr.useLength:
@@ -3067,14 +3057,9 @@ class Environment(CompartmentList):
             # if verbose > 1:
             #    print("time to filter using for loop ", time() - t1)
         else:
-            t1 = time.time()
             allIngrPts = []
-            #            print("allIngrPts = ", allIngrPts)
-            #            print("len (allIngrPts) = ", len(allIngrPts))
             if ingr.modelType == "Cylinders" and ingr.useLength:
                 cut = ingr.length - jitter
-            #            elif ingr.cutoff_boundary is not None :
-            #                cut  = radius+ingr.cutoff_boundary-jitter
             else:
                 cut = radius - jitter
             # for pt in freePoints[:nbFreePoints]:
@@ -3196,7 +3181,6 @@ class Environment(CompartmentList):
             return False, vRangeStart
 
         if self.pickRandPt:
-            t2 = time.time()
             if ingr.packingMode == "close":
                 order = numpy.argsort(allIngrDist)
                 # pick point with closest distance
@@ -3424,8 +3408,6 @@ class Environment(CompartmentList):
 
         vRangeStart = 0.0
         tCancelPrev = time.time()
-        test = True
-        kk = 0
         ptInd = 0
 
         PlacedMols = 0
@@ -3761,14 +3743,7 @@ class Environment(CompartmentList):
                         else:
                             unUsedPts += 1
                     filename = (
-                        wrkDirRes
-                        + "vResultMatrix1"
-                        + o.name
-                        + "_Testid"
-                        + str(vTestid)
-                        + "_Seed"
-                        + str(seedNum)
-                        + "_dists.txt"
+                        wrkDirRes + "vResultMatrix1" + o.name + "_Testid" + str(vTestid) + "_Seed" + str(seedNum) + "_dists.txt"
                     )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
                     #            filename = wrkDirRes+"/vDistances1.txt"
                     f = open(filename, "w")
@@ -3779,24 +3754,10 @@ class Environment(CompartmentList):
                     # if resultfilename == None:
                     # resultfilename = self.resultfile
                     resultfilenameT = (
-                        wrkDirRes
-                        + "vResultMatrix1"
-                        + o.name
-                        + "_Testid"
-                        + str(vTestid)
-                        + "_Seed"
-                        + str(seedNum)
-                        + "_Trans.txt"
+                        wrkDirRes + "vResultMatrix1" + o.name + "_Testid" + str(vTestid) + "_Seed" + str(seedNum) + "_Trans.txt"
                     )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
                     resultfilenameR = (
-                        wrkDirRes
-                        + "vResultMatrix1"
-                        + o.name
-                        + "_Testid"
-                        + str(vTestid)
-                        + "_Seed"
-                        + str(seedNum)
-                        + "_Rot.txt"
+                        wrkDirRes + "vResultMatrix1" + o.name + "_Testid" + str(vTestid) + "_Seed" + str(seedNum) + "_Rot.txt"
                     )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
                     #            resultfilenameT = wrkDirRes+"/vResultMatrix1" + o.name + "_Trans.txt"
                     #            resultfilenameR = wrkDirRes+"/vResultMatrix1" + o.name + "_Rot.txt"
@@ -3864,14 +3825,7 @@ class Environment(CompartmentList):
                         )
                         # vRotationString += str(rot3d) #str(h)+ ",\t" + str(p) + ",\t" + str(b) + "\n"
                         vRotationString += (
-                            str(h1)
-                            + ",\t"
-                            + str(p1)
-                            + ",\t"
-                            + str(b1)
-                            + ",\t"
-                            + ingr.name
-                            + "\n"
+                            str(h1) + ",\t" + str(p1) + ",\t" + str(b1) + ",\t" + ingr.name + "\n"
                         )  # ADDDED this line back from newer code from Theis version added July 5, 2012 to replace next line from SVN
                         #                vRotationString += str(h1)+ ",\t" + str(p1) + ",\t" + str(b1) + ingr.name +"\n"
                         # vRotationString += str( (result[matCount][1]).x )+"\n"
@@ -4230,10 +4184,10 @@ class Environment(CompartmentList):
         #                 [0.0, 0.0, 1.0, 0.0],
         #                 [0.0, 0.0, 0.0, 1.0]])
         lines = rfile.readlines()
-        for l in lines:
-            if not len(l) or len(l) < 6:
+        for line in lines:
+            if not len(line) or len(line) < 6:
                 continue
-            pos, rot, ingrname, ingrcompNum, ptInd, rad = self.getOneIngr(l)
+            pos, rot, ingrname, ingrcompNum, ptInd, rad = self.getOneIngr(line)
             # should I multiply here
             r = numpy.array(rot).reshape(
                 4, 4
@@ -4499,7 +4453,6 @@ class Environment(CompartmentList):
         rfile = open(resultfilename + ".txt", "w")  # doesnt work with symbol link ?
         # pickle.dump(self.molecules, rfile)
         # OR
-        result = []
         line = ""
         line += "<recipe include = " + self.setupfile + ">\n"
         for pos, rot, ingr, ptInd in self.molecules:
@@ -4513,7 +4466,6 @@ class Environment(CompartmentList):
         rfile.close()
         for i, orga in enumerate(self.compartments):
             orfile = open(resultfilename + "ogra" + str(i) + ".txt", "w")
-            result = []
             line = ""
             for pos, rot, ingr, ptInd in orga.molecules:
                 line += self.dropOneIngr(
@@ -4574,21 +4526,12 @@ class Environment(CompartmentList):
 
     def finishWithWater(self, freePoints=None, nbFreePoints=None):
         # self.freePointsAfterFill[:self.nbFreePointsAfterFill]
-        water = [
-            (0.000, 0.000, 0.0),  # 0
-            (0.757, 0.586, 0.0),  # H
-            (-0.757, 0.586, 0.0),
-        ]  # H
-        # object?
         # sphere sphere of 2.9A
-        waterDiam = 2.9
         if freePoints is None:
             freePoints = self.freePointsAfterFill
         if nbFreePoints is None:
             nbFreePoints = self.nbFreePointsAfterFill
         # a freepoint is a voxel, how many water in the voxel
-        voxelsize = self.grid.gridSpacing
-        nbWaterPerVoxel = voxelsize / waterDiam
         # coords masterGridPositions
 
     def estimateVolume(self, boundingBox, spacing):
@@ -4718,9 +4661,7 @@ class Environment(CompartmentList):
     ):
         try:
             import panda3d
-        except:
-            # print ("panda3d not found")
-            # self.placeMethod ="jitter"
+        except Exception:
             return
         self.rb_func_dic = {
             "bullet": {
@@ -4883,7 +4824,6 @@ class Environment(CompartmentList):
     def addSingleCubeRB(self, ingr, pMat, jtrans, rotMat):
         if panda3d is None:
             return
-        rt = "Box"
         halfextents = ingr.bb[1]
         print(halfextents)
         shape = BulletBoxShape(
@@ -4915,7 +4855,7 @@ class Environment(CompartmentList):
             pMat = self.pandaMatrice(mat)
             #            d = numpy.array(p1) - numpy.array(p2)
             #            s = numpy.sum(d*d)
-            a = Point3(
+            Point3(
                 ingr.principalVector[0],
                 ingr.principalVector[1],
                 ingr.principalVector[2],
@@ -4937,10 +4877,6 @@ class Environment(CompartmentList):
         )
         from panda3d.bullet import BulletTriangleMesh, BulletTriangleMeshShape
 
-        p0 = Point3(-10, -10, 0)
-        p1 = Point3(-10, 10, 0)
-        p2 = Point3(10, -10, 0)
-        p3 = Point3(10, 10, 0)
         mesh = BulletTriangleMesh()
         points3d = [Point3(v[0], v[1], v[2]) for v in vertices]
         for f in faces:
@@ -4969,7 +4905,6 @@ class Environment(CompartmentList):
             return
         inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
         inodenp.node().setMass(1.0)
-        helper = autopack.helper
         if ingr.mesh is None:
             return
         ingr.getData()
@@ -5142,7 +5077,6 @@ class Environment(CompartmentList):
         pMat = TransformState.makeMat(pmat)
         if self.panda_solver == "ode":
             pMat = mat3x3
-        shape = None
         inodenp = None
         #        print (pMat)
         if ingr.use_mesh_rb:
