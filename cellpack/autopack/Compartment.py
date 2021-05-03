@@ -32,7 +32,7 @@
 # @author: Graham Johnson, Ludovic Autin, & Michel Sanner
 
 # Hybrid version merged from Graham's Sept 6, 2011 and Ludo's April 2012
-# version on May 16, 2012, remerged on July 5, 2012 with thesis versions
+# version on May 16, 2012, re-merged on July 5, 2012 with thesis versions
 
 # Hybrid version merged from Graham's Sept 2011 and Ludo's April 2012 version on May 16, 2012
 # Updated with Sept 16, 2011 thesis versions on July 5, 2012
@@ -958,9 +958,7 @@ class Compartment(CompartmentList):
             normals.append((normal[0] * n1, normal[1] * n1, normal[2] * n1))
             if fillBB is not None:
                 if (
-                    self.inGrid(vertices[f[0]], fillBB)
-                    and self.inGrid(vertices[f[0]], fillBB)
-                    and self.inGrid(vertices[f[0]], fillBB)
+                    self.inGrid(vertices[f[0]], fillBB) and self.inGrid(vertices[f[0]], fillBB) and self.inGrid(vertices[f[0]], fillBB)
                 ):
                     areas.append(0.5 * vlen(normal))  # added by Graham
         self.area = sum(areas)
@@ -1341,7 +1339,7 @@ class Compartment(CompartmentList):
         surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(self.ogsurfacePoints, env)
         srfPts = surfPtsBB
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
-            nbGridPoints, srfPts, surfPtsBBNorms, histoVol
+            nbGridPoints, srfPts, surfPtsBBNorms, env
         )
         self.insidePoints = insidePoints
         self.surfacePoints = surfacePoints
@@ -1546,8 +1544,7 @@ class Compartment(CompartmentList):
             print("doesnt exist..build")
             # binvox.exe -c -d 30 -bb -850 -850 -850 850 850 850 HIV_VLP.dae
             os.system(
-                autopack.binvox_exe
-                + " -c -dc -d %i -bb %f %f %f %f %f %f %s\n"
+                autopack.binvox_exe + " -c -dc -d %i -bb %f %f %f %f %f %f %s\n"
                 % (
                     gridN[0],
                     bb[0][0],
@@ -2010,8 +2007,7 @@ class Compartment(CompartmentList):
                     if insideBB:
                         # check only if close enouhg to surface
                         if (
-                            new_distances.item(ptInd)
-                            < env.grid.gridSpacing * 1.1547 * 2.0
+                            new_distances.item(ptInd) < env.grid.gridSpacing * 1.1547 * 2.0
                         ):
                             inside = self.checkPointInside_rapid(coord, diag, ray=3)
                         if inside:
@@ -2021,11 +2017,7 @@ class Compartment(CompartmentList):
                     if (ptInd % 1000) == 0:
                         helper.progressBar(
                             progress=int(p),
-                            label=str(ptInd)
-                            + "/"
-                            + str(len(grdPos))
-                            + " inside "
-                            + str(inside),
+                            label=str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(inside),
                         )
         if autopack.verbose:
             print("time to update distance field and idarray", time() - t1)
@@ -2389,9 +2381,7 @@ class Compartment(CompartmentList):
             if sptInd < len(srfPts):
                 sx, sy, sz = srfPts[sptInd]
                 d = math.sqrt(
-                    (gx - sx) * (gx - sx)
-                    + (gy - sy) * (gy - sy)
-                    + (gz - sz) * (gz - sz)
+                    (gx - sx) * (gx - sx) + (gy - sy) * (gy - sy) + (gz - sz) * (gz - sz)
                 )
             else:
                 try:
@@ -2565,7 +2555,6 @@ class Compartment(CompartmentList):
             print(
                 "compartment build grid jordan",
                 diag,
-         
             )
 
         helper = autopack.helper
@@ -2690,12 +2679,7 @@ class Compartment(CompartmentList):
                     # Get the grid indices for the point we're considering, and pass if we're stepping oustide the boundaries
                     newI, newJ, newK = i + x, j + y, k + z
                     if (
-                        newI < 0
-                        or newI > (NX - 1)
-                        or newJ < 0
-                        or newJ > (NY - 1)
-                        or newK < 0
-                        or newK > (NZ - 1)
+                        newI < 0 or newI > (NX - 1) or newJ < 0 or newJ > (NY - 1) or newK < 0 or newK > (NZ - 1)
                     ):
                         continue
                     # Get the point index that this coordinate corresponds to.
@@ -2718,9 +2702,7 @@ class Compartment(CompartmentList):
                         #     pointsToTestInsideOutside.add(desiredPointIndex)
         timeFinishProjection = time()
         print(
-            "Projecting polyhedron to grid took "
-            + str(timeFinishProjection - startTime)
-            + " seconds."
+            "Projecting polyhedron to grid took " + str(timeFinishProjection - startTime) + " seconds."
         )
         helper.progressBar(label="test gridPoints")
         # Let's start flood filling in inside outside. Here's the general algorithm:
@@ -2818,19 +2800,11 @@ class Compartment(CompartmentList):
             if (g.index % 100) == 0:
                 helper.progressBar(
                     progress=int(p),
-                    label=str(g.index)
-                    + "/"
-                    + str(len(gridPoints))
-                    + " inside "
-                    + str(g.isOutside),
+                    label=str(g.index) + "/" + str(len(gridPoints)) + " inside " + str(g.isOutside),
                 )
                 if autopack.verbose:
                     print(
-                        str(g.index)
-                        + "/"
-                        + str(len(gridPoints))
-                        + " inside "
-                        + str(g.isOutside)
+                        str(g.index) + "/" + str(len(gridPoints)) + " inside " + str(g.isOutside)
                     )
 
         # Final pass through for sanity checks.
@@ -2841,9 +2815,7 @@ class Compartment(CompartmentList):
                 if g.isOutside is None:
                     g.isOutside = True
         print(
-            "Flood filling grid inside/outside took "
-            + str(time() - timeFinishProjection)
-            + " seconds."
+            "Flood filling grid inside/outside took " + str(time() - timeFinishProjection) + " seconds."
         )
         insidePoints = [g.globalCoord for g in gridPoints if g.isOutside is False]
         # outsidePoints = [g.index for g in gridPoints if g.isOutside == True]
@@ -3290,117 +3262,6 @@ class Compartment(CompartmentList):
         )
         return self.insidePoints, self.surfacePoints
 
-    def BuildGrid_OrthogonalBox(self, histoVol):
-        """Build the compartment grid ie surface and inside point using a box"""
-        t0 = time()
-        self.ogsurfacePoints = None
-        self.ogsurfacePointsNormals = None
-        #        vertices = None
-        #        faces = None
-        normalList2, areas = None  # in future, get area of box from corner points
-        vSurfaceArea = None  # sum(areas)
-        #        bbox = self.bb
-        #        xmin = bbox[0][0]; ymin = bbox[0][1]; zmin = bbox[0][2]
-        #        xmax = bbox[1][0]; ymax = bbox[1][1]; zmax = bbox[1][2]
-        #        sizex = self.getSizeXYZ()
-        #        gboundingBox = histoVol.grid.boundingBox
-        #        gspacing = histoVol.grid.gridSpacing
-        #
-        #        from UTpackages.UTsdf import utsdf
-        #        #can be 16,32,64,128,256,512,1024
-        #        #        if spacing not in [16,32,64,128,256,512,1024]:
-        #        #            spacing = self.find_nearest(numpy.array([16,32,64,128,256,512,1024]),spacing)
-        #        # compute SDF
-        #        dim=16
-        #        dim1=dim+1
-        #        print ("ok2 dim ",dim)
-        #        size = dim1*dim1*dim1
-        #        from UTpackages.UTsdf import utsdf
-        #        verts = N.array(self.vertices,dtype='f')
-        #
-        #        tris = N.array(self.faces,dtype="int")
-        #        utsdf.setParameters(dim,0,1,[0,0,0,0,0,0])#size, bool isNormalFlip, bool insideZero,bufferArr
-        #        surfacePoints = srfPts = self.vertices
-        #        print ("ok grid points")
-        #        datap = utsdf.computeSDF(N.ascontiguousarray(verts, dtype=N.float32),N.ascontiguousarray(tris, dtype=N.int32))
-        #        print ("ok computeSDF")
-        #        data = utsdf.createNumArr(datap,size)
-        #        volarr = data[:]
-        #        volarr.shape = (dim1, dim1, dim1)
-        #        volarr = numpy.ascontiguousarray(numpy.transpose(volarr), 'f')
-        #
-        #        # get grid points distances to compartment surface
-        #        from Volume.Operators.trilinterp import trilinterp
-        #        invstep =(1./(sizex[0]/dim), 1./(sizex[1]/dim), 1./(sizex[2]/dim))
-        #        origin = self.bb[0]
-        #        distFromSurf = trilinterp(histoVol.grid.masterGridPositions,
-        #                                  volarr, invstep, origin)
-        #
-        #
-        #        # save SDF
-        #        #        self.sdfData = volarr
-        #        #        self.sdfOrigin = origin
-        #        #        self.sdfGridSpacing = (gSizeX, gSizeY, gSizeZ)
-        #        #        self.sdfDims = (dimx, dimy, dimz)
-        #
-        #        ## update histoVol.distToClosestSurf
-        #        distance = histoVol.grid.distToClosestSurf
-        #        for i,d in enumerate(distFromSurf):
-        #            if distance[i] > d:
-        #                distance[i] = d
-
-        # loop over fill box grid points and build the idarray
-        # identify inside and surface points and update the distance field
-        insidePoints = []
-        surfacePoints = []
-
-        indice = numpy.nonzero(numpy.less(distance, 0.0))
-        pointinside = numpy.take(histoVol.grid.masterGridPositions, indice, 0)[0]
-        #        print (len(indice[0]),indice,len(pointinside))
-        if len(indice) == 1 and len(indice[0]) != 1:
-            indice = indice[0]
-        if len(pointinside) == 1 and len(pointinside[0]) != 1:
-            pointinside = pointinside[0]
-        histoVol.grid.gridPtId[indice] = -self.number
-        print(
-            "sdf pointID N ",
-            self.number,
-            len(histoVol.grid.gridPtId[indice]),
-            histoVol.grid.gridPtId[indice],
-        )
-        t1 = time()
-        nbGridPoints = len(histoVol.grid.masterGridPositions)
-        srfPts = self.vertices
-        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, histoVol)
-        srfPts = surfPtsBB
-        surfacePoints, surfacePointsNormals = self.extendGridArrays(
-            nbGridPoints, srfPts, surfPtsBBNorms, histoVol
-        )
-
-        print(len(histoVol.grid.gridPtId[indice]), histoVol.grid.gridPtId[indice])
-        insidePoints = pointinside
-        print("time to extend arrays", time() - t1)
-
-        print("Total time", time() - t0)
-
-        self.insidePoints = insidePoints
-        self.surfacePoints = surfacePoints
-        self.surfacePointsCoords = surfPtsBB
-        self.surfacePointsNormals = surfacePointsNormals
-        print(
-            "%s surface pts, %d inside pts, %d tot grid pts, %d master grid"
-            % (
-                len(self.surfacePoints),
-                len(self.insidePoints),
-                nbGridPoints,
-                len(histoVol.grid.masterGridPositions),
-            )
-        )
-        self.computeVolumeAndSetNbMol(
-            histoVol, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
-        )
-        return insidePoints, surfacePoints
-
     def BuildGrid_utsdf(self, histoVol):
         """
         Build the compartment grid ie surface and inside point using signed distance fields
@@ -3700,8 +3561,7 @@ class Compartment(CompartmentList):
                 v2 = v[i[j][1]]
                 v3 = v[i[j][2]]
                 volume += (
-                    (v2[1] - v1[1]) * (v3[2] - v1[2])
-                    - (v2[2] - v1[2]) * (v3[1] - v1[1])
+                    (v2[1] - v1[1]) * (v3[2] - v1[2]) - (v2[2] - v1[2]) * (v3[1] - v1[1])
                 ) * (v1[0] + v2[0] + v3[0])
             self.interiorVolume = volume / 6.0
         if self.surfaceVolume is None or self.surfaceVolume == 0.0:
@@ -4082,12 +3942,7 @@ class Compartment(CompartmentList):
                     # Get the grid indices for the point we're considering, and pass if we're stepping oustide the boundaries
                     newI, newJ, newK = i + x, j + y, k + z
                     if (
-                        newI < 0
-                        or newI > (NX - 1)
-                        or newJ < 0
-                        or newJ > (NY - 1)
-                        or newK < 0
-                        or newK > (NZ - 1)
+                        newI < 0 or newI > (NX - 1) or newJ < 0 or newJ > (NY - 1) or newK < 0 or newK > (NZ - 1)
                     ):
                         continue
                     # Get the point index that this coordinate corresponds to.
@@ -4110,9 +3965,7 @@ class Compartment(CompartmentList):
                         #     pointsToTestInsideOutside.add(desiredPointIndex)
         timeFinishProjection = time()
         print(
-            "Projecting polyhedron to grid took "
-            + str(timeFinishProjection - startTime)
-            + " seconds."
+            "Projecting polyhedron to grid took " + str(timeFinishProjection - startTime) + " seconds."
         )
 
         # Let's start flood filling in inside outside. Here's the general algorithm:
@@ -4215,9 +4068,7 @@ class Compartment(CompartmentList):
                 if g.isOutside is None:
                     g.isOutside = True
         print(
-            "Flood filling grid inside/outside took "
-            + str(time() - timeFinishProjection)
-            + " seconds."
+            "Flood filling grid inside/outside took " + str(time() - timeFinishProjection) + " seconds."
         )
         insidePoints = [g.globalCoord for g in gridPoints if not g.isOutside]
         # outsidePoints = [g.index for g in gridPoints if g.isOutside == True]
@@ -4227,18 +4078,10 @@ class Compartment(CompartmentList):
         # distance ?
         if superFine:
             print(
-                "Superfine was on and it identified "
-                + str(mismatchCounter)
-                + " mismatches."
+                "Superfine was on and it identified " + str(mismatchCounter) + " mismatches."
             )
         print(
-            "Grid construction took "
-            + str(time() - startTime)
-            + " seconds for "
-            + str(len(faces))
-            + " faces and "
-            + str(len(gridPoints))
-            + " points."
+            "Grid construction took " + str(time() - startTime) + " seconds for " + str(len(faces)) + " faces and " + str(len(gridPoints)) + " points."
         )
         # what are the grid distance opinmt ?self.grid_distances
         return insidePoints, surfacePoints
@@ -4334,11 +4177,7 @@ class Compartment(CompartmentList):
             if (ptInd % 100) == 0:
                 helper.progressBar(
                     progress=int(p),
-                    label=str(ptInd)
-                    + "/"
-                    + str(len(grdPos))
-                    + " inside "
-                    + str(inside),
+                    label=str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(inside),
                 )
         print("total time", time() - t1)
         return insidePoints, surfacePoints
@@ -4507,9 +4346,7 @@ class Compartment(CompartmentList):
             if sptInd < len(srfPts):
                 sx, sy, sz = srfPts[sptInd]
                 d = math.sqrt(
-                    (gx - sx) * (gx - sx)
-                    + (gy - sy) * (gy - sy)
-                    + (gz - sz) * (gz - sz)
+                    (gx - sx) * (gx - sx) + (gy - sy) * (gy - sy) + (gz - sz) * (gz - sz)
                 )
             else:
                 #                try :
@@ -4518,19 +4355,6 @@ class Compartment(CompartmentList):
                 )  # wthis is not working
                 d = min(dist2[0:n])
                 sptInd = res[tuple(dist2).index(d)]
-                #                except :
-                # this is quite long
-                # what about C4d/host
-                #                delta = ((numpy.array(srfPts)-numpy.array(grdPos[ptInd]))**2).sum(axis=1)  # compute distances
-                #                ndx = delta.argsort() # indirect sort
-                #                d = delta[ndx[0]]
-                #                sptInd = ndx[0]
-                #                    delta = numpy.array(srfPts)-numpy.array(grdPos[ptInd])
-                #                    delta *= delta
-                #                    distA = numpy.sqrt( delta.sum(1) )
-                #                    d = min(distA)
-                #                print('distance time', time()-t0)
-                sptInd = list(distA).index(d)
                 sx, sy, sz = srfPts[sptInd]
             if distances[ptInd] > d:
                 distances[ptInd] = d
