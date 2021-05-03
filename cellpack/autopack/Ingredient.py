@@ -3249,15 +3249,11 @@ class Ingredient(Agent):
             rad2 = radc * radc
             dsq = numpy.sum(pd * pd, 1) - dotp * dotp / lengthsq
 
-            # ptsWithinCaps = numpy.nonzero(numpy.logical_and(
-            #    numpy.greater_equal(dotp, 0.), numpy.less_equal(dotp, lengthsq)))
-            #            if not len(ptsWithinCaps[0]):
-            #                print "no point inside the geom?"
-            #                return False
+            ptsWithinCaps = numpy.nonzero(numpy.logical_and(numpy.greater_equal(dotp, 0.), numpy.less_equal(dotp, lengthsq)))
+
             if self.compareCompartment:
                 ptsInSphereId = numpy.take(pointsInCube, ptsWithinCaps[0], 0)
                 compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptsInSphereId, 0)
-                #                print "compId",compIdsSphere
                 if self.compNum <= 0:
                     wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
                     if len(wrongPt):
