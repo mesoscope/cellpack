@@ -2413,9 +2413,7 @@ class Ingredient(Agent):
                     # m.PreRotateY(-math.pi/2.0)
                     # geom.SetNodeTM(m)
                 if (
-                    helper.host != "c4d"
-                    and self.coordsystem == "left"
-                    and helper.host != "softimage"
+                    helper.host != "c4d" and self.coordsystem == "left" and helper.host != "softimage"
                 ):
                     # need to rotate the transform that carry the shape
                     helper.rotateObj(geom, [0.0, -math.pi / 2.0, 0.0])
@@ -3172,8 +3170,7 @@ class Ingredient(Agent):
                 return trigger, True
             # threshold
             if (
-                self.compareCompartmentThreshold != 0.0
-                and p < self.compareCompartmentThreshold
+                self.compareCompartmentThreshold != 0.0 and p < self.compareCompartmentThreshold
             ):
                 return trigger, True
                 # reject the ingr
@@ -3995,10 +3992,7 @@ class Ingredient(Agent):
             #            rad = self.minRadius*2.0# + histoVol.largestProteinSize + \
             # histoVol.smallestProteinSize + histoVol.windowsSize
             rad = (
-                self.minRadius
-                + histoVol.largestProteinSize
-                + histoVol.smallestProteinSize
-                + histoVol.windowsSize
+                self.minRadius + histoVol.largestProteinSize + histoVol.smallestProteinSize + histoVol.windowsSize
             )
         x, y, z = jtrans
         bb = ([x - rad, y - rad, z - rad], [x + rad, y + rad, z + rad])
@@ -4093,9 +4087,7 @@ class Ingredient(Agent):
                 ing.isAttractor
             ):  # and self.compNum <= 0: #always attract! or rol a dice ?sself.excluded_partners.has_key(name)
                 if (
-                    ing.name not in self.partners_name
-                    and self.name not in ing.excluded_partners_name
-                    and ing.name not in self.excluded_partners_name
+                    ing.name not in self.partners_name and self.name not in ing.excluded_partners_name and ing.name not in self.excluded_partners_name
                 ):
                     if autopack.verbose > 1:
                         print("shoul attract " + self.name)
@@ -4338,9 +4330,7 @@ class Ingredient(Agent):
                     # else :
             # print (self.name+" is close to "+ingr.name,jtrans,curentpt)
             if (
-                distances[nid]
-                > (ingr.encapsulatingRadius + self.encapsulatingRadius)
-                * self.histoVol.scaleER
+                distances[nid] > (ingr.encapsulatingRadius + self.encapsulatingRadius) * self.histoVol.scaleER
             ):
                 # print (distances[nid][0],ingr.encapsulatingRadius+self.encapsulatingRadius)
                 continue
@@ -4391,14 +4381,10 @@ class Ingredient(Agent):
                 if distances[nid] == 0.0:
                     continue
                 if (
-                    distances[nid]
-                    > (ingr.encapsulatingRadius + self.encapsulatingRadius)
-                    * self.histoVol.scaleER
+                    distances[nid] > (ingr.encapsulatingRadius + self.encapsulatingRadius) * self.histoVol.scaleER
                 ):
                     continue
-                    #            print ("distance",nid,n,distances[nid],(ingr.encapsulatingRadius+self.encapsulatingRadius)*self.histoVol.scaleER)
-                    #            print ("get_rbNodes",nid,n,len(self.histoVol.rTrans)-1,distances[nid][0])
-                    #            print self.name+" is close to "+ingr.name
+
             jtrans = self.histoVol.rTrans[n]
             rotMat = self.histoVol.rRot[n]
             if prevpoint is not None:
@@ -4735,8 +4721,7 @@ class Ingredient(Agent):
                     usePP=usePP,
                 )
         elif (
-            self.placeType == "pandaBulletRelax"
-            or self.placeType == "pandaBulletSpring"
+            self.placeType == "pandaBulletRelax" or self.placeType == "pandaBulletSpring"
         ):
             success, nbFreePoints = self.pandaBullet_relax(
                 histoVol,
@@ -5652,8 +5637,7 @@ class Ingredient(Agent):
             closesbody_indice = self.getClosestIngredient(
                 pos,
                 self.histoVol,
-                cutoff=self.histoVol.largestProteinSize
-                + self.encapsulatingRadius * 2.0,
+                cutoff=self.histoVol.largestProteinSize + self.encapsulatingRadius * 2.0,
             )  # vself.radii[0][0]*2.0
             if len(closesbody_indice["indices"]) == 0:
                 r = [False]  # closesbody_indice[0] == -1
@@ -5675,8 +5659,7 @@ class Ingredient(Agent):
                     col = (
                         self.histoVol.world.contactTestPair(
                             rbnode, node[0]
-                        ).getNumContacts()
-                        > 0
+                        ).getNumContacts() > 0
                     )
                     r = [col]
                     if col:
@@ -6023,8 +6006,7 @@ class Ingredient(Agent):
                     col = (
                         self.histoVol.world.contactTestPair(
                             rbnode, rbnode2
-                        ).getNumContacts()
-                        > 0
+                        ).getNumContacts() > 0
                     )
                     #                    perdiodic_collision.extend([col])
                     r.extend([col])  # = True in perdiodic_collision
@@ -6054,8 +6036,7 @@ class Ingredient(Agent):
                     closesbody_indice = self.getClosestIngredient(
                         jtrans,
                         self.histoVol,
-                        cutoff=self.histoVol.largestProteinSize
-                        + self.encapsulatingRadius * 2.0,
+                        cutoff=self.histoVol.largestProteinSize + self.encapsulatingRadius * 2.0,
                     )  # vself.radii[0][0]*2.0
                     #                    print ("len(closesbody_indice) ",len(closesbody_indice["indices"]),str(self.histoVol.largestProteinSize+self.encapsulatingRadius) )
                     if len(closesbody_indice["indices"]) == 0:
@@ -6075,7 +6056,7 @@ class Ingredient(Agent):
                                 for c in range(autopack.ncpus):
                                     print("submit job", i, c, n)
                                     self.histoVol.pp_server.submit(
-                                        checkCollision_mp,
+                                        bullet_checkCollision_mp,
                                         (self.histoVol.world, rbnode, liste_nodes[n]),
                                         callback=self.histoVol.grab_cb.grab,
                                     )
@@ -6098,8 +6079,7 @@ class Ingredient(Agent):
                                 col = (
                                     self.histoVol.world.contactTestPair(
                                         rbnode, node[0]
-                                    ).getNumContacts()
-                                    > 0
+                                    ).getNumContacts() > 0
                                 )
                                 #                                print ("collision ?",self.name,node[3].name,col,autopack.helper.measure_distance(jtrans,node[1]))
                                 r = [col]
@@ -7261,10 +7241,7 @@ class Ingredient(Agent):
                 )
                 # r= self.encapsulatingRadius
                 r = (
-                    self.minRadius
-                    + histoVol.largestProteinSize
-                    + histoVol.smallestProteinSize
-                    + histoVol.windowsSize
+                    self.minRadius + histoVol.largestProteinSize + histoVol.smallestProteinSize + histoVol.windowsSize
                 )
                 #                histoVol.octree.insertNode(histoVol.octree.root, r,
                 #                                           histoVol.octree.root, dropedObject)
@@ -8686,8 +8663,7 @@ class SingleCubeIngr(Ingredient):
             radii[0] / 2.0
         )  # should have three radii sizex,sizey,sizez
         self.encapsulatingRadius = self.maxRadius = math.sqrt(
-            max(radii[0] / 2.0) * max(radii[0] / 2.0)
-            + min(radii[0] / 2.0) * min(radii[0] / 2.0)
+            max(radii[0] / 2.0) * max(radii[0] / 2.0) + min(radii[0] / 2.0) * min(radii[0] / 2.0)
         )
         self.bb = [-radii[0] / 2.0, radii[0] / 2.0]
         self.positions = [[-radii[0] / 2.0]]
@@ -10097,8 +10073,7 @@ class GrowIngrediant(MultiCylindersIngr):
                                     col = (
                                         self.histoVol.world.contactTestPair(
                                             rbnode, node[0]
-                                        ).getNumContacts()
-                                        > 0
+                                        ).getNumContacts() > 0
                                     )
                                     print("collision? ", col)
                                     r = [col]
@@ -10181,16 +10156,13 @@ class GrowIngrediant(MultiCylindersIngr):
                             # return None,False
                         #                            print ("upate marge because collision ", marge)
                         if (
-                            attempted % (self.rejectionThreshold / 3) == 0
-                            and not alternate
+                            attempted % (self.rejectionThreshold / 3) == 0 and not alternate
                         ):
                             marge += 1
                             attempted = 0
                             # need to recompute the mask
                             if (
-                                not alternate
-                                and self.useHalton
-                                and self.prev_alt is None
+                                not alternate and self.useHalton and self.prev_alt is None
                             ):
                                 self.sphere_points_mask = numpy.ones(
                                     self.sphere_points_nb, "i"
@@ -10203,8 +10175,7 @@ class GrowIngrediant(MultiCylindersIngr):
                                         self.sphere_points_mask
                                     )[0]
                                     v = (
-                                        self.sphere_points[points_mask] * self.uLength
-                                        + pt2
+                                        self.sphere_points[points_mask] * self.uLength + pt2
                                     )
                                     name = "Hcloud" + self.name
                                     sp = self.vi.getObject(name)
@@ -10397,8 +10368,7 @@ class GrowIngrediant(MultiCylindersIngr):
                                     col = (
                                         self.histoVol.world.contactTestPair(
                                             rbnode, node[0]
-                                        ).getNumContacts()
-                                        > 0
+                                        ).getNumContacts() > 0
                                     )
                                     r = [col]
                                     if col:
@@ -11070,9 +11040,7 @@ class GrowIngrediant(MultiCylindersIngr):
                             attempted = 0
                             # need to recompute the mask
                             if (
-                                not alternate
-                                and self.useHalton
-                                and self.prev_alt is None
+                                not alternate and self.useHalton and self.prev_alt is None
                             ):
                                 self.sphere_points_mask = numpy.ones(
                                     self.sphere_points_nb, "i"
@@ -11085,8 +11053,7 @@ class GrowIngrediant(MultiCylindersIngr):
                                         self.sphere_points_mask
                                     )[0]
                                     v = (
-                                        self.sphere_points[points_mask] * self.uLength
-                                        + pt2
+                                        self.sphere_points[points_mask] * self.uLength + pt2
                                     )
                                     name = "Hcloud" + self.name
                                     sp = self.vi.getObject(name)
@@ -11385,22 +11352,12 @@ class GrowIngrediant(MultiCylindersIngr):
                 if histoVol.afviewer is not None and hasattr(histoVol.afviewer, "vi"):
                     histoVol.afviewer.vi.progressBar(
                         progress=int((self.currentLength / self.length) * 100),
-                        label=self.name
-                        + str(self.currentLength / self.length)
-                        + " "
-                        + str(self.nbCurve)
-                        + "/"
-                        + str(self.nbMol),
+                        label=self.name + str(self.currentLength / self.length) + " " + str(self.nbCurve) + "/" + str(self.nbMol),
                     )
                 else:
                     autopack.helper.progressBar(
                         progress=int((self.currentLength / self.length) * 100),
-                        label=self.name
-                        + str(self.currentLength / self.length)
-                        + " "
-                        + str(self.nbCurve)
-                        + "/"
-                        + str(self.nbMol),
+                        label=self.name + str(self.currentLength / self.length) + " " + str(self.nbCurve) + "/" + str(self.nbMol),
                     )
 
                     # Start Graham on 5/16/12 This progress bar doesn't work properly... compare with my version in HistoVol
@@ -11529,7 +11486,6 @@ class GrowIngrediant(MultiCylindersIngr):
                     parent=parent,
                     radius=self.radii[0][0],
                 )
-    
                 self.vi.update()
         return secondPoint
 
@@ -12501,4 +12457,3 @@ class IngredientDictionary:
                     rRec[k].addIngredient(ingr)
                     i = i + 1
         return rRec
-
