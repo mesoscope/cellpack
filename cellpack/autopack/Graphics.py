@@ -1017,7 +1017,6 @@ class AutopackViewer:
         print("delIngrGrow", ingr, ingr.nbCurve)
         o = ingr.recipe.compartment
         #        o = ingr.recipe().organelle()
-        parent = self.orgaToMasterGeom[ingr]
         pobj = None
         if ingr.unitParent is not None:
             pobj = ingr.unitParent
@@ -1091,7 +1090,7 @@ class AutopackViewer:
         parent = self.vi.getObject(ingr.name + "MeshsParent")
         #        print ("whats the MeshsParent")
         print(type(parent))
-        if type(parent) is type(None):  # g
+        if parent is None:  # g
             #            print ("before newEmpty")
             parent = self.vi.newEmpty(
                 ingr.name + "MeshsParent", parent=vParentHiders
@@ -1270,12 +1269,12 @@ class AutopackViewer:
 
             if self.ViewerType != "dejavu":
                 polygon = ingredient.mesh_3d
-                if type(polygon) is type(None):
+                if polygon is None:
                     self.createIngrMesh(ingredient)
                     polygon = ingredient.mesh_3d
                 name = "Meshs_" + ingredient.name.replace(" ", "_")
                 parent = self.vi.getObject(name)
-                if type(parent) is type(None):
+                if parent is None:
                     parent = self.vi.newEmpty(
                         name, parent=self.orgaToMasterGeom[ingredient]
                     )
@@ -1299,7 +1298,7 @@ class AutopackViewer:
         #        geom = ingredient.mesh
         if self.ViewerType != "dejavu":
             polygon = ingredient.mesh_3d
-            if type(polygon) is type(None):
+            if polygon is None:
                 self.createIngrMesh(ingredient)
                 polygon = ingredient.mesh_3d
             name = "Meshs_" + ingredient.name.replace(" ", "_")
@@ -1328,9 +1327,7 @@ class AutopackViewer:
         verts = {}
         radii = {}
         r = self.histo.exteriorRecipe
-        ningr = 0
         if r:
-            ningr = len(r.ingredients)
             for ingr in r.ingredients:
                 verts[ingr] = []
                 radii[ingr] = []
@@ -1383,9 +1380,7 @@ class AutopackViewer:
                     if ingr not in meshGeoms:
                         inds[ingr] = [ptInd]
                         meshGeoms[ingr] = [mat]
-                        if not hasattr(ingr, "mesh_3d") or type(ingr.mesh_3d) is type(
-                            None
-                        ):
+                        if not hasattr(ingr, "mesh_3d") or ingr.mesh_3d is None:
                             if self.ViewerType != "dejavu":
                                 self.createIngrMesh(ingr)
                                 # else :
@@ -1398,7 +1393,6 @@ class AutopackViewer:
             j = 0
             for ingr in r.ingredients:
                 #                print("process ",ingr.o_name)
-                geom = ingr.mesh
                 polygon = ingr.mesh_3d
                 name = "Meshs_" + ingr.name.replace(" ", "_")
                 parent = self.vi.getObject(name)
@@ -1525,19 +1519,17 @@ class AutopackViewer:
                     #                    if self.ViewerType == 'dejavu':
                     #                        self.vi.AddObject(geom, parent=self.orgaToMasterGeom[ingr])
                     #                    else :
-                    if not hasattr(ingr, "mesh_3d") or type(ingr.mesh_3d) is type(None):
+                    if not hasattr(ingr, "mesh_3d") or ingr.mesh_3d is None:
                         if self.ViewerType == "dejavu":
                             ingr.mesh_3d = ingr.mesh
                         else:
                             self.createIngrMesh(ingr)
             print("nbMAtrices", len(matrices))
             if ri:
-                ningri = len(ri.ingredients)
                 j = 0
                 for ingr in ri.ingredients:
                     if ingr.mesh:
                         #                        self.vi.progressBar(j/ningri,label="instances for "+str(j)+" "+ingr.name+" "+str(len(matrices[ingr])))
-                        geom = ingr.mesh
                         # geom.Set(instanceMatrices=matrices[ingr], visible=1)
                         #                        if self.ViewerType != 'dejavu':
                         # find the polygon and the ingr?#polygon = ingr.mesh_3d
@@ -1594,11 +1586,9 @@ class AutopackViewer:
 
                     j += 1
             if rs:
-                ningrs = len(rs.ingredients)
                 j = 0
                 for ingr in rs.ingredients:
                     if ingr.mesh:
-                        geom = ingr.mesh
                         #                        geom.Set(instanceMatrices=meshGeoms[ingr], visible=1)
                         #                        if self.ViewerType != 'dejavu':
                         # find the polygon and the ingr?#polygon = ingr.mesh_3d
@@ -1745,7 +1735,7 @@ class AutopackViewer:
                     parent=vParentHiders,  # TODO: figure out this undefined variable
                 )
 
-            ptsAll = self.vi.Points(
+            self.vi.Points(
                 "allDistPts",
                 vertices=vertsAll,
                 inheritPointWidth=0,  # Graham debugTrashLine
@@ -1783,7 +1773,7 @@ class AutopackViewer:
                 parent=vGridPointHider,
             )
 
-            ptsFree = self.vi.Points(
+            self.vi.Points(
                 "FreePoints",
                 vertices=vertsFreePts,
                 inheritPointWidth=0,  # Graham debugTrashLine
@@ -1889,12 +1879,11 @@ class AutopackViewer:
         self.displayHistoVol()
         setup = self.checkCreateEmpty(self.name + "_Setup", parent=self.master)
         g = self.checkCreateEmpty(self.name + "_compartments_geometries", parent=setup)
-        orgamesh = self.checkCreateEmpty(
+        self.checkCreateEmpty(
             "Place here your compartments geometries", parent=g
         )
-        name = self.name + "_cytoplasm_ingredient"
         g = self.checkCreateEmpty(self.name + "_cytoplasm_ingredient", parent=setup)
-        ingrcyto = self.checkCreateEmpty(
+        self.checkCreateEmpty(
             "Place here your cytoplasm ingredients", parent=g
         )
         g = self.checkCreateEmpty(self.name + "_compartments_recipes", parent=setup)
@@ -1914,12 +1903,12 @@ class AutopackViewer:
         self.vi.reParent(g, r)
 
         rs = self.checkCreateEmpty(organame + "_surface", parent=r)
-        ingrorga = self.checkCreateEmpty(
+        self.checkCreateEmpty(
             "Place here your surface ingredients " + organame, parent=rs
         )
 
         ri = self.checkCreateEmpty(organame + "_interior", parent=r)
-        ingrorga = self.checkCreateEmpty(
+        self.checkCreateEmpty(
             "Place here your interior ingredients" + organame, parent=ri
         )
 
@@ -2052,7 +2041,7 @@ class AutopackViewer:
             from autopack.Ingredient import MultiCylindersIngr
 
             # need to create a SphereIngredient
-            r, h, axis = res = self.helper.getPropertyObject(
+            r, h, axis = self.helper.getPropertyObject(
                 obj, key=["radius", "length", "axis"]
             )
             ingr = MultiCylindersIngr(
@@ -2104,7 +2093,6 @@ class AutopackViewer:
                 ingr.histoVol = self.histo
             else:
                 recipe.addIngredient(ingr)
-                o = recipe.compartment
                 ingr.compNum = recipe.number
                 # g = self.vi.getObject("O" + o.name)
                 ingr.histoVol = self.histo
@@ -2461,7 +2449,7 @@ class AutopackViewer:
 
     def exportRecipeIngredients(self, recipe):
         if recipe:
-            r = [self.exportIngredient(ingr) for ingr in recipe.ingredients]
+            [self.exportIngredient(ingr) for ingr in recipe.ingredients]
 
     def exportAsIndexedMeshs(
         self,
@@ -2704,7 +2692,7 @@ class AutopackViewer:
             [self.helper.deleteObject(o) for o in point]
 
     def displayRoot(self, root):
-        rooto = self.helper.box(
+        self.helper.box(
             "octreeroot",
             center=root.position,
             size=[
