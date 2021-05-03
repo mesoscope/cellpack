@@ -716,7 +716,7 @@ class AutopackViewer:
             parent = self.vi.getObject(pname)  # or ingr.mesh
             self.vi.toggleDisplay(parent, True)
 
-    def buildIngrPrimitive(self, ingr):
+    def buildIngrPrimitive(self, ingr, visible=1):
         o = ingr.recipe.compartment
         name = o.name + "_Spheres_" + ingr.name.replace(" ", "_")
         if self.ViewerType == "dejavu":
@@ -726,7 +726,7 @@ class AutopackViewer:
                 centers=ingr.positions[0],
                 materials=[ingr.color],
                 radii=ingr.radii[0],
-                visible=visible,  # TODO: fix undefined error
+                visible=visible,
             )
             self.vi.AddObject(sph, parent=ingr.mesh)
         else:
@@ -793,9 +793,7 @@ class AutopackViewer:
                 else:
                     parent = self.vi.getObject(name)
                     names = (
-                        self.histo.FillName[self.histo.cFill]
-                        + "S"
-                        + ingr.name.replace(" ", "_")
+                        self.histo.FillName[self.histo.cFill] + "S" + ingr.name.replace(" ", "_")
                     )
                     if parent is None:
                         parent = self.vi.newEmpty(
@@ -841,9 +839,7 @@ class AutopackViewer:
                     name = o.name + str(i) + "_Spheres_" + ingr.name.replace(" ", "_")
                     parent = self.vi.getObject(name)
                     names = (
-                        self.histo.FillName[self.histo.cFill]
-                        + "S"
-                        + ingr.name.replace(" ", "_")
+                        self.histo.FillName[self.histo.cFill] + "S" + ingr.name.replace(" ", "_")
                     )
                     if parent is None:
                         parent = self.vi.newEmpty(
@@ -901,9 +897,7 @@ class AutopackViewer:
         else:
             parent = self.vi.getObject(name)
             names = (
-                self.histo.FillName[self.histo.cFill]
-                + "C"
-                + ingr.name.replace(" ", "_")
+                self.histo.FillName[self.histo.cFill] + "C" + ingr.name.replace(" ", "_")
             )
             # name=self.orgaToMasterGeom[ingr].GetName()+"Cylinders"
             # parent=self.vi.newEmpty(name)
@@ -1120,8 +1114,6 @@ class AutopackViewer:
             material = None
             if ingr.color is not None:
                 material = self.vi.retrieveColorMat(ingr.color)
-            #            print ("parent is ", ingr.name+"MeshsParent")
-            #            print (vParentHiders,parent)
             if hasattr(geom, "getFaces"):
                 polygon = self.vi.createsNmesh(
                     str(name),
@@ -1555,9 +1547,7 @@ class AutopackViewer:
                         #                            axis = self.vi.rotatePoint(axis,[0.,0.,0.],[0.0,1.0,0.0,-math.pi/2.0])
                         #                            print (self.helper.getType(self.helper.getChilds(polygon)[0]))
                         ingr.ipoly = self.vi.instancePolygon(
-                            orga.name
-                            + self.histo.FillName[self.histo.cFill]
-                            + ingr.name,
+                            orga.name + self.histo.FillName[self.histo.cFill] + ingr.name,
                             matrices=matrices[ingr],
                             mesh=polygon,
                             parent=parent,
@@ -1614,9 +1604,7 @@ class AutopackViewer:
                         #                            axis = self.vi.rotatePoint(axis,[0.,0.,0.],[0.0,1.0,0.0,-math.pi/2.0])
                         #                                print (self.helper.getType(self.helper.getChilds(polygon)[0]))
                         ingr.ipoly = self.vi.instancePolygon(
-                            orga.name
-                            + self.histo.FillName[self.histo.cFill]
-                            + ingr.name,
+                            orga.name + self.histo.FillName[self.histo.cFill] + ingr.name,
                             matrices=matrices[ingr],
                             mesh=polygon,
                             parent=parent,
@@ -1730,9 +1718,10 @@ class AutopackViewer:
             # if self.ViewerType != 'dejavu':
             #    #define the base shape for instance objects
             if self.psph is None:
+                vParentHiders = self.checkCreateEmpty(self.name + "ParentHiders", parent=self.master)
                 self.psph = self.vi.newEmpty(
                     self.name + "base_shape",
-                    parent=vParentHiders,  # TODO: figure out this undefined variable
+                    parent=vParentHiders,
                 )
 
             self.vi.Points(
@@ -2697,8 +2686,7 @@ class AutopackViewer:
             center=root.position,
             size=[
                 root.size,
-            ]
-            * 3,
+            ] * 3,
         )
         print("root", len(root.objects))
         for io in root.objects:
@@ -2715,12 +2703,8 @@ class AutopackViewer:
                 center=subnode.position,
                 size=[
                     subnode.size,
-                ]
-                * 3,
+                ] * 3,
             )
-            #            print "node"+str(i),len(subnode.objects)
-            #            for io in subnode.objects :
-            #                print self.helper.getName(io)
             self.displaysubnode(subnode, i)
             i += 1
 
