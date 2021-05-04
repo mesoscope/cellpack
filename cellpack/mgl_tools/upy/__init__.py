@@ -31,7 +31,7 @@ Created on Sun Dec  5 23:30:44 2010
     >>> from upy import uiadaptor
     
     See examples in upy/examples
-    
+
 """
 import os
 import sys
