@@ -4,14 +4,14 @@ Created on Mon Jun 24 15:27:52 2013
 
 @author: ludovic Autin
 
-2D integration of circle rectangle intersection area from 
+2D integration of circle rectangle intersection area from
 http://www.eex-dev.net/index.php?id=100
 Copyright © Emanuel Jöbstl, 18.06.2011
-reative Commons Attribution-ShareAlike 
+reative Commons Attribution-ShareAlike
 
-3D integration sphee cube intersection volume from 
+3D integration sphee cube intersection volume from
 http://crowsandcats.blogspot.com/2013/04/cube-sphere-intersection-volume.html
-Copyright ©  Andrew White 
+Copyright ©  Andrew White
 """
 import math
 import numpy as np
@@ -19,7 +19,7 @@ import numpy as np
 
 try:
     from scipy.integrate import quad
-except:
+except Exception:
     quad = None
     print("no scipy installed")
 
@@ -219,8 +219,7 @@ class GeometriTools:
             return 4.0 / 3 * pi * (rho) ** 3
         if alpha <= np.sqrt(2):
             return (
-                4.0 / 3 * pi * (rho) ** 3
-                - 6.0 * pi * (2 * (rho) ** 3 - 3 * d * (rho) ** 2 + d ** 3) / 3.0
+                4.0 / 3 * pi * (rho) ** 3 - 6.0 * pi * (2 * (rho) ** 3 - 3 * d * (rho) ** 2 + d ** 3) / 3.0
             )
         if alpha < np.sqrt(3):
             return 16.0 * (
