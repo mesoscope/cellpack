@@ -3836,7 +3836,7 @@ class Ingredient(Agent):
                 dy = jy * jitter * uniform(-1.0, 1.0)
                 dz = jz * jitter * uniform(-1.0, 1.0)
                 d2 = dx * dx + dy * dy + dz * dz
-                if True:  # d2 < jitter2:
+                if d2 < jitter2:
                     if compNum > 0:  # jitter less among normal
                         # if self.name=='2uuh C4 SYNTHASE':
                         #    import pdb
@@ -7242,8 +7242,7 @@ class Ingredient(Agent):
                 #                histoVol.octree.insertNode(histoVol.octree.root, r,
                 #                                           histoVol.octree.root, dropedObject)
                 histoVol.octree.insertNode(dropedObject, [histoVol.octree.root])
-                # print "ok drop",organelle.name,self.name
-                organelle.molecules.append([jtrans, rotMatj, self, ptInd])
+                compartment.molecules.append([jtrans, rotMatj, self, ptInd])
                 histoVol.order[ptInd] = histoVol.lastrank
                 histoVol.lastrank += 1
                 #                histoVol.close_ingr_bhtree.MoveRBHPoint(histoVol.nb_ingredient,jtrans,0)
@@ -8425,12 +8424,10 @@ class Ingredient(Agent):
                     jtrans, rotMatj, gridPointsCoords, distance, histoVol
                 )
             # update free points
-            organelle.molecules.append([jtrans, rotMatj, self, ptInd])
+            compartment.molecules.append([jtrans, rotMatj, self, ptInd])
             histoVol.order[ptInd] = histoVol.lastrank
             histoVol.lastrank += 1
-            #            histoVol.close_ingr_bhtree.MoveRBHPoint(histoVol.nb_ingredient,jtrans,0)
             histoVol.nb_ingredient += 1
-            #            histoVol.close_ingr_bhtree.InsertRBHPoint((jtrans[0],jtrans[1],jtrans[2]),radius,None,histoVol.nb_ingredient)
             nbFreePoints = self.updateDistances(
                 histoVol,
                 insidePoints,
@@ -9456,7 +9453,10 @@ class GrowIngrediant(MultiCylindersIngr):
         checkcollision=True,
         saw=True,
     ):
-
+        cx, cy, cz = posc = pts
+        step = histoVol.grid.gridSpacing * size
+        bb = ([cx - step, cy - step, cz - step], [cx + step, cy + step, cz + step])
+        pointsInCube = histoVol.grid.getPointsInCube(bb, posc, step, addSP=False)
         o = self.histoVol.compartments[abs(self.compNum) - 1]
         sfpts = o.surfacePointsCoords
 
@@ -9484,6 +9484,7 @@ class GrowIngrediant(MultiCylindersIngr):
                 if pointsInCube[newPtId] in self.Ptis:
                     attempted += 1
                     continue
+            cx, cy, cz = posc = pts
             angle = self.vi.angle_between_vectors(numpy.array(posc), numpy.array(v))
             v, d = self.vi.measure_distance(numpy.array(posc), numpy.array(v), vec=True)
             #            print angle,abs(math.degrees(angle)),marge,d
