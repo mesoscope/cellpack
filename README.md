@@ -31,7 +31,7 @@ in terminal:
 3. `pip install -e .[dev]`
 
 ### Run analysis code
-1. `analyze -o [PATH/TO/OUTPUT/FOLDER]` // needs to exist, won't create a folder
+1. `analyze -o [PATH/TO/OUTPUT/FOLDER]` // folder needs to exist, won't create a folder
 
 ## Installation
 
