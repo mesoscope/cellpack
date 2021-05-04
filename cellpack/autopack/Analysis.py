@@ -418,7 +418,10 @@ class AnalyseAP:
         )
         self.helper.rotateObj(p, [0, 0, -math.pi / 2.0])
         filename = (
-            autopack.cache_results + os.sep + self.env.name + "distances_plane_texture.png"
+            autopack.cache_results
+            + os.sep
+            + self.env.name
+            + "distances_plane_texture.png"
         )
         c = colors.reshape(
             (
@@ -609,9 +612,30 @@ class AnalyseAP:
         if len(ingrpositions):
             delta = numpy.array(ingrpositions) - numpy.array(center)
             # lets do it on X,Y,Z and also per positions ?
-            anglesX = anglesX = numpy.array([signed_angle_between_vectors([0, 0, 1], m[0][:3], -delta, directed=False, axis=1) for m in ingrrotation])
-            anglesY = numpy.array([signed_angle_between_vectors([0, 1, 0], m[1][:3], -delta, directed=False, axis=1)for m in ingrrotation])
-            anglesZ = numpy.array([signed_angle_between_vectors([1, 0, 0], m[2][:3], -delta, directed=False, axis=1)for m in ingrrotation])
+            anglesX = anglesX = numpy.array(
+                [
+                    signed_angle_between_vectors(
+                        [0, 0, 1], m[0][:3], -delta, directed=False, axis=1
+                    )
+                    for m in ingrrotation
+                ]
+            )
+            anglesY = numpy.array(
+                [
+                    signed_angle_between_vectors(
+                        [0, 1, 0], m[1][:3], -delta, directed=False, axis=1
+                    )
+                    for m in ingrrotation
+                ]
+            )
+            anglesZ = numpy.array(
+                [
+                    signed_angle_between_vectors(
+                        [1, 0, 0], m[2][:3], -delta, directed=False, axis=1
+                    )
+                    for m in ingrrotation
+                ]
+            )
             delta *= delta
             distA = numpy.sqrt(delta.sum(1)).tolist()
             angles = numpy.array([distA, anglesX, anglesY, anglesZ])
@@ -662,7 +686,10 @@ class AnalyseAP:
         dnr = new_rdf
         N = len(distances)
         V = (
-            self.env.grid.nbGridPoints[0] * self.env.grid.nbGridPoints[1] * self.env.grid.nbGridPoints[2] * self.env.grid.gridSpacing ** 3
+            self.env.grid.nbGridPoints[0]
+            * self.env.grid.nbGridPoints[1]
+            * self.env.grid.nbGridPoints[2]
+            * self.env.grid.gridSpacing ** 3
         )
         Vshell = numpy.array(self.getVolumeShell(self.bbox, radii, self.center))
         gr = (dnr * V) / (N * Vshell)
@@ -778,7 +805,9 @@ class AnalyseAP:
         dnr = new_rdf[:]
         N = len(distances)
         V = (
-            self.env.grid.nbGridPoints[0] * self.env.grid.nbGridPoints[1] * self.env.grid.gridSpacing ** 2
+            self.env.grid.nbGridPoints[0]
+            * self.env.grid.nbGridPoints[1]
+            * self.env.grid.gridSpacing ** 2
         )
         Vshell = numpy.array(self.getAreaShell(self.bbox, radii, self.center))
         #        print Vshell

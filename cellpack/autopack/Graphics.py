@@ -793,7 +793,9 @@ class AutopackViewer:
                 else:
                     parent = self.vi.getObject(name)
                     names = (
-                        self.histo.FillName[self.histo.cFill] + "S" + ingr.name.replace(" ", "_")
+                        self.histo.FillName[self.histo.cFill]
+                        + "S"
+                        + ingr.name.replace(" ", "_")
                     )
                     if parent is None:
                         parent = self.vi.newEmpty(
@@ -839,7 +841,9 @@ class AutopackViewer:
                     name = o.name + str(i) + "_Spheres_" + ingr.name.replace(" ", "_")
                     parent = self.vi.getObject(name)
                     names = (
-                        self.histo.FillName[self.histo.cFill] + "S" + ingr.name.replace(" ", "_")
+                        self.histo.FillName[self.histo.cFill]
+                        + "S"
+                        + ingr.name.replace(" ", "_")
                     )
                     if parent is None:
                         parent = self.vi.newEmpty(
@@ -897,7 +901,9 @@ class AutopackViewer:
         else:
             parent = self.vi.getObject(name)
             names = (
-                self.histo.FillName[self.histo.cFill] + "C" + ingr.name.replace(" ", "_")
+                self.histo.FillName[self.histo.cFill]
+                + "C"
+                + ingr.name.replace(" ", "_")
             )
             # name=self.orgaToMasterGeom[ingr].GetName()+"Cylinders"
             # parent=self.vi.newEmpty(name)
@@ -1547,7 +1553,9 @@ class AutopackViewer:
                         #                            axis = self.vi.rotatePoint(axis,[0.,0.,0.],[0.0,1.0,0.0,-math.pi/2.0])
                         #                            print (self.helper.getType(self.helper.getChilds(polygon)[0]))
                         ingr.ipoly = self.vi.instancePolygon(
-                            orga.name + self.histo.FillName[self.histo.cFill] + ingr.name,
+                            orga.name
+                            + self.histo.FillName[self.histo.cFill]
+                            + ingr.name,
                             matrices=matrices[ingr],
                             mesh=polygon,
                             parent=parent,
@@ -1604,7 +1612,9 @@ class AutopackViewer:
                         #                            axis = self.vi.rotatePoint(axis,[0.,0.,0.],[0.0,1.0,0.0,-math.pi/2.0])
                         #                                print (self.helper.getType(self.helper.getChilds(polygon)[0]))
                         ingr.ipoly = self.vi.instancePolygon(
-                            orga.name + self.histo.FillName[self.histo.cFill] + ingr.name,
+                            orga.name
+                            + self.histo.FillName[self.histo.cFill]
+                            + ingr.name,
                             matrices=matrices[ingr],
                             mesh=polygon,
                             parent=parent,
@@ -1718,7 +1728,9 @@ class AutopackViewer:
             # if self.ViewerType != 'dejavu':
             #    #define the base shape for instance objects
             if self.psph is None:
-                vParentHiders = self.checkCreateEmpty(self.name + "ParentHiders", parent=self.master)
+                vParentHiders = self.checkCreateEmpty(
+                    self.name + "ParentHiders", parent=self.master
+                )
                 self.psph = self.vi.newEmpty(
                     self.name + "base_shape",
                     parent=vParentHiders,
@@ -1868,13 +1880,9 @@ class AutopackViewer:
         self.displayHistoVol()
         setup = self.checkCreateEmpty(self.name + "_Setup", parent=self.master)
         g = self.checkCreateEmpty(self.name + "_compartments_geometries", parent=setup)
-        self.checkCreateEmpty(
-            "Place here your compartments geometries", parent=g
-        )
+        self.checkCreateEmpty("Place here your compartments geometries", parent=g)
         g = self.checkCreateEmpty(self.name + "_cytoplasm_ingredient", parent=setup)
-        self.checkCreateEmpty(
-            "Place here your cytoplasm ingredients", parent=g
-        )
+        self.checkCreateEmpty("Place here your cytoplasm ingredients", parent=g)
         g = self.checkCreateEmpty(self.name + "_compartments_recipes", parent=setup)
         # s = self.checkCreateEmpty('Setup following the template', parent=g)
         # r = self.checkCreateEmpty('compartmentname_recipe', parent=g)
@@ -2686,7 +2694,8 @@ class AutopackViewer:
             center=root.position,
             size=[
                 root.size,
-            ] * 3,
+            ]
+            * 3,
         )
         print("root", len(root.objects))
         for io in root.objects:
@@ -2703,7 +2712,8 @@ class AutopackViewer:
                 center=subnode.position,
                 size=[
                     subnode.size,
-                ] * 3,
+                ]
+                * 3,
             )
             self.displaysubnode(subnode, i)
             i += 1

@@ -219,7 +219,8 @@ class GeometriTools:
             return 4.0 / 3 * pi * (rho) ** 3
         if alpha <= np.sqrt(2):
             return (
-                4.0 / 3 * pi * (rho) ** 3 - 6.0 * pi * (2 * (rho) ** 3 - 3 * d * (rho) ** 2 + d ** 3) / 3.0
+                4.0 / 3 * pi * (rho) ** 3
+                - 6.0 * pi * (2 * (rho) ** 3 - 3 * d * (rho) ** 2 + d ** 3) / 3.0
             )
         if alpha < np.sqrt(3):
             return 16.0 * (

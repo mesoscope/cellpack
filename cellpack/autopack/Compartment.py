@@ -67,15 +67,19 @@ from cellpack.mgl_tools.RAPID import RAPIDlib
 import cellpack.autopack as autopack
 from cellpack.autopack import transformation as tr, binvox_rw
 from .Recipe import Recipe
-from .ray import makeMarchingCube, vcross, vlen, findPointsCenter, f_ray_intersect_polyhedron, vdiff
+from .ray import (
+    makeMarchingCube,
+    vcross,
+    vlen,
+    findPointsCenter,
+    f_ray_intersect_polyhedron,
+    vdiff,
+)
 
 try:
     import panda3d
     from panda3d.core import Mat3, Mat4, Point3, TransformState, BitMask32
-    from panda3d.bullet import (
-        BulletCapsuleShape,
-        BulletRigidBodyNode
-    )
+    from panda3d.bullet import BulletCapsuleShape, BulletRigidBodyNode
 except Exception as e:
     panda3d = None
     print("Failed to get Panda ", e)
@@ -958,7 +962,9 @@ class Compartment(CompartmentList):
             normals.append((normal[0] * n1, normal[1] * n1, normal[2] * n1))
             if fillBB is not None:
                 if (
-                    self.inGrid(vertices[f[0]], fillBB) and self.inGrid(vertices[f[0]], fillBB) and self.inGrid(vertices[f[0]], fillBB)
+                    self.inGrid(vertices[f[0]], fillBB)
+                    and self.inGrid(vertices[f[0]], fillBB)
+                    and self.inGrid(vertices[f[0]], fillBB)
                 ):
                     areas.append(0.5 * vlen(normal))  # added by Graham
         self.area = sum(areas)
@@ -1544,7 +1550,8 @@ class Compartment(CompartmentList):
             print("doesnt exist..build")
             # binvox.exe -c -d 30 -bb -850 -850 -850 850 850 850 HIV_VLP.dae
             os.system(
-                autopack.binvox_exe + " -c -dc -d %i -bb %f %f %f %f %f %f %s\n"
+                autopack.binvox_exe
+                + " -c -dc -d %i -bb %f %f %f %f %f %f %s\n"
                 % (
                     gridN[0],
                     bb[0][0],
@@ -2007,7 +2014,8 @@ class Compartment(CompartmentList):
                     if insideBB:
                         # check only if close enouhg to surface
                         if (
-                            new_distances.item(ptInd) < env.grid.gridSpacing * 1.1547 * 2.0
+                            new_distances.item(ptInd)
+                            < env.grid.gridSpacing * 1.1547 * 2.0
                         ):
                             inside = self.checkPointInside_rapid(coord, diag, ray=3)
                         if inside:
@@ -2017,7 +2025,11 @@ class Compartment(CompartmentList):
                     if (ptInd % 1000) == 0:
                         helper.progressBar(
                             progress=int(p),
-                            label=str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(inside),
+                            label=str(ptInd)
+                            + "/"
+                            + str(len(grdPos))
+                            + " inside "
+                            + str(inside),
                         )
         if autopack.verbose:
             print("time to update distance field and idarray", time() - t1)
@@ -2381,7 +2393,9 @@ class Compartment(CompartmentList):
             if sptInd < len(srfPts):
                 sx, sy, sz = srfPts[sptInd]
                 d = math.sqrt(
-                    (gx - sx) * (gx - sx) + (gy - sy) * (gy - sy) + (gz - sz) * (gz - sz)
+                    (gx - sx) * (gx - sx)
+                    + (gy - sy) * (gy - sy)
+                    + (gz - sz) * (gz - sz)
                 )
             else:
                 try:
@@ -2679,7 +2693,12 @@ class Compartment(CompartmentList):
                     # Get the grid indices for the point we're considering, and pass if we're stepping oustide the boundaries
                     newI, newJ, newK = i + x, j + y, k + z
                     if (
-                        newI < 0 or newI > (NX - 1) or newJ < 0 or newJ > (NY - 1) or newK < 0 or newK > (NZ - 1)
+                        newI < 0
+                        or newI > (NX - 1)
+                        or newJ < 0
+                        or newJ > (NY - 1)
+                        or newK < 0
+                        or newK > (NZ - 1)
                     ):
                         continue
                     # Get the point index that this coordinate corresponds to.
@@ -2702,7 +2721,9 @@ class Compartment(CompartmentList):
                         #     pointsToTestInsideOutside.add(desiredPointIndex)
         timeFinishProjection = time()
         print(
-            "Projecting polyhedron to grid took " + str(timeFinishProjection - startTime) + " seconds."
+            "Projecting polyhedron to grid took "
+            + str(timeFinishProjection - startTime)
+            + " seconds."
         )
         helper.progressBar(label="test gridPoints")
         # Let's start flood filling in inside outside. Here's the general algorithm:
@@ -2800,11 +2821,19 @@ class Compartment(CompartmentList):
             if (g.index % 100) == 0:
                 helper.progressBar(
                     progress=int(p),
-                    label=str(g.index) + "/" + str(len(gridPoints)) + " inside " + str(g.isOutside),
+                    label=str(g.index)
+                    + "/"
+                    + str(len(gridPoints))
+                    + " inside "
+                    + str(g.isOutside),
                 )
                 if autopack.verbose:
                     print(
-                        str(g.index) + "/" + str(len(gridPoints)) + " inside " + str(g.isOutside)
+                        str(g.index)
+                        + "/"
+                        + str(len(gridPoints))
+                        + " inside "
+                        + str(g.isOutside)
                     )
 
         # Final pass through for sanity checks.
@@ -2815,7 +2844,9 @@ class Compartment(CompartmentList):
                 if g.isOutside is None:
                     g.isOutside = True
         print(
-            "Flood filling grid inside/outside took " + str(time() - timeFinishProjection) + " seconds."
+            "Flood filling grid inside/outside took "
+            + str(time() - timeFinishProjection)
+            + " seconds."
         )
         insidePoints = [g.globalCoord for g in gridPoints if g.isOutside is False]
         # outsidePoints = [g.index for g in gridPoints if g.isOutside == True]
@@ -3561,7 +3592,8 @@ class Compartment(CompartmentList):
                 v2 = v[i[j][1]]
                 v3 = v[i[j][2]]
                 volume += (
-                    (v2[1] - v1[1]) * (v3[2] - v1[2]) - (v2[2] - v1[2]) * (v3[1] - v1[1])
+                    (v2[1] - v1[1]) * (v3[2] - v1[2])
+                    - (v2[2] - v1[2]) * (v3[1] - v1[1])
                 ) * (v1[0] + v2[0] + v3[0])
             self.interiorVolume = volume / 6.0
         if self.surfaceVolume is None or self.surfaceVolume == 0.0:
@@ -3942,7 +3974,12 @@ class Compartment(CompartmentList):
                     # Get the grid indices for the point we're considering, and pass if we're stepping oustide the boundaries
                     newI, newJ, newK = i + x, j + y, k + z
                     if (
-                        newI < 0 or newI > (NX - 1) or newJ < 0 or newJ > (NY - 1) or newK < 0 or newK > (NZ - 1)
+                        newI < 0
+                        or newI > (NX - 1)
+                        or newJ < 0
+                        or newJ > (NY - 1)
+                        or newK < 0
+                        or newK > (NZ - 1)
                     ):
                         continue
                     # Get the point index that this coordinate corresponds to.
@@ -3965,7 +4002,9 @@ class Compartment(CompartmentList):
                         #     pointsToTestInsideOutside.add(desiredPointIndex)
         timeFinishProjection = time()
         print(
-            "Projecting polyhedron to grid took " + str(timeFinishProjection - startTime) + " seconds."
+            "Projecting polyhedron to grid took "
+            + str(timeFinishProjection - startTime)
+            + " seconds."
         )
 
         # Let's start flood filling in inside outside. Here's the general algorithm:
@@ -4068,20 +4107,28 @@ class Compartment(CompartmentList):
                 if g.isOutside is None:
                     g.isOutside = True
         print(
-            "Flood filling grid inside/outside took " + str(time() - timeFinishProjection) + " seconds."
+            "Flood filling grid inside/outside took "
+            + str(time() - timeFinishProjection)
+            + " seconds."
         )
         insidePoints = [g.globalCoord for g in gridPoints if not g.isOutside]
         # outsidePoints = [g.index for g in gridPoints if g.isOutside == True]
-        surfacePoints = [
-            g.globalCoord for g in gridPoints if g.representsPolyhedron
-        ]
+        surfacePoints = [g.globalCoord for g in gridPoints if g.representsPolyhedron]
         # distance ?
         if superFine:
             print(
-                "Superfine was on and it identified " + str(mismatchCounter) + " mismatches."
+                "Superfine was on and it identified "
+                + str(mismatchCounter)
+                + " mismatches."
             )
         print(
-            "Grid construction took " + str(time() - startTime) + " seconds for " + str(len(faces)) + " faces and " + str(len(gridPoints)) + " points."
+            "Grid construction took "
+            + str(time() - startTime)
+            + " seconds for "
+            + str(len(faces))
+            + " faces and "
+            + str(len(gridPoints))
+            + " points."
         )
         # what are the grid distance opinmt ?self.grid_distances
         return insidePoints, surfacePoints
@@ -4177,7 +4224,11 @@ class Compartment(CompartmentList):
             if (ptInd % 100) == 0:
                 helper.progressBar(
                     progress=int(p),
-                    label=str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(inside),
+                    label=str(ptInd)
+                    + "/"
+                    + str(len(grdPos))
+                    + " inside "
+                    + str(inside),
                 )
         print("total time", time() - t1)
         return insidePoints, surfacePoints
@@ -4323,9 +4374,7 @@ class Compartment(CompartmentList):
             cylN = helper.oneCylinder(
                 "normal", [0.0, 0.0, 0.0], [1.0, 1.0, 1.0], radius=20.0
             )
-            helper.oneCylinder(
-                "V", [0.0, 0.0, 0.0], [1.0, 1.0, 1.0], radius=20.0
-            )
+            helper.oneCylinder("V", [0.0, 0.0, 0.0], [1.0, 1.0, 1.0], radius=20.0)
             helper.changeObjColorMat(sph2, (0.0, 0.0, 1.0))
         for ptInd in range(len(grdPos)):  # len(grdPos)):
             # find closest OGsurfacepoint
@@ -4346,7 +4395,9 @@ class Compartment(CompartmentList):
             if sptInd < len(srfPts):
                 sx, sy, sz = srfPts[sptInd]
                 d = math.sqrt(
-                    (gx - sx) * (gx - sx) + (gy - sy) * (gy - sy) + (gz - sz) * (gz - sz)
+                    (gx - sx) * (gx - sx)
+                    + (gy - sy) * (gy - sy)
+                    + (gz - sz) * (gz - sz)
                 )
             else:
                 #                try :
@@ -4547,12 +4598,8 @@ class Compartment(CompartmentList):
             sph = helper.Sphere("gPts", res=10, radius=20.0)[0]
             sph2 = helper.Sphere("sPts", res=10, radius=20.0)[0]
             sph3 = helper.Sphere("hitPos", res=10, radius=20.0)[0]
-            helper.oneCylinder(
-                "normal", [0.0, 0.0, 0.0], [1.0, 1.0, 1.0], radius=20.0
-            )
-            helper.oneCylinder(
-                "V", [0.0, 0.0, 0.0], [1.0, 1.0, 1.0], radius=20.0
-            )
+            helper.oneCylinder("normal", [0.0, 0.0, 0.0], [1.0, 1.0, 1.0], radius=20.0)
+            helper.oneCylinder("V", [0.0, 0.0, 0.0], [1.0, 1.0, 1.0], radius=20.0)
             helper.changeObjColorMat(sph2, (0.0, 0.0, 1.0))
         for ptInd in range(len(grdPos)):  # len(grdPos)):
             inside = False

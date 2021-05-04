@@ -408,7 +408,9 @@ class IOingredientTool(object):
 
     def ingrPythonNode(self, ingr, recipe="recipe"):
         inrStr = (
-            "#include as follow : execfile('pathto/" + ingr.name + ".py',globals(),{'recipe':recipe_variable_name})\n"
+            "#include as follow : execfile('pathto/"
+            + ingr.name
+            + ".py',globals(),{'recipe':recipe_variable_name})\n"
         )
         if ingr.Type == "MultiSphere":
             inrStr += (
@@ -433,7 +435,7 @@ class IOingredientTool(object):
             MultiSphereIngr,
             SingleCubeIngr,
             MultiCylindersIngr,
-            GrowIngrediant
+            GrowIngrediant,
         )
 
         ingr = None
@@ -1177,7 +1179,11 @@ h1 = Environment()
             if useXref:
                 io_ingr.write(ingr, pathout + os.sep + ingr.name, ingr_format="python")
                 setupStr += (
-                    "execfile('" + pathout + os.sep + ingr.name + ".py',globals(),{'recipe':cytoplasme})\n"
+                    "execfile('"
+                    + pathout
+                    + os.sep
+                    + ingr.name
+                    + ".py',globals(),{'recipe':cytoplasme})\n"
                 )
             else:
                 ingrnode = io_ingr.ingrPythonNode(ingr, recipe="cytoplasme")
@@ -1200,7 +1206,13 @@ h1 = Environment()
                         ingr, pathout + os.sep + ingr.name, ingr_format="python"
                     )
                     setupStr += (
-                        "execfile('" + pathout + os.sep + ingr.name + ".py',globals(),{'recipe':" + o.name + "_surface})\n"
+                        "execfile('"
+                        + pathout
+                        + os.sep
+                        + ingr.name
+                        + ".py',globals(),{'recipe':"
+                        + o.name
+                        + "_surface})\n"
                     )
                 else:
                     ingrnode = io_ingr.ingrPythonNode(ingr, recipe=o.name + "_surface")
@@ -1215,7 +1227,13 @@ h1 = Environment()
                         ingr, pathout + os.sep + ingr.name, ingr_format="python"
                     )
                     setupStr += (
-                        "execfile('" + pathout + os.sep + ingr.name + ".py',globals(),{'recipe':" + o.name + "_inner})\n"
+                        "execfile('"
+                        + pathout
+                        + os.sep
+                        + ingr.name
+                        + ".py',globals(),{'recipe':"
+                        + o.name
+                        + "_inner})\n"
                     )
                 else:
                     ingrnode = io_ingr.ingrPythonNode(ingr, recipe=o.name + "_inner")
@@ -1230,7 +1248,9 @@ h1 = Environment()
     setupStr += "try :\n"
     setupStr += "    print ('try')\n"
     setupStr += (
-        "    AFGui.Set('" + env.name + "',helper=afviewer.helper,afviewer=afviewer,histoVol=h1,bbox=bbox)\n"
+        "    AFGui.Set('"
+        + env.name
+        + "',helper=afviewer.helper,afviewer=afviewer,histoVol=h1,bbox=bbox)\n"
     )
     setupStr += "except:\n"
     setupStr += "    print ('no GUI')\n"

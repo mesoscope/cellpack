@@ -30,7 +30,7 @@ Created on Saturday September 1 1:50:00 2012
 #
 ###############################################################################
 Name: -
-@author: Graham Johnson, Michel Sanner, Ludovic Autin, Kevin Wu 
+@author: Graham Johnson, Michel Sanner, Ludovic Autin, Kevin Wu
 """
 
 import numpy
@@ -412,7 +412,7 @@ def f_ray_intersect_polyhedron(
                     # vBreakj = True  # To see if a point is inside, I can stop at the first backface hit.
                     # break
                 # else:
-                    # vBreakj = True
+                # vBreakj = True
 
                 vBackfaceFinal = vBackface
                 maxDistance = d

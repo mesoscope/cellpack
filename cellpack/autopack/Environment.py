@@ -2292,41 +2292,50 @@ class Environment(CompartmentList):
                 print("The size of the grid I build = ", len(a))
 
             if (
-                self.innerGridMethod == "sdf" and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "sdf"
+                and compartment.isOrthogonalBoudingBox != 1
             ):  # A fillSelection can now be a mesh too... it can use either of these methods
                 a, b = compartment.BuildGrid_utsdf(
                     self
                 )  # to make the outer most selection from the master and then the compartment
             elif (
-                self.innerGridMethod == "bhtree" and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "bhtree"
+                and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid(self)
             elif (
-                self.innerGridMethod == "jordan" and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "jordan"
+                and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_jordan(self)
             elif (
-                self.innerGridMethod == "jordan3" and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "jordan3"
+                and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_jordan(self, ray=3)
             elif (
-                self.innerGridMethod == "pyray" and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "pyray"
+                and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_pyray(self)
             elif (
-                self.innerGridMethod == "floodfill" and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "floodfill"
+                and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_kevin(self)
             elif (
-                self.innerGridMethod == "binvox" and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "binvox"
+                and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_binvox(self)
             elif (
-                self.innerGridMethod == "trimesh" and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "trimesh"
+                and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_trimesh(self)
             elif (
-                self.innerGridMethod == "scanline" and compartment.isOrthogonalBoudingBox != 1
+                self.innerGridMethod == "scanline"
+                and compartment.isOrthogonalBoudingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_scanline(self)
 
@@ -3743,7 +3752,14 @@ class Environment(CompartmentList):
                         else:
                             unUsedPts += 1
                     filename = (
-                        wrkDirRes + "vResultMatrix1" + o.name + "_Testid" + str(vTestid) + "_Seed" + str(seedNum) + "_dists.txt"
+                        wrkDirRes
+                        + "vResultMatrix1"
+                        + o.name
+                        + "_Testid"
+                        + str(vTestid)
+                        + "_Seed"
+                        + str(seedNum)
+                        + "_dists.txt"
                     )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
                     #            filename = wrkDirRes+"/vDistances1.txt"
                     f = open(filename, "w")
@@ -3754,10 +3770,24 @@ class Environment(CompartmentList):
                     # if resultfilename == None:
                     # resultfilename = self.resultfile
                     resultfilenameT = (
-                        wrkDirRes + "vResultMatrix1" + o.name + "_Testid" + str(vTestid) + "_Seed" + str(seedNum) + "_Trans.txt"
+                        wrkDirRes
+                        + "vResultMatrix1"
+                        + o.name
+                        + "_Testid"
+                        + str(vTestid)
+                        + "_Seed"
+                        + str(seedNum)
+                        + "_Trans.txt"
                     )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
                     resultfilenameR = (
-                        wrkDirRes + "vResultMatrix1" + o.name + "_Testid" + str(vTestid) + "_Seed" + str(seedNum) + "_Rot.txt"
+                        wrkDirRes
+                        + "vResultMatrix1"
+                        + o.name
+                        + "_Testid"
+                        + str(vTestid)
+                        + "_Seed"
+                        + str(seedNum)
+                        + "_Rot.txt"
                     )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
                     #            resultfilenameT = wrkDirRes+"/vResultMatrix1" + o.name + "_Trans.txt"
                     #            resultfilenameR = wrkDirRes+"/vResultMatrix1" + o.name + "_Rot.txt"
@@ -3825,7 +3855,14 @@ class Environment(CompartmentList):
                         )
                         # vRotationString += str(rot3d) #str(h)+ ",\t" + str(p) + ",\t" + str(b) + "\n"
                         vRotationString += (
-                            str(h1) + ",\t" + str(p1) + ",\t" + str(b1) + ",\t" + ingr.name + "\n"
+                            str(h1)
+                            + ",\t"
+                            + str(p1)
+                            + ",\t"
+                            + str(b1)
+                            + ",\t"
+                            + ingr.name
+                            + "\n"
                         )  # ADDDED this line back from newer code from Theis version added July 5, 2012 to replace next line from SVN
                         #                vRotationString += str(h1)+ ",\t" + str(p1) + ",\t" + str(b1) + ingr.name +"\n"
                         # vRotationString += str( (result[matCount][1]).x )+"\n"
@@ -4719,7 +4756,6 @@ class Environment(CompartmentList):
             self.base = base
             from panda3d.core import Vec3
 
-            #            bullet.bullet-max-objects = 1024 * 10#sum of all predicted n Ingredient ?
             if self.panda_solver == "bullet":
                 from panda3d.bullet import BulletWorld
 

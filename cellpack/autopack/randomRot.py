@@ -33,10 +33,10 @@ Created 2012
 
 Name: 'randomRot'
 @author: Modified from uniform random rotation matrix from http://www.lfd.uci.edu/~gohlke/code/transformations.py.html which is copyrighted as follows:
-    
+
 #    # -*- coding: utf-8 -*-
 #    # transformations.py
-#    
+#
 #    # Copyright (c) 2006-2012, Christoph Gohlke
 #    # Copyright (c) 2006-2012, The Regents of the University of California
 #    # Produced at the Laboratory for Fluorescence Dynamics
@@ -65,7 +65,7 @@ Name: 'randomRot'
 #    # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 #    # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #    # POSSIBILITY OF SUCH DAMAGE.
-#    
+#
 #    Homogeneous Transformation Matrices and Quaternions.
 #
 #   A library for calculating 4x4 matrices for translating, rotating, reflecting,

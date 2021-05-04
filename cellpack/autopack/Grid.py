@@ -625,13 +625,16 @@ class Grid:
         if len(i1) == 3:
             # in a corner need total 7 pos, never happen in 2D
             corner[1] = (
-                self.preriodic_table["left"][0] * pxyz[0] + self.preriodic_table["left"][1] * pxyz[1]
+                self.preriodic_table["left"][0] * pxyz[0]
+                + self.preriodic_table["left"][1] * pxyz[1]
             )
             corner[2] = (
-                self.preriodic_table["left"][0] * pxyz[0] + self.preriodic_table["left"][2] * pxyz[2]
+                self.preriodic_table["left"][0] * pxyz[0]
+                + self.preriodic_table["left"][2] * pxyz[2]
             )
             corner[3] = (
-                self.preriodic_table["left"][1] * pxyz[1] + self.preriodic_table["left"][2] * pxyz[2]
+                self.preriodic_table["left"][1] * pxyz[1]
+                + self.preriodic_table["left"][2] * pxyz[2]
             )
             for i in range(4):  # 4+1=5
                 # print i,corner[i],sum(corner[i])
@@ -1094,7 +1097,13 @@ class Grid:
             if (ptInd % 100) == 0:
                 print(
                     int(p),
-                    str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(inside) + " " + str(insideBB),
+                    str(ptInd)
+                    + "/"
+                    + str(len(grdPos))
+                    + " inside "
+                    + str(inside)
+                    + " "
+                    + str(insideBB),
                 )
         return insidePoints, surfacePoints
 
