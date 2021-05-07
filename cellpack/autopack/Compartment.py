@@ -59,7 +59,6 @@ import os
 import pickle
 
 import numpy
-import pdb
 from time import time
 import math
 
@@ -3168,8 +3167,8 @@ class Compartment(CompartmentList):
             # find closest OGsurfacepoint
             gx, gy, gz = grdPos[ptInd]
             sptInd = closest[ptInd]
-            if closest[ptInd] == -1:
-                pdb.set_trace()
+            # if closest[ptInd] == -1:
+            #     pdb.set_trace()
             sx, sy, sz = srfPts[sptInd]
 
             # update distance field
