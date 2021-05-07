@@ -1,0 +1,974 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.mgl_tools.DejaVu.Transformable &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../cellpack.html">cellpack</a> &raquo;</li>
+        
+      <li>cellpack.mgl_tools.DejaVu.Transformable</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.mgl_tools.DejaVu.Transformable</h1><div class="highlight"><pre>
+<span></span><span class="c1">## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by</span>
+
+<span class="c1">#############################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Michel F. SANNER</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright: M. Sanner TSRI 2000</span>
+<span class="c1">#</span>
+<span class="c1">#############################################################################</span>
+
+<span class="c1">#</span>
+<span class="c1"># $Header: /opt/cvs/python/packages/share1.5/DejaVu/Transformable.py,v 1.51 2010/04/15 21:09:00 autin Exp $</span>
+<span class="c1">#</span>
+<span class="c1"># $Id: Transformable.py,v 1.51 2010/04/15 21:09:00 autin Exp $</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">cellpack.mgl_tools.opengltk.OpenGL</span> <span class="kn">import</span> <span class="n">GL</span>
+
+<span class="kn">from</span> <span class="nn">cellpack.mgl_tools.opengltk.extent.utillib</span> <span class="kn">import</span> <span class="n">glCleanRotMat</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">cellpack.mgl_tools.opengltk.OpenGL.GLU</span> <span class="kn">import</span> <span class="n">gluProject</span>
+    <span class="kn">from</span> <span class="nn">cellpack.mgl_tools.opengltk.extent</span> <span class="kn">import</span> <span class="n">_gllib</span> <span class="k">as</span> <span class="n">gllib</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">gllib</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">gluProject</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="kn">import</span> <span class="nn">cellpack.mgl_tools.oldnumeric</span> <span class="k">as</span> <span class="nn">Numeric</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">import</span> <span class="nn">cellpack.mgl_tools.DejaVu</span> <span class="k">as</span> <span class="nn">DejaVu</span>
+<span class="kn">from</span> <span class="nn">cellpack.mgl_tools.mglutil.events</span> <span class="kn">import</span> <span class="n">Event</span>
+
+
+<div class="viewcode-block" id="translateEvent"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.translateEvent">[docs]</a><span class="k">class</span> <span class="nc">translateEvent</span><span class="p">(</span><span class="n">Event</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">objects</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;  &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objects</span> <span class="o">=</span> <span class="n">objects</span></div>
+
+
+<div class="viewcode-block" id="Transformable"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable">[docs]</a><span class="k">class</span> <span class="nc">Transformable</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Base Class inherited by objects which can be transformed using the</span>
+<span class="sd">    mouse&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Transformable.multMat4pt"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.multMat4pt">[docs]</a>    <span class="k">def</span> <span class="nf">multMat4pt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat</span><span class="p">,</span> <span class="n">pt</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="n">ptx</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">pt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">pty</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">pt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">ptz</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">pt</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">ptx</span><span class="p">,</span> <span class="n">pty</span><span class="p">,</span> <span class="n">ptz</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Transformable.ResetTransformation"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.ResetTransformation">[docs]</a>    <span class="k">def</span> <span class="nf">ResetTransformation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redo</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Reset the tranformations (Rotation, translation, pivot, scale)&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">translation</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pivot</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">,),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">currentObject</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">rootObject</span> <span class="ow">and</span> <span class="n">redo</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">deleteOpenglList</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+            <span class="sd">&quot;&quot;&quot;Constructor&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inheritXform</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># set to 0 not to inherit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redirectXform</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># object to which transf.</span>
+        <span class="c1"># should be redirected</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagateRedirection</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">copyXform</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of objects to be</span>
+        <span class="c1"># transf. along with me</span>
+
+        <span class="c1"># Object&#39;s original transf.</span>
+        <span class="c1"># in OpenGL form (shape (16,))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Matrix</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Matrix</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MatrixRot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MatrixRotInv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MatrixScale</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">,),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MatrixTransl</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">=</span> <span class="n">viewer</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ResetTransformation</span><span class="p">(</span><span class="n">redo</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># init object&#39;s transf.</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>  <span class="c1"># Object&#39;s frame rotation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Ri</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>  <span class="c1"># Inverse of R</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Ri</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Si</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">,))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>  <span class="c1"># Inverse of frame&#39;s scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isScalable</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">immediateRendering</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># self.hasChildWithImmediateRendering = False # set to True if a child is not using dpyList</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">needsRedoDpyListOnResize</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="Transformable.Decompose4x4"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.Decompose4x4">[docs]</a>    <span class="k">def</span> <span class="nf">Decompose4x4</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot; takes a matrix in shape (16,) in OpenGL form (sequential values go</span>
+<span class="sd">        down columns) and decomposes it into its rotation (shape (16,)),</span>
+<span class="sd">        translation (shape (3,)), and scale (shape (3,)) &quot;&quot;&quot;</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">matrix</span>
+        <span class="n">transl</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">m</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="mi">14</span><span class="p">]),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="n">scale0</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+        <span class="n">scale1</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span>
+        <span class="n">scale2</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="n">m</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">scale0</span><span class="p">,</span> <span class="n">scale1</span><span class="p">,</span> <span class="n">scale2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="n">rot</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="n">rot</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="n">rot</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">rot</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">scale0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="n">rot</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">rot</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">scale1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="n">rot</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">rot</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">scale2</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cleanup</span><span class="p">:</span>
+            <span class="n">rot</span> <span class="o">=</span> <span class="n">glCleanRotMat</span><span class="p">(</span><span class="n">rot</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+        <span class="n">rot</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
+        <span class="c1"># rot1 = rot.astype(&#39;f&#39;)</span>
+        <span class="k">return</span> <span class="n">rot</span><span class="p">,</span> <span class="n">transl</span><span class="p">,</span> <span class="n">scale</span></div>
+
+<div class="viewcode-block" id="Transformable.setMatrixComponents"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.setMatrixComponents">[docs]</a>    <span class="k">def</span> <span class="nf">setMatrixComponents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trans</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">redo</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Define MatrixRot, MatrixTransl, MatrixScale and MatrixRotInv</span>
+<span class="sd">from a rotation, translation and scale.</span>
+<span class="sd">rot should be a 4x4 matrix defining a 3D 3x3 rotation </span>
+<span class="sd">trans should be a 3D translation vector</span>
+<span class="sd">scale should be 3-vector of positive number larger than 0.0</span>
+<span class="sd">&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">rot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">rot</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MatrixRot</span> <span class="o">=</span> <span class="n">rot</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+            <span class="n">RotInv</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MatrixRotInv</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">RotInv</span><span class="p">,</span> <span class="p">(</span><span class="mi">16</span><span class="p">,))</span>
+
+        <span class="k">if</span> <span class="n">trans</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">trans</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MatrixTransl</span> <span class="o">=</span> <span class="n">trans</span>
+
+        <span class="k">if</span> <span class="n">scale</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">scale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">scale</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">scale</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.0</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MatrixScale</span> <span class="o">=</span> <span class="n">scale</span>
+
+        <span class="k">if</span> <span class="n">redo</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">RedoDisplayList</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">Redraw</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Transformable.SetMatrix"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.SetMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">SetMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot; takes a 4x4 matrix.  If shape==(16,), it must be in OpenGL form.</span>
+<span class="sd">        If shape==(4,4), then it is in standard form, with translation vector</span>
+<span class="sd">        in right column, etc. calls Decompose4x4 to calculate equivalent</span>
+<span class="sd">        rotation, translation, and scale matrix/vectors and sets the objects</span>
+<span class="sd">        attributes, setting the object&#39;s original transformation to matrix &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span> <span class="ow">or</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Numeric</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">matrix</span><span class="p">),</span> <span class="p">(</span><span class="mi">16</span><span class="p">,))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Matrix</span> <span class="o">=</span> <span class="n">matrix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MatrixRot</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MatrixTransl</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MatrixScale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Decompose4x4</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="n">RotInv</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MatrixRot</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MatrixRotInv</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">RotInv</span><span class="p">,</span> <span class="p">(</span><span class="mi">16</span><span class="p">,))</span>
+        <span class="c1">#</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MatrixRot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MatrixRot</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MatrixRotInv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">MatrixRot</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">rootObject</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">deleteOpenglList</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">Redraw</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Transformable.RedirectTransformTo"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.RedirectTransformTo">[docs]</a>    <span class="k">def</span> <span class="nf">RedirectTransformTo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">propagate</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Apply transformations to object rather than to myself&quot;&quot;&quot;</span>
+
+        <span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">object</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">Transformable</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">object</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;AllObjects&quot;</span><span class="p">):</span>
+                <span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">AllObjects</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is a child of </span><span class="si">%s</span><span class="s2">, therefore it </span><span class="se">\</span>
+<span class="s2">    already inherits the transformation&quot;</span>
+                        <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">object</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                    <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagateRedirection</span> <span class="o">=</span> <span class="n">propagate</span>
+
+        <span class="k">while</span> <span class="nb">object</span> <span class="ow">and</span> <span class="nb">object</span><span class="o">.</span><span class="n">redirectXform</span> <span class="ow">and</span> <span class="nb">object</span><span class="o">.</span><span class="n">propagateRedirection</span><span class="p">:</span>
+            <span class="nb">object</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">redirectXform</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redirectXform</span> <span class="o">=</span> <span class="nb">object</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">redirectXform</span><span class="p">:</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">redirectXform</span> <span class="o">=</span> <span class="nb">object</span></div>
+
+<div class="viewcode-block" id="Transformable.MoveWith"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.MoveWith">[docs]</a>    <span class="k">def</span> <span class="nf">MoveWith</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Add myself to the list of objects inheriting transf. from object&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">object</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">Transformable</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">object</span> <span class="o">==</span> <span class="bp">self</span> <span class="ow">or</span> <span class="nb">object</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">objs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">rootObject</span><span class="o">.</span><span class="n">AllObjects</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="n">o</span><span class="o">.</span><span class="n">copyXform</span><span class="p">:</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">copyXform</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;AllObjects&quot;</span><span class="p">):</span>
+            <span class="n">children</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">AllObjects</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is a child of </span><span class="si">%s</span><span class="s2">, therefore it already </span><span class="se">\</span>
+<span class="s2">inherits the transformation&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">object</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">object</span><span class="o">.</span><span class="n">copyXform</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="n">copyXform</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_SetPivot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_pivot</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Set the pivot vector directly&quot;&quot;&quot;</span>
+        <span class="n">pivot</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">new_pivot</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">pivot</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pivot</span> <span class="o">=</span> <span class="n">pivot</span>
+
+<div class="viewcode-block" id="Transformable.SetPivot"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.SetPivot">[docs]</a>    <span class="k">def</span> <span class="nf">SetPivot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_pivot</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Set the center of rotation.</span>
+<span class="sd">        the pivot point should be expressed in the coordinate system defined</span>
+<span class="sd">        by all the transformations above this node including this node&#39;s</span>
+<span class="sd">        transformation&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">MatrixRotInv</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MatrixRotInv</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="n">pivotDiff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pivot</span> <span class="o">-</span> <span class="n">new_pivot</span>
+        <span class="n">pivotTrans</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">MatrixRotInv</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">pivotDiff</span><span class="p">)</span>
+        <span class="n">scal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span>
+        <span class="n">scalTrans</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">MatrixScale</span> <span class="o">*</span> <span class="n">pivotDiff</span>
+        <span class="n">newPivotTrans</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">MatrixRotInv</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">scalTrans</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">pivotTrans</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="o">+</span> <span class="n">scal</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">newPivotTrans</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span>
+                <span class="p">)</span>
+        <span class="n">oldPivot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pivot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pivot</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">new_pivot</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">oldPivot</span></div>
+
+    <span class="c1"># Guillaume wonders if we could write MakeMat this way</span>
+    <span class="c1"># ie get rid of the call with (self.MatrixRotInv) then (self.MatrixRot)</span>
+    <span class="c1"># but I need an exemple where self.MatrixRot is not the identity</span>
+    <span class="c1">#    def MakeMat(self, scale=True):</span>
+    <span class="c1">#    &quot;&quot;&quot;Build the matrix for this object in his parent&#39;s frame&quot;&quot;&quot;</span>
+    <span class="c1">#        gllib.glTranslatef(float(self.pivot[0]),</span>
+    <span class="c1">#                           float(self.pivot[1]),</span>
+    <span class="c1">#                           float(self.pivot[2]))</span>
+    <span class="c1">#</span>
+    <span class="c1">#        gllib.glTranslatef(float(self.translation[0]),</span>
+    <span class="c1">#                           float(self.translation[1]),</span>
+    <span class="c1">#                           float(self.translation[2]))</span>
+    <span class="c1">#        gllib.glMultMatrixf(self.rotation)</span>
+    <span class="c1">#        if scale:</span>
+    <span class="c1">#            gllib.glScalef(float(self.scale[0]),</span>
+    <span class="c1">#                           float(self.scale[1]),</span>
+    <span class="c1">#                           float(self.scale[2]))</span>
+    <span class="c1">#</span>
+    <span class="c1">#        gllib.glTranslatef(float(self.MatrixTransl[0]),</span>
+    <span class="c1">#                           float(self.MatrixTransl[1]),</span>
+    <span class="c1">#                           float(self.MatrixTransl[2]))</span>
+    <span class="c1">#        gllib.glMultMatrixf(self.MatrixRot)</span>
+    <span class="c1">#        gllib.glScalef(float(self.MatrixScale[0]),</span>
+    <span class="c1">#                       float(self.MatrixScale[1]),</span>
+    <span class="c1">#                       float(self.MatrixScale[2]))</span>
+    <span class="c1">#</span>
+    <span class="c1">#        gllib.glTranslatef(float(-self.pivot[0]),</span>
+    <span class="c1">#                           float(-self.pivot[1]),</span>
+    <span class="c1">#                           float(-self.pivot[2]))</span>
+
+<div class="viewcode-block" id="Transformable.MakeMat"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.MakeMat">[docs]</a>    <span class="k">def</span> <span class="nf">MakeMat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Build the matrix for this object in his parent&#39;s frame&quot;&quot;&quot;</span>
+        <span class="n">gllib</span><span class="o">.</span><span class="n">glTranslatef</span><span class="p">(</span>
+            <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+            <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+        <span class="p">)</span>
+        <span class="n">gllib</span><span class="o">.</span><span class="n">glTranslatef</span><span class="p">(</span>
+            <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MatrixTransl</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+            <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MatrixTransl</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MatrixTransl</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+        <span class="p">)</span>
+        <span class="c1"># print &quot;self.MatrixRot&quot;, self.MatrixRot</span>
+        <span class="n">gllib</span><span class="o">.</span><span class="n">glMultMatrixf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MatrixRot</span><span class="p">)</span>
+        <span class="n">gllib</span><span class="o">.</span><span class="n">glTranslatef</span><span class="p">(</span>
+            <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pivot</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pivot</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pivot</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="p">)</span>
+        <span class="n">gllib</span><span class="o">.</span><span class="n">glMultMatrixf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MatrixRotInv</span><span class="p">)</span>
+        <span class="n">gllib</span><span class="o">.</span><span class="n">glMultMatrixf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rotation</span><span class="p">)</span>
+        <span class="n">gllib</span><span class="o">.</span><span class="n">glMultMatrixf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MatrixRot</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">scale</span><span class="p">:</span>
+            <span class="n">gllib</span><span class="o">.</span><span class="n">glScalef</span><span class="p">(</span>
+                <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="p">)</span>
+            <span class="n">gllib</span><span class="o">.</span><span class="n">glScalef</span><span class="p">(</span>
+                <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MatrixScale</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MatrixScale</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MatrixScale</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+            <span class="p">)</span>
+        <span class="n">gllib</span><span class="o">.</span><span class="n">glTranslatef</span><span class="p">(</span>
+            <span class="nb">float</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">pivot</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">pivot</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">pivot</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Transformable.BuildMat"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.BuildMat">[docs]</a>    <span class="k">def</span> <span class="nf">BuildMat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Build the matrix by which this object is transformed</span>
+<span class="sd">instance is a list of integer providing instance indices for all parents</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+        <span class="c1"># print &#39;build Mat&#39;, obj.name, instance</span>
+        <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">parent</span> <span class="ow">and</span> <span class="n">obj</span> <span class="o">!=</span> <span class="n">root</span><span class="p">:</span>
+            <span class="n">parentInstance</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">BuildMat</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">parentInstance</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">MakeMat</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span>
+        <span class="c1"># print &#39;build Mat end&#39;, obj.name, instance</span>
+        <span class="c1"># print &#39;build multiply instance&#39;, instance[-1], &#39;for geom&#39;, obj</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">instanceMatricesFortran</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">instance</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span>
+        <span class="n">gllib</span><span class="o">.</span><span class="n">glMultMatrixf</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span></div>
+
+    <span class="c1">## FIXME does not work .. Project return weird stuff</span>
+    <span class="c1">##      def Project(self, point):</span>
+    <span class="c1">##          &quot;&quot;&quot;Apply all transformations to point and return winx,winy,winz&quot;&quot;&quot;</span>
+    <span class="c1">##          camera = self.viewer.currentCamera</span>
+    <span class="c1">##          camera.SetupProjectionMatrix()</span>
+    <span class="c1">##      GL.glViewport(0, 0, camera.width, camera.height)</span>
+    <span class="c1">##  #        mat = Numeric.reshape(Numeric.transpose(self.GetMatrix(self)), (16,))</span>
+    <span class="c1">##          mat = Numeric.reshape(self.GetMatrix(), (16,))</span>
+    <span class="c1">##          print self.name, mat</span>
+    <span class="c1">##      GL.glPushMatrix()</span>
+    <span class="c1">##      GL.glLoadIdentity()</span>
+    <span class="c1">##          GL.glMultMatrix(mat)</span>
+    <span class="c1">##          print &#39;MOD&#39;,GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX)</span>
+    <span class="c1">##          print &#39;PROJ&#39;,GL.glGetDoublev(GL.GL_PROJECTION_MATRIX)</span>
+    <span class="c1">##          projPoint = gluProject(point[0],point[1],point[2])</span>
+    <span class="c1">##        GL.glPopMatrix()</span>
+    <span class="c1">##          return projPoint</span>
+
+<div class="viewcode-block" id="Transformable.GetMatrix"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.GetMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">GetMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Returns the matrix by which this object is transformed</span>
+<span class="sd">scale = False: returns the rotation and translation. no scaling info included</span>
+<span class="sd">               Used to save the transformed geom --&gt; coords --&gt; new pdb file</span>
+<span class="sd">instance is a list of integer instance indices for all parents</span>
+<span class="sd">&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">rootObject</span>
+
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
+            <span class="k">while</span> <span class="n">p</span><span class="p">:</span>
+                <span class="n">instance</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">parent</span>
+
+        <span class="n">GL</span><span class="o">.</span><span class="n">glPushMatrix</span><span class="p">()</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glLoadIdentity</span><span class="p">()</span>
+        <span class="c1"># print &#39;GetMatrix&#39;, instance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BuildMat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
+        <span class="c1"># GL.glMultMatrixf(self.instanceMatricesFortran[instanceList[0]]])</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">GL</span><span class="o">.</span><span class="n">glGetDoublev</span><span class="p">(</span><span class="n">GL</span><span class="o">.</span><span class="n">GL_MODELVIEW_MATRIX</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glPopMatrix</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">alltrue</span><span class="p">(</span><span class="n">m</span> <span class="o">==</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)):</span>
+            <span class="c1"># this happens when Pmv has no GUI</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Transformable.GetMatrixInverse"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.GetMatrixInverse">[docs]</a>    <span class="k">def</span> <span class="nf">GetMatrixInverse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Returns the inverse of the matrix used to transform this object&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">rootObject</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetMatrix</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Numeric</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="p">(</span><span class="mi">16</span><span class="p">,))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="n">rot</span><span class="p">,</span> <span class="n">transl</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Decompose4x4</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        <span class="n">sc</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="p">[[</span><span class="mi">1</span><span class="p">]]))</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">rot</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span> <span class="o">/</span> <span class="n">sc</span>
+        <span class="n">tr</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="p">(</span><span class="n">transl</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">transl</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">transl</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">n</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">tr</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">n</span></div>
+
+    <span class="c1">##      m[:3,:3] = Numeric.transpose(m[:3,:3])</span>
+    <span class="c1">##      m[:3,3] = -m[:3,3]</span>
+    <span class="c1">##      s = Numeric.identity(4) * 1.0/root.scale[0]</span>
+    <span class="c1">##      s[3,3] = 1.0</span>
+    <span class="c1">##      m = Numeric.dot(s, m)</span>
+
+<div class="viewcode-block" id="Transformable.FrameTransform"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.FrameTransform">[docs]</a>    <span class="k">def</span> <span class="nf">FrameTransform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">camera</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Build the R an RI, the object&#39;s frame transformation and inverse&quot;&quot;&quot;</span>
+
+        <span class="n">GL</span><span class="o">.</span><span class="n">glPushMatrix</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Si</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">,))</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glLoadIdentity</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;parent&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inheritXform</span><span class="p">:</span>
+                <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
+                <span class="k">while</span> <span class="n">parent</span><span class="p">:</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">rotation</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+                    <span class="n">upd</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Numeric</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="p">(</span><span class="mi">16</span><span class="p">,))</span>
+                    <span class="n">GL</span><span class="o">.</span><span class="n">glMultMatrixf</span><span class="p">(</span><span class="n">upd</span><span class="p">)</span>
+                    <span class="n">GL</span><span class="o">.</span><span class="n">glMultMatrixf</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">MatrixRotInv</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">Si</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Si</span> <span class="o">/</span> <span class="n">parent</span><span class="o">.</span><span class="n">scale</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">Si</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Si</span> <span class="o">/</span> <span class="n">parent</span><span class="o">.</span><span class="n">MatrixScale</span>
+                    <span class="c1"># we have to test here because we need to take into</span>
+                    <span class="c1"># account the first parent that does not inherit while</span>
+                    <span class="c1"># building R and Ri</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">parent</span><span class="o">.</span><span class="n">inheritXform</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
+
+        <span class="k">if</span> <span class="n">camera</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">camera</span><span class="o">.</span><span class="n">rotation</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+            <span class="n">upd</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Numeric</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="p">(</span><span class="mi">16</span><span class="p">,))</span>
+            <span class="n">GL</span><span class="o">.</span><span class="n">glMultMatrixf</span><span class="p">(</span><span class="n">upd</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Si</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Si</span> <span class="o">/</span> <span class="n">camera</span><span class="o">.</span><span class="n">scale</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Ri</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">GL</span><span class="o">.</span><span class="n">glGetDoublev</span><span class="p">(</span><span class="n">GL</span><span class="o">.</span><span class="n">GL_MODELVIEW_MATRIX</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glPopMatrix</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Ri</span> <span class="o">=</span> <span class="n">glCleanRotMat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Ri</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Ri</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Numeric</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Ri</span><span class="p">),</span> <span class="p">(</span><span class="mi">16</span><span class="p">,))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Ri</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">redirectXform</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">redirectXform</span><span class="o">.</span><span class="n">FrameTransform</span><span class="p">(</span><span class="n">camera</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">copyXform</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">FrameTransform</span><span class="p">(</span><span class="n">camera</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Transformable.SetTransformation"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.SetTransformation">[docs]</a>    <span class="k">def</span> <span class="nf">SetTransformation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">redo</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Set the transformation matrix, if transpose is False the rotation</span>
+<span class="sd">should be in FORTRAN style</span>
+<span class="sd">&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Numeric</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">matrix</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">matrix</span><span class="o">.</span><span class="n">flags</span><span class="o">.</span><span class="n">contiguous</span><span class="p">:</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="n">rot</span><span class="p">,</span> <span class="n">transl</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Decompose4x4</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetRotation</span><span class="p">(</span><span class="n">rot</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">),</span> <span class="n">redo</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetTranslation</span><span class="p">(</span><span class="n">transl</span><span class="p">,</span> <span class="n">redo</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetScale</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">redo</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">redo</span> <span class="ow">and</span> <span class="bp">self</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">rootObject</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">immediateRendering</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">deleteOpenglList</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">Redraw</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Transformable.SetRotation"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.SetRotation">[docs]</a>    <span class="k">def</span> <span class="nf">SetRotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">redo</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Set the rotation matrix to the object [matrix.shape==(16,)]&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">matrix</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1">##      if self.redirectXform: obj = self.redirectXform</span>
+        <span class="c1">##      else: obj = self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">matrix</span>
+        <span class="c1">##      for o in self.copyXform: o.SetRotation(camera)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">redo</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span>
+            <span class="ow">and</span> <span class="bp">self</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">rootObject</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">immediateRendering</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">deleteOpenglList</span><span class="p">()</span></div>
+        <span class="c1"># self.viewer.Redraw()</span>
+
+<div class="viewcode-block" id="Transformable.ConcatRotationRelative"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.ConcatRotationRelative">[docs]</a>    <span class="k">def</span> <span class="nf">ConcatRotationRelative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Apply the rotation matrix to the object (matrix.shape ==(16,)</span>
+<span class="sd">        Unlike ConcatRotation you just concatenate the rotation of the object</span>
+<span class="sd">        without considering Ri and R</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glPushMatrix</span><span class="p">()</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glLoadIdentity</span><span class="p">()</span>
+        <span class="c1">##         GL.glMultMatrixf(obj.rotation)</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glMultMatrixf</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glMultMatrixf</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">rotation</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">GL</span><span class="o">.</span><span class="n">glGetDoublev</span><span class="p">(</span><span class="n">GL</span><span class="o">.</span><span class="n">GL_MODELVIEW_MATRIX</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glPopMatrix</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Transformable.ConcatRotation"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.ConcatRotation">[docs]</a>    <span class="k">def</span> <span class="nf">ConcatRotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">redo</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Apply the rotation matrix to the object [matrix.shape==(16,)]&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">redirectXform</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">redirectXform</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glPushMatrix</span><span class="p">()</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glLoadIdentity</span><span class="p">()</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glMultMatrixf</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">Ri</span><span class="p">)</span>  <span class="c1"># .astype(&#39;f&#39;))</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glMultMatrixf</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glMultMatrixf</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">R</span><span class="p">)</span>  <span class="c1"># .astype(&#39;f&#39;))</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glMultMatrixf</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">rotation</span><span class="p">)</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">GL</span><span class="o">.</span><span class="n">glGetDoublev</span><span class="p">(</span><span class="n">GL</span><span class="o">.</span><span class="n">GL_MODELVIEW_MATRIX</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">glCleanRotMat</span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">rotation</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
+        <span class="n">GL</span><span class="o">.</span><span class="n">glPopMatrix</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">copyXform</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">ConcatRotation</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+
+        <span class="c1">## This code made rotation very slow because it would rebuild the</span>
+        <span class="c1">## master dpyList in cases where it was not needed</span>
+        <span class="c1">##         if redo and not self.immediateRendering:</span>
+        <span class="c1">##             vi = self.viewer</span>
+        <span class="c1">##             print &#39;faga&#39;</span>
+        <span class="c1">##             vi.deleteOpenglList()</span>
+
+        <span class="n">vi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">vi</span><span class="o">.</span><span class="n">activeClippingPlanes</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="ow">or</span> <span class="n">vi</span><span class="o">.</span><span class="n">activeScissor</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="n">vi</span><span class="o">.</span><span class="n">currentObject</span> <span class="o">!=</span> <span class="n">vi</span><span class="o">.</span><span class="n">rootObject</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">vi</span><span class="o">.</span><span class="n">redirectTransformToRoot</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">redo</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">immediateRendering</span>
+        <span class="p">):</span>
+            <span class="n">vi</span><span class="o">.</span><span class="n">deleteOpenglList</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Transformable.SetTranslation"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.SetTranslation">[docs]</a>    <span class="k">def</span> <span class="nf">SetTranslation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">redo</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Set the translation trans to the object&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">trans</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1">##      if self.redirectXform: obj = self.redirectXform</span>
+        <span class="c1">##      else: obj = self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">translation</span> <span class="o">=</span> <span class="n">trans</span>
+        <span class="c1">##      for o in self.copyXform: o.SetTranslation(camera)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span>
+            <span class="ow">and</span> <span class="bp">self</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">rootObject</span>
+            <span class="ow">and</span> <span class="n">redo</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">immediateRendering</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">deleteOpenglList</span><span class="p">()</span></div>
+        <span class="c1"># self.viewer.Redraw()</span>
+
+<div class="viewcode-block" id="Transformable.getCumulatedTranslation"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.getCumulatedTranslation">[docs]</a>    <span class="k">def</span> <span class="nf">getCumulatedTranslation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;calculate the translation cumulated from root</span>
+<span class="sd">&quot;&quot;&quot;</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="n">lCumulatedTranslation</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">obj</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">rootObject</span><span class="p">:</span>
+            <span class="n">lCumulatedTranslation</span> <span class="o">+=</span> <span class="n">obj</span><span class="o">.</span><span class="n">translation</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">parent</span>
+        <span class="n">lCumulatedTranslation</span> <span class="o">+=</span> <span class="n">obj</span><span class="o">.</span><span class="n">translation</span>  <span class="c1"># to add rootObject translation</span>
+        <span class="k">return</span> <span class="n">lCumulatedTranslation</span></div>
+
+<div class="viewcode-block" id="Transformable.ConcatTranslation"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.ConcatTranslation">[docs]</a>    <span class="k">def</span> <span class="nf">ConcatTranslation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">redo</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Apply the translation trans to the object&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">redirectXform</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">redirectXform</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># MS. Feb 22 &#39;99 obj.R does not contain the scaling factor</span>
+        <span class="c1">#        d = obj.Si * Numeric.array( trans )</span>
+        <span class="c1"># d = Numeric.array( trans )</span>
+        <span class="c1"># d = Numeric.concatenate( (d, [1.0]) )  # go to homogenous coords</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">trans</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span>
+        <span class="n">rot</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">R</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="c1">##         obj.translation = obj.translation + \</span>
+        <span class="c1">##                            Numeric.dot( rot, d )[:3]</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">translation</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">translation</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">multMat4pt</span><span class="p">(</span><span class="n">rot</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">copyXform</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">ConcatTranslation</span><span class="p">(</span><span class="n">trans</span><span class="p">)</span>
+        <span class="n">vi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">vi</span><span class="o">.</span><span class="n">activeClippingPlanes</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="ow">or</span> <span class="n">vi</span><span class="o">.</span><span class="n">activeScissor</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="n">vi</span><span class="o">.</span><span class="n">currentObject</span> <span class="o">!=</span> <span class="n">vi</span><span class="o">.</span><span class="n">rootObject</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">vi</span><span class="o">.</span><span class="n">redirectTransformToRoot</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">redo</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">immediateRendering</span>
+        <span class="p">):</span>
+            <span class="n">vi</span><span class="o">.</span><span class="n">deleteOpenglList</span><span class="p">()</span>
+        <span class="n">vi</span><span class="o">.</span><span class="n">Redraw</span><span class="p">()</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="n">translateEvent</span><span class="p">(</span><span class="s2">&quot;translate&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+        <span class="n">vi</span><span class="o">.</span><span class="n">dispatchEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Transformable.SetScale"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.SetScale">[docs]</a>    <span class="k">def</span> <span class="nf">SetScale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">redo</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Set the scaling factor of the object&quot;&quot;&quot;</span>
+        <span class="c1"># print &quot;SetScale&quot;, redo</span>
+        <span class="c1">##      if self.redirectXform: obj = self.redirectXform</span>
+        <span class="c1">##      else: obj = self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isScalable</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">scale</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,)</span>
+            <span class="k">if</span> <span class="n">scale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.00</span> <span class="ow">and</span> <span class="n">scale</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.00</span> <span class="ow">and</span> <span class="n">scale</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.00</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span>
+            <span class="c1">##      for o in self.copyXform: o.SetScale(camera)</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span>
+                <span class="ow">and</span> <span class="p">(</span>
+                    <span class="bp">self</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">rootObject</span>
+                    <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">activeClippingPlanes</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="p">)</span>
+                <span class="ow">and</span> <span class="n">redo</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">immediateRendering</span>
+            <span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">deleteOpenglList</span><span class="p">()</span></div>
+
+    <span class="c1"># self.viewer.Redraw()</span>
+
+<div class="viewcode-block" id="Transformable.ConcatScale"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.ConcatScale">[docs]</a>    <span class="k">def</span> <span class="nf">ConcatScale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">redo</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Multiply the object&#39;s scale by scale&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">redirectXform</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">redirectXform</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">scale</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">isScalable</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">scale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">1.0</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">scale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">scale</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">scale</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.0</span>
+            <span class="p">):</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">scale</span> <span class="o">*</span> <span class="n">scale</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">copyXform</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">ConcatScale</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span>  <span class="c1"># was o.ConcatScale(camera)</span>
+        <span class="n">vi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">vi</span><span class="o">.</span><span class="n">activeClippingPlanes</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="ow">or</span> <span class="n">vi</span><span class="o">.</span><span class="n">activeScissor</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="n">vi</span><span class="o">.</span><span class="n">currentObject</span> <span class="o">!=</span> <span class="n">vi</span><span class="o">.</span><span class="n">rootObject</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">vi</span><span class="o">.</span><span class="n">redirectTransformToRoot</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">redo</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">immediateRendering</span>
+        <span class="p">):</span>
+            <span class="n">vi</span><span class="o">.</span><span class="n">deleteOpenglList</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Transformable.transformIsIdentity"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.transformIsIdentity">[docs]</a>    <span class="k">def</span> <span class="nf">transformIsIdentity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;return true if this object has the identity matrix as</span>
+<span class="sd">        transformation&quot;&quot;&quot;</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetMatrix</span><span class="p">()</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">mat</span> <span class="o">-</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.00001</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Transformable.transformationSourceCode"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.Transformable.Transformable.transformationSourceCode">[docs]</a>    <span class="k">def</span> <span class="nf">transformationSourceCode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s2">&quot;functionName&quot;</span><span class="p">):</span>
+                <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;generate the source code for setting the current transformation.</span>
+<span class="sd">        the returned arryaays can be used to g.SetXXX where XXX is</span>
+<span class="sd">        Rotation, Translation, Scale or Pivot&quot;&quot;&quot;</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetMatrix</span><span class="p">()</span>
+        <span class="n">rot</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Decompose4x4</span><span class="p">(</span><span class="n">Numeric</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">src</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;from numpy.oldnumeric import array</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">src</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;rot = &quot;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.astype(&#39;f&#39;)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">src</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;trans = &quot;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="n">trans</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">src</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;scale = &quot;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">src</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;pivot = &quot;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">src</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

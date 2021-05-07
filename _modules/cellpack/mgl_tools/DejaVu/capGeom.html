@@ -1,0 +1,643 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.mgl_tools.DejaVu.capGeom &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../cellpack.html">cellpack</a> &raquo;</li>
+        
+      <li>cellpack.mgl_tools.DejaVu.capGeom</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.mgl_tools.DejaVu.capGeom</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">cellpack.mgl_tools.mglutil.math.rotax</span> <span class="kn">import</span> <span class="n">rotax</span><span class="p">,</span> <span class="n">rotVectToVect</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+
+<div class="viewcode-block" id="vdiff"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.capGeom.vdiff">[docs]</a><span class="k">def</span> <span class="nf">vdiff</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
+    <span class="c1"># returns p1 - p2</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">p1</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">p2</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z1</span> <span class="o">-</span> <span class="n">z2</span><span class="p">)</span></div>
+
+
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+
+
+<div class="viewcode-block" id="vnorm"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.capGeom.vnorm">[docs]</a><span class="k">def</span> <span class="nf">vnorm</span><span class="p">(</span><span class="n">v1</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">v1</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">y1</span> <span class="o">+</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">z1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">n</span><span class="p">,</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">n</span><span class="p">,</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="vlen"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.capGeom.vlen">[docs]</a><span class="k">def</span> <span class="nf">vlen</span><span class="p">(</span><span class="n">v1</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">v1</span>
+    <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">y1</span> <span class="o">+</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">z1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="dot"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.capGeom.dot">[docs]</a><span class="k">def</span> <span class="nf">dot</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">v1</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">v2</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x1</span> <span class="o">*</span> <span class="n">x2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">y1</span> <span class="o">*</span> <span class="n">y2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">z1</span> <span class="o">*</span> <span class="n">z2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="lengthOfProjectedVects"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.capGeom.lengthOfProjectedVects">[docs]</a><span class="k">def</span> <span class="nf">lengthOfProjectedVects</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    return the length of the v1 projected onto v2</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># v1.v2 = |v1|*|v2|*cos(angle)</span>
+    <span class="c1"># |v1|*cos(angle) = (v1.v2) / |v2|</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">v1</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">v2</span>
+    <span class="n">nv2</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">x2</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">y2</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">+</span> <span class="n">z2</span> <span class="o">*</span> <span class="n">z2</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="p">((</span><span class="n">x1</span> <span class="o">*</span> <span class="n">x2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">y1</span> <span class="o">*</span> <span class="n">y2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">z1</span> <span class="o">*</span> <span class="n">z2</span><span class="p">))</span> <span class="o">/</span> <span class="n">nv2</span>
+    <span class="n">vpx</span><span class="p">,</span> <span class="n">vpy</span><span class="p">,</span> <span class="n">vpz</span> <span class="o">=</span> <span class="n">s</span> <span class="o">*</span> <span class="n">x2</span><span class="p">,</span> <span class="n">s</span> <span class="o">*</span> <span class="n">y2</span><span class="p">,</span> <span class="n">s</span> <span class="o">*</span> <span class="n">z2</span>
+    <span class="k">return</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">vpx</span> <span class="o">*</span> <span class="n">vpx</span> <span class="o">+</span> <span class="n">vpy</span> <span class="o">*</span> <span class="n">vpy</span> <span class="o">+</span> <span class="n">vpz</span> <span class="o">*</span> <span class="n">vpz</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="area2"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.capGeom.area2">[docs]</a><span class="k">def</span> <span class="nf">area2</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    return 2 * area of triangle abc</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="insideTriangle"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.capGeom.insideTriangle">[docs]</a><span class="k">def</span> <span class="nf">insideTriangle</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    returns True if P lies within triangle A,B,C</span>
+<span class="sd">    ABC is counterclockwise</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">area2</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">area2</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">area2</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="triangulate"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.capGeom.triangulate">[docs]</a><span class="k">def</span> <span class="nf">triangulate</span><span class="p">(</span><span class="n">verts</span><span class="p">):</span>
+    <span class="n">tri</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">vertsInd</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">)))</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertsInd</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">triFound</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">triFound</span> <span class="ow">and</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertsInd</span><span class="p">):</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">vertsInd</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">ca</span> <span class="o">=</span> <span class="n">verts</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+            <span class="n">cb</span> <span class="o">=</span> <span class="n">verts</span><span class="p">[</span><span class="n">b</span><span class="p">]</span>
+            <span class="n">cc</span> <span class="o">=</span> <span class="n">verts</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">area2</span><span class="p">(</span><span class="n">ca</span><span class="p">,</span> <span class="n">cb</span><span class="p">,</span> <span class="n">cc</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">vertsInd</span><span class="p">[</span><span class="mi">3</span><span class="p">:]:</span>
+                    <span class="n">cp</span> <span class="o">=</span> <span class="n">verts</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">insideTriangle</span><span class="p">(</span><span class="n">ca</span><span class="p">,</span> <span class="n">cb</span><span class="p">,</span> <span class="n">cc</span><span class="p">,</span> <span class="n">cp</span><span class="p">):</span>
+                        <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">tri</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+                    <span class="n">vertsInd</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+                    <span class="n">triFound</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">vertsInd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertsInd</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertsInd</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERROR Not a simple polygon&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">tri</span></div>
+
+
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">acos</span><span class="p">,</span> <span class="n">pi</span>
+
+
+<div class="viewcode-block" id="angleBetweenNormVecsRad"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.capGeom.angleBetweenNormVecsRad">[docs]</a><span class="k">def</span> <span class="nf">angleBetweenNormVecsRad</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;return the angle between vetors v1 and v2. NOTE v1 and v2 have to be</span>
+<span class="sd">    normalized&quot;&quot;&quot;</span>
+    <span class="c1"># v1.v2 = |v1|*|v2|*cos(angle)</span>
+    <span class="c1"># angle = acos( v1.v2 / |v1|*|v2|)</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">v1</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">v2</span>
+    <span class="k">return</span> <span class="n">acos</span><span class="p">((</span><span class="n">x1</span> <span class="o">*</span> <span class="n">x2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">y1</span> <span class="o">*</span> <span class="n">y2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">z1</span> <span class="o">*</span> <span class="n">z2</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="angleBetweenVecsDeg"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.capGeom.angleBetweenVecsDeg">[docs]</a><span class="k">def</span> <span class="nf">angleBetweenVecsDeg</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    return the angle between vetors v1 and v2.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># v1.v2 = |v1|*|v2|*cos(angle)</span>
+    <span class="c1"># angle = acos( v1.v2 / |v1|*|v2|)</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">v1</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">v2</span>
+    <span class="n">n1</span> <span class="o">=</span> <span class="n">vlen</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span>
+    <span class="n">n2</span> <span class="o">=</span> <span class="n">vlen</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span>
+    <span class="n">arad</span> <span class="o">=</span> <span class="n">acos</span><span class="p">(((</span><span class="n">x1</span> <span class="o">*</span> <span class="n">x2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">y1</span> <span class="o">*</span> <span class="n">y2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">z1</span> <span class="o">*</span> <span class="n">z2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">n1</span> <span class="o">*</span> <span class="n">n2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="mi">180</span> <span class="o">*</span> <span class="n">arad</span> <span class="o">/</span> <span class="n">pi</span></div>
+
+
+<div class="viewcode-block" id="ccw"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.capGeom.ccw">[docs]</a><span class="k">def</span> <span class="nf">ccw</span><span class="p">(</span><span class="n">poly</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">poly</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">area2</span><span class="p">(</span><span class="n">poly</span><span class="p">[</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">poly</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">poly</span><span class="p">[(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">n</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="capMesh"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.capGeom.capMesh">[docs]</a><span class="k">def</span> <span class="nf">capMesh</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">faceEdges</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">pno</span><span class="p">,</span> <span class="n">minDist</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds the section mesh between a mesh and a plane</span>
+
+<span class="sd">    vertices: mesh vertices</span>
+<span class="sd">    edges: mesh edges as (v1,v2)</span>
+<span class="sd">    faces: mesh faces</span>
+<span class="sd">    faceEdges:</span>
+<span class="sd">    pp: Vector - A point on the plane</span>
+<span class="sd">    pno: Vector - The cutting plane&#39;s normal (normalized)</span>
+<span class="sd">    minDist: useds to remove points to close in contour</span>
+
+<span class="sd">    Returns: Mesh - the resulting mesh of the section if any or</span>
+<span class="sd">                    Boolean - False if no section exists</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
+
+    <span class="n">halfPi</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">*</span> <span class="mf">0.5</span>
+
+    <span class="c1">##     ppx, ppy, ppz = pp</span>
+    <span class="c1">##     pnox, pnoy, pnoz = pno</span>
+
+    <span class="c1">##     t1 = time()</span>
+    <span class="c1">##     vertsold = []</span>
+    <span class="c1">##     ed_xsect = {}</span>
+    <span class="c1">##     pr1 = []</span>
+    <span class="c1">##     pr2 = []</span>
+    <span class="c1">##     ang1 = []</span>
+    <span class="c1">##     ang2 = []</span>
+    <span class="c1">##     for ednum, ed in enumerate(edges):</span>
+    <span class="c1">##         # getting a vector from each edge vertices to a point on the plane</span>
+    <span class="c1">##         v1 = vertices[ed[0]]</span>
+    <span class="c1">##         co1 = vdiff( v1, pp)</span>
+
+    <span class="c1">##         v2 = vertices[ed[1]]</span>
+    <span class="c1">##         co2 = vdiff( v2, pp)</span>
+
+    <span class="c1">##         # projecting them on the normal vector</span>
+    <span class="c1">##         #proj1 = lengthOfProjectedVects(co1, pno)</span>
+    <span class="c1">##         x1,y1,z1 = co1</span>
+    <span class="c1">##         x2,y2,z2 = pno</span>
+    <span class="c1">##         s = ( (x1*x2) + (y1*y2) + (z1*z2) )</span>
+    <span class="c1">##         vpx, vpy, vpz = s*x2, s*y2,s*z2</span>
+    <span class="c1">##         proj1 = sqrt( (vpx*vpx + vpy*vpy + vpz*vpz) )</span>
+    <span class="c1">##         pr1.append(proj1)</span>
+
+    <span class="c1">##         #proj2 = lengthOfProjectedVects(co2, pno)</span>
+    <span class="c1">##         x1,y1,z1 = co2</span>
+    <span class="c1">##         s = ( (x1*x2) + (y1*y2) + (z1*z2) )</span>
+    <span class="c1">##         vpx, vpy, vpz = s*x2, s*y2,s*z2</span>
+    <span class="c1">##         proj2 = sqrt( (vpx*vpx + vpy*vpy + vpz*vpz) )</span>
+    <span class="c1">##         pr2.append(proj2)</span>
+
+    <span class="c1">##         if (proj1 != 0):</span>
+    <span class="c1">##             angle1 = angleBetweenVecsDeg(co1, pno)</span>
+    <span class="c1">##         else:</span>
+    <span class="c1">##             print &#39;0 eangle1&#39;, ed</span>
+    <span class="c1">##             angle1 = 0</span>
+
+    <span class="c1">##         if (proj2 != 0):</span>
+    <span class="c1">##             angle2 = angleBetweenVecsDeg(co2, pno)</span>
+    <span class="c1">##         else:</span>
+    <span class="c1">##             angle2 = 0</span>
+    <span class="c1">##             print &#39;0 eangle2&#39;, ed</span>
+
+    <span class="c1">##         ang1.append(angle1)</span>
+    <span class="c1">##         ang2.append(angle2)</span>
+    <span class="c1">##         #Check to see if edge intersects. Also check if edge is coplanar to the</span>
+    <span class="c1">##         #cutting plane (proj1=proj2=0)</span>
+    <span class="c1">##         if ((proj1 == 0) or (proj2 == 0) or \</span>
+    <span class="c1">##             (angle1 &gt; 90) != (angle2 &gt; 90)) and \</span>
+    <span class="c1">##             (proj1+proj2 &gt; 0) :</span>
+
+    <span class="c1">##             #edge intersects.</span>
+    <span class="c1">##             proj1 /= proj1+proj2</span>
+    <span class="c1">##             cox = (v2[0]-v1[0])*proj1 + v1[0]</span>
+    <span class="c1">##             coy = (v2[1]-v1[1])*proj1 + v1[1]</span>
+    <span class="c1">##             coz = (v2[2]-v1[2])*proj1 + v1[2]</span>
+    <span class="c1">##             vertsold.append( (cox,coy,coz) )</span>
+    <span class="c1">##             #store a mapping between the new vertices and the mesh&#39;s edges</span>
+    <span class="c1">##             ed_xsect[ednum] = len(ed_xsect)</span>
+    <span class="c1">##     print &#39;    time to compute contour&#39;, time()-t1, len(vertsold)</span>
+
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+    <span class="n">nv1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">edges</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">nv2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">edges</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">nco1</span> <span class="o">=</span> <span class="n">nv1</span> <span class="o">-</span> <span class="n">pp</span>
+    <span class="n">ns</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nco1</span> <span class="o">*</span> <span class="n">pno</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ns</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="n">nvp</span> <span class="o">=</span> <span class="n">pno</span> <span class="o">*</span> <span class="n">ns</span>
+    <span class="n">nproj1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nvp</span> <span class="o">*</span> <span class="n">nvp</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">nco2</span> <span class="o">=</span> <span class="n">nv2</span> <span class="o">-</span> <span class="n">pp</span>
+    <span class="n">ns</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nco2</span> <span class="o">*</span> <span class="n">pno</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ns</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="n">nvp</span> <span class="o">=</span> <span class="n">pno</span> <span class="o">*</span> <span class="n">ns</span>
+    <span class="n">nproj2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nvp</span> <span class="o">*</span> <span class="n">nvp</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">lpno</span> <span class="o">=</span> <span class="n">vlen</span><span class="p">(</span><span class="n">pno</span><span class="p">)</span>
+    <span class="n">nlco1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nv1</span> <span class="o">*</span> <span class="n">nv1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">denom</span> <span class="o">=</span> <span class="n">nlco1</span> <span class="o">*</span> <span class="n">lpno</span>  <span class="c1"># what id denom is 0. i.e proj=0</span>
+    <span class="n">arad1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nco1</span> <span class="o">*</span> <span class="n">pno</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">denom</span><span class="p">)</span>  <span class="c1"># * 180 / pi</span>
+
+    <span class="n">nlco2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nv2</span> <span class="o">*</span> <span class="n">nv2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">denom</span> <span class="o">=</span> <span class="n">nlco2</span> <span class="o">*</span> <span class="n">lpno</span>  <span class="c1"># what id denom is 0. i.e proj=0</span>
+    <span class="n">arad2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nco2</span> <span class="o">*</span> <span class="n">pno</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">denom</span><span class="p">)</span>  <span class="c1"># * 180 / pi</span>
+
+    <span class="n">verts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">contourVerts</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">)):</span>
+        <span class="n">proj1</span> <span class="o">=</span> <span class="n">nproj1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">proj2</span> <span class="o">=</span> <span class="n">nproj2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">proj1</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">proj2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">arad1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">halfPi</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">arad2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">halfPi</span><span class="p">)</span>
+        <span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">proj1</span> <span class="o">+</span> <span class="n">proj2</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+
+            <span class="c1"># edge intersects.</span>
+            <span class="n">proj1</span> <span class="o">/=</span> <span class="n">proj1</span> <span class="o">+</span> <span class="n">proj2</span>
+            <span class="n">v1i</span><span class="p">,</span> <span class="n">v2i</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">v1</span> <span class="o">=</span> <span class="n">vertices</span><span class="p">[</span><span class="n">v1i</span><span class="p">]</span>
+            <span class="n">v2</span> <span class="o">=</span> <span class="n">vertices</span><span class="p">[</span><span class="n">v2i</span><span class="p">]</span>
+            <span class="n">cox</span> <span class="o">=</span> <span class="p">(</span><span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">proj1</span> <span class="o">+</span> <span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">coy</span> <span class="o">=</span> <span class="p">(</span><span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">proj1</span> <span class="o">+</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">coz</span> <span class="o">=</span> <span class="p">(</span><span class="n">v2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">proj1</span> <span class="o">+</span> <span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">verts</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cox</span><span class="p">,</span> <span class="n">coy</span><span class="p">,</span> <span class="n">coz</span><span class="p">))</span>
+            <span class="c1"># store a mapping between the new vertices and the mesh&#39;s edges</span>
+            <span class="n">contourVerts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">contourVerts</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    time to compute contour1&quot;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[],</span> <span class="p">[]</span>
+
+    <span class="c1"># build list of edges in contour</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">edgesS</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">vertToEdges</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># used to find the 2 edges a vertex belong to</span>
+    <span class="n">nbe</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">fe</span> <span class="ow">in</span> <span class="n">faceEdges</span><span class="p">:</span>
+        <span class="n">ps</span> <span class="o">=</span> <span class="p">[</span><span class="n">contourVerts</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">fe</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">contourVerts</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span> <span class="o">=</span> <span class="n">ps</span>
+
+            <span class="k">if</span> <span class="n">v1</span> <span class="ow">in</span> <span class="n">vertToEdges</span><span class="p">:</span>
+                <span class="n">vertToEdges</span><span class="p">[</span><span class="n">v1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbe</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vertToEdges</span><span class="p">[</span><span class="n">v1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">nbe</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">vertToEdges</span><span class="p">:</span>
+                <span class="n">vertToEdges</span><span class="p">[</span><span class="n">v2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbe</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vertToEdges</span><span class="p">[</span><span class="n">v2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">nbe</span><span class="p">]</span>
+            <span class="n">edgesS</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">ps</span><span class="p">))</span>
+            <span class="n">nbe</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   time to compute edge list&quot;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span>
+
+    <span class="c1"># compute rotation matrix to cut plane into a Z plane</span>
+    <span class="n">rotMat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rotVectToVect</span><span class="p">(</span><span class="n">pno</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
+    <span class="n">vertsR</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">verts</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="c1"># order vertices along contour</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+    <span class="n">edgeList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">edgesS</span><span class="p">)))</span>
+    <span class="n">allFaces</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">allVertices</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">edgeList</span><span class="p">):</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="n">curE</span> <span class="o">=</span> <span class="n">edgeList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">fstV</span><span class="p">,</span> <span class="n">curV</span> <span class="o">=</span> <span class="n">edgesS</span><span class="p">[</span><span class="n">edgeList</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">ovi</span> <span class="o">=</span> <span class="p">[</span><span class="n">fstV</span><span class="p">]</span>
+        <span class="n">ov</span> <span class="o">=</span> <span class="p">[</span><span class="n">vertsR</span><span class="p">[</span><span class="n">fstV</span><span class="p">]]</span>
+        <span class="n">ovnr</span> <span class="o">=</span> <span class="p">[</span><span class="n">verts</span><span class="p">[</span><span class="n">fstV</span><span class="p">]]</span>
+        <span class="n">edgeList</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">curE</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">curV</span> <span class="o">!=</span> <span class="n">fstV</span><span class="p">:</span>
+            <span class="n">ovi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">curV</span><span class="p">)</span>
+            <span class="n">ov</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertsR</span><span class="p">[</span><span class="n">curV</span><span class="p">])</span>
+            <span class="n">ovnr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">verts</span><span class="p">[</span><span class="n">curV</span><span class="p">])</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="n">length</span> <span class="o">&lt;</span> <span class="n">minDist</span><span class="p">:</span>
+                <span class="n">nextEdge</span> <span class="o">=</span> <span class="n">vertToEdges</span><span class="p">[</span><span class="n">curV</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">nextEdge</span> <span class="o">==</span> <span class="n">curE</span><span class="p">:</span>
+                    <span class="n">nextEdge</span> <span class="o">=</span> <span class="n">vertToEdges</span><span class="p">[</span><span class="n">curV</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">curE</span> <span class="o">=</span> <span class="n">nextEdge</span>
+                <span class="n">edgeList</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">curE</span><span class="p">)</span>
+                <span class="n">v2</span> <span class="o">=</span> <span class="n">edgesS</span><span class="p">[</span><span class="n">curE</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">v2</span> <span class="o">==</span> <span class="n">curV</span><span class="p">:</span>
+                    <span class="n">v2</span> <span class="o">=</span> <span class="n">edgesS</span><span class="p">[</span><span class="n">curE</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">length</span> <span class="o">=</span> <span class="n">vlen</span><span class="p">(</span><span class="n">vdiff</span><span class="p">(</span><span class="n">vertsR</span><span class="p">[</span><span class="n">ovi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">vertsR</span><span class="p">[</span><span class="n">v2</span><span class="p">]))</span>
+                <span class="n">curV</span> <span class="o">=</span> <span class="n">v2</span>
+                <span class="k">if</span> <span class="n">curV</span> <span class="o">==</span> <span class="n">fstV</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+        <span class="c1"># make sure vertice are counter clockwise</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ccw</span><span class="p">(</span><span class="n">ov</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;reversing&quot;</span><span class="p">)</span>
+            <span class="n">ov</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+            <span class="n">ovnr</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;           time to order pacth vertices&quot;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span>
+        <span class="c1"># print &#39;contour length&#39;, len(ovi), len(ov)</span>
+
+        <span class="c1"># apply rotation to vertices</span>
+        <span class="c1"># ovr = numpy.dot( ov, rotMat[:3, :3] ).tolist()</span>
+
+        <span class="c1"># for v in ovr:</span>
+        <span class="c1">#    print v[2],</span>
+        <span class="c1"># print</span>
+        <span class="c1"># print ovi</span>
+
+        <span class="c1"># triangulate</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="n">facesS</span> <span class="o">=</span> <span class="n">triangulate</span><span class="p">(</span><span class="n">ov</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;           time to triangulate patch&quot;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span>
+
+        <span class="n">allFaces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">facesS</span><span class="p">)</span>
+        <span class="n">allVertices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ovnr</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    time to triangulate all&quot;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">allVertices</span><span class="p">,</span> <span class="n">allFaces</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">DejaVu.IndexedPolygons</span> <span class="kn">import</span> <span class="n">IndexedPolygonsFromFile</span>
+
+    <span class="n">geomS</span> <span class="o">=</span> <span class="n">IndexedPolygonsFromFile</span><span class="p">(</span><span class="s2">&quot;cv&quot;</span><span class="p">,</span> <span class="s2">&quot;mesh&quot;</span><span class="p">)</span>
+    <span class="n">faces</span> <span class="o">=</span> <span class="n">geomS</span><span class="o">.</span><span class="n">getFaces</span><span class="p">()</span>
+    <span class="n">vertices</span> <span class="o">=</span> <span class="n">geomS</span><span class="o">.</span><span class="n">getVertices</span><span class="p">()</span>
+    <span class="n">vnormals</span> <span class="o">=</span> <span class="n">geomS</span><span class="o">.</span><span class="n">getVNormals</span><span class="p">()</span>
+
+    <span class="n">planePoint</span> <span class="o">=</span> <span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">planeNormal</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="n">vertsC</span><span class="p">,</span> <span class="n">facesC</span> <span class="o">=</span> <span class="n">cap</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">planePoint</span><span class="p">,</span> <span class="n">planeNormal</span><span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">DejaVu</span> <span class="kn">import</span> <span class="n">Viewer</span>
+
+    <span class="n">vi</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">()</span>
+
+    <span class="kn">from</span> <span class="nn">DejaVu.IndexedPolygons</span> <span class="kn">import</span> <span class="n">IndexedPolygons</span>
+
+    <span class="n">tet</span> <span class="o">=</span> <span class="n">IndexedPolygons</span><span class="p">(</span>
+        <span class="s2">&quot;surfaceMesh&quot;</span><span class="p">,</span>
+        <span class="n">vertices</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span>
+        <span class="n">faces</span><span class="o">=</span><span class="n">faces</span><span class="p">,</span>
+        <span class="n">vnormals</span><span class="o">=</span><span class="n">vnormals</span><span class="p">,</span>
+        <span class="n">inheritFrontPolyMode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">frontPolyMode</span><span class="o">=</span><span class="s2">&quot;line&quot;</span><span class="p">,</span>
+        <span class="n">inheritCulling</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">culling</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="n">inheritShading</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">shading</span><span class="o">=</span><span class="s2">&quot;flat&quot;</span><span class="p">,</span>
+        <span class="n">visible</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">vi</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">tet</span><span class="p">)</span>
+
+    <span class="c1"># from DejaVu.Spheres import Spheres</span>
+    <span class="c1"># sectionVsph = Spheres(&#39;sectionV&#39;, vertices=vertsS, radii=(0.02,))</span>
+    <span class="c1"># vi.AddObject(sectionVsph)</span>
+    <span class="c1"># from DejaVu.Points import Points</span>
+    <span class="c1"># sectionVpts = Points(&#39;sectionV&#39;, vertices=allvertsS)</span>
+    <span class="c1"># sectionVpts = Points(&#39;sectionV&#39;, vertices=[vertsS[14], vertsS[159], vertsS[158]])</span>
+    <span class="c1"># vi.AddObject(sectionVpts)</span>
+
+    <span class="c1"># from DejaVu.IndexedPolylines import IndexedPolylines</span>
+    <span class="c1"># line = IndexedPolylines(</span>
+    <span class="c1">#    &#39;sectionL&#39;, vertices=allvertsS, faces=edgesS,</span>
+    <span class="c1">#    inheritLinewidth=False, Linewidth=3,</span>
+    <span class="c1">#    inheritMaterial=False, materials=( (0,1,0), ))</span>
+    <span class="c1"># vi.AddObject(line)</span>
+
+    <span class="c1"># from DejaVu.Polylines import Polylines</span>
+    <span class="c1"># line = Polylines(</span>
+    <span class="c1">#    &#39;contour&#39;, vertices=(vertsS[:5],),</span>
+    <span class="c1">#    inheritLinewidth=False, Linewidth=3,</span>
+    <span class="c1">#    inheritMaterial=False, materials=( (1,1,0), ))</span>
+    <span class="c1"># vi.AddObject(line)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">vertsC</span><span class="p">,</span> <span class="n">facesC</span><span class="p">):</span>
+        <span class="n">cap</span> <span class="o">=</span> <span class="n">IndexedPolygons</span><span class="p">(</span>
+            <span class="s2">&quot;cap</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span>
+            <span class="n">vertices</span><span class="o">=</span><span class="n">v</span><span class="p">,</span>
+            <span class="n">faces</span><span class="o">=</span><span class="n">f</span><span class="p">,</span>
+            <span class="n">inheritFrontPolyMode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">frontPolyMode</span><span class="o">=</span><span class="s2">&quot;fill&quot;</span><span class="p">,</span>
+            <span class="n">inheritCulling</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">culling</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+            <span class="n">inheritShading</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">shading</span><span class="o">=</span><span class="s2">&quot;flat&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">vi</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">cap</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

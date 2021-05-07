@@ -1,0 +1,723 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.mgl_tools.DejaVu.datamodel &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../cellpack.html">cellpack</a> &raquo;</li>
+        
+      <li>cellpack.mgl_tools.DejaVu.datamodel</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.mgl_tools.DejaVu.datamodel</h1><div class="highlight"><pre>
+<span></span><span class="c1">## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by </span>
+
+<span class="c1">#############################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Michel F. SANNER</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright: M. Sanner TSRI 2000</span>
+<span class="c1">#</span>
+<span class="c1"># Revision: Guillaume Vareille</span>
+<span class="c1">#</span>
+<span class="c1">#############################################################################</span>
+
+<span class="c1">#</span>
+<span class="c1"># $Header: /opt/cvs/python/packages/share1.5/DejaVu/datamodel.py,v 1.19 2009/04/10 17:40:46 vareille Exp $</span>
+<span class="c1">#</span>
+<span class="c1"># $Id: datamodel.py,v 1.19 2009/04/10 17:40:46 vareille Exp $</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;Classes to store data such as vertices, faces, properties etc...&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">cellpack.mgl_tools.oldnumeric</span> <span class="k">as</span> <span class="nn">Numeric</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">viewerConst</span>
+<span class="kn">import</span> <span class="nn">types</span>
+
+<span class="kn">from</span> <span class="nn">cellpack.mgl_tools</span> <span class="kn">import</span> <span class="n">DejaVu</span>
+
+<div class="viewcode-block" id="isarray"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.isarray">[docs]</a><span class="k">def</span> <span class="nf">isarray</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">var</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;array&#39;</span></div>
+
+<div class="viewcode-block" id="ValuesArray"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.ValuesArray">[docs]</a><span class="k">class</span> <span class="nc">ValuesArray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;base class for arrays of data</span>
+
+<span class="sd"> ValuesArray is a class used to represent data that can be stored in a</span>
+<span class="sd"> Numeric array. The shape of the array holding the data and the precision</span>
+<span class="sd"> is set at creation time and only data that matches this shape can be added</span>
+<span class="sd"> to this array</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+    <span class="k">def</span> <span class="nf">_FirstValues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">datatype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Set the initial set of values, always returns a copy&quot;&quot;&quot;</span>
+    
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="k">return</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">isarray</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>  <span class="c1"># data is an Numeric array</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">datatype</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">:</span> <span class="n">datatype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span>
+                    <span class="k">else</span><span class="p">:</span> <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;I Need a datatype&#39;</span><span class="p">)</span>
+    
+                <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">typecode</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">:</span> <span class="c1"># right type</span>
+                    <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+                    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span><span class="p">:</span> <span class="k">return</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">shape</span> <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span> <span class="c1"># bad type</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">datatype</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+        <span class="c1">#            if data.shape == self.ashape: return Numeric.array(data)</span>
+                    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span><span class="p">:</span> <span class="k">return</span> <span class="n">data</span>
+                    <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+    
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># data is not an array</span>
+                <span class="k">if</span> <span class="n">datatype</span> <span class="ow">and</span> <span class="n">shape</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">shape</span> <span class="p">)</span>
+                <span class="k">elif</span> <span class="n">datatype</span><span class="p">:</span>
+                    <span class="n">d</span><span class="o">=</span><span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">datatype</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">shape</span>
+                    <span class="k">return</span> <span class="n">d</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">d</span><span class="o">=</span><span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Bad argument&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">char</span> <span class="ow">in</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">typecodes</span><span class="p">[</span><span class="s1">&#39;Integer&#39;</span><span class="p">]</span> <span class="ow">or</span> \
+                       <span class="n">d</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">char</span> <span class="ow">in</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">typecodes</span><span class="p">[</span><span class="s1">&#39;UnsignedInteger&#39;</span><span class="p">]:</span>
+                           <span class="n">d</span><span class="o">=</span><span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">viewerConst</span><span class="o">.</span><span class="n">IPRECISION</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">d</span><span class="o">=</span><span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">viewerConst</span><span class="o">.</span><span class="n">FPRECISION</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">shape</span>
+                    <span class="k">return</span> <span class="n">d</span>
+    
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># No data</span>
+            <span class="k">if</span> <span class="n">datatype</span> <span class="ow">and</span> <span class="n">shape</span><span class="p">:</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="mi">0</span><span class="p">,),</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+                <span class="n">d</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span>
+                <span class="k">return</span>  <span class="n">d</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;I Need a datatype and a shape&#39;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">datatype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Create an instance, with a name and (shape or data)&quot;&quot;&quot;</span>
+    
+    
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span>
+    
+        <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;need shape or data attribute&quot;</span><span class="p">)</span>
+    
+    <span class="c1">#    if __debug__:</span>
+    <span class="c1">#        if data: assert type(data).__name__ == &#39;array&#39;</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">datatype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span> <span class="o">=</span> <span class="n">shape</span>   <span class="c1"># array&#39;s shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_FirstValues</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">datatype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixedShape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;returns the number of entries&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">Numeric</span><span class="o">.</span><span class="n">multiply</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;List name, number of values and the shape of this array&quot;&quot;&quot;</span>
+    
+        <span class="c1">#d = self.array</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;Array </span><span class="si">%s</span><span class="s1"> </span><span class="si">%d</span><span class="s1"> values of type </span><span class="si">%s</span><span class="s1"> shape=</span><span class="si">%s</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> \
+               <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="p">)</span>
+
+
+<div class="viewcode-block" id="ValuesArray.SetValues"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.ValuesArray.SetValues">[docs]</a>    <span class="k">def</span> <span class="nf">SetValues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">reshape</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Set values&quot;&quot;&quot;</span>
+    
+        <span class="k">if</span> <span class="n">values</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">return</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_FirstValues</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ashape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fixedShape</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;input array bad shape </span><span class="si">%s</span><span class="s2">!=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> \
+                     <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ashape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span>
+                      <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fixedShape</span><span class="p">)))</span>
+    
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">reshape</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixedShape</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;input array of bad shape&quot;</span><span class="p">)</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixedShape</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_ShapeValues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Check type and shape, coerce if needed&quot;&quot;&quot;</span>
+    
+        <span class="k">if</span> <span class="n">isarray</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="ow">and</span> <span class="n">values</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">char</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixedShape</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">values</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span> <span class="n">values</span><span class="p">,</span> <span class="p">(</span> <span class="o">-</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixedShape</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="n">values</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span> <span class="n">values</span><span class="p">,</span> <span class="p">(</span> <span class="o">-</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixedShape</span> <span class="p">)</span>
+
+
+<div class="viewcode-block" id="ValuesArray.AddValues"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.ValuesArray.AddValues">[docs]</a>    <span class="k">def</span> <span class="nf">AddValues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Add values&quot;&quot;&quot;</span>
+    
+        <span class="k">if</span> <span class="n">values</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">return</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SetValues</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fixedShape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">_ShapeValues</span><span class="p">(</span><span class="n">values</span><span class="p">))</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span></div></div>
+
+
+<div class="viewcode-block" id="PropertiesArray"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.PropertiesArray">[docs]</a><span class="k">class</span> <span class="nc">PropertiesArray</span><span class="p">(</span><span class="n">ValuesArray</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;base class for property Arrays&quot;&quot;&quot;</span>
+
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">datatype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+
+        <span class="n">ValuesArray</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">datatype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Compute</span> <span class="o">=</span> <span class="kc">None</span>          <span class="c1"># user settable function to compute prop.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">()</span>               <span class="c1"># arguments to function Compute</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">computeMode</span> <span class="o">=</span> <span class="kc">None</span>      <span class="c1"># computation mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">viewerConst</span><span class="o">.</span><span class="n">UNKNOWN</span>
+
+
+<div class="viewcode-block" id="PropertiesArray.ComputeFunction"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.PropertiesArray.ComputeFunction">[docs]</a>    <span class="k">def</span> <span class="nf">ComputeFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Set the function used to compute this property&quot;&quot;&quot;</span>
+    
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="o">==</span><span class="s1">&#39;tuple&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Compute</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span></div>
+
+
+<div class="viewcode-block" id="PropertiesArray.ComputeMode"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.PropertiesArray.ComputeMode">[docs]</a>    <span class="k">def</span> <span class="nf">ComputeMode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Set the computation mode for this property&quot;&quot;&quot;</span>
+    
+        <span class="k">if</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">(</span> <span class="n">viewerConst</span><span class="o">.</span><span class="n">NO_COMPUTATION</span><span class="p">,</span> <span class="n">viewerConst</span><span class="o">.</span><span class="n">AUTO</span> <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span> <span class="n">computeMode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Bad property computation mode NO_COMPUTATION,</span><span class="se">\</span>
+<span class="s2">     AUTO&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PropertiesArray.PropertyStatus"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.PropertiesArray.PropertyStatus">[docs]</a>    <span class="k">def</span> <span class="nf">PropertyStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neededNumber</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Check if we have as many property values as we need&quot;&quot;&quot;</span>
+    
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">neededNumber</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">viewerConst</span><span class="o">.</span><span class="n">NONE</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="n">neededNumber</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">viewerConst</span><span class="o">.</span><span class="n">SET</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">neededNumber</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">viewerConst</span><span class="o">.</span><span class="n">TOO_MANY</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">neededNumber</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">viewerConst</span><span class="o">.</span><span class="n">TOO_FEW</span></div>
+    
+
+<div class="viewcode-block" id="PropertiesArray.AddValues"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.PropertiesArray.AddValues">[docs]</a>    <span class="k">def</span> <span class="nf">AddValues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">neededNumber</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Add values&quot;&quot;&quot;</span>
+        <span class="n">ValuesArray</span><span class="o">.</span><span class="n">AddValues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">neededNumber</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">PropertyStatus</span><span class="p">(</span><span class="n">neededNumber</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PropertiesArray.GetProperty"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.PropertiesArray.GetProperty">[docs]</a>    <span class="k">def</span> <span class="nf">GetProperty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;May be compute and return the values&quot;&quot;&quot;</span>
+    
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">&lt;</span> <span class="n">viewerConst</span><span class="o">.</span><span class="n">COMPUTED</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Compute</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeMode</span><span class="o">==</span><span class="n">viewerConst</span><span class="o">.</span><span class="n">AUTO</span><span class="p">:</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Compute</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">SetValues</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="o">=</span><span class="n">viewerConst</span><span class="o">.</span><span class="n">COMPUTED</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="o">=</span><span class="n">viewerConst</span><span class="o">.</span><span class="n">NONE</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="o">=</span><span class="n">viewerConst</span><span class="o">.</span><span class="n">NONE</span>
+                <span class="k">return</span> <span class="kc">None</span>
+    
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span></div></div>
+
+
+<div class="viewcode-block" id="VectorProperties"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.VectorProperties">[docs]</a><span class="k">class</span> <span class="nc">VectorProperties</span><span class="p">(</span><span class="n">PropertiesArray</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;base class for arrays of vector property values&quot;&quot;&quot;</span>
+
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">datatype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+
+        <span class="n">PropertiesArray</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">datatype</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ashape</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;VectorProperties require at least a 2D array&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;returns the number of property vectors&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">Numeric</span><span class="o">.</span><span class="n">multiply</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;List name, number of values and the shape of this array&quot;&quot;&quot;</span>
+
+        <span class="c1">#d = self.array</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;VectorProperties </span><span class="si">%s</span><span class="s1"> </span><span class="si">%d</span><span class="s1"> </span><span class="si">%d</span><span class="s1">-vectors of type </span><span class="si">%s</span><span class="s1"> shape=</span><span class="si">%s</span><span class="s1"> </span><span class="se">\</span>
+<span class="s1">    status=</span><span class="si">%s</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> \
+               <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ashape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+               <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ashape</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Apply the transformation matrix to the vertices&quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()</span>
+        <span class="n">one</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span> <span class="n">viewerConst</span><span class="o">.</span><span class="n">FPRECISION</span> <span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">one</span><span class="p">),</span> <span class="mi">1</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UnFlatten</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span> <span class="n">c</span><span class="p">,</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span> <span class="p">)[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="VectorProperties.Flatten"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.VectorProperties.Flatten">[docs]</a>    <span class="k">def</span> <span class="nf">Flatten</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Reshape the coordinates to a 2D array of vectors&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">oldshape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>  <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">oldshape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span> <span class="p">)</span></div>
+    
+
+<div class="viewcode-block" id="VectorProperties.UnFlatten"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.VectorProperties.UnFlatten">[docs]</a>    <span class="k">def</span> <span class="nf">UnFlatten</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Reshape the coordinates to initial shape array&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">array</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">oldshape</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VectorProperties.BoundingBox"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.VectorProperties.BoundingBox">[docs]</a>    <span class="k">def</span> <span class="nf">BoundingBox</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Compute and return the bounding box of the vectors&quot;&quot;&quot;</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bbmax</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">maximum</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bbmin</span> <span class="o">=</span> <span class="n">Numeric</span><span class="o">.</span><span class="n">minimum</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">array</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UnFlatten</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bbmin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bbmax</span></div></div>
+
+
+<div class="viewcode-block" id="ScalarProperties"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.ScalarProperties">[docs]</a><span class="k">class</span> <span class="nc">ScalarProperties</span><span class="p">(</span><span class="n">PropertiesArray</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;base class for arrays of scalar property values&quot;&quot;&quot;</span>
+
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">datatype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+
+        <span class="n">PropertiesArray</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">datatype</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;List name, number of values and the shape of this array&quot;&quot;&quot;</span>
+    
+        <span class="c1">#d = self.array</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;ScalarProperties </span><span class="si">%s</span><span class="s1"> </span><span class="si">%d</span><span class="s1"> values of type </span><span class="si">%s</span><span class="s1"> shape=</span><span class="si">%s</span><span class="s1"> </span><span class="se">\</span>
+<span class="s1">    status=</span><span class="si">%d</span><span class="s1">&gt;&#39;</span> <span class="o">%</span> \
+               <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ashape</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Set"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.Set">[docs]</a><span class="k">class</span> <span class="nc">Set</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;base class for VertexSet and Face Set&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<div class="viewcode-block" id="Set.AddScalarProperty"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.Set.AddScalarProperty">[docs]</a>    <span class="k">def</span> <span class="nf">AddScalarProperty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">datatype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;add a scalar property&quot;&quot;&quot;</span>
+    
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="nb">bytes</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Property name already used&#39;</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">ScalarProperties</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">datatype</span><span class="p">)</span>
+        <span class="nb">eval</span> <span class="p">(</span> <span class="s1">&#39;self.</span><span class="si">%s</span><span class="s1"> = p&#39;</span><span class="p">,</span> <span class="n">name</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span></div>
+    
+
+<div class="viewcode-block" id="Set.AddVectorProperty"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.Set.AddVectorProperty">[docs]</a>    <span class="k">def</span> <span class="nf">AddVectorProperty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">datatype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;add a vector property&quot;&quot;&quot;</span>
+    
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="nb">bytes</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Property name already used&#39;</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">VectorProperties</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">datatype</span><span class="p">)</span>
+        <span class="nb">eval</span> <span class="p">(</span> <span class="s1">&#39;self.</span><span class="si">%s</span><span class="s1"> = p&#39;</span><span class="p">,</span> <span class="n">name</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span></div>
+
+
+<div class="viewcode-block" id="Set.ListProperties"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.Set.ListProperties">[docs]</a>    <span class="k">def</span> <span class="nf">ListProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;List names and summary of defined properties&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">p</span><span class="p">]))</span></div></div>
+
+
+<div class="viewcode-block" id="VertexSet"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.VertexSet">[docs]</a><span class="k">class</span> <span class="nc">VertexSet</span><span class="p">(</span><span class="n">Set</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;class for vertices&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vert</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+
+        <span class="n">Set</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vert</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">vert</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="o">=</span> <span class="n">VectorProperties</span><span class="p">(</span><span class="s1">&#39;vertices&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">vert</span><span class="p">,</span>
+                          <span class="n">datatype</span><span class="o">=</span><span class="n">viewerConst</span><span class="o">.</span><span class="n">FPRECISION</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="o">=</span> <span class="n">VectorProperties</span><span class="p">(</span> <span class="s1">&#39;vertices&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span>
+                           <span class="n">datatype</span><span class="o">=</span><span class="n">viewerConst</span><span class="o">.</span><span class="n">FPRECISION</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;I need data or a shape&quot;</span><span class="p">)</span>
+    
+        <span class="k">if</span> <span class="n">norm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">vert</span><span class="p">):</span>
+    <span class="c1">#        self.AddVectorProperty(&#39;normals&#39;, norm,</span>
+    <span class="c1">#                   datatype=viewerConst.FPRECISION)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normals</span> <span class="o">=</span> <span class="n">VectorProperties</span><span class="p">(</span><span class="s1">&#39;normals&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span>
+                            <span class="n">datatype</span><span class="o">=</span><span class="n">viewerConst</span><span class="o">.</span><span class="n">FPRECISION</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nshape</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="o">.</span><span class="n">ashape</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span>
+    <span class="c1">#        self.AddVectorProperty(&#39;normals&#39;, norm,</span>
+    <span class="c1">#                   datatype=viewerConst.FPRECISION)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normals</span> <span class="o">=</span> <span class="n">VectorProperties</span><span class="p">(</span><span class="s1">&#39;normals&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">nshape</span><span class="p">,</span>
+                            <span class="n">datatype</span><span class="o">=</span><span class="n">viewerConst</span><span class="o">.</span><span class="n">FPRECISION</span><span class="p">)</span>
+    
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="o">.</span><span class="n">BoundingBox</span><span class="p">()</span>
+    
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">%s</span><span class="s1">&gt; with </span><span class="si">%d</span><span class="s1"> elements prop: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> \
+              <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;returns the number of vertices&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="VertexSet.AddValues"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.VertexSet.AddValues">[docs]</a>    <span class="k">def</span> <span class="nf">AddValues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;Add values&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="o">.</span><span class="n">AddValues</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="o">.</span><span class="n">BoundingBox</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="FaceSet"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.DejaVu.html#cellpack.mgl_tools.DejaVu.datamodel.FaceSet">[docs]</a><span class="k">class</span> <span class="nc">FaceSet</span><span class="p">(</span><span class="n">Set</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;class for vertices&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+
+        <span class="n">Set</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">faces</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">faces</span> <span class="o">=</span> <span class="n">VectorProperties</span><span class="p">(</span><span class="s1">&#39;faces&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">faces</span><span class="p">,</span>
+                             <span class="n">datatype</span><span class="o">=</span><span class="n">viewerConst</span><span class="o">.</span><span class="n">IPRECISION</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">shape</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">faces</span> <span class="o">=</span> <span class="n">VectorProperties</span><span class="p">(</span><span class="s1">&#39;faces&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span>
+                          <span class="n">datatype</span><span class="o">=</span><span class="n">viewerConst</span><span class="o">.</span><span class="n">IPRECISION</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;I need data or a shape&quot;</span><span class="p">)</span>
+    
+        <span class="k">if</span> <span class="n">norm</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">AddVectorProperty</span><span class="p">(</span><span class="s1">&#39;normals&#39;</span><span class="p">,</span> <span class="n">norm</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nshape</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">faces</span><span class="o">.</span><span class="n">ashape</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normals</span> <span class="o">=</span> <span class="n">VectorProperties</span><span class="p">(</span><span class="s1">&#39;normals&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">nshape</span><span class="p">,</span>
+                       <span class="n">datatype</span><span class="o">=</span><span class="n">viewerConst</span><span class="o">.</span><span class="n">FPRECISION</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">%s</span><span class="s1">&gt; with </span><span class="si">%d</span><span class="s1"> elements prop: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> \
+                  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">faces</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">__debug__</span><span class="p">:</span>
+         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">DejaVu</span><span class="p">,</span> <span class="s1">&#39;functionName&#39;</span><span class="p">):</span> <span class="n">DejaVu</span><span class="o">.</span><span class="n">functionName</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;returns the number of faces&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">faces</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

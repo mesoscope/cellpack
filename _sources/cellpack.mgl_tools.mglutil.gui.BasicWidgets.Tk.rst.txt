@@ -1,0 +1,199 @@
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk package
+=======================================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.Tests
+   cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.TreeWidget
+   cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.trees
+
+Submodules
+----------
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.Dial module
+-----------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.Dial
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.KeyboardEntry module
+--------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.KeyboardEntry
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.RelabelingCascadeMenu module
+----------------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.RelabelingCascadeMenu
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.canvasWidgets module
+--------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.canvasWidgets
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.colorWidgets module
+-------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.colorWidgets
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.customizedWidgets module
+------------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.customizedWidgets
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.defaultColors module
+--------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.defaultColors
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.dirDialog module
+----------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.dirDialog
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.eventHandler module
+-------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.eventHandler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.fileBrowsers module
+-------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.fileBrowsers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.graphtool module
+----------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.graphtool
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.multiButton module
+------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.multiButton
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.multiListbox module
+-------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.multiListbox
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.optionsPanel module
+-------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.optionsPanel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.player module
+-------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.player
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.progressBar module
+------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.progressBar
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.seqViewer module
+----------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.seqViewer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.tablemaker module
+-----------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.tablemaker
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.thumbwheel module
+-----------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.thumbwheel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.toolbarbutton module
+--------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.toolbarbutton
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.vector3DGUI module
+------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.vector3DGUI
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.xyzGUI module
+-------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.xyzGUI
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk
+   :members:
+   :undoc-members:
+   :show-inheritance:

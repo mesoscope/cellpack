@@ -1,0 +1,768 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.mgl_tools package &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="cellpack.mgl_tools.DejaVu package" href="cellpack.mgl_tools.DejaVu.html" />
+    <link rel="prev" title="cellpack.bin package" href="cellpack.bin.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cellpack.html">cellpack package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="cellpack.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">cellpack</a> &raquo;</li>
+        
+          <li><a href="cellpack.html">cellpack package</a> &raquo;</li>
+        
+      <li>cellpack.mgl_tools package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/cellpack.mgl_tools.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="cellpack.mgl_tools.DejaVu.html" class="btn btn-neutral float-right" title="cellpack.mgl_tools.DejaVu package" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+      
+      
+        <a href="cellpack.bin.html" class="btn btn-neutral float-left" title="cellpack.bin package" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="cellpack-mgl-tools-package">
+<h1>cellpack.mgl_tools package<a class="headerlink" href="#cellpack-mgl-tools-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html">cellpack.mgl_tools.DejaVu package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html">cellpack.mgl_tools.DejaVu.Tests package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-rgb256-map-module">cellpack.mgl_tools.DejaVu.Tests.rgb256_map module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-arcs3d-module">cellpack.mgl_tools.DejaVu.Tests.test_Arcs3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-arrows-module">cellpack.mgl_tools.DejaVu.Tests.test_Arrows module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-axis-module">cellpack.mgl_tools.DejaVu.Tests.test_Axis module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-box-module">cellpack.mgl_tools.DejaVu.Tests.test_Box module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-camera-module">cellpack.mgl_tools.DejaVu.Tests.test_Camera module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-clip-module">cellpack.mgl_tools.DejaVu.Tests.test_Clip module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-colorchooser-module">cellpack.mgl_tools.DejaVu.Tests.test_ColorChooser module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-colormap-module">cellpack.mgl_tools.DejaVu.Tests.test_ColorMap module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-colormapgui-module">cellpack.mgl_tools.DejaVu.Tests.test_ColorMapGUI module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-colorwheel-module">cellpack.mgl_tools.DejaVu.Tests.test_ColorWheel module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-crossset-module">cellpack.mgl_tools.DejaVu.Tests.test_CrossSet module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-cylinders-module">cellpack.mgl_tools.DejaVu.Tests.test_Cylinders module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-dataoutput-module">cellpack.mgl_tools.DejaVu.Tests.test_DataOutput module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-ellipsoids-module">cellpack.mgl_tools.DejaVu.Tests.test_Ellipsoids module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-fan3d-module">cellpack.mgl_tools.DejaVu.Tests.test_Fan3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-fog-module">cellpack.mgl_tools.DejaVu.Tests.test_Fog module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-geom-module">cellpack.mgl_tools.DejaVu.Tests.test_Geom module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-gridbox-module">cellpack.mgl_tools.DejaVu.Tests.test_GridBox module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-indexedpolygons-module">cellpack.mgl_tools.DejaVu.Tests.test_IndexedPolygons module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-indexedpolylines-module">cellpack.mgl_tools.DejaVu.Tests.test_IndexedPolylines module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-labels-module">cellpack.mgl_tools.DejaVu.Tests.test_Labels module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-light-module">cellpack.mgl_tools.DejaVu.Tests.test_Light module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-materialeditor-module">cellpack.mgl_tools.DejaVu.Tests.test_MaterialEditor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-points-module">cellpack.mgl_tools.DejaVu.Tests.test_Points module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-spheres-module">cellpack.mgl_tools.DejaVu.Tests.test_Spheres module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-viewer-module">cellpack.mgl_tools.DejaVu.Tests.test_Viewer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-basics-module">cellpack.mgl_tools.DejaVu.Tests.test_basics module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-dependencies-module">cellpack.mgl_tools.DejaVu.Tests.test_dependencies module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-memory-module">cellpack.mgl_tools.DejaVu.Tests.test_memory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#cellpack-mgl-tools-dejavu-tests-test-trianglestrip-module">cellpack.mgl_tools.DejaVu.Tests.test_triangleStrip module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.Tests.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.VisionInterface.html">cellpack.mgl_tools.DejaVu.VisionInterface package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.VisionInterface.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.VisionInterface.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.VisionInterface.html#cellpack-mgl-tools-dejavu-visioninterface-dejavunodes-module">cellpack.mgl_tools.DejaVu.VisionInterface.DejaVuNodes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.VisionInterface.html#cellpack-mgl-tools-dejavu-visioninterface-dejavutypes-module">cellpack.mgl_tools.DejaVu.VisionInterface.DejaVuTypes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.VisionInterface.html#cellpack-mgl-tools-dejavu-visioninterface-dejavuwidgets-module">cellpack.mgl_tools.DejaVu.VisionInterface.DejaVuWidgets module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.VisionInterface.html#cellpack-mgl-tools-dejavu-visioninterface-geometrynodes-module">cellpack.mgl_tools.DejaVu.VisionInterface.GeometryNodes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.VisionInterface.html#cellpack-mgl-tools-dejavu-visioninterface-mappotongeom-module">cellpack.mgl_tools.DejaVu.VisionInterface.MapPotOnGeom module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.VisionInterface.html#cellpack-mgl-tools-dejavu-visioninterface-rotatescene-module">cellpack.mgl_tools.DejaVu.VisionInterface.RotateScene module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.VisionInterface.html#cellpack-mgl-tools-dejavu-visioninterface-stereosep-module">cellpack.mgl_tools.DejaVu.VisionInterface.StereoSep module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.VisionInterface.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.doc.html">cellpack.mgl_tools.DejaVu.doc package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.doc.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.doc.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.gui.html">cellpack.mgl_tools.DejaVu.gui package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.gui.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.gui.html#cellpack-mgl-tools-dejavu-gui-animationplayer-module">cellpack.mgl_tools.DejaVu.gui.AnimationPlayer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.gui.html#cellpack-mgl-tools-dejavu-gui-geomschooser-module">cellpack.mgl_tools.DejaVu.gui.geomsChooser module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.gui.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html">cellpack.mgl_tools.DejaVu.materialsDef package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#module-cellpack.mgl_tools.DejaVu.materialsDef.artdeco">cellpack.mgl_tools.DejaVu.materialsDef.artdeco module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#module-cellpack.mgl_tools.DejaVu.materialsDef.autumn">cellpack.mgl_tools.DejaVu.materialsDef.autumn module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#module-cellpack.mgl_tools.DejaVu.materialsDef.glass">cellpack.mgl_tools.DejaVu.materialsDef.glass module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#module-cellpack.mgl_tools.DejaVu.materialsDef.metal">cellpack.mgl_tools.DejaVu.materialsDef.metal module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#module-cellpack.mgl_tools.DejaVu.materialsDef.neon">cellpack.mgl_tools.DejaVu.materialsDef.neon module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#module-cellpack.mgl_tools.DejaVu.materialsDef.rococo">cellpack.mgl_tools.DejaVu.materialsDef.rococo module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#module-cellpack.mgl_tools.DejaVu.materialsDef.santafe">cellpack.mgl_tools.DejaVu.materialsDef.santafe module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#module-cellpack.mgl_tools.DejaVu.materialsDef.sheen">cellpack.mgl_tools.DejaVu.materialsDef.sheen module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#module-cellpack.mgl_tools.DejaVu.materialsDef.silky">cellpack.mgl_tools.DejaVu.materialsDef.silky module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#module-cellpack.mgl_tools.DejaVu.materialsDef.spring">cellpack.mgl_tools.DejaVu.materialsDef.spring module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#module-cellpack.mgl_tools.DejaVu.materialsDef.summer">cellpack.mgl_tools.DejaVu.materialsDef.summer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#module-cellpack.mgl_tools.DejaVu.materialsDef.tropical">cellpack.mgl_tools.DejaVu.materialsDef.tropical module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#module-cellpack.mgl_tools.DejaVu.materialsDef.winter">cellpack.mgl_tools.DejaVu.materialsDef.winter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.materialsDef.html#module-cellpack.mgl_tools.DejaVu.materialsDef">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.scenarioInterface.html">cellpack.mgl_tools.DejaVu.scenarioInterface package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.scenarioInterface.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.scenarioInterface.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.scenarioInterface.html#cellpack-mgl-tools-dejavu-scenariointerface-actor-module">cellpack.mgl_tools.DejaVu.scenarioInterface.actor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.scenarioInterface.html#cellpack-mgl-tools-dejavu-scenariointerface-actorfromfile-module">cellpack.mgl_tools.DejaVu.scenarioInterface.actorFromFile module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.scenarioInterface.html#cellpack-mgl-tools-dejavu-scenariointerface-actorsdescr-module">cellpack.mgl_tools.DejaVu.scenarioInterface.actorsDescr module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.scenarioInterface.html#cellpack-mgl-tools-dejavu-scenariointerface-animationgui-module">cellpack.mgl_tools.DejaVu.scenarioInterface.animationGUI module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.scenarioInterface.html#cellpack-mgl-tools-dejavu-scenariointerface-animationpanels-module">cellpack.mgl_tools.DejaVu.scenarioInterface.animationPanels module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.scenarioInterface.html#cellpack-mgl-tools-dejavu-scenariointerface-animations-module">cellpack.mgl_tools.DejaVu.scenarioInterface.animations module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.scenarioInterface.html#cellpack-mgl-tools-dejavu-scenariointerface-interpolators-module">cellpack.mgl_tools.DejaVu.scenarioInterface.interpolators module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.scenarioInterface.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-module">cellpack.mgl_tools.DejaVu module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-arcs3d-module">cellpack.mgl_tools.DejaVu.Arcs3D module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-arrows-module">cellpack.mgl_tools.DejaVu.Arrows module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-box-module">cellpack.mgl_tools.DejaVu.Box module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-camera-module">cellpack.mgl_tools.DejaVu.Camera module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.Clip">cellpack.mgl_tools.DejaVu.Clip module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.ColorChooser">cellpack.mgl_tools.DejaVu.ColorChooser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.ColorWheel">cellpack.mgl_tools.DejaVu.ColorWheel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-colormapgui-module">cellpack.mgl_tools.DejaVu.ColormapGui module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.Common2d3dObject">cellpack.mgl_tools.DejaVu.Common2d3dObject module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-cylinders-module">cellpack.mgl_tools.DejaVu.Cylinders module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-datainput-module">cellpack.mgl_tools.DejaVu.DataInput module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-dataoutput-module">cellpack.mgl_tools.DejaVu.DataOutput module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.Displayable">cellpack.mgl_tools.DejaVu.Displayable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-ellipsoids-module">cellpack.mgl_tools.DejaVu.Ellipsoids module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.EventHandler">cellpack.mgl_tools.DejaVu.EventHandler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.Geom">cellpack.mgl_tools.DejaVu.Geom module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-geomchooser-module">cellpack.mgl_tools.DejaVu.GeomChooser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-gleobjects-module">cellpack.mgl_tools.DejaVu.GleObjects module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-indexedgeom-module">cellpack.mgl_tools.DejaVu.IndexedGeom module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-indexedpolygons-module">cellpack.mgl_tools.DejaVu.IndexedPolygons module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-indexedpolylines-module">cellpack.mgl_tools.DejaVu.IndexedPolylines module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-insert2d-module">cellpack.mgl_tools.DejaVu.Insert2d module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-legend-module">cellpack.mgl_tools.DejaVu.Legend module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-light-module">cellpack.mgl_tools.DejaVu.Light module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.MaterialEditor">cellpack.mgl_tools.DejaVu.MaterialEditor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.Materials">cellpack.mgl_tools.DejaVu.Materials module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-normalsviz-module">cellpack.mgl_tools.DejaVu.NormalsViz module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-nurbs-module">cellpack.mgl_tools.DejaVu.Nurbs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-points-module">cellpack.mgl_tools.DejaVu.Points module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-polylines-module">cellpack.mgl_tools.DejaVu.Polylines module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-propertyeditor-module">cellpack.mgl_tools.DejaVu.PropertyEditor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-selectiongui-module">cellpack.mgl_tools.DejaVu.SelectionGUI module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-shapes-module">cellpack.mgl_tools.DejaVu.Shapes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.Slider">cellpack.mgl_tools.DejaVu.Slider module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-spheres-module">cellpack.mgl_tools.DejaVu.Spheres module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-stickerimage-module">cellpack.mgl_tools.DejaVu.StickerImage module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-texture-module">cellpack.mgl_tools.DejaVu.Texture module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-textured2darray-module">cellpack.mgl_tools.DejaVu.Textured2DArray module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-trackball-module">cellpack.mgl_tools.DejaVu.Trackball module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.Transformable">cellpack.mgl_tools.DejaVu.Transformable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-viewer-module">cellpack.mgl_tools.DejaVu.Viewer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-viewergui-module">cellpack.mgl_tools.DejaVu.ViewerGUI module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-volumegeom-module">cellpack.mgl_tools.DejaVu.VolumeGeom module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-bitpatterns-module">cellpack.mgl_tools.DejaVu.bitPatterns module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-blenderscene-module">cellpack.mgl_tools.DejaVu.blenderScene module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.capGeom">cellpack.mgl_tools.DejaVu.capGeom module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-colormap-module">cellpack.mgl_tools.DejaVu.colorMap module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-colormaplegend-module">cellpack.mgl_tools.DejaVu.colorMapLegend module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.colorTool">cellpack.mgl_tools.DejaVu.colorTool module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-colors-module">cellpack.mgl_tools.DejaVu.colors module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-csgclip-module">cellpack.mgl_tools.DejaVu.csgClip module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-cursors-module">cellpack.mgl_tools.DejaVu.cursors module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.datamodel">cellpack.mgl_tools.DejaVu.datamodel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.extendedSlider">cellpack.mgl_tools.DejaVu.extendedSlider module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-gelato-module">cellpack.mgl_tools.DejaVu.gelato module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-geomtree-module">cellpack.mgl_tools.DejaVu.geomTree module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-glflabels-module">cellpack.mgl_tools.DejaVu.glfLabels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-glfsticker-module">cellpack.mgl_tools.DejaVu.glfSticker module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-imageviewer-module">cellpack.mgl_tools.DejaVu.imageViewer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.jitter">cellpack.mgl_tools.DejaVu.jitter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-povray3-module">cellpack.mgl_tools.DejaVu.povray3 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-quad-strip-module">cellpack.mgl_tools.DejaVu.quad_strip module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-rotationmatrices-module">cellpack.mgl_tools.DejaVu.rotationMatrices module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-spline-module">cellpack.mgl_tools.DejaVu.spline module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-states-module">cellpack.mgl_tools.DejaVu.states module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-testcsg3-module">cellpack.mgl_tools.DejaVu.testcsg3 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-tilerenderer-module">cellpack.mgl_tools.DejaVu.tileRenderer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-triangle-strip-module">cellpack.mgl_tools.DejaVu.triangle_strip module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-utils-module">cellpack.mgl_tools.DejaVu.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#cellpack-mgl-tools-dejavu-videorecorder-module">cellpack.mgl_tools.DejaVu.videoRecorder module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.viewerConst">cellpack.mgl_tools.DejaVu.viewerConst module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-cellpack.mgl_tools.DejaVu.viewerFns">cellpack.mgl_tools.DejaVu.viewerFns module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.DejaVu.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellpack.mgl_tools.RAPID.html">cellpack.mgl_tools.RAPID package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.RAPID.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.RAPID.Tests.html">cellpack.mgl_tools.RAPID.Tests package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.RAPID.Tests.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.RAPID.Tests.html#cellpack-mgl-tools-rapid-tests-test-module">cellpack.mgl_tools.RAPID.Tests.test module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.RAPID.Tests.html#module-cellpack.mgl_tools.RAPID.Tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.RAPID.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.RAPID.html#cellpack-mgl-tools-rapid-rapidlib-module">cellpack.mgl_tools.RAPID.RAPIDlib module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.RAPID.html#module-cellpack.mgl_tools.RAPID">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellpack.mgl_tools.Support.html">cellpack.mgl_tools.Support package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.Support.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.Support.html#module-cellpack.mgl_tools.Support.mktestsummary">cellpack.mgl_tools.Support.mktestsummary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.Support.html#cellpack-mgl-tools-support-path-module">cellpack.mgl_tools.Support.path module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.Support.html#cellpack-mgl-tools-support-sitecustomize-module">cellpack.mgl_tools.Support.sitecustomize module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.Support.html#module-cellpack.mgl_tools.Support.unzip">cellpack.mgl_tools.Support.unzip module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.Support.html#cellpack-mgl-tools-support-update-module">cellpack.mgl_tools.Support.update module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.Support.html#module-cellpack.mgl_tools.Support.version">cellpack.mgl_tools.Support.version module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.Support.html#module-cellpack.mgl_tools.Support">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellpack.mgl_tools.bhtree.html">cellpack.mgl_tools.bhtree package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.bhtree.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.bhtree.Tests.html">cellpack.mgl_tools.bhtree.Tests package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.bhtree.Tests.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.bhtree.Tests.html#cellpack-mgl-tools-bhtree-tests-crn-crd-module">cellpack.mgl_tools.bhtree.Tests.crn_crd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.bhtree.Tests.html#cellpack-mgl-tools-bhtree-tests-crn-crd-and-rad-module">cellpack.mgl_tools.bhtree.Tests.crn_crd_and_rad module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.bhtree.Tests.html#cellpack-mgl-tools-bhtree-tests-cv-crd-and-rad-module">cellpack.mgl_tools.bhtree.Tests.cv_crd_and_rad module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.bhtree.Tests.html#cellpack-mgl-tools-bhtree-tests-test-module">cellpack.mgl_tools.bhtree.Tests.test module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.bhtree.Tests.html#cellpack-mgl-tools-bhtree-tests-test-dependencies-module">cellpack.mgl_tools.bhtree.Tests.test_dependencies module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.bhtree.Tests.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.bhtree.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.bhtree.html#cellpack-mgl-tools-bhtree-bhtreelib-module">cellpack.mgl_tools.bhtree.bhtreelib module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.bhtree.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellpack.mgl_tools.geomutils.html">cellpack.mgl_tools.geomutils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.geomutils.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.geomutils.Tests.html">cellpack.mgl_tools.geomutils.Tests package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.geomutils.Tests.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.geomutils.Tests.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.geomutils.Tests.html#cellpack-mgl-tools-geomutils-tests-test-module">cellpack.mgl_tools.geomutils.Tests.test module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.geomutils.Tests.html#cellpack-mgl-tools-geomutils-tests-test-dependencies-module">cellpack.mgl_tools.geomutils.Tests.test_dependencies module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.geomutils.Tests.html#module-cellpack.mgl_tools.geomutils.Tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.geomutils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.geomutils.html#cellpack-mgl-tools-geomutils-efitlib-module">cellpack.mgl_tools.geomutils.efitlib module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.geomutils.html#cellpack-mgl-tools-geomutils-geomalgorithms-module">cellpack.mgl_tools.geomutils.geomalgorithms module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.geomutils.html#cellpack-mgl-tools-geomutils-sdflib-module">cellpack.mgl_tools.geomutils.sdflib module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.geomutils.html#module-cellpack.mgl_tools.geomutils.surface">cellpack.mgl_tools.geomutils.surface module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.geomutils.html#module-cellpack.mgl_tools.geomutils">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellpack.mgl_tools.mglutil.html">cellpack.mgl_tools.mglutil package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.mglutil.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.mglutil.TestUtil.html">cellpack.mgl_tools.mglutil.TestUtil package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.TestUtil.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.TestUtil.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.TestUtil.html#cellpack-mgl-tools-mglutil-testutil-bugreport-module">cellpack.mgl_tools.mglutil.TestUtil.BugReport module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.TestUtil.html#cellpack-mgl-tools-mglutil-testutil-dependencytester-module">cellpack.mgl_tools.mglutil.TestUtil.Dependencytester module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.TestUtil.html#cellpack-mgl-tools-mglutil-testutil-multipartposthandler-module">cellpack.mgl_tools.mglutil.TestUtil.MultipartPostHandler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.TestUtil.html#cellpack-mgl-tools-mglutil-testutil-tester-module">cellpack.mgl_tools.mglutil.TestUtil.tester module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.TestUtil.html#module-cellpack.mgl_tools.mglutil.TestUtil">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.mglutil.Tests.html">cellpack.mgl_tools.mglutil.Tests package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.Tests.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.Tests.html#cellpack-mgl-tools-mglutil-tests-test-dependencies-module">cellpack.mgl_tools.mglutil.Tests.test_dependencies module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.Tests.html#module-cellpack.mgl_tools.mglutil.Tests">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.mglutil.gui.html">cellpack.mgl_tools.mglutil.gui package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.gui.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.gui.html#module-cellpack.mgl_tools.mglutil.gui">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html">cellpack.mgl_tools.mglutil.math package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-tensormodule-module">cellpack.mgl_tools.mglutil.math.TensorModule module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-vectormodule-module">cellpack.mgl_tools.mglutil.math.VectorModule module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-crystal-module">cellpack.mgl_tools.mglutil.math.crystal module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-griddescriptor-module">cellpack.mgl_tools.mglutil.math.gridDescriptor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-kinematics-module">cellpack.mgl_tools.mglutil.math.kinematics module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-kinematicstest-module">cellpack.mgl_tools.mglutil.math.kinematicstest module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#module-cellpack.mgl_tools.mglutil.math.kmeansClustering">cellpack.mgl_tools.mglutil.math.kmeansClustering module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-ncoords-module">cellpack.mgl_tools.mglutil.math.ncoords module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-ncoordstest-module">cellpack.mgl_tools.mglutil.math.ncoordstest module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-rigidfit-module">cellpack.mgl_tools.mglutil.math.rigidFit module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-rmsd-module">cellpack.mgl_tools.mglutil.math.rmsd module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-rmsdtest-module">cellpack.mgl_tools.mglutil.math.rmsdtest module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#module-cellpack.mgl_tools.mglutil.math.rotax">cellpack.mgl_tools.mglutil.math.rotax module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-statetocoords-module">cellpack.mgl_tools.mglutil.math.statetocoords module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-statetocoordstest-module">cellpack.mgl_tools.mglutil.math.statetocoordstest module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#module-cellpack.mgl_tools.mglutil.math.stats">cellpack.mgl_tools.mglutil.math.stats module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#module-cellpack.mgl_tools.mglutil.math.torsion">cellpack.mgl_tools.mglutil.math.torsion module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-transformation-module">cellpack.mgl_tools.mglutil.math.transformation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-transformationtest-module">cellpack.mgl_tools.mglutil.math.transformationtest module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#cellpack-mgl-tools-mglutil-math-usr-module">cellpack.mgl_tools.mglutil.math.usr module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.html#module-cellpack.mgl_tools.mglutil.math">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.mglutil.regression.html">cellpack.mgl_tools.mglutil.regression package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.regression.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.regression.html#module-cellpack.mgl_tools.mglutil.regression.testplus">cellpack.mgl_tools.mglutil.regression.testplus module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.regression.html#module-cellpack.mgl_tools.mglutil.regression.testplus_before_2_1">cellpack.mgl_tools.mglutil.regression.testplus_before_2_1 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.regression.html#module-cellpack.mgl_tools.mglutil.regression">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.mglutil.splashregister.html">cellpack.mgl_tools.mglutil.splashregister package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.splashregister.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.splashregister.html#cellpack-mgl-tools-mglutil-splashregister-about-module">cellpack.mgl_tools.mglutil.splashregister.about module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.splashregister.html#cellpack-mgl-tools-mglutil-splashregister-license-module">cellpack.mgl_tools.mglutil.splashregister.license module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.splashregister.html#cellpack-mgl-tools-mglutil-splashregister-register-module">cellpack.mgl_tools.mglutil.splashregister.register module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.splashregister.html#cellpack-mgl-tools-mglutil-splashregister-splashscreen-module">cellpack.mgl_tools.mglutil.splashregister.splashscreen module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.splashregister.html#module-cellpack.mgl_tools.mglutil.splashregister">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html">cellpack.mgl_tools.mglutil.util package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#module-cellpack.mgl_tools.mglutil.util.callback">cellpack.mgl_tools.mglutil.util.callback module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#module-cellpack.mgl_tools.mglutil.util.colorUtil">cellpack.mgl_tools.mglutil.util.colorUtil module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#module-cellpack.mgl_tools.mglutil.util.defaultPalettes">cellpack.mgl_tools.mglutil.util.defaultPalettes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#cellpack-mgl-tools-mglutil-util-idleutil-module">cellpack.mgl_tools.mglutil.util.idleUtil module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#module-cellpack.mgl_tools.mglutil.util.misc">cellpack.mgl_tools.mglutil.util.misc module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#module-cellpack.mgl_tools.mglutil.util.packageFilePath">cellpack.mgl_tools.mglutil.util.packageFilePath module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#cellpack-mgl-tools-mglutil-util-parser-module">cellpack.mgl_tools.mglutil.util.parser module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#cellpack-mgl-tools-mglutil-util-qhullutils-module">cellpack.mgl_tools.mglutil.util.qhullUtils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#cellpack-mgl-tools-mglutil-util-recentfiles-module">cellpack.mgl_tools.mglutil.util.recentFiles module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#module-cellpack.mgl_tools.mglutil.util.relpath">cellpack.mgl_tools.mglutil.util.relpath module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#module-cellpack.mgl_tools.mglutil.util.repeatPrinter">cellpack.mgl_tools.mglutil.util.repeatPrinter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#module-cellpack.mgl_tools.mglutil.util.tree">cellpack.mgl_tools.mglutil.util.tree module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#module-cellpack.mgl_tools.mglutil.util.uniq">cellpack.mgl_tools.mglutil.util.uniq module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.util.html#module-cellpack.mgl_tools.mglutil.util">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.mglutil.web.html">cellpack.mgl_tools.mglutil.web package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.web.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.web.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.web.html#module-cellpack.mgl_tools.mglutil.web.HTMLParser">cellpack.mgl_tools.mglutil.web.HTMLParser module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.mglutil.web.html#module-cellpack.mgl_tools.mglutil.web">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.mglutil.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.mglutil.html#module-cellpack.mgl_tools.mglutil">cellpack.mgl_tools.mglutil module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.mglutil.html#cellpack-mgl-tools-mglutil-alignmenteditor-module">cellpack.mgl_tools.mglutil.alignmentEditor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.mglutil.html#cellpack-mgl-tools-mglutil-bhtfunctions-module">cellpack.mgl_tools.mglutil.bhtfunctions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.mglutil.html#module-cellpack.mgl_tools.mglutil.events">cellpack.mgl_tools.mglutil.events module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.mglutil.html#cellpack-mgl-tools-mglutil-pdb-blender-module">cellpack.mgl_tools.mglutil.pdb_blender module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.mglutil.html#cellpack-mgl-tools-mglutil-pdb-c4d-module">cellpack.mgl_tools.mglutil.pdb_c4d module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.mglutil.html#module-cellpack.mgl_tools.mglutil.popen2Threads">cellpack.mgl_tools.mglutil.popen2Threads module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.mglutil.html#cellpack-mgl-tools-mglutil-preferences-module">cellpack.mgl_tools.mglutil.preferences module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.mglutil.html#cellpack-mgl-tools-mglutil-process-module">cellpack.mgl_tools.mglutil.process module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.mglutil.html#module-0">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html">cellpack.mgl_tools.oldnumeric package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.alter_code1">cellpack.mgl_tools.oldnumeric.alter_code1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.alter_code2">cellpack.mgl_tools.oldnumeric.alter_code2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.array_printer">cellpack.mgl_tools.oldnumeric.array_printer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.arrayfns">cellpack.mgl_tools.oldnumeric.arrayfns module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.compat">cellpack.mgl_tools.oldnumeric.compat module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.fft">cellpack.mgl_tools.oldnumeric.fft module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#cellpack-mgl-tools-oldnumeric-fix-default-axis-module">cellpack.mgl_tools.oldnumeric.fix_default_axis module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.functions">cellpack.mgl_tools.oldnumeric.functions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.linear_algebra">cellpack.mgl_tools.oldnumeric.linear_algebra module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.ma">cellpack.mgl_tools.oldnumeric.ma module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#masked-arrays">Masked Arrays</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.matrix">cellpack.mgl_tools.oldnumeric.matrix module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#cellpack-mgl-tools-oldnumeric-misc-module">cellpack.mgl_tools.oldnumeric.misc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#cellpack-mgl-tools-oldnumeric-mlab-module">cellpack.mgl_tools.oldnumeric.mlab module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.precision">cellpack.mgl_tools.oldnumeric.precision module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.random_array">cellpack.mgl_tools.oldnumeric.random_array module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.rng">cellpack.mgl_tools.oldnumeric.rng module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#cellpack-mgl-tools-oldnumeric-rng-stats-module">cellpack.mgl_tools.oldnumeric.rng_stats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.setup">cellpack.mgl_tools.oldnumeric.setup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.setupscons">cellpack.mgl_tools.oldnumeric.setupscons module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.typeconv">cellpack.mgl_tools.oldnumeric.typeconv module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric.ufuncs">cellpack.mgl_tools.oldnumeric.ufuncs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#cellpack-mgl-tools-oldnumeric-user-array-module">cellpack.mgl_tools.oldnumeric.user_array module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.oldnumeric.html#module-cellpack.mgl_tools.oldnumeric">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellpack.mgl_tools.opengltk.html">cellpack.mgl_tools.opengltk package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.opengltk.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.opengltk.OpenGL.html">cellpack.mgl_tools.opengltk.OpenGL package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.OpenGL.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.OpenGL.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.OpenGL.html#module-cellpack.mgl_tools.opengltk.OpenGL.GL">cellpack.mgl_tools.opengltk.OpenGL.GL module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.OpenGL.html#module-cellpack.mgl_tools.opengltk.OpenGL.GLU">cellpack.mgl_tools.opengltk.OpenGL.GLU module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.OpenGL.html#module-cellpack.mgl_tools.opengltk.OpenGL">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.opengltk.Tests.html">cellpack.mgl_tools.opengltk.Tests package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.Tests.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.Tests.html#cellpack-mgl-tools-opengltk-tests-glx-module">cellpack.mgl_tools.opengltk.Tests.glx module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.Tests.html#cellpack-mgl-tools-opengltk-tests-test-cube-module">cellpack.mgl_tools.opengltk.Tests.test_cube module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.Tests.html#cellpack-mgl-tools-opengltk-tests-test-dependencies-module">cellpack.mgl_tools.opengltk.Tests.test_dependencies module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.Tests.html#cellpack-mgl-tools-opengltk-tests-test-dots-module">cellpack.mgl_tools.opengltk.Tests.test_dots module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.Tests.html#cellpack-mgl-tools-opengltk-tests-test-lines-module">cellpack.mgl_tools.opengltk.Tests.test_lines module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.Tests.html#cellpack-mgl-tools-opengltk-tests-test-smooth-module">cellpack.mgl_tools.opengltk.Tests.test_smooth module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.Tests.html#cellpack-mgl-tools-opengltk-tests-test-togl-module">cellpack.mgl_tools.opengltk.Tests.test_togl module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.Tests.html#module-cellpack.mgl_tools.opengltk.Tests">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.opengltk.extent.html">cellpack.mgl_tools.opengltk.extent package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.extent.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.extent.html#module-cellpack.mgl_tools.opengltk.extent.utillib">cellpack.mgl_tools.opengltk.extent.utillib module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.extent.html#module-cellpack.mgl_tools.opengltk.extent">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.opengltk.wrapper.html">cellpack.mgl_tools.opengltk.wrapper package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.wrapper.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.wrapper.html#cellpack-mgl-tools-opengltk-wrapper-doauto-module">cellpack.mgl_tools.opengltk.wrapper.doauto module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.wrapper.html#cellpack-mgl-tools-opengltk-wrapper-gl-auto-module">cellpack.mgl_tools.opengltk.wrapper.gl_auto module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.wrapper.html#cellpack-mgl-tools-opengltk-wrapper-gl-deprec-module">cellpack.mgl_tools.opengltk.wrapper.gl_deprec module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.wrapper.html#cellpack-mgl-tools-opengltk-wrapper-gl-wrapper-module">cellpack.mgl_tools.opengltk.wrapper.gl_wrapper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.wrapper.html#cellpack-mgl-tools-opengltk-wrapper-gle-wrapper-module">cellpack.mgl_tools.opengltk.wrapper.gle_wrapper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.wrapper.html#cellpack-mgl-tools-opengltk-wrapper-glu-wrapper-module">cellpack.mgl_tools.opengltk.wrapper.glu_wrapper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.wrapper.html#cellpack-mgl-tools-opengltk-wrapper-glx-wrapper-module">cellpack.mgl_tools.opengltk.wrapper.glx_wrapper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.wrapper.html#cellpack-mgl-tools-opengltk-wrapper-smap-wrapper-module">cellpack.mgl_tools.opengltk.wrapper.smap_wrapper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.opengltk.wrapper.html#module-cellpack.mgl_tools.opengltk.wrapper">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.opengltk.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.opengltk.html#module-cellpack.mgl_tools.opengltk.ccallback">cellpack.mgl_tools.opengltk.ccallback module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.opengltk.html#cellpack-mgl-tools-opengltk-exception-module">cellpack.mgl_tools.opengltk.exception module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.opengltk.html#cellpack-mgl-tools-opengltk-glplus-module">cellpack.mgl_tools.opengltk.glplus module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.opengltk.html#cellpack-mgl-tools-opengltk-util-module">cellpack.mgl_tools.opengltk.util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.opengltk.html#module-cellpack.mgl_tools.opengltk">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cellpack.mgl_tools.upy.html">cellpack.mgl_tools.upy package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.upy.autodesk3dsmax.html">cellpack.mgl_tools.upy.autodesk3dsmax package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.autodesk3dsmax.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.autodesk3dsmax.html#module-cellpack.mgl_tools.upy.autodesk3dsmax">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.upy.autodeskmaya.html">cellpack.mgl_tools.upy.autodeskmaya package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.autodeskmaya.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.autodeskmaya.html#cellpack-mgl-tools-upy-autodeskmaya-mayahelper-module">cellpack.mgl_tools.upy.autodeskmaya.mayaHelper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.autodeskmaya.html#cellpack-mgl-tools-upy-autodeskmaya-mayaplugin-module">cellpack.mgl_tools.upy.autodeskmaya.mayaPlugin module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.autodeskmaya.html#cellpack-mgl-tools-upy-autodeskmaya-mayaui-module">cellpack.mgl_tools.upy.autodeskmaya.mayaUI module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.autodeskmaya.html#module-cellpack.mgl_tools.upy.autodeskmaya">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.upy.blender.html">cellpack.mgl_tools.upy.blender package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.blender.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.blender.html#module-cellpack.mgl_tools.upy.blender">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.upy.cinema4d.html">cellpack.mgl_tools.upy.cinema4d package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.cinema4d.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.cinema4d.html#module-cellpack.mgl_tools.upy.cinema4d">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.upy.dejavuTk.html">cellpack.mgl_tools.upy.dejavuTk package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.dejavuTk.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.dejavuTk.html#cellpack-mgl-tools-upy-dejavutk-dejavuhelper-module">cellpack.mgl_tools.upy.dejavuTk.dejavuHelper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.dejavuTk.html#cellpack-mgl-tools-upy-dejavutk-dejavuhelper-mgl-module">cellpack.mgl_tools.upy.dejavuTk.dejavuHelper_mgl module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.dejavuTk.html#cellpack-mgl-tools-upy-dejavutk-dejavuui-module">cellpack.mgl_tools.upy.dejavuTk.dejavuUI module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.dejavuTk.html#module-cellpack.mgl_tools.upy.dejavuTk">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.upy.houdini.html">cellpack.mgl_tools.upy.houdini package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.houdini.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.houdini.html#cellpack-mgl-tools-upy-houdini-hou-pyqt-helper-module">cellpack.mgl_tools.upy.houdini.hou_pyqt_helper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.houdini.html#cellpack-mgl-tools-upy-houdini-houdiniadaptor-module">cellpack.mgl_tools.upy.houdini.houdiniAdaptor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.houdini.html#cellpack-mgl-tools-upy-houdini-houdinihelper-module">cellpack.mgl_tools.upy.houdini.houdiniHelper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.houdini.html#cellpack-mgl-tools-upy-houdini-houdiniui-module">cellpack.mgl_tools.upy.houdini.houdiniUI module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.houdini.html#cellpack-mgl-tools-upy-houdini-test-module">cellpack.mgl_tools.upy.houdini.test module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.houdini.html#cellpack-mgl-tools-upy-houdini-testqt-module">cellpack.mgl_tools.upy.houdini.testQt module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.houdini.html#module-cellpack.mgl_tools.upy.houdini">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.upy.pythonUI.html">cellpack.mgl_tools.upy.pythonUI package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.pythonUI.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.pythonUI.html#cellpack-mgl-tools-upy-pythonui-qtcollapsible-module">cellpack.mgl_tools.upy.pythonUI.qtCollapsible module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.pythonUI.html#cellpack-mgl-tools-upy-pythonui-qtui-module">cellpack.mgl_tools.upy.pythonUI.qtUI module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.pythonUI.html#cellpack-mgl-tools-upy-pythonui-tkui-module">cellpack.mgl_tools.upy.pythonUI.tkUI module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.pythonUI.html#module-cellpack.mgl_tools.upy.pythonUI">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.upy.softimage.html">cellpack.mgl_tools.upy.softimage package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.softimage.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.softimage.html#module-cellpack.mgl_tools.upy.softimage">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.upy.ucsfchimera.html">cellpack.mgl_tools.upy.ucsfchimera package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.ucsfchimera.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.ucsfchimera.html#cellpack-mgl-tools-upy-ucsfchimera-chimerahelper-module">cellpack.mgl_tools.upy.ucsfchimera.chimeraHelper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.upy.ucsfchimera.html#module-cellpack.mgl_tools.upy.ucsfchimera">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#module-cellpack.mgl_tools.upy.bitoperators">cellpack.mgl_tools.upy.bitoperators module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#module-cellpack.mgl_tools.upy.colors">cellpack.mgl_tools.upy.colors module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#cellpack-mgl-tools-upy-dev-util-module">cellpack.mgl_tools.upy.dev_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#module-cellpack.mgl_tools.upy.hostHelper">cellpack.mgl_tools.upy.hostHelper module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#module-cellpack.mgl_tools.upy.intersect_RayTriangle">cellpack.mgl_tools.upy.intersect_RayTriangle module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#cellpack-mgl-tools-upy-nma-module">cellpack.mgl_tools.upy.nma module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#module-cellpack.mgl_tools.upy.pluginAdaptor">cellpack.mgl_tools.upy.pluginAdaptor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#cellpack-mgl-tools-upy-register-user-module">cellpack.mgl_tools.upy.register_user module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#cellpack-mgl-tools-upy-setup-module">cellpack.mgl_tools.upy.setup module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#module-cellpack.mgl_tools.upy.transformation">cellpack.mgl_tools.upy.transformation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.mgl_tools.upy.html#requirements">Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#module-cellpack.mgl_tools.upy.tree">cellpack.mgl_tools.upy.tree module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#module-cellpack.mgl_tools.upy.uiAdaptor">cellpack.mgl_tools.upy.uiAdaptor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#module-cellpack.mgl_tools.upy.upy_updater">cellpack.mgl_tools.upy.upy_updater module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.mgl_tools.upy.html#module-cellpack.mgl_tools.upy">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="module-cellpack.mgl_tools">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.mgl_tools" title="Permalink to this headline">¶</a></h2>
+<p>MGL tools packages</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

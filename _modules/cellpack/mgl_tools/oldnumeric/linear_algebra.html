@@ -1,0 +1,313 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.mgl_tools.oldnumeric.linear_algebra &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../cellpack.html">cellpack</a> &raquo;</li>
+        
+      <li>cellpack.mgl_tools.oldnumeric.linear_algebra</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.mgl_tools.oldnumeric.linear_algebra</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Backward compatible with LinearAlgebra from Numeric</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># This module is a lite version of the linalg.py module in SciPy which contains</span>
+<span class="c1"># high-level Python interface to the LAPACK library.  The lite version</span>
+<span class="c1"># only accesses the following LAPACK functions: dgesv, zgesv, dgeev,</span>
+<span class="c1"># zgeev, dgesdd, zgesdd, dgelsd, zgelsd, dsyevd, zheevd, dgetrf, dpotrf.</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;LinAlgError&#39;</span><span class="p">,</span> <span class="s1">&#39;solve_linear_equations&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;inverse&#39;</span><span class="p">,</span> <span class="s1">&#39;cholesky_decomposition&#39;</span><span class="p">,</span> <span class="s1">&#39;eigenvalues&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;Heigenvalues&#39;</span><span class="p">,</span> <span class="s1">&#39;generalized_inverse&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;determinant&#39;</span><span class="p">,</span> <span class="s1">&#39;singular_value_decomposition&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;eigenvectors&#39;</span><span class="p">,</span>  <span class="s1">&#39;Heigenvectors&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;linear_least_squares&#39;</span>
+           <span class="p">]</span>
+
+<span class="kn">from</span> <span class="nn">numpy.core</span> <span class="kn">import</span> <span class="n">transpose</span>
+<span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">linalg</span>
+
+<span class="c1"># Linear equations</span>
+
+<span class="n">LinAlgError</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span>
+
+<div class="viewcode-block" id="solve_linear_equations"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.linear_algebra.solve_linear_equations">[docs]</a><span class="k">def</span> <span class="nf">solve_linear_equations</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span></div>
+
+<span class="c1"># Matrix inversion</span>
+
+<div class="viewcode-block" id="inverse"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.linear_algebra.inverse">[docs]</a><span class="k">def</span> <span class="nf">inverse</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">a</span><span class="p">)</span></div>
+
+<span class="c1"># Cholesky decomposition</span>
+
+<div class="viewcode-block" id="cholesky_decomposition"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.linear_algebra.cholesky_decomposition">[docs]</a><span class="k">def</span> <span class="nf">cholesky_decomposition</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">a</span><span class="p">)</span></div>
+
+<span class="c1"># Eigenvalues</span>
+
+<div class="viewcode-block" id="eigenvalues"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.linear_algebra.eigenvalues">[docs]</a><span class="k">def</span> <span class="nf">eigenvalues</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">eigvals</span><span class="p">(</span><span class="n">a</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Heigenvalues"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.linear_algebra.Heigenvalues">[docs]</a><span class="k">def</span> <span class="nf">Heigenvalues</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">UPLO</span><span class="o">=</span><span class="s1">&#39;L&#39;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">UPLO</span><span class="p">)</span></div>
+
+<span class="c1"># Eigenvectors</span>
+
+<div class="viewcode-block" id="eigenvectors"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.linear_algebra.eigenvectors">[docs]</a><span class="k">def</span> <span class="nf">eigenvectors</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="n">w</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">w</span><span class="p">,</span> <span class="n">transpose</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Heigenvectors"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.linear_algebra.Heigenvectors">[docs]</a><span class="k">def</span> <span class="nf">Heigenvectors</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="n">w</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">w</span><span class="p">,</span> <span class="n">transpose</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></div>
+
+<span class="c1"># Generalized inverse</span>
+
+<div class="viewcode-block" id="generalized_inverse"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.linear_algebra.generalized_inverse">[docs]</a><span class="k">def</span> <span class="nf">generalized_inverse</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">rcond</span> <span class="o">=</span> <span class="mf">1.e-10</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">rcond</span><span class="p">)</span></div>
+
+<span class="c1"># Determinant</span>
+
+<div class="viewcode-block" id="determinant"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.linear_algebra.determinant">[docs]</a><span class="k">def</span> <span class="nf">determinant</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">a</span><span class="p">)</span></div>
+
+<span class="c1"># Linear Least Squares</span>
+
+<div class="viewcode-block" id="linear_least_squares"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.linear_algebra.linear_least_squares">[docs]</a><span class="k">def</span> <span class="nf">linear_least_squares</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="mf">1.e-10</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;returns x,resids,rank,s</span>
+<span class="sd">where x minimizes 2-norm(|b - Ax|)</span>
+<span class="sd">      resids is the sum square residuals</span>
+<span class="sd">      rank is the rank of A</span>
+<span class="sd">      s is the rank of the singular values of A in descending order</span>
+
+<span class="sd">If b is a matrix then x is also a matrix with corresponding columns.</span>
+<span class="sd">If the rank of A is less than the number of columns of A or greater than</span>
+<span class="sd">the number of rows, then residuals will be returned as an empty array</span>
+<span class="sd">otherwise resids = sum((b-dot(A,x)**2).</span>
+<span class="sd">Singular values less than s[0]*rcond are treated as zero.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">rcond</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="singular_value_decomposition"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.linear_algebra.singular_value_decomposition">[docs]</a><span class="k">def</span> <span class="nf">singular_value_decomposition</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">full_matrices</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">full_matrices</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

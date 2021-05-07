@@ -1,0 +1,1768 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.autopack package &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="cellpack.bin package" href="cellpack.bin.html" />
+    <link rel="prev" title="cellpack package" href="cellpack.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Package modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cellpack.html">cellpack package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="cellpack.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">cellpack</a> &raquo;</li>
+        
+          <li><a href="cellpack.html">cellpack package</a> &raquo;</li>
+        
+      <li>cellpack.autopack package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/cellpack.autopack.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
+      
+        <a href="cellpack.bin.html" class="btn btn-neutral float-right" title="cellpack.bin package" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+      
+      
+        <a href="cellpack.html" class="btn btn-neutral float-left" title="cellpack package" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+      
+  </div>
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="cellpack-autopack-package">
+<h1>cellpack.autopack package<a class="headerlink" href="#cellpack-autopack-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-cellpack.autopack.Analysis">
+<span id="cellpack-autopack-analysis-module"></span><h2>cellpack.autopack.Analysis module<a class="headerlink" href="#module-cellpack.autopack.Analysis" title="Permalink to this headline">¶</a></h2>
+<p>Created on Mon May  6 22:58:44 2013</p>
+<p>&#64;author: ludo</p>
+<dl class="py class">
+<dt id="cellpack.autopack.Analysis.AnalyseAP">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cellpack.autopack.Analysis.</span></code><code class="sig-name descname"><span class="pre">AnalyseAP</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.PairCorrelationFunction_2D">
+<code class="sig-name descname"><span class="pre">PairCorrelationFunction_2D</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rMax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.PairCorrelationFunction_2D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.PairCorrelationFunction_2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the two-dimensional pair correlation function, also known
+as the radial distribution function, for a set of circular particles
+contained in a square region of a plane.  This simple function finds
+reference particles such that a circle of radius rMax drawn around the
+particle will fit entirely within the square, eliminating the need to
+compensate for edge effects.  If no such particles exist, an error is
+returned. Try a smaller rMax…or write some code to handle edge effects! ;)</p>
+<dl>
+<dt>Arguments:</dt><dd><p>x               an array of x positions of centers of particles
+y               an array of y positions of centers of particles
+S               length of each side of the square region of the plane
+rMax            outer diameter of largest annulus
+dr              increment for increasing radius of annulus</p>
+</dd>
+<dt>Returns a tuple: (g, radii, interior_x, interior_y)</dt><dd><p>g(r)            a numpy array containing the correlation function g(r)
+radii           a numpy array containing the radii of the</p>
+<blockquote>
+<div><p>annuli used to compute g(r)</p>
+</div></blockquote>
+<p>interior_x      x coordinates of reference particles
+interior_y      y coordinates of reference particles</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.PairCorrelationFunction_3D">
+<code class="sig-name descname"><span class="pre">PairCorrelationFunction_3D</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rMax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.PairCorrelationFunction_3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.PairCorrelationFunction_3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the three-dimensional pair correlation function for a set of
+spherical particles contained in a cube with side length S. This simple
+function finds reference particles such that a sphere of radius rMax drawn
+around the particle will fit entirely within the cube, eliminating the need
+to compensate for edge effects. If no such particles exist, an error is
+returned. Try a smaller rMax…or write some code to handle edge effects! ;)
+Arguments:
+x an array of x positions of centers of particles
+y an array of y positions of centers of particles
+z an array of z positions of centers of particles
+S length of each side of the cube in space
+rMax outer diameter of largest spherical shell
+dr increment for increasing radius of spherical shell</p>
+<p>Returns a tuple: (g, radii, interior_x, interior_y, interior_z)
+g(r) a numpy array containing the correlation function g(r)
+radii a numpy array containing the radii of the
+spherical shells used to compute g(r)
+interior_x x coordinates of reference particles
+interior_y y coordinates of reference particles
+interior_z z coordinates of reference particles</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.axis_distribution">
+<code class="sig-name descname"><span class="pre">axis_distribution</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.axis_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.axis_distribution" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.axis_distribution_total">
+<code class="sig-name descname"><span class="pre">axis_distribution_total</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_positions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.axis_distribution_total"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.axis_distribution_total" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.calcDistanceMatrixFastEuclidean2">
+<code class="sig-name descname"><span class="pre">calcDistanceMatrixFastEuclidean2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nDimPoints</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.calcDistanceMatrixFastEuclidean2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.calcDistanceMatrixFastEuclidean2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.correlation">
+<code class="sig-name descname"><span class="pre">correlation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.correlation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.correlation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.displayDistance">
+<code class="sig-name descname"><span class="pre">displayDistance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ramp_color1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ramp_color2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ramp_color3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.displayDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.displayDistance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.displayDistanceCube">
+<code class="sig-name descname"><span class="pre">displayDistanceCube</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ramp_color1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ramp_color2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ramp_color3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.displayDistanceCube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.displayDistanceCube" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.displayDistancePlane">
+<code class="sig-name descname"><span class="pre">displayDistancePlane</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ramp_color1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ramp_color2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ramp_color3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.displayDistancePlane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.displayDistancePlane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.doloop">
+<code class="sig-name descname"><span class="pre">doloop</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wrkDir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rdf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">twod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbox_bb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeds_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.doloop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.doloop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.flush">
+<code class="sig-name descname"><span class="pre">flush</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.flush"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.flush" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.getAreaShell">
+<code class="sig-name descname"><span class="pre">getAreaShell</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.getAreaShell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.getAreaShell" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.getAxeValue">
+<code class="sig-name descname"><span class="pre">getAxeValue</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingrname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.getAxeValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.getAxeValue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.getAxesValues">
+<code class="sig-name descname"><span class="pre">getAxesValues</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">positions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.getAxesValues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.getAxesValues" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.getClosestDistance">
+<code class="sig-name descname"><span class="pre">getClosestDistance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.getClosestDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.getClosestDistance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.getDistance">
+<code class="sig-name descname"><span class="pre">getDistance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingrname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.getDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.getDistance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.getDistanceAngle">
+<code class="sig-name descname"><span class="pre">getDistanceAngle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.getDistanceAngle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.getDistanceAngle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.getDistanceFrom">
+<code class="sig-name descname"><span class="pre">getDistanceFrom</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.getDistanceFrom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.getDistanceFrom" title="Permalink to this definition">¶</a></dt>
+<dd><p>target : name or host object target or target position
+parent : name of host parent object for the list of object to measre distance from
+objects : list of object or list of points</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.getHaltonUnique">
+<code class="sig-name descname"><span class="pre">getHaltonUnique</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.getHaltonUnique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.getHaltonUnique" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.getMinMaxProteinSize">
+<code class="sig-name descname"><span class="pre">getMinMaxProteinSize</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.getMinMaxProteinSize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.getMinMaxProteinSize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.getPositionsFromObject">
+<code class="sig-name descname"><span class="pre">getPositionsFromObject</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.getPositionsFromObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.getPositionsFromObject" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.getPositionsFromResFile">
+<code class="sig-name descname"><span class="pre">getPositionsFromResFile</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.getPositionsFromResFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.getPositionsFromResFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.getVolumeShell">
+<code class="sig-name descname"><span class="pre">getVolumeShell</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.getVolumeShell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.getVolumeShell" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.grabResultFromJSON">
+<code class="sig-name descname"><span class="pre">grabResultFromJSON</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.grabResultFromJSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.grabResultFromJSON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.grabResultFromTXT">
+<code class="sig-name descname"><span class="pre">grabResultFromTXT</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doanalyze</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.grabResultFromTXT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.grabResultFromTXT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.grid_pack">
+<code class="sig-name descname"><span class="pre">grid_pack</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wrkDir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forceBuild</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vTestid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vAnalysis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbox_bb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.grid_pack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.grid_pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.histo">
+<code class="sig-name descname"><span class="pre">histo</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.histo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.histo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.loadJSON">
+<code class="sig-name descname"><span class="pre">loadJSON</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.loadJSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.loadJSON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.merge">
+<code class="sig-name descname"><span class="pre">merge</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">d1</span></em>, <em class="sig-param"><span class="pre">d2</span></em>, <em class="sig-param"><span class="pre">merge=&lt;function</span> <span class="pre">AnalyseAP.&lt;lambda&gt;&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.merge" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.occurence_distribution">
+<code class="sig-name descname"><span class="pre">occurence_distribution</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.occurence_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.occurence_distribution" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.pack">
+<code class="sig-name descname"><span class="pre">pack</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forceBuild</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vTestid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vAnalysis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbox_bb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.pack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.pack" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.plot">
+<code class="sig-name descname"><span class="pre">plot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.plot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.plotNResult2D">
+<code class="sig-name descname"><span class="pre">plotNResult2D</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[0.0,</span> <span class="pre">0,</span> <span class="pre">0.0],</span> <span class="pre">[1000.0,</span> <span class="pre">1000.0,</span> <span class="pre">1000.0]]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.plotNResult2D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.plotNResult2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.plotOneResult2D">
+<code class="sig-name descname"><span class="pre">plotOneResult2D</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[0.0,</span> <span class="pre">0,</span> <span class="pre">0.0],</span> <span class="pre">[1000.0,</span> <span class="pre">1000.0,</span> <span class="pre">1000.0]]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.plotOneResult2D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.plotOneResult2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.rdf">
+<code class="sig-name descname"><span class="pre">rdf</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">positions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rMax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.rdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.rdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.rdf_2d">
+<code class="sig-name descname"><span class="pre">rdf_2d</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.rdf_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.rdf_2d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.rdf_3d">
+<code class="sig-name descname"><span class="pre">rdf_3d</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.rdf_3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.rdf_3d" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.rectangle_circle_area">
+<code class="sig-name descname"><span class="pre">rectangle_circle_area</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.rectangle_circle_area"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.rectangle_circle_area" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.ripley">
+<code class="sig-name descname"><span class="pre">ripley</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">positions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rMax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.ripley"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.ripley" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.save_csv">
+<code class="sig-name descname"><span class="pre">save_csv</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.save_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.save_csv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.simpleplot">
+<code class="sig-name descname"><span class="pre">simpleplot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.simpleplot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.simpleplot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Analysis.AnalyseAP.writeJSON">
+<code class="sig-name descname"><span class="pre">writeJSON</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP.writeJSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP.writeJSON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.Analysis.angle_between_vectors">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.Analysis.</span></code><code class="sig-name descname"><span class="pre">angle_between_vectors</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#angle_between_vectors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.angle_between_vectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return angle between vectors.
+If directed is False, the input vectors are interpreted as undirected axes,
+i.e. the maximum angle is pi/2.
+&gt;&gt;&gt; a = angle_between_vectors([1, -2, 3], [-1, 2, -3])
+&gt;&gt;&gt; numpy.allclose(a, math.pi)
+True
+&gt;&gt;&gt; a = angle_between_vectors([1, -2, 3], [-1, 2, -3], directed=False)
+&gt;&gt;&gt; numpy.allclose(a, 0)
+True
+&gt;&gt;&gt; v0 = [[2, 0, 0, 2], [0, 2, 0, 2], [0, 0, 2, 2]]
+&gt;&gt;&gt; v1 = [[3], [0], [0]]
+&gt;&gt;&gt; a = angle_between_vectors(v0, v1)
+&gt;&gt;&gt; numpy.allclose(a, [0, 1.5708, 1.5708, 0.95532])
+True
+&gt;&gt;&gt; v0 = [[2, 0, 0], [2, 0, 0], [0, 2, 0], [2, 0, 0]]
+&gt;&gt;&gt; v1 = [[0, 3, 0], [0, 0, 3], [0, 0, 3], [3, 3, 3]]
+&gt;&gt;&gt; a = angle_between_vectors(v0, v1, axis=1)
+&gt;&gt;&gt; numpy.allclose(a, [1.5708, 1.5708, 1.5708, 0.95532])
+True</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.Analysis.autolabel">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.Analysis.</span></code><code class="sig-name descname"><span class="pre">autolabel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#autolabel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.autolabel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.Analysis.autolabels">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.Analysis.</span></code><code class="sig-name descname"><span class="pre">autolabels</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loci1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loci2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loci3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yerr1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yerr2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yerr3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#autolabels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.autolabels" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.Analysis.autolabelyerr">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.Analysis.</span></code><code class="sig-name descname"><span class="pre">autolabelyerr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#autolabelyerr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.autolabelyerr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.Analysis.getRndWeighted">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.Analysis.</span></code><code class="sig-name descname"><span class="pre">getRndWeighted</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listPts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yerr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#getRndWeighted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.getRndWeighted" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.Analysis.signed_angle_between_vectors">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.Analysis.</span></code><code class="sig-name descname"><span class="pre">signed_angle_between_vectors</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Vn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#signed_angle_between_vectors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.signed_angle_between_vectors" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.Analysis.vector_norm">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.Analysis.</span></code><code class="sig-name descname"><span class="pre">vector_norm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#vector_norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.vector_norm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return length, i.e. Euclidean norm, of ndarray along axis.
+&gt;&gt;&gt; v = numpy.random.random(3)
+&gt;&gt;&gt; n = vector_norm(v)
+&gt;&gt;&gt; numpy.allclose(n, numpy.linalg.norm(v))
+True
+&gt;&gt;&gt; v = numpy.random.rand(6, 5, 3)
+&gt;&gt;&gt; n = vector_norm(v, axis=-1)
+&gt;&gt;&gt; numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=2)))
+True
+&gt;&gt;&gt; n = vector_norm(v, axis=1)
+&gt;&gt;&gt; numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=1)))
+True
+&gt;&gt;&gt; v = numpy.random.rand(5, 4, 3)
+&gt;&gt;&gt; n = numpy.empty((5, 3))
+&gt;&gt;&gt; vector_norm(v, axis=1, out=n)
+&gt;&gt;&gt; numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=1)))
+True
+&gt;&gt;&gt; vector_norm([])
+0.0
+&gt;&gt;&gt; vector_norm([1])
+1.0</p>
+</dd></dl>
+
+</div>
+<div class="section" id="cellpack-autopack-compartment-module">
+<h2>cellpack.autopack.Compartment module<a class="headerlink" href="#cellpack-autopack-compartment-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="cellpack-autopack-environment-module">
+<h2>cellpack.autopack.Environment module<a class="headerlink" href="#cellpack-autopack-environment-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-cellpack.autopack.GeometryTools">
+<span id="cellpack-autopack-geometrytools-module"></span><h2>cellpack.autopack.GeometryTools module<a class="headerlink" href="#module-cellpack.autopack.GeometryTools" title="Permalink to this headline">¶</a></h2>
+<p>Created on Mon Jun 24 15:27:52 2013</p>
+<p>&#64;author: ludovic Autin</p>
+<p>2D integration of circle rectangle intersection area from
+<a class="reference external" href="http://www.eex-dev.net/index.php?id=100">http://www.eex-dev.net/index.php?id=100</a>
+Copyright © Emanuel Jöbstl, 18.06.2011
+reative Commons Attribution-ShareAlike</p>
+<p>3D integration sphee cube intersection volume from
+<a class="reference external" href="http://crowsandcats.blogspot.com/2013/04/cube-sphere-intersection-volume.html">http://crowsandcats.blogspot.com/2013/04/cube-sphere-intersection-volume.html</a>
+Copyright ©  Andrew White</p>
+<dl class="py class">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cellpack.autopack.GeometryTools.</span></code><code class="sig-name descname"><span class="pre">GeometriTools</span></code><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.GetDistance">
+<code class="sig-name descname"><span class="pre">GetDistance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.GetDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.GetDistance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.LowerCircleFunction">
+<code class="sig-name descname"><span class="pre">LowerCircleFunction</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.LowerCircleFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.LowerCircleFunction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.LowerRectangleFunction">
+<code class="sig-name descname"><span class="pre">LowerRectangleFunction</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.LowerRectangleFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.LowerRectangleFunction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.Resolution">
+<code class="sig-name descname"><span class="pre">Resolution</span></code><em class="property"> <span class="pre">=</span> <span class="pre">0.01</span></em><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.Resolution" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.UpperCircleFunction">
+<code class="sig-name descname"><span class="pre">UpperCircleFunction</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.UpperCircleFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.UpperCircleFunction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.UpperRectangleFunction">
+<code class="sig-name descname"><span class="pre">UpperRectangleFunction</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.UpperRectangleFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.UpperRectangleFunction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.calc_volume">
+<code class="sig-name descname"><span class="pre">calc_volume</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.calc_volume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.calc_volume" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.check_rectangle_oustide">
+<code class="sig-name descname"><span class="pre">check_rectangle_oustide</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.check_rectangle_oustide"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.check_rectangle_oustide" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.check_sphere_inside">
+<code class="sig-name descname"><span class="pre">check_sphere_inside</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.check_sphere_inside"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.check_sphere_inside" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if sphere completly inside rect
+check if the four corner are more than radius away from circle center</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.getBoundary">
+<code class="sig-name descname"><span class="pre">getBoundary</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.getBoundary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.getBoundary" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.get_rectangle_cercle_area">
+<code class="sig-name descname"><span class="pre">get_rectangle_cercle_area</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leftBound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rightBound</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.get_rectangle_cercle_area"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.get_rectangle_cercle_area" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.region_1">
+<code class="sig-name descname"><span class="pre">region_1</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.region_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.region_1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.region_1_2_theta">
+<code class="sig-name descname"><span class="pre">region_1_2_theta</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.region_1_2_theta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.region_1_2_theta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.region_2">
+<code class="sig-name descname"><span class="pre">region_2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.region_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.region_2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.region_2_integrand">
+<code class="sig-name descname"><span class="pre">region_2_integrand</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.region_2_integrand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.region_2_integrand" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.region_3">
+<code class="sig-name descname"><span class="pre">region_3</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.region_3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.region_3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.GeometryTools.GeometriTools.region_3_integrand">
+<code class="sig-name descname"><span class="pre">region_3_integrand</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometriTools.region_3_integrand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometriTools.region_3_integrand" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="cellpack.autopack.GeometryTools.Rectangle">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cellpack.autopack.GeometryTools.</span></code><code class="sig-name descname"><span class="pre">Rectangle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#Rectangle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.Rectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="cellpack-autopack-graphics-module">
+<h2>cellpack.autopack.Graphics module<a class="headerlink" href="#cellpack-autopack-graphics-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="cellpack-autopack-grid-module">
+<h2>cellpack.autopack.Grid module<a class="headerlink" href="#cellpack-autopack-grid-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="cellpack-autopack-ioutils-module">
+<h2>cellpack.autopack.IOutils module<a class="headerlink" href="#cellpack-autopack-ioutils-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="cellpack-autopack-ingredient-module">
+<h2>cellpack.autopack.Ingredient module<a class="headerlink" href="#cellpack-autopack-ingredient-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-cellpack.autopack.Recipe">
+<span id="cellpack-autopack-recipe-module"></span><h2>cellpack.autopack.Recipe module<a class="headerlink" href="#module-cellpack.autopack.Recipe" title="Permalink to this headline">¶</a></h2>
+<p># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin,
+# and Michel Sanner
+#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
+#   with assistance from Mostafa Al-Alusi in 2009 and periodic input
+#   from Arthur Olson’s Molecular Graphics Lab
+#
+# Recipe.py Authors: Graham Johnson &amp; Michel Sanner with editing/
+# enhancement from Ludovic Autin
+#
+# Translation to Python initiated March 1, 2010 by Michel Sanner
+# with Graham Johnson
+#
+# Class restructuring and organization: Michel Sanner
+#
+# This file “Recipe.py” is part of autoPACK, cellPACK.
+#
+#    autoPACK is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    autoPACK is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with autoPACK (See “CopyingGNUGPL” in the installation.
+#    If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.
+#
+############################################################################
+&#64;author: Graham Johnson, Ludovic Autin, &amp; Michel Sanner</p>
+<p># Hybrid version merged from Graham’s Sept 6, 2011 and Ludo’s April 2012
+#version on May 16, 2012, re-merged on July 5, 2012 with thesis versions</p>
+<dl class="py class">
+<dt id="cellpack.autopack.Recipe.Recipe">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cellpack.autopack.Recipe.</span></code><code class="sig-name descname"><span class="pre">Recipe</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ext'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Recipe.html#Recipe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Recipe.Recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>a recipe provides ingredients that are each defining a protein identity
+along with radius and molarity for this protein.</p>
+<dl class="py method">
+<dt id="cellpack.autopack.Recipe.Recipe.addIngredient">
+<code class="sig-name descname"><span class="pre">addIngredient</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Recipe.html#Recipe.addIngredient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Recipe.Recipe.addIngredient" title="Permalink to this definition">¶</a></dt>
+<dd><p>add the given ingredient from the recipe</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Recipe.Recipe.delIngredient">
+<code class="sig-name descname"><span class="pre">delIngredient</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Recipe.html#Recipe.delIngredient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Recipe.Recipe.delIngredient" title="Permalink to this definition">¶</a></dt>
+<dd><p>remove the given ingredient from the recipe</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Recipe.Recipe.getMinMaxProteinSize">
+<code class="sig-name descname"><span class="pre">getMinMaxProteinSize</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Recipe.html#Recipe.getMinMaxProteinSize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Recipe.Recipe.getMinMaxProteinSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the mini and maxi radius from all recipe ingredients</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Recipe.Recipe.printFillInfo">
+<code class="sig-name descname"><span class="pre">printFillInfo</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Recipe.html#Recipe.printFillInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Recipe.Recipe.printFillInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>print the states of all recipe ingredients</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Recipe.Recipe.resetIngr">
+<code class="sig-name descname"><span class="pre">resetIngr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Recipe.html#Recipe.resetIngr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Recipe.Recipe.resetIngr" title="Permalink to this definition">¶</a></dt>
+<dd><p>reset the states of the given ingredient</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Recipe.Recipe.resetIngrs">
+<code class="sig-name descname"><span class="pre">resetIngrs</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Recipe.html#Recipe.resetIngrs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Recipe.Recipe.resetIngrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>reset the states of all recipe ingredients</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Recipe.Recipe.setCount">
+<code class="sig-name descname"><span class="pre">setCount</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Recipe.html#Recipe.setCount"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Recipe.Recipe.setCount" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the count of n of molecule for every ingredients
+in the recipe, and push them in te activeIngredient list
+David and Graham independently worked out and corrected the molarity calculation for Å as shown in the following lines
+M = moles/L
+6.022e23 ingredients/mole</p>
+<p>uPy works in Å by default (not ideal for mesoscale, but works with all molecular viewers that way), so given a volume in Å^3
+1L = (10cm)^3
+1cm = 10^(-2)m
+1Å = 10^(-10)m
+1cm = 10^(8)Å
+10cm = 10^(9)Å
+1L = (10cm)^3 = (10^(9)Å)^3 = 10^(27)Å^3</p>
+<p>M = 6.022x10^23/L = [6.022x10^23] / [10^(27)Å^3] = 6.022x10(-4)ing/Å^3
+numberIngredientsToPack = [0.0006022 ing/Å^3] * [volume Å^3]</p>
+<p>volume / ingredient in 1M = 1ing / 0.0006022 ing/Å^3 = 1660Å^3 * 1nm^3/1000Å^3 = 1.6nm^3</p>
+<p>Average distance between molecules is cubic root 3√(1.6nm^3) = 11.8Å = 1.18nm
+Thus the nbr should simply be
+nbr = densityInMolarity*[0.0006022 ing/Å^3] * [volume Å^3]
+see <a class="reference external" href="http://molbiol.edu.ru/eng/scripts/01_04.html">http://molbiol.edu.ru/eng/scripts/01_04.html</a>
+<a class="reference external" href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3910158/">http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3910158/</a>
+<a class="reference external" href="http://book.bionumbers.org/">http://book.bionumbers.org/</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Recipe.Recipe.sort">
+<code class="sig-name descname"><span class="pre">sort</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Recipe.html#Recipe.sort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Recipe.Recipe.sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>sort the ingredients using the min Radius</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.Recipe.random">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.Recipe.</span></code><code class="sig-name descname"><span class="pre">random</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">x</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">interval</span> <span class="pre">[0,</span> <span class="pre">1).</span><a class="headerlink" href="#cellpack.autopack.Recipe.random" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-cellpack.autopack.Serializable">
+<span id="cellpack-autopack-serializable-module"></span><h2>cellpack.autopack.Serializable module<a class="headerlink" href="#module-cellpack.autopack.Serializable" title="Permalink to this headline">¶</a></h2>
+<p>Created on Tue Jan 19 15:55:27 2016</p>
+<p>&#64;author: ludo</p>
+<dl class="py class">
+<dt id="cellpack.autopack.Serializable.sCompartment">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cellpack.autopack.Serializable.</span></code><code class="sig-name descname"><span class="pre">sCompartment</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Serializable.html#sCompartment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Serializable.sCompartment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="cellpack.autopack.Serializable.sCompartment.addCompartment">
+<code class="sig-name descname"><span class="pre">addCompartment</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compartment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Serializable.html#sCompartment.addCompartment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Serializable.sCompartment.addCompartment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Serializable.sCompartment.addIngredientGroup">
+<code class="sig-name descname"><span class="pre">addIngredientGroup</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingrgroup</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Serializable.html#sCompartment.addIngredientGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Serializable.sCompartment.addIngredientGroup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cellpack.autopack.Serializable.sCompartment.static_id">
+<code class="sig-name descname"><span class="pre">static_id</span></code><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#cellpack.autopack.Serializable.sCompartment.static_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Serializable.sCompartment.to_JSON">
+<code class="sig-name descname"><span class="pre">to_JSON</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Serializable.html#sCompartment.to_JSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Serializable.sCompartment.to_JSON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="cellpack.autopack.Serializable.sIngredient">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cellpack.autopack.Serializable.</span></code><code class="sig-name descname"><span class="pre">sIngredient</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupType</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Serializable.html#sIngredient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Serializable.sIngredient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="cellpack.autopack.Serializable.sIngredient.static_id">
+<code class="sig-name descname"><span class="pre">static_id</span></code><em class="property"> <span class="pre">=</span> <span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0]</span></em><a class="headerlink" href="#cellpack.autopack.Serializable.sIngredient.static_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Serializable.sIngredient.to_JSON">
+<code class="sig-name descname"><span class="pre">to_JSON</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Serializable.html#sIngredient.to_JSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Serializable.sIngredient.to_JSON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="cellpack.autopack.Serializable.sIngredientFiber">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cellpack.autopack.Serializable.</span></code><code class="sig-name descname"><span class="pre">sIngredientFiber</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Serializable.html#sIngredientFiber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Serializable.sIngredientFiber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="cellpack.autopack.Serializable.sIngredientFiber.static_id">
+<code class="sig-name descname"><span class="pre">static_id</span></code><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#cellpack.autopack.Serializable.sIngredientFiber.static_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Serializable.sIngredientFiber.to_JSON">
+<code class="sig-name descname"><span class="pre">to_JSON</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Serializable.html#sIngredientFiber.to_JSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Serializable.sIngredientFiber.to_JSON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="cellpack.autopack.Serializable.sIngredientGroup">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cellpack.autopack.Serializable.</span></code><code class="sig-name descname"><span class="pre">sIngredientGroup</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupType</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Serializable.html#sIngredientGroup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Serializable.sIngredientGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="cellpack.autopack.Serializable.sIngredientGroup.addIngredient">
+<code class="sig-name descname"><span class="pre">addIngredient</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingredient</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Serializable.html#sIngredientGroup.addIngredient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Serializable.sIngredientGroup.addIngredient" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cellpack.autopack.Serializable.sIngredientGroup.static_id">
+<code class="sig-name descname"><span class="pre">static_id</span></code><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#cellpack.autopack.Serializable.sIngredientGroup.static_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.Serializable.sIngredientGroup.to_JSON">
+<code class="sig-name descname"><span class="pre">to_JSON</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Serializable.html#sIngredientGroup.to_JSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Serializable.sIngredientGroup.to_JSON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cellpack.autopack.binvox_rw">
+<span id="cellpack-autopack-binvox-rw-module"></span><h2>cellpack.autopack.binvox_rw module<a class="headerlink" href="#module-cellpack.autopack.binvox_rw" title="Permalink to this headline">¶</a></h2>
+<p>Binvox to Numpy and back.</p>
+<p>binvox argument
+Usage: binvox [-d &lt;voxel dimension&gt;] [-t &lt;voxel file type&gt;] [-c] [-v] &lt;model filespec&gt;</p>
+<blockquote>
+<div><p>-license: show software license
+-d: specify voxel grid size (default 256, max 1024)(no max when using -e)
+-t: specify voxel file type (default binvox, also supported: hips, mira, vtk, raw, schematic, msh)
+-c: z-buffer based carving method only
+-dc: dilated carving, stop carving 1 voxel before intersection
+-v: z-buffer based parity voting method only (default is both -c and -v)
+-e: exact voxelization (any voxel with part of a triangle gets set)(does not use graphics card)</p>
+</div></blockquote>
+<dl>
+<dt>Additional parameters:</dt><dd><p>-bb &lt;minx&gt; &lt;miny&gt; &lt;minz&gt; &lt;maxx&gt; &lt;maxy&gt; &lt;maxz&gt;: force a different input model bounding box
+-ri: remove internal voxels
+-cb: center model inside unit cube
+-rotx: rotate object 90 degrees ccw around x-axis before voxelizing
+-rotz: rotate object 90 degrees cw around z-axis before voxelizing</p>
+<blockquote>
+<div><p>both -rotx and -rotz can be used multiple times</p>
+</div></blockquote>
+<p>-aw: _also_ render the model in wireframe (helps with thin parts)
+-fit: only write the voxels in the voxel bounding box
+-bi &lt;id&gt;: when converting to schematic, use block ID &lt;id&gt;
+-mb: when converting using -e from .obj to schematic, parse block ID from material spec ‘usemtl blockid_&lt;id&gt;’ (ids 1-255 only)
+-down: downsample voxels by a factor of 2 in each dimension (can be used multiple times)
+-dmin &lt;nr&gt;: when downsampling, destination voxel is on if &gt;= &lt;nr&gt; source voxels are (default 4)</p>
+</dd>
+<dt>Supported 3D model file formats:</dt><dd><p>VRML V2.0: almost fully supported
+UG, OBJ, OFF, DXF, XGL, POV, BREP, PLY, JOT: only polygons supported</p>
+</dd>
+</dl>
+<p>Example:
+binvox -c -d 200 -t mira plane.wrl</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">binvox_rw</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;chair.binvox&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">m1</span> <span class="o">=</span> <span class="n">binvox_rw</span><span class="o">.</span><span class="n">read_as_3d_array</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m1</span><span class="o">.</span><span class="n">dims</span>
+<span class="go">[32, 32, 32]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m1</span><span class="o">.</span><span class="n">scale</span>
+<span class="go">41.133000000000003</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m1</span><span class="o">.</span><span class="n">translate</span>
+<span class="go">[0.0, 0.0, 0.0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;chair_out.binvox&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">m1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;chair_out.binvox&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">m2</span> <span class="o">=</span> <span class="n">binvox_rw</span><span class="o">.</span><span class="n">read_as_3d_array</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m1</span><span class="o">.</span><span class="n">dims</span><span class="o">==</span><span class="n">m2</span><span class="o">.</span><span class="n">dims</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m1</span><span class="o">.</span><span class="n">scale</span><span class="o">==</span><span class="n">m2</span><span class="o">.</span><span class="n">scale</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m1</span><span class="o">.</span><span class="n">translate</span><span class="o">==</span><span class="n">m2</span><span class="o">.</span><span class="n">translate</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">m1</span><span class="o">.</span><span class="n">data</span><span class="o">==</span><span class="n">m2</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;chair.binvox&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">md</span> <span class="o">=</span> <span class="n">binvox_rw</span><span class="o">.</span><span class="n">read_as_3d_array</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;chair.binvox&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">ms</span> <span class="o">=</span> <span class="n">binvox_rw</span><span class="o">.</span><span class="n">read_as_coord_array</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data_ds</span> <span class="o">=</span> <span class="n">binvox_rw</span><span class="o">.</span><span class="n">dense_to_sparse</span><span class="p">(</span><span class="n">md</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data_sd</span> <span class="o">=</span> <span class="n">binvox_rw</span><span class="o">.</span><span class="n">sparse_to_dense</span><span class="p">(</span><span class="n">ms</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">data_sd</span><span class="o">==</span><span class="n">md</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># the ordering of elements returned by numpy.nonzero changes with axis</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># ordering, so to compare for equality we first lexically sort the voxels.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ms</span><span class="o">.</span><span class="n">data</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">lexsort</span><span class="p">(</span><span class="n">ms</span><span class="o">.</span><span class="n">data</span><span class="p">)]</span> <span class="o">==</span> <span class="n">data_ds</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">lexsort</span><span class="p">(</span><span class="n">data_ds</span><span class="p">)])</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt id="cellpack.autopack.binvox_rw.Voxels">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cellpack.autopack.binvox_rw.</span></code><code class="sig-name descname"><span class="pre">Voxels</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#Voxels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.Voxels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Holds a binvox model.
+data is either a three-dimensional numpy boolean array (dense representation)
+or a two-dimensional numpy float array (coordinate representation).</p>
+<p>dims, translate and scale are the model metadata.</p>
+<p>dims are the voxel dimensions, e.g. [32, 32, 32] for a 32x32x32 model.</p>
+<p>scale and translate relate the voxels to the original model coordinates.</p>
+<p>To translate voxel coordinates i, j, k to original coordinates x, y, z:</p>
+<p>x_n = (i+.5)/dims[0]
+y_n = (j+.5)/dims[1]
+z_n = (k+.5)/dims[2]
+x = scale*x_n + translate[0]
+y = scale*y_n + translate[1]
+z = scale*z_n + translate[2]</p>
+<dl class="py method">
+<dt id="cellpack.autopack.binvox_rw.Voxels.cartesian">
+<code class="sig-name descname"><span class="pre">cartesian</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#Voxels.cartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.Voxels.cartesian" title="Permalink to this definition">¶</a></dt>
+<dd><p>#http://stackoverflow.com/questions/1208118/using-numpy-to-build-an-array-of-all-combinations-of-two-arrays
+Generate a cartesian product of input arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arrays</strong> (<em>list of array-like</em>) – 1-D arrays to form the cartesian product of.</p></li>
+<li><p><strong>out</strong> (<em>ndarray</em>) – Array to place the cartesian product in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – 2-D array of shape (M, len(arrays)) containing cartesian products
+formed of input arrays.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cartesian</span><span class="p">(([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]))</span>
+<span class="go">array([[1, 4, 6],</span>
+<span class="go">       [1, 4, 7],</span>
+<span class="go">       [1, 5, 6],</span>
+<span class="go">       [1, 5, 7],</span>
+<span class="go">       [2, 4, 6],</span>
+<span class="go">       [2, 4, 7],</span>
+<span class="go">       [2, 5, 6],</span>
+<span class="go">       [2, 5, 7],</span>
+<span class="go">       [3, 4, 6],</span>
+<span class="go">       [3, 4, 7],</span>
+<span class="go">       [3, 5, 6],</span>
+<span class="go">       [3, 5, 7]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.binvox_rw.Voxels.clone">
+<code class="sig-name descname"><span class="pre">clone</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#Voxels.clone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.Voxels.clone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.binvox_rw.Voxels.getIndex">
+<code class="sig-name descname"><span class="pre">getIndex</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ijk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#Voxels.getIndex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.Voxels.getIndex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.binvox_rw.Voxels.getIndexData">
+<code class="sig-name descname"><span class="pre">getIndexData</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ijk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#Voxels.getIndexData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.Voxels.getIndexData" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.binvox_rw.Voxels.ijkToIndex">
+<code class="sig-name descname"><span class="pre">ijkToIndex</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ijk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#Voxels.ijkToIndex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.Voxels.ijkToIndex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.binvox_rw.Voxels.ijkToxyz">
+<code class="sig-name descname"><span class="pre">ijkToxyz</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#Voxels.ijkToxyz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.Voxels.ijkToxyz" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.binvox_rw.Voxels.write">
+<code class="sig-name descname"><span class="pre">write</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#Voxels.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.Voxels.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.binvox_rw.Voxels.xyzToijk">
+<code class="sig-name descname"><span class="pre">xyzToijk</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xyz</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#Voxels.xyzToijk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.Voxels.xyzToijk" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.binvox_rw.dense_to_sparse">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.binvox_rw.</span></code><code class="sig-name descname"><span class="pre">dense_to_sparse</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">voxel_data</span></em>, <em class="sig-param"><span class="pre">dtype=&lt;class</span> <span class="pre">'int'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#dense_to_sparse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.dense_to_sparse" title="Permalink to this definition">¶</a></dt>
+<dd><p>From dense representation to sparse (coordinate) representation.
+No coordinate reordering.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.binvox_rw.read">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.binvox_rw.</span></code><code class="sig-name descname"><span class="pre">read</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read binary binvox format as array.</p>
+<p>Returns the model with accompanying metadata.</p>
+<p>Voxels are stored in a three-dimensional numpy array, which is simple and
+direct, but may use a lot of memory for large models. (Storage requirements
+are 8*(d^3) bytes, where d is the dimensions of the binvox model. Numpy
+boolean arrays use a byte per element).</p>
+<p>Doesn’t do any checks on input except for the ‘#binvox’ line.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.binvox_rw.read_as_3d_array">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.binvox_rw.</span></code><code class="sig-name descname"><span class="pre">read_as_3d_array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#read_as_3d_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.read_as_3d_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read binary binvox format as array.</p>
+<p>Returns the model with accompanying metadata.</p>
+<p>Voxels are stored in a three-dimensional numpy array, which is simple and
+direct, but may use a lot of memory for large models. (Storage requirements
+are 8*(d^3) bytes, where d is the dimensions of the binvox model. Numpy
+boolean arrays use a byte per element).</p>
+<p>Doesn’t do any checks on input except for the ‘#binvox’ line.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.binvox_rw.read_as_coord_array">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.binvox_rw.</span></code><code class="sig-name descname"><span class="pre">read_as_coord_array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fix_coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#read_as_coord_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.read_as_coord_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read binary binvox format as coordinates.</p>
+<p>Returns binvox model with voxels in a “coordinate” representation, i.e.  an
+3 x N array where N is the number of nonzero voxels. Each column
+corresponds to a nonzero voxel and the 3 rows are the (x, z, y) coordinates
+of the voxel.  (The odd ordering is due to the way binvox format lays out
+data).  Note that coordinates refer to the binvox voxels, without any
+scaling or translation.</p>
+<p>Use this to save memory if your model is very sparse (mostly empty).</p>
+<p>Doesn’t do any checks on input except for the ‘#binvox’ line.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.binvox_rw.read_header">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.binvox_rw.</span></code><code class="sig-name descname"><span class="pre">read_header</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#read_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.read_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read binvox header. Mostly meant for internal use.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.binvox_rw.sparse_to_dense">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.binvox_rw.</span></code><code class="sig-name descname"><span class="pre">sparse_to_dense</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">voxel_data</span></em>, <em class="sig-param"><span class="pre">dims</span></em>, <em class="sig-param"><span class="pre">dtype=&lt;class</span> <span class="pre">'bool'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#sparse_to_dense"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.sparse_to_dense" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.binvox_rw.write">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.binvox_rw.</span></code><code class="sig-name descname"><span class="pre">write</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">voxel_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write binary binvox format.</p>
+<p>Note that when saving a model in sparse (coordinate) format, it is first
+converted to dense format.</p>
+<p>Doesn’t check if the model is ‘sane’.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cellpack.autopack.ldSequence">
+<span id="cellpack-autopack-ldsequence-module"></span><h2>cellpack.autopack.ldSequence module<a class="headerlink" href="#module-cellpack.autopack.ldSequence" title="Permalink to this headline">¶</a></h2>
+<p># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
+#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
+#   with assistance from Mostafa Al-Alusi in 2009 and periodic input
+#   from Arthur Olson’s Molecular Graphics Lab
+#
+# ldSequence.py Authors: Ludovic Autin
+###############################################################################
+&#64;author: Ludovic Autin, Graham Johnson,  &amp; Michel Sanner</p>
+<dl class="py class">
+<dt id="cellpack.autopack.ldSequence.HaltonSequence">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ldSequence.</span></code><code class="sig-name descname"><span class="pre">HaltonSequence</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atmost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ldSequence.html#HaltonSequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ldSequence.HaltonSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Another algorithm to compute a d-dimensional Halton Sequence.
+This one gives the same results as the other.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="cellpack.autopack.ldSequence.SobolSequence">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ldSequence.</span></code><code class="sig-name descname"><span class="pre">SobolSequence</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ldSequence.html#SobolSequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ldSequence.SobolSequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>From the Gnu Scientific Library</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ldSequence.SphereHalton">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ldSequence.</span></code><code class="sig-name descname"><span class="pre">SphereHalton</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7853981633974483</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ldSequence.html#SphereHalton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ldSequence.SphereHalton" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ldSequence.SphereHammersley">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ldSequence.</span></code><code class="sig-name descname"><span class="pre">SphereHammersley</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ldSequence.html#SphereHammersley"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ldSequence.SphereHammersley" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="cellpack.autopack.ldSequence.cHaltonSequence3">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ldSequence.</span></code><code class="sig-name descname"><span class="pre">cHaltonSequence3</span></code><a class="reference internal" href="_modules/cellpack/autopack/ldSequence.html#cHaltonSequence3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ldSequence.cHaltonSequence3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="cellpack.autopack.ldSequence.cHaltonSequence3.inc">
+<code class="sig-name descname"><span class="pre">inc</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ldSequence.html#cHaltonSequence3.inc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ldSequence.cHaltonSequence3.inc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.ldSequence.cHaltonSequence3.reset">
+<code class="sig-name descname"><span class="pre">reset</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ldSequence.html#cHaltonSequence3.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ldSequence.cHaltonSequence3.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ldSequence.halton">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ldSequence.</span></code><code class="sig-name descname"><span class="pre">halton</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ldSequence.html#halton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ldSequence.halton" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ldSequence.halton2">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ldSequence.</span></code><code class="sig-name descname"><span class="pre">halton2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ldSequence.html#halton2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ldSequence.halton2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ldSequence.halton3">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ldSequence.</span></code><code class="sig-name descname"><span class="pre">halton3</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ldSequence.html#halton3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ldSequence.halton3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ldSequence.halton_sequence">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ldSequence.</span></code><code class="sig-name descname"><span class="pre">halton_sequence</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ldSequence.html#halton_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ldSequence.halton_sequence" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ldSequence.haltonterm">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ldSequence.</span></code><code class="sig-name descname"><span class="pre">haltonterm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ldSequence.html#haltonterm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ldSequence.haltonterm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-cellpack.autopack.randomRot">
+<span id="cellpack-autopack-randomrot-module"></span><h2>cellpack.autopack.randomRot module<a class="headerlink" href="#module-cellpack.autopack.randomRot" title="Permalink to this headline">¶</a></h2>
+<p>Created 2012</p>
+<p># autoPACK Authors: Graham T. Johnson, Ludovic Autin, Mostafa Al-Alusi, Michel Sanner
+#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
+#   with assistance from Mostafa Al-Alusi in 2009 and periodic input
+#   from Arthur Olson’s Molecular Graphics Lab
+#
+# AFGui.py Authors: Ludovic Autin with minor editing/enhancement from Graham Johnson
+#
+# Copyright: Graham Johnson ©2010
+#
+# This file is part of autoPACK, cellPACK, and AutoFill.
+#
+#    autoPACK is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    autoPACK is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with autoPACK (See “CopyingGNUGPL” in the installation.
+#    If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.
+#
+###############################################################################</p>
+<p>Name: ‘randomRot’
+&#64;author: Modified from uniform random rotation matrix from <a class="reference external" href="http://www.lfd.uci.edu/~gohlke/code/transformations.py.html">http://www.lfd.uci.edu/~gohlke/code/transformations.py.html</a> which is copyrighted as follows:</p>
+<p>#    # -<em>- coding: utf-8 -</em>-
+#    # transformations.py
+#
+#    # Copyright (c) 2006-2012, Christoph Gohlke
+#    # Copyright (c) 2006-2012, The Regents of the University of California
+#    # Produced at the Laboratory for Fluorescence Dynamics
+#    # All rights reserved.
+#    #
+#    # Redistribution and use in source and binary forms, with or without
+#    # modification, are permitted provided that the following conditions are met:
+#    #
+#    # * Redistributions of source code must retain the above copyright
+#    #   notice, this list of conditions and the following disclaimer.
+#    # * Redistributions in binary form must reproduce the above copyright
+#    #   notice, this list of conditions and the following disclaimer in the
+#    #   documentation and/or other materials provided with the distribution.
+#    # * Neither the name of the copyright holders nor the names of any
+#    #   contributors may be used to endorse or promote products derived
+#    #   from this software without specific prior written permission.
+#    #
+#    # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS”
+#    # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#    # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+#    # ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+#    # LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+#    # CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+#    # SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+#    # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+#    # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+#    # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#    # POSSIBILITY OF SUCH DAMAGE.
+#
+#    Homogeneous Transformation Matrices and Quaternions.
+#
+#   A library for calculating 4x4 matrices for translating, rotating, reflecting,
+#   scaling, shearing, projecting, orthogonalizing, and superimposing arrays of
+#   3D homogeneous coordinates as well as for converting between rotation matrices,
+#   Euler angles, and quaternions. Also includes an Arcball control object and
+#   functions to decompose transformation matrices.
+#
+#   :Authors:
+#    <a class="reference external" href="http://www.lfd.uci.edu/~gohlke/">Christoph Gohlke</a>,
+#    Laboratory for Fluorescence Dynamics, University of California, Irvine
+#
+#   :Version: 2012.10.18</p>
+<dl class="py class">
+<dt id="cellpack.autopack.randomRot.RandomRot">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cellpack.autopack.randomRot.</span></code><code class="sig-name descname"><span class="pre">RandomRot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/randomRot.html#RandomRot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.randomRot.RandomRot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="cellpack.autopack.randomRot.RandomRot.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/randomRot.html#RandomRot.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.randomRot.RandomRot.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.randomRot.RandomRot.getOld">
+<code class="sig-name descname"><span class="pre">getOld</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/randomRot.html#RandomRot.getOld"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.randomRot.RandomRot.getOld" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.randomRot.RandomRot.quaternion_matrix">
+<code class="sig-name descname"><span class="pre">quaternion_matrix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quaternion</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/randomRot.html#RandomRot.quaternion_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.randomRot.RandomRot.quaternion_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return homogeneous rotation matrix from quaternion.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">M</span> <span class="o">=</span> <span class="n">quaternion_matrix</span><span class="p">([</span><span class="mf">0.99810947</span><span class="p">,</span> <span class="mf">0.06146124</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">(</span><span class="mf">0.123</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">M</span> <span class="o">=</span> <span class="n">quaternion_matrix</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">M</span> <span class="o">=</span> <span class="n">quaternion_matrix</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.randomRot.RandomRot.random_quaternion">
+<code class="sig-name descname"><span class="pre">random_quaternion</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rand</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/randomRot.html#RandomRot.random_quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.randomRot.RandomRot.random_quaternion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return uniform random unit quaternion.</p>
+<dl class="simple">
+<dt>rand: array like or None</dt><dd><p>Three independent random variables that are uniformly distributed
+between 0 and 1.</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">random_quaternion</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">vector_norm</span><span class="p">(</span><span class="n">q</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">random_quaternion</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">q</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">4</span>
+<span class="go">(1, True)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.randomRot.RandomRot.random_rotation_matrix">
+<code class="sig-name descname"><span class="pre">random_rotation_matrix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rand</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/randomRot.html#RandomRot.random_rotation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.randomRot.RandomRot.random_rotation_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return uniform random rotation matrix.</p>
+<dl class="simple">
+<dt>rand: array like</dt><dd><p>Three independent random variables that are uniformly distributed
+between 0 and 1 for each returned quaternion.</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">R</span> <span class="o">=</span> <span class="n">random_rotation_matrix</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">R</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cellpack.autopack.randomRot.RandomRot.setSeed">
+<code class="sig-name descname"><span class="pre">setSeed</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/randomRot.html#RandomRot.setSeed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.randomRot.RandomRot.setSeed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cellpack.autopack.ray">
+<span id="cellpack-autopack-ray-module"></span><h2>cellpack.autopack.ray module<a class="headerlink" href="#module-cellpack.autopack.ray" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="created-on-saturday-september-1-1-50-00-2012">
+<h3>Created on Saturday September 1 1:50:00 2012<a class="headerlink" href="#created-on-saturday-september-1-1-50-00-2012" title="Permalink to this headline">¶</a></h3>
+<p>#
+# autoPACK Authors: Graham T. Johnson, Ludovic Autin, Mostafa Al-Alusi, Michel Sanner
+#  Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
+#  with assistance from Mostafa Al-Alusi in 2009 and periodic input
+#  from Arthur Olson’s Molecular Graphics Lab
+#
+# AFGui.py Authors: Ludovic Autin with minor editing/enhancement from Graham Johnson
+#
+# Copyright: Graham Johnson ©2010
+#
+# This file “fillBoxPseudoCode.py” is part of autoPACK, cellPACK, and AutoFill.
+#
+#   autoPACK is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   autoPACK is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with autoPACK (See “CopyingGNUGPL” in the installation.
+#   If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.
+#
+###############################################################################
+Name: -
+&#64;author: Graham Johnson, Michel Sanner, Ludovic Autin, Kevin Wu</p>
+<dl class="py function">
+<dt id="cellpack.autopack.ray.dot">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ray.</span></code><code class="sig-name descname"><span class="pre">dot</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ray.html#dot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ray.dot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ray.f_dot_product">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ray.</span></code><code class="sig-name descname"><span class="pre">f_dot_product</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vector2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ray.html#f_dot_product"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ray.f_dot_product" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the dot product of two 3D vectors.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ray.f_ray_intersect_polyhedron">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ray.</span></code><code class="sig-name descname"><span class="pre">f_ray_intersect_polyhedron</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pRayStartPos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pRayEndPos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pTruncateToSegment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ray.html#f_ray_intersect_polyhedron"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ray.f_ray_intersect_polyhedron" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns TRUE if a ray intersects a triangle.
+It also calculates and returns the UV coordinates of said colision as part of the intersection test,
+Makes sure that we are working with arrays</p>
+<ul class="simple">
+<li><p>TAKES IN pRayStartPos as LEFT-HANDED COORDINATE (Z,Y,X)</p></li>
+<li><p>TAKES IN pRayEndPos AS LEFT-HANDED COORDINATE (Z,Y,X)</p></li>
+<li><p>faces is a list of vertex indices that defines the polyhedron</p></li>
+<li><p>vertices is the list of global coordinates that faces refers to</p></li>
+<li><p>pTruncateToSegment decides whether or not the segment terminates at the end position, or keeps on
+going forever</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ray.findPointsCenter">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ray.</span></code><code class="sig-name descname"><span class="pre">findPointsCenter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ray.html#findPointsCenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ray.findPointsCenter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ray.makeMarchingCube">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ray.</span></code><code class="sig-name descname"><span class="pre">makeMarchingCube</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gridSpacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ray.html#makeMarchingCube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ray.makeMarchingCube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a numpy array that represents the precomputed distances to each point
+for the cube of points surrounding our center point.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ray.ray_intersect_polygon">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ray.</span></code><code class="sig-name descname"><span class="pre">ray_intersect_polygon</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pRayStartPos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pRayEndPos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pQuadranglePointPositions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pQuadranglePointList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pTruncateToSegment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ray.html#ray_intersect_polygon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ray.ray_intersect_polygon" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ray.ray_intersect_polyhedron">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ray.</span></code><code class="sig-name descname"><span class="pre">ray_intersect_polyhedron</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pRayStartPos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pRayEndPos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pTruncateToSegment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ray.html#ray_intersect_polyhedron"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ray.ray_intersect_polyhedron" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ray.vcross">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ray.</span></code><code class="sig-name descname"><span class="pre">vcross</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ray.html#vcross"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ray.vcross" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ray.vdiff">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ray.</span></code><code class="sig-name descname"><span class="pre">vdiff</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ray.html#vdiff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ray.vdiff" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ray.vlen">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ray.</span></code><code class="sig-name descname"><span class="pre">vlen</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ray.html#vlen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ray.vlen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.ray.vnorm">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.ray.</span></code><code class="sig-name descname"><span class="pre">vnorm</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ray.html#vnorm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ray.vnorm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-cellpack.autopack.transformation">
+<span id="cellpack-autopack-transformation-module"></span><h2>cellpack.autopack.transformation module<a class="headerlink" href="#module-cellpack.autopack.transformation" title="Permalink to this headline">¶</a></h2>
+<p>Homogeneous Transformation Matrices and Quaternions.</p>
+<p>A library for calculating 4x4 matrices for translating, rotating, reflecting,
+scaling, shearing, projecting, orthogonalizing, and superimposing arrays of
+3D homogeneous coordinates as well as for converting between rotation matrices,
+Euler angles, and quaternions. Also includes an Arcball control object and
+functions to decompose transformation matrices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Author</dt>
+<dd class="field-odd"><p><a class="reference external" href="http://www.lfd.uci.edu/~gohlke/">Christoph Gohlke</a></p>
+</dd>
+<dt class="field-even">Organization</dt>
+<dd class="field-even"><p>Laboratory for Fluorescence Dynamics, University of California, Irvine</p>
+</dd>
+<dt class="field-odd">Version</dt>
+<dd class="field-odd"><p>2013.06.29</p>
+</dd>
+</dl>
+<div class="section" id="requirements">
+<h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.python.org">CPython 2.7 or 3.3</a></p></li>
+<li><p><a class="reference external" href="http://www.numpy.org">Numpy 1.7</a></p></li>
+<li><p><a class="reference external" href="http://www.lfd.uci.edu/~gohlke/">Transformations.c 2013.01.18</a>
+(recommended for speedup of some functions)</p></li>
+</ul>
+<p class="rubric">Notes</p>
+<p>The API is not stable yet and is expected to change between revisions.</p>
+<p>This Python code is not optimized for speed. Refer to the transformations.c
+module for a faster implementation of some functions.</p>
+<p>Documentation in HTML format can be generated with epydoc.</p>
+<p>Matrices (M) can be inverted using numpy.linalg.inv(M), be concatenated using
+numpy.dot(M0, M1), or transform homogeneous coordinate arrays (v) using
+numpy.dot(M, v) for shape (4, /<em>) column vectors, respectively
+numpy.dot(v, M.T) for shape (/</em>, 4) row vectors (“array of points”).</p>
+<p>This module follows the “column vectors on the right” and “row major storage”
+(C contiguous) conventions. The translation components are in the right column
+of the transformation matrix, i.e. M[:3, 3].
+The transpose of the transformation matrices may have to be used to interface
+with other graphics systems, e.g. with OpenGL’s glMultMatrixd(). See also [16].</p>
+<p>Calculations are carried out with numpy.float64 precision.</p>
+<p>Vector, point, quaternion, and matrix function arguments are expected to be
+“array like”, i.e. tuple, list, or numpy arrays.</p>
+<p>Return types are numpy arrays unless specified otherwise.</p>
+<p>Angles are in radians unless specified otherwise.</p>
+<p>Quaternions w+ix+jy+kz are represented as [w, x, y, z].</p>
+<p>A triple of Euler angles can be applied/interpreted in 24 ways, which can
+be specified using a 4 character string or encoded 4-tuple:</p>
+<blockquote>
+<div><p><em>Axes 4-string</em>: e.g. ‘sxyz’ or ‘ryxy’</p>
+<ul class="simple">
+<li><p>first character : rotations are applied to ‘s’tatic or ‘r’otating frame</p></li>
+<li><p>remaining characters : successive rotation axis ‘x’, ‘y’, or ‘z’</p></li>
+</ul>
+<p><em>Axes 4-tuple</em>: e.g. (0, 0, 0, 0) or (1, 1, 1, 1)</p>
+<ul class="simple">
+<li><p>inner axis: code of axis (‘x’:0, ‘y’:1, ‘z’:2) of rightmost matrix.</p></li>
+<li><p>parity : even (0) if inner axis ‘x’ is followed by ‘y’, ‘y’ is followed
+by ‘z’, or ‘z’ is followed by ‘x’. Otherwise odd (1).</p></li>
+<li><p>repetition : first and last axis are same (1) or different (0).</p></li>
+<li><p>frame : rotations are applied to static (0) or rotating (1) frame.</p></li>
+</ul>
+</div></blockquote>
+<p class="rubric">References</p>
+<ol class="arabic simple">
+<li><p>Matrices and transformations. Ronald Goldman.
+In “Graphics Gems I”, pp 472-475. Morgan Kaufmann, 1990.</p></li>
+<li><p>More matrices and transformations: shear and pseudo-perspective.
+Ronald Goldman. In “Graphics Gems II”, pp 320-323. Morgan Kaufmann, 1991.</p></li>
+<li><p>Decomposing a matrix into simple transformations. Spencer Thomas.
+In “Graphics Gems II”, pp 320-323. Morgan Kaufmann, 1991.</p></li>
+<li><p>Recovering the data from the transformation matrix. Ronald Goldman.
+In “Graphics Gems II”, pp 324-331. Morgan Kaufmann, 1991.</p></li>
+<li><p>Euler angle conversion. Ken Shoemake.
+In “Graphics Gems IV”, pp 222-229. Morgan Kaufmann, 1994.</p></li>
+<li><p>Arcball rotation control. Ken Shoemake.
+In “Graphics Gems IV”, pp 175-192. Morgan Kaufmann, 1994.</p></li>
+<li><p>Representing attitude: Euler angles, unit quaternions, and rotation
+vectors. James Diebel. 2006.</p></li>
+<li><p>A discussion of the solution for the best rotation to relate two sets
+of vectors. W Kabsch. Acta Cryst. 1978. A34, 827-828.</p></li>
+<li><p>Closed-form solution of absolute orientation using unit quaternions.
+BKP Horn. J Opt Soc Am A. 1987. 4(4):629-642.</p></li>
+<li><p>Quaternions. Ken Shoemake.
+<a class="reference external" href="http://www.sfu.ca/~jwa3/cmpt461/files/quatut.pdf">http://www.sfu.ca/~jwa3/cmpt461/files/quatut.pdf</a></p></li>
+<li><p>From quaternion to matrix and back. JMP van Waveren. 2005.
+<a class="reference external" href="http://www.intel.com/cd/ids/developer/asmo-na/eng/293748.htm">http://www.intel.com/cd/ids/developer/asmo-na/eng/293748.htm</a></p></li>
+<li><p>Uniform random rotations. Ken Shoemake.
+In “Graphics Gems III”, pp 124-132. Morgan Kaufmann, 1992.</p></li>
+<li><p>Quaternion in molecular modeling. CFF Karney.
+J Mol Graph Mod, 25(5):595-604</p></li>
+<li><p>New method for extracting the quaternion from a rotation matrix.
+Itzhack Y Bar-Itzhack, J Guid Contr Dynam. 2000. 23(6): 1085-1087.</p></li>
+<li><p>Multiple View Geometry in Computer Vision. Hartley and Zissermann.
+Cambridge University Press; 2nd Ed. 2004. Chapter 4, Algorithm 4.7, p 130.</p></li>
+<li><p>Column Vectors vs. Row Vectors.
+<a class="reference external" href="http://steve.hollasch.net/cgindex/math/matrix/column-vec.html">http://steve.hollasch.net/cgindex/math/matrix/column-vec.html</a></p></li>
+</ol>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.123</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.234</span><span class="p">,</span> <span class="mf">2.345</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">origin</span><span class="p">,</span> <span class="n">xaxis</span><span class="p">,</span> <span class="n">yaxis</span><span class="p">,</span> <span class="n">zaxis</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">I</span> <span class="o">=</span> <span class="n">identity_matrix</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Rx</span> <span class="o">=</span> <span class="n">rotation_matrix</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">xaxis</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Ry</span> <span class="o">=</span> <span class="n">rotation_matrix</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">yaxis</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Rz</span> <span class="o">=</span> <span class="n">rotation_matrix</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">zaxis</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">R</span> <span class="o">=</span> <span class="n">concatenate_matrices</span><span class="p">(</span><span class="n">Rx</span><span class="p">,</span> <span class="n">Ry</span><span class="p">,</span> <span class="n">Rz</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">euler</span> <span class="o">=</span> <span class="n">euler_from_matrix</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="s1">&#39;rxyz&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">([</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">gamma</span><span class="p">],</span> <span class="n">euler</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Re</span> <span class="o">=</span> <span class="n">euler_matrix</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="s1">&#39;rxyz&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_same_transform</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">Re</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">al</span><span class="p">,</span> <span class="n">be</span><span class="p">,</span> <span class="n">ga</span> <span class="o">=</span> <span class="n">euler_from_matrix</span><span class="p">(</span><span class="n">Re</span><span class="p">,</span> <span class="s1">&#39;rxyz&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_same_transform</span><span class="p">(</span><span class="n">Re</span><span class="p">,</span> <span class="n">euler_matrix</span><span class="p">(</span><span class="n">al</span><span class="p">,</span> <span class="n">be</span><span class="p">,</span> <span class="n">ga</span><span class="p">,</span> <span class="s1">&#39;rxyz&#39;</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qx</span> <span class="o">=</span> <span class="n">quaternion_about_axis</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">xaxis</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qy</span> <span class="o">=</span> <span class="n">quaternion_about_axis</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">yaxis</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qz</span> <span class="o">=</span> <span class="n">quaternion_about_axis</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">zaxis</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">quaternion_multiply</span><span class="p">(</span><span class="n">qx</span><span class="p">,</span> <span class="n">qy</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">quaternion_multiply</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">qz</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Rq</span> <span class="o">=</span> <span class="n">quaternion_matrix</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_same_transform</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">Rq</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">S</span> <span class="o">=</span> <span class="n">scale_matrix</span><span class="p">(</span><span class="mf">1.23</span><span class="p">,</span> <span class="n">origin</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">=</span> <span class="n">translation_matrix</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Z</span> <span class="o">=</span> <span class="n">shear_matrix</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">xaxis</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">zaxis</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">R</span> <span class="o">=</span> <span class="n">random_rotation_matrix</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">M</span> <span class="o">=</span> <span class="n">concatenate_matrices</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scale</span><span class="p">,</span> <span class="n">shear</span><span class="p">,</span> <span class="n">angles</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">persp</span> <span class="o">=</span> <span class="n">decompose_matrix</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="mf">1.23</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">trans</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">shear</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">beta</span><span class="p">),</span> <span class="mi">0</span><span class="p">])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_same_transform</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">euler_matrix</span><span class="p">(</span><span class="n">axes</span><span class="o">=</span><span class="s1">&#39;sxyz&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">angles</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">M1</span> <span class="o">=</span> <span class="n">compose_matrix</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">shear</span><span class="p">,</span> <span class="n">angles</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">persp</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_same_transform</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">M1</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v0</span><span class="p">,</span> <span class="n">v1</span> <span class="o">=</span> <span class="n">random_vector</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">random_vector</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">M</span> <span class="o">=</span> <span class="n">rotation_matrix</span><span class="p">(</span><span class="n">angle_between_vectors</span><span class="p">(</span><span class="n">v0</span><span class="p">,</span> <span class="n">v1</span><span class="p">),</span> <span class="n">vector_product</span><span class="p">(</span><span class="n">v0</span><span class="p">,</span> <span class="n">v1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v0</span><span class="p">,</span> <span class="n">M</span><span class="p">[:</span><span class="mi">3</span><span class="p">,:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">unit_vector</span><span class="p">(</span><span class="n">v1</span><span class="p">),</span> <span class="n">unit_vector</span><span class="p">(</span><span class="n">v2</span><span class="p">))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="module-cellpack.autopack">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.autopack" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="created-on-fri-jul-20-23-53-00-2012">
+<h3>Created on Fri Jul 20 23:53:00 2012<a class="headerlink" href="#created-on-fri-jul-20-23-53-00-2012" title="Permalink to this headline">¶</a></h3>
+<p>#
+# autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
+#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
+#   with assistance from Mostafa Al-Alusi in 2009 and periodic input
+#   from Arthur Olson’s Molecular Graphics Lab
+#
+# __init__.py Authors: Ludovic Autin with minor editing/enhancement from Graham Johnson
+#
+# Copyright: Graham Johnson ©2010
+#
+# This file “__init__.py” is part of autoPACK.
+#
+#    autoPACK is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    autoPACK is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with autoPACK (See “CopyingGNUGPL” in the installation.
+#    If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.
+#
+###############################################################################
+Name: ‘autoPACK’
+Define here some usefull variable and setup filename path that facilitate
+AF
+&#64;author: Ludovic Autin with editing by Graham Johnson</p>
+<dl class="py function">
+<dt id="cellpack.autopack.checkErrorInPath">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">checkErrorInPath</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toreplace</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#checkErrorInPath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.checkErrorInPath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.checkPath">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">checkPath</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#checkPath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.checkPath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.checkRecipeAvailable">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">checkRecipeAvailable</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#checkRecipeAvailable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.checkRecipeAvailable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.checkURL">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">checkURL</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">URL</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#checkURL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.checkURL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.clearCaches">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">clearCaches</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#clearCaches"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.clearCaches" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.fixOnePath">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">fixOnePath</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#fixOnePath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.fixOnePath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.fixPath">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">fixPath</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#fixPath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.fixPath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.resetDefault">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">resetDefault</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#resetDefault"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.resetDefault" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.retrieveFile">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">retrieveFile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'geometries'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#retrieveFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.retrieveFile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.revertOnePath">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">revertOnePath</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#revertOnePath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.revertOnePath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.saveRecipeAvailable">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">saveRecipeAvailable</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipe_dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipefile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#saveRecipeAvailable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.saveRecipeAvailable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.saveRecipeAvailableJSON">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">saveRecipeAvailableJSON</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipe_dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#saveRecipeAvailableJSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.saveRecipeAvailableJSON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.updatePath">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">updatePath</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#updatePath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.updatePath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.updatePathJSON">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">updatePathJSON</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#updatePathJSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.updatePathJSON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.updateRecipAvailable">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">updateRecipAvailable</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipesfile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#updateRecipAvailable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.updateRecipAvailable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.updateRecipAvailableJSON">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">updateRecipAvailableJSON</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipesfile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#updateRecipAvailableJSON"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.updateRecipAvailableJSON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.updateRecipAvailableXML">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">updateRecipAvailableXML</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipesfile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#updateRecipAvailableXML"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.updateRecipAvailableXML" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="cellpack.autopack.updateReplacePath">
+<code class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></code><code class="sig-name descname"><span class="pre">updateReplacePath</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">newPaths</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#updateReplacePath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.updateReplacePath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.Tests package
+=============================================================
+
+Submodules
+----------
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.Tests.test\_colorWidgets module
+-------------------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.Tests.test_colorWidgets
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.Tests.test\_customizedWidgets module
+------------------------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.Tests.test_customizedWidgets
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.Tests.test\_dial module
+-----------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.Tests.test_dial
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.Tests.test\_graphtool module
+----------------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.Tests.test_graphtool
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.Tests.test\_optionsPanel module
+-------------------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.Tests.test_optionsPanel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.Tests.test\_player module
+-------------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.Tests.test_player
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.Tests.test\_thumbwheel module
+-----------------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.Tests.test_thumbwheel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.Tests.test\_toolbarbutton module
+--------------------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.Tests.test_toolbarbutton
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.Tests.test\_vector3DGUI module
+------------------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.Tests.test_vector3DGUI
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.gui.BasicWidgets.Tk.Tests.test\_xyzGUI module
+-------------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.Tests.test_xyzGUI
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.gui.BasicWidgets.Tk.Tests
+   :members:
+   :undoc-members:
+   :show-inheritance:

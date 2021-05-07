@@ -1,0 +1,399 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.mgl_tools.oldnumeric.precision &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../cellpack.html">cellpack</a> &raquo;</li>
+        
+      <li>cellpack.mgl_tools.oldnumeric.precision</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.mgl_tools.oldnumeric.precision</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Lifted from Precision.py.  This is for compatibility only.</span>
+<span class="c1">#</span>
+<span class="c1">#  The character strings are still for &quot;new&quot; NumPy</span>
+<span class="c1">#   which is the only Incompatibility with Numeric</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Character&#39;</span><span class="p">,</span> <span class="s1">&#39;Complex&#39;</span><span class="p">,</span> <span class="s1">&#39;Float&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;PrecisionError&#39;</span><span class="p">,</span> <span class="s1">&#39;PyObject&#39;</span><span class="p">,</span> <span class="s1">&#39;Int&#39;</span><span class="p">,</span> <span class="s1">&#39;UInt&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;UnsignedInt&#39;</span><span class="p">,</span> <span class="s1">&#39;UnsignedInteger&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;typecodes&#39;</span><span class="p">,</span> <span class="s1">&#39;zeros&#39;</span><span class="p">]</span>
+
+<span class="kn">from</span> <span class="nn">.functions</span> <span class="kn">import</span> <span class="n">zeros</span>
+<span class="kn">import</span> <span class="nn">string</span>   <span class="c1"># for backwards compatibility</span>
+
+<span class="n">typecodes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Character&#39;</span><span class="p">:</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;Integer&#39;</span><span class="p">:</span><span class="s1">&#39;bhil&#39;</span><span class="p">,</span> <span class="s1">&#39;UnsignedInteger&#39;</span><span class="p">:</span><span class="s1">&#39;BHIL&#39;</span><span class="p">,</span> <span class="s1">&#39;Float&#39;</span><span class="p">:</span><span class="s1">&#39;fd&#39;</span><span class="p">,</span> <span class="s1">&#39;Complex&#39;</span><span class="p">:</span><span class="s1">&#39;FD&#39;</span><span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">_get_precisions</span><span class="p">(</span><span class="n">typecodes</span><span class="p">):</span>
+    <span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">typecodes</span><span class="p">:</span>
+        <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">t</span> <span class="p">)</span><span class="o">.</span><span class="n">itemsize</span><span class="o">*</span><span class="mi">8</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">lst</span>
+
+<span class="k">def</span> <span class="nf">_fill_table</span><span class="p">(</span><span class="n">typecodes</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">typecodes</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="n">table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_precisions</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">table</span>
+
+<span class="n">_code_table</span> <span class="o">=</span> <span class="n">_fill_table</span><span class="p">(</span><span class="n">typecodes</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PrecisionError"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.precision.PrecisionError">[docs]</a><span class="k">class</span> <span class="nc">PrecisionError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<span class="k">def</span> <span class="nf">_lookup</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">required_bits</span><span class="p">):</span>
+    <span class="n">lst</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">bits</span><span class="p">,</span> <span class="n">typecode</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">bits</span> <span class="o">&gt;=</span> <span class="n">required_bits</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">typecode</span>
+    <span class="k">raise</span> <span class="n">PrecisionError</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="s2">&quot; of &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">required_bits</span><span class="p">)</span> <span class="o">+</span>
+            <span class="s2">&quot; bits not available on this system&quot;</span><span class="p">)</span>
+
+<span class="n">Character</span> <span class="o">=</span> <span class="s1">&#39;c&#39;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">UnsignedInt8</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s2">&quot;UnsignedInteger&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="n">UInt8</span> <span class="o">=</span> <span class="n">UnsignedInt8</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;UnsignedInt8&#39;</span><span class="p">,</span> <span class="s1">&#39;UInt8&#39;</span><span class="p">])</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">UnsignedInt16</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s2">&quot;UnsignedInteger&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">UInt16</span> <span class="o">=</span> <span class="n">UnsignedInt16</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;UnsignedInt16&#39;</span><span class="p">,</span> <span class="s1">&#39;UInt16&#39;</span><span class="p">])</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">UnsignedInt32</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s2">&quot;UnsignedInteger&quot;</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+    <span class="n">UInt32</span> <span class="o">=</span> <span class="n">UnsignedInt32</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;UnsignedInt32&#39;</span><span class="p">,</span> <span class="s1">&#39;UInt32&#39;</span><span class="p">])</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">UnsignedInt64</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s2">&quot;UnsignedInteger&quot;</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+    <span class="n">UInt64</span> <span class="o">=</span> <span class="n">UnsignedInt64</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;UnsignedInt64&#39;</span><span class="p">,</span> <span class="s1">&#39;UInt64&#39;</span><span class="p">])</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">UnsignedInt128</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s2">&quot;UnsignedInteger&quot;</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+    <span class="n">UInt128</span> <span class="o">=</span> <span class="n">UnsignedInt128</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;UnsignedInt128&#39;</span><span class="p">,</span> <span class="s1">&#39;UInt128&#39;</span><span class="p">])</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="n">UInt</span> <span class="o">=</span> <span class="n">UnsignedInt</span> <span class="o">=</span> <span class="n">UnsignedInteger</span> <span class="o">=</span> <span class="s1">&#39;u&#39;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Int0</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Integer&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Int0&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Int8</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Integer&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Int8&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Int16</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Integer&#39;</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Int16&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Int32</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Integer&#39;</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Int32&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Int64</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Integer&#39;</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Int64&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Int128</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Integer&#39;</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Int128&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="n">Int</span> <span class="o">=</span> <span class="s1">&#39;l&#39;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Float0</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Float&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Float0&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Float8</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Float&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Float8&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Float16</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Float&#39;</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Float16&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Float32</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Float&#39;</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Float32&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Float64</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Float&#39;</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Float64&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Float128</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Float&#39;</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Float128&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="n">Float</span> <span class="o">=</span> <span class="s1">&#39;d&#39;</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Complex0</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Complex&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Complex0&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Complex8</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Complex&#39;</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Complex8&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Complex16</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Complex&#39;</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Complex16&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Complex32</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Complex&#39;</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Complex32&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Complex64</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Complex&#39;</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Complex64&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Complex128</span> <span class="o">=</span> <span class="n">_lookup</span><span class="p">(</span><span class="n">_code_table</span><span class="p">,</span> <span class="s1">&#39;Complex&#39;</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+    <span class="n">__all__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Complex128&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">(</span><span class="n">PrecisionError</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="n">Complex</span> <span class="o">=</span> <span class="s1">&#39;D&#39;</span>
+
+<span class="n">PyObject</span> <span class="o">=</span> <span class="s1">&#39;O&#39;</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

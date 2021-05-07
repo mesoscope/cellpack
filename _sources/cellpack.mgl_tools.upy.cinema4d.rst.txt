@@ -1,0 +1,20 @@
+cellpack.mgl\_tools.upy.cinema4d package
+========================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   cellpack.mgl_tools.upy.cinema4d.r12
+   cellpack.mgl_tools.upy.cinema4d.r13
+   cellpack.mgl_tools.upy.cinema4d.r14
+
+Module contents
+---------------
+
+.. automodule:: cellpack.mgl_tools.upy.cinema4d
+   :members:
+   :undoc-members:
+   :show-inheritance:

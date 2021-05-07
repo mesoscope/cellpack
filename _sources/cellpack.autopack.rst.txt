@@ -1,0 +1,133 @@
+cellpack.autopack package
+=========================
+
+Submodules
+----------
+
+cellpack.autopack.Analysis module
+---------------------------------
+
+.. automodule:: cellpack.autopack.Analysis
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.Compartment module
+------------------------------------
+
+.. automodule:: cellpack.autopack.Compartment
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.Environment module
+------------------------------------
+
+.. automodule:: cellpack.autopack.Environment
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.GeometryTools module
+--------------------------------------
+
+.. automodule:: cellpack.autopack.GeometryTools
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.Graphics module
+---------------------------------
+
+.. automodule:: cellpack.autopack.Graphics
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.Grid module
+-----------------------------
+
+.. automodule:: cellpack.autopack.Grid
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.IOutils module
+--------------------------------
+
+.. automodule:: cellpack.autopack.IOutils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.Ingredient module
+-----------------------------------
+
+.. automodule:: cellpack.autopack.Ingredient
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.Recipe module
+-------------------------------
+
+.. automodule:: cellpack.autopack.Recipe
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.Serializable module
+-------------------------------------
+
+.. automodule:: cellpack.autopack.Serializable
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.binvox\_rw module
+-----------------------------------
+
+.. automodule:: cellpack.autopack.binvox_rw
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.ldSequence module
+-----------------------------------
+
+.. automodule:: cellpack.autopack.ldSequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.randomRot module
+----------------------------------
+
+.. automodule:: cellpack.autopack.randomRot
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.ray module
+----------------------------
+
+.. automodule:: cellpack.autopack.ray
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.transformation module
+---------------------------------------
+
+.. automodule:: cellpack.autopack.transformation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.autopack
+   :members:
+   :undoc-members:
+   :show-inheritance:

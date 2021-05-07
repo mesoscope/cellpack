@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.mgl_tools.upy.pluginAdaptor &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../cellpack.html">cellpack</a> &raquo;</li>
+        
+          <li><a href="../upy.html">cellpack.mgl_tools.upy</a> &raquo;</li>
+        
+      <li>cellpack.mgl_tools.upy.pluginAdaptor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.mgl_tools.upy.pluginAdaptor</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Copyright (C) &lt;2010&gt;  Autin L. TSRI</span>
+<span class="sd">    </span>
+<span class="sd">    This file git_upy/pluginAdaptor.py is part of upy.</span>
+
+<span class="sd">    upy is free software: you can redistribute it and/or modify</span>
+<span class="sd">    it under the terms of the GNU General Public License as published by</span>
+<span class="sd">    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">    (at your option) any later version.</span>
+
+<span class="sd">    upy is distributed in the hope that it will be useful,</span>
+<span class="sd">    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">    GNU General Public License for more details.</span>
+
+<span class="sd">    You should have received a copy of the GNU General Public License</span>
+<span class="sd">    along with upy.  If not, see &lt;http://www.gnu.org/licenses/gpl-3.0.html&gt;.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Mon Mar 19 11:32:26 2012</span>
+
+<span class="sd">@author: Ludovic Autin</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="pluginAdaptor"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.pluginAdaptor.pluginAdaptor">[docs]</a><span class="k">class</span> <span class="nc">pluginAdaptor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The Plug-in abstract Layer</span>
+<span class="sd">    ==========================</span>
+<span class="sd">    This is the main class from which all plugin will derived. The Plugin Class</span>
+<span class="sd">    give access to the initialisatio and registratio of plugin for the host.</span>
+
+<span class="sd">    It currently does not support procedural, and attribute assignement.</span>
+<span class="sd">    But with combination of the helper and the uiADaptor, we should be able to provide it in</span>
+<span class="sd">    the futur.</span>
+
+<span class="sd">    &gt;&gt;&gt; PLUGIN_ID = 1027431</span>
+<span class="sd">    &gt;&gt;&gt; import upy</span>
+<span class="sd">    &gt;&gt;&gt; plugTypeClass,operatorHostClass = upy.getPluginClass(plug=&quot;command&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; class MyPlugin(plugTypeClass):</span>
+<span class="sd">    &gt;&gt;&gt;    plugin_name = &quot;myPlugin&quot;</span>
+<span class="sd">    &gt;&gt;&gt;    plugin_tooltip= &quot;a general plugin&quot;</span>
+<span class="sd">    &gt;&gt;&gt;    plugin_id =  PLUGIN_ID</span>
+<span class="sd">    &gt;&gt;&gt;    def runCommands(self):</span>
+<span class="sd">    &gt;&gt;&gt;        #put here what should do the plugin. i.e. open a dialog windows</span>
+<span class="sd">    &gt;&gt;&gt;        #or create some objects...</span>
+<span class="sd">    &gt;&gt;&gt;        pass</span>
+<span class="sd">    &gt;&gt;&gt;plug = MyPlugin()</span>
+<span class="sd">    &gt;&gt;&gt;if &quot;__res__&quot; in locals() :</span>
+<span class="sd">    &gt;&gt;&gt;    plug.register(epmv_Dialog,Object=plug,res=__res__)#add menuadd={&quot;head&quot;:None} to add an access to the plugin in Blender</span>
+<span class="sd">    &gt;&gt;&gt;else :</span>
+<span class="sd">    &gt;&gt;&gt;    plug.register(epmv_Dialog,Object=plug)</span>
+<span class="sd">    &gt;&gt;&gt;#do no touch the following lines required by Blender and Maya</span>
+<span class="sd">    &gt;&gt;&gt;#Blender Function</span>
+<span class="sd">    &gt;&gt;&gt;def register():</span>
+<span class="sd">    &gt;&gt;&gt;    print (__name__)</span>
+<span class="sd">    &gt;&gt;&gt;def unregister():</span>
+<span class="sd">    &gt;&gt;&gt;    pass</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt;#Maya function</span>
+<span class="sd">    &gt;&gt;&gt;def initializePlugin(mobject):</span>
+<span class="sd">    &gt;&gt;&gt;    pass</span>
+<span class="sd">    &gt;&gt;&gt;def uninitializePlugin(mobject):</span>
+<span class="sd">    &gt;&gt;&gt;    pass</span>
+
+<span class="sd">    See examples in upy/examples</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;pluginId&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setId</span><span class="p">(</span><span class="n">kw</span><span class="p">[</span><span class="s2">&quot;pluginId&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;plugin_name&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plugin_name</span> <span class="o">=</span> <span class="s2">&quot;MyPlugin&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plugin_name</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;plugin_dir&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plugin_dir</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;plugin_dir&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plugin_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_name</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;plugin_icon&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plugin_icon</span> <span class="o">=</span> <span class="s2">&quot;PLUG&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;icon&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plugin_icon</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;icon&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;plugin_tooltip&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plugin_tooltip</span> <span class="o">=</span> <span class="s2">&quot;MyPlugin description&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;tooltip&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plugin_tooltip</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;tooltip&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;hasGui&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hasGui</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="s2">&quot;hasGui&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hasGui</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;hasGui&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;gui&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gui</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+
+<div class="viewcode-block" id="pluginAdaptor.setId"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.pluginAdaptor.pluginAdaptor.setId">[docs]</a>    <span class="k">def</span> <span class="nf">setId</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ID</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        set the ID of the plugin</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plugin_id</span> <span class="o">=</span> <span class="n">ID</span></div>
+
+<div class="viewcode-block" id="pluginAdaptor.register"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.pluginAdaptor.pluginAdaptor.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Register the plugin  using an instance and the class Object</span>
+
+<span class="sd">        *overwrite by host specific module</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="pluginAdaptor.unregister"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.pluginAdaptor.pluginAdaptor.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        UnRegister the plugin  using an instance and the class Object</span>
+
+<span class="sd">        *overwrite by host specific module</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="pluginAdaptor.getType"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.pluginAdaptor.pluginAdaptor.getType">[docs]</a>    <span class="k">def</span> <span class="nf">getType</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the type of the module</span>
+
+<span class="sd">        *overwrite by host specific module</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="pluginAdaptor.setRunCommands"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.pluginAdaptor.pluginAdaptor.setRunCommands">[docs]</a>    <span class="k">def</span> <span class="nf">setRunCommands</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="pluginAdaptor.runCommands"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.pluginAdaptor.pluginAdaptor.runCommands">[docs]</a>    <span class="k">def</span> <span class="nf">runCommands</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="pluginAdaptor.setup"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.pluginAdaptor.pluginAdaptor.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="pluginAdaptor.setgui"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.pluginAdaptor.pluginAdaptor.setgui">[docs]</a>    <span class="k">def</span> <span class="nf">setgui</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dname</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="pluginAdaptor.resetgui"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.pluginAdaptor.pluginAdaptor.resetgui">[docs]</a>    <span class="k">def</span> <span class="nf">resetgui</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dname</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="pluginAdaptor.execute"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.pluginAdaptor.pluginAdaptor.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="pluginAdaptor.setIcon"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.pluginAdaptor.pluginAdaptor.setIcon">[docs]</a>    <span class="k">def</span> <span class="nf">setIcon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

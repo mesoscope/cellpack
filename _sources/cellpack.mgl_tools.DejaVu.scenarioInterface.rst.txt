@@ -1,0 +1,77 @@
+cellpack.mgl\_tools.DejaVu.scenarioInterface package
+====================================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   cellpack.mgl_tools.DejaVu.scenarioInterface.Tests
+
+Submodules
+----------
+
+cellpack.mgl\_tools.DejaVu.scenarioInterface.actor module
+---------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.scenarioInterface.actor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.DejaVu.scenarioInterface.actorFromFile module
+-----------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.scenarioInterface.actorFromFile
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.DejaVu.scenarioInterface.actorsDescr module
+---------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.scenarioInterface.actorsDescr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.DejaVu.scenarioInterface.animationGUI module
+----------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.scenarioInterface.animationGUI
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.DejaVu.scenarioInterface.animationPanels module
+-------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.scenarioInterface.animationPanels
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.DejaVu.scenarioInterface.animations module
+--------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.scenarioInterface.animations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.DejaVu.scenarioInterface.interpolators module
+-----------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.scenarioInterface.interpolators
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.scenarioInterface
+   :members:
+   :undoc-members:
+   :show-inheritance:

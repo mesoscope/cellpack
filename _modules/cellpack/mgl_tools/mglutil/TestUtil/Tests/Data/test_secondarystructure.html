@@ -1,0 +1,686 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../../../" src="../../../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../../../_static/jquery.js"></script>
+        <script src="../../../../../../../_static/underscore.js"></script>
+        <script src="../../../../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../../../../cellpack.html">cellpack</a> &raquo;</li>
+        
+      <li>cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure</h1><div class="highlight"><pre>
+<span></span><span class="c1">#############################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Sophie I. COON, Michel F. SANNER</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright: M. Sanner TSRI 2000</span>
+<span class="c1">#</span>
+<span class="c1">#############################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># $Header: /opt/cvs/python/packages/share1.5/mglutil/TestUtil/Tests/Data/test_secondarystructure.py,v 1.3 2009/03/12 20:52:33 vareille Exp $</span>
+<span class="c1">#</span>
+<span class="c1"># $Id: test_secondarystructure.py,v 1.3 2009/03/12 20:52:33 vareille Exp $</span>
+<span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module implements a set of functions to test the commands of the</span>
+<span class="sd">secondarystructurecommands module</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">mv</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">setUp</span> <span class="o">=</span> <span class="s2">&quot;startMoleculeViewer&quot;</span>
+<span class="n">tearDown</span> <span class="o">=</span> <span class="s2">&quot;quitMoleculeViewer&quot;</span>
+
+<span class="c1"># We should create a test protein directory ....</span>
+<div class="viewcode-block" id="startMoleculeViewer"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.startMoleculeViewer">[docs]</a><span class="k">def</span> <span class="nf">startMoleculeViewer</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">mv</span>
+    <span class="kn">from</span> <span class="nn">Pmv.moleculeViewer</span> <span class="kn">import</span> <span class="n">MoleculeViewer</span>
+
+    <span class="n">mv</span> <span class="o">=</span> <span class="n">MoleculeViewer</span><span class="p">(</span><span class="n">customizer</span><span class="o">=</span><span class="s2">&quot;./.empty&quot;</span><span class="p">,</span> <span class="n">logMode</span><span class="o">=</span><span class="s2">&quot;overwrite&quot;</span><span class="p">,</span> <span class="n">withShell</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">setUserPreference</span><span class="p">((</span><span class="s2">&quot;trapExceptions&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">),</span> <span class="n">log</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">setUserPreference</span><span class="p">((</span><span class="s2">&quot;warningMsgFormat&quot;</span><span class="p">,</span> <span class="s2">&quot;printed&quot;</span><span class="p">),</span> <span class="n">log</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">loadCommand</span><span class="p">(</span><span class="s2">&quot;fileCommands&quot;</span><span class="p">,</span> <span class="s2">&quot;readMolecule&quot;</span><span class="p">,</span> <span class="s2">&quot;Pmv&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">loadCommand</span><span class="p">(</span><span class="s2">&quot;deleteCommands&quot;</span><span class="p">,</span> <span class="s2">&quot;deleteMol&quot;</span><span class="p">,</span> <span class="s2">&quot;Pmv&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">loadCommand</span><span class="p">(</span><span class="s2">&quot;bondsCommands&quot;</span><span class="p">,</span> <span class="s2">&quot;buildBondsByDistance&quot;</span><span class="p">,</span> <span class="s2">&quot;Pmv&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">setOnAddObjectCommands</span><span class="p">([</span><span class="s2">&quot;buildBondsByDistance&quot;</span><span class="p">,</span> <span class="s2">&quot;displayLines&quot;</span><span class="p">],</span> <span class="n">log</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">loadModule</span><span class="p">(</span><span class="s2">&quot;interactiveCommands&quot;</span><span class="p">,</span> <span class="s2">&quot;Pmv&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">loadModule</span><span class="p">(</span><span class="s2">&quot;secondaryStructureCommands&quot;</span><span class="p">,</span> <span class="s2">&quot;Pmv&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="quitMoleculeViewer"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.quitMoleculeViewer">[docs]</a><span class="k">def</span> <span class="nf">quitMoleculeViewer</span><span class="p">():</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<span class="c1">############################################################</span>
+<span class="c1"># ComputeSecondaryStructureCommand Tests                   #</span>
+<span class="c1">############################################################</span>
+<div class="viewcode-block" id="test_computeSecondaryStructure_emptyViewer"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_computeSecondaryStructure_emptyViewer">[docs]</a><span class="k">def</span> <span class="nf">test_computeSecondaryStructure_emptyViewer</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test if the computeSecondaryStructure behaves properly when no molecule has</span>
+<span class="sd">    been loaded in the viewer and with the default values</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="test_computeSecondaryStructure_Normal"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_computeSecondaryStructure_Normal">[docs]</a><span class="k">def</span> <span class="nf">test_computeSecondaryStructure_Normal</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test the normal behavior of the computeSecondaryStructure on 1crn</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># When computing the secondary structure of a 1crn we expect:</span>
+    <span class="c1">#  - a secondary structure set containing 10 secondary structure elements</span>
+    <span class="c1">#  - the selectionCommands.sets__ dictionnary contains 10 extra keys</span>
+    <span class="c1">#  - a new attribute of the mol has been created called hasSS its value</span>
+    <span class="c1"># should be [&#39;From File&#39;]</span>
+    <span class="c1">#  - resWithSS ?</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;1crn.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span><span class="s2">&quot;1crn&quot;</span><span class="p">,</span> <span class="n">molModes</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;1crn&quot;</span><span class="p">:</span> <span class="s2">&quot;From File&quot;</span><span class="p">})</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="s2">&quot;hasSS&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">mol</span><span class="o">.</span><span class="n">hasSS</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;From File&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">hasattr</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="s2">&quot;_ExtrudeSecondaryStructureCommand__hasSSGeom&quot;</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="n">mol</span><span class="o">.</span><span class="n">_ExtrudeSecondaryStructureCommand__hasSSGeom</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;1crn&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="test_colorSecondaryStructure_Normal"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_colorSecondaryStructure_Normal">[docs]</a><span class="k">def</span> <span class="nf">test_colorSecondaryStructure_Normal</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test the normal behavior of the computeSecondaryStructure on 1crn</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># When computing the secondary structure of a 1crn we expect:</span>
+    <span class="c1">#  - a secondary structure set containing 10 secondary structure elements</span>
+    <span class="c1">#  - the selectionCommands.sets__ dictionnary contains 10 extra keys</span>
+    <span class="c1">#  - a new attribute of the mol has been created called hasSS its value</span>
+    <span class="c1"># should be [&#39;From File&#39;]</span>
+    <span class="c1">#  - resWithSS ?</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;1crn.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span><span class="s2">&quot;1crn&quot;</span><span class="p">,</span> <span class="n">molModes</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;1crn&quot;</span><span class="p">:</span> <span class="s2">&quot;From File&quot;</span><span class="p">})</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">colorBySecondaryStructure</span><span class="p">(</span><span class="s2">&quot;1crn&quot;</span><span class="p">)</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># assert hasattr(mol, &#39;hasSS&#39;) and mol.hasSS == [&#39;From File&#39;]</span>
+    <span class="c1"># assert hasattr(mol.chains[0], &#39;secondarystructureset&#39;) and \</span>
+    <span class="c1">#       len(mol.chains[0].secondarystructureset)==10</span>
+    <span class="c1"># assert not hasattr(mol,&#39;_ExtrudeSecondaryStructureCommand__hasSSGeom&#39;) or \</span>
+    <span class="c1">#       mol._ExtrudeSecondaryStructureCommand__hasSSGeom == 0</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;1crn&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="test_computeSecondaryStructure_nosheet2D"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_computeSecondaryStructure_nosheet2D">[docs]</a><span class="k">def</span> <span class="nf">test_computeSecondaryStructure_nosheet2D</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test the computeSecondaryStructure on a molecule (1crnnosheet2D) created</span>
+<span class="sd">    using 1crn.pdb (res1-res29) removing all the O atoms, but leaving the</span>
+<span class="sd">    Secondary Structure information in the file.</span>
+<span class="sd">    We expect to:</span>
+<span class="sd">      - create the proper secondarystructureset containing 5 SS elements</span>
+<span class="sd">      - but no sheet2D</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;1crnnosheet2D.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;1crnnosheet2D&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">())</span>
+    <span class="n">chain</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">mol</span><span class="o">.</span><span class="n">hasSS</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;From File&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;1crnnosheet2D&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="test_computeSecondaryStructure_fileThenStrideOnMol"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_computeSecondaryStructure_fileThenStrideOnMol">[docs]</a><span class="k">def</span> <span class="nf">test_computeSecondaryStructure_fileThenStrideOnMol</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ComputeSecondaryStructure on 1crn using the info in the file then</span>
+<span class="sd">    using stride.&quot;&quot;&quot;</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;1crn.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;1crn&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">(),</span> <span class="p">{</span><span class="s2">&quot;1crn&quot;</span><span class="p">:</span> <span class="s2">&quot;From File&quot;</span><span class="p">})</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">mol</span><span class="o">.</span><span class="n">hasSS</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;From File&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">hasattr</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span>
+    <span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">(),</span> <span class="p">{</span><span class="s2">&quot;1crn&quot;</span><span class="p">:</span> <span class="s2">&quot;From Stride&quot;</span><span class="p">})</span>
+    <span class="k">assert</span> <span class="n">mol</span><span class="o">.</span><span class="n">hasSS</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;From Stride&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">hasattr</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">11</span>
+    <span class="p">)</span>
+
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;1crn&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="test_computeSecondaryStructure_twochains"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_computeSecondaryStructure_twochains">[docs]</a><span class="k">def</span> <span class="nf">test_computeSecondaryStructure_twochains</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test computeSecondaryStructure on a molecule protease.pdb with two chains</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;protease.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;protease&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">())</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">mol</span><span class="o">.</span><span class="n">hasSS</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;From File&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;protease&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="test_computeSecondaryStructure_nofileinfo"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_computeSecondaryStructure_nofileinfo">[docs]</a><span class="k">def</span> <span class="nf">test_computeSecondaryStructure_nofileinfo</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test computeSecondaryStructure on 7ins.pdb with no information in the file</span>
+<span class="sd">    using stride by default</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">MolKit.protein</span> <span class="kn">import</span> <span class="n">SecondaryStructureSet</span>
+
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;7ins.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;7ins&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">())</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">mol</span><span class="o">.</span><span class="n">hasSS</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;From Stride&quot;</span><span class="p">]</span>
+    <span class="n">c0</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">c0</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">,</span> <span class="n">SecondaryStructureSet</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">c0</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span>
+    <span class="p">)</span>
+    <span class="n">c1</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">,</span> <span class="n">SecondaryStructureSet</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="p">)</span>
+    <span class="n">c2</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">c2</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">,</span> <span class="n">SecondaryStructureSet</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">c2</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span>
+    <span class="p">)</span>
+    <span class="n">c3</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">c3</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">,</span> <span class="n">SecondaryStructureSet</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">c3</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="p">)</span>
+    <span class="n">c4</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">c4</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">,</span> <span class="n">SecondaryStructureSet</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">c4</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span>
+    <span class="p">)</span>
+    <span class="n">c5</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">c5</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">,</span> <span class="n">SecondaryStructureSet</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">c5</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="p">)</span>
+    <span class="n">c6</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c6</span><span class="p">,</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+    <span class="n">c7</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c7</span><span class="p">,</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;7ins&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="test_computeSecondaryStructure_fileOnMolAndStrideOnMol"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_computeSecondaryStructure_fileOnMolAndStrideOnMol">[docs]</a><span class="k">def</span> <span class="nf">test_computeSecondaryStructure_fileOnMolAndStrideOnMol</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test computeSecondaryStructure command on two proteins protease.pdb with</span>
+<span class="sd">    File information and 7ins with no File information.</span>
+<span class="sd">    The molMode are specified protease : From File and 7ins From Stride</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">MolKit.protein</span> <span class="kn">import</span> <span class="n">SecondaryStructureSet</span>
+
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;protease.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;7ins.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span>
+        <span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">(),</span> <span class="n">molModes</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;protease&quot;</span><span class="p">:</span> <span class="s2">&quot;From File&quot;</span><span class="p">,</span> <span class="s2">&quot;7ins&quot;</span><span class="p">:</span> <span class="s2">&quot;From Stride&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">prot</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ins</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">prot</span><span class="o">.</span><span class="n">hasSS</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;From File&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prot</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">,</span> <span class="n">SecondaryStructureSet</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prot</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">,</span> <span class="n">SecondaryStructureSet</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">ins</span><span class="o">.</span><span class="n">hasSS</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;From Stride&quot;</span><span class="p">]</span>
+    <span class="n">c0</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">c0</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">,</span> <span class="n">SecondaryStructureSet</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">c0</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span>
+    <span class="p">)</span>
+    <span class="n">c1</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">,</span> <span class="n">SecondaryStructureSet</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="p">)</span>
+    <span class="n">c2</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">c2</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">,</span> <span class="n">SecondaryStructureSet</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">c2</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span>
+    <span class="p">)</span>
+    <span class="n">c3</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">c3</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">,</span> <span class="n">SecondaryStructureSet</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">c3</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="p">)</span>
+    <span class="n">c4</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">c4</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">,</span> <span class="n">SecondaryStructureSet</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">c4</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span>
+    <span class="p">)</span>
+    <span class="n">c5</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">c5</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">,</span> <span class="n">SecondaryStructureSet</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">c5</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="p">)</span>
+    <span class="n">c6</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c6</span><span class="p">,</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+    <span class="n">c7</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c7</span><span class="p">,</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;7ins&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;protease&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="test_computeSecondaryStructure_forceFileWhenNoInfo"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_computeSecondaryStructure_forceFileWhenNoInfo">[docs]</a><span class="k">def</span> <span class="nf">test_computeSecondaryStructure_forceFileWhenNoInfo</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test computeSecondaryStructure command on 7ins.pdb which doesn&#39;t have</span>
+<span class="sd">    information on the secondarystructure in its file. Forces to compute</span>
+<span class="sd">    from the file information. What do we expect ?</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">MolKit.protein</span> <span class="kn">import</span> <span class="n">SecondaryStructureSet</span>
+
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;7ins.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;7ins&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">(),</span> <span class="n">molModes</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;7ins&quot;</span><span class="p">:</span> <span class="s2">&quot;From File&quot;</span><span class="p">})</span>
+    <span class="n">ins</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ins</span><span class="o">.</span><span class="n">hasSS</span> <span class="o">==</span> <span class="p">[]</span>
+
+    <span class="n">c0</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c0</span><span class="p">,</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+    <span class="n">c1</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+    <span class="n">c2</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+    <span class="n">c3</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c3</span><span class="p">,</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+    <span class="n">c4</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c4</span><span class="p">,</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+    <span class="n">c5</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c5</span><span class="p">,</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+    <span class="n">c6</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c6</span><span class="p">,</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+    <span class="n">c7</span> <span class="o">=</span> <span class="n">ins</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c7</span><span class="p">,</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;7ins&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<span class="c1">############################################################</span>
+<span class="c1"># ExtrudeSecondaryStructureCommand Tests                   #</span>
+<span class="c1">############################################################</span>
+<div class="viewcode-block" id="test_extrudeSecondaryStructure_emptyViewer"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_extrudeSecondaryStructure_emptyViewer">[docs]</a><span class="k">def</span> <span class="nf">test_extrudeSecondaryStructure_emptyViewer</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Test if extrudeSecondaryStructure behaves properly when no molecule has</span>
+<span class="sd">    been loaded in the viewer and with the default values&quot;&quot;&quot;</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">extrudeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="test_extrudeSecondaryStructure_noDheet2D"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_extrudeSecondaryStructure_noDheet2D">[docs]</a><span class="k">def</span> <span class="nf">test_extrudeSecondaryStructure_noDheet2D</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Testing extrudeSecondaryStructure for a protein 1crnnosheet2D with 1 chain</span>
+<span class="sd">    having a secondarystructureset holding 5 secondary structure elements</span>
+<span class="sd">    but no sheet2D because no residues have an O.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;1crnnosheet2D.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">())</span>
+    <span class="n">chain</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">extrudeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">(),</span> <span class="n">display</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="s2">&quot;sheet2D&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">chain</span><span class="o">.</span><span class="n">sheet2D</span><span class="p">[</span><span class="s2">&quot;ssSheet2D&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;1crnnosheet2D&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="test_extrudeSecondaryStructure_defaultParam"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_extrudeSecondaryStructure_defaultParam">[docs]</a><span class="k">def</span> <span class="nf">test_extrudeSecondaryStructure_defaultParam</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to test the extrudeSecondaryStructure command for 1crn with 1</span>
+<span class="sd">    chain with the default parameters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;1crn.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">())</span>
+    <span class="n">chain</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">extrudeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">(),</span> <span class="n">display</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;1crn&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<span class="c1">################################################################</span>
+<span class="c1"># DisplayExtrudedSSCommand Tests                               #</span>
+<span class="c1">################################################################</span>
+<div class="viewcode-block" id="test_displaySecondaryStructure_emptyViewer"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_displaySecondaryStructure_emptyViewer">[docs]</a><span class="k">def</span> <span class="nf">test_displaySecondaryStructure_emptyViewer</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Test if displaySecondaryStructure behaves properly when no</span>
+<span class="sd">    molecule has been loaded in the viewer and with the default values&quot;&quot;&quot;</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">displayExtrudedSS</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="test_displaySecondaryStructure_beforeCompute"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_displaySecondaryStructure_beforeCompute">[docs]</a><span class="k">def</span> <span class="nf">test_displaySecondaryStructure_beforeCompute</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test the display secondarystructurecommands before the</span>
+<span class="sd">    computing and extruding the secondary structure information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;1crn.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">displayExtrudedSS</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">())</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;1crn&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<span class="c1">################################################################</span>
+<span class="c1"># OTHER secondaryStructure  Tests                              #</span>
+<span class="c1">################################################################</span>
+
+
+<div class="viewcode-block" id="test_secondaryStructure_fileThenStrideOnMol"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_secondaryStructure_fileThenStrideOnMol">[docs]</a><span class="k">def</span> <span class="nf">test_secondaryStructure_fileThenStrideOnMol</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ComputeSecondaryStructure on 1crn using the info in the file then</span>
+<span class="sd">    using stride.&quot;&quot;&quot;</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;1crn.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;1crn&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">(),</span> <span class="p">{</span><span class="s2">&quot;1crn&quot;</span><span class="p">:</span> <span class="s2">&quot;From File&quot;</span><span class="p">})</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">extrudeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">())</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">mol</span><span class="o">.</span><span class="n">hasSS</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;From File&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">hasattr</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span>
+    <span class="p">)</span>
+
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">(),</span> <span class="p">{</span><span class="s2">&quot;1crn&quot;</span><span class="p">:</span> <span class="s2">&quot;From Stride&quot;</span><span class="p">})</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">extrudeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">())</span>
+    <span class="k">assert</span> <span class="n">mol</span><span class="o">.</span><span class="n">hasSS</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;From Stride&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">hasattr</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;secondarystructureset&quot;</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">secondarystructureset</span><span class="p">)</span> <span class="o">==</span> <span class="mi">11</span>
+    <span class="p">)</span>
+
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;1crn&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="test_secondaryStructure_cleanBeforeExtrude"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_secondaryStructure_cleanBeforeExtrude">[docs]</a><span class="k">def</span> <span class="nf">test_secondaryStructure_cleanBeforeExtrude</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;This test makes sure that everything is cleaned by the clean method</span>
+<span class="sd">    The clean method is called when computing the SS using stride after using</span>
+<span class="sd">    the info in the file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;1crn.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;1crn&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">(),</span> <span class="p">{</span><span class="s2">&quot;1crn&quot;</span><span class="p">:</span> <span class="s2">&quot;From File&quot;</span><span class="p">})</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeSecondaryStructure</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;1crn&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<span class="c1">############################################################</span>
+<span class="c1"># RibbonCommand Tests                                      #</span>
+<span class="c1">############################################################</span>
+<div class="viewcode-block" id="test_ribbon_emptyViewer"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_ribbon_emptyViewer">[docs]</a><span class="k">def</span> <span class="nf">test_ribbon_emptyViewer</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Test if the ribbon behaves properly when no molecule has</span>
+<span class="sd">    been loaded in the viewer and with the default values&quot;&quot;&quot;</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">ribbon</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="test_ribbon_2tbv"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_ribbon_2tbv">[docs]</a><span class="k">def</span> <span class="nf">test_ribbon_2tbv</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Test if ribbon on the 2tbv with the default param&quot;&quot;&quot;</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;./2tbv.pdb&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">mv</span><span class="o">.</span><span class="n">Mols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;2tbv&quot;</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;2tbv&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">ribbon</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">())</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteMol</span><span class="p">(</span><span class="s2">&quot;2tbv&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1">############################################################</span>
+<span class="c1"># OTHER BUGS                                               #</span>
+<span class="c1">############################################################</span>
+<div class="viewcode-block" id="test_DanielBug"><a class="viewcode-back" href="../../../../../../../cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.html#cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure.test_DanielBug">[docs]</a><span class="k">def</span> <span class="nf">test_DanielBug</span><span class="p">():</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">readMolecule</span><span class="p">(</span><span class="s2">&quot;./fx.pdb&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">loadCommand</span><span class="p">(</span>
+        <span class="s2">&quot;selectionCommands&quot;</span><span class="p">,</span>
+        <span class="p">[</span>
+            <span class="s2">&quot;selectFromString&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;Pmv&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">loadModule</span><span class="p">(</span><span class="s2">&quot;editCommands&quot;</span><span class="p">,</span> <span class="s2">&quot;Pmv&quot;</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">loadModule</span><span class="p">(</span><span class="s2">&quot;deleteCommands&quot;</span><span class="p">,</span> <span class="s2">&quot;Pmv&quot;</span><span class="p">)</span>
+
+    <span class="n">mv</span><span class="o">.</span><span class="n">selectFromString</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;H*&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">deleteAtomSet</span><span class="p">(</span><span class="n">mv</span><span class="o">.</span><span class="n">getSelection</span><span class="p">())</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">add_hGC</span><span class="p">(</span><span class="s2">&quot;fx:::&quot;</span><span class="p">,</span> <span class="n">polarOnly</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">renumber</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;noBondOrder&quot;</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mv</span><span class="o">.</span><span class="n">computeS</span></div>
+
+
+<span class="c1">## if __name__ == &#39;__main__&#39;:</span>
+<span class="c1">##     testplus.chdir()</span>
+<span class="c1">##     print harness</span>
+<span class="c1">##     sys.exit( len( harness))</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+cellpack.mgl\_tools.upy.pythonUI package
+========================================
+
+Submodules
+----------
+
+cellpack.mgl\_tools.upy.pythonUI.qtCollapsible module
+-----------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.upy.pythonUI.qtCollapsible
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.upy.pythonUI.qtUI module
+--------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.upy.pythonUI.qtUI
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.upy.pythonUI.tkUI module
+--------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.upy.pythonUI.tkUI
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.mgl_tools.upy.pythonUI
+   :members:
+   :undoc-members:
+   :show-inheritance:

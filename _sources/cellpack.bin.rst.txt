@@ -4,10 +4,10 @@ cellpack.bin package
 Submodules
 ----------
 
-cellpack.bin.my\_example module
--------------------------------
+cellpack.bin.analyze module
+---------------------------
 
-.. automodule:: cellpack.bin.my_example
+.. automodule:: cellpack.bin.analyze
    :members:
    :undoc-members:
    :show-inheritance:

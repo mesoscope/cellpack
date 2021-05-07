@@ -1,0 +1,18 @@
+cellpack.mgl\_tools.upy.softimage package
+=========================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   cellpack.mgl_tools.upy.softimage.v2013
+
+Module contents
+---------------
+
+.. automodule:: cellpack.mgl_tools.upy.softimage
+   :members:
+   :undoc-members:
+   :show-inheritance:

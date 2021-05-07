@@ -1,0 +1,20 @@
+cellpack.mgl\_tools.upy.autodesk3dsmax package
+==============================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   cellpack.mgl_tools.upy.autodesk3dsmax.v2013
+   cellpack.mgl_tools.upy.autodesk3dsmax.v2015
+   cellpack.mgl_tools.upy.autodesk3dsmax.v2016
+
+Module contents
+---------------
+
+.. automodule:: cellpack.mgl_tools.upy.autodesk3dsmax
+   :members:
+   :undoc-members:
+   :show-inheritance:

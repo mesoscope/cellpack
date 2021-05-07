@@ -1,0 +1,45 @@
+cellpack.mgl\_tools.upy.autodesk3dsmax.v2015 package
+====================================================
+
+Submodules
+----------
+
+cellpack.mgl\_tools.upy.autodesk3dsmax.v2015.classIds module
+------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.upy.autodesk3dsmax.v2015.classIds
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.upy.autodesk3dsmax.v2015.maxHelper module
+-------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.upy.autodesk3dsmax.v2015.maxHelper
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.upy.autodesk3dsmax.v2015.maxPlugin module
+-------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.upy.autodesk3dsmax.v2015.maxPlugin
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.upy.autodesk3dsmax.v2015.maxUI module
+---------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.upy.autodesk3dsmax.v2015.maxUI
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.mgl_tools.upy.autodesk3dsmax.v2015
+   :members:
+   :undoc-members:
+   :show-inheritance:

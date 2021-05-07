@@ -1,0 +1,29 @@
+cellpack.mgl\_tools.mglutil.TestUtil.Tests.Data package
+=======================================================
+
+Submodules
+----------
+
+cellpack.mgl\_tools.mglutil.TestUtil.Tests.Data.test\_displayCommands module
+----------------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_displayCommands
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.TestUtil.Tests.Data.test\_secondarystructure module
+-------------------------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.TestUtil.Tests.Data.test_secondarystructure
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.TestUtil.Tests.Data
+   :members:
+   :undoc-members:
+   :show-inheritance:

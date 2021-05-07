@@ -98,7 +98,9 @@
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Package modules</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.html">cellpack package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html">cellpack.autopack package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.html#submodules">Submodules</a></li>
@@ -197,7 +199,7 @@
 <a class="reference external image-reference" href="https://github.com/mesoscope/cellpack/actions"><img alt="Build Status" src="https://github.com/mesoscope/cellpack/workflows/Build%20Main/badge.svg" /></a>
 <a class="reference external image-reference" href="https://mesoscope.github.io/cellpack/"><img alt="Documentation" src="https://github.com/mesoscope/cellpack/workflows/Documentation/badge.svg" /></a>
 <a class="reference external image-reference" href="https://codecov.io/gh/mesoscope/cellpack"><img alt="Code Coverage" src="https://codecov.io/gh/mesoscope/cellpack/branch/main/graph/badge.svg" /></a>
-<p>algorthim to pack molecular recipes</p>
+<p>algorithm to pack molecular recipes</p>
 <hr class="docutils" />
 <div class="section" id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
@@ -213,6 +215,21 @@
 <span class="n">a</span> <span class="o">=</span> <span class="n">Example</span><span class="p">()</span>
 <span class="n">a</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>  <span class="c1"># 10</span>
 </pre></div>
+</div>
+<p>in terminal:</p>
+<div class="section" id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p>create a virtual env: <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span> <span class="pre">-n</span> <span class="pre">autopack</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">activate</span> <span class="pre">autopack</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.[dev]</span></code></p></li>
+</ol>
+</div>
+<div class="section" id="run-analysis-code">
+<h3>Run analysis code<a class="headerlink" href="#run-analysis-code" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">analyze</span> <span class="pre">-o</span> <span class="pre">[PATH/TO/OUTPUT/FOLDER]</span></code> // folder needs to exist, won’t create a folder</p></li>
+</ol>
 </div>
 </div>
 <div class="section" id="installation">
@@ -256,8 +273,6 @@ documentation for your Python package.</p>
 </div></blockquote>
 </li>
 </ol>
-<div class="section" id="additional-optional-setup-steps">
-<h3>Additional Optional Setup Steps:<a class="headerlink" href="#additional-optional-setup-steps" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Turn your project into a GitHub repository:</p>
 <ul>
@@ -296,9 +311,6 @@ actions will build and deploy your Python package to PyPI.</p></li>
 </ul>
 </li>
 </ul>
-</div>
-<div class="section" id="suggested-git-branch-strategy">
-<h3>Suggested Git Branch Strategy<a class="headerlink" href="#suggested-git-branch-strategy" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">main</span></code> is for the most up-to-date development, very rarely should you directly
 commit to this branch. GitHub Actions will run on every push and on a CRON to this
@@ -314,7 +326,6 @@ each set of changes to <code class="docutils literal notranslate"><span class="p
 well defined PR’s.</p></li>
 </ol>
 <p><strong>MIT license</strong></p>
-</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">

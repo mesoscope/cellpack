@@ -1,0 +1,709 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.mgl_tools.upy.upy_updater &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../cellpack.html">cellpack</a> &raquo;</li>
+        
+          <li><a href="../upy.html">cellpack.mgl_tools.upy</a> &raquo;</li>
+        
+      <li>cellpack.mgl_tools.upy.upy_updater</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.mgl_tools.upy.upy_updater</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Copyright (C) &lt;2010&gt;  Autin L. TSRI</span>
+<span class="sd">    </span>
+<span class="sd">    This file git_upy/upy_updater.py is part of upy.</span>
+
+<span class="sd">    upy is free software: you can redistribute it and/or modify</span>
+<span class="sd">    it under the terms of the GNU General Public License as published by</span>
+<span class="sd">    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">    (at your option) any later version.</span>
+
+<span class="sd">    upy is distributed in the hope that it will be useful,</span>
+<span class="sd">    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">    GNU General Public License for more details.</span>
+
+<span class="sd">    You should have received a copy of the GNU General Public License</span>
+<span class="sd">    along with upy.  If not, see &lt;http://www.gnu.org/licenses/gpl-3.0.html&gt;.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Mon Feb  4 19:16:40 2013</span>
+
+<span class="sd">@author: Ludovic Autin</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">urllib.request</span> <span class="k">as</span> <span class="nn">urllib</span>  <span class="c1"># , urllib.parse, urllib.error</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">urllib</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">simplejson</span> <span class="k">as</span> <span class="nn">json</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">json</span>
+
+
+<div class="viewcode-block" id="checkURL"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.upy_updater.checkURL">[docs]</a><span class="k">def</span> <span class="nf">checkURL</span><span class="p">(</span><span class="n">URL</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">URL</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">404</span></div>
+
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">upy</span>
+
+    <span class="n">local_temp_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">upy</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">local_temp_dir</span> <span class="o">=</span> <span class="s2">&quot;./&quot;</span>
+
+
+<div class="viewcode-block" id="Updater"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.upy_updater.Updater">[docs]</a><span class="k">class</span> <span class="nc">Updater</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">list_host</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="s2">&quot;maya&quot;</span><span class="p">,</span> <span class="s2">&quot;c4d&quot;</span><span class="p">,</span> <span class="s2">&quot;blender&quot;</span><span class="p">,</span> <span class="s2">&quot;3dsmax&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;all&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;host&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;host&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_host</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;all&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;epmv&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;autopack&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;upy&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+        <span class="k">if</span> <span class="s2">&quot;liste_plugin&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;liste_plugin&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">helper</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="s2">&quot;helper&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">helper</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;helper&quot;</span><span class="p">]</span>
+        <span class="c1">#        else :</span>
+        <span class="c1">#            self.helper = upy.getHelperClass()()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gui</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="s2">&quot;gui&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gui</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;gui&quot;</span><span class="p">]</span>
+        <span class="c1"># sourceforge</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="s2">&quot;http://sourceforge.net/projects/upyplugins/files/Updates/&quot;</span>  <span class="c1"># could be google</span>
+        <span class="c1">#        self.url = &quot;https://upy.googlecode.com/svn/branches/updates/update_notes_&quot;+self.host+&quot;.json&quot; #sourceforge?</span>
+        <span class="c1">#        self.url = &quot;http://mgldev.scripps.edu/projects/uPy/Distribs/Updates/update_notes_&quot;+self.host+&quot;.json&quot; #sourceforge?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;http://sourceforge.net/projects/upyplugins/files/Updates/update_notes_&quot;</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span>
+            <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_path</span> <span class="o">=</span> <span class="s2">&quot;/usr/local/www/projects//uPy/Distribs/Updates&quot;</span>  <span class="c1"># &quot;/Users/ludo/DEV/upy_google_svn/branches/updates&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_notes</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">typeUpdate</span> <span class="o">=</span> <span class="s2">&quot;std&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;typeUpdate&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">typeUpdate</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;typeUpdate&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Updater.checkForUpdate"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.upy_updater.Updater.checkForUpdate">[docs]</a>    <span class="k">def</span> <span class="nf">checkForUpdate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1"># check on web if update available</span>
+        <span class="c1"># return boolean for update_PMV,update_ePMV and update_pyubics</span>
+        <span class="c1"># where to check and what type dev/stable/host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_notes</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># need version</span>
+        <span class="n">URI</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span>
+        <span class="n">tmpFileName</span> <span class="o">=</span> <span class="n">local_temp_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;update_notes_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
+        <span class="c1">#        if not os.path.isfile(tmpFileName):</span>
+        <span class="n">urllib</span><span class="o">.</span><span class="n">urlcleanup</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">checkURL</span><span class="p">(</span><span class="n">URI</span><span class="p">):</span>
+            <span class="n">urllib</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">URI</span><span class="p">,</span> <span class="n">tmpFileName</span><span class="p">)</span>  <span class="c1"># ,reporthook=self.helper.reporthook)</span>
+            <span class="c1"># geturl(URI, tmpFileName)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;problem connecting to server&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmpFileName</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>  <span class="c1"># doesnt work with symbol link ?</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+        <span class="n">do_update</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">plug</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;update&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;version_current&quot;</span><span class="p">]</span>
+                <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;version_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">typeUpdate</span><span class="p">]</span>
+            <span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;host&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">]</span>
+                    <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;host&quot;</span><span class="p">]</span>
+                <span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;update&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;host&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;host&quot;</span><span class="p">]</span>
+            <span class="n">do_update</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;update&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_notes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;notes&quot;</span><span class="p">]</span>
+        <span class="c1"># self.merge_list_plug()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_notes</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmpFileName</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">do_update</span></div>
+
+<div class="viewcode-block" id="Updater.update"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.upy_updater.Updater.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># path should be set up before getting here</span>
+        <span class="k">for</span> <span class="n">plug</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">plug</span> <span class="o">==</span> <span class="s2">&quot;notes&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;update&quot;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;update &quot;</span> <span class="o">+</span> <span class="n">plug</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">backup</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_plug</span><span class="p">(</span><span class="n">plug</span><span class="p">,</span> <span class="n">typeUpdate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">typeUpdate</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="n">backup</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Updater.checkUpdate_cb_cb"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.upy_updater.Updater.checkUpdate_cb_cb">[docs]</a>    <span class="k">def</span> <span class="nf">checkUpdate_cb_cb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">drawMessage</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;update&quot;</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="s2">&quot;The plugins will now update. Please be patient while the update downloads. This may take several minutes depending on your connection speed.&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">backup</span><span class="o">=</span><span class="n">res</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">drawMessage</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;update&quot;</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="s2">&quot;You are now up to date. Please restart &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">resetProgressBar</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Updater.checkUpdate_cb"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.upy_updater.Updater.checkUpdate_cb">[docs]</a>    <span class="k">def</span> <span class="nf">checkUpdate_cb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">drawQuestion</span><span class="p">(</span>
+                <span class="n">question</span><span class="o">=</span><span class="s2">&quot;Do you want to backup the current version?&quot;</span><span class="p">,</span>
+                <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">checkUpdate_cb_cb</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Updater.checkUpdate"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.upy_updater.Updater.checkUpdate">[docs]</a>    <span class="k">def</span> <span class="nf">checkUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">doit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkForUpdate</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gui</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="kc">True</span> <span class="ow">in</span> <span class="n">doit</span><span class="p">:</span>
+            <span class="c1"># need some display?</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;An update is available.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="k">for</span> <span class="n">plug</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="n">plug</span>
+                    <span class="o">+</span> <span class="s2">&quot; current &quot;</span>
+                    <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;version_current&quot;</span><span class="p">])</span>
+                    <span class="o">+</span> <span class="s2">&quot; update &quot;</span>
+                    <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">typeUpdate</span>
+                    <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+                    <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;version_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">typeUpdate</span><span class="p">])</span>
+                    <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="c1">#            msg+= self.epmv.inst.update_notes</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;Do you want to update?</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">drawQuestion</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="n">msg</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">checkUpdate_cb</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">drawMessage</span><span class="p">(</span>
+                <span class="n">title</span><span class="o">=</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;You are up to date! No update necessary.&quot;</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Updater.update_plug"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.upy_updater.Updater.update_plug">[docs]</a>    <span class="k">def</span> <span class="nf">update_plug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plug</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">typeUpdate</span><span class="o">=</span><span class="s2">&quot;std&quot;</span><span class="p">,</span> <span class="n">backup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">zipfile</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span>
+                <span class="s2">&quot;path&quot;</span>
+            <span class="p">]</span>  <span class="c1"># AutoFill.__path__[0]+os.sep #path of plug</span>
+        <span class="c1">#        print &quot;update_AF&quot;,AFwrkDir1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;host&quot;</span><span class="p">]:</span>
+            <span class="n">URI</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">plug</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">typeUpdate</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">+</span> <span class="s2">&quot;.zip&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">URI</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">plug</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">typeUpdate</span> <span class="o">+</span> <span class="s2">&quot;_all.zip&quot;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s2">&quot;../&quot;</span><span class="p">)</span>
+        <span class="n">patchpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">curdir</span><span class="p">)</span>
+        <span class="n">tmpFileName</span> <span class="o">=</span> <span class="n">patchpath</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">plug</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">typeUpdate</span> <span class="o">+</span> <span class="s2">&quot;.zip&quot;</span>
+
+        <span class="n">urllib</span><span class="o">.</span><span class="n">urlcleanup</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">checkURL</span><span class="p">(</span><span class="n">URI</span><span class="p">):</span>
+            <span class="n">urllib</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">URI</span><span class="p">,</span> <span class="n">tmpFileName</span><span class="p">,</span> <span class="n">reporthook</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">reporthook</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">zfile</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">tmpFileName</span><span class="p">)</span>
+        <span class="c1">#        TF=tarfile.TarFile(tmpFileName)</span>
+        <span class="n">dirname1</span> <span class="o">=</span> <span class="n">p</span>  <span class="c1"># +os.sep+&quot;..&quot;+os.sep+&quot;AutoFill&quot;</span>
+        <span class="kn">import</span> <span class="nn">shutil</span>
+
+        <span class="k">if</span> <span class="n">backup</span><span class="p">:</span>
+            <span class="c1"># rename AF to AFv</span>
+            <span class="n">dirname2</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">dirname1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;version_current&quot;</span><span class="p">]</span>
+            <span class="p">)</span>  <span class="c1"># the version</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">dirname1</span><span class="p">,</span> <span class="n">dirname2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dirname2</span><span class="p">):</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">dirname2</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">dirname1</span><span class="p">,</span> <span class="n">dirname2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dirname1</span><span class="p">):</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">dirname1</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="c1">#        TF.extractall(patchpath)</span>
+        <span class="n">zfile</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">patchpath</span><span class="p">)</span>
+        <span class="n">zfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tmpFileName</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Updater.writeUpdateNote"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.upy_updater.Updater.writeUpdateNote">[docs]</a>    <span class="k">def</span> <span class="nf">writeUpdateNote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">notes</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>  <span class="c1"># std or dev</span>
+        <span class="n">result_json</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">plug</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">:</span>
+            <span class="n">result_json</span><span class="p">[</span><span class="n">plug</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="s2">&quot;version_std&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">]:</span>
+                <span class="n">result_json</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;version_std&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span>
+                    <span class="s2">&quot;version_std&quot;</span>
+                <span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;version_dev&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">]:</span>
+                <span class="n">result_json</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;version_dev&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span>
+                    <span class="s2">&quot;version_dev&quot;</span>
+                <span class="p">]</span>
+            <span class="n">result_json</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;host&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;host&quot;</span><span class="p">]</span>
+        <span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;notes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">notes</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_path</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;update_notes_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
+                <span class="n">result_json</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;: &quot;</span><span class="p">)</span>
+            <span class="p">)</span>  <span class="c1"># ,indent=4, separators=(&#39;,&#39;, &#39;: &#39;)</span></div>
+
+<div class="viewcode-block" id="Updater.readUpdateNote"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.upy_updater.Updater.readUpdateNote">[docs]</a>    <span class="k">def</span> <span class="nf">readUpdateNote</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">URI</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span>
+        <span class="n">tmpFileName</span> <span class="o">=</span> <span class="n">local_temp_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;update_notes_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
+        <span class="n">urllib</span><span class="o">.</span><span class="n">urlcleanup</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">checkURL</span><span class="p">(</span><span class="n">URI</span><span class="p">):</span>
+            <span class="n">urllib</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">URI</span><span class="p">,</span> <span class="n">tmpFileName</span><span class="p">)</span>  <span class="c1"># ,reporthook=self.helper.reporthook)</span>
+            <span class="c1"># geturl(URI, tmpFileName)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;problem connecting to server&quot;</span><span class="p">,</span> <span class="n">URI</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmpFileName</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>  <span class="c1"># doesnt work with symbol link ?</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Updater.merge_list_plug"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.upy_updater.Updater.merge_list_plug">[docs]</a>    <span class="k">def</span> <span class="nf">merge_list_plug</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">plug</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">plug</span> <span class="o">==</span> <span class="s2">&quot;notes&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">plug</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">plug</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">plug</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">opt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="n">opt</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="n">opt</span><span class="p">]</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;version_dev&quot;</span><span class="p">]</span>
+                    <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;version_std&quot;</span><span class="p">]</span>
+                <span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;version_dev&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span>
+                        <span class="s2">&quot;version_std&quot;</span>
+                    <span class="p">]</span></div>
+
+<div class="viewcode-block" id="Updater.update_svn_export"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.upy_updater.Updater.update_svn_export">[docs]</a>    <span class="k">def</span> <span class="nf">update_svn_export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">host</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">host</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">host</span>
+        <span class="k">for</span> <span class="n">plug</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">:</span>
+            <span class="c1">#             print self.liste_plugin[plug][&quot;svn&quot;],self.liste_plugin[plug][&quot;path&quot;]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_svn_export_one_plug</span><span class="p">(</span><span class="n">plug</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Updater.update_svn_export_one_plug"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.upy_updater.Updater.update_svn_export_one_plug">[docs]</a>    <span class="k">def</span> <span class="nf">update_svn_export_one_plug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plug</span><span class="p">,</span> <span class="n">host</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;svn export &quot;</span><span class="p">,</span> <span class="n">plug</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span>
+            <span class="s2">&quot;path&quot;</span>
+        <span class="p">]</span>  <span class="c1"># &quot;/usr/local/www/projects/ePMV/SOURCES/export/ePMV&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;rm &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;log&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;rm &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;version&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span>
+            <span class="s2">&quot;svn export &quot;</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;svn&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="s2">&quot; &gt; &quot;</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="s2">&quot;log&quot;</span>
+        <span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span>
+            <span class="s2">&quot;tail -1 &quot;</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="s2">&quot;log &gt; &quot;</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+            <span class="o">+</span> <span class="s2">&quot;version&quot;</span>
+        <span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="c1">#        print lines</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">plug</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="s2">&quot;new v &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;major&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">lines</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;version.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;major&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">lines</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;version_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">typeUpdate</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;major&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">lines</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;host&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host</span>
+        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">host</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">local_path</span>
+                <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
+                <span class="o">+</span> <span class="n">plug</span>
+                <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
+                <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">typeUpdate</span>
+                <span class="o">+</span> <span class="s2">&quot;_&quot;</span>
+                <span class="o">+</span> <span class="n">h</span>
+                <span class="o">+</span> <span class="s2">&quot;.zip&quot;</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="c1"># need to remove some files for autopack</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;zip &quot;</span><span class="p">,</span> <span class="n">plug</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">plug</span> <span class="o">==</span> <span class="s2">&quot;autopack&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/Patches&quot;</span><span class="p">):</span>
+                    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">liste_plugin</span><span class="p">[</span><span class="n">plug</span><span class="p">][</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/Patches&quot;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;cd &quot;</span> <span class="o">+</span> <span class="n">d</span> <span class="o">+</span> <span class="s2">&quot;/..;zip -r &quot;</span> <span class="o">+</span> <span class="n">f</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">plug</span> <span class="o">+</span> <span class="s2">&quot;/  &gt;logx&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;done&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="get_current_version"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.upy.html#cellpack.mgl_tools.upy.upy_updater.get_current_version">[docs]</a><span class="k">def</span> <span class="nf">get_current_version</span><span class="p">():</span>
+    <span class="c1">#        set afversion=`svn info https://github.com/gj210/autoPACK/trunk/autopack | grep &quot;Revision:&quot; | cut -d: -f2 `</span>
+    <span class="c1">#        set epmvversion=`svn info https://subversion.assembla.com/svn/epmv/trunk | grep &quot;Revision:&quot; | cut -d: -f2 `</span>
+    <span class="c1">#        set upyversion=`svn info https://github.com/corredD/upy/trunk | grep &quot;Revision:&quot; | cut -d: -f2 `</span>
+    <span class="c1">#    output = os.system(&#39;svn info https://github.com/gj210/autoPACK/trunk/autopack | grep &quot;Revision:&quot; | cut -d: -f2 &#39;)</span>
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+
+    <span class="n">svn</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;svn&quot;</span><span class="p">,</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="s2">&quot;https://github.com/gj210/autoPACK/trunk/autopack&quot;</span><span class="p">],</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">svn_info</span> <span class="o">=</span> <span class="n">svn</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">afversion</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">svn_info</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;Revision: &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">svn</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;svn&quot;</span><span class="p">,</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="s2">&quot;https://github.com/corredD/ePMV/trunk&quot;</span><span class="p">],</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">svn_info</span> <span class="o">=</span> <span class="n">svn</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">epmvversion</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">svn_info</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;Revision: &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">svn</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;svn&quot;</span><span class="p">,</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="s2">&quot;https://github.com/corredD/upy/trunk&quot;</span><span class="p">],</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">svn_info</span> <span class="o">=</span> <span class="n">svn</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">upyversion</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">svn_info</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;Revision: &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">afversion</span><span class="p">,</span> <span class="n">epmvversion</span><span class="p">,</span> <span class="n">upyversion</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1">#  python2.7 -i upy/upy_updater.py</span>
+    <span class="c1"># cd ~/DEV/git_upy;python -i upy_updater.py;cd /Users/ludo/DEV/upy_google_svn/branches/updates;svn commit -m&quot;update&quot;</span>
+    <span class="c1"># scp *.zip acoreda@frs.sourceforge.net:/home/frs/project/upyplugins/Updates</span>
+    <span class="c1">#    set afversion=`svn info https://subversion.assembla.com/svn/autofill/trunk/AutoFillClean | grep &quot;Revision:&quot; | cut -d: -f2 `</span>
+    <span class="c1">#    set epmvversion=`svn info https://subversion.assembla.com/svn/epmv/trunk/ | grep &quot;Revision:&quot; | cut -d: -f2 `</span>
+    <span class="c1">#    set upyversion=`svn info https://subversion.assembla.com/svn/upy/trunk/upy | grep &quot;Revision:&quot; | cut -d: -f2 `</span>
+    <span class="n">update_path</span> <span class="o">=</span> <span class="s2">&quot;/Users/ludo/DEV/upy_google_svn/branches/updates/&quot;</span>
+    <span class="c1">#    update_path=&quot;/virtual/local/www/projects/uPy/Distribs/Updates&quot;</span>
+    <span class="n">depmv</span> <span class="o">=</span> <span class="s2">&quot;/usr/local/www/projects/ePMV/SOURCES/export/ePMV&quot;</span>
+    <span class="n">dupy</span> <span class="o">=</span> <span class="s2">&quot;/usr/local/www/projects/uPy/export/upy&quot;</span>
+    <span class="n">dautopack</span> <span class="o">=</span> <span class="s2">&quot;/usr/local/www/projects/AF/Sources/export/autopack&quot;</span>
+    <span class="c1">#    zipoutput=&quot;/usr/local/www/projects/ePMV/updates/&quot;</span>
+    <span class="n">do_json</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">do_update</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">afversion</span><span class="p">,</span> <span class="n">epmvversion</span><span class="p">,</span> <span class="n">upyversion</span> <span class="o">=</span> <span class="n">get_current_version</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">afversion</span><span class="p">,</span> <span class="n">epmvversion</span><span class="p">,</span> <span class="n">upyversion</span><span class="p">)</span>
+    <span class="c1">#    sys.exit()</span>
+    <span class="k">if</span> <span class="n">do_json</span><span class="p">:</span>
+        <span class="c1"># current version?</span>
+        <span class="n">afversion</span><span class="p">,</span> <span class="n">epmvversion</span><span class="p">,</span> <span class="n">upyversion</span> <span class="o">=</span> <span class="n">get_current_version</span><span class="p">()</span>
+        <span class="n">upyv</span> <span class="o">=</span> <span class="s2">&quot;0.7.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">upyversion</span><span class="p">)</span>
+        <span class="n">apv</span> <span class="o">=</span> <span class="s2">&quot;0.6.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">afversion</span><span class="p">)</span>
+        <span class="n">epmv</span> <span class="o">=</span> <span class="s2">&quot;0.6.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">epmvversion</span><span class="p">)</span>
+        <span class="n">liste_plugin</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;upy&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;version_current&quot;</span><span class="p">:</span> <span class="n">upyv</span><span class="p">,</span>
+                <span class="s2">&quot;version_std&quot;</span><span class="p">:</span> <span class="n">upyv</span><span class="p">,</span>
+                <span class="s2">&quot;version_dev&quot;</span><span class="p">:</span> <span class="n">upyv</span><span class="p">,</span>
+                <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">],</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;autopack&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;version_current&quot;</span><span class="p">:</span> <span class="n">apv</span><span class="p">,</span>
+                <span class="s2">&quot;version_std&quot;</span><span class="p">:</span> <span class="n">apv</span><span class="p">,</span>
+                <span class="s2">&quot;version_dev&quot;</span><span class="p">:</span> <span class="n">apv</span><span class="p">,</span>
+                <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">],</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;ePMV&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;version_current&quot;</span><span class="p">:</span> <span class="n">epmv</span><span class="p">,</span>
+                <span class="s2">&quot;version_std&quot;</span><span class="p">:</span> <span class="n">epmv</span><span class="p">,</span>
+                <span class="s2">&quot;version_dev&quot;</span><span class="p">:</span> <span class="n">epmv</span><span class="p">,</span>
+                <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">],</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+        <span class="c1"># from upy.upy_updater import Updater</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">liste_plugin</span><span class="p">)</span>
+        <span class="n">up</span> <span class="o">=</span> <span class="n">Updater</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">],</span> <span class="n">liste_plugin</span><span class="o">=</span><span class="n">liste_plugin</span><span class="p">)</span>
+        <span class="c1">#        up.writeUpdateNote(notes=&quot;blabla&quot;)</span>
+        <span class="n">up</span><span class="o">.</span><span class="n">writeUpdateNote</span><span class="p">(</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">zipoutput</span> <span class="o">+</span> <span class="s2">&quot;update_notes_&quot;</span> <span class="o">+</span> <span class="s2">&quot;all&quot;</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">,</span>
+            <span class="n">notes</span><span class="o">=</span><span class="s2">&quot;new update systems&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">do_update</span><span class="p">:</span>
+        <span class="n">liste_plugin</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;upy&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">dupy</span><span class="p">,</span>
+                <span class="s2">&quot;svn&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/corredD/upy/trunk&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;major&quot;</span><span class="p">:</span> <span class="s2">&quot;0.7&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;autopack&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">dautopack</span><span class="p">,</span>
+                <span class="s2">&quot;svn&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/gj210/autoPACK/trunk/autopack&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;major&quot;</span><span class="p">:</span> <span class="s2">&quot;0.7&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;ePMV&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">depmv</span><span class="p">,</span>
+                <span class="s2">&quot;svn&quot;</span><span class="p">:</span> <span class="s2">&quot;https://github.com/corredD/ePMV/trunk&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;major&quot;</span><span class="p">:</span> <span class="s2">&quot;0.6&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+        <span class="c1">#        liste_plugin={&quot;upy&quot;:{&quot;path&quot;:&quot;/Users/ludo/DEV/upy_google_svn/branches/updates/upy&quot;,&quot;svn&quot;:&quot;https://subversion.assembla.com/svn/upy/trunk/upy&quot;,&quot;major&quot;:&quot;0.6&quot;},</span>
+        <span class="c1">#                      &quot;AutoFill&quot;:{&quot;path&quot;:&quot;/Users/ludo/DEV/upy_google_svn/branches/updates/AutoFill&quot;,&quot;svn&quot;:&quot;https://subversion.assembla.com/svn/autofill/trunk/AutoFillClean&quot;,&quot;major&quot;:&quot;0.5&quot;},</span>
+        <span class="c1">#                        &quot;ePMV&quot;:{&quot;path&quot;:&quot;/Users/ludo/DEV/upy_google_svn/branches/updates/ePMV&quot;,&quot;svn&quot;:&quot;https://subversion.assembla.com/svn/epmv/trunk/&quot;,&quot;major&quot;:&quot;0.5&quot;}}</span>
+        <span class="c1"># from upy.upy_updater import Updater</span>
+        <span class="n">up</span> <span class="o">=</span> <span class="n">Updater</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">],</span> <span class="n">liste_plugin</span><span class="o">=</span><span class="n">liste_plugin</span><span class="p">,</span> <span class="n">typeUpdate</span><span class="o">=</span><span class="s2">&quot;std&quot;</span><span class="p">)</span>
+        <span class="n">up</span><span class="o">.</span><span class="n">update_svn_export</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">])</span>
+        <span class="c1">#        up.readUpdateNote()</span>
+        <span class="c1">#        up.merge_list_plug()</span>
+        <span class="c1">#        up.writeUpdateNote(filename=&quot;/Users/ludo/DEV/upy_googlesvn/branches/updates/update_notes_all.json&quot;,notes=&quot;new update systems&quot;)</span>
+        <span class="n">up</span> <span class="o">=</span> <span class="n">Updater</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">],</span> <span class="n">liste_plugin</span><span class="o">=</span><span class="n">liste_plugin</span><span class="p">,</span> <span class="n">typeUpdate</span><span class="o">=</span><span class="s2">&quot;dev&quot;</span><span class="p">)</span>
+        <span class="n">up</span><span class="o">.</span><span class="n">update_svn_export</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">])</span>  <span class="c1"># up.list_host)</span>
+
+        <span class="n">up</span><span class="o">.</span><span class="n">readUpdateNote</span><span class="p">()</span>
+        <span class="n">up</span><span class="o">.</span><span class="n">merge_list_plug</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">up</span><span class="o">.</span><span class="n">list_host</span><span class="p">:</span>
+            <span class="c1">#            up.writeUpdateNote(filename=&quot;/Users/ludo/DEV/upy_google_svn/branches/updates/update_notes_&quot;+name+&quot;.json&quot;,notes=&quot;new update systems&quot;)</span>
+            <span class="n">up</span><span class="o">.</span><span class="n">writeUpdateNote</span><span class="p">(</span><span class="n">notes</span><span class="o">=</span><span class="s2">&quot;new update systems&quot;</span><span class="p">)</span>
+        <span class="c1"># upload to sourceforge</span>
+<span class="c1">#        os.system(cd /Users/ludo/DEV/upy_google_svn/branches/updates;scp *.zip acoreda@frs.sourceforge.net:/home/frs/project/upyplugins/Updates&quot;)</span>
+<span class="c1">#        os.system(&quot;cd &quot;+up.local_path+&quot;;scp * acoreda@frs.sourceforge.net:/home/frs/project/upyplugins/Updates&quot;)</span>
+<span class="c1">#        os.system(scp file.zip jsmith@frs.sourceforge.net:/home/frs/project/fooproject/Rel_1</span>
+<span class="c1">#        os.system(scp file.zip jsmith@frs.sourceforge.net:/home/frs/project/fooproject/Rel_1</span>
+<span class="c1"># for host specific</span>
+<span class="c1">#        up = Updater(host=[&quot;maya&quot;],liste_plugin=liste_plugin,typeUpdate=&quot;std&quot;)</span>
+<span class="c1">#        up.update_svn_export()</span>
+<span class="c1"># this willl create an update just for maya</span>
+<span class="c1"># so shoul we have udpate_note per host</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

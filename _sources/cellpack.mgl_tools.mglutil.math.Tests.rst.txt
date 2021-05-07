@@ -1,0 +1,37 @@
+cellpack.mgl\_tools.mglutil.math.Tests package
+==============================================
+
+Submodules
+----------
+
+cellpack.mgl\_tools.mglutil.math.Tests.test\_interpolate module
+---------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.math.Tests.test_interpolate
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.math.Tests.test\_matToAxis module
+-------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.math.Tests.test_matToAxis
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.mglutil.math.Tests.test\_superimpose module
+---------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.math.Tests.test_superimpose
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.mgl_tools.mglutil.math.Tests
+   :members:
+   :undoc-members:
+   :show-inheritance:

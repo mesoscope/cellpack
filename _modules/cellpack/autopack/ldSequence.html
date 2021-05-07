@@ -1,0 +1,1092 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.autopack.ldSequence &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../cellpack.html">cellpack</a> &raquo;</li>
+        
+          <li><a href="../autopack.html">cellpack.autopack</a> &raquo;</li>
+        
+      <li>cellpack.autopack.ldSequence</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.autopack.ldSequence</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">###############################################################################</span>
+<span class="sd">#</span>
+<span class="sd"># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner</span>
+<span class="sd">#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010</span>
+<span class="sd">#   with assistance from Mostafa Al-Alusi in 2009 and periodic input</span>
+<span class="sd">#   from Arthur Olson&#39;s Molecular Graphics Lab</span>
+<span class="sd">#</span>
+<span class="sd"># ldSequence.py Authors: Ludovic Autin</span>
+<span class="sd">###############################################################################</span>
+<span class="sd">@author: Ludovic Autin, Graham Johnson,  &amp; Michel Sanner</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># First implementation came from QuasiRandom.py</span>
+<span class="c1"># https://code.google.com/p/pistol/source/browse/trunk/Pistol/QuasiRandom.py?r=4</span>
+<span class="c1"># ==============================================================================</span>
+<span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    QuasiRandom.py - Generators for quasirandom sequences</span>
+<span class="sd">DESCRIPTION</span>
+<span class="sd">    Use a Halton sequence to generate quasirandom sequences.</span>
+
+<span class="sd">Copyright (c) 2003 Richard P. Muller (rmuller@sandia.gov). All rights</span>
+<span class="sd">reserved. See the LICENSE file for licensing details.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="haltonterm"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.haltonterm">[docs]</a><span class="k">def</span> <span class="nf">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">fac</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">base</span>
+
+    <span class="k">while</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">digit</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="n">base</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">h</span> <span class="o">+</span> <span class="n">digit</span> <span class="o">*</span> <span class="n">fac</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">digit</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span>
+        <span class="n">fac</span> <span class="o">=</span> <span class="n">fac</span> <span class="o">/</span> <span class="n">base</span>
+    <span class="k">return</span> <span class="n">h</span></div>
+
+
+<div class="viewcode-block" id="halton"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.halton">[docs]</a><span class="k">def</span> <span class="nf">halton</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">terms</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="halton2"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.halton2">[docs]</a><span class="k">def</span> <span class="nf">halton2</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">base1</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">base2</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">terms</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base1</span><span class="p">),</span> <span class="n">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base2</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="halton3"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.halton3">[docs]</a><span class="k">def</span> <span class="nf">halton3</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">base1</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">base2</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">base3</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">terms</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base1</span><span class="p">),</span> <span class="n">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base2</span><span class="p">),</span> <span class="n">haltonterm</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">base3</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<span class="n">prime</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="mf">2.0</span><span class="p">,</span>
+    <span class="mf">3.0</span><span class="p">,</span>
+    <span class="mf">5.0</span><span class="p">,</span>
+    <span class="mf">7.0</span><span class="p">,</span>
+    <span class="mf">11.0</span><span class="p">,</span>
+    <span class="mf">13.0</span><span class="p">,</span>
+    <span class="mf">17.0</span><span class="p">,</span>
+    <span class="mf">19.0</span><span class="p">,</span>
+    <span class="mf">23.0</span><span class="p">,</span>
+    <span class="mf">29.0</span><span class="p">,</span>
+    <span class="mf">31.0</span><span class="p">,</span>
+    <span class="mf">37.0</span><span class="p">,</span>
+    <span class="mf">41.0</span><span class="p">,</span>
+    <span class="mf">43.0</span><span class="p">,</span>
+    <span class="mf">47.0</span><span class="p">,</span>
+    <span class="mf">53.0</span><span class="p">,</span>
+    <span class="mf">59.0</span><span class="p">,</span>
+    <span class="mf">61.0</span><span class="p">,</span>
+    <span class="mf">67.0</span><span class="p">,</span>
+    <span class="mf">71.0</span><span class="p">,</span>
+    <span class="mf">73.0</span><span class="p">,</span>
+    <span class="mf">79.0</span><span class="p">,</span>
+    <span class="mf">83.0</span><span class="p">,</span>
+    <span class="mf">89.0</span><span class="p">,</span>
+    <span class="mf">97.0</span><span class="p">,</span>
+    <span class="mf">101.0</span><span class="p">,</span>
+    <span class="mf">103.0</span><span class="p">,</span>
+    <span class="mf">107.0</span><span class="p">,</span>
+    <span class="mf">109.0</span><span class="p">,</span>
+    <span class="mf">113.0</span><span class="p">,</span>
+    <span class="mf">127.0</span><span class="p">,</span>
+    <span class="mf">131.0</span><span class="p">,</span>
+    <span class="mf">137.0</span><span class="p">,</span>
+    <span class="mf">139.0</span><span class="p">,</span>
+    <span class="mf">149.0</span><span class="p">,</span>
+    <span class="mf">151.0</span><span class="p">,</span>
+    <span class="mf">157.0</span><span class="p">,</span>
+    <span class="mf">163.0</span><span class="p">,</span>
+    <span class="mf">167.0</span><span class="p">,</span>
+    <span class="mf">173.0</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="HaltonSequence"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.HaltonSequence">[docs]</a><span class="k">class</span> <span class="nc">HaltonSequence</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Another algorithm to compute a d-dimensional Halton Sequence.</span>
+<span class="sd">    This one gives the same results as the other.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">atmost</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">prime</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="s2">&quot;dim &lt; </span><span class="si">%d</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">prime</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">err</span> <span class="o">=</span> <span class="mf">0.9</span> <span class="o">/</span> <span class="p">(</span><span class="n">atmost</span> <span class="o">*</span> <span class="n">prime</span><span class="p">[</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">prime</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quasi</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prime</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">prime</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">quasi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prime</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prime</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">quasi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">t</span>
+            <span class="k">while</span> <span class="n">f</span> <span class="o">-</span> <span class="n">h</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">err</span><span class="p">:</span>
+                <span class="n">g</span> <span class="o">=</span> <span class="n">h</span>
+                <span class="n">h</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">t</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">quasi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span> <span class="o">+</span> <span class="n">h</span> <span class="o">-</span> <span class="n">f</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">quasi</span></div>
+
+
+<div class="viewcode-block" id="SobolSequence"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.SobolSequence">[docs]</a><span class="k">class</span> <span class="nc">SobolSequence</span><span class="p">:</span>
+    <span class="s2">&quot;From the Gnu Scientific Library&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_dim</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bit_count</span> <span class="o">=</span> <span class="mi">30</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">primitive_polynomials</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="mi">1</span><span class="p">,</span>
+            <span class="mi">3</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">11</span><span class="p">,</span>
+            <span class="mi">13</span><span class="p">,</span>
+            <span class="mi">19</span><span class="p">,</span>
+            <span class="mi">25</span><span class="p">,</span>
+            <span class="mi">37</span><span class="p">,</span>
+            <span class="mi">59</span><span class="p">,</span>
+            <span class="mi">47</span><span class="p">,</span>
+            <span class="mi">61</span><span class="p">,</span>
+            <span class="mi">55</span><span class="p">,</span>
+            <span class="mi">41</span><span class="p">,</span>
+            <span class="mi">67</span><span class="p">,</span>
+            <span class="mi">97</span><span class="p">,</span>
+            <span class="mi">91</span><span class="p">,</span>
+            <span class="mi">109</span><span class="p">,</span>
+            <span class="mi">103</span><span class="p">,</span>
+            <span class="mi">115</span><span class="p">,</span>
+            <span class="mi">131</span><span class="p">,</span>
+            <span class="mi">193</span><span class="p">,</span>
+            <span class="mi">137</span><span class="p">,</span>
+            <span class="mi">145</span><span class="p">,</span>
+            <span class="mi">143</span><span class="p">,</span>
+            <span class="mi">241</span><span class="p">,</span>
+            <span class="mi">157</span><span class="p">,</span>
+            <span class="mi">185</span><span class="p">,</span>
+            <span class="mi">167</span><span class="p">,</span>
+            <span class="mi">229</span><span class="p">,</span>
+            <span class="mi">171</span><span class="p">,</span>
+            <span class="mi">213</span><span class="p">,</span>
+            <span class="mi">191</span><span class="p">,</span>
+            <span class="mi">253</span><span class="p">,</span>
+            <span class="mi">203</span><span class="p">,</span>
+            <span class="mi">211</span><span class="p">,</span>
+            <span class="mi">239</span><span class="p">,</span>
+            <span class="mi">247</span><span class="p">,</span>
+            <span class="mi">285</span><span class="p">,</span>
+            <span class="mi">369</span><span class="p">,</span>
+            <span class="mi">299</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">degree_table</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="mi">0</span><span class="p">,</span>
+            <span class="mi">1</span><span class="p">,</span>
+            <span class="mi">2</span><span class="p">,</span>
+            <span class="mi">3</span><span class="p">,</span>
+            <span class="mi">3</span><span class="p">,</span>
+            <span class="mi">4</span><span class="p">,</span>
+            <span class="mi">4</span><span class="p">,</span>
+            <span class="mi">5</span><span class="p">,</span>
+            <span class="mi">5</span><span class="p">,</span>
+            <span class="mi">5</span><span class="p">,</span>
+            <span class="mi">5</span><span class="p">,</span>
+            <span class="mi">5</span><span class="p">,</span>
+            <span class="mi">5</span><span class="p">,</span>
+            <span class="mi">6</span><span class="p">,</span>
+            <span class="mi">6</span><span class="p">,</span>
+            <span class="mi">6</span><span class="p">,</span>
+            <span class="mi">6</span><span class="p">,</span>
+            <span class="mi">6</span><span class="p">,</span>
+            <span class="mi">6</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">8</span><span class="p">,</span>
+            <span class="mi">8</span><span class="p">,</span>
+            <span class="mi">8</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v_init</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">9</span><span class="p">,</span>
+                <span class="mi">13</span><span class="p">,</span>
+                <span class="mi">11</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">9</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">13</span><span class="p">,</span>
+                <span class="mi">13</span><span class="p">,</span>
+                <span class="mi">11</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">15</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">15</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">9</span><span class="p">,</span>
+                <span class="mi">13</span><span class="p">,</span>
+                <span class="mi">9</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">11</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">15</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">15</span><span class="p">,</span>
+                <span class="mi">11</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">9</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">9</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">27</span><span class="p">,</span>
+                <span class="mi">15</span><span class="p">,</span>
+                <span class="mi">29</span><span class="p">,</span>
+                <span class="mi">21</span><span class="p">,</span>
+                <span class="mi">23</span><span class="p">,</span>
+                <span class="mi">19</span><span class="p">,</span>
+                <span class="mi">11</span><span class="p">,</span>
+                <span class="mi">25</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">13</span><span class="p">,</span>
+                <span class="mi">17</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">25</span><span class="p">,</span>
+                <span class="mi">29</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">31</span><span class="p">,</span>
+                <span class="mi">11</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">23</span><span class="p">,</span>
+                <span class="mi">27</span><span class="p">,</span>
+                <span class="mi">19</span><span class="p">,</span>
+                <span class="mi">21</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="mi">17</span><span class="p">,</span>
+                <span class="mi">13</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">15</span><span class="p">,</span>
+                <span class="mi">9</span><span class="p">,</span>
+                <span class="mi">31</span><span class="p">,</span>
+                <span class="mi">9</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">37</span><span class="p">,</span>
+                <span class="mi">33</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">5</span><span class="p">,</span>
+                <span class="mi">11</span><span class="p">,</span>
+                <span class="mi">39</span><span class="p">,</span>
+                <span class="mi">63</span><span class="p">,</span>
+                <span class="mi">27</span><span class="p">,</span>
+                <span class="mi">17</span><span class="p">,</span>
+                <span class="mi">15</span><span class="p">,</span>
+                <span class="mi">23</span><span class="p">,</span>
+                <span class="mi">29</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">21</span><span class="p">,</span>
+                <span class="mi">13</span><span class="p">,</span>
+                <span class="mi">31</span><span class="p">,</span>
+                <span class="mi">25</span><span class="p">,</span>
+                <span class="mi">9</span><span class="p">,</span>
+                <span class="mi">49</span><span class="p">,</span>
+                <span class="mi">33</span><span class="p">,</span>
+                <span class="mi">19</span><span class="p">,</span>
+                <span class="mi">29</span><span class="p">,</span>
+                <span class="mi">11</span><span class="p">,</span>
+                <span class="mi">19</span><span class="p">,</span>
+                <span class="mi">27</span><span class="p">,</span>
+                <span class="mi">15</span><span class="p">,</span>
+                <span class="mi">25</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">13</span><span class="p">,</span>
+                <span class="mi">33</span><span class="p">,</span>
+                <span class="mi">115</span><span class="p">,</span>
+                <span class="mi">41</span><span class="p">,</span>
+                <span class="mi">79</span><span class="p">,</span>
+                <span class="mi">17</span><span class="p">,</span>
+                <span class="mi">29</span><span class="p">,</span>
+                <span class="mi">119</span><span class="p">,</span>
+                <span class="mi">75</span><span class="p">,</span>
+                <span class="mi">73</span><span class="p">,</span>
+                <span class="mi">105</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">59</span><span class="p">,</span>
+                <span class="mi">65</span><span class="p">,</span>
+                <span class="mi">21</span><span class="p">,</span>
+                <span class="mi">3</span><span class="p">,</span>
+                <span class="mi">113</span><span class="p">,</span>
+                <span class="mi">61</span><span class="p">,</span>
+                <span class="mi">89</span><span class="p">,</span>
+                <span class="mi">45</span><span class="p">,</span>
+                <span class="mi">107</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="p">[</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">0</span><span class="p">,</span>
+                <span class="mi">7</span><span class="p">,</span>
+                <span class="mi">23</span><span class="p">,</span>
+                <span class="mi">39</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">]</span>  <span class="c1"># end of self.v_init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
+        <span class="c1"># self.v_direction = [[0]*self.bit_count]*self.max_dim</span>
+        <span class="c1"># self.v_direction = [[0]*self.max_dim]*self.bit_count #??</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v_direction</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bit_count</span><span class="p">):</span>
+            <span class="n">array</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_dim</span><span class="p">):</span>
+                <span class="n">array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">v_direction</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+
+        <span class="c1"># Initialize direction table in dimension 0.</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bit_count</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">v_direction</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># Initialize in remaining dimensions.</span>
+        <span class="k">for</span> <span class="n">i_dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+            <span class="n">poly_index</span> <span class="o">=</span> <span class="n">i_dim</span>
+            <span class="n">degree_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">degree_table</span><span class="p">[</span><span class="n">poly_index</span><span class="p">]</span>
+            <span class="n">includ</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span>
+
+            <span class="c1"># Expand the polynomial bit pattern to separate</span>
+            <span class="c1"># components of the logical array includ[].</span>
+            <span class="n">p_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primitive_polynomials</span><span class="p">[</span><span class="n">poly_index</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">degree_i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">includ</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_i</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+                <span class="n">p_i</span> <span class="o">/=</span> <span class="mi">2</span>
+
+            <span class="c1"># Leading elements for dimension i come from v_init[][].</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">degree_i</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">v_direction</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i_dim</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v_init</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i_dim</span><span class="p">]</span>
+
+            <span class="c1"># Calculate remaining elements for this dimension,</span>
+            <span class="c1"># as explained in Bratley+Fox, section 2.</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">degree_i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bit_count</span><span class="p">):</span>
+                <span class="n">newv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v_direction</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="n">degree_i</span><span class="p">][</span><span class="n">i_dim</span><span class="p">]</span>
+                <span class="n">ell</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">degree_i</span><span class="p">):</span>
+                    <span class="n">ell</span> <span class="o">*=</span> <span class="mi">2</span>
+                    <span class="k">if</span> <span class="n">includ</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+                        <span class="n">newv</span> <span class="o">=</span> <span class="n">newv</span> <span class="o">^</span> <span class="p">(</span><span class="n">ell</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">v_direction</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="n">i_dim</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">v_direction</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i_dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">newv</span>
+        <span class="c1"># done with for i_dim in range(1,self.dim)</span>
+
+        <span class="c1"># Multiply columns of v by appropriate power of 2</span>
+        <span class="n">ell</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bit_count</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">ell</span> <span class="o">*=</span> <span class="mi">2</span>
+            <span class="k">for</span> <span class="n">i_dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">v_direction</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i_dim</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v_direction</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i_dim</span><span class="p">]</span> <span class="o">*</span> <span class="n">ell</span>
+        <span class="c1"># 1/(common denom of the elements in v_direction)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_denominator_inv</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">ell</span><span class="p">)</span>
+
+        <span class="c1"># final setup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sequence_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_numerator_vec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ell</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_count</span>
+        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">ell</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">c</span> <span class="o">/=</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="n">ell</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">bit_count</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="s2">&quot;Sobol failed for </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_count</span>
+
+        <span class="n">v</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span>
+        <span class="k">for</span> <span class="n">i_dimension</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">):</span>
+            <span class="n">direction_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">v_direction</span><span class="p">[</span><span class="n">ell</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="n">i_dimension</span><span class="p">]</span>
+            <span class="n">old_numerator_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_numerator_vec</span><span class="p">[</span><span class="n">i_dimension</span><span class="p">]</span>
+            <span class="n">new_numerator_i</span> <span class="o">=</span> <span class="n">old_numerator_i</span> <span class="o">^</span> <span class="n">direction_i</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_numerator_vec</span><span class="p">[</span><span class="n">i_dimension</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_numerator_i</span>
+            <span class="n">v</span><span class="p">[</span><span class="n">i_dimension</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_numerator_i</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_denominator_inv</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sequence_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">v</span></div>
+
+
+<span class="n">kOneOverThree</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">3.0</span>
+<span class="n">kOneOverFive</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">5.0</span>
+
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># Second implementation came from :</span>
+<span class="c1"># http://www.cse.cuhk.edu.hk/~ttwong/papers/udpoint/udpoint.pdf</span>
+<span class="c1"># ==============================================================================</span>
+<div class="viewcode-block" id="SphereHammersley"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.SphereHammersley">[docs]</a><span class="k">def</span> <span class="nf">SphereHammersley</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">st</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">phirad</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">kk</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1">#    pos=0</span>
+    <span class="c1">#    for (k=0, pos=0 ; k&lt;n ; k++)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="n">kk</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="c1">#        for (p=0.5, kk=k ; kk ; p*=0.5, kk&gt;&gt;=1)</span>
+        <span class="k">while</span> <span class="n">kk</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">kk</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># // kk mod 2 == 1</span>
+                <span class="n">t</span> <span class="o">+=</span> <span class="n">p</span>
+            <span class="n">kk</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
+            <span class="n">p</span> <span class="o">*=</span> <span class="mf">0.5</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">t</span> <span class="o">-</span> <span class="mf">1.0</span>  <span class="c1"># // map from [0,1] to [-1,1]</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+        <span class="c1"># // a slight shift</span>
+        <span class="n">phirad</span> <span class="o">=</span> <span class="n">phi</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+        <span class="c1"># // map to [0, 2 pi)</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">t</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">px</span> <span class="o">=</span> <span class="n">st</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phirad</span><span class="p">)</span>
+        <span class="n">py</span> <span class="o">=</span> <span class="n">st</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phirad</span><span class="p">)</span>
+        <span class="n">pz</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="n">pz</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="SphereHalton"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.SphereHalton">[docs]</a><span class="k">def</span> <span class="nf">SphereHalton</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">marge</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">45.0</span><span class="p">)):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">st</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">phirad</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">ip</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">kk</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1">#    pos=0</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="c1"># for (k=0, pos=0 ; k&lt;n ; k++)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="n">kk</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="c1">#        for (p=0.5, kk=k ; kk ; p*=0.5, kk&gt;&gt;=1)</span>
+        <span class="k">while</span> <span class="n">kk</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">kk</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># // kk mod 2 == 1</span>
+                <span class="n">t</span> <span class="o">+=</span> <span class="n">p</span>
+            <span class="n">kk</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span>
+            <span class="n">p</span> <span class="o">*=</span> <span class="mf">0.5</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">t</span> <span class="o">-</span> <span class="mf">1.0</span>
+        <span class="c1"># // map from [0,1] to [-1,1]</span>
+        <span class="n">st</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">t</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ip</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">p2</span>
+        <span class="c1"># // inverse of p2</span>
+        <span class="c1">#        for (p=ip, kk=k ; kk ; p*=ip, kk/=p2) #// kk = (int)(kk/p2)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">ip</span>
+        <span class="n">kk</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="k">while</span> <span class="n">kk</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">kk</span> <span class="o">%</span> <span class="n">p2</span>
+            <span class="k">if</span> <span class="n">a</span><span class="p">:</span>
+                <span class="n">phi</span> <span class="o">+=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">p</span>
+            <span class="n">kk</span> <span class="o">/=</span> <span class="n">p2</span>
+            <span class="n">p</span> <span class="o">*=</span> <span class="n">ip</span>
+        <span class="n">phirad</span> <span class="o">=</span> <span class="n">phi</span> <span class="o">*</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">marge</span>
+        <span class="c1"># // map from [0,0.5] to [0, 2 pi)</span>
+        <span class="n">px</span> <span class="o">=</span> <span class="n">st</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phirad</span><span class="p">)</span>
+        <span class="n">py</span> <span class="o">=</span> <span class="n">st</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phirad</span><span class="p">)</span>
+        <span class="n">pz</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="n">pz</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<span class="c1"># see http://packinon.sourceforge.net/programs/index.html</span>
+<span class="c1">#</span>
+<div class="viewcode-block" id="halton_sequence"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.halton_sequence">[docs]</a><span class="k">def</span> <span class="nf">halton_sequence</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="c1"># /// return term i of the base b Halton sequence</span>
+    <span class="c1"># /// You can think of this as, for example, just a generalization of Heckbert&#39;s bit-</span>
+    <span class="c1"># /// reversal distribution trick.</span>
+    <span class="c1"># /// E.g., when b=3, write n as a base 3 number, digit 0 -&gt; which third of interval the</span>
+    <span class="c1"># /// sample is in, 1 -&gt; which third of that, 2 -&gt; which third of that, etc.</span>
+    <span class="c1"># {</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ip</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">b</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">ip</span>
+    <span class="k">while</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="n">b</span><span class="p">)</span> <span class="o">*</span> <span class="n">p</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">/</span> <span class="n">b</span>
+        <span class="n">p</span> <span class="o">*=</span> <span class="n">ip</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># third implementation come from fast object distribution article in Siggraph</span>
+<span class="c1"># translate in python</span>
+<span class="c1"># http://www.andrewwillmott.com/s2007</span>
+<span class="c1"># ==============================================================================</span>
+<div class="viewcode-block" id="cHaltonSequence3"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.cHaltonSequence3">[docs]</a><span class="k">class</span> <span class="nc">cHaltonSequence3</span><span class="p">:</span>
+    <span class="c1"># /// This calculates the Halton sequence incrementally</span>
+    <span class="c1"># /// for a base 2/3/5 triplet.</span>
+    <span class="c1"># //    cFXVector3 mPoint;  ///&lt; Current sample point.</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mX</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mY</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mZ</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mBase2</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># uint32_t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mBase3</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mBase5</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="cHaltonSequence3.inc"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.cHaltonSequence3.inc">[docs]</a>    <span class="k">def</span> <span class="nf">inc</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1">#    ///&lt; Advance to next point in the sequence. Returns the index of this point.</span>
+        <span class="c1">#    /////////////////////////////////////</span>
+        <span class="c1">#    // base 2</span>
+        <span class="n">oldBase2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mBase2</span>  <span class="c1"># uint32_t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mBase2</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mBase2</span> <span class="o">^</span> <span class="n">oldBase2</span>
+
+        <span class="c1">#        // bottom bit always changes, higher bits</span>
+        <span class="c1">#        // change less frequently.</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+        <span class="c1">#        // diff will be of the form 0*1+, i.e. one bits up until the last carry.</span>
+        <span class="c1">#        // expected iterations = 1 + 0.5 + 0.25 + ... = 2</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">oldBase2</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mX</span> <span class="o">-=</span> <span class="n">s</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mX</span> <span class="o">+=</span> <span class="n">s</span>
+            <span class="n">s</span> <span class="o">*=</span> <span class="mf">0.5</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">diff</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+            <span class="n">oldBase2</span> <span class="o">=</span> <span class="n">oldBase2</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">diff</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="c1">#        /////////////////////////////////////</span>
+        <span class="c1">#        // base 3: use 2 bits for each base 3 digit.</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="mh">0x3</span>  <span class="c1"># // also the max base 3 digit</span>
+        <span class="n">add</span> <span class="o">=</span> <span class="mh">0x1</span>  <span class="c1"># // amount to add to force carry once digit==3</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">kOneOverThree</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mBase3</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1">#        // expected iterations: 1.5</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mBase3</span> <span class="o">&amp;</span> <span class="n">mask</span><span class="p">)</span> <span class="o">==</span> <span class="n">mask</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mBase3</span> <span class="o">+=</span> <span class="n">add</span>  <span class="c1"># force carry into next 2-bit digit</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mY</span> <span class="o">-=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">s</span>
+
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span>
+                <span class="n">add</span> <span class="o">=</span> <span class="n">add</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span>
+
+                <span class="n">s</span> <span class="o">*=</span> <span class="n">kOneOverThree</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mY</span> <span class="o">+=</span> <span class="n">s</span>  <span class="c1"># // we know digit n has gone from a to a + 1</span>
+                <span class="k">break</span>
+
+        <span class="c1">#        /////////////////////////////////////</span>
+        <span class="c1">#        // base 5: use 3 bits for each base 5 digit.</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="mh">0x7</span>
+        <span class="n">add</span> <span class="o">=</span> <span class="mh">0x3</span>  <span class="c1"># amount to add to force carry once digit==dmax</span>
+        <span class="n">dmax</span> <span class="o">=</span> <span class="mh">0x5</span>  <span class="c1"># max digit</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">kOneOverFive</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mBase5</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1">#        // expected iterations: 1.25</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mBase5</span> <span class="o">&amp;</span> <span class="n">mask</span><span class="p">)</span> <span class="o">==</span> <span class="n">dmax</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mBase5</span> <span class="o">+=</span> <span class="n">add</span>  <span class="c1"># // force carry into next 3-bit digit</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mZ</span> <span class="o">-=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">s</span>
+
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span>
+                <span class="n">dmax</span> <span class="o">=</span> <span class="n">dmax</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span>
+                <span class="n">add</span> <span class="o">=</span> <span class="n">add</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span>
+
+                <span class="n">s</span> <span class="o">*=</span> <span class="n">kOneOverFive</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mZ</span> <span class="o">+=</span> <span class="n">s</span>  <span class="c1"># we know digit n has gone from a to a + 1</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mBase2</span>  <span class="c1"># return the index of this sequence point</span></div>
+
+<div class="viewcode-block" id="cHaltonSequence3.reset"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.ldSequence.cHaltonSequence3.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1">#    ///&lt; Move back to first point in the sequence (i.e. the origin.)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mBase2</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mBase3</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mBase5</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mX</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mY</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mZ</span> <span class="o">=</span> <span class="mf">0.0</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

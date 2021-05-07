@@ -1,0 +1,470 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.mgl_tools.oldnumeric.alter_code1 &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../cellpack.html">cellpack</a> &raquo;</li>
+        
+      <li>cellpack.mgl_tools.oldnumeric.alter_code1</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.mgl_tools.oldnumeric.alter_code1</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module converts code written for Numeric to run with numpy</span>
+
+<span class="sd">Makes the following changes:</span>
+<span class="sd"> * Changes import statements (warns of use of from Numeric import *)</span>
+<span class="sd"> * Changes import statements (using numerix) ...</span>
+<span class="sd"> * Makes search and replace changes to:</span>
+<span class="sd">   - .typecode()</span>
+<span class="sd">   - .iscontiguous()</span>
+<span class="sd">   - .byteswapped()</span>
+<span class="sd">   - .itemsize()</span>
+<span class="sd">   - .toscalar()</span>
+<span class="sd"> * Converts .flat to .ravel() except for .flat = xxx or .flat[xxx]</span>
+<span class="sd"> * Replace xxx.spacesaver() with True</span>
+<span class="sd"> * Convert xx.savespace(?) to pass + ## xx.savespace(?)</span>
+
+<span class="sd"> * Converts uses of &#39;b&#39; to &#39;B&#39; in the typecode-position of</span>
+<span class="sd">   functions:</span>
+<span class="sd">   eye, tri (in position 4)</span>
+<span class="sd">   ones, zeros, identity, empty, array, asarray, arange,</span>
+<span class="sd">   fromstring, indices, array_constructor (in position 2)</span>
+
+<span class="sd">   and methods:</span>
+<span class="sd">   astype --- only argument</span>
+<span class="sd">    -- converts uses of &#39;1&#39;, &#39;s&#39;, &#39;w&#39;, and &#39;u&#39; to</span>
+<span class="sd">    -- &#39;b&#39;, &#39;h&#39;, &#39;H&#39;, and &#39;I&#39;</span>
+
+<span class="sd"> * Converts uses of type(...) is &lt;type&gt;</span>
+<span class="sd">   isinstance(..., &lt;type&gt;)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;convertfile&#39;</span><span class="p">,</span> <span class="s1">&#39;convertall&#39;</span><span class="p">,</span> <span class="s1">&#39;converttree&#39;</span><span class="p">,</span> <span class="s1">&#39;convertsrc&#39;</span><span class="p">]</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+
+
+<span class="n">_func4</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;eye&#39;</span><span class="p">,</span> <span class="s1">&#39;tri&#39;</span><span class="p">]</span>
+<span class="n">_meth1</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;astype&#39;</span><span class="p">]</span>
+<span class="n">_func2</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ones&#39;</span><span class="p">,</span> <span class="s1">&#39;zeros&#39;</span><span class="p">,</span> <span class="s1">&#39;identity&#39;</span><span class="p">,</span> <span class="s1">&#39;fromstring&#39;</span><span class="p">,</span> <span class="s1">&#39;indices&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;empty&#39;</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span> <span class="s1">&#39;asarray&#39;</span><span class="p">,</span> <span class="s1">&#39;arange&#39;</span><span class="p">,</span> <span class="s1">&#39;array_constructor&#39;</span><span class="p">]</span>
+
+<span class="n">_chars</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;s&#39;</span><span class="p">:</span><span class="s1">&#39;h&#39;</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">:</span><span class="s1">&#39;H&#39;</span><span class="p">,</span><span class="s1">&#39;u&#39;</span><span class="p">:</span><span class="s1">&#39;I&#39;</span><span class="p">}</span>
+
+<span class="n">func_re</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">meth_re</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_func2</span><span class="p">:</span>
+    <span class="n">_astr</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;(</span><span class="si">%s</span><span class="s2">\s*[(][^,]*?[,][^&#39;&quot;]*?[&#39;&quot;])b([&#39;&quot;][^)]*?[)])&quot;&quot;&quot;</span><span class="o">%</span><span class="n">name</span>
+    <span class="n">func_re</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">_astr</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_func4</span><span class="p">:</span>
+    <span class="n">_astr</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;(</span><span class="si">%s</span><span class="s2">\s*[(][^,]*?[,][^,]*?[,][^,]*?[,][^&#39;&quot;]*?[&#39;&quot;])b([&#39;&quot;][^)]*?[)])&quot;&quot;&quot;</span><span class="o">%</span><span class="n">name</span>
+    <span class="n">func_re</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">_astr</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_meth1</span><span class="p">:</span>
+    <span class="n">_astr</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;(.</span><span class="si">%s</span><span class="s2">\s*[(][^&#39;&quot;]*?[&#39;&quot;])b([&#39;&quot;][^)]*?[)])&quot;&quot;&quot;</span><span class="o">%</span><span class="n">name</span>
+    <span class="n">func_re</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">_astr</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">_chars</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+    <span class="n">_astr</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&quot;&quot;(.astype\s*[(][^&#39;&quot;]*?[&#39;&quot;])</span><span class="si">%s</span><span class="s2">([&#39;&quot;][^)]*?[)])&quot;&quot;&quot;</span><span class="o">%</span><span class="n">char</span>
+    <span class="n">meth_re</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">_astr</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">fixtypechars</span><span class="p">(</span><span class="n">fstr</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_func2</span> <span class="o">+</span> <span class="n">_func4</span> <span class="o">+</span> <span class="n">_meth1</span><span class="p">:</span>
+        <span class="n">fstr</span> <span class="o">=</span> <span class="n">func_re</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">1B</span><span class="se">\\</span><span class="s1">2&#39;</span><span class="p">,</span><span class="n">fstr</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">_chars</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">fstr</span> <span class="o">=</span> <span class="n">meth_re</span><span class="p">[</span><span class="n">char</span><span class="p">]</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">1</span><span class="si">%s</span><span class="se">\\</span><span class="s1">2&#39;</span><span class="o">%</span><span class="n">_chars</span><span class="p">[</span><span class="n">char</span><span class="p">],</span> <span class="n">fstr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fstr</span>
+
+<span class="n">flatindex_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;([.]flat(\s*?[[=]))&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">changeimports</span><span class="p">(</span><span class="n">fstr</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">newname</span><span class="p">):</span>
+    <span class="n">importstr</span> <span class="o">=</span> <span class="s1">&#39;import </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">name</span>
+    <span class="n">importasstr</span> <span class="o">=</span> <span class="s1">&#39;import </span><span class="si">%s</span><span class="s1"> as &#39;</span> <span class="o">%</span> <span class="n">name</span>
+    <span class="n">fromstr</span> <span class="o">=</span> <span class="s1">&#39;from </span><span class="si">%s</span><span class="s1"> import &#39;</span> <span class="o">%</span> <span class="n">name</span>
+    <span class="n">fromall</span><span class="o">=</span><span class="mi">0</span>
+
+    <span class="n">fstr</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(import\s+[^,\n\r]+,\s*)(</span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="n">name</span><span class="p">,</span>
+                  <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">1</span><span class="si">%s</span><span class="s2"> as </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">newname</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="n">fstr</span><span class="p">)</span>
+    <span class="n">fstr</span> <span class="o">=</span> <span class="n">fstr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">importasstr</span><span class="p">,</span> <span class="s1">&#39;import </span><span class="si">%s</span><span class="s1"> as &#39;</span> <span class="o">%</span> <span class="n">newname</span><span class="p">)</span>
+    <span class="n">fstr</span> <span class="o">=</span> <span class="n">fstr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">importstr</span><span class="p">,</span> <span class="s1">&#39;import </span><span class="si">%s</span><span class="s1"> as </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">newname</span><span class="p">,</span><span class="n">name</span><span class="p">))</span>
+
+    <span class="n">ind</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">Nlen</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fromstr</span><span class="p">)</span>
+    <span class="n">Nlen2</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="s2">&quot;from </span><span class="si">%s</span><span class="s2"> import &quot;</span> <span class="o">%</span> <span class="n">newname</span><span class="p">)</span>
+    <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">fstr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">fromstr</span><span class="p">,</span><span class="n">ind</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">found</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">break</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">found</span> <span class="o">+</span> <span class="n">Nlen</span>
+        <span class="k">if</span> <span class="n">fstr</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">fstr</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">from </span><span class="si">%s</span><span class="s2"> import </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fstr</span><span class="p">[:</span><span class="n">found</span><span class="p">],</span> <span class="n">newname</span><span class="p">,</span> <span class="n">fstr</span><span class="p">[</span><span class="n">ind</span><span class="p">:])</span>
+        <span class="n">ind</span> <span class="o">+=</span> <span class="n">Nlen2</span> <span class="o">-</span> <span class="n">Nlen</span>
+    <span class="k">return</span> <span class="n">fstr</span><span class="p">,</span> <span class="n">fromall</span>
+
+<span class="n">istest_re</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;float&#39;</span><span class="p">,</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="s1">&#39;complex&#39;</span><span class="p">,</span> <span class="s1">&#39;ArrayType&#39;</span><span class="p">,</span> <span class="s1">&#39;FloatType&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;IntType&#39;</span><span class="p">,</span> <span class="s1">&#39;ComplexType&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_types</span><span class="p">:</span>
+    <span class="n">_astr</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;type\s*[(]([^)]*)[)]\s+(?:is|==)\s+(.*?</span><span class="si">%s</span><span class="s1">)&#39;</span><span class="o">%</span><span class="n">name</span>
+    <span class="n">istest_re</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">_astr</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">fixistesting</span><span class="p">(</span><span class="n">astr</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">_types</span><span class="p">:</span>
+        <span class="n">astr</span> <span class="o">=</span> <span class="n">istest_re</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;isinstance(</span><span class="se">\\</span><span class="s1">1, </span><span class="se">\\</span><span class="s1">2)&#39;</span><span class="p">,</span> <span class="n">astr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">astr</span>
+
+<span class="k">def</span> <span class="nf">replaceattr</span><span class="p">(</span><span class="n">astr</span><span class="p">):</span>
+    <span class="n">astr</span> <span class="o">=</span> <span class="n">astr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.typecode()&quot;</span><span class="p">,</span><span class="s2">&quot;.dtype.char&quot;</span><span class="p">)</span>
+    <span class="n">astr</span> <span class="o">=</span> <span class="n">astr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.iscontiguous()&quot;</span><span class="p">,</span><span class="s2">&quot;.flags.contiguous&quot;</span><span class="p">)</span>
+    <span class="n">astr</span> <span class="o">=</span> <span class="n">astr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.byteswapped()&quot;</span><span class="p">,</span><span class="s2">&quot;.byteswap()&quot;</span><span class="p">)</span>
+    <span class="n">astr</span> <span class="o">=</span> <span class="n">astr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.toscalar()&quot;</span><span class="p">,</span> <span class="s2">&quot;.item()&quot;</span><span class="p">)</span>
+    <span class="n">astr</span> <span class="o">=</span> <span class="n">astr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.itemsize()&quot;</span><span class="p">,</span><span class="s2">&quot;.itemsize&quot;</span><span class="p">)</span>
+    <span class="c1"># preserve uses of flat that should be o.k.</span>
+    <span class="n">tmpstr</span> <span class="o">=</span> <span class="n">flatindex_re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;@@@@\2&quot;</span><span class="p">,</span><span class="n">astr</span><span class="p">)</span>
+    <span class="c1"># replace other uses of flat</span>
+    <span class="n">tmpstr</span> <span class="o">=</span> <span class="n">tmpstr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.flat&quot;</span><span class="p">,</span><span class="s2">&quot;.ravel()&quot;</span><span class="p">)</span>
+    <span class="c1"># put back .flat where it was valid</span>
+    <span class="n">astr</span> <span class="o">=</span> <span class="n">tmpstr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;@@@@&quot;</span><span class="p">,</span> <span class="s2">&quot;.flat&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">astr</span>
+
+<span class="n">svspc2</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([^,(\s]+[.]spacesaver[(][)])&#39;</span><span class="p">)</span>
+<span class="n">svspc3</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\S+[.]savespace[(].*[)])&#39;</span><span class="p">)</span>
+<span class="c1">#shpe = re.compile(r&#39;(\S+\s*)[.]shape\s*=[^=]\s*(.+)&#39;)</span>
+<span class="k">def</span> <span class="nf">replaceother</span><span class="p">(</span><span class="n">astr</span><span class="p">):</span>
+    <span class="n">astr</span> <span class="o">=</span> <span class="n">svspc2</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;True&#39;</span><span class="p">,</span><span class="n">astr</span><span class="p">)</span>
+    <span class="n">astr</span> <span class="o">=</span> <span class="n">svspc3</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;pass  ## \1&#39;</span><span class="p">,</span> <span class="n">astr</span><span class="p">)</span>
+    <span class="c1">#astr = shpe.sub(&#39;\\1=\\1.reshape(\\2)&#39;, astr)</span>
+    <span class="k">return</span> <span class="n">astr</span>
+
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="k">def</span> <span class="nf">fromstr</span><span class="p">(</span><span class="n">filestr</span><span class="p">):</span>
+    <span class="n">savestr</span> <span class="o">=</span> <span class="n">filestr</span><span class="p">[:]</span>
+    <span class="n">filestr</span> <span class="o">=</span> <span class="n">fixtypechars</span><span class="p">(</span><span class="n">filestr</span><span class="p">)</span>
+    <span class="n">filestr</span> <span class="o">=</span> <span class="n">fixistesting</span><span class="p">(</span><span class="n">filestr</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall1</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;Numeric&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall1</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;multiarray&#39;</span><span class="p">,</span><span class="s1">&#39;numpy.oldnumeric&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall1</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;umath&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall1</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;Precision&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric.precision&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall1</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;UserArray&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric.user_array&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall1</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;ArrayPrinter&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric.array_printer&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall2</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;numerix&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall3</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;scipy_base&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall3</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;Matrix&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric.matrix&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall3</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;MLab&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric.mlab&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall3</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;LinearAlgebra&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric.linear_algebra&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall3</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;RNG&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric.rng&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall3</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;RNG.Statistics&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric.rng_stats&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall3</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;RandomArray&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric.random_array&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall3</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;FFT&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric.fft&#39;</span><span class="p">)</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">fromall3</span> <span class="o">=</span> <span class="n">changeimports</span><span class="p">(</span><span class="n">filestr</span><span class="p">,</span> <span class="s1">&#39;MA&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy.oldnumeric.ma&#39;</span><span class="p">)</span>
+    <span class="n">fromall</span> <span class="o">=</span> <span class="n">fromall1</span> <span class="ow">or</span> <span class="n">fromall2</span> <span class="ow">or</span> <span class="n">fromall3</span>
+    <span class="n">filestr</span> <span class="o">=</span> <span class="n">replaceattr</span><span class="p">(</span><span class="n">filestr</span><span class="p">)</span>
+    <span class="n">filestr</span> <span class="o">=</span> <span class="n">replaceother</span><span class="p">(</span><span class="n">filestr</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">savestr</span> <span class="o">!=</span> <span class="n">filestr</span><span class="p">:</span>
+        <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%b </span><span class="si">%d</span><span class="s1">, %Y&#39;</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">filestr</span> <span class="o">=</span> <span class="s1">&#39;## Automatically adapted for &#39;</span>\
+                  <span class="s1">&#39;numpy.oldnumeric </span><span class="si">%s</span><span class="s1"> by </span><span class="si">%s</span><span class="se">\n\n</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">today</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">filestr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">filestr</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">filestr</span><span class="p">,</span> <span class="mi">0</span>
+
+<span class="k">def</span> <span class="nf">makenewfile</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">filestr</span><span class="p">):</span>
+    <span class="n">fid</span> <span class="o">=</span> <span class="n">file</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filestr</span><span class="p">)</span>
+    <span class="n">fid</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<div class="viewcode-block" id="convertfile"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.alter_code1.convertfile">[docs]</a><span class="k">def</span> <span class="nf">convertfile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">orig</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert the filename given from using Numeric to using NumPy</span>
+
+<span class="sd">    Copies the file to filename.orig and then over-writes the file</span>
+<span class="sd">    with the updated code</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fid</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">filestr</span> <span class="o">=</span> <span class="n">fid</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">fid</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">filestr</span><span class="p">,</span> <span class="n">changed</span> <span class="o">=</span> <span class="n">fromstr</span><span class="p">(</span><span class="n">filestr</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">changed</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">orig</span><span class="p">:</span>
+            <span class="n">base</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">base</span><span class="o">+</span><span class="s2">&quot;.orig&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">makenewfile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">filestr</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">fromargs</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">converttree</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<div class="viewcode-block" id="convertall"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.alter_code1.convertall">[docs]</a><span class="k">def</span> <span class="nf">convertall</span><span class="p">(</span><span class="n">direc</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">curdir</span><span class="p">,</span> <span class="n">orig</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert all .py files to use numpy.oldnumeric (from Numeric) in the directory given</span>
+
+<span class="sd">    For each changed file, a backup of &lt;usesnumeric&gt;.py is made as</span>
+<span class="sd">    &lt;usesnumeric&gt;.py.orig.  A new file named &lt;usesnumeric&gt;.py</span>
+<span class="sd">    is then written with the updated code.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span><span class="s1">&#39;*.py&#39;</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">afile</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">afile</span><span class="p">[</span><span class="o">-</span><span class="mi">8</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;setup.py&#39;</span><span class="p">:</span> <span class="k">continue</span> <span class="c1"># skip these</span>
+        <span class="n">convertfile</span><span class="p">(</span><span class="n">afile</span><span class="p">,</span> <span class="n">orig</span><span class="p">)</span></div>
+
+<span class="n">header_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(Numeric/arrayobject.h)&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="convertsrc"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.alter_code1.convertsrc">[docs]</a><span class="k">def</span> <span class="nf">convertsrc</span><span class="p">(</span><span class="n">direc</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">curdir</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orig</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Replace Numeric/arrayobject.h with numpy/oldnumeric.h in all files in the</span>
+<span class="sd">    directory with extension give by list ext (if ext is None, then all files are</span>
+<span class="sd">    replaced).&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ext</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span><span class="s1">&#39;*&#39;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">aext</span> <span class="ow">in</span> <span class="n">ext</span><span class="p">:</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span><span class="s2">&quot;*.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">aext</span><span class="p">)))</span>
+    <span class="k">for</span> <span class="n">afile</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="n">fid</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">afile</span><span class="p">)</span>
+        <span class="n">fstr</span> <span class="o">=</span> <span class="n">fid</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">fid</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">fstr</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">header_re</span><span class="o">.</span><span class="n">subn</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;numpy/oldnumeric.h&#39;</span><span class="p">,</span><span class="n">fstr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">orig</span><span class="p">:</span>
+                <span class="n">base</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">afile</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">afile</span><span class="p">,</span> <span class="n">base</span><span class="o">+</span><span class="s2">&quot;.orig&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">afile</span><span class="p">)</span>
+            <span class="n">makenewfile</span><span class="p">(</span><span class="n">afile</span><span class="p">,</span> <span class="n">fstr</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">_func</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">fnames</span><span class="p">):</span>
+    <span class="n">convertall</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">orig</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">convertsrc</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="n">orig</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<div class="viewcode-block" id="converttree"><a class="viewcode-back" href="../../../../cellpack.mgl_tools.oldnumeric.html#cellpack.mgl_tools.oldnumeric.alter_code1.converttree">[docs]</a><span class="k">def</span> <span class="nf">converttree</span><span class="p">(</span><span class="n">direc</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">curdir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert all .py files and source code files in the tree given</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">direc</span><span class="p">,</span> <span class="n">_func</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">fromargs</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

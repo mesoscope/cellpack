@@ -1,0 +1,56 @@
+cellpack.mgl\_tools.opengltk package
+====================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   cellpack.mgl_tools.opengltk.OpenGL
+   cellpack.mgl_tools.opengltk.Tests
+   cellpack.mgl_tools.opengltk.extent
+   cellpack.mgl_tools.opengltk.wrapper
+
+Submodules
+----------
+
+cellpack.mgl\_tools.opengltk.ccallback module
+---------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.opengltk.ccallback
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.opengltk.exception module
+---------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.opengltk.exception
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.opengltk.glplus module
+------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.opengltk.glplus
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.opengltk.util module
+----------------------------------------
+
+.. automodule:: cellpack.mgl_tools.opengltk.util
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.mgl_tools.opengltk
+   :members:
+   :undoc-members:
+   :show-inheritance:

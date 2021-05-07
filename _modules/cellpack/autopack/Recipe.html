@@ -1,0 +1,461 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.autopack.Recipe &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../cellpack.html">cellpack</a> &raquo;</li>
+        
+          <li><a href="../autopack.html">cellpack.autopack</a> &raquo;</li>
+        
+      <li>cellpack.autopack.Recipe</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.autopack.Recipe</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">############################################################################</span>
+<span class="sd">#</span>
+<span class="sd"># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin,</span>
+<span class="sd"># and Michel Sanner</span>
+<span class="sd">#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010</span>
+<span class="sd">#   with assistance from Mostafa Al-Alusi in 2009 and periodic input</span>
+<span class="sd">#   from Arthur Olson&#39;s Molecular Graphics Lab</span>
+<span class="sd">#</span>
+<span class="sd"># Recipe.py Authors: Graham Johnson &amp; Michel Sanner with editing/</span>
+<span class="sd"># enhancement from Ludovic Autin</span>
+<span class="sd">#</span>
+<span class="sd"># Translation to Python initiated March 1, 2010 by Michel Sanner</span>
+<span class="sd"># with Graham Johnson</span>
+<span class="sd">#</span>
+<span class="sd"># Class restructuring and organization: Michel Sanner</span>
+<span class="sd">#</span>
+<span class="sd"># This file &quot;Recipe.py&quot; is part of autoPACK, cellPACK.</span>
+<span class="sd">#</span>
+<span class="sd">#    autoPACK is free software: you can redistribute it and/or modify</span>
+<span class="sd">#    it under the terms of the GNU General Public License as published by</span>
+<span class="sd">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">#    (at your option) any later version.</span>
+<span class="sd">#</span>
+<span class="sd">#    autoPACK is distributed in the hope that it will be useful,</span>
+<span class="sd">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">#    GNU General Public License for more details.</span>
+<span class="sd">#</span>
+<span class="sd">#    You should have received a copy of the GNU General Public License</span>
+<span class="sd">#    along with autoPACK (See &quot;CopyingGNUGPL&quot; in the installation.</span>
+<span class="sd">#    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="sd">#</span>
+<span class="sd">############################################################################</span>
+<span class="sd">@author: Graham Johnson, Ludovic Autin, &amp; Michel Sanner</span>
+
+<span class="sd"># Hybrid version merged from Graham&#39;s Sept 6, 2011 and Ludo&#39;s April 2012</span>
+<span class="sd">#version on May 16, 2012, re-merged on July 5, 2012 with thesis versions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># import weakref</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span><span class="p">,</span> <span class="n">seed</span>
+
+
+<span class="c1"># randint,gauss,uniform added by Graham 8/18/11</span>
+<span class="c1"># seedNum = 14</span>
+<span class="c1"># seed(seedNum)               #Mod by Graham 8/18/11</span>
+
+
+<div class="viewcode-block" id="Recipe"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe">[docs]</a><span class="k">class</span> <span class="nc">Recipe</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    a recipe provides ingredients that are each defining a protein identity</span>
+<span class="sd">    along with radius and molarity for this protein.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ext&quot;</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activeIngredients</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compartment</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the weeek ref ?</span>
+        <span class="c1"># will be set when recipe is added to compartment</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exclude</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+<div class="viewcode-block" id="Recipe.delIngredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.delIngredient">[docs]</a>    <span class="k">def</span> <span class="nf">delIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; remove the given ingredient from the recipe &quot;&quot;&quot;</span>
+        <span class="c1">#        print ingr,ingr.name</span>
+        <span class="k">if</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ingr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exclude</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">exclude</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Recipe.addIngredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.addIngredient">[docs]</a>    <span class="k">def</span> <span class="nf">addIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; add the given ingredient from the recipe &quot;&quot;&quot;</span>
+        <span class="c1">#        assert isinstance(ingr, Ingredient)</span>
+        <span class="c1">#        print ingr,ingr.name</span>
+        <span class="c1"># we need ingredient unique name</span>
+        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;__&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
+        <span class="c1"># I&#39;d like to turn this off but it breaks the GUI&#39;s ability to turn off</span>
+        <span class="c1"># ingredients with the checkboxes and packs everything everytime if this is off.</span>
+        <span class="c1"># Right now the ingredients become way too long with it on.</span>
+        <span class="k">if</span> <span class="n">ingr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
+        <span class="c1">#        ingr.recipe = weakref.ref(self)</span>
+        <span class="n">ingr</span><span class="o">.</span><span class="n">recipe</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">if</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exclude</span><span class="p">:</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exclude</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">exclude</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;add ingredient &quot;</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Recipe.setCount"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.setCount">[docs]</a>    <span class="k">def</span> <span class="nf">setCount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>  <span class="c1"># area=False,</span>
+        <span class="sd">&quot;&quot;&quot;set the count of n of molecule for every ingredients</span>
+<span class="sd">        in the recipe, and push them in te activeIngredient list</span>
+<span class="sd">        David and Graham independently worked out and corrected the molarity calculation for Å as shown in the following lines</span>
+<span class="sd">        M = moles/L</span>
+<span class="sd">        6.022e23 ingredients/mole</span>
+
+<span class="sd">        uPy works in Å by default (not ideal for mesoscale, but works with all molecular viewers that way), so given a volume in Å^3</span>
+<span class="sd">        1L = (10cm)^3</span>
+<span class="sd">        1cm = 10^(-2)m</span>
+<span class="sd">        1Å = 10^(-10)m</span>
+<span class="sd">        1cm = 10^(8)Å</span>
+<span class="sd">        10cm = 10^(9)Å</span>
+<span class="sd">        1L = (10cm)^3 = (10^(9)Å)^3 = 10^(27)Å^3</span>
+
+<span class="sd">        M = 6.022x10^23/L = [6.022x10^23] / [10^(27)Å^3] = 6.022x10(-4)ing/Å^3</span>
+<span class="sd">        numberIngredientsToPack = [0.0006022 ing/Å^3] * [volume Å^3]</span>
+
+<span class="sd">        volume / ingredient in 1M = 1ing / 0.0006022 ing/Å^3 = 1660Å^3 * 1nm^3/1000Å^3 = 1.6nm^3</span>
+
+<span class="sd">        Average distance between molecules is cubic root 3√(1.6nm^3) = 11.8Å = 1.18nm</span>
+<span class="sd">        Thus the nbr should simply be</span>
+<span class="sd">        nbr = densityInMolarity*[0.0006022 ing/Å^3] * [volume Å^3]</span>
+<span class="sd">        see http://molbiol.edu.ru/eng/scripts/01_04.html</span>
+<span class="sd">        http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3910158/</span>
+<span class="sd">        http://book.bionumbers.org/</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">seedNum</span> <span class="o">=</span> <span class="mi">14</span>
+        <span class="n">seed</span><span class="p">(</span><span class="n">seedNum</span><span class="p">)</span>
+        <span class="c1"># Mod by Graham 8/18/11, revised 9/6...</span>
+        <span class="c1"># this now allows consistent refilling via seed)</span>
+        <span class="c1"># compute number of molecules for a given volume</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">):</span>
+            <span class="c1"># 6.02 / 10000)# 1x10^27 / 1x10^23 = 10000</span>
+            <span class="k">if</span> <span class="n">reset</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">resetIngr</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
+            <span class="c1">#            nb = int(ingr.molarity * volume * .000602)</span>
+            <span class="c1"># Overridden by next 18 lines marked Mod</span>
+            <span class="c1"># by Graham 8/18/11 into Hybrid on 5/16/12</span>
+            <span class="c1"># Mod by Graham 8/18/11: Needed this to give</span>
+            <span class="c1"># ingredients an increasing chance to add one more molecule</span>
+            <span class="c1"># based on modulus proximity to the next integer</span>
+            <span class="c1"># Molarity = No. of molecules /(N X V)</span>
+            <span class="c1"># doesnt seem to work anymore</span>
+            <span class="c1"># =B7*POWER(10, 27)/100/1000/(6.0221415*POWER(10,23))</span>
+            <span class="c1"># this eqauation seems wrong, it work for volume unit in m^3</span>
+            <span class="c1">#            nbr = ingr.molarity * volume * .000602 #Mod by Graham 8/18/11</span>
+            <span class="c1"># we work in angstrom-&gt;L-&gt;m</span>
+            <span class="c1"># vnm is volume in nm^3</span>
+            <span class="c1"># replace by 10e30 for angstrom^3</span>
+            <span class="c1"># molarity = (nbr*10e27)/vnm/1000.0/(6.022*10e23) M</span>
+            <span class="c1"># nbr = molarity*((6.022*10e23)*vnm*1000)/10e27   molecule</span>
+            <span class="c1"># specific for M (mol / L) in a volume in Angstrom</span>
+            <span class="c1">#            nbr = ingr.molarity * (volume/10e6) * 1000 * 0.000602</span>
+            <span class="c1">#            nbi = int(nbr)              #Mod by Graham 8/18/11</span>
+            <span class="n">nbr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">molarity</span> <span class="o">*</span> <span class="mf">0.0006022</span> <span class="o">*</span> <span class="n">volume</span>
+            <span class="n">nbi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nbr</span><span class="p">)</span>  <span class="c1"># Mod by Graham 8/18/11</span>
+
+            <span class="c1">#            print &#39;ingr.molarity = &#39;, ingr.molarity</span>
+            <span class="c1">#            print &#39;volume = &#39;, volume</span>
+            <span class="c1">#            print &#39;nbr = &#39;, nbr</span>
+            <span class="c1">#            print &#39;nbi = &#39;, nbi         #Mod by Graham 8/18/11</span>
+            <span class="k">if</span> <span class="n">nbi</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">nbmod</span> <span class="o">=</span> <span class="n">nbr</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">nbmod</span> <span class="o">=</span> <span class="n">nbr</span> <span class="o">%</span> <span class="n">nbi</span>  <span class="c1"># Mod by Graham 8/18/11</span>
+            <span class="n">randval</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span>  <span class="c1"># Mod by Graham 8/18/11</span>
+            <span class="c1">#            print &#39;randval = &#39;, randval</span>
+            <span class="k">if</span> <span class="n">nbmod</span> <span class="o">&gt;=</span> <span class="n">randval</span><span class="p">:</span>  <span class="c1"># Mod by Graham 8/18/11</span>
+                <span class="n">nbi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nbi</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Mod by Graham 8/18/11</span>
+            <span class="c1">#            print &#39;nbi = &#39;, nbi         #Mod by Graham 8/18/11</span>
+            <span class="n">nb</span> <span class="o">=</span> <span class="n">nbi</span>  <span class="c1"># Mod by Graham 8/18/11</span>
+            <span class="c1">#            print&#39;nb = &#39;, nb            #Mod by Graham 8/18/11</span>
+            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">overwrite_nbMol</span><span class="p">:</span>  <span class="c1"># DEPRECATED</span>
+                <span class="n">ingr</span><span class="o">.</span><span class="n">vol_nbmol</span> <span class="o">=</span> <span class="n">nb</span>
+                <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">overwrite_nbMol_value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ingr</span><span class="o">.</span><span class="n">vol_nbmol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="n">nb</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">overwrite_nbMol_value</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="p">(</span><span class="s2">&quot;RECIPE IS ON&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;volume&quot;</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="si">%d</span><span class="s2"> &quot;</span> <span class="s2">&quot;nb&quot;</span> <span class="s2">&quot; </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">nb</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="c1"># print &#39;*************************************volume = &#39;%(volume)</span>
+            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;WARNING GRAHAM: recipe ingredient </span><span class="si">%s</span><span class="s2"> has 0 molecules as target&quot;</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">activeIngredients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Recipe.resetIngr"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.resetIngr">[docs]</a>    <span class="k">def</span> <span class="nf">resetIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; reset the states of the given ingredient &quot;&quot;&quot;</span>
+        <span class="n">ingr</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ingr</span><span class="o">.</span><span class="n">completion</span> <span class="o">=</span> <span class="mf">0.0</span></div>
+
+<div class="viewcode-block" id="Recipe.resetIngrs"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.resetIngrs">[docs]</a>    <span class="k">def</span> <span class="nf">resetIngrs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; reset the states of all recipe ingredients &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+            <span class="n">ingr</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">ingr</span><span class="o">.</span><span class="n">completion</span> <span class="o">=</span> <span class="mf">0.0</span></div>
+
+<div class="viewcode-block" id="Recipe.getMinMaxProteinSize"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.getMinMaxProteinSize">[docs]</a>    <span class="k">def</span> <span class="nf">getMinMaxProteinSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; get the mini and maxi radius from all recipe ingredients &quot;&quot;&quot;</span>
+        <span class="n">mini</span> <span class="o">=</span> <span class="mf">9999999.0</span>
+        <span class="n">maxi</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">&gt;</span> <span class="n">maxi</span><span class="p">:</span>
+                <span class="n">maxi</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulatingRadius</span>
+            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">minRadius</span> <span class="o">&lt;</span> <span class="n">mini</span><span class="p">:</span>
+                <span class="n">mini</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">minRadius</span>
+        <span class="k">return</span> <span class="n">mini</span><span class="p">,</span> <span class="n">maxi</span></div>
+
+<div class="viewcode-block" id="Recipe.sort"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.sort">[docs]</a>    <span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; sort the ingredients using the min Radius &quot;&quot;&quot;</span>
+        <span class="c1"># sort tuples in molecule list according to radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">minRadius</span><span class="p">)</span></div>
+        <span class="c1"># cmp(y.minRadius, x. minRadius))#(a &gt; b) - (a &lt; b)</span>
+
+    <span class="c1">#        self.ingredients.sort(lambda x,y: cmp(y.minRadius, x. minRadius))</span>
+    <span class="c1"># Do we need to sort y.minRadius too for ellipses/Cyl?</span>
+    <span class="c1"># This line is from August 2011 version of code</span>
+
+<div class="viewcode-block" id="Recipe.printFillInfo"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.printFillInfo">[docs]</a>    <span class="k">def</span> <span class="nf">printFillInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; print the states of all recipe ingredients &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="n">indent</span>
+                <span class="o">+</span> <span class="s2">&quot;ingr: </span><span class="si">%s</span><span class="s2"> target: </span><span class="si">%3d</span><span class="s2"> placed </span><span class="si">%3d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">pdb</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">counter</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

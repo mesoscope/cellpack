@@ -1,0 +1,636 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.mgl_tools.mglutil.util.packageFilePath &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../../cellpack.html">cellpack</a> &raquo;</li>
+        
+      <li>cellpack.mgl_tools.mglutil.util.packageFilePath</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.mgl_tools.mglutil.util.packageFilePath</h1><div class="highlight"><pre>
+<span></span><span class="c1">#########################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># Date: Jul 2003  Author: Michel Sanner, Daniel Stoffler</span>
+<span class="c1">#</span>
+<span class="c1">#       sanner@scripps.edu</span>
+<span class="c1">#       stoffler@scripps.edu</span>
+<span class="c1">#</span>
+<span class="c1">#       The Scripps Research Institute (TSRI)</span>
+<span class="c1">#       Molecular Graphics Lab</span>
+<span class="c1">#       La Jolla, CA 92037, USA</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright: Michel Sanner, Daniel Stoffler and TSRI</span>
+<span class="c1">#</span>
+<span class="c1">#########################################################################</span>
+<span class="c1"># $Header: /opt/cvs/python/packages/share1.5/mglutil/util/packageFilePath.py,v 1.54 2009/06/17 00:03:21 vareille Exp $</span>
+<span class="c1">#</span>
+<span class="c1"># $Id: packageFilePath.py,v 1.54 2009/06/17 00:03:21 vareille Exp $</span>
+
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">string</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="c1"># import user</span>
+
+<span class="c1"># resourceFolder = user.home + os.sep + &quot;.mgltools&quot;</span>
+<span class="n">resourceFolder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;.mgltools&quot;</span>
+
+
+<div class="viewcode-block" id="getBinary"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.util.html#cellpack.mgl_tools.mglutil.util.packageFilePath.getBinary">[docs]</a><span class="k">def</span> <span class="nf">getBinary</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find an executable program in a Python package.  .exe extension is</span>
+<span class="sd">    assumed under windows&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;nt&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">!=</span> <span class="s2">&quot;.exe&quot;</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.exe&quot;</span>
+    <span class="n">pgmfullpath</span> <span class="o">=</span> <span class="n">findFilePath</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">package</span><span class="p">)</span>
+    <span class="c1"># assert it is executable</span>
+    <span class="n">pgmfullpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">pgmfullpath</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">pgmfullpath</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">X_OK</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pgmfullpath</span></div>
+
+
+<div class="viewcode-block" id="findFilePath"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.util.html#cellpack.mgl_tools.mglutil.util.packageFilePath.findFilePath">[docs]</a><span class="k">def</span> <span class="nf">findFilePath</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">packageName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Find the path to the file from the package packageName&quot;&quot;&quot;</span>
+    <span class="n">mod</span> <span class="o">=</span> <span class="nb">__import__</span><span class="p">(</span><span class="n">packageName</span><span class="p">)</span>
+    <span class="n">components</span> <span class="o">=</span> <span class="n">packageName</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
+    <span class="n">fullName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fileName</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fullName</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">fullName</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="findResourceFile"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.util.html#cellpack.mgl_tools.mglutil.util.packageFilePath.findResourceFile">[docs]</a><span class="k">def</span> <span class="nf">findResourceFile</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">resourceFile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;we look for the file specified in argument in the</span>
+<span class="sd">    following directories:</span>
+<span class="sd">    1 - current directory</span>
+<span class="sd">    2 - user&#39;s home directory</span>
+<span class="sd">    3 - the package to which this instance belongs to</span>
+<span class="sd">    Returns a list of three tuples (&#39;home&#39;,path),(&#39;currentdir&#39;,path)</span>
+<span class="sd">    (&#39;package&#39;,path)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">resourceFile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">elif</span> <span class="n">resourceFile</span> <span class="o">==</span> <span class="s2">&quot;_visionrc&quot;</span><span class="p">:</span>
+        <span class="n">resourceFileLocation</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">resourceFileLocation</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">resourceFileLocation</span><span class="p">[</span><span class="s2">&quot;currentdir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">lResourceFolder</span> <span class="o">=</span> <span class="n">getResourceFolderWithVersion</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">lResourceFolder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">resourceFileLocation</span><span class="p">[</span><span class="s2">&quot;home&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">resourceFileLocation</span><span class="p">[</span><span class="s2">&quot;home&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">getResourceFolderWithVersion</span><span class="p">()</span>
+                <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
+                <span class="o">+</span> <span class="s2">&quot;Vision&quot;</span>
+                <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
+                <span class="o">+</span> <span class="s2">&quot;_visionrc&quot;</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">resourceFileLocation</span><span class="p">[</span><span class="s2">&quot;home&quot;</span><span class="p">])</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">resourceFileLocation</span><span class="p">[</span><span class="s2">&quot;home&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">resourceFileLocation</span>
+
+    <span class="n">resourceFileLocation</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">currentfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">resourceFile</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">currentfile</span><span class="p">):</span>
+        <span class="n">resourceFileLocation</span><span class="p">[</span><span class="s2">&quot;currentdir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">currentfile</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">resourceFileLocation</span><span class="p">[</span><span class="s2">&quot;currentdir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="s2">&quot;HOME&quot;</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">home</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;HOME&quot;</span><span class="p">]</span>
+        <span class="n">homefile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">home</span><span class="p">,</span> <span class="n">resourceFile</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">homefile</span><span class="p">):</span>
+            <span class="n">resourceFileLocation</span><span class="p">[</span><span class="s2">&quot;home&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">homefile</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">resourceFileLocation</span><span class="p">[</span><span class="s2">&quot;home&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">resourceFileLocation</span><span class="p">[</span><span class="s2">&quot;home&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="nb">__import__</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span><span class="o">.</span><span class="n">__path__</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">path</span><span class="p">:</span>
+        <span class="n">packagefile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">resourceFile</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">packagefile</span><span class="p">):</span>
+            <span class="n">resourceFileLocation</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">packagefile</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">resourceFileLocation</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">resourceFileLocation</span><span class="p">[</span><span class="s2">&quot;package&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">resourceFileLocation</span></div>
+
+
+<div class="viewcode-block" id="findAllPackages"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.util.html#cellpack.mgl_tools.mglutil.util.packageFilePath.findAllPackages">[docs]</a><span class="k">def</span> <span class="nf">findAllPackages</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Returns a list of package names and name with path found in sys.path&quot;&quot;&quot;</span>
+    <span class="n">packages</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;.&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+        <span class="n">flagline</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="n">pdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">pdir</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pdir</span><span class="p">,</span> <span class="s2">&quot;__init__.py&quot;</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">f</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
+                    <span class="n">packages</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdir</span>
+            <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="s2">&quot;.pth&quot;</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">f</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
+                    <span class="n">packages</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">=</span> <span class="n">pdir</span>
+
+    <span class="k">return</span> <span class="n">packages</span></div>
+
+
+<div class="viewcode-block" id="findModulesInPackage"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.util.html#cellpack.mgl_tools.mglutil.util.packageFilePath.findModulesInPackage">[docs]</a><span class="k">def</span> <span class="nf">findModulesInPackage</span><span class="p">(</span><span class="n">package</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fileNameFilters</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a dictionnary where the key is the path to the package or</span>
+<span class="sd">    subpackage. The value is the list of modules in which the string &#39;name&#39;</span>
+<span class="sd">    was found.  Name can be a regular expression.Using &#39;^&#39; as a first symbol</span>
+<span class="sd">    to match string at the begining of the lines is faster.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;^&quot;</span><span class="p">:</span>
+        <span class="n">candidates</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+            <span class="c1"># remove directories not to visit</span>
+            <span class="k">for</span> <span class="n">rem</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="s2">&quot;CVS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;regression&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Tutorial&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Doc&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;doc&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Icons&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Tests&quot;</span><span class="p">,</span>
+            <span class="p">]:</span>
+                <span class="k">if</span> <span class="n">rem</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">:</span>
+                    <span class="n">dirs</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">rem</span><span class="p">)</span>
+            <span class="c1"># look for files that contain the string NodeLibrary</span>
+            <span class="n">newfiles</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">fi</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">fi</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;.py&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">fi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">]:</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">fileNameFilters</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">fi</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                    <span class="n">Lines</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">fi</span><span class="p">))</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                    <span class="n">found</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">Lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">:])]</span>
+                    <span class="k">if</span> <span class="n">Lines</span> <span class="o">!=</span> <span class="p">[]:</span>
+                        <span class="k">if</span> <span class="n">root</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+                            <span class="n">candidates</span><span class="p">[</span><span class="n">root</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="n">candidates</span><span class="p">[</span><span class="n">root</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fi</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># use re</span>
+        <span class="kn">import</span> <span class="nn">re</span>
+
+        <span class="n">pat</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="n">candidates</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+            <span class="c1"># remove directories not to visit</span>
+            <span class="k">for</span> <span class="n">rem</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="s2">&quot;CVS&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;regression&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Tutorial&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Doc&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;doc&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Icons&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Tests&quot;</span><span class="p">,</span>
+            <span class="p">]:</span>
+                <span class="k">if</span> <span class="n">rem</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">:</span>
+                    <span class="n">dirs</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">rem</span><span class="p">)</span>
+            <span class="c1"># look for files that contain the string NodeLibrary</span>
+            <span class="n">newfiles</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">fi</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">fi</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;.py&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">fi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">]:</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">fileNameFilters</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">fi</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                    <span class="n">Lines</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">fi</span><span class="p">))</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                    <span class="n">found</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                        <span class="n">match</span> <span class="o">=</span> <span class="n">pat</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">root</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+                                <span class="n">candidates</span><span class="p">[</span><span class="n">root</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                            <span class="n">candidates</span><span class="p">[</span><span class="n">root</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fi</span><span class="p">)</span>
+                            <span class="k">break</span>
+    <span class="k">return</span> <span class="n">candidates</span></div>
+
+
+<div class="viewcode-block" id="findModulesInDirectory"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.util.html#cellpack.mgl_tools.mglutil.util.packageFilePath.findModulesInDirectory">[docs]</a><span class="k">def</span> <span class="nf">findModulesInDirectory</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a list of modules for a given directory, in which the string</span>
+<span class="sd">    &#39;name&#39; was found.&quot;&quot;&quot;</span>
+
+    <span class="c1"># pat = re.compile(name)</span>
+    <span class="n">candidates</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">olddir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+
+    <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.py&quot;</span><span class="p">)</span>
+    <span class="c1"># look for files that contain the string NodeLibrary</span>
+    <span class="k">for</span> <span class="n">fi</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="n">Lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fi</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">Lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">Lines</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="k">if</span> <span class="n">root</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+                <span class="n">candidates</span><span class="p">[</span><span class="n">root</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">candidates</span><span class="p">[</span><span class="n">root</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fi</span><span class="p">)</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">olddir</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">candidates</span></div>
+
+
+<div class="viewcode-block" id="getObjectFromFile"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.util.html#cellpack.mgl_tools.mglutil.util.packageFilePath.getObjectFromFile">[docs]</a><span class="k">def</span> <span class="nf">getObjectFromFile</span><span class="p">(</span><span class="n">absfile</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;import the object obj from absfile and return it&quot;&quot;&quot;</span>
+    <span class="n">direct</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">absfile</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">direct</span><span class="p">)</span>
+    <span class="n">modulepath</span> <span class="o">=</span> <span class="n">file</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="n">mod</span> <span class="o">=</span> <span class="nb">__import__</span><span class="p">(</span><span class="n">modulepath</span><span class="p">,</span> <span class="nb">globals</span><span class="p">(),</span> <span class="nb">locals</span><span class="p">(),</span> <span class="p">[</span><span class="n">obj</span><span class="p">])</span>
+    <span class="n">components</span> <span class="o">=</span> <span class="n">modulepath</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">comp</span> <span class="ow">in</span> <span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="setResourceFolder"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.util.html#cellpack.mgl_tools.mglutil.util.packageFilePath.setResourceFolder">[docs]</a><span class="k">def</span> <span class="nf">setResourceFolder</span><span class="p">(</span><span class="n">folderName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set the name of the resourceFolder&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">resourceFolder</span>
+    <span class="n">resourceFolder</span> <span class="o">=</span> <span class="n">folderName</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">resourceFolder</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">resourceFolder</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">txt</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;Resource Folder can&#39;t be created in home directory, now using tmp directory </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">resourceFolder</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+            <span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">gettempdir</span>
+
+            <span class="n">resourceFolder</span> <span class="o">=</span> <span class="n">gettempdir</span><span class="p">()</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;.mgltools&quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">resourceFolder</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">resourceFolder</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="n">txt</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="s2">&quot;Running without Resource Folder as it can&#39;t be created </span><span class="si">%s</span><span class="s2">&quot;</span>
+                        <span class="o">%</span> <span class="n">resourceFolder</span>
+                    <span class="p">)</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+                    <span class="n">resourceFolder</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">resourceFolder</span></div>
+
+
+<div class="viewcode-block" id="getResourceFolder"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.util.html#cellpack.mgl_tools.mglutil.util.packageFilePath.getResourceFolder">[docs]</a><span class="k">def</span> <span class="nf">getResourceFolder</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Returns MGLTools resource folder,</span>
+<span class="sd">    create it if necessary,</span>
+<span class="sd">    returns None if it doesn&#39;t exist and can&#39;t be created&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">resourceFolder</span>
+    <span class="k">if</span> <span class="n">resourceFolder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">resourceFolder</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">setResourceFolder</span><span class="p">(</span><span class="n">resourceFolder</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">resourceFolder</span></div>
+
+
+<div class="viewcode-block" id="getResourceFolderWithVersion"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.util.html#cellpack.mgl_tools.mglutil.util.packageFilePath.getResourceFolderWithVersion">[docs]</a><span class="k">def</span> <span class="nf">getResourceFolderWithVersion</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Returns MGLTools resource folder,</span>
+<span class="sd">    create it if necessary,</span>
+<span class="sd">    returns None if it doesn&#39;t exist and can&#39;t be created&quot;&quot;&quot;</span>
+    <span class="n">old_rc</span> <span class="o">=</span> <span class="n">getResourceFolder</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">old_rc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="kn">from</span> <span class="nn">cellpack.mgl_tools.Support.version</span> <span class="kn">import</span> <span class="n">__version__</span>
+
+    <span class="n">Version</span> <span class="o">=</span> <span class="n">__version__</span>
+
+    <span class="n">lRessourceFolder</span> <span class="o">=</span> <span class="n">old_rc</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">Version</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">lRessourceFolder</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">lRessourceFolder</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">lRessourceFolder</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">regfile</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">old_rc</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;.registration&quot;</span><span class="p">):</span>
+                    <span class="n">regfile</span> <span class="o">=</span> <span class="n">old_rc</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;.registration&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">dirlist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">old_rc</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">dirlist</span><span class="p">:</span>
+                        <span class="n">tmpRegFile</span> <span class="o">=</span> <span class="n">old_rc</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">item</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;.registration&quot;</span>
+                        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">tmpRegFile</span><span class="p">):</span>
+                            <span class="n">regfile</span> <span class="o">=</span> <span class="n">tmpRegFile</span>
+                            <span class="k">break</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">regfile</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">lRessourceFolder</span>
+                <span class="kn">import</span> <span class="nn">pickle</span>
+
+                <span class="n">regDict</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">regfile</span><span class="p">))</span>
+                <span class="n">regDict</span><span class="p">[</span><span class="s2">&quot;Version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Version</span>
+                <span class="n">form_dict</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">form_dict</span><span class="p">[</span><span class="s2">&quot;UserID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">regDict</span><span class="p">[</span><span class="s2">&quot;UserID&quot;</span><span class="p">]</span>
+                <span class="n">form_dict</span><span class="p">[</span><span class="s2">&quot;Version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">regDict</span><span class="p">[</span><span class="s2">&quot;Version&quot;</span><span class="p">]</span>
+                <span class="kn">import</span> <span class="nn">http.client</span><span class="o">,</span> <span class="nn">urllib.request</span><span class="o">,</span> <span class="nn">urllib.parse</span><span class="o">,</span> <span class="nn">urllib.error</span>
+
+                <span class="n">params</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlencode</span><span class="p">(</span><span class="n">form_dict</span><span class="p">)</span>
+                <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;Content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-www-form-urlencoded&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+                <span class="n">conn</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">HTTPConnection</span><span class="p">(</span><span class="s2">&quot;www.scripps.edu:80&quot;</span><span class="p">)</span>
+                <span class="n">conn</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
+                    <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;/cgi-bin/sanner/update_mgltools_version.py&quot;</span><span class="p">,</span>
+                    <span class="n">params</span><span class="p">,</span>
+                    <span class="n">headers</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                    <span class="n">reg</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">lRessourceFolder</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;.registration&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+                    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">regDict</span><span class="p">,</span> <span class="n">reg</span><span class="p">)</span>
+                    <span class="n">reg</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+                <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">inst</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span>
+                <span class="n">txt</span> <span class="o">=</span> <span class="s2">&quot;Could not register MGLTools</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+            <span class="k">return</span> <span class="n">lRessourceFolder</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">inst</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Cannot create the Resource Folder </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">lRessourceFolder</span><span class="p">))</span>
+            <span class="kn">import</span> <span class="nn">tempfile</span>
+
+            <span class="n">tmpDir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Using </span><span class="si">%s</span><span class="s2"> insterad&quot;</span> <span class="o">%</span> <span class="n">tmpDir</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">tmpDir</span></div>
+
+
+<div class="viewcode-block" id="which"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.util.html#cellpack.mgl_tools.mglutil.util.packageFilePath.which">[docs]</a><span class="k">def</span> <span class="nf">which</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Source http://mail.python.org/pipermail/python-list/2002-August/157829.html&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">X_OK</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">filename</span>
+    <span class="k">if</span> <span class="s2">&quot;PATH&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PATH&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">defpath</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PATH&quot;</span><span class="p">]</span>
+
+    <span class="n">pathlist</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">pathlist</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">X_OK</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">f</span>
+        <span class="n">fAlternative</span> <span class="o">=</span> <span class="n">f</span> <span class="o">+</span> <span class="s2">&quot;.exe&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">fAlternative</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">X_OK</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">fAlternative</span>
+        <span class="n">fAlternative</span> <span class="o">=</span> <span class="n">f</span> <span class="o">+</span> <span class="s2">&quot;.sh&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">fAlternative</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">X_OK</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">fAlternative</span>
+        <span class="n">fAlternative</span> <span class="o">=</span> <span class="n">f</span> <span class="o">+</span> <span class="s2">&quot;.bat&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">fAlternative</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">X_OK</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">fAlternative</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

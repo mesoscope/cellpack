@@ -1,0 +1,448 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.autopack.randomRot &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../cellpack.html">cellpack</a> &raquo;</li>
+        
+          <li><a href="../autopack.html">cellpack.autopack</a> &raquo;</li>
+        
+      <li>cellpack.autopack.randomRot</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.autopack.randomRot</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created 2012</span>
+
+<span class="sd">###############################################################################</span>
+<span class="sd">#</span>
+<span class="sd"># autoPACK Authors: Graham T. Johnson, Ludovic Autin, Mostafa Al-Alusi, Michel Sanner</span>
+<span class="sd">#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010</span>
+<span class="sd">#   with assistance from Mostafa Al-Alusi in 2009 and periodic input</span>
+<span class="sd">#   from Arthur Olson&#39;s Molecular Graphics Lab</span>
+<span class="sd">#</span>
+<span class="sd"># AFGui.py Authors: Ludovic Autin with minor editing/enhancement from Graham Johnson</span>
+<span class="sd">#</span>
+<span class="sd"># Copyright: Graham Johnson ©2010</span>
+<span class="sd">#</span>
+<span class="sd"># This file is part of autoPACK, cellPACK, and AutoFill.</span>
+<span class="sd">#</span>
+<span class="sd">#    autoPACK is free software: you can redistribute it and/or modify</span>
+<span class="sd">#    it under the terms of the GNU General Public License as published by</span>
+<span class="sd">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="sd">#    (at your option) any later version.</span>
+<span class="sd">#</span>
+<span class="sd">#    autoPACK is distributed in the hope that it will be useful,</span>
+<span class="sd">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="sd">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="sd">#    GNU General Public License for more details.</span>
+<span class="sd">#</span>
+<span class="sd">#    You should have received a copy of the GNU General Public License</span>
+<span class="sd">#    along with autoPACK (See &quot;CopyingGNUGPL&quot; in the installation.</span>
+<span class="sd">#    If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="sd">#</span>
+<span class="sd">###############################################################################</span>
+
+<span class="sd">Name: &#39;randomRot&#39;</span>
+<span class="sd">@author: Modified from uniform random rotation matrix from http://www.lfd.uci.edu/~gohlke/code/transformations.py.html which is copyrighted as follows:</span>
+
+<span class="sd">#    # -*- coding: utf-8 -*-</span>
+<span class="sd">#    # transformations.py</span>
+<span class="sd">#</span>
+<span class="sd">#    # Copyright (c) 2006-2012, Christoph Gohlke</span>
+<span class="sd">#    # Copyright (c) 2006-2012, The Regents of the University of California</span>
+<span class="sd">#    # Produced at the Laboratory for Fluorescence Dynamics</span>
+<span class="sd">#    # All rights reserved.</span>
+<span class="sd">#    #</span>
+<span class="sd">#    # Redistribution and use in source and binary forms, with or without</span>
+<span class="sd">#    # modification, are permitted provided that the following conditions are met:</span>
+<span class="sd">#    #</span>
+<span class="sd">#    # * Redistributions of source code must retain the above copyright</span>
+<span class="sd">#    #   notice, this list of conditions and the following disclaimer.</span>
+<span class="sd">#    # * Redistributions in binary form must reproduce the above copyright</span>
+<span class="sd">#    #   notice, this list of conditions and the following disclaimer in the</span>
+<span class="sd">#    #   documentation and/or other materials provided with the distribution.</span>
+<span class="sd">#    # * Neither the name of the copyright holders nor the names of any</span>
+<span class="sd">#    #   contributors may be used to endorse or promote products derived</span>
+<span class="sd">#    #   from this software without specific prior written permission.</span>
+<span class="sd">#    #</span>
+<span class="sd">#    # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
+<span class="sd">#    # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span>
+<span class="sd">#    # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span>
+<span class="sd">#    # ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE</span>
+<span class="sd">#    # LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span>
+<span class="sd">#    # CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span>
+<span class="sd">#    # SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span>
+<span class="sd">#    # INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span>
+<span class="sd">#    # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span>
+<span class="sd">#    # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span>
+<span class="sd">#    # POSSIBILITY OF SUCH DAMAGE.</span>
+<span class="sd">#</span>
+<span class="sd">#    Homogeneous Transformation Matrices and Quaternions.</span>
+<span class="sd">#</span>
+<span class="sd">#   A library for calculating 4x4 matrices for translating, rotating, reflecting,</span>
+<span class="sd">#   scaling, shearing, projecting, orthogonalizing, and superimposing arrays of</span>
+<span class="sd">#   3D homogeneous coordinates as well as for converting between rotation matrices,</span>
+<span class="sd">#   Euler angles, and quaternions. Also includes an Arcball control object and</span>
+<span class="sd">#   functions to decompose transformation matrices.</span>
+<span class="sd">#</span>
+<span class="sd">#   :Authors:</span>
+<span class="sd">#    `Christoph Gohlke &lt;http://www.lfd.uci.edu/~gohlke/&gt;`__,</span>
+<span class="sd">#    Laboratory for Fluorescence Dynamics, University of California, Irvine</span>
+<span class="sd">#</span>
+<span class="sd">#   :Version: 2012.10.18</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">RandomState</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">uniform</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="c1"># epsilon for testing whether a number is close to zero</span>
+<span class="n">_EPS</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span> <span class="o">*</span> <span class="mf">4.0</span>
+
+
+<div class="viewcode-block" id="RandomRot"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot">[docs]</a><span class="k">class</span> <span class="nc">RandomRot</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">16</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seedTable</span> <span class="o">=</span> <span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+    <span class="c1">#        from .deg06Rot import allRtotations</span>
+    <span class="c1">#        self.rot = allRtotations</span>
+    <span class="c1">#        self.nbRot = len(allRtotations)-1</span>
+
+<div class="viewcode-block" id="RandomRot.getOld"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.getOld">[docs]</a>    <span class="k">def</span> <span class="nf">getOld</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbRot</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rot</span><span class="p">[</span><span class="n">n</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="RandomRot.setSeed"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.setSeed">[docs]</a>    <span class="k">def</span> <span class="nf">setSeed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">16</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seedTable</span> <span class="o">=</span> <span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RandomRot.get"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_rotation_matrix</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="RandomRot.random_quaternion"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.random_quaternion">[docs]</a>    <span class="k">def</span> <span class="nf">random_quaternion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rand</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return uniform random unit quaternion.</span>
+
+<span class="sd">        rand: array like or None</span>
+<span class="sd">            Three independent random variables that are uniformly distributed</span>
+<span class="sd">            between 0 and 1.</span>
+
+<span class="sd">        &gt;&gt;&gt; q = random_quaternion()</span>
+<span class="sd">        &gt;&gt;&gt; numpy.allclose(1, vector_norm(q))</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; q = random_quaternion(numpy.random.random(3))</span>
+<span class="sd">        &gt;&gt;&gt; len(q.shape), q.shape[0]==4</span>
+<span class="sd">        (1, True)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">rand</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rand</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seedTable</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="c1">#            rand = numpy.random.rand(3)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">rand</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+        <span class="n">r1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">rand</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">r2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rand</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">pi2</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="n">pi2</span> <span class="o">*</span> <span class="n">rand</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">t2</span> <span class="o">=</span> <span class="n">pi2</span> <span class="o">*</span> <span class="n">rand</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">t2</span><span class="p">)</span> <span class="o">*</span> <span class="n">r2</span><span class="p">,</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span> <span class="o">*</span> <span class="n">r1</span><span class="p">,</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span> <span class="o">*</span> <span class="n">r1</span><span class="p">,</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t2</span><span class="p">)</span> <span class="o">*</span> <span class="n">r2</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="RandomRot.quaternion_matrix"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.quaternion_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">quaternion_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quaternion</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return homogeneous rotation matrix from quaternion.</span>
+
+<span class="sd">        &gt;&gt;&gt; M = quaternion_matrix([0.99810947, 0.06146124, 0, 0])</span>
+<span class="sd">        &gt;&gt;&gt; numpy.allclose(M, rotation_matrix(0.123, [1, 0, 0]))</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; M = quaternion_matrix([1, 0, 0, 0])</span>
+<span class="sd">        &gt;&gt;&gt; numpy.allclose(M, numpy.identity(4))</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; M = quaternion_matrix([0, 1, 0, 0])</span>
+<span class="sd">        &gt;&gt;&gt; numpy.allclose(M, numpy.diag([1, -1, -1, 1]))</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">quaternion</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">_EPS</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">q</span> <span class="o">*=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">[</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">q</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+            <span class="p">]</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="RandomRot.random_rotation_matrix"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.random_rotation_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">random_rotation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rand</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return uniform random rotation matrix.</span>
+
+<span class="sd">        rand: array like</span>
+<span class="sd">            Three independent random variables that are uniformly distributed</span>
+<span class="sd">            between 0 and 1 for each returned quaternion.</span>
+
+<span class="sd">        &gt;&gt;&gt; R = random_rotation_matrix()</span>
+<span class="sd">        &gt;&gt;&gt; numpy.allclose(numpy.dot(R.T, R), numpy.identity(4))</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">quaternion_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">random_quaternion</span><span class="p">(</span><span class="n">rand</span><span class="p">))</span></div></div>
+
+
+<span class="c1"># def getRotations(filename):</span>
+
+<span class="c1">#     #read rotations</span>
+<span class="c1">#     f = open(filename)</span>
+<span class="c1">#     data = f.readlines()</span>
+<span class="c1">#     f.close()</span>
+
+<span class="c1">#     allRot = []</span>
+<span class="c1">#     for line in data:</span>
+<span class="c1">#         rotString = line</span>
+<span class="c1">#         rot = numpy.array( map(float, line.split()))</span>
+<span class="c1">#         rot.shape = (3,3)</span>
+<span class="c1">#         allRot.append( rot )</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># from time import time</span>
+    <span class="c1"># t1 = time()</span>
+    <span class="c1"># allRot = getRotations(&#39;deg06.matrix&#39;)</span>
+    <span class="c1"># print &#39;time to read rotation&#39;, time()-t1</span>
+
+    <span class="c1">#     t1 = time()</span>
+    <span class="c1">#     from deg06Rotations import allRtotations</span>
+    <span class="c1">#     print &#39;time to import rotation&#39;, time()-t1</span>
+
+    <span class="n">rr</span> <span class="o">=</span> <span class="n">RandomRot</span><span class="p">()</span>
+    <span class="n">mat</span> <span class="o">=</span> <span class="n">rr</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

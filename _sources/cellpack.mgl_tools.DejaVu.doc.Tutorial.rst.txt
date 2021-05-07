@@ -1,0 +1,69 @@
+cellpack.mgl\_tools.DejaVu.doc.Tutorial package
+===============================================
+
+Submodules
+----------
+
+cellpack.mgl\_tools.DejaVu.doc.Tutorial.Example1 module
+-------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.doc.Tutorial.Example1
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.DejaVu.doc.Tutorial.Example2 module
+-------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.doc.Tutorial.Example2
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.DejaVu.doc.Tutorial.Example3 module
+-------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.doc.Tutorial.Example3
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.DejaVu.doc.Tutorial.Example4 module
+-------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.doc.Tutorial.Example4
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.DejaVu.doc.Tutorial.simple module
+-----------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.doc.Tutorial.simple
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.DejaVu.doc.Tutorial.testMaterials module
+------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.doc.Tutorial.testMaterials
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.mgl\_tools.DejaVu.doc.Tutorial.tutorialFunctions module
+----------------------------------------------------------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.doc.Tutorial.tutorialFunctions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.mgl_tools.DejaVu.doc.Tutorial
+   :members:
+   :undoc-members:
+   :show-inheritance:
