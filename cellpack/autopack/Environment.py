@@ -55,6 +55,20 @@ from scipy import spatial
 import numpy
 import pickle
 from math import floor, exp, cos, sqrt, pow as mathPow, pi
+
+# PANDA3D Physics engine ODE and Bullet
+import panda3d
+
+from panda3d.core import Mat3, Mat4, Vec3, Point3
+from panda3d.core import TransformState
+from panda3d.core import BitMask32
+from panda3d.bullet import BulletSphereShape, BulletBoxShape, BulletCylinderShape
+
+from panda3d.bullet import BulletRigidBodyNode
+from panda3d.ode import OdeBody, OdeMass
+from panda3d.ode import OdeSphereGeom
+from panda3d.core import NodePath
+
 from cellpack.mgl_tools.bhtree import bhtreelib
 
 import cellpack.autopack as autopack
@@ -79,30 +93,6 @@ try:
 except ImportError:
     helper = None
 print("Environment helper is " + str(helper))
-
-
-# PANDA3D Physics engine ODE and Bullet
-# path are setup in autopack.__init__
-try:
-    import panda3d
-
-    print("Should have Panda3D now because panda3d = ", panda3d)
-
-    from panda3d.core import Mat3, Mat4, Vec3, Point3
-    from panda3d.core import TransformState
-    from panda3d.core import BitMask32
-    from panda3d.bullet import BulletSphereShape, BulletBoxShape, BulletCylinderShape
-
-    #        from panda3d.bullet import BulletUpAxis
-    from panda3d.bullet import BulletRigidBodyNode
-    from panda3d.ode import OdeBody, OdeMass
-    from panda3d.ode import OdeSphereGeom
-    from panda3d.core import NodePath
-
-    print("Got Panda3D")
-except ImportError:
-    panda3d = None
-    print("Failed to get Panda, because panda3d = ", panda3d)
 
 # could replace by a faster json python library
 try:
@@ -4759,7 +4749,7 @@ class Environment(CompartmentList):
             if self.panda_solver == "bullet":
                 from panda3d.bullet import BulletWorld
 
-                self.worldNP = render.attachNewNode("World")
+                self.worldNP = render.attachNewNode("World")  # noqa: F821, global variable from panda3d
                 self.world = BulletWorld()
                 self.BitMask32 = BitMask32
             elif self.panda_solver == "ode":
@@ -5194,7 +5184,7 @@ class Environment(CompartmentList):
         while not done:
             # should do it after a jitter run
             #        for i in xrange(10):
-            dt = globalClock.getDt()
+            dt = globalClock.getDt()  # noqa: F821, global variable from panda3d
             self.world.doPhysics(
                 dt, 100, 1.0 / 500.0
             )  # world.doPhysics(dt, 10, 1.0/180.0)100, 1./500.#2, 1.0/120.0
