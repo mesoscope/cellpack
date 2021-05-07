@@ -8,9 +8,8 @@ __email__ = "meganr@alleninstitute.org"
 # Details in CONTRIBUTING.md
 __version__ = "0.0.0"
 
+from .example import Example  # noqa: F401
+
 
 def get_module_version():
     return __version__
-
-
-from .example import Example  # noqa: F401

@@ -4,7 +4,7 @@
 [![Documentation](https://github.com/mesoscope/cellpack/workflows/Documentation/badge.svg)](https://mesoscope.github.io/cellpack/)
 [![Code Coverage](https://codecov.io/gh/mesoscope/cellpack/branch/main/graph/badge.svg)](https://codecov.io/gh/mesoscope/cellpack)
 
-algorthim to pack molecular recipes
+algorithm to pack molecular recipes
 
 ---
 
@@ -20,7 +20,18 @@ from cellpack import Example
 
 a = Example()
 a.get_value()  # 10
+
 ```
+
+in terminal:
+
+### Setup 
+1. create a virtual env: `conda create -n autopack`
+2. `activate autopack`
+3. `pip install -e .[dev]`
+
+### Run analysis code
+1. `analyze -o [PATH/TO/OUTPUT/FOLDER]` // folder needs to exist, won't create a folder
 
 ## Installation
 

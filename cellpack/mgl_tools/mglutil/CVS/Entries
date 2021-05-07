@@ -1,0 +1,20 @@
+/LICENSE/1.2/Thu Jul  3 20:49:11 2008/-kkv/
+/RELNOTES/1.5/Thu Oct 30 19:57:13 2008/-kkv/
+/alignmentEditor.py/1.7/Tue Jul 24 17:30:40 2007/-kkv/
+/bhtfunctions.py/1.9/Tue Jul 24 17:30:40 2007/-kkv/
+/events.py/1.2/Thu Feb 19 18:23:55 2009/-kkv/
+/popen2Threads.py/1.17/Wed Mar  4 23:35:37 2009/-kkv/
+/preferences.py/1.9/Thu May 14 18:49:42 2009/-kkv/
+/process.py/1.4/Wed Jun 17 00:03:21 2009/-kkv/
+D/TestUtil////
+D/gui////
+D/math////
+D/regression////
+D/splashregister////
+D/util////
+D/web////
+/.packager.py/1.18/Fri Oct  2 02:45:44 2009/-kkv/
+D/Tests////
+D/hostappli////
+D/testdir////
+/__init__.py/1.93/Wed Oct 28 23:27:57 2009/-kkv/
