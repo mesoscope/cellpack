@@ -471,7 +471,6 @@ class AnalyseAP:
                         ingrpos[ingrname].append(
                             data[recipe][ingrname]["results"][k][0]
                         )
-            print(i)
         return ingrpos, ingrrot
 
     def grabResultFromTXT(self, n, doanalyze=False):
@@ -480,7 +479,6 @@ class AnalyseAP:
         ingrrot = {}
         ingrpos = {}
         for i in range(1000):
-            print(i)
             files = open("results_seed_" + str(i) + ".txt", "r")
             lines = files.readlines()
             files.close()
@@ -551,7 +549,6 @@ class AnalyseAP:
         area = math.pi * r ** 2
         chs = self.g.check_sphere_inside(rect, m, r)
         if chs:  # sph not completly inside
-            #            print "rectangle is outside of circle",r
             ch = self.g.check_rectangle_oustide(rect, m, r)
             if ch:  # rectangle not outside
                 leftBound, rightBound = self.g.getBoundary(rect, m, r)
@@ -741,7 +738,6 @@ class AnalyseAP:
                 area0 = math.pi * e ** 2  # complete circle
                 area1 = self.rectangle_circle_area(self.bbox, p, e)
                 w = area1 / area0
-                print(w, area1, area0, e, p)
                 k[i, j] = w * len(numpy.nonzero(di < e)[0]) / N ** 2
         Kt = V * numpy.sum(k, axis=0)
         Lt = (Kt / numpy.pi) ** 0.5
@@ -823,7 +819,6 @@ class AnalyseAP:
             basename + ingr.name + "_rdf_simple.csv", numpy.array(G), delimiter=","
         )
         self.plot(numpy.array(G), radii[:-1], basename + ingr.name + "_rdf_simple.png")
-        print(G)
 
     def axis_distribution_total(self, all_positions):
         basename = self.env.basename
@@ -1068,13 +1063,6 @@ class AnalyseAP:
         #        bb=self.helper.getCornerPointCube(box)
         gridFileIn = None
         gridFileOut = None
-        #        self.env.grid.reset()
-        #        self.grid.reset()self.env.grid = None
-        #        if forceBuild :
-        #            gridFileOut=wrkDir+os.sep+"fill_grid"
-        #        else :
-        #            gridFileIn=wrkDir+os.sep+"fill_grid"
-        print(gridFileIn, gridFileOut, forceBuild)
         self.env.buildGrid(
             boundingBox=bb,
             gridFileIn=gridFileIn,
@@ -1082,8 +1070,7 @@ class AnalyseAP:
             gridFileOut=gridFileOut,
             previousFill=False,
         )
-        #    h.buildGrid(gridFileIn=gridFileIn,
-        #                  gridFileOut=gridFileOut)
+
         t2 = time()
         gridTime = t2 - t1
         if fill:
@@ -1128,7 +1115,6 @@ class AnalyseAP:
     def merge(self, d1, d2, merge=lambda x, y: y):
         result = dict(d1)
         for k, v in d2.items():
-            print(k)
             if k in result:
                 result[k].extend(v)
             else:
@@ -1164,7 +1150,6 @@ class AnalyseAP:
                     ingrpos[ingrname].append(data[recipe][ingrname]["results"][k][0])
         for ingr in ingrpos:
             for i, p in enumerate(ingrpos[ingr]):
-                print(p, radius[ingr])
                 ax.add_patch(
                     Circle(
                         (p[0], p[1]), radius[ingr], edgecolor="black", facecolor="red"
@@ -1270,7 +1255,6 @@ class AnalyseAP:
                 r = self.env.exteriorRecipe
                 d = {}
                 if r:
-                    #                    print ("DONERUNXXXCYTO!!!!!")
                     for ingr in r.ingredients:
                         if ingr.name not in distances:
                             distances[ingr.name] = []
@@ -1308,7 +1292,6 @@ class AnalyseAP:
                             total_positions.extend(ingrpos)
                             total_distances.extend(d)
 
-                        # print plot,twod
                         if plot and twod:
                             for i, p in enumerate(ingrpos):
                                 ax.add_patch(
@@ -1377,9 +1360,7 @@ class AnalyseAP:
                                                     facecolor=ingr.color,
                                                 )
                                             )
-                #                print ("DONERUNXXXbefore!!!!!")
                 for o in self.env.compartments:
-                    #                    print ("DONERUNXXXComp!!!!!")
                     rs = o.surfaceRecipe
                     if rs:
                         for ingr in rs.ingredients:
@@ -1415,7 +1396,6 @@ class AnalyseAP:
                                             facecolor=ingr.color,
                                         )
                                     )
-                    #                    print ("DONERUNXXXYYY!!!!!")
                     ri = o.innerRecipe
                     if ri:
                         for ingr in ri.ingredients:
@@ -1462,9 +1442,6 @@ class AnalyseAP:
                     self.writeJSON(
                         output + os.sep + "_angleIngr_" + str(si) + ".json", anglesingr
                     )
-                # print ("############")
-                # print (output+os.sep+"_dIngr_"+str(si)+".json",distances)
-                #                print ("DONERUNXXX!!!!!")
                 if plot and twod:
                     ax.set_aspect(1.0)
                     pyplot.axhline(y=bbox[0][1], color="k")
@@ -1474,11 +1451,7 @@ class AnalyseAP:
                     pyplot.axis([bbox[0][0], bbox[1][0], bbox[0][1], bbox[1][1]])
                     pyplot.savefig(basename + ".png")
                     pylab.close()  # closes the current figure
-        #            return
-        #            print ("DONERUN!!!!!")
-        #            self.flush()
-        # plot(x)
-        #        print ("DONE1!!!!")
+
         numpy.savetxt(output + os.sep + "seeds", seeds_i, delimiter=",")
         if use_file:
             total_positions = numpy.genfromtxt(position_file, delimiter=",")
@@ -1499,17 +1472,12 @@ class AnalyseAP:
                     output + os.sep + "_angleIngr_" + str(i) + ".json"
                 )
                 anglesingr = dict(self.merge(anglesingr, dict1))
-        #        print ("DONE2!!!!")
         self.writeJSON(occurences_file, occurences)
         self.env.ingrpositions = ingrpositions
         self.env.distances = distances
         self.env.basename = basename
         self.env.occurences = occurences
         self.env.angles = total_angles
-        #        if rdf :
-        #            if twod : self.env.loopThroughIngr(self.rdf_2d)
-        #            else : self.env.loopThroughIngr(self.rdf_3d)
-        #            do the X Y histo averge !
         self.env.loopThroughIngr(self.axis_distribution)
         self.env.loopThroughIngr(self.occurence_distribution)
         self.axis_distribution_total(total_positions)
@@ -1535,10 +1503,4 @@ class AnalyseAP:
                 bins=12,
                 size=max(total_angles[2]),
             )
-        #        print ("DONE!!!!")
         return distances
-
-
-# from bhtree import bhtreelib
-# bht = bhtreelib.BHtree( verts, None, 10)
-# closest = bht.closestPointsArray(tuple(grdPos), diag, returnNullIfFail)

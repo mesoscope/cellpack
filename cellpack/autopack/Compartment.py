@@ -119,7 +119,6 @@ class Compartment(CompartmentList):
 
     def __init__(self, name, vertices, faces, vnormals, **kw):
         CompartmentList.__init__(self)
-        # print ("compartment init",name,kw)
         self.name = name
         self.center = None
         self.vertices = vertices
@@ -156,10 +155,8 @@ class Compartment(CompartmentList):
                 self.faces, self.vertices, self.vnormals = self.getMesh(
                     filename=kw["filename"], gname=gname
                 )
-                print(self.vertices[0])
                 self.filename = kw["filename"]
                 self.ref_obj = name
-                # print ("mesh",self.name,self.filename)
         if self.meshType == "raw":
             # need to build the mesh from v,f,n
             gname = self.name
@@ -260,7 +257,6 @@ class Compartment(CompartmentList):
         m = numpy.identity(4)
         m[:3, :3] = rot[:3, :3]
         m[3, :3] = pos
-        # print self.vertices[0]
         self.vertices = autopack.helper.ApplyMatrix(self.vertices, m.transpose())
         # Recompute the normal ?
         # self.vnormals = autopack.helper.ApplyMatrix(self.vnormals,m.transpose())
@@ -287,12 +283,6 @@ class Compartment(CompartmentList):
         f = numpy.loadtxt(filename + ".indpolface", numpy.int32)
         geom = IndexedPolygons(self.name, vertices=v[:, :3], faces=f)
 
-        # from DejaVu.IndexedPolygons import IndexedPolygonsFromFile
-        # seems not ok...when they came from c4d ... some transformation are not occuring.
-        # print ("dejavu mesh", filename)
-        # geom = IndexedPolygonsFromFile(filename, 'mesh_%s' % self.name)
-        # if helper is not None:
-        #     helper.rotateObj(geom,[0.0,-math.pi/2.0,0.0])
         return geom
 
     def saveDejaVuMesh(self, filename):
@@ -313,8 +303,6 @@ class Compartment(CompartmentList):
 
     def buildSphere(self, radius, geomname):
         geom = None
-        print("in buildSphere")
-        print(radius)
         if autopack.helper is not None:
             if not autopack.helper.nogui:
                 p = autopack.helper.getObject("autopackHider")
@@ -327,18 +315,12 @@ class Compartment(CompartmentList):
                 #                                   radius=radius)[0]
                 autopack.helper.reParent(geomname, "autopackHider")
             else:
-                # print "OK TEST OLKKKKK"
-                # geom = autopack.helper.Sphere(geomname,res=4,
-                #                                   radius=radius)[0]
                 geom = autopack.helper.unitSphere(geomname, 4, radius=radius)[0]
-            print("in after helper.Sphere")
             self.filename = geomname
             self.ref_obj = geomname
             self.faces, self.vertices, self.vnormals = helper.DecomposeMesh(
                 geom, edit=False, copy=False, tri=True
             )
-            print("in after helper.DecomposeMesh")
-        # return geom
 
     def buildMesh(self, data, geomname):
         """
@@ -627,10 +609,7 @@ class Compartment(CompartmentList):
                     # fix the normal Should transform first ?
                     vn = helper.normal_array(v, numpy.array(f))
                     v = numpy.array(v) * self.scale
-                    # print v[0],vn[0]
-                    # vn = self.getVertexNormals(numpy.array(v),f[:])
                     self.mesh = helper.createsNmesh(gname, v, None, f)[0]
-                    # print v[0],vn[0]
                     return f, v, vn
                 geom = helper.getObject(gname)
                 if geom is None:
@@ -779,7 +758,6 @@ class Compartment(CompartmentList):
             center = list(center)
             for i in range(3):
                 center[i] = round(center[i], 4)
-                #        print "center =", center
             self.center = center
 
     def getRadius(self):
@@ -1331,7 +1309,6 @@ class Compartment(CompartmentList):
                 % (len(a), len(a), len(self.grid.masterGridPositions))
             )
         self.computeVolumeAndSetNbMol(env, b, a, areas=vSurfaceArea)
-        # print("I've built a grid in the compartment test with no surface", a)
         if autopack.verbose:
             print("The size of the grid I build = ", len(a))
         return a, b, vSurfaceArea
@@ -2702,8 +2679,6 @@ class Compartment(CompartmentList):
                         continue
                     # Get the point index that this coordinate corresponds to.
                     desiredPointIndex = int(round(newK * NX * NY + newJ * NX + newI))
-                    # if desiredPointIndex == 54199:
-                    #     print('HIT with face ' + str(face) + ' and polygon point ' + str(P))
                     desiredPoint = gridPoints[desiredPointIndex]
                     if desiredPoint.representsPolyhedron:
                         continue
@@ -2966,7 +2941,6 @@ class Compartment(CompartmentList):
     #        # create surface points
     #        t0 = t1 = time()
     #        self.createSurfacePoints(maxl=histoVol.grid.gridSpacing)
-    #        print("Creating surface points and preparing to sum the surface area, TODO- limit to selection box")
     #        # Graham Sum the SurfaceArea for each polyhedron
     #        vertices = self.vertices  #NEED to make these limited to selection box, not whole compartment
     #        faces = self.faces #         Should be able to use self.ogsurfacePoints and collect faces too from above
@@ -2974,13 +2948,9 @@ class Compartment(CompartmentList):
     #        vSurfaceArea = sum(areas)
     #        #for gnum in range(len(normalList2)):
     #        #    vSurfaceArea = vSurfaceArea + areas[gnum]
-    #        print('Graham says Surface Area is %d' %(vSurfaceArea))
-    #        print('Graham says the last triangle area is is %d' %(areas[-1]))
-    #        #print '%d surface points %.2f unitVol'%(len(surfacePoints), unitVol)
     #
     #        # build a BHTree for the vertices
     #
-    #        print('time to create surface points', time()-t1, len(self.ogsurfacePoints))
     #
     #        distances = histoVol.grid.distToClosestSurf
     #        idarray = histoVol.grid.gridPtId
@@ -3397,7 +3367,6 @@ class Compartment(CompartmentList):
             nbGridPoints, srfPts, surfPtsBBNorms, histoVol
         )
 
-        print(len(histoVol.grid.gridPtId[indice]), histoVol.grid.gridPtId[indice])
         insidePoints = pointinside
         print("time to extend arrays", time() - t1)
 
@@ -3555,7 +3524,6 @@ class Compartment(CompartmentList):
         self.insidePoints = insidePoints
         self.surfacePoints = surfacePoints
         self.surfacePointsNormals = allNormals
-        print("AAAAAAAAAAAA", len(surfacePoints))
 
         return insidePoints, surfacePoints
 
@@ -3732,7 +3700,6 @@ class Compartment(CompartmentList):
         This is independant from the packing. Help build ingredient sphere tree and representation
         """
         print("beforea import")
-        print("ok1")
         from autopack.Environment import Grid
 
         self.grid = grid = Grid()
@@ -3762,7 +3729,6 @@ class Compartment(CompartmentList):
         dim = spacing
         dim1 = dim + 1
 
-        print("ok2 ", dim1, dim)
         size = dim1 * dim1 * dim1
         # can be 16,32,64,128,256,512,1024
         verts = numpy.array(self.vertices, dtype="f")
@@ -3770,7 +3736,6 @@ class Compartment(CompartmentList):
         utsdf.setParameters(
             int(dim), 0, 1, [0, 0, 0, 0, 0, 0]
         )  # size, bool isNormalFlip, bool insideZero,bufferArr
-        print("ok3")
 
         # spacing = length / 64
         sizes = self.getSizeXYZ()
@@ -3781,12 +3746,8 @@ class Compartment(CompartmentList):
         xl, yl, zl = boundingBox[0]
         xr, yr, zr = boundingBox[1]
 
-        print(len(verts), len(tris), type(verts), type(tris), verts[0], tris[0])
         print("ok grid points")
-        # verts = N.ascontiguousarray(verts, dtype='f')
-        # tris = N.ascontiguousarray(tris, dtype=N.int32)
-        # verts = N.ascontiguousarray(verts, dtype='f')
-        # tris = N.ascontiguousarray(tris, dtype=N.int32)
+
 
         datap = utsdf.computeSDF(verts, tris)
         # datap = utsdf.computeSDF(verts,tris)
@@ -3983,8 +3944,6 @@ class Compartment(CompartmentList):
                         continue
                     # Get the point index that this coordinate corresponds to.
                     desiredPointIndex = int(round(newK * NX * NY + newJ * NX + newI))
-                    # if desiredPointIndex == 54199:
-                    #     print('HIT with face ' + str(face) + ' and polygon point ' + str(P))
                     desiredPoint = gridPoints[desiredPointIndex]
                     if desiredPoint.representsPolyhedron:
                         continue
@@ -4259,7 +4218,6 @@ class Compartment(CompartmentList):
         diag = grid.diag
         dim = 16
         dim1 = dim + 1
-        print("ok2")
         size = dim1 * dim1 * dim1
         from UTpackages.UTsdf import utsdf
 
@@ -4344,7 +4302,6 @@ class Compartment(CompartmentList):
         #        faces = self.faces[:]
         #        self.createSurfacePoints(maxl=grid.gridSpacing/2.0)
         surfacePoints = srfPts = self.ogsurfacePoints
-        print(len(self.ogsurfacePointsNormals), self.ogsurfacePointsNormals)
         self.OGsrfPtsBht = bht = bhtreelib.BHtree(tuple(srfPts), None, 10)
 
         res = numpy.zeros(len(srfPts), "f")
@@ -4478,22 +4435,13 @@ class Compartment(CompartmentList):
             vx, vy, vz = (gx - sx, gy - sy, gz - sz)
             dot2 = vx * nx + vy * ny + vz * nz
             a = helper.angle_between_vectors(vptos, n)
-            print(dot, dot2, math.degrees(a), include)
-            #            if math.degrees(a) > 250. :#and math.degrees(a) <= 271 :
-            #                print (dot,dot2,a,math.degrees(a))
-            #            if a > (math.pi/2.)+0.1 and a < (math.pi+(math.pi/2.)):#<= gave he outside points
             if (
                 dot > 0 and a < math.pi / 2.0 and include
             ):  # and d1 > d2 :#and dot < (-1.*10E-5): # inside ?
                 print("INSIDE", dot, dot2, a, math.degrees(a))
 
-                #                print (grdPos[ptInd],srfPts[sptInd])
-                #                print ("point ",v," normal ",n)
-                #                print ("inside",dot,dot2,a,math.degrees(a),helper.vector_norm(v),helper.vector_norm(n))
                 # and the point is actually inside the mesh bounding box
                 inside = True
-                #                if self.checkinside :
-                #                    inside  = self.checkPointInsideBB(grdPos[ptInd])
                 # this is not working for a plane, or any unclosed compartment...
                 if inside:
                     idarray[ptInd] = -number
@@ -4516,7 +4464,6 @@ class Compartment(CompartmentList):
                 label=str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(inside),
             )
 
-        #            print('inside time', time()-t2)
         print("total time", time() - t1)
         self.grid_distances = distances
         return insidePoints, surfacePoints
@@ -4572,7 +4519,6 @@ class Compartment(CompartmentList):
         #        faces = self.faces[:]
         #        self.createSurfacePoints(maxl=grid.gridSpacing)
         surfacePoints = srfPts = self.ogsurfacePoints
-        print(len(self.ogsurfacePointsNormals), self.ogsurfacePointsNormals)
         self.OGsrfPtsBht = bht = bhtreelib.BHtree(tuple(srfPts), None, 10)
 
         res = numpy.zeros(len(srfPts), "f")
@@ -4736,9 +4682,6 @@ class Compartment(CompartmentList):
         meshcontacts = pud.world.contactTest(meshnode.node())
         meshcontacts.getNumContacts()
         for ct in meshcontacts.getContacts():
-            m = ct.getManifoldPoint()
-            d = m.getDistance()
-            print(ct.getNode0().getName(), ct.getNode1().getName(), d)
             i = eval(ct.getNode0().getName())
             if i not in iPtList:
                 insidePoints.append(grdPos[i])

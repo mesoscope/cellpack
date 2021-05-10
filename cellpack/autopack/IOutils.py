@@ -42,9 +42,7 @@ def flatten_unicode_keys(d):
 
 
 def getValueToXMLNode(vtype, node, attrname):
-    #        print "getValueToXMLNode ",attrname
     value = node.getAttribute(attrname)
-    #        print "value " , value
     value = str(value)
     if not len(value):
         return None
@@ -80,7 +78,6 @@ def setValueToXMLNode(value, node, attrname):
 
 def setValueToJsonNode(value, attrname):
     vdic = OrderedDict()
-    #  print (attrname,type(attrname),value,type(value))
     vdic[attrname] = None
     if value is None:
         print(attrname, " is None !")
@@ -129,7 +126,6 @@ def setValueToPythonStr(value, attrname):
                 for j, va in enumerate(v):
                     if type(va) == numpy.ndarray:
                         v[j] = va.tolist()
-                    #        print ("setValueToXMLNode ",attrname,value,str(value))
     if type(value) == str:
         return "%s = '%s'" % (attrname, str(value))
     else:
@@ -273,7 +269,6 @@ class IOingredientTool(object):
             print("filename is None")
             return None
         kw = self.parseIngrXmlNode(ingrnode)
-        #        print ("all KW",kw)
         # check for overwritten parameter
         overwrite_node = inode.getElementsByTagName("overwrite")
         if len(overwrite_node):
@@ -285,9 +280,6 @@ class IOingredientTool(object):
         return ingre
 
     def parseIngrXmlNode(self, ingrnode):
-        #        print ("parseIngrXmlNode,",ingrnode)
-        #        name = str(ingrnode.getAttribute("name"))
-        #        print ("name",name)
         kw = {}
         for k in KWDS:
             v = getValueToXMLNode(KWDS[k]["type"], ingrnode, k)
@@ -349,7 +341,6 @@ class IOingredientTool(object):
         # check for overwritten parameter
         if len(overwrite_dic):
             kw.update(overwrite_dic)
-        #        print ("OK ",kw)
         kw = flatten_unicode_keys(kw)
         ingre = self.makeIngredient(**kw)
         return ingre
@@ -670,11 +661,6 @@ def save_asJson(env, setupfile, useXref=True, indent=True):
                 ] = io_ingr.ingrJsonNode(
                     ingr
                 )  # {"name":ingr.o_name}
-                # ingrJsonNode?
-                #                    for k in ingr.KWDS:
-                #                        v = getattr(ingr,k)
-                #    #                    print ingr.name+" keyword ",k,v
-                #                        env.jsondic["cytoplasme"]["ingredients"][ingr.o_name].update(setValueToJsonNode(v,k))
                 env.jsondic["cytoplasme"]["ingredients"][ingr.o_name][
                     "name"
                 ] = ingr.o_name
@@ -722,10 +708,6 @@ def save_asJson(env, setupfile, useXref=True, indent=True):
                     ] = io_ingr.ingrJsonNode(
                         ingr
                     )  # {"name":ingr.o_name}
-                    #                        for k in ingr.KWDS:
-                    #                            v = getattr(ingr,k)
-                    #        #                    print ingr.name+" keyword ",k,v
-                    #                            env.jsondic["compartments"][str(o.name)]["surface"]["ingredients"][ingr.o_name].update(setValueToJsonNode(v,k))
                     env.jsondic["compartments"][str(o.name)]["surface"]["ingredients"][
                         ingr.o_name
                     ]["name"] = ingr.o_name
@@ -757,15 +739,9 @@ def save_asJson(env, setupfile, useXref=True, indent=True):
                     ] = io_ingr.ingrJsonNode(
                         ingr
                     )  # {"name":ingr.o_name}
-                    #                        for k in ingr.KWDS:
-                    #                            v = getattr(ingr,k)
-                    #        #                    print ingr.name+" keyword ",k,v
-                    #                            env.jsondic["compartments"][str(o.name)]["interior"]["ingredients"][ingr.o_name].update(setValueToJsonNode(v,k))
                     env.jsondic["compartments"][str(o.name)]["interior"]["ingredients"][
                         ingr.o_name
                     ]["name"] = ingr.o_name
-    #    if sys.version_info[0] >= 3:
-    #       convert everything to OrderedDict
 
     def default(o):
         raise TypeError(repr(o) + " is not JSON serializable ", o, type(o))
@@ -877,11 +853,6 @@ def save_Mixed_asJson(
                 ] = io_ingr.ingrJsonNode(
                     ingr, result=result, kwds=kwds, transpose=transpose
                 )  # {"name":ingr.o_name}
-                # ingrJsonNode?
-                #                    for k in ingr.KWDS:
-                #                        v = getattr(ingr,k)
-                #    #                    print ingr.name+" keyword ",k,v
-                #                        env.jsondic["cytoplasme"]["ingredients"][ingr.o_name].update(setValueToJsonNode(v,k))
                 env.jsondic["cytoplasme"]["ingredients"][ingr.o_name][
                     "name"
                 ] = ingr.o_name
@@ -925,10 +896,6 @@ def save_Mixed_asJson(
                     ] = io_ingr.ingrJsonNode(
                         ingr, result=result, kwds=kwds, transpose=transpose
                     )  # {"name":ingr.o_name}
-                    #                        for k in ingr.KWDS:
-                    #                            v = getattr(ingr,k)
-                    #        #                    print ingr.name+" keyword ",k,v
-                    #                            env.jsondic["compartments"][str(o.name)]["surface"]["ingredients"][ingr.o_name].update(setValueToJsonNode(v,k))
                     env.jsondic["compartments"][str(o.name)]["surface"]["ingredients"][
                         ingr.o_name
                     ]["name"] = ingr.o_name
@@ -957,10 +924,6 @@ def save_Mixed_asJson(
                     ] = io_ingr.ingrJsonNode(
                         ingr, result=result, kwds=kwds, transpose=transpose
                     )  # {"name":ingr.o_name}
-                    #                        for k in ingr.KWDS:
-                    #                            v = getattr(ingr,k)
-                    #        #                    print ingr.name+" keyword ",k,v
-                    #                            env.jsondic["compartments"][str(o.name)]["interior"]["ingredients"][ingr.o_name].update(setValueToJsonNode(v,k))
                     env.jsondic["compartments"][str(o.name)]["interior"]["ingredients"][
                         ingr.o_name
                     ]["name"] = ingr.o_name
@@ -1044,7 +1007,6 @@ def save_asXML(env, setupfile, useXref=True):
                 ingrnode.setAttribute("name", str(ingr.name))
                 for k in ingr.KWDS:
                     v = getattr(ingr, k)
-                    #                    print ingr.name+" keyword ",k,v
                     setValueToXMLNode(v, ingrnode, k)
     for o in env.compartments:
         onode = env.xmldoc.createElement("compartment")
@@ -1592,7 +1554,6 @@ def serializedRecipe_group_dic(env, transpose, use_quaternion, lefthand=False):
             # ap, ar = gatherResult(ingr["results"], transpose, use_quaternion, type=igr.ingredient_id, lefthand=lefthand)
             # all_pos.extend(ap)
             # all_rot.extend(ar)
-            # print len(all_pos)
         root.addIngredientGroup(group)
     for o in env["compartments"]:
         co = sCompartment(o.name)
@@ -1602,16 +1563,9 @@ def serializedRecipe_group_dic(env, transpose, use_quaternion, lefthand=False):
             for ingr_name in rs["ingredients"]:
                 ingr = rs["ingredients"][ingr_name]
                 kwds = {"nbMol": len(ingr["results"]), "source": ingr["source"]}
-                #                if ingr.Type == "Grow":
-                #                    igr = sIngredientFiber(ingr.o_name, **kwds)
-                #                    group.addIngredientFiber(igr)
-                #                else:
                 igr = sIngredient(ingr["name"], **kwds)
                 group.addIngredient(igr)
-                # ap, ar = gatherResult(ingr.results, transpose, use_quaternion, type=igr.ingredient_id, lefthand=lefthand)
-                # all_pos.extend(ap)
-                # all_rot.extend(ar)
-                # print len(all_pos)
+
             co.addIngredientGroup(group)
         ri = env["compartments"][o]["interior"]
         if ri:
@@ -1625,10 +1579,7 @@ def serializedRecipe_group_dic(env, transpose, use_quaternion, lefthand=False):
                 #                else:
                 igr = sIngredient(ingr["name"], **kwds)
                 group.addIngredient(igr)
-            #                ap, ar = gatherResult(ingr.results, transpose, use_quaternion, type=igr.ingredient_id, lefthand=lefthand)
-            #                all_pos.extend(ap)
-            #                all_rot.extend(ar)
-            # print len(all_pos)
+
             co.addIngredientGroup(group)
         root.addCompartment(co)
     data_json = root.to_JSON()
@@ -1659,7 +1610,6 @@ def serializedRecipe_group(env, transpose, use_quaternion, lefthand=False):
             )
             all_pos.extend(ap)
             all_rot.extend(ar)
-            # print len(all_pos)
         root.addIngredientGroup(group)
     for o in env.compartments:
         co = sCompartment(o.name)
@@ -1683,7 +1633,6 @@ def serializedRecipe_group(env, transpose, use_quaternion, lefthand=False):
                 )
                 all_pos.extend(ap)
                 all_rot.extend(ar)
-                # print len(all_pos)
             co.addIngredientGroup(group)
         ri = o.innerRecipe
         if ri:
@@ -1705,7 +1654,6 @@ def serializedRecipe_group(env, transpose, use_quaternion, lefthand=False):
                 )
                 all_pos.extend(ap)
                 all_rot.extend(ar)
-                # print len(all_pos)
             co.addIngredientGroup(group)
         root.addCompartment(co)
     data_json = root.to_JSON()
@@ -1888,7 +1836,6 @@ def load_XML(env, setupfile):
             direction = str(grnode.getAttribute("direction"))  # vector
             description = str(grnode.getAttribute("description"))
             radius = float(str(grnode.getAttribute("radius")))
-            #                print "weight_mode",weight_mode
             env.setGradient(
                 name=name,
                 mode=mode,
@@ -1941,9 +1888,7 @@ def load_XML(env, setupfile):
         geom = str(onode.getAttribute("geom"))
         rep = str(onode.getAttribute("rep"))
         rep_file = str(onode.getAttribute("rep_file"))
-        # print ("is it working")
         print("xml parsing ", name, geom, rep, rep_file)
-        # print (rep,rep_file,len(rep),rep == '',rep=="",rep != "None",rep != "None" or len(rep) != 0)
         if rep != "None" and len(rep) != 0:
             rname = rep_file.split("/")[-1]
             fileName, fileExtension = os.path.splitext(rname)
@@ -2250,8 +2195,6 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                     iresults, ingrname, ingrcompNum, ptInd, rad = env.getOneIngrJson(
                         ingr, env.result_json["cytoplasme"]["ingredients"][name_ingr]
                     )
-                    #                    print ("rlen ",len(iresults),name_ingr)
-                    #                    ingr.results=[]
                     for r in iresults:  # what if quaternion ?
                         if len(r[1]) == 4:  # quaternion
                             if type(r[1][0]) == float:
@@ -2310,11 +2253,8 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                             "ingredients"
                         ][name_ingr],
                     )
-                    #                        print ("rlen ",len(iresults),name_ingr)
-                    #                    ingr.results=[]
                     for r in iresults:
                         rot = numpy.identity(4)
-                        # print r[1],len(r[1]),type(r[1][0])
                         if len(r[1]) == 4:  # quaternion
                             if type(r[1][0]) == float:
                                 if transpose:
@@ -2366,8 +2306,6 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                             "ingredients"
                         ][name_ingr],
                     )
-                    #                        print ("rlen ",len(iresults),name_ingr)
-                    #                    ingr.results=[]
                     for r in iresults:
                         rot = numpy.identity(4)
                         if len(r[1]) == 4:  # quaternion

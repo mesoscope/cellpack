@@ -455,7 +455,6 @@ class Gradient:
             direction = self.direction
         if bb is None:
             bb = self.bb
-        print(bb)
         # assume grid orthogonal
         maxinmini = []
         a = []
@@ -495,7 +494,6 @@ class Gradient:
             )  # numpy.random.normal(0.5, 0.1, NW) #one dimension
         elif self.weight_mode == "half-gauss":  # 0-1
             d = self.get_gauss_weights(NW * 2)[NW:]
-        print(self.name, self.radius)
         for ptid in range(N):
             dist = vdistance(MasterPosition[ptid], radial_point)
             if self.weight_mode == "linear":
@@ -612,7 +610,6 @@ class Gradient:
                 ptInd = pointIndex
         if self.weight[ptInd] < self.weight_threshold:
             ptInd = None
-        # print "picked",self.weight[ptInd]
         return ptInd
 
     def getMinWeight(self, listPts):
@@ -1902,7 +1899,6 @@ class Environment(CompartmentList):
         if os.path.isfile(ref_obj):
             fileName, fileExtension = os.path.splitext(ref_obj)
             if helper is not None:  # neeed the helper
-                #                print ("read withHelper")
                 helper.read(ref_obj)
                 geom = helper.getObject(fileName)
                 # reparent to the fill parent
@@ -2004,9 +2000,6 @@ class Environment(CompartmentList):
         if r:
             # check if name start with comp name
             # backward compatibility
-            # print name,r.name
-            #            if name.find(r.name) == -1 :
-            #                name = r.name+"__"+name
             # legacy code
             # Problem when ingredient in different compartments
             # compartments is in the first three caractet like int_2 or surf_1
@@ -2278,7 +2271,6 @@ class Environment(CompartmentList):
                     % (len(a), len(a), len(self.grid.masterGridPositions))
                 )
                 compartment.computeVolumeAndSetNbMol(self, b, a, areas=vSurfaceArea)
-                # print("I've built a grid in the compartment test with no surface", a)
                 print("The size of the grid I build = ", len(a))
 
             if (
@@ -2401,10 +2393,8 @@ class Environment(CompartmentList):
             self.callFunction(
                 grid.create3DPointLookup
             )  # generate grid.masterGridPositions
-            #            print('grid size', grid.nbGridPoints)
             grid.nbSurfacePoints = 0
             # self.isFree = numpy.ones( (nbPoints,), 'i') # Will never shrink
-            #            print('nb freePoints', nbPoints)#-1)
             # Id is set set to None initially
             grid.gridPtId = numpy.zeros(nbPoints)  # [0]*nbPoints
 
@@ -2733,7 +2723,6 @@ class Environment(CompartmentList):
             if verbose:
                 print("self.totalRadii += ", r, "=", self.totalRadii)
             if r == 0:
-                print(radii, radii.name)
                 # safety
                 self.totalRadii = self.totalRadii + 1.0
 
@@ -2980,7 +2969,6 @@ class Environment(CompartmentList):
         if hasattr(ingr, "nbPts"):
             if hasattr(ingr, "firstTimeUpdate") and not ingr.firstTimeUpdate:
                 ratio = float(ingr.nbPts) / float(nbFreePoints)
-                #                print('freePtsUpdateThrehod = ', self.freePtsUpdateThrehod)
                 if verbose:
                     print(
                         "checkIfUpdate: ratio = ",
@@ -3066,7 +3054,6 @@ class Environment(CompartmentList):
                 print("find grid point with distance >= ", cut)
             if hasattr(ingr, "allIngrPts") and self._hackFreepts:
                 allIngrPts = ingr.allIngrPts
-                #                print("hasattr(ingr,allIngrPts)")
                 if verbose > 1:
                     print("Running nofreepoint HACK")
             else:
@@ -3176,7 +3163,6 @@ class Environment(CompartmentList):
             # this chunk overwrites the next three lines from July version. July 5, 2012
             #            self.thresholdPriorities.pop(ind)
             #            self.normalizedPriorities.pop(ind)
-            #            print(("time to reject the picking", time()-t))
             return False, vRangeStart
 
         if self.pickRandPt:
@@ -3236,12 +3222,10 @@ class Environment(CompartmentList):
                     print(("vRangeStart", vRangeStart))
                 return False, vRangeStart
 
-            #            print(("time to random pick a point", time()-t2))
         else:
             #            t3=time()
             allIngrPts.sort()
             ptInd = allIngrPts[0]
-        #            print(("time to sort and pick a point", time()-t3))
         return True, ptInd
 
     #    import fill4isolated # Graham cut the outdated fill4 from this document and put it in a separate file. turn on here if you want to use it.
@@ -3488,13 +3472,7 @@ class Environment(CompartmentList):
                             self.afviewer.vi.displayParticleVolumeDistance(
                                 distance, self
                             )
-                    else:
-                        print(
-                            "\r{} {} {} {}".format(
-                                p, ingr.name, ingr.completion, nbFreePoints
-                            ),
-                        )
-                        # End C4D safety check for Status bar added July 10, 2012
+
             compNum = ingr.compNum
             radius = ingr.minRadius
             jitter = self.callFunction(ingr.getMaxJitter, (spacing,))
@@ -3570,7 +3548,6 @@ class Environment(CompartmentList):
                 ),
                 {"debugFunc": debugFunc},
             )
-            #            print("nbFreePoints after PLACE ",nbFreePoints)
             if success:
                 self.grid.distToClosestSurf = numpy.array(distance[:])
                 self.grid.freePoints = numpy.array(freePoints[:])
@@ -3895,9 +3872,7 @@ class Environment(CompartmentList):
                 unitVol = self.grid.gridSpacing ** 3
                 innerPointNum = len(freePoints)
                 print("  .  .  .  . ")
-                #                print ('for compartment o = ', o.name)
                 print("inner Point Count = ", innerPointNum)
-                #                print ('inner Volume = ', o.interiorVolume)
                 print("innerVolume temp Confirm = ", innerPointNum * unitVol)
                 usedPts = 0
                 unUsedPts = 0
@@ -4851,7 +4826,6 @@ class Environment(CompartmentList):
         if panda3d is None:
             return
         halfextents = ingr.bb[1]
-        print(halfextents)
         shape = BulletBoxShape(
             Vec3(halfextents[0], halfextents[1], halfextents[2])
         )  # halfExtents
@@ -5078,7 +5052,6 @@ class Environment(CompartmentList):
         #        mat[:3, 3] = trans
         #        mat = mat.transpose()
         mat = mat.transpose().reshape((16,))
-        #        print mat,len(mat),mat.shape
         mat3x3 = Mat3(
             mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10]
         )
@@ -5134,7 +5107,6 @@ class Environment(CompartmentList):
         if True in numpy.isnan(mat).flatten():
             print("problem Matrix", node)
             return
-        #        print mat,len(mat),mat.shape
         if self.panda_solver == "bullet":
             pMat = Mat4(
                 mat[0],
@@ -5194,7 +5166,7 @@ class Environment(CompartmentList):
                 for n in self.static
             ]
             done = not (True in r)
-            print(done, dt, time() - t1)
+            print(done, dt, "time", time() - t1)
             if runTimeDisplay:
                 # move self.moving and update
                 nodenp = NodePath(self.moving)

@@ -257,7 +257,6 @@ class Grid:
                         zl + zi * space + space / 2.0,
                     )
                     self.ijkPtIndice[i] = (xi, yi, zi)
-                    # print ("add i",i,xi,yi,zi,nx,ny,nz)
                     i += 1
         self.masterGridPositions = pointArrayRaw
 
@@ -336,7 +335,6 @@ class Grid:
             NY = 1
         if NZ == 0:
             NZ = 1
-        print(NX, NY, NZ)
         # we want the diagonal of the voxel, not the diagonal of the plane, so the second 1.1547 is was incorrect
         environmentBoxEqualFillBox = True
         # np.linspace(2.0, 3.0, num=5)
@@ -610,7 +608,6 @@ class Grid:
         tr = []
         corner = numpy.zeros((4, 3))  # 7 corner / 3 corner 3D / 2D
         i1 = numpy.nonzero(pxyz)[0]
-        # print i1,pxyz
         for i in i1:
             tr.append(pt3d + (self.preriodic_table["left"][i] * pxyz[i]))  # 0,1,2
             corner[0] += self.preriodic_table["left"][i] * pxyz[i]  # 1
@@ -637,8 +634,6 @@ class Grid:
                 + self.preriodic_table["left"][2] * pxyz[2]
             )
             for i in range(4):  # 4+1=5
-                # print i,corner[i],sum(corner[i])
-                # if sum(corner[i]) != 0 :
                 tr.append(pt3d + corner[i])
         if len(tr):
             translation = tr
@@ -827,7 +822,6 @@ class Grid:
             ptIndices = [p[2] + NY * p[1] + p[0] for p in ijk]
         else:
             0.02451198
-        #        print "coordi",ptIndices[0],self.masterGridPositions[ptIndices[0]]
         # add surface points
         if addSP and self.nbSurfacePoints != 0:
             result = numpy.zeros((self.nbSurfacePoints,), "i")
@@ -857,8 +851,6 @@ class Grid:
         Return all grid points indices inside the given bouding box.
         NOTE : need to fix with grid build with numpy arrange
         """
-        # print ("get grid points ", bb, pt, radius)
-        # return self.getPointsInCubeFillBB(bb, pt, radius,addSP=addSP,info=info)
         return self.getPointsInSphere(bb, pt, radius, addSP=addSP, info=info)
         spacing1 = 1.0 / (self.gridSpacing)  # / 1.1547)
 
@@ -1009,7 +1001,6 @@ class Grid:
             RAPIDlib.cvar.RAPID_ALL_CONTACTS,
         )
         # could display it ?
-        # print numpy.array([v1,v2,v3],'f')
         return RAPIDlib.cvar.RAPID_num_contacts
 
     def checkPointInside_rapid(self, point, diag, ray=1):
@@ -1096,6 +1087,7 @@ class Grid:
             p = (ptInd / float(len(grdPos))) * 100.0
             if (ptInd % 100) == 0:
                 print(
+                    "points",
                     int(p),
                     str(ptInd)
                     + "/"
