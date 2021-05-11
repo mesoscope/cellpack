@@ -48,7 +48,6 @@
 
 import os
 import time
-import sys
 from random import random, uniform, seed
 import bisect
 from scipy import spatial
@@ -107,16 +106,6 @@ LISTPLACEMETHOD = autopack.LISTPLACEMETHOD
 SEED = 14
 LOG = False
 verbose = 0
-
-
-def linearDecayProb():
-    """return a number from 0 (higest probability) to 1 (lowest probability)
-    with a linear fall off of probability
-    """
-    r1 = uniform(-0.25, 0.25)
-    r2 = uniform(-0.25, 0.25)
-    return abs(r1 + r2)
-
 
 def ingredient_compare1(x, y):
     """
@@ -201,15 +190,29 @@ def ingredient_compare2(x, y):
         return -1
 
 
-def cmp2key(mycmp):
-    """Converts a cmp= function into a key= function"""
-
+def cmp_to_key(mycmp):
+    'Convert a cmp= function into a key= function'
     class K:
         def __init__(self, obj, *args):
             self.obj = obj
 
-        def __cmp__(self, other):
-            return mycmp(self.obj, other.obj)
+        def __lt__(self, other):
+            return mycmp(self.obj, other.obj) < 0
+
+        def __gt__(self, other):
+            return mycmp(self.obj, other.obj) > 0
+
+        def __eq__(self, other):
+            return mycmp(self.obj, other.obj) == 0
+
+        def __le__(self, other):
+            return mycmp(self.obj, other.obj) <= 0
+
+        def __ge__(self, other):
+            return mycmp(self.obj, other.obj) >= 0
+
+        def __ne__(self, other):
+            return mycmp(self.obj, other.obj) != 0
 
     return K
 
@@ -1455,7 +1458,7 @@ class Environment(CompartmentList):
                 print("PROBLEM creating ingredient from ", ingrnode)
             # look for overwritten attribute
 
-    def loadRecipe(self, setupfile):
+    def load_recipe(self, setupfile):
         if setupfile is None:
             setupfile = self.setupfile
         else:
@@ -1972,21 +1975,21 @@ class Environment(CompartmentList):
 
     def loopThroughIngr(self, cb_function):
         """
-        Helper function that loop through all ingredients of all recipe and apply the give
-        callback functio on each ingredients.
+        Helper function that loops through all ingredients of all recipes and applies the given
+        callback function on each ingredients.
         """
-        r = self.exteriorRecipe
-        if r:
-            for ingr in r.ingredients:
+        recipe = self.exteriorRecipe
+        if recipe:
+            for ingr in recipe.ingredients:
                 cb_function(ingr)
-        for o in self.compartments:
-            rs = o.surfaceRecipe
-            if rs:
-                for ingr in rs.ingredients:
+        for compartment in self.compartments:
+            surface_recipe = compartment.surfaceRecipe
+            if surface_recipe:
+                for ingr in surface_recipe.ingredients:
                     cb_function(ingr)
-            ri = o.innerRecipe
-            if ri:
-                for ingr in ri.ingredients:
+            inner_recipe = compartment.innerRecipe
+            if inner_recipe:
+                for ingr in inner_recipe.ingredients:
                     cb_function(ingr)
 
     def getIngrFromNameInRecipe(self, name, r):
@@ -2681,24 +2684,12 @@ class Environment(CompartmentList):
                 priorities0.append(ing.packingPriority)
 
         if self.pickWeightedIngr:
-            # Graham here on 5/16/12. Double check that this new version is correct- it
-            # uses a very different function than the working September version from
-            #  2011
-            # sorted(ingr1, key=attrgetter('packingPriority', 'minRadius','completion'), reverse=True)
-            # ingr1.sort(key=ingredient_compare1)  #Fails 5/21/12
-            if sys.version < "3.0.0":
-                ingr1.sort(ingredient_compare1)
-                # sort ingredients with no priority based on radius and completion
-                ingr2.sort(ingredient_compare2)
-                ingr0.sort(ingredient_compare0)  # Fails 5/21/12
-            else:
-                try:
-                    ingr1.sort(key=ingredient_compare1)
-                    ingr2.sort(key=ingredient_compare2)
-                    ingr0.sort(key=ingredient_compare0)
-                except:  # noqa: E722
-                    print("ATTENTION INGR NOT SORTED")
-        # for ing in ingr3 : ing.packingPriority    = -ing.packingPriority
+            try:
+                ingr1.sort(key=cmp_to_key(ingredient_compare1))
+                ingr2.sort(key=cmp_to_key(ingredient_compare2))
+                ingr0.sort(key=cmp_to_key(ingredient_compare0))
+            except Exception as e:  # noqa: E722
+                print("ATTENTION INGR NOT SORTED", e)
         # GrahamAdded this stuff in summer 2011, beware!
         if len(ingr1) != 0:
             lowestIng = ingr1[len(ingr1) - 1]
@@ -2746,17 +2737,6 @@ class Environment(CompartmentList):
             print("priorities1 is ", priorities1)
             print("priorities2 is ", priorities2)
             print("packingPriorities", packingPriorities)
-
-        #        if verbose>0:
-        #            print 'Ingredients:'
-        #            for i, ingr in enumerate(activeIngr):
-        #                packPri = ingr.packingPriority
-        #                if packPri is None:
-        #                    packPri = -1
-        #                print '  comp:%2d #:%3d pri:%3d compl:%.2f mRad:%5.1f t:%4d n:%4d '%(
-        #                    ingr.compNum, i, packPri, ingr.completion, ingr.minRadius,
-        #                    ingr.nbMol, ingr.counter)
-        #            raw_input("hit enter")
 
         return activeIngr0, activeIngr12
 
@@ -3249,7 +3229,7 @@ class Environment(CompartmentList):
                 self.set_partners_ingredient(ingr)
         return totalNbIngr
 
-    def fill5(
+    def pack_grid(
         self,
         seedNum=14,
         stepByStep=False,
@@ -3264,8 +3244,8 @@ class Environment(CompartmentList):
     ):
         """
         the latest packing loop
-        ## Fill the grid by picking an ingredient first and then
         ## this packing should be able to continue from a previous one
+        ## Fill the grid by picking an ingredient first and then
         ## find a suitable point using the ingredient's placer object
         """
         # set periodicity
@@ -3294,14 +3274,11 @@ class Environment(CompartmentList):
         self.FillName.append(name)
         self.nFill += 1
         # seed random number generator
-        #        if not self.seed_set:
         self.setSeed(seedNum)
         # create copies of the distance array as they change when molecules
         # are added, theses array can be restored/saved before feeling
         freePoints = self.grid.freePoints[:]
         self.grid.nbFreePoints = nbFreePoints = len(freePoints)  # -1
-        #        self.freePointMask = numpy.ones(nbFreePoints,dtype="int32")
-        # Oct 20, 2012  This is part of the code that is breaking the grids for all meshless compartment fills
         if "fbox" in kw:
             self.fbox = kw["fbox"]
         if self.fbox is not None and not self.EnviroOnly:
@@ -3372,17 +3349,17 @@ class Environment(CompartmentList):
             for ingr in allIngredients:
                 totalNumMols += ingr.nbMol
             if verbose > 1:
-                print("totalNumMols Fill5if = ", totalNumMols)
+                print("totalNumMols pack_grid if = ", totalNumMols)
         else:
             for threshProb in self.thresholdPriorities:
                 nameMe = self.activeIngr[nls]
                 totalNumMols += nameMe.nbMol
                 if verbose > 1:
                     print(
-                        "threshprop Fill5else is %f for ingredient: %s %s %d"
+                        "threshprop pack_grid else is %f for ingredient: %s %s %d"
                         % (threshProb, nameMe, nameMe.name, nameMe.nbMol)
                     )
-                    print("totalNumMols Fill5else = ", totalNumMols)
+                    print("totalNumMols pack_grid else = ", totalNumMols)
                 nls += 1
 
         vRangeStart = 0.0
@@ -3415,16 +3392,16 @@ class Environment(CompartmentList):
                 print("Points Remaining", nbFreePoints, len(freePoints))
                 print("len(self.activeIngr)", len(self.activeIngr))
 
-                # breakin test
+            # breakin test
             if len(self.activeIngr) == 0:
-                print("broken by len****")
+                print("exit packing loop because of len****")
                 if hasattr(self, "afviewer"):
                     if self.afviewer is not None and hasattr(self.afviewer, "vi"):
                         self.afviewer.vi.resetProgressBar()
                         self.afviewer.vi.progressBar(label="Filling Complete")
                 break
             if vRangeStart > 1:
-                print("broken by vRange and hence Done!!!****")
+                print("exit packing loop because vRange and hence Done!!!****")
                 break
             if self.cancelDialog:
                 tCancel = time.time()
