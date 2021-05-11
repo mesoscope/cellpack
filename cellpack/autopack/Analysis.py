@@ -140,7 +140,7 @@ class AnalyseAP:
         self.g.Resolution = 1.0  # or grid step?
         self.current_pos = None
         self.current_distance = None
-        autopack._colornos = None
+        autopack._colors = None
 
     def getMinMaxProteinSize(self):
         smallest = 999999.0
