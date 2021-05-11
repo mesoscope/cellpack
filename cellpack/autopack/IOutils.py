@@ -458,7 +458,7 @@ class IOingredientTool(object):
             ingr.gradient = kw["gradient"]
         if "results" in kw:
             ingr.results = kw["results"]
-            # flag as previsouly loaded ?
+            # flag as previously loaded ?
         return ingr
 
     def set_recipe_ingredient(self, xmlnode, recipe):
