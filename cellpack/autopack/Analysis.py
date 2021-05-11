@@ -207,14 +207,14 @@ class AnalyseAP:
         self.helper = None
         if viewer:
             self.helper = self.afviewer.vi
-        self.resutl_file = result_file
+        self.result_file = result_file
         self.center = [0, 0, 0]
         self.bbox = [[0, 0, 0], [1, 1, 1]]
         self.g = GeometriTools()
         self.g.Resolution = 1.0  # or grid step?
         self.current_pos = None
         self.current_distance = None
-        autopack._colors = None
+        autopack._colornos = None
 
     def getMinMaxProteinSize(self):
         smallest = 999999.0
@@ -246,20 +246,20 @@ class AnalyseAP:
         positions = []
         for parent in parents:
             obparent = self.helper.getObject(parent)
-            childs = self.helper.getChilds(obparent)
-            for ch in childs:
+            children = self.helper.getChilds(obparent)
+            for ch in children:
                 ingr_name = self.helper.getName(ch)
                 meshp = self.helper.getObject("Meshs_" + ingr_name.split("_")[0])
                 if meshp is None:
                     c = self.helper.getChilds(ch)
                     if not len(c):
                         continue
-                    meshpchilds = self.helper.getChilds(
+                    meshp_children = self.helper.getChilds(
                         c[0]
                     )  # continue #should get sphere/cylnder parent ?
                 else:
-                    meshpchilds = self.helper.getChilds(meshp)
-                for cc in meshpchilds:
+                    meshp_children = self.helper.getChilds(meshp)
+                for cc in meshp_children:
                     pos = self.helper.ToVec(self.helper.getTranslation(cc))
                     positions.append(pos)
         return positions
@@ -267,7 +267,7 @@ class AnalyseAP:
     def getDistanceFrom(self, target, parents=None, **options):
         """
         target : name or host object target or target position
-        parent : name of host parent object for the list of object to measre distance from
+        parent : name of host parent object for the list of object to measure distance from
         objects : list of object or list of points
         """
         # get distance from object to the target.
@@ -284,33 +284,33 @@ class AnalyseAP:
             o = self.helper.getObject(target)
             if o is not None:
                 targetPos = self.helper.ToVec(self.helper.getTranslation(o))  # hostForm
-        listeCenters = []
-        if self.resutl_file is None:
-            if parents is None and self.resutl_file is None:
+        listCenters = []
+        if self.result_file is None:
+            if parents is None and self.result_file is None:
                 listeParent = [self.env.name + "_cytoplasm"]
                 for o in self.env.compartments:
                     listeParent.append(o.name + "_Matrix")
                     listeParent.append(o.name + "_surface")
-            elif parents is not None and self.resutl_file is None:
+            elif parents is not None and self.result_file is None:
                 listeParent = parents
-            listeCenters = self.getPositionsFromObject(listeParent)
+            listCenters = self.getPositionsFromObject(listeParent)
         else:
             # use data from file
-            listeCenters = self.getPositionsFromResFile(listeParent)
+            listCenters = self.getPositionsFromResFile(listeParent)
 
-        delta = numpy.array(listeCenters) - numpy.array(targetPos)
+        delta = numpy.array(listCenters) - numpy.array(targetPos)
         delta *= delta
         distA = numpy.sqrt(delta.sum(1))
         return distA
 
     def getClosestDistance(self, parents=None, **options):
-        if self.resutl_file is None:
-            if parents is None and self.resutl_file is None:
+        if self.result_file is None:
+            if parents is None and self.result_file is None:
                 listeParent = [self.env.name + "_cytoplasm"]
                 for o in self.env.compartments:
                     listeParent.append(o.name + "_Matrix")
                     listeParent.append(o.name + "_surface")
-            elif parents is not None and self.resutl_file is None:
+            elif parents is not None and self.result_file is None:
                 listeParent = parents
             listeCenters = self.getPositionsFromObject(listeParent)
         else:

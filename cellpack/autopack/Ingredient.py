@@ -978,7 +978,7 @@ class Agent:
             if ingr.name not in listeIngrInstance:
                 listeIngrInstance[ingr.name] = [ingr.weight, []]
             listeIngrInstance[ingr.name][1].append(i)
-        # sort according ingrediant binding weight (proba to bind)
+        # sort according ingredient binding weight (proba to bind)
         sortedListe = sorted(
             list(listeIngrInstance.items()), key=lambda elem: elem[1][0]
         )
@@ -1106,7 +1106,7 @@ class Agent:
 
     def pickPartner_old(self, mingrs, listePartner, currentPos=[0, 0, 0]):
         # pick the highest weighted partner
-        # pick one instance of this ingrediant
+        # pick one instance of this ingredient
         # (distance or random or density nb of instance)
         # roll a dice to decide if bind or not
         # problem where put the cb function
@@ -4989,7 +4989,7 @@ class Ingredient(Agent):
 
         ok = False
         # here should go the simulation
-        # 1- we build the ingrediant if not already and place the ingrediant at jtrans, rotMatj
+        # 1- we build the ingredient if not already and place the ingredient at jtrans, rotMatj
         moving = None
         static = []
         target = None
@@ -5042,7 +5042,7 @@ class Ingredient(Agent):
                         parent=afvi.staticMesh,
                     )
                 static.append(ipoly)
-            elif isinstance(ing, GrowIngrediant):
+            elif isinstance(ing, GrowIngredient):
                 name = ing.name + str(ind)
                 ipoly = afvi.vi.newInstance(
                     name, afvi.orgaToMasterGeom[ing], parent=afvi.staticMesh
@@ -8223,7 +8223,7 @@ class Ingredient(Agent):
         #        print ("jtrans ",jtrans)
         ok = False
         # here should go the simulation
-        # 1- we build the ingrediant if not already and place the ingrediant at jtrans, rotMatj
+        # 1- we build the ingredient if not already and place the ingredient at jtrans, rotMatj
         targetPoint = jtrans
         #        import c4d
         # c4d.documents.RunAnimation(c4d.documents.GetActiveDocument(), True)
@@ -8273,7 +8273,7 @@ class Ingredient(Agent):
                             parent=afvi.staticMesh,
                         )
                         #                    static.append(ipoly)
-                elif isinstance(ing, GrowIngrediant):
+                elif isinstance(ing, GrowIngredient):
                     name = ing.name + str(ind)
                     ipoly = afvi.vi.newInstance(
                         name, afvi.orgaToMasterGeom[ing], parent=afvi.staticMesh
@@ -8898,7 +8898,7 @@ class MultiCylindersIngr(Ingredient):
         # do we need this class?
 
 
-class GrowIngrediant(MultiCylindersIngr):
+class GrowIngredient(MultiCylindersIngr):
     def __init__(
         self,
         molarity=0.0,
@@ -9048,10 +9048,6 @@ class GrowIngrediant(MultiCylindersIngr):
                     p = autopack.helper.newEmpty("autopackHider")
                     if autopack.helper.host.find("blender") == -1:
                         autopack.helper.toggleDisplay(p, False)
-                        #                self.mesh = autopack.helper.Cylinder(self.name+"_basic",
-                        #                                radius=self.radii[0][0]*1.24, length=self.uLength,
-                        #                                res= 5, parent="autopackHider",axis="+X")[0]
-                        #            else :
             # is axis working ?
             self.mesh = autopack.helper.Cylinder(
                 self.name + "_basic",
@@ -11857,7 +11853,7 @@ class GrowIngrediant(MultiCylindersIngr):
 # return newPts,None,None
 
 
-class ActinIngrediant(GrowIngrediant):
+class ActinIngredient(GrowIngredient):
     def __init__(
         self,
         molarity,
@@ -11896,7 +11892,7 @@ class ActinIngrediant(GrowIngrediant):
         #                            jitterMax, perturbAxisAmplitude, principalVector,
         #                            meshFile, packingMode,placeType,meshObject)
 
-        GrowIngrediant.__init__(
+        GrowIngredient.__init__(
             self,
             molarity,
             radii,
@@ -11959,7 +11955,7 @@ class ActinIngrediant(GrowIngrediant):
 # from DejaVu  import colors
 class IngredientDictionary:
     """
-    list all available ingrediant, and permit to add user ingrediant
+    list all available ingredient, and permit to add user ingredient
     the listing is based on a scanning of the autopack package directory
     under recipe/membrane and recipe/cyto
     """
@@ -12191,7 +12187,7 @@ class IngredientDictionary:
                 nbSphere = eval(lines[i + 1])
                 return nbSphere
 
-    def makeBiLayerIngrediant(
+    def makeBiLayerIngredient(
         self,
         molarity,
         positions=[-0.5, 0, 0],
@@ -12226,7 +12222,7 @@ class IngredientDictionary:
         )  # color=colors.burlywood,
         return cyl1IngrU, cyl1IngrD
 
-    def makeKnownIngrediant(self, MSca, listeCol):
+    def makeKnownIngredient(self, MSca, listeCol):
         rSurf1 = Recipe()
         rCyto = Recipe()
         rMatrix = Recipe()
@@ -12280,7 +12276,7 @@ class IngredientDictionary:
                 i = i + 1
         return rRec
 
-    def getIngrediants(self, name, color):
+    def getIngredients(self, name, color):
         wrkDir = self.rdir
         ingr = None
         for k in list(self.knownIngr.keys()):
@@ -12330,7 +12326,7 @@ class IngredientDictionary:
                     break
         return ingr
 
-    def makeIngrediants(self, MSca, listeCol, wanted):
+    def makeIngredients(self, MSca, listeCol, wanted):
         rSurf1 = Recipe()
         rCyto = Recipe()
         rRec = {"membrane": rSurf1, "cyto": rCyto}

@@ -223,10 +223,10 @@ class Compartment(CompartmentList):
         # to compute inside points.
         if "isBox" in kw:
             self.isBox = kw["isBox"]
-        self.isOrthogonalBoudingBox = None  # the compartment shape is a box, no need
+        self.isOrthogonalBoundingBox = None  # the compartment shape is a box, no need
         # to compute inside points.
-        if "isOrthogonalBoudingBox" in kw:
-            self.isOrthogonalBoudingBox = kw["isOrthogonalBoudingBox"]
+        if "isOrthogonalBoundingBox" in kw:
+            self.isOrthogonalBoundingBox = kw["isOrthogonalBoundingBox"]
         self.stype = "mesh"
         self.radius = 0.0
         self.height = 0.0
@@ -271,7 +271,7 @@ class Compartment(CompartmentList):
         @type  filename: string
         @param filename: the name of the input file
         @type  geomname: string
-        @param geomname: the name of the ouput geometry
+        @param geomname: the name of the output geometry
 
         @rtype:   DejaVu.IndexedPolygons
         @return:  the created dejavu mesh
@@ -761,7 +761,7 @@ class Compartment(CompartmentList):
             self.center = center
 
     def getRadius(self):
-        """get the radius as the distance between vertices center and bottom left bouding box"""
+        """get the radius as the distance between vertices center and bottom left bounding box"""
         import math
 
         d = self.center - self.bb[0]
@@ -787,7 +787,7 @@ class Compartment(CompartmentList):
         return sizexyz
 
     #    def checkPointInsideBBold(self,pt3d,dist=None):
-    #        """check if the given 3d coordinate is inside the compartment bouding box"""
+    #        """check if the given 3d coordinate is inside the compartment bounding box"""
     #        O = numpy.array(self.bb[0])
     #        E = numpy.array(self.bb[1])
     #        P = numpy.array(pt3d)
@@ -1242,44 +1242,44 @@ class Compartment(CompartmentList):
         return inside
 
     def BuildGrid(self, env):
-        if self.isOrthogonalBoudingBox == 1:
+        if self.isOrthogonalBoundingBox == 1:
             self.prepare_buildgrid_box(env)
         if (
-            env.innerGridMethod == "sdf" and self.isOrthogonalBoudingBox != 1
+            env.innerGridMethod == "sdf" and self.isOrthogonalBoundingBox != 1
         ):  # A fillSelection can now be a mesh too... it can use either of these methods
             a, b = self.BuildGrid_utsdf(
                 env
             )  # to make the outer most selection from the master and then the compartment
         elif (
-            env.innerGridMethod == "bhtree" and self.isOrthogonalBoudingBox != 1
+            env.innerGridMethod == "bhtree" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             a, b = self.BuildGrid_bhtree(env)
         elif (
-            env.innerGridMethod == "jordan" and self.isOrthogonalBoudingBox != 1
+            env.innerGridMethod == "jordan" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             a, b = self.BuildGrid_jordan(env)
         elif (
-            env.innerGridMethod == "jordan3" and self.isOrthogonalBoudingBox != 1
+            env.innerGridMethod == "jordan3" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             a, b = self.BuildGrid_jordan(env, ray=3)
         elif (
-            env.innerGridMethod == "pyray" and self.isOrthogonalBoudingBox != 1
+            env.innerGridMethod == "pyray" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             a, b = self.BuildGrid_pyray(env)
         elif (
-            env.innerGridMethod == "floodfill" and self.isOrthogonalBoudingBox != 1
+            env.innerGridMethod == "floodfill" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             a, b = self.BuildGrid_kevin(env)
         elif (
-            env.innerGridMethod == "binvox" and self.isOrthogonalBoudingBox != 1
+            env.innerGridMethod == "binvox" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             a, b = self.BuildGrid_binvox(env)
         elif (
-            env.innerGridMethod == "trimesh" and self.isOrthogonalBoudingBox != 1
+            env.innerGridMethod == "trimesh" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             a, b = self.BuildGrid_trimesh(env)
         elif (
-            env.innerGridMethod == "scanline" and self.isOrthogonalBoudingBox != 1
+            env.innerGridMethod == "scanline" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             a, b = self.BuildGrid_scanline(env)
         return a, b
@@ -3747,8 +3747,6 @@ class Compartment(CompartmentList):
         xr, yr, zr = boundingBox[1]
 
         print("ok grid points")
-
-
         datap = utsdf.computeSDF(verts, tris)
         # datap = utsdf.computeSDF(verts,tris)
         print("ok computeSDF")

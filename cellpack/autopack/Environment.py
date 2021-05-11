@@ -74,7 +74,7 @@ from cellpack.mgl_tools.bhtree import bhtreelib
 import cellpack.autopack as autopack
 from .Compartment import CompartmentList
 from .Recipe import Recipe
-from .Ingredient import GrowIngrediant, ActinIngrediant
+from .Ingredient import GrowIngredient, ActinIngredient
 from .ray import vlen, vdiff
 from cellpack.autopack import IOutils
 
@@ -116,9 +116,6 @@ def linearDecayProb():
     r1 = uniform(-0.25, 0.25)
     r2 = uniform(-0.25, 0.25)
     return abs(r1 + r2)
-    # r3 = uniform(-0.25,0.25)
-    # r4 = uniform(-0.25,0.25)
-    # return abs(r1+r2+r3+r4)  # Gaussian decay
 
 
 def ingredient_compare1(x, y):
@@ -294,7 +291,6 @@ class Gradient:
         if direction is None:
             self.direction = self.directions[self.mode]
         else:
-            #            self.mode = "direction"
             self.direction = direction  # from direction get start and end point
         self.distance = 0.0
         self.gblob = 4.0
@@ -1097,7 +1093,7 @@ class Environment(CompartmentList):
         self.FillName = ["F" + str(self.nFill)]
 
         self.traj_linked = False
-        # do we sort the ingrediant or not see  getSortedActiveIngredients
+        # do we sort the ingredient or not see  getSortedActiveIngredients
         self.pickWeightedIngr = True
         self.pickRandPt = True  # point pick randomly or one after the other?
         self.currtId = 0
@@ -1113,7 +1109,7 @@ class Environment(CompartmentList):
         # debug with timer function
         self._timer = False
         self._hackFreepts = False  # hack for speed up ?
-        self.freePtsUpdateThrehod = 0.0
+        self.freePtsUpdateThreshold = 0.0
         self.nb_ingredient = 0
         self.totalNbIngr = 0
         self.treemode = "cKDTree"  # "bhtree"
@@ -1125,13 +1121,13 @@ class Environment(CompartmentList):
         self.rIngr = []
         self.rRot = []
         self.listPlaceMethod = LISTPLACEMETHOD
-        # should be part of an independant module
+        # should be part of an independent module
         self.panda_solver = "bullet"  # or bullet
         # could be a problem here for pp
         # can't pickle this dictionary
         self.rb_func_dic = {}
         self.use_periodicity = False
-        self.gridbiasedPeriodicity = None  # unsused here
+        self.gridbiasedPeriodicity = None  # unused here
         # need options for the save/server data etc....
         # should it be in __init__ like other general options ?
         self.dump = True
@@ -1272,7 +1268,7 @@ class Environment(CompartmentList):
                 "description": "compute Grid Params",
                 "width": 30,
             },
-            # do we sort the ingrediant or not see  getSortedActiveIngredients
+            # do we sort the ingredient or not see  getSortedActiveIngredients
             "pickWeightedIngr": {
                 "name": "pickWeightedIngr",
                 "value": True,
@@ -1315,8 +1311,8 @@ class Environment(CompartmentList):
                 "description": "no free point update",
                 "width": 30,
             },
-            "freePtsUpdateThrehod": {
-                "name": "freePtsUpdateThrehod",
+            "freePtsUpdateThreshold": {
+                "name": "freePtsUpdateThreshold",
                 "value": 0.0,
                 "default": 0.0,
                 "type": "float",
@@ -1371,7 +1367,7 @@ class Environment(CompartmentList):
             MultiSphereIngr,
             SingleCubeIngr,
         )
-        from autopack.Ingredient import MultiCylindersIngr, GrowIngrediant
+        from autopack.Ingredient import MultiCylindersIngr, GrowIngredient
 
         ingr = None
 
@@ -1396,9 +1392,9 @@ class Environment(CompartmentList):
             kw["positions2"] = None
             ingr = SingleCubeIngr(**kw)
         elif kw["Type"] == "Grow":
-            ingr = GrowIngrediant(**kw)
+            ingr = GrowIngredient(**kw)
         elif kw["Type"] == "Actine":
-            ingr = ActinIngrediant(**kw)
+            ingr = ActinIngredient(**kw)
         if "gradient" in kw and kw["gradient"] != "" and kw["gradient"] != "None":
             ingr.gradient = kw["gradient"]
         return ingr
@@ -2082,8 +2078,8 @@ class Environment(CompartmentList):
         for compartment in self.compartments:
             if autopack.verbose:
                 print(
-                    "in Environment, compartment.isOrthogonalBoudingBox =",
-                    compartment.isOrthogonalBoudingBox,
+                    "in Environment, compartment.isOrthogonalBoundingBox =",
+                    compartment.isOrthogonalBoundingBox,
                 )
             a, b = compartment.BuildGrid(self)  # return inside and surface point
             aInteriorGrids.append(a)
@@ -2239,11 +2235,11 @@ class Environment(CompartmentList):
         b = []
         for compartment in self.compartments:
             print(
-                "in Environment, compartment.isOrthogonalBoudingBox =",
-                compartment.isOrthogonalBoudingBox,
+                "in Environment, compartment.isOrthogonalBoundingBox =",
+                compartment.isOrthogonalBoundingBox,
             )
             b = []
-            if compartment.isOrthogonalBoudingBox == 1:
+            if compartment.isOrthogonalBoundingBox == 1:
                 self.EnviroOnly = True
                 print(
                     ">>>>>>>>>>>>>>>>>>>>>>>>> Not building a grid because I'm an Orthogonal Bounding Box"
@@ -2275,49 +2271,49 @@ class Environment(CompartmentList):
 
             if (
                 self.innerGridMethod == "sdf"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # A fillSelection can now be a mesh too... it can use either of these methods
                 a, b = compartment.BuildGrid_utsdf(
                     self
                 )  # to make the outer most selection from the master and then the compartment
             elif (
                 self.innerGridMethod == "bhtree"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid(self)
             elif (
                 self.innerGridMethod == "jordan"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_jordan(self)
             elif (
                 self.innerGridMethod == "jordan3"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_jordan(self, ray=3)
             elif (
                 self.innerGridMethod == "pyray"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_pyray(self)
             elif (
                 self.innerGridMethod == "floodfill"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_kevin(self)
             elif (
                 self.innerGridMethod == "binvox"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_binvox(self)
             elif (
                 self.innerGridMethod == "trimesh"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_trimesh(self)
             elif (
                 self.innerGridMethod == "scanline"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_scanline(self)
 
@@ -2978,7 +2974,7 @@ class Environment(CompartmentList):
                         "ingr.nbPts = ",
                         ingr.nbPts,
                     )
-                if ratio > self.freePtsUpdateThrehod:
+                if ratio > self.freePtsUpdateThreshold:
                     return True
                 else:
                     if ingr.haveBeenRejected and ingr.rejectionCounter > 5:
@@ -3523,7 +3519,7 @@ class Environment(CompartmentList):
                 vRangeStart = res[1]
                 continue
                 print("picked ", ptInd, distance[ptInd])
-            # place the ingrediant
+            # place the ingredient
             if self.overwritePlaceMethod:
                 ingr.placeType = self.placeMethod
             # if self.rejectionThreshold is not None:
@@ -4155,8 +4151,8 @@ class Environment(CompartmentList):
         #            name_ingr = ingr.o_name
         #        for r in ingr.results:
         #            ingrdic[name_ingr]["results"].append([r[0]],r[1],)
-        #        print ("growingr?",ingr,ingr.name,isinstance(ingr, GrowIngrediant))
-        if isinstance(ingr, GrowIngrediant) or isinstance(ingr, ActinIngrediant):
+        #        print ("growingr?",ingr,ingr.name,isinstance(ingr, GrowIngredient))
+        if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
             ingr.nbCurve = ingrdic["nbCurve"]
             ingr.listePtLinear = []
             for i in range(ingr.nbCurve):
@@ -4223,14 +4219,14 @@ class Environment(CompartmentList):
 
         self.loopThroughIngr(cb)
         for pos, rot, ingr, ptInd in self.molecules:
-            if isinstance(ingr, GrowIngrediant) or isinstance(ingr, ActinIngrediant):
+            if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
                 pass  # already store
             else:
                 ingr.results.append([pos, rot])
         for i, orga in enumerate(self.compartments):
             for pos, rot, ingr, ptInd in orga.molecules:
-                if isinstance(ingr, GrowIngrediant) or isinstance(
-                    ingr, ActinIngrediant
+                if isinstance(ingr, GrowIngredient) or isinstance(
+                    ingr, ActinIngredient
                 ):
                     pass  # already store
                 else:
@@ -4385,7 +4381,7 @@ class Environment(CompartmentList):
             if hasattr(r[1], "tolist"):
                 r[1] = r[1].tolist()
             adic["results"].append([r[0], r[1]])
-        if isinstance(ingr, GrowIngrediant) or isinstance(ingr, ActinIngrediant):
+        if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
             adic["nbCurve"] = ingr.nbCurve
             for i in range(ingr.nbCurve):
                 lp = numpy.array(ingr.listePtLinear[i])

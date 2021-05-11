@@ -12,7 +12,7 @@ from xml.dom.minidom import getDOMImplementation
 
 from cellpack.mgl_tools.upy import transformation as tr
 import cellpack.autopack as autopack
-from cellpack.autopack.Ingredient import GrowIngrediant, ActinIngrediant, KWDS
+from cellpack.autopack.Ingredient import GrowIngredient, ActinIngredient, KWDS
 from cellpack.autopack.Serializable import (
     sCompartment,
     sIngredientGroup,
@@ -386,7 +386,7 @@ class IOingredientTool(object):
                 if self.use_quaternion:
                     R = tr.quaternion_from_matrix(R).tolist()
                 ingdic["results"].append([r[0], R])
-            if isinstance(ingr, GrowIngrediant) or isinstance(ingr, ActinIngrediant):
+            if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
                 ingdic["nbCurve"] = ingr.nbCurve
                 for i in range(ingr.nbCurve):
                     lp = numpy.array(ingr.listePtLinear[i])
@@ -426,7 +426,7 @@ class IOingredientTool(object):
             MultiSphereIngr,
             SingleCubeIngr,
             MultiCylindersIngr,
-            GrowIngrediant,
+            GrowIngredient,
         )
 
         ingr = None
@@ -451,9 +451,9 @@ class IOingredientTool(object):
             kw["positions2"] = None
             ingr = SingleCubeIngr(**kw)
         elif kw["Type"] == "Grow":
-            ingr = GrowIngrediant(**kw)
+            ingr = GrowIngredient(**kw)
         elif kw["Type"] == "Actine":
-            ingr = ActinIngrediant(**kw)
+            ingr = ActinIngredient(**kw)
         if "gradient" in kw and kw["gradient"] != "" and kw["gradient"] != "None":
             ingr.gradient = kw["gradient"]
         if "results" in kw:
@@ -1077,7 +1077,7 @@ import os
 import autopack
 localdir = wrkDir = autopack.__path__[0]
 from autopack.Ingredient import SingleSphereIngr, MultiSphereIngr
-from autopack.Ingredient import MultiCylindersIngr,GrowIngrediant,ActinIngrediant
+from autopack.Ingredient import MultiCylindersIngr,GrowIngredient,ActinIngredient
 from autopack.Compartment import Compartment
 from autopack.Recipe import Recipe
 from autopack.Environment import Environment

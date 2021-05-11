@@ -54,7 +54,7 @@ from cellpack.mgl_tools.upy import colors as upyColors
 
 from cellpack.mgl_tools.DejaVu.colorTool import Map
 
-from .Ingredient import GrowIngrediant, ActinIngrediant
+from .Ingredient import GrowIngredient, ActinIngredient
 
 
 class AutopackViewer:
@@ -375,7 +375,7 @@ class AutopackViewer:
             for ingr in r.ingredients:
                 self.addMasterIngr(ingr, parent=gc)
 
-        if orga.isOrthogonalBoudingBox != 1:
+        if orga.isOrthogonalBoundingBox != 1:
             # create the mesh for the compartment
             name = "%s_Mesh" % orga.name
             tet = self.helper.getObject(name)
@@ -409,7 +409,7 @@ class AutopackViewer:
                 #        orga.ref_obj = name
 
     def createOrganelMesh(self, orga):
-        if orga.isOrthogonalBoudingBox != 1:
+        if orga.isOrthogonalBoundingBox != 1:
             name = "%s_Mesh" % orga.name
             if self.helper.host == "maya":
                 name = "mesh_" + name  # TODO fix this in maya
@@ -465,7 +465,7 @@ class AutopackViewer:
         self.prepareMaster()
         self.displayCompartments()
         self.displayHistoVol()
-        self.prepareIngrediant()
+        self.prepareIngredient()
         self.prepareDynamic()
         if self.vi.host.find("blender") != -1:
             # change the viewportshadr
@@ -658,7 +658,7 @@ class AutopackViewer:
             n = self.vi.Polylines("normals", vertices=verts, visible=0)
             self.vi.AddObject(n, parent=self.orgaToMasterGeom[orga])
 
-        if orga.isOrthogonalBoudingBox != 1:
+        if orga.isOrthogonalBoundingBox != 1:
             if hasattr(orga, "ogsurfacePoints"):
                 # display off grid surface grid points
                 self.displayPoints(
@@ -816,13 +816,13 @@ class AutopackViewer:
     def displayIngrCylinders(self, ingr, verts, radii, visible=0):
         # dont do it for a snake ingredient...
         # just use the realtime capbility
-        if isinstance(ingr, GrowIngrediant):
+        if isinstance(ingr, GrowIngredient):
             return
         o = ingr.recipe.compartment
         v = numpy.array(verts[ingr])
         f = numpy.arange(len(v))
         f.shape = (-1, 2)
-        if isinstance(ingr, GrowIngrediant):
+        if isinstance(ingr, GrowIngredient):
             if ingr.use_rbsphere:
                 for i in range(ingr.nbCurve):
                     name = o.name + str(i) + "_Spheres_" + ingr.name.replace(" ", "_")
@@ -925,8 +925,8 @@ class AutopackViewer:
         r = self.histo.exteriorRecipe
         if r:
             for ingr in r.ingredients:
-                if isinstance(ingr, GrowIngrediant) or isinstance(
-                    ingr, ActinIngrediant
+                if isinstance(ingr, GrowIngredient) or isinstance(
+                    ingr, ActinIngredient
                 ):
                     self.displayIngrGrow(ingr)
         # compartment ingr
@@ -935,16 +935,16 @@ class AutopackViewer:
             rs = orga.surfaceRecipe
             if rs:
                 for ingr in rs.ingredients:
-                    if isinstance(ingr, GrowIngrediant) or isinstance(
-                        ingr, ActinIngrediant
+                    if isinstance(ingr, GrowIngredient) or isinstance(
+                        ingr, ActinIngredient
                     ):
                         self.displayIngrGrow(ingr)
             # compartment matrix ingr
             ri = orga.innerRecipe
             if ri:
                 for ingr in ri.ingredients:
-                    if isinstance(ingr, GrowIngrediant) or isinstance(
-                        ingr, ActinIngrediant
+                    if isinstance(ingr, GrowIngredient) or isinstance(
+                        ingr, ActinIngredient
                     ):
                         self.displayIngrGrow(ingr)
 
@@ -1029,13 +1029,13 @@ class AutopackViewer:
                 if extruder is not None:
                     self.helper.deleteObject(extruder)
 
-    def prepareIngrediant(
+    def prepareIngredient(
         self,
     ):
         # cyto ingr
         r = self.histo.exteriorRecipe
         if r:
-            self.displayIngrediants(r)
+            self.displayIngredients(r)
 
             # compartment ingr
         for orga in self.histo.compartments:
@@ -1044,11 +1044,11 @@ class AutopackViewer:
             # compartment matrix ingr
             ri = orga.innerRecipe
             if rs:
-                self.displayIngrediants(rs)
+                self.displayIngredients(rs)
             if ri:
-                self.displayIngrediants(ri)
+                self.displayIngredients(ri)
 
-    def displayIngrediants(self, recipes):
+    def displayIngredients(self, recipes):
         for ingr in recipes.ingredients:
             if isinstance(ingr.mesh, None):  # mes_3d?
                 # try get it
@@ -1138,7 +1138,7 @@ class AutopackViewer:
             ingr.jitterMax,
         )
 
-    def printIngrediants(self):
+    def printIngredients(self):
         r = self.histo.exteriorRecipe
         if r:
             [self.printOneIngr(ingr) for ingr in r.ingredients]

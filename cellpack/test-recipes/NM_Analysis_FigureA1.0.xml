@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 	<autopackSetup name="Test_Spheres2D" version="1.1">
 	<options EnviroOnly="False"
-        _freePtsUpdateThrehod="0.0"
+        _freePtsUpdateThreshold="0.0"
         _hackFreepts="False"
         _timer="False"
         boundingBox="[[0.0, 0, 0.], [1000.0, 1000.0, 1.0]]"
