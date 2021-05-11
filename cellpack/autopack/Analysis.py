@@ -23,7 +23,7 @@ from cellpack.mgl_tools.upy import colors as col
 import cellpack.autopack as autopack
 from cellpack.autopack.ldSequence import halton
 
-from cellpack.autopack.GeometryTools import GeometriTools, Rectangle
+from cellpack.autopack.GeometryTools import GeometryTools, Rectangle
 
 
 def angle_between_vectors(v0, v1, directed=True, axis=0):
@@ -210,7 +210,7 @@ class AnalyseAP:
         self.result_file = result_file
         self.center = [0, 0, 0]
         self.bbox = [[0, 0, 0], [1, 1, 1]]
-        self.g = GeometriTools()
+        self.g = GeometryTools()
         self.g.Resolution = 1.0  # or grid step?
         self.current_pos = None
         self.current_distance = None
@@ -1084,7 +1084,7 @@ class AnalyseAP:
     def pack(self, seed=20, forceBuild=True, vTestid=3, vAnalysis=0, fbox_bb=None):
         t1 = time()
         print("seed is ", seed, fbox_bb)
-        self.env.fill5(
+        self.env.pack_grid(
             seedNum=seed, verbose=0, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb
         )
         t2 = time()

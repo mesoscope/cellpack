@@ -161,7 +161,7 @@ class Recipe:
             else:
                 ingr.vol_nbmol = ingr.nbMol = nb + ingr.overwrite_nbMol_value
             print(
-                ("RECIPE IS ON" + ingr.name + "volume" + " %d " "nb" " %d")
+                ("RECIPE IS ON " + ingr.name + "volume" + " %d " "nb" " %d")
                 % (volume, nb)
             )
             # print '*************************************volume = '%(volume)

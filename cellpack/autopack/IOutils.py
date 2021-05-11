@@ -1797,7 +1797,6 @@ def load_XML(env, setupfile):
     Setup the environment according the given xml file.
     """
     env.setupfile = setupfile
-    #    from autopack import Ingredient as ingr
     io_ingr = IOingredientTool(env=env)
     from xml.dom.minidom import parse
 
@@ -1807,7 +1806,6 @@ def load_XML(env, setupfile):
     env.custom_paths = getValueToXMLNode("g", root, "paths")
     env.current_path = os.path.dirname(os.path.abspath(env.setupfile))
     if env.custom_paths:
-        #        autopack.replace_path.extend(env.custom_paths)#keyWordPAth,valuePath
         autopack.updateReplacePath(env.custom_paths)
     autopack.current_recipe_path = env.current_path
     options = root.getElementsByTagName("options")
@@ -1819,10 +1817,10 @@ def load_XML(env, setupfile):
             v = getValueToXMLNode(env.OPTIONS[k]["type"], options, k)
             if v is not None:
                 setattr(env, k, v)
-        v = getValueToXMLNode("vector", options, "boundingBox")
-        env.boundingBox = v
-        v = getValueToXMLNode("string", options, "version")
-        env.version = v
+        boudning_box = getValueToXMLNode("vector", options, "boundingBox")
+        env.boundingBox = boudning_box
+        version = getValueToXMLNode("string", options, "version")
+        env.version = version
 
     gradientsnode = root.getElementsByTagName("gradients")
     if len(gradientsnode):
@@ -1852,8 +1850,6 @@ def load_XML(env, setupfile):
         env.grid_filename = str(gridn.getAttribute("grid_storage"))
         env.grid_result_filename = str(gridn.getAttribute("grid_result"))
 
-    from cellpack.autopack.Recipe import Recipe
-
     rnode = root.getElementsByTagName("cytoplasme")
     if len(rnode):
         rCyto = Recipe()
@@ -1881,7 +1877,6 @@ def load_XML(env, setupfile):
     if not len(onodes):
         # backward compatibility
         onodes = root.getElementsByTagName("organelle")  # Change to Compartment
-    from cellpack.autopack.Compartment import Compartment
 
     for onode in onodes:
         name = str(onode.getAttribute("name"))
@@ -1956,10 +1951,6 @@ def load_XML(env, setupfile):
             o.setInnerRecipe(rMatrix)
     # Go through all ingredient and setup the partner
     env.loopThroughIngr(env.set_partners_ingredient)
-
-
-#        if self.placeMethod.find("panda") != -1 :
-#            self.setupPanda()
 
 
 def load_JsonString(env, astring):

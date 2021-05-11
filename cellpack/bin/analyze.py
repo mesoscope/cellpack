@@ -112,7 +112,7 @@ def main():
     args = Args()
     dbg = args.debug
     try:
-        recipePath = args.recipe
+        recipe_path = args.recipe
         doAnalysis = args.analysis
         output = args.output
         twoD = args.twoD
@@ -122,11 +122,11 @@ def main():
 
         helper = helperClass(vi="nogui")
         autopack.helper = helper
-        fileName = os.path.basename(recipePath)
+        fileName = os.path.basename(recipe_path)
 
         env = Environment(name=fileName)
         env.helper = helper
-        env.loadRecipe(recipePath)
+        env.load_recipe(recipe_path)
         afviewer = None
 
         env.saveResult = False
@@ -138,6 +138,7 @@ def main():
         env.loopThroughIngr(setCompartment)
 
         if doAnalysis:
+            print("DOING analysis")
             env.placeMethod = "RAPID"
             env.encapsulatingGrid = 0
             autopack.testPeriodicity = False
@@ -153,7 +154,7 @@ def main():
             env.innerGridMethod = "bhtree"  # jordan pure python ? sdf ?
             env.boundingBox = [[-2482, -2389.0, 100.0], [2495, 2466, 2181.0]]
             env.buildGrid(boundingBox=env.boundingBox, gridFileIn=gridfile, rebuild=True, gridFileOut=None, previousFill=False)
-            env.fill5(verbose=0, usePP=False)
+            env.pack_grid(verbose=0, usePP=False)
 
     except Exception as e:
         log.error("=============================================")

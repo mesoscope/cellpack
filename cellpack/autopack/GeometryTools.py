@@ -29,7 +29,7 @@ class Rectangle:
         self.Left = left
 
 
-class GeometriTools:
+class GeometryTools:
     Resolution = 0.01
 
     # ==============================================================================
