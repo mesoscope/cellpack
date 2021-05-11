@@ -65,6 +65,7 @@ import math
 from cellpack.mgl_tools.RAPID import RAPIDlib
 from cellpack.autopack.transformation import (
     euler_from_matrix,
+    angle_between_vectors
 )
 from cellpack.autopack import Recipe
 
@@ -412,74 +413,6 @@ def getDihedral(a, b, c, d):
     v1v2 = numpy.cross(v1, v2)
     v2v3 = numpy.cross(v2, v3)
     return angle_between_vectors(v1v2, v2v3)
-
-
-def angle_between_vectors(v0, v1, directed=True, axis=0):
-    """Return angle between vectors.
-    If directed is False, the input vectors are interpreted as undirected axes,
-    i.e. the maximum angle is pi/2.
-    >>> a = angle_between_vectors([1, -2, 3], [-1, 2, -3])
-    >>> numpy.allclose(a, math.pi)
-    True
-    >>> a = angle_between_vectors([1, -2, 3], [-1, 2, -3], directed=False)
-    >>> numpy.allclose(a, 0)
-    True
-    >>> v0 = [[2, 0, 0, 2], [0, 2, 0, 2], [0, 0, 2, 2]]
-    >>> v1 = [[3], [0], [0]]
-    >>> a = angle_between_vectors(v0, v1)
-    >>> numpy.allclose(a, [0, 1.5708, 1.5708, 0.95532])
-    True
-    >>> v0 = [[2, 0, 0], [2, 0, 0], [0, 2, 0], [2, 0, 0]]
-    >>> v1 = [[0, 3, 0], [0, 0, 3], [0, 0, 3], [3, 3, 3]]
-    >>> a = angle_between_vectors(v0, v1, axis=1)
-    >>> numpy.allclose(a, [1.5708, 1.5708, 1.5708, 0.95532])
-    True
-    """
-    v0 = numpy.array(v0, dtype=numpy.float64, copy=False)
-    v1 = numpy.array(v1, dtype=numpy.float64, copy=False)
-    dot = numpy.sum(v0 * v1, axis=axis)
-    # check nothing is > 1.0
-    dot /= vector_norm(v0, axis=axis) * vector_norm(v1, axis=axis)
-    indice = numpy.nonzero(numpy.greater(dot, 1.0))
-    dot[indice] = 1.0
-    return numpy.arccos(dot if directed else numpy.fabs(dot))
-
-
-def vector_norm(data, axis=None, out=None):
-    """Return length, i.e. Euclidean norm, of ndarray along axis.
-    >>> v = numpy.random.random(3)
-    >>> n = vector_norm(v)
-    >>> numpy.allclose(n, numpy.linalg.norm(v))
-    True
-    >>> v = numpy.random.rand(6, 5, 3)
-    >>> n = vector_norm(v, axis=-1)
-    >>> numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=2)))
-    True
-    >>> n = vector_norm(v, axis=1)
-    >>> numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=1)))
-    True
-    >>> v = numpy.random.rand(5, 4, 3)
-    >>> n = numpy.empty((5, 3))
-    >>> vector_norm(v, axis=1, out=n)
-    >>> numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=1)))
-    True
-    >>> vector_norm([])
-    0.0
-    >>> vector_norm([1])
-    1.0
-    """
-    data = numpy.array(data, dtype=numpy.float64, copy=True)
-    if out is None:
-        if data.ndim == 1:
-            return math.sqrt(numpy.dot(data, data))
-        data *= data
-        out = numpy.atleast_1d(numpy.sum(data, axis=axis))
-        numpy.sqrt(out, out)
-        return out
-    else:
-        data *= data
-        numpy.sum(data, axis=axis, out=out)
-        numpy.sqrt(out, out)
 
 
 def SphereHalton(n, p2, marge=math.pi):

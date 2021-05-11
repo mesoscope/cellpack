@@ -69,6 +69,7 @@ from panda3d.ode import OdeSphereGeom
 from panda3d.core import NodePath
 
 from cellpack.mgl_tools.bhtree import bhtreelib
+from cellpack.mgl_tools.upy.hostHelper import vdistance
 
 import cellpack.autopack as autopack
 from .Compartment import CompartmentList
@@ -76,7 +77,7 @@ from .Recipe import Recipe
 from .Ingredient import GrowIngredient, ActinIngredient
 from .ray import vlen, vdiff
 from cellpack.autopack import IOutils
-
+from cellpack.autopack.transformation import angle_between_vectors
 # backward compatibility with kevin method
 from cellpack.autopack.Grid import Grid as G
 
@@ -106,6 +107,7 @@ LISTPLACEMETHOD = autopack.LISTPLACEMETHOD
 SEED = 14
 LOG = False
 verbose = 0
+
 
 def ingredient_compare1(x, y):
     """
@@ -215,38 +217,6 @@ def cmp_to_key(mycmp):
             return mycmp(self.obj, other.obj) != 0
 
     return K
-
-
-def vector_norm(data, axis=None, out=None):
-    """get the norm of a vector data"""
-    data = numpy.array(data, dtype=numpy.float64, copy=True)
-    if out is None:
-        if data.ndim == 1:
-            return sqrt(numpy.dot(data, data))
-        data *= data
-        out = numpy.atleast_1d(numpy.sum(data, axis=axis))
-        numpy.sqrt(out, out)
-        return out
-    else:
-        data *= data
-        numpy.sum(data, axis=axis, out=out)
-        numpy.sqrt(out, out)
-
-
-def angleVector(v0, v1, directed=True, axis=0):
-    """get the angle between two vector v0 and v1"""
-    v0 = numpy.array(v0, dtype=numpy.float64, copy=False)
-    v1 = numpy.array(v1, dtype=numpy.float64, copy=False)
-    dot = numpy.sum(v0 * v1, axis=axis)
-    dot /= vector_norm(v0, axis=axis) * vector_norm(v1, axis=axis)
-    return numpy.arccos(dot if directed else numpy.fabs(dot))
-
-
-def vdistance(c0, c1):
-    """get the distance between two points c0 and c1"""
-    d = numpy.array(c1) - numpy.array(c0)
-    s = numpy.sum(d * d)
-    return sqrt(s)
 
 
 class Gradient:
@@ -459,7 +429,7 @@ class Gradient:
         a = []
         axes = ["X", "Y", "Z"]
         for i, ax in enumerate(axes):
-            angle = angleVector(self.directions[ax], direction)
+            angle = angle_between_vectors(self.directions[ax], direction)
             a.append(angle)
             maxi = max(bb[1][i], bb[0][i])
             mini = min(bb[1][i], bb[0][i])

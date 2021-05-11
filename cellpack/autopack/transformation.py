@@ -1904,6 +1904,16 @@ def angle_between_vectors(v0, v1, directed=True, axis=0):
     return numpy.arccos(dot if directed else numpy.fabs(dot))
 
 
+def signed_angle_between_vectors(Vn, v0, v1, directed=True, axis=0):
+    Vn = numpy.array(Vn)
+    angles = angle_between_vectors(v0, v1, directed=directed, axis=axis)
+    cross = numpy.cross(v0, v1)
+    dot = numpy.dot(cross, Vn)
+    ind = numpy.nonzero(dot < 0)
+    angles[ind] *= -1.0
+    return angles
+
+
 def inverse_matrix(matrix):
     """Return inverse of square transformation matrix.
 

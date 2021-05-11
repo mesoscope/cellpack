@@ -21,84 +21,10 @@ from matplotlib.patches import Circle
 
 from cellpack.mgl_tools.upy import colors as col
 import cellpack.autopack as autopack
+from cellpack.autopack.transformation import signed_angle_between_vectors
 from cellpack.autopack.ldSequence import halton
 
 from cellpack.autopack.GeometryTools import GeometryTools, Rectangle
-
-
-def angle_between_vectors(v0, v1, directed=True, axis=0):
-    """Return angle between vectors.
-    If directed is False, the input vectors are interpreted as undirected axes,
-    i.e. the maximum angle is pi/2.
-    >>> a = angle_between_vectors([1, -2, 3], [-1, 2, -3])
-    >>> numpy.allclose(a, math.pi)
-    True
-    >>> a = angle_between_vectors([1, -2, 3], [-1, 2, -3], directed=False)
-    >>> numpy.allclose(a, 0)
-    True
-    >>> v0 = [[2, 0, 0, 2], [0, 2, 0, 2], [0, 0, 2, 2]]
-    >>> v1 = [[3], [0], [0]]
-    >>> a = angle_between_vectors(v0, v1)
-    >>> numpy.allclose(a, [0, 1.5708, 1.5708, 0.95532])
-    True
-    >>> v0 = [[2, 0, 0], [2, 0, 0], [0, 2, 0], [2, 0, 0]]
-    >>> v1 = [[0, 3, 0], [0, 0, 3], [0, 0, 3], [3, 3, 3]]
-    >>> a = angle_between_vectors(v0, v1, axis=1)
-    >>> numpy.allclose(a, [1.5708, 1.5708, 1.5708, 0.95532])
-    True
-    """
-    v0 = numpy.array(v0, dtype=numpy.float64, copy=False)
-    v1 = numpy.array(v1, dtype=numpy.float64, copy=False)
-    dot = numpy.sum(v0 * v1, axis=axis)
-    dot /= vector_norm(v0, axis=axis) * vector_norm(v1, axis=axis)
-    return numpy.arccos(dot if directed else numpy.fabs(dot))
-
-
-def signed_angle_between_vectors(Vn, v0, v1, directed=True, axis=0):
-    Vn = numpy.array(Vn)
-    angles = angle_between_vectors(v0, v1, directed=directed, axis=axis)
-    cross = numpy.cross(v0, v1)
-    dot = numpy.dot(cross, Vn)
-    ind = numpy.nonzero(dot < 0)
-    angles[ind] *= -1.0
-    return angles
-
-
-def vector_norm(data, axis=None, out=None):
-    """Return length, i.e. Euclidean norm, of ndarray along axis.
-    >>> v = numpy.random.random(3)
-    >>> n = vector_norm(v)
-    >>> numpy.allclose(n, numpy.linalg.norm(v))
-    True
-    >>> v = numpy.random.rand(6, 5, 3)
-    >>> n = vector_norm(v, axis=-1)
-    >>> numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=2)))
-    True
-    >>> n = vector_norm(v, axis=1)
-    >>> numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=1)))
-    True
-    >>> v = numpy.random.rand(5, 4, 3)
-    >>> n = numpy.empty((5, 3))
-    >>> vector_norm(v, axis=1, out=n)
-    >>> numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=1)))
-    True
-    >>> vector_norm([])
-    0.0
-    >>> vector_norm([1])
-    1.0
-    """
-    data = numpy.array(data, dtype=numpy.float64, copy=True)
-    if out is None:
-        if data.ndim == 1:
-            return math.sqrt(numpy.dot(data, data))
-        data *= data
-        out = numpy.atleast_1d(numpy.sum(data, axis=axis))
-        numpy.sqrt(out, out)
-        return out
-    else:
-        data *= data
-        numpy.sum(data, axis=axis, out=out)
-        numpy.sqrt(out, out)
 
 
 def autolabel(rects, ax):
