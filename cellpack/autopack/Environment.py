@@ -1396,7 +1396,6 @@ class Environment(CompartmentList):
                     partner = ingr.addPartner(ingr_partner, weight=w, properties={})
                 for p in ingr_partner.properties:
                     partner.addProperties(p, ingr_partner.properties[p])
-                partner.setup()
                 w += ((1 - weightinitial) / (total - 1)) - weightinitial
             if ingr.Type == "Grow":
                 ingr.prepare_alternates()
@@ -3631,9 +3630,6 @@ class Environment(CompartmentList):
                 unitVol = self.grid.gridSpacing ** 3
                 # totalVolume = self.grid.gridVolume*unitVol
                 wrkDirRes = self.resultfile + "_analyze_"
-                print(
-                    "TODO: overwrite wrkDirRes with specific user directory for each run or each script or put in a cache and offer a chance to save it"
-                )
                 print("self.compartments = ", self.compartments)
                 for o in self.compartments:  # only for compartment ?
                     # totalVolume -= o.surfaceVolume
