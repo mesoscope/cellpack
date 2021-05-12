@@ -160,11 +160,7 @@ class Recipe:
                 ingr.nbMol = ingr.overwrite_nbMol_value
             else:
                 ingr.vol_nbmol = ingr.nbMol = nb + ingr.overwrite_nbMol_value
-            print(
-                ("RECIPE IS ON " + ingr.name + "volume" + " %d " "nb" " %d")
-                % (volume, nb)
-            )
-            # print '*************************************volume = '%(volume)
+
             if ingr.nbMol == 0:
                 print(
                     "WARNING GRAHAM: recipe ingredient %s has 0 molecules as target"
