@@ -386,11 +386,9 @@ class dejavuUI:
         @type  h: int
         @param h: force the height of the item
         """
-#        print x,y,w,h,elem["height"],elem["width"]
         w = 45
         w = int(elem["width"]*self.scale)
         st= int(len(elem["name"]))
-        print(w,st)
         if st > w :
             w = st
         name = elem["name"]

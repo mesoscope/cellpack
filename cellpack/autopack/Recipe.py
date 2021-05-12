@@ -66,7 +66,6 @@ class Recipe:
 
     def delIngredient(self, ingr):
         """ remove the given ingredient from the recipe """
-        #        print ingr,ingr.name
         if ingr in self.ingredients:
             ind = self.ingredients.index(ingr)
             self.ingredients.pop(ind)
@@ -76,7 +75,6 @@ class Recipe:
     def addIngredient(self, ingr):
         """ add the given ingredient from the recipe """
         #        assert isinstance(ingr, Ingredient)
-        #        print ingr,ingr.name
         # we need ingredient unique name
         if ingr.name.find(self.name) == -1:
             ingr.name = self.name + "__" + ingr.name
@@ -149,29 +147,21 @@ class Recipe:
             #            nbi = int(nbr)              #Mod by Graham 8/18/11
             nbr = ingr.molarity * 0.0006022 * volume
             nbi = int(nbr)  # Mod by Graham 8/18/11
-
-            #            print 'ingr.molarity = ', ingr.molarity
-            #            print 'volume = ', volume
-            #            print 'nbr = ', nbr
-            #            print 'nbi = ', nbi         #Mod by Graham 8/18/11
             if nbi == 0:
                 nbmod = nbr
             else:
                 nbmod = nbr % nbi  # Mod by Graham 8/18/11
             randval = random()  # Mod by Graham 8/18/11
-            #            print 'randval = ', randval
             if nbmod >= randval:  # Mod by Graham 8/18/11
                 nbi = int(nbi + 1)  # Mod by Graham 8/18/11
-            #            print 'nbi = ', nbi         #Mod by Graham 8/18/11
             nb = nbi  # Mod by Graham 8/18/11
-            #            print'nb = ', nb            #Mod by Graham 8/18/11
             if ingr.overwrite_nbMol:  # DEPRECATED
                 ingr.vol_nbmol = nb
                 ingr.nbMol = ingr.overwrite_nbMol_value
             else:
                 ingr.vol_nbmol = ingr.nbMol = nb + ingr.overwrite_nbMol_value
             print(
-                ("RECIPE IS ON" + ingr.name + "volume" + " %d " "nb" " %d")
+                ("RECIPE IS ON " + ingr.name + "volume" + " %d " "nb" " %d")
                 % (volume, nb)
             )
             # print '*************************************volume = '%(volume)

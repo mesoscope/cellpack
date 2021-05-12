@@ -415,7 +415,6 @@ class tkUI:
         w = 45
         w = int(elem["width"] * self.scale)
         st = int(len(elem["name"]))
-        print(w, st)
         if st > w:
             w = st
         button = Button(

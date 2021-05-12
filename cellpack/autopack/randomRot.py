@@ -205,12 +205,9 @@ if __name__ == "__main__":
     # from time import time
     # t1 = time()
     # allRot = getRotations('deg06.matrix')
-    # print 'time to read rotation', time()-t1
 
     #     t1 = time()
     #     from deg06Rotations import allRtotations
-    #     print 'time to import rotation', time()-t1
 
     rr = RandomRot()
     mat = rr.get()
-    print(mat)

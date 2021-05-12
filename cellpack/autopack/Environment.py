@@ -48,7 +48,6 @@
 
 import os
 import time
-import sys
 from random import random, uniform, seed
 import bisect
 from scipy import spatial
@@ -70,14 +69,15 @@ from panda3d.ode import OdeSphereGeom
 from panda3d.core import NodePath
 
 from cellpack.mgl_tools.bhtree import bhtreelib
+from cellpack.mgl_tools.upy.hostHelper import vdistance
 
 import cellpack.autopack as autopack
 from .Compartment import CompartmentList
 from .Recipe import Recipe
-from .Ingredient import GrowIngrediant, ActinIngrediant
+from .Ingredient import GrowIngredient, ActinIngredient
 from .ray import vlen, vdiff
 from cellpack.autopack import IOutils
-
+from cellpack.autopack.transformation import angle_between_vectors
 # backward compatibility with kevin method
 from cellpack.autopack.Grid import Grid as G
 
@@ -107,18 +107,6 @@ LISTPLACEMETHOD = autopack.LISTPLACEMETHOD
 SEED = 14
 LOG = False
 verbose = 0
-
-
-def linearDecayProb():
-    """return a number from 0 (higest probability) to 1 (lowest probability)
-    with a linear fall off of probability
-    """
-    r1 = uniform(-0.25, 0.25)
-    r2 = uniform(-0.25, 0.25)
-    return abs(r1 + r2)
-    # r3 = uniform(-0.25,0.25)
-    # r4 = uniform(-0.25,0.25)
-    # return abs(r1+r2+r3+r4)  # Gaussian decay
 
 
 def ingredient_compare1(x, y):
@@ -204,49 +192,31 @@ def ingredient_compare2(x, y):
         return -1
 
 
-def cmp2key(mycmp):
-    """Converts a cmp= function into a key= function"""
-
+def cmp_to_key(mycmp):
+    'Convert a cmp= function into a key= function'
     class K:
         def __init__(self, obj, *args):
             self.obj = obj
 
-        def __cmp__(self, other):
-            return mycmp(self.obj, other.obj)
+        def __lt__(self, other):
+            return mycmp(self.obj, other.obj) < 0
+
+        def __gt__(self, other):
+            return mycmp(self.obj, other.obj) > 0
+
+        def __eq__(self, other):
+            return mycmp(self.obj, other.obj) == 0
+
+        def __le__(self, other):
+            return mycmp(self.obj, other.obj) <= 0
+
+        def __ge__(self, other):
+            return mycmp(self.obj, other.obj) >= 0
+
+        def __ne__(self, other):
+            return mycmp(self.obj, other.obj) != 0
 
     return K
-
-
-def vector_norm(data, axis=None, out=None):
-    """get the norm of a vector data"""
-    data = numpy.array(data, dtype=numpy.float64, copy=True)
-    if out is None:
-        if data.ndim == 1:
-            return sqrt(numpy.dot(data, data))
-        data *= data
-        out = numpy.atleast_1d(numpy.sum(data, axis=axis))
-        numpy.sqrt(out, out)
-        return out
-    else:
-        data *= data
-        numpy.sum(data, axis=axis, out=out)
-        numpy.sqrt(out, out)
-
-
-def angleVector(v0, v1, directed=True, axis=0):
-    """get the angle between two vector v0 and v1"""
-    v0 = numpy.array(v0, dtype=numpy.float64, copy=False)
-    v1 = numpy.array(v1, dtype=numpy.float64, copy=False)
-    dot = numpy.sum(v0 * v1, axis=axis)
-    dot /= vector_norm(v0, axis=axis) * vector_norm(v1, axis=axis)
-    return numpy.arccos(dot if directed else numpy.fabs(dot))
-
-
-def vdistance(c0, c1):
-    """get the distance between two points c0 and c1"""
-    d = numpy.array(c1) - numpy.array(c0)
-    s = numpy.sum(d * d)
-    return sqrt(s)
 
 
 class Gradient:
@@ -294,7 +264,6 @@ class Gradient:
         if direction is None:
             self.direction = self.directions[self.mode]
         else:
-            #            self.mode = "direction"
             self.direction = direction  # from direction get start and end point
         self.distance = 0.0
         self.gblob = 4.0
@@ -455,13 +424,12 @@ class Gradient:
             direction = self.direction
         if bb is None:
             bb = self.bb
-        print(bb)
         # assume grid orthogonal
         maxinmini = []
         a = []
         axes = ["X", "Y", "Z"]
         for i, ax in enumerate(axes):
-            angle = angleVector(self.directions[ax], direction)
+            angle = angle_between_vectors(self.directions[ax], direction)
             a.append(angle)
             maxi = max(bb[1][i], bb[0][i])
             mini = min(bb[1][i], bb[0][i])
@@ -495,7 +463,6 @@ class Gradient:
             )  # numpy.random.normal(0.5, 0.1, NW) #one dimension
         elif self.weight_mode == "half-gauss":  # 0-1
             d = self.get_gauss_weights(NW * 2)[NW:]
-        print(self.name, self.radius)
         for ptid in range(N):
             dist = vdistance(MasterPosition[ptid], radial_point)
             if self.weight_mode == "linear":
@@ -612,7 +579,6 @@ class Gradient:
                 ptInd = pointIndex
         if self.weight[ptInd] < self.weight_threshold:
             ptInd = None
-        # print "picked",self.weight[ptInd]
         return ptInd
 
     def getMinWeight(self, listPts):
@@ -1100,7 +1066,7 @@ class Environment(CompartmentList):
         self.FillName = ["F" + str(self.nFill)]
 
         self.traj_linked = False
-        # do we sort the ingrediant or not see  getSortedActiveIngredients
+        # do we sort the ingredient or not see  getSortedActiveIngredients
         self.pickWeightedIngr = True
         self.pickRandPt = True  # point pick randomly or one after the other?
         self.currtId = 0
@@ -1116,7 +1082,7 @@ class Environment(CompartmentList):
         # debug with timer function
         self._timer = False
         self._hackFreepts = False  # hack for speed up ?
-        self.freePtsUpdateThrehod = 0.0
+        self.freePtsUpdateThreshold = 0.0
         self.nb_ingredient = 0
         self.totalNbIngr = 0
         self.treemode = "cKDTree"  # "bhtree"
@@ -1128,13 +1094,13 @@ class Environment(CompartmentList):
         self.rIngr = []
         self.rRot = []
         self.listPlaceMethod = LISTPLACEMETHOD
-        # should be part of an independant module
+        # should be part of an independent module
         self.panda_solver = "bullet"  # or bullet
         # could be a problem here for pp
         # can't pickle this dictionary
         self.rb_func_dic = {}
         self.use_periodicity = False
-        self.gridbiasedPeriodicity = None  # unsused here
+        self.gridbiasedPeriodicity = None  # unused here
         # need options for the save/server data etc....
         # should it be in __init__ like other general options ?
         self.dump = True
@@ -1275,7 +1241,7 @@ class Environment(CompartmentList):
                 "description": "compute Grid Params",
                 "width": 30,
             },
-            # do we sort the ingrediant or not see  getSortedActiveIngredients
+            # do we sort the ingredient or not see  getSortedActiveIngredients
             "pickWeightedIngr": {
                 "name": "pickWeightedIngr",
                 "value": True,
@@ -1318,8 +1284,8 @@ class Environment(CompartmentList):
                 "description": "no free point update",
                 "width": 30,
             },
-            "freePtsUpdateThrehod": {
-                "name": "freePtsUpdateThrehod",
+            "freePtsUpdateThreshold": {
+                "name": "freePtsUpdateThreshold",
                 "value": 0.0,
                 "default": 0.0,
                 "type": "float",
@@ -1374,7 +1340,7 @@ class Environment(CompartmentList):
             MultiSphereIngr,
             SingleCubeIngr,
         )
-        from autopack.Ingredient import MultiCylindersIngr, GrowIngrediant
+        from autopack.Ingredient import MultiCylindersIngr, GrowIngredient
 
         ingr = None
 
@@ -1399,9 +1365,9 @@ class Environment(CompartmentList):
             kw["positions2"] = None
             ingr = SingleCubeIngr(**kw)
         elif kw["Type"] == "Grow":
-            ingr = GrowIngrediant(**kw)
+            ingr = GrowIngredient(**kw)
         elif kw["Type"] == "Actine":
-            ingr = ActinIngrediant(**kw)
+            ingr = ActinIngredient(**kw)
         if "gradient" in kw and kw["gradient"] != "" and kw["gradient"] != "None":
             ingr.gradient = kw["gradient"]
         return ingr
@@ -1462,7 +1428,7 @@ class Environment(CompartmentList):
                 print("PROBLEM creating ingredient from ", ingrnode)
             # look for overwritten attribute
 
-    def loadRecipe(self, setupfile):
+    def load_recipe(self, setupfile):
         if setupfile is None:
             setupfile = self.setupfile
         else:
@@ -1902,7 +1868,6 @@ class Environment(CompartmentList):
         if os.path.isfile(ref_obj):
             fileName, fileExtension = os.path.splitext(ref_obj)
             if helper is not None:  # neeed the helper
-                #                print ("read withHelper")
                 helper.read(ref_obj)
                 geom = helper.getObject(fileName)
                 # reparent to the fill parent
@@ -1980,21 +1945,21 @@ class Environment(CompartmentList):
 
     def loopThroughIngr(self, cb_function):
         """
-        Helper function that loop through all ingredients of all recipe and apply the give
-        callback functio on each ingredients.
+        Helper function that loops through all ingredients of all recipes and applies the given
+        callback function on each ingredients.
         """
-        r = self.exteriorRecipe
-        if r:
-            for ingr in r.ingredients:
+        recipe = self.exteriorRecipe
+        if recipe:
+            for ingr in recipe.ingredients:
                 cb_function(ingr)
-        for o in self.compartments:
-            rs = o.surfaceRecipe
-            if rs:
-                for ingr in rs.ingredients:
+        for compartment in self.compartments:
+            surface_recipe = compartment.surfaceRecipe
+            if surface_recipe:
+                for ingr in surface_recipe.ingredients:
                     cb_function(ingr)
-            ri = o.innerRecipe
-            if ri:
-                for ingr in ri.ingredients:
+            inner_recipe = compartment.innerRecipe
+            if inner_recipe:
+                for ingr in inner_recipe.ingredients:
                     cb_function(ingr)
 
     def getIngrFromNameInRecipe(self, name, r):
@@ -2004,9 +1969,6 @@ class Environment(CompartmentList):
         if r:
             # check if name start with comp name
             # backward compatibility
-            # print name,r.name
-            #            if name.find(r.name) == -1 :
-            #                name = r.name+"__"+name
             # legacy code
             # Problem when ingredient in different compartments
             # compartments is in the first three caractet like int_2 or surf_1
@@ -2089,8 +2051,8 @@ class Environment(CompartmentList):
         for compartment in self.compartments:
             if autopack.verbose:
                 print(
-                    "in Environment, compartment.isOrthogonalBoudingBox =",
-                    compartment.isOrthogonalBoudingBox,
+                    "in Environment, compartment.isOrthogonalBoundingBox =",
+                    compartment.isOrthogonalBoundingBox,
                 )
             a, b = compartment.BuildGrid(self)  # return inside and surface point
             aInteriorGrids.append(a)
@@ -2246,11 +2208,11 @@ class Environment(CompartmentList):
         b = []
         for compartment in self.compartments:
             print(
-                "in Environment, compartment.isOrthogonalBoudingBox =",
-                compartment.isOrthogonalBoudingBox,
+                "in Environment, compartment.isOrthogonalBoundingBox =",
+                compartment.isOrthogonalBoundingBox,
             )
             b = []
-            if compartment.isOrthogonalBoudingBox == 1:
+            if compartment.isOrthogonalBoundingBox == 1:
                 self.EnviroOnly = True
                 print(
                     ">>>>>>>>>>>>>>>>>>>>>>>>> Not building a grid because I'm an Orthogonal Bounding Box"
@@ -2278,54 +2240,53 @@ class Environment(CompartmentList):
                     % (len(a), len(a), len(self.grid.masterGridPositions))
                 )
                 compartment.computeVolumeAndSetNbMol(self, b, a, areas=vSurfaceArea)
-                # print("I've built a grid in the compartment test with no surface", a)
                 print("The size of the grid I build = ", len(a))
 
             if (
                 self.innerGridMethod == "sdf"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # A fillSelection can now be a mesh too... it can use either of these methods
                 a, b = compartment.BuildGrid_utsdf(
                     self
                 )  # to make the outer most selection from the master and then the compartment
             elif (
                 self.innerGridMethod == "bhtree"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid(self)
             elif (
                 self.innerGridMethod == "jordan"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_jordan(self)
             elif (
                 self.innerGridMethod == "jordan3"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_jordan(self, ray=3)
             elif (
                 self.innerGridMethod == "pyray"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_pyray(self)
             elif (
                 self.innerGridMethod == "floodfill"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_kevin(self)
             elif (
                 self.innerGridMethod == "binvox"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_binvox(self)
             elif (
                 self.innerGridMethod == "trimesh"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_trimesh(self)
             elif (
                 self.innerGridMethod == "scanline"
-                and compartment.isOrthogonalBoudingBox != 1
+                and compartment.isOrthogonalBoundingBox != 1
             ):  # surfaces and interiors will be subtracted from it as normal!
                 a, b = compartment.BuildGrid_scanline(self)
 
@@ -2401,10 +2362,8 @@ class Environment(CompartmentList):
             self.callFunction(
                 grid.create3DPointLookup
             )  # generate grid.masterGridPositions
-            #            print('grid size', grid.nbGridPoints)
             grid.nbSurfacePoints = 0
             # self.isFree = numpy.ones( (nbPoints,), 'i') # Will never shrink
-            #            print('nb freePoints', nbPoints)#-1)
             # Id is set set to None initially
             grid.gridPtId = numpy.zeros(nbPoints)  # [0]*nbPoints
 
@@ -2695,24 +2654,12 @@ class Environment(CompartmentList):
                 priorities0.append(ing.packingPriority)
 
         if self.pickWeightedIngr:
-            # Graham here on 5/16/12. Double check that this new version is correct- it
-            # uses a very different function than the working September version from
-            #  2011
-            # sorted(ingr1, key=attrgetter('packingPriority', 'minRadius','completion'), reverse=True)
-            # ingr1.sort(key=ingredient_compare1)  #Fails 5/21/12
-            if sys.version < "3.0.0":
-                ingr1.sort(ingredient_compare1)
-                # sort ingredients with no priority based on radius and completion
-                ingr2.sort(ingredient_compare2)
-                ingr0.sort(ingredient_compare0)  # Fails 5/21/12
-            else:
-                try:
-                    ingr1.sort(key=ingredient_compare1)
-                    ingr2.sort(key=ingredient_compare2)
-                    ingr0.sort(key=ingredient_compare0)
-                except:  # noqa: E722
-                    print("ATTENTION INGR NOT SORTED")
-        # for ing in ingr3 : ing.packingPriority    = -ing.packingPriority
+            try:
+                ingr1.sort(key=cmp_to_key(ingredient_compare1))
+                ingr2.sort(key=cmp_to_key(ingredient_compare2))
+                ingr0.sort(key=cmp_to_key(ingredient_compare0))
+            except Exception as e:  # noqa: E722
+                print("ATTENTION INGR NOT SORTED", e)
         # GrahamAdded this stuff in summer 2011, beware!
         if len(ingr1) != 0:
             lowestIng = ingr1[len(ingr1) - 1]
@@ -2733,7 +2680,6 @@ class Environment(CompartmentList):
             if verbose:
                 print("self.totalRadii += ", r, "=", self.totalRadii)
             if r == 0:
-                print(radii, radii.name)
                 # safety
                 self.totalRadii = self.totalRadii + 1.0
 
@@ -2761,17 +2707,6 @@ class Environment(CompartmentList):
             print("priorities1 is ", priorities1)
             print("priorities2 is ", priorities2)
             print("packingPriorities", packingPriorities)
-
-        #        if verbose>0:
-        #            print 'Ingredients:'
-        #            for i, ingr in enumerate(activeIngr):
-        #                packPri = ingr.packingPriority
-        #                if packPri is None:
-        #                    packPri = -1
-        #                print '  comp:%2d #:%3d pri:%3d compl:%.2f mRad:%5.1f t:%4d n:%4d '%(
-        #                    ingr.compNum, i, packPri, ingr.completion, ingr.minRadius,
-        #                    ingr.nbMol, ingr.counter)
-        #            raw_input("hit enter")
 
         return activeIngr0, activeIngr12
 
@@ -2980,7 +2915,6 @@ class Environment(CompartmentList):
         if hasattr(ingr, "nbPts"):
             if hasattr(ingr, "firstTimeUpdate") and not ingr.firstTimeUpdate:
                 ratio = float(ingr.nbPts) / float(nbFreePoints)
-                #                print('freePtsUpdateThrehod = ', self.freePtsUpdateThrehod)
                 if verbose:
                     print(
                         "checkIfUpdate: ratio = ",
@@ -2990,7 +2924,7 @@ class Environment(CompartmentList):
                         "ingr.nbPts = ",
                         ingr.nbPts,
                     )
-                if ratio > self.freePtsUpdateThrehod:
+                if ratio > self.freePtsUpdateThreshold:
                     return True
                 else:
                     if ingr.haveBeenRejected and ingr.rejectionCounter > 5:
@@ -3066,7 +3000,6 @@ class Environment(CompartmentList):
                 print("find grid point with distance >= ", cut)
             if hasattr(ingr, "allIngrPts") and self._hackFreepts:
                 allIngrPts = ingr.allIngrPts
-                #                print("hasattr(ingr,allIngrPts)")
                 if verbose > 1:
                     print("Running nofreepoint HACK")
             else:
@@ -3176,7 +3109,6 @@ class Environment(CompartmentList):
             # this chunk overwrites the next three lines from July version. July 5, 2012
             #            self.thresholdPriorities.pop(ind)
             #            self.normalizedPriorities.pop(ind)
-            #            print(("time to reject the picking", time()-t))
             return False, vRangeStart
 
         if self.pickRandPt:
@@ -3236,12 +3168,10 @@ class Environment(CompartmentList):
                     print(("vRangeStart", vRangeStart))
                 return False, vRangeStart
 
-            #            print(("time to random pick a point", time()-t2))
         else:
             #            t3=time()
             allIngrPts.sort()
             ptInd = allIngrPts[0]
-        #            print(("time to sort and pick a point", time()-t3))
         return True, ptInd
 
     #    import fill4isolated # Graham cut the outdated fill4 from this document and put it in a separate file. turn on here if you want to use it.
@@ -3269,7 +3199,7 @@ class Environment(CompartmentList):
                 self.set_partners_ingredient(ingr)
         return totalNbIngr
 
-    def fill5(
+    def pack_grid(
         self,
         seedNum=14,
         stepByStep=False,
@@ -3284,8 +3214,8 @@ class Environment(CompartmentList):
     ):
         """
         the latest packing loop
-        ## Fill the grid by picking an ingredient first and then
         ## this packing should be able to continue from a previous one
+        ## Fill the grid by picking an ingredient first and then
         ## find a suitable point using the ingredient's placer object
         """
         # set periodicity
@@ -3314,14 +3244,11 @@ class Environment(CompartmentList):
         self.FillName.append(name)
         self.nFill += 1
         # seed random number generator
-        #        if not self.seed_set:
         self.setSeed(seedNum)
         # create copies of the distance array as they change when molecules
         # are added, theses array can be restored/saved before feeling
         freePoints = self.grid.freePoints[:]
         self.grid.nbFreePoints = nbFreePoints = len(freePoints)  # -1
-        #        self.freePointMask = numpy.ones(nbFreePoints,dtype="int32")
-        # Oct 20, 2012  This is part of the code that is breaking the grids for all meshless compartment fills
         if "fbox" in kw:
             self.fbox = kw["fbox"]
         if self.fbox is not None and not self.EnviroOnly:
@@ -3392,17 +3319,17 @@ class Environment(CompartmentList):
             for ingr in allIngredients:
                 totalNumMols += ingr.nbMol
             if verbose > 1:
-                print("totalNumMols Fill5if = ", totalNumMols)
+                print("totalNumMols pack_grid if = ", totalNumMols)
         else:
             for threshProb in self.thresholdPriorities:
                 nameMe = self.activeIngr[nls]
                 totalNumMols += nameMe.nbMol
                 if verbose > 1:
                     print(
-                        "threshprop Fill5else is %f for ingredient: %s %s %d"
+                        "threshprop pack_grid else is %f for ingredient: %s %s %d"
                         % (threshProb, nameMe, nameMe.name, nameMe.nbMol)
                     )
-                    print("totalNumMols Fill5else = ", totalNumMols)
+                    print("totalNumMols pack_grid else = ", totalNumMols)
                 nls += 1
 
         vRangeStart = 0.0
@@ -3435,16 +3362,16 @@ class Environment(CompartmentList):
                 print("Points Remaining", nbFreePoints, len(freePoints))
                 print("len(self.activeIngr)", len(self.activeIngr))
 
-                # breakin test
+            # breakin test
             if len(self.activeIngr) == 0:
-                print("broken by len****")
+                print("exit packing loop because of len****")
                 if hasattr(self, "afviewer"):
                     if self.afviewer is not None and hasattr(self.afviewer, "vi"):
                         self.afviewer.vi.resetProgressBar()
                         self.afviewer.vi.progressBar(label="Filling Complete")
                 break
             if vRangeStart > 1:
-                print("broken by vRange and hence Done!!!****")
+                print("exit packing loop because vRange and hence Done!!!****")
                 break
             if self.cancelDialog:
                 tCancel = time.time()
@@ -3488,13 +3415,7 @@ class Environment(CompartmentList):
                             self.afviewer.vi.displayParticleVolumeDistance(
                                 distance, self
                             )
-                    else:
-                        print(
-                            "\r{} {} {} {}".format(
-                                p, ingr.name, ingr.completion, nbFreePoints
-                            ),
-                        )
-                        # End C4D safety check for Status bar added July 10, 2012
+
             compNum = ingr.compNum
             radius = ingr.minRadius
             jitter = self.callFunction(ingr.getMaxJitter, (spacing,))
@@ -3545,7 +3466,7 @@ class Environment(CompartmentList):
                 vRangeStart = res[1]
                 continue
                 print("picked ", ptInd, distance[ptInd])
-            # place the ingrediant
+            # place the ingredient
             if self.overwritePlaceMethod:
                 ingr.placeType = self.placeMethod
             # if self.rejectionThreshold is not None:
@@ -3570,7 +3491,6 @@ class Environment(CompartmentList):
                 ),
                 {"debugFunc": debugFunc},
             )
-            #            print("nbFreePoints after PLACE ",nbFreePoints)
             if success:
                 self.grid.distToClosestSurf = numpy.array(distance[:])
                 self.grid.freePoints = numpy.array(freePoints[:])
@@ -3895,9 +3815,7 @@ class Environment(CompartmentList):
                 unitVol = self.grid.gridSpacing ** 3
                 innerPointNum = len(freePoints)
                 print("  .  .  .  . ")
-                #                print ('for compartment o = ', o.name)
                 print("inner Point Count = ", innerPointNum)
-                #                print ('inner Volume = ', o.interiorVolume)
                 print("innerVolume temp Confirm = ", innerPointNum * unitVol)
                 usedPts = 0
                 unUsedPts = 0
@@ -4180,8 +4098,8 @@ class Environment(CompartmentList):
         #            name_ingr = ingr.o_name
         #        for r in ingr.results:
         #            ingrdic[name_ingr]["results"].append([r[0]],r[1],)
-        #        print ("growingr?",ingr,ingr.name,isinstance(ingr, GrowIngrediant))
-        if isinstance(ingr, GrowIngrediant) or isinstance(ingr, ActinIngrediant):
+        #        print ("growingr?",ingr,ingr.name,isinstance(ingr, GrowIngredient))
+        if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
             ingr.nbCurve = ingrdic["nbCurve"]
             ingr.listePtLinear = []
             for i in range(ingr.nbCurve):
@@ -4248,14 +4166,14 @@ class Environment(CompartmentList):
 
         self.loopThroughIngr(cb)
         for pos, rot, ingr, ptInd in self.molecules:
-            if isinstance(ingr, GrowIngrediant) or isinstance(ingr, ActinIngrediant):
+            if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
                 pass  # already store
             else:
                 ingr.results.append([pos, rot])
         for i, orga in enumerate(self.compartments):
             for pos, rot, ingr, ptInd in orga.molecules:
-                if isinstance(ingr, GrowIngrediant) or isinstance(
-                    ingr, ActinIngrediant
+                if isinstance(ingr, GrowIngredient) or isinstance(
+                    ingr, ActinIngredient
                 ):
                     pass  # already store
                 else:
@@ -4410,7 +4328,7 @@ class Environment(CompartmentList):
             if hasattr(r[1], "tolist"):
                 r[1] = r[1].tolist()
             adic["results"].append([r[0], r[1]])
-        if isinstance(ingr, GrowIngrediant) or isinstance(ingr, ActinIngrediant):
+        if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
             adic["nbCurve"] = ingr.nbCurve
             for i in range(ingr.nbCurve):
                 lp = numpy.array(ingr.listePtLinear[i])
@@ -4851,7 +4769,6 @@ class Environment(CompartmentList):
         if panda3d is None:
             return
         halfextents = ingr.bb[1]
-        print(halfextents)
         shape = BulletBoxShape(
             Vec3(halfextents[0], halfextents[1], halfextents[2])
         )  # halfExtents
@@ -5078,7 +4995,6 @@ class Environment(CompartmentList):
         #        mat[:3, 3] = trans
         #        mat = mat.transpose()
         mat = mat.transpose().reshape((16,))
-        #        print mat,len(mat),mat.shape
         mat3x3 = Mat3(
             mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10]
         )
@@ -5134,7 +5050,6 @@ class Environment(CompartmentList):
         if True in numpy.isnan(mat).flatten():
             print("problem Matrix", node)
             return
-        #        print mat,len(mat),mat.shape
         if self.panda_solver == "bullet":
             pMat = Mat4(
                 mat[0],
@@ -5194,7 +5109,7 @@ class Environment(CompartmentList):
                 for n in self.static
             ]
             done = not (True in r)
-            print(done, dt, time() - t1)
+            print(done, dt, "time", time() - t1)
             if runTimeDisplay:
                 # move self.moving and update
                 nodenp = NodePath(self.moving)

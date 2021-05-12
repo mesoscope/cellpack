@@ -2409,7 +2409,6 @@ class blenderUI:
 
     #        if elem["type"] == "sliders":
     #            #check if float or int !
-    #            print(type(elem["variable"].val))
     #            if type(elem["variable"].val) is int :
     #                return int(elem["variable"].val)
     #            else :

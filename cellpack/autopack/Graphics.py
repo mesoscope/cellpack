@@ -54,7 +54,7 @@ from cellpack.mgl_tools.upy import colors as upyColors
 
 from cellpack.mgl_tools.DejaVu.colorTool import Map
 
-from .Ingredient import GrowIngrediant, ActinIngrediant
+from .Ingredient import GrowIngredient, ActinIngredient
 
 
 class AutopackViewer:
@@ -200,7 +200,6 @@ class AutopackViewer:
         self.histo = histo
         self.env = self.histo
         self.name = self.histo.name
-        print(self.name, self.histo.name)
         self.histo.afviewer = self
         # add padding
         bb = self.histo.boundingBox
@@ -241,10 +240,8 @@ class AutopackViewer:
             compartment = self.histo
         else:
             compartment = self.histo.compartments[abs(ingr.compNum) - 1]
-        # print("parent",parent,self.vi.getName(parent))
         name = "%s_%s" % (ingr.name, compartment.name)
         gi = self.checkCreateEmpty(name, parent=parent)
-        print(gi, name)
         self.orgaToMasterGeom[ingr] = gi
 
     def prepareMaster(self):
@@ -378,7 +375,7 @@ class AutopackViewer:
             for ingr in r.ingredients:
                 self.addMasterIngr(ingr, parent=gc)
 
-        if orga.isOrthogonalBoudingBox != 1:
+        if orga.isOrthogonalBoundingBox != 1:
             # create the mesh for the compartment
             name = "%s_Mesh" % orga.name
             tet = self.helper.getObject(name)
@@ -412,7 +409,7 @@ class AutopackViewer:
                 #        orga.ref_obj = name
 
     def createOrganelMesh(self, orga):
-        if orga.isOrthogonalBoudingBox != 1:
+        if orga.isOrthogonalBoundingBox != 1:
             name = "%s_Mesh" % orga.name
             if self.helper.host == "maya":
                 name = "mesh_" + name  # TODO fix this in maya
@@ -468,7 +465,7 @@ class AutopackViewer:
         self.prepareMaster()
         self.displayCompartments()
         self.displayHistoVol()
-        self.prepareIngrediant()
+        self.prepareIngredient()
         self.prepareDynamic()
         if self.vi.host.find("blender") != -1:
             # change the viewportshadr
@@ -533,21 +530,16 @@ class AutopackViewer:
         """
         if self.master is None:
             self.displayPreFill()
-        #            print ("displayPreFill OK")
         self.vi.resetProgressBar()
         self.vi.progressBar(label="displayFill")
         if self.doPoints:
             self.vi.progressBar(label="displayPoints")
             self.callFunction(self.displayCompartmentsPoints)  # ()
             self.callFunction(self.displayFreePoints)  # ()
-        #            print ("displayPoints OK")
         self.vi.progressBar(label="displayCytoplasmIngredients")
         self.callFunction(self.displayCytoplasmIngredients)  #
-        #        print ("displayCytoplasmIngredients OK")
         self.vi.progressBar(label="displayCompartmentsIngredients")
         self.callFunction(self.displayCompartmentsIngredients)  #
-        #        print ("displayCompartmentsIngredients OK")
-        #        print ("displayFill OK")
         if self.vi.host.find("blender") != -1:
             p = self.vi.getObject("autopackHider")
             self.vi.setLayers(p, [1])
@@ -666,7 +658,7 @@ class AutopackViewer:
             n = self.vi.Polylines("normals", vertices=verts, visible=0)
             self.vi.AddObject(n, parent=self.orgaToMasterGeom[orga])
 
-        if orga.isOrthogonalBoudingBox != 1:
+        if orga.isOrthogonalBoundingBox != 1:
             if hasattr(orga, "ogsurfacePoints"):
                 # display off grid surface grid points
                 self.displayPoints(
@@ -698,10 +690,6 @@ class AutopackViewer:
         """
         for orga in self.histo.compartments:
             self.displayCompartmentPoints(orga)
-            #        print("In orga $$$$$$$$$$$$$$$$$$$$$$$$ with orthogonalBoundingBox = ", orga.isOrthogonalBoudingBox)
-        #            if orga.isOrthogonalBoudingBox != 1:
-        #            print("in orga is box because isOrthogonalBoudingBox = ", orga.isOrthogonalBoudingBox)
-        #                self.displayCompartmentPoints(orga)
 
     def hideIngrPrimitive(self, ingr):
         pname = ingr.name.replace(" ", "_") + "_SPH"
@@ -789,7 +777,6 @@ class AutopackViewer:
                         visible=visible,
                     )
                     self.vi.AddObject(sph, parent=self.orgaToMasterGeom[ingr])
-                    # print ingr.name, verts[ingr]
                 else:
                     parent = self.vi.getObject(name)
                     names = (
@@ -829,13 +816,13 @@ class AutopackViewer:
     def displayIngrCylinders(self, ingr, verts, radii, visible=0):
         # dont do it for a snake ingredient...
         # just use the realtime capbility
-        if isinstance(ingr, GrowIngrediant):
+        if isinstance(ingr, GrowIngredient):
             return
         o = ingr.recipe.compartment
         v = numpy.array(verts[ingr])
         f = numpy.arange(len(v))
         f.shape = (-1, 2)
-        if isinstance(ingr, GrowIngrediant):
+        if isinstance(ingr, GrowIngredient):
             if ingr.use_rbsphere:
                 for i in range(ingr.nbCurve):
                     name = o.name + str(i) + "_Spheres_" + ingr.name.replace(" ", "_")
@@ -938,8 +925,8 @@ class AutopackViewer:
         r = self.histo.exteriorRecipe
         if r:
             for ingr in r.ingredients:
-                if isinstance(ingr, GrowIngrediant) or isinstance(
-                    ingr, ActinIngrediant
+                if isinstance(ingr, GrowIngredient) or isinstance(
+                    ingr, ActinIngredient
                 ):
                     self.displayIngrGrow(ingr)
         # compartment ingr
@@ -948,16 +935,16 @@ class AutopackViewer:
             rs = orga.surfaceRecipe
             if rs:
                 for ingr in rs.ingredients:
-                    if isinstance(ingr, GrowIngrediant) or isinstance(
-                        ingr, ActinIngrediant
+                    if isinstance(ingr, GrowIngredient) or isinstance(
+                        ingr, ActinIngredient
                     ):
                         self.displayIngrGrow(ingr)
             # compartment matrix ingr
             ri = orga.innerRecipe
             if ri:
                 for ingr in ri.ingredients:
-                    if isinstance(ingr, GrowIngrediant) or isinstance(
-                        ingr, ActinIngrediant
+                    if isinstance(ingr, GrowIngredient) or isinstance(
+                        ingr, ActinIngredient
                     ):
                         self.displayIngrGrow(ingr)
 
@@ -1042,13 +1029,13 @@ class AutopackViewer:
                 if extruder is not None:
                     self.helper.deleteObject(extruder)
 
-    def prepareIngrediant(
+    def prepareIngredient(
         self,
     ):
         # cyto ingr
         r = self.histo.exteriorRecipe
         if r:
-            self.displayIngrediants(r)
+            self.displayIngredients(r)
 
             # compartment ingr
         for orga in self.histo.compartments:
@@ -1057,11 +1044,11 @@ class AutopackViewer:
             # compartment matrix ingr
             ri = orga.innerRecipe
             if rs:
-                self.displayIngrediants(rs)
+                self.displayIngredients(rs)
             if ri:
-                self.displayIngrediants(ri)
+                self.displayIngredients(ri)
 
-    def displayIngrediants(self, recipes):
+    def displayIngredients(self, recipes):
         for ingr in recipes.ingredients:
             if isinstance(ingr.mesh, None):  # mes_3d?
                 # try get it
@@ -1075,11 +1062,9 @@ class AutopackViewer:
     def createIngrMesh(self, ingr):
         o = ingr.recipe.compartment
         geom = ingr.mesh
-        #        print ("createIngrMesh ",ingr.name, ingr.mesh, self.helper.getName(ingr.mesh) )
         # START New section added by Graham on July 16, 2012 replaces section below
         # This version allows the user to hide the parent geometry from the center of the scene very easily
         # This version MAY NOT be safe outside of Cinema 4D  Can we test it ???
-        #        print ("try getting the parent and hide it",self.name+"ParentHiders")
         vParentHiders = self.vi.getObject(self.name + "ParentHiders")  # g
         if vParentHiders is None:  # g
             vParentHiders = self.vi.newEmpty(
@@ -1088,19 +1073,11 @@ class AutopackViewer:
         if self.vi.host.find("blender") == -1:
             self.vi.toggleDisplay(vParentHiders, False)
         parent = self.vi.getObject(ingr.name + "MeshsParent")
-        #        print ("whats the MeshsParent")
-        print(type(parent))
         if parent is None:  # g
-            #            print ("before newEmpty")
             parent = self.vi.newEmpty(
                 ingr.name + "MeshsParent", parent=vParentHiders
             )  # g
-        #            print ("ok")
-        #            print (ingr.name+"MeshsParent",type(vParentHiders))
-        #            self.vi.reParent(parent,vParentHiders)
-        #        else :
-        #            self.vi.reParent(parent,vParentHiders)
-        #        print("ingredient Mesh_3d to build")#when reset should delete it
+
         if (
             not hasattr(ingr, "mesh_3d") or ingr.mesh_3d is None
         ):  # or parent is None:  #mod by g
@@ -1130,13 +1107,9 @@ class AutopackViewer:
                     parent=parent,
                 )
             else:
-                #                print ("build instance")
                 polygon = self.vi.newInstance(
                     name, geom, material=material, parent=parent
                 )  # identity?
-            # self.vi.toggleDisplay(parent,False)
-            #            print ("ok polygon")
-            #            print   (name,polygon,parent,type(polygon))
             if not self.visibleMesh:
                 self.vi.toggleDisplay(parent, False)
                 self.vi.toggleDisplay(polygon[0], False)
@@ -1147,20 +1120,16 @@ class AutopackViewer:
             ingr.mesh_3d = parent  # polygon[0] is this will work in other host
         print("after build")
 
-    #        print (type(ingr.mesh_3d))
-    #        self.vi.reParent(parent,vParentHiders)
-
     def displayIngrMesh(self, matrices, ingr):
         matrices[ingr] = []
-        # ingr.mesh.Set(materials=[ingr.color], inheritMaterial=0)
         if self.ViewerType != "dejavu":
             self.createIngrMesh(ingr)
         else:
             ingr.mesh_3d = ingr.mesh
-        #            ingr.mesh.Set(materials=[ingr.color], inheritMaterial=0)
 
     def printOneIngr(self, ingr):
         print(
+            "one ingredient:",
             ingr.name,
             ingr.molarity,
             ingr.pdb,
@@ -1169,7 +1138,7 @@ class AutopackViewer:
             ingr.jitterMax,
         )
 
-    def printIngrediants(self):
+    def printIngredients(self):
         r = self.histo.exteriorRecipe
         if r:
             [self.printOneIngr(ingr) for ingr in r.ingredients]
@@ -1213,14 +1182,11 @@ class AutopackViewer:
             print("no Childs")
         else:
             instance = childs[0]
-        #        print (polygon,instance,newMesh)
-        #        if self.vi.host == "maya" :
-        #            instance = ingredient.mesh
+
         if self.vi.host.find("blender") != -1:
             instance = self.orgaToMasterGeom[ingredient]
         elif self.vi.host == "dejavu" or self.vi.host == "softimage":
             instance = polygon
-        #        print (polygon,instance,newMesh)
         self.vi.updateMasterInstance(instance, [newMesh])
         if self.vi.host.find("blender") != -1:
             newMesh = self.vi.getObject(newMesh)
@@ -1356,7 +1322,6 @@ class AutopackViewer:
                     if ingr.modelType == "Spheres":
                         self.displayIngrSpheres(ingr, verts, radii, visible=1)
                     elif ingr.modelType == "Cylinders":
-                        print(ingr.name, verts)
                         self.displayIngrCylinders(ingr, verts, radii, visible=1)
 
         # display cytoplasm meshes
@@ -1365,7 +1330,6 @@ class AutopackViewer:
             meshGeoms = {}  # self.meshGeoms#{}
             inds = {}
             for pos, rot, ingr, ptInd in self.histo.molecules:
-                #                print ("ingr",ingr,ingr.mesh,ingr.mesh_3d)
                 if ingr.mesh:  # display mesh
                     mat = rot.copy()
                     mat[:3, 3] = pos
@@ -1390,7 +1354,6 @@ class AutopackViewer:
                         #    self.vi.AddObject(geom, parent=self.orgaToMasterGeom[ingr])
             j = 0
             for ingr in r.ingredients:
-                #                print("process ",ingr.o_name)
                 polygon = ingr.mesh_3d
                 name = "Meshs_" + ingr.name.replace(" ", "_")
                 parent = self.vi.getObject(name)
@@ -1402,9 +1365,6 @@ class AutopackViewer:
                     print("ingr not in meshGeoms", ingr, meshGeoms)
                     continue
                 axis = numpy.array(ingr.principalVector[:])
-                #                if self.vi.host.find("blender") != -1 and self.vi.instance_dupliFace and ingr.coordsystem == "left":
-                #                    axis = self.vi.rotatePoint(axis,[0.,0.,0.],[0.0,1.0,0.0,-math.pi/2.0])
-                #                print ("make ipoly",)
                 ingr.ipoly = self.vi.instancePolygon(
                     "cyto_" + self.histo.FillName[self.histo.cFill] + ingr.o_name,
                     matrices=meshGeoms[ingr],
@@ -1425,15 +1385,12 @@ class AutopackViewer:
                         if type(ingr.ipoly) != list:
                             return
                         for i, ip in enumerate(ingr.ipoly):
-                            #                    print i,ip,type(ip)
                             name = self.vi.getName(ip)
                             if inds[ingr][i] in self.histo.order:
-                                #                        print name,name+"_"+str(self.histo.order[inds[ingr][i]])
                                 self.vi.setName(
                                     ip,
                                     name + "_" + str(self.histo.order[inds[ingr][i]]),
                                 )
-                            #                self.vi.progressBar(j/ningr,label="instances for "+str(j)+" "+ingr.name+" "+str(len(meshGeoms[ingr])))
                 j += 1
 
     def displayCompartmentsIngredients(self):
@@ -1499,24 +1456,14 @@ class AutopackViewer:
             #                        self.displayIngrMesh(matrices,ingr)
             for pos, rot, ingr, ptInd in orga.molecules:
                 if ingr.mesh:  # display mesh
-                    #                    geom = ingr.mesh
-                    # print ingr,ingr.mesh.name
-                    # print pos
                     mat = rot.copy()
                     mat[:3, 3] = pos
-                    #                    if self.helper.host == 'dejavu':
-                    #                        mry90 = self.helper.rotation_matrix(-math.pi/2.0, [0.0,1.0,0.0])
-                    #                        mat = numpy.array(numpy.matrix(mat)*numpy.matrix(mry90))
                     if self.helper.instance_dupliFace:
-                        #                        self.helper.host.find("blender") != -1 :
                         mat = rot.copy().transpose()
                         mat[3][:3] = pos
                     if ingr not in matrices:
                         matrices[ingr] = []
                     matrices[ingr].append(mat)
-                    #                    if self.ViewerType == 'dejavu':
-                    #                        self.vi.AddObject(geom, parent=self.orgaToMasterGeom[ingr])
-                    #                    else :
                     if not hasattr(ingr, "mesh_3d") or ingr.mesh_3d is None:
                         if self.ViewerType == "dejavu":
                             ingr.mesh_3d = ingr.mesh
@@ -1537,8 +1484,6 @@ class AutopackViewer:
                         # check if alive ?
                         if ingr not in matrices:
                             continue
-                        else:
-                            print(name, len(matrices[ingr]))
                         if parent is None:
                             parent = self.vi.newEmpty(
                                 name, parent=self.orgaToMasterGeom[ingr]
@@ -1551,7 +1496,6 @@ class AutopackViewer:
                         #                        if self.vi.host.find("blender") != -1 and self.vi.instance_dupliFace and ingr.coordsystem == "left":
                         #                            if self.helper.getType(self.helper.getChilds(polygon)[0]) != self.helper.EMPTY:
                         #                            axis = self.vi.rotatePoint(axis,[0.,0.,0.],[0.0,1.0,0.0,-math.pi/2.0])
-                        #                            print (self.helper.getType(self.helper.getChilds(polygon)[0]))
                         ingr.ipoly = self.vi.instancePolygon(
                             orga.name
                             + self.histo.FillName[self.histo.cFill]
@@ -1563,7 +1507,6 @@ class AutopackViewer:
                             colors=[ingr.color],
                             axis=axis,
                         )
-                        # print ("ingr instance build, reparent".ingr.ipoly,self.orgaToMasterGeom[ingr])
                         # principal vector rotate by 90degree for blender dupliVert?
                         if self.vi.host.find("blender") != -1:
                             self.orgaToMasterGeom[ingr] = polygon
@@ -1571,9 +1514,6 @@ class AutopackViewer:
                                 self.vi.setLayers(
                                     polygon, [1]
                                 )  # and do it for child too.
-                            #                            else :
-                            #                                if ingr.coordsystem == "left":
-                            #                                    self.vi.rotateObj(polygon,[0.0,-math.pi/2.0,0.0])
                         elif self.vi.host == "dejavu":
                             self.orgaToMasterGeom[ingr] = ingr.mesh
                         elif self.vi.host == "softimage":
@@ -1595,9 +1535,6 @@ class AutopackViewer:
                         parent = self.vi.getObject(name)
                         if ingr not in matrices:
                             continue
-                        else:
-                            print(name, len(matrices[ingr]))
-                        #                        self.vi.progressBar(j/ningrs,label="instances for "+str(j)+" "+ingr.name+" "+str(len(matrices[ingr])))
                         if parent is None:
                             parent = self.vi.newEmpty(
                                 name, parent=self.orgaToMasterGeom[ingr]
@@ -1622,16 +1559,13 @@ class AutopackViewer:
                             colors=[ingr.color],
                             axis=axis,
                         )
-                        # print ("ingr instance build, reparent".ingr.ipoly,self.orgaToMasterGeom[ingr])
                         if self.vi.host.find("blender") != -1:
                             self.orgaToMasterGeom[ingr] = polygon
                             if not self.vi.instance_dupliFace:
                                 self.vi.setLayers(
                                     polygon, [1]
                                 )  # and do it for child too.
-                            #                            else :
-                            #                                if ingr.coordsystem == "left":
-                            #                                    self.vi.rotateObj(polygon,[0.0,-math.pi/2.0,0.0])
+
                         elif self.vi.host == "dejavu":
                             self.orgaToMasterGeom[ingr] = ingr.mesh
                     j += 1
@@ -1682,7 +1616,6 @@ class AutopackViewer:
         for pt in range(NPTS):
             vertsAll.append(self.histo.masterGridPositions[pt])  # Graham debugTrashLine
             d = self.histo.distancesAfterFill[pt]
-            #            print("distAfterFill for pt ", pt," = ", d)
             if d > self.histo.smallestProteinSize - 0.001:
                 verts.append(self.histo.masterGridPositions[pt])
                 rads.append(d)
@@ -1959,8 +1892,6 @@ class AutopackViewer:
                     positions.append(pos)
                     radius.append(r * s[0])  # should be one
                 #                    self.helper.Sphere(self.helper.getName(io)+"_sp",radius=r)
-                print(len(radius), len(positions))
-                print(radius, positions)
                 ingr = MultiSphereIngr(
                     1.0,
                     name=name,
@@ -1968,7 +1899,6 @@ class AutopackViewer:
                     positions=[positions],
                     meshObject=obj,
                 )
-            #                print("spheres ",positions)
             elif ingtype == self.helper.CYLINDER:
                 from autopack.Ingredient import MultiCylindersIngr
 
@@ -1996,7 +1926,6 @@ class AutopackViewer:
                     meshObject=obj,
                     principalVector=axis,
                 )
-            #                print (name, [radius],[positions],[positions2])
             elif ingtype == self.helper.CUBE:
                 from autopack.Ingredient import SingleCubeIngr
 
@@ -2130,7 +2059,6 @@ class AutopackViewer:
                 else:
                     name = chname
                 print("name 1 org", name)
-                #                print name,helper.getType(ch),helper.EMPTY,helper.POLYGON
                 if self.helper.getType(ch) == self.helper.EMPTY:
                     c = self.helper.getChilds(ch)
                     # should be all polygon
@@ -2294,7 +2222,6 @@ class AutopackViewer:
             if ramp is None:
                 return [[], []]
         o = self.vi.getObject(target)
-        #        print "target",o
         if o is None:
             print("target is none", target)
             return [[], []]
@@ -2313,15 +2240,12 @@ class AutopackViewer:
                 listeParent = parents
             for parent in listeParent:
                 obparent = self.vi.getObject(parent)
-                #                print "parent",obparent
                 childs = self.vi.getChilds(obparent)
                 for ch in childs:
                     ingr_name = self.vi.getName(ch)
-                    #                    print "ingr",ingr_name
                     # ingr_childs = self.vi.getChilds(ch)
                     meshp = self.vi.getObject("Meshs_" + ingr_name.split("_")[0])
                     # for all instance get the position and measure the distance to target
-                    #                    print "meshi",meshp
                     if meshp is None:
                         c = self.vi.getChilds(ch)
                         if not len(c):
@@ -2332,13 +2256,11 @@ class AutopackViewer:
                     else:
                         meshpchilds = self.vi.getChilds(meshp)
                     for cc in meshpchilds:
-                        #                        print "child",cc
                         pos = self.vi.ToVec(self.vi.getTranslation(cc))
                         if usePoint:
                             d = self.vi.findClosestPoint(pos, o)
                         else:
                             d = self.vi.measure_distance(pos, targetPos)
-                        #                        print d,threshold
                         if d < threshold:
                             listeDistances.append(d)
                             listeObjs.append(cc)
@@ -2409,7 +2331,6 @@ class AutopackViewer:
                             name = self.vi.getName(cc)
                             print("child order", name.split("_")[-1])
                             order = int(name.split("_")[-1])  # first caracter is "n"
-                            print(order)
                             if order < threshold:
                                 listeOrder.append(order)
                                 listeObjs.append(cc)
@@ -2430,7 +2351,6 @@ class AutopackViewer:
 
     def exportIngredient(self, ingr):
         #        from DejaVu.IndexedPolygons import IndexedPolygons
-        print(ingr.name)
         if ingr.meshFile is None or os.path.splitext(ingr.meshFile)[0] != "":
             #            if isinstance(ingr.mesh,IndexedPolygons):
             #                ingr.mesh.writeToFile(self.wrkdir+os.sep+ingr.name)
@@ -2617,7 +2537,6 @@ class AutopackViewer:
         ingrname = ingr.name
         parentname = "Meshs_" + ingrname.replace(" ", "_")
         parent = self.helper.getObject(parentname)
-        print(parentname, parent)
         if parent is not None:
             instances = self.helper.getChilds(parent)
             [self.helper.deleteObject(o) for o in instances]
@@ -2627,14 +2546,12 @@ class AutopackViewer:
             orga = ingr.recipe.compartment
             name = orga.name + "_Spheres_" + ingr.name.replace(" ", "_")
             parent = self.helper.getObject(name)
-            print(name, parent)
             if parent is not None:
                 instances = self.helper.getChilds(parent)
                 [self.helper.deleteObject(o) for o in instances]
                 self.helper.deleteObject(parent)
             name = orga.name + "_Cylinders_" + ingr.name.replace(" ", "_")
             parent = self.helper.getObject(name)
-            print(name, parent)
             if parent is not None:
                 instances = self.helper.getChilds(parent)
                 [self.helper.deleteObject(o) for o in instances]
@@ -2670,7 +2587,6 @@ class AutopackViewer:
         # need to clear also the static object
         parentname = recipe + "static"
         parent = self.helper.getObject(parentname)
-        #        print (parentname,parent)
         if parent is not None:
             static = self.helper.getChilds(parent)
             [self.helper.deleteObject(o) for o in static]
@@ -2678,7 +2594,6 @@ class AutopackViewer:
         # need to clear also the moving object
         parentname = recipe + "moving"
         parent = self.helper.getObject(parentname)
-        #        print (parentname,parent)
         if parent is not None:
             static = self.helper.getChilds(parent)
             [self.helper.deleteObject(o) for o in static]
@@ -2698,8 +2613,6 @@ class AutopackViewer:
             * 3,
         )
         print("root", len(root.objects))
-        for io in root.objects:
-            print(self.helper.getName(io))
 
     def displaysubnode(self, parentnode, i):
         if not parentnode.hasSubnodes and not parentnode.hasSubdivided:

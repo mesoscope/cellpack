@@ -1012,7 +1012,6 @@ class blenderUI:
         lMenu = []
         for i, m in enumerate(elem["value"]):
             l = (str(i), m, m)
-            print(l)
             lMenu.append(l)  # return,name,description
         if elem["action"] is not None:
             setattr(

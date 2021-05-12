@@ -41,7 +41,6 @@ from types import StringType, ListType
 #    usenumpy = True
 # except :
 #    usenumpy = False
-#    print("no numpy")
 
 # base helper class
 from upy import hostHelper

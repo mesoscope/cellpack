@@ -46,14 +46,15 @@ import ssl
 # in case simplejson not there
 try:
     import simplejson as json
-
     # we can use the hookup at loading
 except ImportError:
     import json
+
 try:
     from collections import OrderedDict
 except ImportError:
     from ordereddict import OrderedDict
+
 try:
     import urllib.request as urllib  # , urllib.parse, urllib.error
 except ImportError:
@@ -83,36 +84,35 @@ else:
     appdata = path.expanduser(path.join("~", "." + APPNAME))
 if not os.path.exists(appdata):
     os.makedirs(appdata)
-    print("autoPACK data dir created")
-    print(appdata)
+    print("autoPACK data dir created", appdata)
 
 # ==============================================================================
 # setup Panda directory
 # ==============================================================================
-PANDA_PATH = ""
-if sys.platform == "darwin":
-    PANDA_PATH = afdir + os.sep + ".." + os.sep + "Panda3D"
-    sys.path.append("/Developer/Panda3D/")
-    sys.path.append("/Developer/Panda3D/lib/")  # in case already installed
-    # TODO need to fix the dependency that are locally set to /Developer/Panda3D/lib/
-elif sys.platform == "win32":
-    PANDA_PATH = afdir + os.sep + ".." + os.sep + "Panda3d-1.9.0-x64"
-    PANDA_PATH_BIN = PANDA_PATH + os.sep + "bin"
-    try:
-        if PANDA_PATH_BIN not in os.environ.get("PATH", ""):
-            os.environ["PATH"] = os.pathsep.join(
-                (PANDA_PATH_BIN, os.environ.get("PATH", ""))
-            )
-    except Exception:
-        pass
-    sys.path.append(PANDA_PATH_BIN)
-    sys.path.append(PANDA_PATH)
-elif sys.platform == "linux2":  # linux ? blender and maya ?
-    PANDA_PATH = "/usr/lib/python2.7/dist-packages/"
-    PANDA_PATH_BIN = "/usr/lib/panda3d/"
-else:
-    pass
-sys.path.append(PANDA_PATH + os.sep + "lib")
+# PANDA_PATH = ""
+# if sys.platform == "darwin":
+#     PANDA_PATH = afdir + os.sep + ".." + os.sep + "Panda3D"
+#     sys.path.append("/Developer/Panda3D/")
+#     sys.path.append("/Developer/Panda3D/lib/")  # in case already installed
+#     # TODO need to fix the dependency that are locally set to /Developer/Panda3D/lib/
+# elif sys.platform == "win32":
+#     PANDA_PATH = afdir + os.sep + ".." + os.sep + "Panda3d-1.9.0-x64"
+#     PANDA_PATH_BIN = PANDA_PATH + os.sep + "bin"
+#     try:
+#         if PANDA_PATH_BIN not in os.environ.get("PATH", ""):
+#             os.environ["PATH"] = os.pathsep.join(
+#                 (PANDA_PATH_BIN, os.environ.get("PATH", ""))
+#             )
+#     except Exception:
+#         pass
+#     sys.path.append(PANDA_PATH_BIN)
+#     sys.path.append(PANDA_PATH)
+# elif sys.platform == "linux2":  # linux ? blender and maya ?
+#     PANDA_PATH = "/usr/lib/python2.7/dist-packages/"
+#     PANDA_PATH_BIN = "/usr/lib/panda3d/"
+# else:
+#     pass
+# sys.path.append(PANDA_PATH + os.sep + "lib")
 
 
 def checkURL(URL):
@@ -152,21 +152,11 @@ cache_dir = {
     "prefs": preferences,
 }
 
-#
-# autopack_cache_data (e.g. recipe_available.json)
-# or call this autopack_cache_recipelists
-# autopack_cache_recipes
-# autopack_cache_results
-# autopack_cache_analysis
-# autopack_cache_geometries
-# autopack_cache_paths
-
 usePP = False
 helper = None
 LISTPLACEMETHOD = ["jitter", "spheresBHT", "RAPID"]
 try:
     from panda3d.core import Mat4  # noqa: F401
-
     LISTPLACEMETHOD = ["jitter", "spheresBHT", "pandaBullet", "RAPID"]
 except ImportError:
     LISTPLACEMETHOD = ["jitter", "spheresBHT", "RAPID"]
@@ -353,7 +343,6 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
         if not os.path.exists(cache_dir[cache] + os.sep + destination):
             os.makedirs(cache_dir[cache] + os.sep + destination)
         # check if exist first
-        # print ("isfile ",tmpFileName)
         if not os.path.isfile(tmpFileName) or force:
             if checkURL(filename):
                 try:

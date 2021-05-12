@@ -21,84 +21,10 @@ from matplotlib.patches import Circle
 
 from cellpack.mgl_tools.upy import colors as col
 import cellpack.autopack as autopack
+from cellpack.autopack.transformation import signed_angle_between_vectors
 from cellpack.autopack.ldSequence import halton
 
-from cellpack.autopack.GeometryTools import GeometriTools, Rectangle
-
-
-def angle_between_vectors(v0, v1, directed=True, axis=0):
-    """Return angle between vectors.
-    If directed is False, the input vectors are interpreted as undirected axes,
-    i.e. the maximum angle is pi/2.
-    >>> a = angle_between_vectors([1, -2, 3], [-1, 2, -3])
-    >>> numpy.allclose(a, math.pi)
-    True
-    >>> a = angle_between_vectors([1, -2, 3], [-1, 2, -3], directed=False)
-    >>> numpy.allclose(a, 0)
-    True
-    >>> v0 = [[2, 0, 0, 2], [0, 2, 0, 2], [0, 0, 2, 2]]
-    >>> v1 = [[3], [0], [0]]
-    >>> a = angle_between_vectors(v0, v1)
-    >>> numpy.allclose(a, [0, 1.5708, 1.5708, 0.95532])
-    True
-    >>> v0 = [[2, 0, 0], [2, 0, 0], [0, 2, 0], [2, 0, 0]]
-    >>> v1 = [[0, 3, 0], [0, 0, 3], [0, 0, 3], [3, 3, 3]]
-    >>> a = angle_between_vectors(v0, v1, axis=1)
-    >>> numpy.allclose(a, [1.5708, 1.5708, 1.5708, 0.95532])
-    True
-    """
-    v0 = numpy.array(v0, dtype=numpy.float64, copy=False)
-    v1 = numpy.array(v1, dtype=numpy.float64, copy=False)
-    dot = numpy.sum(v0 * v1, axis=axis)
-    dot /= vector_norm(v0, axis=axis) * vector_norm(v1, axis=axis)
-    return numpy.arccos(dot if directed else numpy.fabs(dot))
-
-
-def signed_angle_between_vectors(Vn, v0, v1, directed=True, axis=0):
-    Vn = numpy.array(Vn)
-    angles = angle_between_vectors(v0, v1, directed=directed, axis=axis)
-    cross = numpy.cross(v0, v1)
-    dot = numpy.dot(cross, Vn)
-    ind = numpy.nonzero(dot < 0)
-    angles[ind] *= -1.0
-    return angles
-
-
-def vector_norm(data, axis=None, out=None):
-    """Return length, i.e. Euclidean norm, of ndarray along axis.
-    >>> v = numpy.random.random(3)
-    >>> n = vector_norm(v)
-    >>> numpy.allclose(n, numpy.linalg.norm(v))
-    True
-    >>> v = numpy.random.rand(6, 5, 3)
-    >>> n = vector_norm(v, axis=-1)
-    >>> numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=2)))
-    True
-    >>> n = vector_norm(v, axis=1)
-    >>> numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=1)))
-    True
-    >>> v = numpy.random.rand(5, 4, 3)
-    >>> n = numpy.empty((5, 3))
-    >>> vector_norm(v, axis=1, out=n)
-    >>> numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=1)))
-    True
-    >>> vector_norm([])
-    0.0
-    >>> vector_norm([1])
-    1.0
-    """
-    data = numpy.array(data, dtype=numpy.float64, copy=True)
-    if out is None:
-        if data.ndim == 1:
-            return math.sqrt(numpy.dot(data, data))
-        data *= data
-        out = numpy.atleast_1d(numpy.sum(data, axis=axis))
-        numpy.sqrt(out, out)
-        return out
-    else:
-        data *= data
-        numpy.sum(data, axis=axis, out=out)
-        numpy.sqrt(out, out)
+from cellpack.autopack.GeometryTools import GeometryTools, Rectangle
 
 
 def autolabel(rects, ax):
@@ -207,10 +133,10 @@ class AnalyseAP:
         self.helper = None
         if viewer:
             self.helper = self.afviewer.vi
-        self.resutl_file = result_file
+        self.result_file = result_file
         self.center = [0, 0, 0]
         self.bbox = [[0, 0, 0], [1, 1, 1]]
-        self.g = GeometriTools()
+        self.g = GeometryTools()
         self.g.Resolution = 1.0  # or grid step?
         self.current_pos = None
         self.current_distance = None
@@ -246,20 +172,20 @@ class AnalyseAP:
         positions = []
         for parent in parents:
             obparent = self.helper.getObject(parent)
-            childs = self.helper.getChilds(obparent)
-            for ch in childs:
+            children = self.helper.getChilds(obparent)
+            for ch in children:
                 ingr_name = self.helper.getName(ch)
                 meshp = self.helper.getObject("Meshs_" + ingr_name.split("_")[0])
                 if meshp is None:
                     c = self.helper.getChilds(ch)
                     if not len(c):
                         continue
-                    meshpchilds = self.helper.getChilds(
+                    meshp_children = self.helper.getChilds(
                         c[0]
                     )  # continue #should get sphere/cylnder parent ?
                 else:
-                    meshpchilds = self.helper.getChilds(meshp)
-                for cc in meshpchilds:
+                    meshp_children = self.helper.getChilds(meshp)
+                for cc in meshp_children:
                     pos = self.helper.ToVec(self.helper.getTranslation(cc))
                     positions.append(pos)
         return positions
@@ -267,7 +193,7 @@ class AnalyseAP:
     def getDistanceFrom(self, target, parents=None, **options):
         """
         target : name or host object target or target position
-        parent : name of host parent object for the list of object to measre distance from
+        parent : name of host parent object for the list of object to measure distance from
         objects : list of object or list of points
         """
         # get distance from object to the target.
@@ -284,33 +210,33 @@ class AnalyseAP:
             o = self.helper.getObject(target)
             if o is not None:
                 targetPos = self.helper.ToVec(self.helper.getTranslation(o))  # hostForm
-        listeCenters = []
-        if self.resutl_file is None:
-            if parents is None and self.resutl_file is None:
+        listCenters = []
+        if self.result_file is None:
+            if parents is None and self.result_file is None:
                 listeParent = [self.env.name + "_cytoplasm"]
                 for o in self.env.compartments:
                     listeParent.append(o.name + "_Matrix")
                     listeParent.append(o.name + "_surface")
-            elif parents is not None and self.resutl_file is None:
+            elif parents is not None and self.result_file is None:
                 listeParent = parents
-            listeCenters = self.getPositionsFromObject(listeParent)
+            listCenters = self.getPositionsFromObject(listeParent)
         else:
             # use data from file
-            listeCenters = self.getPositionsFromResFile(listeParent)
+            listCenters = self.getPositionsFromResFile(listeParent)
 
-        delta = numpy.array(listeCenters) - numpy.array(targetPos)
+        delta = numpy.array(listCenters) - numpy.array(targetPos)
         delta *= delta
         distA = numpy.sqrt(delta.sum(1))
         return distA
 
     def getClosestDistance(self, parents=None, **options):
-        if self.resutl_file is None:
-            if parents is None and self.resutl_file is None:
+        if self.result_file is None:
+            if parents is None and self.result_file is None:
                 listeParent = [self.env.name + "_cytoplasm"]
                 for o in self.env.compartments:
                     listeParent.append(o.name + "_Matrix")
                     listeParent.append(o.name + "_surface")
-            elif parents is not None and self.resutl_file is None:
+            elif parents is not None and self.result_file is None:
                 listeParent = parents
             listeCenters = self.getPositionsFromObject(listeParent)
         else:
@@ -471,7 +397,6 @@ class AnalyseAP:
                         ingrpos[ingrname].append(
                             data[recipe][ingrname]["results"][k][0]
                         )
-            print(i)
         return ingrpos, ingrrot
 
     def grabResultFromTXT(self, n, doanalyze=False):
@@ -480,7 +405,6 @@ class AnalyseAP:
         ingrrot = {}
         ingrpos = {}
         for i in range(1000):
-            print(i)
             files = open("results_seed_" + str(i) + ".txt", "r")
             lines = files.readlines()
             files.close()
@@ -551,7 +475,6 @@ class AnalyseAP:
         area = math.pi * r ** 2
         chs = self.g.check_sphere_inside(rect, m, r)
         if chs:  # sph not completly inside
-            #            print "rectangle is outside of circle",r
             ch = self.g.check_rectangle_oustide(rect, m, r)
             if ch:  # rectangle not outside
                 leftBound, rightBound = self.g.getBoundary(rect, m, r)
@@ -741,7 +664,6 @@ class AnalyseAP:
                 area0 = math.pi * e ** 2  # complete circle
                 area1 = self.rectangle_circle_area(self.bbox, p, e)
                 w = area1 / area0
-                print(w, area1, area0, e, p)
                 k[i, j] = w * len(numpy.nonzero(di < e)[0]) / N ** 2
         Kt = V * numpy.sum(k, axis=0)
         Lt = (Kt / numpy.pi) ** 0.5
@@ -823,7 +745,6 @@ class AnalyseAP:
             basename + ingr.name + "_rdf_simple.csv", numpy.array(G), delimiter=","
         )
         self.plot(numpy.array(G), radii[:-1], basename + ingr.name + "_rdf_simple.png")
-        print(G)
 
     def axis_distribution_total(self, all_positions):
         basename = self.env.basename
@@ -1068,13 +989,6 @@ class AnalyseAP:
         #        bb=self.helper.getCornerPointCube(box)
         gridFileIn = None
         gridFileOut = None
-        #        self.env.grid.reset()
-        #        self.grid.reset()self.env.grid = None
-        #        if forceBuild :
-        #            gridFileOut=wrkDir+os.sep+"fill_grid"
-        #        else :
-        #            gridFileIn=wrkDir+os.sep+"fill_grid"
-        print(gridFileIn, gridFileOut, forceBuild)
         self.env.buildGrid(
             boundingBox=bb,
             gridFileIn=gridFileIn,
@@ -1082,8 +996,7 @@ class AnalyseAP:
             gridFileOut=gridFileOut,
             previousFill=False,
         )
-        #    h.buildGrid(gridFileIn=gridFileIn,
-        #                  gridFileOut=gridFileOut)
+
         t2 = time()
         gridTime = t2 - t1
         if fill:
@@ -1097,7 +1010,7 @@ class AnalyseAP:
     def pack(self, seed=20, forceBuild=True, vTestid=3, vAnalysis=0, fbox_bb=None):
         t1 = time()
         print("seed is ", seed, fbox_bb)
-        self.env.fill5(
+        self.env.pack_grid(
             seedNum=seed, verbose=0, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb
         )
         t2 = time()
@@ -1128,7 +1041,6 @@ class AnalyseAP:
     def merge(self, d1, d2, merge=lambda x, y: y):
         result = dict(d1)
         for k, v in d2.items():
-            print(k)
             if k in result:
                 result[k].extend(v)
             else:
@@ -1164,7 +1076,6 @@ class AnalyseAP:
                     ingrpos[ingrname].append(data[recipe][ingrname]["results"][k][0])
         for ingr in ingrpos:
             for i, p in enumerate(ingrpos[ingr]):
-                print(p, radius[ingr])
                 ax.add_patch(
                     Circle(
                         (p[0], p[1]), radius[ingr], edgecolor="black", facecolor="red"
@@ -1270,7 +1181,6 @@ class AnalyseAP:
                 r = self.env.exteriorRecipe
                 d = {}
                 if r:
-                    #                    print ("DONERUNXXXCYTO!!!!!")
                     for ingr in r.ingredients:
                         if ingr.name not in distances:
                             distances[ingr.name] = []
@@ -1308,7 +1218,6 @@ class AnalyseAP:
                             total_positions.extend(ingrpos)
                             total_distances.extend(d)
 
-                        # print plot,twod
                         if plot and twod:
                             for i, p in enumerate(ingrpos):
                                 ax.add_patch(
@@ -1377,9 +1286,7 @@ class AnalyseAP:
                                                     facecolor=ingr.color,
                                                 )
                                             )
-                #                print ("DONERUNXXXbefore!!!!!")
                 for o in self.env.compartments:
-                    #                    print ("DONERUNXXXComp!!!!!")
                     rs = o.surfaceRecipe
                     if rs:
                         for ingr in rs.ingredients:
@@ -1415,7 +1322,6 @@ class AnalyseAP:
                                             facecolor=ingr.color,
                                         )
                                     )
-                    #                    print ("DONERUNXXXYYY!!!!!")
                     ri = o.innerRecipe
                     if ri:
                         for ingr in ri.ingredients:
@@ -1462,9 +1368,6 @@ class AnalyseAP:
                     self.writeJSON(
                         output + os.sep + "_angleIngr_" + str(si) + ".json", anglesingr
                     )
-                # print ("############")
-                # print (output+os.sep+"_dIngr_"+str(si)+".json",distances)
-                #                print ("DONERUNXXX!!!!!")
                 if plot and twod:
                     ax.set_aspect(1.0)
                     pyplot.axhline(y=bbox[0][1], color="k")
@@ -1474,11 +1377,7 @@ class AnalyseAP:
                     pyplot.axis([bbox[0][0], bbox[1][0], bbox[0][1], bbox[1][1]])
                     pyplot.savefig(basename + ".png")
                     pylab.close()  # closes the current figure
-        #            return
-        #            print ("DONERUN!!!!!")
-        #            self.flush()
-        # plot(x)
-        #        print ("DONE1!!!!")
+
         numpy.savetxt(output + os.sep + "seeds", seeds_i, delimiter=",")
         if use_file:
             total_positions = numpy.genfromtxt(position_file, delimiter=",")
@@ -1499,17 +1398,12 @@ class AnalyseAP:
                     output + os.sep + "_angleIngr_" + str(i) + ".json"
                 )
                 anglesingr = dict(self.merge(anglesingr, dict1))
-        #        print ("DONE2!!!!")
         self.writeJSON(occurences_file, occurences)
         self.env.ingrpositions = ingrpositions
         self.env.distances = distances
         self.env.basename = basename
         self.env.occurences = occurences
         self.env.angles = total_angles
-        #        if rdf :
-        #            if twod : self.env.loopThroughIngr(self.rdf_2d)
-        #            else : self.env.loopThroughIngr(self.rdf_3d)
-        #            do the X Y histo averge !
         self.env.loopThroughIngr(self.axis_distribution)
         self.env.loopThroughIngr(self.occurence_distribution)
         self.axis_distribution_total(total_positions)
@@ -1535,10 +1429,4 @@ class AnalyseAP:
                 bins=12,
                 size=max(total_angles[2]),
             )
-        #        print ("DONE!!!!")
         return distances
-
-
-# from bhtree import bhtreelib
-# bht = bhtreelib.BHtree( verts, None, 10)
-# closest = bht.closestPointsArray(tuple(grdPos), diag, returnNullIfFail)

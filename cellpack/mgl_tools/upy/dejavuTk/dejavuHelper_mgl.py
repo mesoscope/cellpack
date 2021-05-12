@@ -2563,7 +2563,6 @@ class dejavuHelper(hostHelper.Helper):
         @type  filename: string
         @param filename: the destinaon filename.
         """
-        print(polygon, self.getName(polygon))
         # get shild ?
         if isinstance(polygon, IndexedPolygons):
             polygon.writeToFile(filename)

@@ -17,12 +17,7 @@ import math
 import numpy as np
 
 
-try:
-    from scipy.integrate import quad
-except Exception:
-    quad = None
-    print("no scipy installed")
-
+from scipy.integrate import quad
 from math import pi
 
 
@@ -34,7 +29,7 @@ class Rectangle:
         self.Left = left
 
 
-class GeometriTools:
+class GeometryTools:
     Resolution = 0.01
 
     # ==============================================================================
@@ -114,13 +109,11 @@ class GeometriTools:
         # //The bounds of our integration
         leftBound = 0
         rightBound = 0
-        #        print m[1] >= rect.Bottom and m[1] <= rect.Top
         if m[1] >= rect.Bottom and m[1] <= rect.Top:
             # //Take care if the circle's center lies
             # within the rectangle.
             leftBound = max(-r + m[0], rect.Left)
             rightBound = min(r + m[0], rect.Right)
-            #            print leftBound,rightBound
             return leftBound, rightBound
         elif r >= abs(nearestRectangleEdge - m[1]):
             # //If the circle's center lies outside of the rectangle, we can choose optimal bounds.
@@ -142,7 +135,6 @@ class GeometriTools:
         # the area
         a = 0.0
         i = leftBound + self.Resolution
-        #        print a,i,self.Resolution,leftBound,rightBound
         while i <= rightBound:
             upperBound = min(
                 self.UpperRectangleFunction(rect, i - self.Resolution / 2.0),
@@ -152,7 +144,6 @@ class GeometriTools:
                 self.LowerRectangleFunction(rect, i - self.Resolution / 2.0),
                 self.LowerCircleFunction(m, r, i - self.Resolution / 2.0),
             )
-            #            print upperBound,lowerBound
             a += (upperBound - lowerBound) * self.Resolution
             i += self.Resolution
         return a
