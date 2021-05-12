@@ -42,7 +42,7 @@ class Args(argparse.Namespace):
         # Arguments that could be passed in through the command line
         self.twoD = self.DEFAULT_TWOD
         self.analysis = self.DEFAULT_ANALYSIS
-        self.recipe = os.path.join(os.getcwd(), self.DEFAULT_RECIPE_FILE)
+        self.recipe = self.DEFAULT_RECIPE_FILE
         self.output = self.DEFAULT_OUTPUT_FILE
         self.debug = True
         #
@@ -64,7 +64,7 @@ class Args(argparse.Namespace):
             "-r",
             "--recipe",
             action="store",
-            dest="recpie",
+            dest="recipe",
             type=str,
             default=self.recipe,
             help="Relative path to the recipe file for packing",
@@ -111,8 +111,10 @@ class Args(argparse.Namespace):
 def main():
     args = Args()
     dbg = args.debug
+    print(args)
     try:
-        recipe_path = args.recipe
+
+        recipe_path = os.path.join(os.getcwd(), args.recipe)
         doAnalysis = args.analysis
         output = args.output
         twoD = args.twoD
