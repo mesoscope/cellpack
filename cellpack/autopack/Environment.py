@@ -400,9 +400,9 @@ class Gradient:
         """
         degree = N / 2
         window = N  # degree*2#-1
-        weight = numpy.array([1.0] * window)
+        weight = numpy.array([1.0]) * window
         weightGauss = []
-        for i in range(window):
+        for i in range(int(window)):
             i = i - degree + 1
             frac = i / float(window)
             gauss = 1 / (numpy.exp((self.gblob * (frac)) ** 2))
