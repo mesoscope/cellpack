@@ -5124,7 +5124,7 @@ class Ingredient(Agent):
                     print("PREMATURE ENDING of ingredient", self.name)
                 self.completion = 1.0
         return success, nbFreePoints
-
+    # NOTE: This is a duplicate function
     def jitter_place(
         self,
         histoVol,
@@ -11329,7 +11329,7 @@ class GrowIngredient(MultiCylindersIngr):
                 self.vi.update()
         return secondPoint
 
-    # isit the jitter place ? I guess  Why are there two jitter_place functions?  What is this one?
+    # are there two jitter_place functions?  What is this one?
     def jitter_place(
         self,
         histoVol,
