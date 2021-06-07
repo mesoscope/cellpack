@@ -175,11 +175,11 @@ def main():
             # ingr.rejectionThreshold = 60  # [1,1,0]#
             ingr.nbJitter = 6
             ingr.rejectionThreshold = 100  # [1,1,0]#
-            # if dim == 3:
-            #     ingr.jitterMax = [1, 1, 1]
-            # else:
-            #     ingr.jitterMax = [1, 1, 0]
-            # ingr.cutoff_boundary = 0  # ingr.encapsulatingRadius/2.0
+            ingr.cutoff_boundary = 0  # ingr.encapsulatingRadius/2.0
+            if dim == 3:
+                ingr.jitterMax = [1, 1, 1]
+            else:
+                ingr.jitterMax = [1, 1, 0]
 
         env.loopThroughIngr(setCompartment)
 
