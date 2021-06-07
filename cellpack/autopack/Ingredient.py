@@ -86,7 +86,6 @@ if helper is not None:
 try:
     import panda3d
 
-    print("Should have Panda3D now because panda3d = ", panda3d)
 except ImportError:
     panda3d = None
 
@@ -2321,7 +2320,6 @@ class Ingredient(Agent):
         else:
             filename = autopack.retrieveFile(filename, cache="geometries")
         if filename is None:
-            print("problem")
             return None
         if not os.path.isfile(filename) and fileExtension != "":
             print("problem with " + filename, fileExtension)
@@ -2394,7 +2392,7 @@ class Ingredient(Agent):
             else:  # if helper is not None:#neeed the helper
                 if helper.host == "dejavu" and helper.nogui:
                     dgeoms = helper.read(filename)
-                    v, vn, f = dgeoms.values()[0]["mesh"]
+                    v, vn, f = list(dgeoms.values())[0]["mesh"]
                     print("vertices nb is ", len(v))
                     #                    vn = self.getVertexNormals(v,f)
                     self.vertices, self.vnormals, self.faces = (
@@ -5264,7 +5262,6 @@ class Ingredient(Agent):
             periodic_collision = False
             r = []
             if periodic_pos is not None and self.packingMode != "gradient":
-                print("OK Periodicity ", len(periodic_pos), periodic_pos)
                 for p in periodic_pos:
                     periodic_collision = self.collision_jitter(
                         p,
@@ -5928,7 +5925,6 @@ class Ingredient(Agent):
             )
             perdiodic_collision = False
             if periodic_pos is not None and self.packingMode != "gradient":
-                print("OK Periodicity ", len(periodic_pos), periodic_pos)
                 for p in periodic_pos:
                     histoVol.callFunction(
                         histoVol.moveRBnode,
@@ -7383,7 +7379,7 @@ class Ingredient(Agent):
                     self.useOrientBias and self.packingMode == "gradient"
                 ):  # you need a gradient here
                     rotMat = self.alignRotation(gridPointsCoords[ptInd])
-                else:
+                elif afvi:
                     rotMat = afvi.vi.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
@@ -11280,7 +11276,6 @@ class GrowIngredient(MultiCylindersIngr):
                 numpy.array(v).flatten() * self.uLength * self.jitterMax
             )  # = (1,0,0)self.vector.flatten()
             secondPoint = self.startingpoint + self.vector
-            print("newPoints", self.startingpoint, secondPoint)
             # seed="F"
             if seed:
                 seed = "R"
@@ -11299,17 +11294,15 @@ class GrowIngredient(MultiCylindersIngr):
                 k = 0
                 while not inside or closeS:
                     if k > safety:
-                        print("cant find first inside point", inside, closeS)
+                        # print("cant find first inside point", inside, closeS)
                         return None
                     else:
                         k += 1
                     p = self.vi.advance_randpoint_onsphere(
                         self.uLength, marge=math.radians(self.marge), vector=self.vector
                     )
-                    print("p is ", p, k, safety)
                     pt = numpy.array(p) * numpy.array(self.jitterMax)
                     secondPoint = self.startingpoint + numpy.array(pt)
-                    print("secdpoint ", secondPoint)
                     inside = self.histoVol.grid.checkPointInside(
                         secondPoint, dist=self.cutoff_boundary, jitter=self.jitterMax
                     )
@@ -11388,6 +11381,7 @@ class GrowIngredient(MultiCylindersIngr):
             compartment = self.histoVol
         else:
             compartment = self.histoVol.compartments[abs(self.compNum) - 1]
+        print("SETTINGING SELF COMPARTEMENT", compartment, compartment.compartments)
         self.compartment = compartment
 
         secondPoint = self.getFirstPoint(ptInd)
@@ -11577,7 +11571,6 @@ class GrowIngredient(MultiCylindersIngr):
         # return self.pick_random_alternate()
         weights = self.alternates_weight  # python3?#dict.copy().keys()
         rnd = uniform(0, 1.0) * sum(weights)  # * (self.currentLength / self.length)
-        #        print ("alter",weights,rnd)
         i = 0
         for i, w in enumerate(weights):
             rnd -= w
