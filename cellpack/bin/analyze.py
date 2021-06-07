@@ -20,6 +20,7 @@ import cellpack.mgl_tools.upy as upy
 from cellpack import autopack, get_module_version
 from cellpack.autopack.Environment import Environment
 from cellpack.autopack.Analysis import AnalyseAP
+from cellpack.autopack.Graphics import AutopackViewer as AFViewer
 
 ###############################################################################
 
@@ -33,17 +34,21 @@ logging.basicConfig(
 
 class Args(argparse.Namespace):
 
-    DEFAULT_TWOD = True
+    DEFAULT_DIM = 2
     DEFAULT_ANALYSIS = True
     DEFAULT_RECIPE_FILE = "cellpack/test-recipes/NM_Analysis_FigureA1.0.xml"
     DEFAULT_OUTPUT_FILE = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_A2_2/"
+    DEFAULT_USE_GUI = False
+    DEFAULT_PLACE_METHOD = "RAPID"
 
     def __init__(self):
         # Arguments that could be passed in through the command line
-        self.twoD = self.DEFAULT_TWOD
+        self.dim = self.DEFAULT_DIM
         self.analysis = self.DEFAULT_ANALYSIS
         self.recipe = self.DEFAULT_RECIPE_FILE
         self.output = self.DEFAULT_OUTPUT_FILE
+        self.use_gui = self.DEFAULT_USE_GUI
+        self.place_method = self.DEFAULT_PLACE_METHOD
         self.debug = True
         #
         self.__parse()
@@ -79,13 +84,22 @@ class Args(argparse.Namespace):
             help="Full path for where to store the results file",
         )
         p.add_argument(
-            "-t",
-            "--two-d",
+            "-d",
+            "--dim",
             action="store",
-            dest="twoD",
+            dest="dim",
             type=int,
-            default=self.twoD,
+            default=self.dim,
             help="The dimensions of the packing",
+        )
+        p.add_argument(
+            "-g",
+            "--use-gui",
+            action="store",
+            dest="use_gui",
+            type=bool,
+            default=self.use_gui,
+            help="Whether to use a GUI",
         )
         p.add_argument(
             "-a",
@@ -95,6 +109,15 @@ class Args(argparse.Namespace):
             type=bool,
             default=self.analysis,
             help="The mode of the packing",
+        )
+        p.add_argument(
+            "-p",
+            "--place-method",
+            action="store",
+            dest="place_method",
+            type=str,
+            default=self.place_method,
+            help="The place method",
         )
         p.add_argument(
             "--debug",
@@ -111,44 +134,80 @@ class Args(argparse.Namespace):
 def main():
     args = Args()
     dbg = args.debug
-    print(args)
     try:
-
         recipe_path = os.path.join(os.getcwd(), args.recipe)
-        doAnalysis = args.analysis
+        do_analysis = args.analysis
         output = args.output
-        twoD = args.twoD
+        if os.path.isdir(output) is False:
+            os.mkdir(output)
+        dim = args.dim
+        place_method = args.place_method
+        use_gui = args.use_gui
         print("Recipe : {}\n".format(args.recipe))
         localdir = wrkDir = autopack.__path__[0]
         helperClass = upy.getHelperClass()
+        if use_gui:
+            print("USE GUI", helperClass)
+            helper = helperClass()
+        else:
+            helper = helperClass(vi="nogui")
+        print("HELPER", helper)
 
-        helper = helperClass(vi="nogui")
         autopack.helper = helper
-        fileName = os.path.basename(recipe_path)
 
+        fileName = os.path.basename(recipe_path)
         env = Environment(name=fileName)
+
         env.helper = helper
         env.load_recipe(recipe_path)
         afviewer = None
 
         env.saveResult = False
 
+        if use_gui:
+            setattr(env, "helper", helper)
+            afviewer = AFViewer(ViewerType=env.helper.host, helper=env.helper)
+            afviewer.SetHistoVol(env, 20.0, display=False)
+            env.host = env.helper.host
+            afviewer.displayPreFill()
+
+        def setJitter(ingr):
+            ingr.jitterMax = [ingr.encapsulatingRadius, ingr.encapsulatingRadius, 0.0]
+
         def setCompartment(ingr):
             ingr.rejectionThreshold = 60  # [1,1,0]#
             ingr.nbJitter = 6
-
+            ingr.rejectionThreshold = 100  # [1,1,0]#
+            if dim == 3:
+                ingr.jitterMax = [1, 1, 1]
+            else:
+                ingr.jitterMax = [1, 1, 0]
+            ingr.cutoff_boundary = 0  # ingr.encapsulatingRadius/2.0
+            ingr.nbJitter = 6
+        
         env.loopThroughIngr(setCompartment)
 
-        if doAnalysis:
-            print("DOING analysis")
-            env.placeMethod = "RAPID"
-            env.encapsulatingGrid = 0
-            autopack.testPeriodicity = False
-            analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
-            analyse.g.Resolution = 1.0
-            env.boundingBox = numpy.array(env.boundingBox)
-            analyse.doloop(10, env.boundingBox, wrkDir, output, rdf=True, render=False, twod=twoD, use_file=True)  # ,fbox_bb=fbox_bb)
-
+        if do_analysis:
+            if place_method == "RAPID":
+                env.placeMethod = "RAPID"
+                env.encapsulatingGrid = 0
+                autopack.testPeriodicity = False
+                analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
+                analyse.g.Resolution = 1.0
+                env.boundingBox = numpy.array(env.boundingBox)
+                analyse.doloop(2, env.boundingBox, wrkDir, output, rdf=True, render=False, twod=(dim == 2), use_file=True)  # ,fbox_bb=fbox_bb)
+            elif place_method == "pandaBullet":
+                env.placeMethod = "pandaBullet"
+                env.encapsulatingGrid = 0
+                env.use_periodicity = True
+                autopack.testPeriodicity = True
+                autopack.biasedPeriodicity = [1, 1, 1]
+                analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
+                env.analyse = analyse
+                analyse.g.Resolution = 1.0
+                env.smallestProteinSize = 30.0  # get it faster? same result ?
+                env.boundingBox = numpy.array(env.boundingBox)
+                analyse.doloop(2, env.boundingBox, wrkDir, output, rdf=True, render=False, twod=(dim == 2), use_file=True)  # ,fbox_bb=fbox_bb)
         else:
             gridfile = localdir + os.sep + "autoFillRecipeScripts/Mycoplasma/results/grid_store"
             env.placeMethod = "RAPID"
