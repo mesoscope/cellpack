@@ -78,6 +78,7 @@ from .Ingredient import GrowIngredient, ActinIngredient
 from .ray import vlen, vdiff
 from cellpack.autopack import IOutils
 from cellpack.autopack.transformation import angle_between_vectors
+
 # backward compatibility with kevin method
 from cellpack.autopack.Grid import Grid as G
 
@@ -193,7 +194,8 @@ def ingredient_compare2(x, y):
 
 
 def cmp_to_key(mycmp):
-    'Convert a cmp= function into a key= function'
+    "Convert a cmp= function into a key= function"
+
     class K:
         def __init__(self, obj, *args):
             self.obj = obj
@@ -4663,7 +4665,9 @@ class Environment(CompartmentList):
             if self.panda_solver == "bullet":
                 from panda3d.bullet import BulletWorld
 
-                self.worldNP = render.attachNewNode("World")  # noqa: F821, global variable from panda3d
+                self.worldNP = render.attachNewNode(
+                    "World"
+                )  # noqa: F821, global variable from panda3d
                 self.world = BulletWorld()
                 self.BitMask32 = BitMask32
             elif self.panda_solver == "ode":

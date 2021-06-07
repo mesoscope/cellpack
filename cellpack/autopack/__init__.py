@@ -46,6 +46,7 @@ import ssl
 # in case simplejson not there
 try:
     import simplejson as json
+
     # we can use the hookup at loading
 except ImportError:
     import json
@@ -119,7 +120,7 @@ def checkURL(URL):
     try:
         response = urllib.urlopen(URL)
     except Exception as e:
-        print("Error in checkURL ", URL, e) 
+        print("Error in checkURL ", URL, e)
         return False
     return response.code != 404
 
@@ -158,6 +159,7 @@ helper = None
 LISTPLACEMETHOD = ["jitter", "spheresBHT", "RAPID"]
 try:
     from panda3d.core import Mat4  # noqa: F401
+
     LISTPLACEMETHOD = ["jitter", "spheresBHT", "pandaBullet", "RAPID"]
 except ImportError:
     LISTPLACEMETHOD = ["jitter", "spheresBHT", "RAPID"]
@@ -345,7 +347,7 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
             if checkURL(filename):
                 try:
                     urllib.urlretrieve(filename, tmpFileName, reporthook=reporthook)
-                except Exception as e: 
+                except Exception as e:
                     print("error fetching file ", e)
                     if useAPServer:
                         print("try alternate server")

@@ -63,10 +63,7 @@ from random import uniform, gauss, random
 from time import time, sleep
 import math
 from cellpack.mgl_tools.RAPID import RAPIDlib
-from cellpack.autopack.transformation import (
-    euler_from_matrix,
-    angle_between_vectors
-)
+from cellpack.autopack.transformation import euler_from_matrix, angle_between_vectors
 from cellpack.autopack import Recipe
 
 # RAPID require a uniq mesh. not an empty or an instance
@@ -11381,7 +11378,6 @@ class GrowIngredient(MultiCylindersIngr):
             compartment = self.histoVol
         else:
             compartment = self.histoVol.compartments[abs(self.compNum) - 1]
-        print("SETTINGING SELF COMPARTEMENT", compartment, compartment.compartments)
         self.compartment = compartment
 
         secondPoint = self.getFirstPoint(ptInd)

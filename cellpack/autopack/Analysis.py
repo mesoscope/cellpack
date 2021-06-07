@@ -1097,17 +1097,17 @@ class AnalyseAP:
     #        res=plotOneResult(None,filename="results_seed_8.json")
 
     def plot_one_result_3D(self, filename, width=1000.0):
-        plt.close('all')     # closes the current figure
+        plt.close("all")  # closes the current figure
         pos = []
         s = []
         c = []
         for i in range(len(self.env.molecules)):
             m = self.env.molecules[i]
             pos.append(numpy.array(m[0]).tolist())
-            s.append(m[2].encapsulatingRadius**2)
+            s.append(m[2].encapsulatingRadius ** 2)
             c.append(m[2].color)
         fig = plt.figure()
-        ax = fig.gca(projection='3d')
+        ax = fig.gca(projection="3d")
         x, y, z = numpy.array(pos).transpose()
         ax.scatter(x, y, z, s=s, c=c)
         ax.legend()

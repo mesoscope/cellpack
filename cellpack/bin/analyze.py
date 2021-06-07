@@ -171,20 +171,16 @@ def main():
             env.host = env.helper.host
             afviewer.displayPreFill()
 
-        def setJitter(ingr):
-            ingr.jitterMax = [ingr.encapsulatingRadius, ingr.encapsulatingRadius, 0.0]
-
         def setCompartment(ingr):
-            ingr.rejectionThreshold = 60  # [1,1,0]#
+            # ingr.rejectionThreshold = 60  # [1,1,0]#
             ingr.nbJitter = 6
             ingr.rejectionThreshold = 100  # [1,1,0]#
-            if dim == 3:
-                ingr.jitterMax = [1, 1, 1]
-            else:
-                ingr.jitterMax = [1, 1, 0]
-            ingr.cutoff_boundary = 0  # ingr.encapsulatingRadius/2.0
-            ingr.nbJitter = 6
-        
+            # if dim == 3:
+            #     ingr.jitterMax = [1, 1, 1]
+            # else:
+            #     ingr.jitterMax = [1, 1, 0]
+            # ingr.cutoff_boundary = 0  # ingr.encapsulatingRadius/2.0
+
         env.loopThroughIngr(setCompartment)
 
         if do_analysis:
@@ -195,7 +191,16 @@ def main():
                 analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
                 analyse.g.Resolution = 1.0
                 env.boundingBox = numpy.array(env.boundingBox)
-                analyse.doloop(2, env.boundingBox, wrkDir, output, rdf=True, render=False, twod=(dim == 2), use_file=True)  # ,fbox_bb=fbox_bb)
+                analyse.doloop(
+                    2,
+                    env.boundingBox,
+                    wrkDir,
+                    output,
+                    rdf=True,
+                    render=False,
+                    twod=(dim == 2),
+                    use_file=True,
+                )  # ,fbox_bb=fbox_bb)
             elif place_method == "pandaBullet":
                 env.placeMethod = "pandaBullet"
                 env.encapsulatingGrid = 0
@@ -207,14 +212,33 @@ def main():
                 analyse.g.Resolution = 1.0
                 env.smallestProteinSize = 30.0  # get it faster? same result ?
                 env.boundingBox = numpy.array(env.boundingBox)
-                analyse.doloop(2, env.boundingBox, wrkDir, output, rdf=True, render=False, twod=(dim == 2), use_file=True)  # ,fbox_bb=fbox_bb)
+                analyse.doloop(
+                    2,
+                    env.boundingBox,
+                    wrkDir,
+                    output,
+                    rdf=True,
+                    render=False,
+                    twod=(dim == 2),
+                    use_file=True,
+                )  # ,fbox_bb=fbox_bb)
         else:
-            gridfile = localdir + os.sep + "autoFillRecipeScripts/Mycoplasma/results/grid_store"
+            gridfile = (
+                localdir
+                + os.sep
+                + "autoFillRecipeScripts/Mycoplasma/results/grid_store"
+            )
             env.placeMethod = "RAPID"
             env.saveResult = True
             env.innerGridMethod = "bhtree"  # jordan pure python ? sdf ?
             env.boundingBox = [[-2482, -2389.0, 100.0], [2495, 2466, 2181.0]]
-            env.buildGrid(boundingBox=env.boundingBox, gridFileIn=gridfile, rebuild=True, gridFileOut=None, previousFill=False)
+            env.buildGrid(
+                boundingBox=env.boundingBox,
+                gridFileIn=gridfile,
+                rebuild=True,
+                gridFileOut=None,
+                previousFill=False,
+            )
             env.pack_grid(verbose=0, usePP=False)
 
     except Exception as e:
