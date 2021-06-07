@@ -1,0 +1,102 @@
+{
+    "recipe": {
+        "version": "1.4",
+        "name": "NM_Analysis_FigureC"
+    },
+    "options": {
+        "cancelDialog": false,
+        "_hackFreepts": false,
+        "windowsSize": 10,
+        "use_gradient": true,
+        "placeMethod": "RAPID",
+        "saveResult": false,
+        "runTimeDisplay": false,
+        "overwritePlaceMethod": true,
+        "innerGridMethod": "bhtree",
+        "boundingBox": [
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                1000,
+                1000,
+                1
+            ]
+        ],
+        "gradients": [
+            "gR",
+            "gY",
+            "gX"
+        ],
+        "smallestProteinSize": 15,
+        "computeGridParams": true,
+        "freePtsUpdateThreshold": 0,
+        "pickWeightedIngr": true,
+        "_timer": false,
+        "ingrLookForNeighbours": false,
+        "pickRandPt": true,
+        "largestProteinSize": 1000,
+        "resultfile": "autoPACKserver/results/NM_Analysis_FigureC1.4.apr.json",
+        "use_periodicity": false,
+        "EnviroOnly": false
+    },
+    "gradients": {
+        "gR": {
+            "direction": [
+                0,
+                0,
+                0
+            ],
+            "radius": 1412.2,
+            "description": "",
+            "weight_mode": "square",
+            "pick_mode": "rnd",
+            "gblob": 4,
+            "mode": "radial"
+        },
+        "gY": {
+            "direction": [
+                0.5,
+                0.5,
+                0
+            ],
+            "radius": 10,
+            "description": "",
+            "weight_mode": "gauss",
+            "pick_mode": "rnd",
+            "gblob": 4,
+            "mode": "Y"
+        },
+        "gX": {
+            "direction": [
+                1,
+                0,
+                0
+            ],
+            "radius": 10,
+            "description": "",
+            "weight_mode": "gauss",
+            "pick_mode": "rnd",
+            "gblob": 4,
+            "mode": "X"
+        }
+    },
+    "cytoplasme": {
+        "ingredients": {
+            "Bacteria_Rad25_1_3": {
+                "include": "Bacteria_Rad25_1_4.json",
+                "name": "Bacteria_Rad25_1_3"
+            },
+            "IngredientC_1_1": {
+                "include": "IngredientC_1_2.json",
+                "name": "IngredientC_1_1"
+            },
+            "snake": {
+                "include": "snake.json",
+                "name": "snake"
+            }
+        }
+    }
+}

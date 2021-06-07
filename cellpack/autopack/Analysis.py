@@ -18,6 +18,7 @@ import matplotlib
 from matplotlib import pylab
 from matplotlib import pyplot
 from matplotlib.patches import Circle
+from matplotlib import pyplot as plt
 
 from cellpack.mgl_tools.upy import colors as col
 import cellpack.autopack as autopack
@@ -496,6 +497,8 @@ class AnalyseAP:
 
     def getAxesValues(self, positions):
         pp = numpy.array(positions).transpose()
+        if len(positions) == 0:
+            return 1, 1, 1
         px = pp[0]
         py = pp[1]
         pz = pp[2]
@@ -1050,9 +1053,9 @@ class AnalyseAP:
     def plotNResult2D(self, n, bbox=[[0.0, 0, 0.0], [1000.0, 1000.0, 1000.0]]):
         for i in range(n):
             f = "results_seed_" + str(i) + ".json"
-            self.plotOneResult2D(filename=f, bbox=bbox)
+            self.plot_one_result_2d(filename=f, bbox=bbox)
 
-    def plotOneResult2D(
+    def plot_one_result_2d(
         self, data=None, filename=None, bbox=[[0.0, 0, 0.0], [1000.0, 1000.0, 1000.0]]
     ):
         if data is None and filename is None:
@@ -1093,8 +1096,43 @@ class AnalyseAP:
 
     #        res=plotOneResult(None,filename="results_seed_8.json")
 
-    def getHaltonUnique(self, n):
+    def plot_one_result_3D(self, filename, width=1000.0):
+        plt.close('all')     # closes the current figure
+        pos = []
+        s = []
+        c = []
+        for i in range(len(self.env.molecules)):
+            m = self.env.molecules[i]
+            pos.append(numpy.array(m[0]).tolist())
+            s.append(m[2].encapsulatingRadius**2)
+            c.append(m[2].color)
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
+        x, y, z = numpy.array(pos).transpose()
+        ax.scatter(x, y, z, s=s, c=c)
+        ax.legend()
+        ax.set_xlim3d(0, width)
+        ax.set_ylim3d(0, width)
+        ax.set_zlim3d(0, width)
+        plt.savefig(filename)
+        return x, y, z, s, c
 
+    def one_exp(self, seed, output_path, eid=0, nmol=1, periodicity=True, dim=2):
+        output = output_path + str(nmol)
+        if periodicity:
+            self.env.use_periodicity = True
+            autopack.testPeriodicity = True
+        else:
+            self.env.use_periodicity = False
+            autopack.testPeriodicity = False
+        if dim == 3:
+            autopack.biasedPeriodicity = [1, 1, 1]
+        else:
+            autopack.biasedPeriodicity = [1, 1, 0]
+        if not os.path.exists(output):
+            os.makedirs(output)
+
+    def getHaltonUnique(self, n):
         seeds_f = numpy.array(halton(int(n * 1.5))) * int(n * 1.5)
         seeds_int = numpy.array(numpy.round(seeds_f), "int")
         sorted_s, indices_u = numpy.unique(seeds_int, return_index=True)
