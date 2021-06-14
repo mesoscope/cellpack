@@ -23,7 +23,6 @@
 import os
 import numpy
 from PIL import Image
-import collada
 
 # DejaVu module
 from cellpack.mgl_tools.upy import hostHelper
@@ -36,12 +35,8 @@ from cellpack.mgl_tools.DejaVu.glfLabels import GlfLabels as Labels
 from cellpack.mgl_tools.DejaVu.IndexedPolygons import IndexedPolygons
 from cellpack.mgl_tools.DejaVu.Polylines import Polylines as dejavuPolylines
 from cellpack.mgl_tools.DejaVu.Texture import Texture
+import cellpack.mgl_tools.collada as collada
 
-try:
-    import collada
-except:
-    collada = None
-    print("can't import pycollada upy")
 
 # Problem instance doesnt really exist as its. Or its instance of mesh/sphere/cylinder directly.
 # check autofill display
@@ -2519,8 +2514,7 @@ class dejavuHelper(hostHelper.Helper):
 
     def read(self, filename, **kw):
         fileName, fileExtension = os.path.splitext(filename)
-        #        import collada
-        #        print "load ",filename
+
         if fileExtension == ".dae":
             daeDic = None
             col = collada.Collada(filename)  # , ignore=[collada.DaeUnsupportedError,

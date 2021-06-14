@@ -53,7 +53,7 @@ import numpy
 from numpy import matrix
 
 try:
-    import collada
+    from cellpack.mgl_tools import collada
 except ImportError:
     print("no collada")
 # , weakref
@@ -7526,7 +7526,7 @@ class Ingredient(Agent):
                         rotMatj = self.getBiasedRotation(rotMat, weight=None)
                     # weight = 1.0 - self.histoVol.gradients[self.gradient].weight[ptInd])
                     else:
-                        rotMatj = afvi.vi.rotation_matrix(
+                        rotMatj = autopack.helper.rotation_matrix(
                             random() * self.rotRange, self.rotAxis
                         )
                 else:
