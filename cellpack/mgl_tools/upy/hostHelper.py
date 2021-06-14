@@ -26,7 +26,6 @@ from math import *
 usenumpy = False
 try:
     import numpy
-    import numpy.oldnumeric as Numeric
 
     usenumpy = True
 except:

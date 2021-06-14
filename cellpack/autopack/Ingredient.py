@@ -4898,7 +4898,7 @@ class Ingredient(Agent):
                 if sum(self.rotAxis) == 0.0:
                     rotMat = numpy.identity(4)
                 else:
-                    rotMat = afvi.vi.rotation_matrix(
+                    rotMat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
             else:
@@ -6776,7 +6776,7 @@ class Ingredient(Agent):
                 if sum(self.rotAxis) == 0.0:
                     rotMat = numpy.identity(4)
                 else:
-                    rotMat = afvi.vi.rotation_matrix(
+                    rotMat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
             # for other points we get a random rotation
@@ -7377,7 +7377,7 @@ class Ingredient(Agent):
                 ):  # you need a gradient here
                     rotMat = self.alignRotation(gridPointsCoords[ptInd])
                 elif afvi:
-                    rotMat = afvi.vi.rotation_matrix(
+                    rotMat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
             # for other points we get a random rotation
@@ -8129,7 +8129,7 @@ class Ingredient(Agent):
                 if sum(self.rotAxis) == 0.0:
                     rotMat = numpy.identity(4)
                 else:
-                    rotMat = afvi.vi.rotation_matrix(
+                    rotMat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
             else:
@@ -11430,10 +11430,7 @@ class GrowIngredient(MultiCylindersIngr):
         #        self.Ptis=[ptInd,histoVol.grid.getPointFrom3D(secondPoint)]
         dist, pid = histoVol.grid.getClosestGridPoint(secondPoint)
         self.Ptis = [ptInd, pid]
-        # get compartments obj, bhtree and get ID of startingPoint
-        res = self.compartment.OGsrfPtsBht.query(startingPoint)
         print("the starting point on the grid was ", startingPoint, pid, ptInd)
-        self.startGridPoint.append(res[1])
         listePtCurve = [jtrans]
         listePtLinear = [startingPoint, secondPoint]
         # grow until reach self.currentLength >= self.length

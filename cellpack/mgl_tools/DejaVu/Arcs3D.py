@@ -15,14 +15,11 @@
 #
 
 from opengltk.OpenGL import GL
-import math, numpy.oldnumeric as Numeric, types
+import numpy as Numeric
 from math import sqrt, fabs, pi, cos, sin, acos, atan2
 from .Geom import Geom
-from .Polylines import Polylines
-from . import datamodel, viewerConst
-from .viewerFns import checkKeywords, getkw
-from DejaVu.colorTool import resetMaterialMemory
-
+from . import viewerConst
+from .viewerFns import getkw
 
 def valideFloat(values, length):
     """This function takes a single float, or int or a list of them and a
@@ -282,8 +279,7 @@ class Arcs3D(Geom):
     def _arcTemplate(self, angle):
 
         nsegments = self.nsegments
-        assert nsegments > 1
-        import numpy.oldnumeric as Numeric, math
+        assert (nsegments > 1)
 
         self.v = Numeric.zeros(((nsegments + 1), 3), "f")
         self.n = Numeric.zeros(((nsegments + 1), 3), "f")
