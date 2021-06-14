@@ -549,9 +549,9 @@ class AnalyseAP:
                 -delta, directed=False, axis=1
             ))
             anglesZ = numpy.array(signed_angle_between_vectors(
-                + [[1, 0, 0], ] * len(ingr_positions),
-                +                    ingr_rotation[:, 2, :3],
-                + -delta, directed=False, axis=1
+                [[1, 0, 0], ] * len(ingr_positions),
+                                   ingr_rotation[:, 2, :3],
+                -delta, directed=False, axis=1
             )
             )
             delta *= delta
