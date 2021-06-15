@@ -52,10 +52,8 @@ except ImportError:
 import numpy
 from numpy import matrix
 
-try:
-    from cellpack.mgl_tools import collada
-except ImportError:
-    print("no collada")
+import collada
+
 # , weakref
 from math import sqrt, pi, sin, cos, asin
 from cellpack.mgl_tools.bhtree import bhtreelib

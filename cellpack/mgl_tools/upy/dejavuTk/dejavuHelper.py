@@ -35,7 +35,7 @@ from cellpack.mgl_tools.DejaVu.glfLabels import GlfLabels as Labels
 from cellpack.mgl_tools.DejaVu.IndexedPolygons import IndexedPolygons
 from cellpack.mgl_tools.DejaVu.Polylines import Polylines as dejavuPolylines
 from cellpack.mgl_tools.DejaVu.Texture import Texture
-import cellpack.mgl_tools.collada as collada
+import collada
 
 
 # Problem instance doesnt really exist as its. Or its instance of mesh/sphere/cylinder directly.
