@@ -5122,7 +5122,7 @@ class Ingredient(Agent):
                     print("PREMATURE ENDING of ingredient", self.name)
                 self.completion = 1.0
         return success, nbFreePoints
-    # NOTE: This is a duplicate function
+
     def jitter_place(
         self,
         histoVol,

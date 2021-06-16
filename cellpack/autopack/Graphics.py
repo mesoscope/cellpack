@@ -2724,7 +2724,6 @@ class AutopackViewer:
                 self.vi.Sphere("sph" + str(i), pos=sph, radius=8.0)
 
 
-
 class ColladaExporter:
     def __init__(self, env):
         self.env = env
