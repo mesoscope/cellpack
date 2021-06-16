@@ -538,20 +538,41 @@ class AnalyseAP:
         if len(ingr_positions):
             delta = numpy.array(ingr_positions) - numpy.array(center)
             # lets do it on X,Y,Z and also per positions ?
-            anglesX = numpy.array(signed_angle_between_vectors([[0, 0, 1], ] * len(ingr_positions),
-                                                               ingr_rotation[:, 0, :3],
-                                                               -delta, directed=False, axis=1
-                                                               )
-                                  )
-            anglesY = numpy.array(signed_angle_between_vectors(
-                [[0, 1, 0], ] * len(ingr_positions),
-                ingr_rotation[:, 1, :3],
-                -delta, directed=False, axis=1
-            ))
-            anglesZ = numpy.array(signed_angle_between_vectors(
-                [[1, 0, 0], ] * len(ingr_positions), ingr_rotation[:, 2, :3],
-                -delta, directed=False, axis=1
+            anglesX = numpy.array(
+                signed_angle_between_vectors(
+                    [
+                        [0, 0, 1],
+                    ]
+                    * len(ingr_positions),
+                    ingr_rotation[:, 0, :3],
+                    -delta,
+                    directed=False,
+                    axis=1,
+                )
             )
+            anglesY = numpy.array(
+                signed_angle_between_vectors(
+                    [
+                        [0, 1, 0],
+                    ]
+                    * len(ingr_positions),
+                    ingr_rotation[:, 1, :3],
+                    -delta,
+                    directed=False,
+                    axis=1,
+                )
+            )
+            anglesZ = numpy.array(
+                signed_angle_between_vectors(
+                    [
+                        [1, 0, 0],
+                    ]
+                    * len(ingr_positions),
+                    ingr_rotation[:, 2, :3],
+                    -delta,
+                    directed=False,
+                    axis=1,
+                )
             )
             delta *= delta
             distA = numpy.sqrt(delta.sum(1)).tolist()
