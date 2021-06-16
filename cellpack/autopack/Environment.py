@@ -3276,6 +3276,7 @@ class Environment(CompartmentList):
         self.activeIngr0, self.activeIngr12 = self.callFunction(
             self.getSortedActiveIngredients, (allIngredients, verbose)
         )
+        self.collectResultPerIngredient()
 
         if verbose > 1:
             print("len(allIngredients", len(allIngredients))
@@ -3619,9 +3620,10 @@ class Environment(CompartmentList):
                 mixed=True,
                 kwds=["compNum"],
                 result=True,
+                quaternion=True,
                 grid=False,
                 packing_options=False,
-                indent=False,
+                indent=False
             )  # pdb ?
             # self.saveGridToFile_asTxt(self.resultfile+"grid")freePointsAfterFill
             # should we save to text as well
@@ -4665,9 +4667,7 @@ class Environment(CompartmentList):
             if self.panda_solver == "bullet":
                 from panda3d.bullet import BulletWorld
 
-                self.worldNP = render.attachNewNode(
-                    "World"
-                )  # noqa: F821, global variable from panda3d
+                self.worldNP = render.attachNewNode("World")  # noqa: F821, global variable from panda3d
                 self.world = BulletWorld()
                 self.BitMask32 = BitMask32
             elif self.panda_solver == "ode":
