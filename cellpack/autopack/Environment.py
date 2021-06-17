@@ -4667,9 +4667,8 @@ class Environment(CompartmentList):
             if self.panda_solver == "bullet":
                 from panda3d.bullet import BulletWorld
 
-                self.worldNP = render.attachNewNode(
-                    "World"
-                )  # noqa: F821, global variable from panda3d
+                # global variable from panda3d
+                self.worldNP = render.attachNewNode("World")  # noqa: F821
                 self.world = BulletWorld()
                 self.BitMask32 = BitMask32
             elif self.panda_solver == "ode":
