@@ -3276,7 +3276,6 @@ class Environment(CompartmentList):
         self.activeIngr0, self.activeIngr12 = self.callFunction(
             self.getSortedActiveIngredients, (allIngredients, verbose)
         )
-        self.collectResultPerIngredient()
 
         if verbose > 1:
             print("len(allIngredients", len(allIngredients))
@@ -3611,6 +3610,7 @@ class Environment(CompartmentList):
             # shoul check extension filename for type of saved file
             self.saveGridToFile(self.resultfile + "grid")
             self.grid.result_filename = self.resultfile + "grid"
+            self.collectResultPerIngredient()
             self.store()
             self.store_asTxt()
             #            self.store_asJson(resultfilename=self.resultfile+".json")
