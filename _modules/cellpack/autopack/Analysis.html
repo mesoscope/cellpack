@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -204,87 +207,14 @@
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span>
 <span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Circle</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
 <span class="kn">from</span> <span class="nn">cellpack.mgl_tools.upy</span> <span class="kn">import</span> <span class="n">colors</span> <span class="k">as</span> <span class="n">col</span>
 <span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.transformation</span> <span class="kn">import</span> <span class="n">signed_angle_between_vectors</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.ldSequence</span> <span class="kn">import</span> <span class="n">halton</span>
 
-<span class="kn">from</span> <span class="nn">cellpack.autopack.GeometryTools</span> <span class="kn">import</span> <span class="n">GeometriTools</span><span class="p">,</span> <span class="n">Rectangle</span>
-
-
-<div class="viewcode-block" id="angle_between_vectors"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.angle_between_vectors">[docs]</a><span class="k">def</span> <span class="nf">angle_between_vectors</span><span class="p">(</span><span class="n">v0</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return angle between vectors.</span>
-<span class="sd">    If directed is False, the input vectors are interpreted as undirected axes,</span>
-<span class="sd">    i.e. the maximum angle is pi/2.</span>
-<span class="sd">    &gt;&gt;&gt; a = angle_between_vectors([1, -2, 3], [-1, 2, -3])</span>
-<span class="sd">    &gt;&gt;&gt; numpy.allclose(a, math.pi)</span>
-<span class="sd">    True</span>
-<span class="sd">    &gt;&gt;&gt; a = angle_between_vectors([1, -2, 3], [-1, 2, -3], directed=False)</span>
-<span class="sd">    &gt;&gt;&gt; numpy.allclose(a, 0)</span>
-<span class="sd">    True</span>
-<span class="sd">    &gt;&gt;&gt; v0 = [[2, 0, 0, 2], [0, 2, 0, 2], [0, 0, 2, 2]]</span>
-<span class="sd">    &gt;&gt;&gt; v1 = [[3], [0], [0]]</span>
-<span class="sd">    &gt;&gt;&gt; a = angle_between_vectors(v0, v1)</span>
-<span class="sd">    &gt;&gt;&gt; numpy.allclose(a, [0, 1.5708, 1.5708, 0.95532])</span>
-<span class="sd">    True</span>
-<span class="sd">    &gt;&gt;&gt; v0 = [[2, 0, 0], [2, 0, 0], [0, 2, 0], [2, 0, 0]]</span>
-<span class="sd">    &gt;&gt;&gt; v1 = [[0, 3, 0], [0, 0, 3], [0, 0, 3], [3, 3, 3]]</span>
-<span class="sd">    &gt;&gt;&gt; a = angle_between_vectors(v0, v1, axis=1)</span>
-<span class="sd">    &gt;&gt;&gt; numpy.allclose(a, [1.5708, 1.5708, 1.5708, 0.95532])</span>
-<span class="sd">    True</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">v0</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">v1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">dot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">v0</span> <span class="o">*</span> <span class="n">v1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
-    <span class="n">dot</span> <span class="o">/=</span> <span class="n">vector_norm</span><span class="p">(</span><span class="n">v0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span> <span class="o">*</span> <span class="n">vector_norm</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">dot</span> <span class="k">if</span> <span class="n">directed</span> <span class="k">else</span> <span class="n">numpy</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">dot</span><span class="p">))</span></div>
-
-
-<div class="viewcode-block" id="signed_angle_between_vectors"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.signed_angle_between_vectors">[docs]</a><span class="k">def</span> <span class="nf">signed_angle_between_vectors</span><span class="p">(</span><span class="n">Vn</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="n">Vn</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Vn</span><span class="p">)</span>
-    <span class="n">angles</span> <span class="o">=</span> <span class="n">angle_between_vectors</span><span class="p">(</span><span class="n">v0</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="n">directed</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
-    <span class="n">cross</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">v0</span><span class="p">,</span> <span class="n">v1</span><span class="p">)</span>
-    <span class="n">dot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cross</span><span class="p">,</span> <span class="n">Vn</span><span class="p">)</span>
-    <span class="n">ind</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">dot</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="n">angles</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="mf">1.0</span>
-    <span class="k">return</span> <span class="n">angles</span></div>
-
-
-<div class="viewcode-block" id="vector_norm"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.vector_norm">[docs]</a><span class="k">def</span> <span class="nf">vector_norm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return length, i.e. Euclidean norm, of ndarray along axis.</span>
-<span class="sd">    &gt;&gt;&gt; v = numpy.random.random(3)</span>
-<span class="sd">    &gt;&gt;&gt; n = vector_norm(v)</span>
-<span class="sd">    &gt;&gt;&gt; numpy.allclose(n, numpy.linalg.norm(v))</span>
-<span class="sd">    True</span>
-<span class="sd">    &gt;&gt;&gt; v = numpy.random.rand(6, 5, 3)</span>
-<span class="sd">    &gt;&gt;&gt; n = vector_norm(v, axis=-1)</span>
-<span class="sd">    &gt;&gt;&gt; numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=2)))</span>
-<span class="sd">    True</span>
-<span class="sd">    &gt;&gt;&gt; n = vector_norm(v, axis=1)</span>
-<span class="sd">    &gt;&gt;&gt; numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=1)))</span>
-<span class="sd">    True</span>
-<span class="sd">    &gt;&gt;&gt; v = numpy.random.rand(5, 4, 3)</span>
-<span class="sd">    &gt;&gt;&gt; n = numpy.empty((5, 3))</span>
-<span class="sd">    &gt;&gt;&gt; vector_norm(v, axis=1, out=n)</span>
-<span class="sd">    &gt;&gt;&gt; numpy.allclose(n, numpy.sqrt(numpy.sum(v*v, axis=1)))</span>
-<span class="sd">    True</span>
-<span class="sd">    &gt;&gt;&gt; vector_norm([])</span>
-<span class="sd">    0.0</span>
-<span class="sd">    &gt;&gt;&gt; vector_norm([1])</span>
-<span class="sd">    1.0</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="p">))</span>
-        <span class="n">data</span> <span class="o">*=</span> <span class="n">data</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">))</span>
-        <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">out</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">*=</span> <span class="n">data</span>
-        <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
-        <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span></div>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.GeometryTools</span> <span class="kn">import</span> <span class="n">GeometryTools</span><span class="p">,</span> <span class="n">Rectangle</span>
 
 
 <div class="viewcode-block" id="autolabel"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.autolabel">[docs]</a><span class="k">def</span> <span class="nf">autolabel</span><span class="p">(</span><span class="n">rects</span><span class="p">,</span> <span class="n">ax</span><span class="p">):</span>
@@ -393,10 +323,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">helper</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">viewer</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">helper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="o">.</span><span class="n">vi</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">resutl_file</span> <span class="o">=</span> <span class="n">result_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span> <span class="o">=</span> <span class="n">result_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bbox</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">GeometriTools</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">GeometryTools</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">Resolution</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># or grid step?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_pos</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_distance</span> <span class="o">=</span> <span class="kc">None</span>
@@ -432,20 +362,20 @@
         <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">:</span>
             <span class="n">obparent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
-            <span class="n">childs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getChilds</span><span class="p">(</span><span class="n">obparent</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">childs</span><span class="p">:</span>
+            <span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getChilds</span><span class="p">(</span><span class="n">obparent</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
                 <span class="n">ingr_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
                 <span class="n">meshp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="s2">&quot;Meshs_&quot;</span> <span class="o">+</span> <span class="n">ingr_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
                 <span class="k">if</span> <span class="n">meshp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getChilds</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
                         <span class="k">continue</span>
-                    <span class="n">meshpchilds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getChilds</span><span class="p">(</span>
+                    <span class="n">meshp_children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getChilds</span><span class="p">(</span>
                         <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="p">)</span>  <span class="c1"># continue #should get sphere/cylnder parent ?</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">meshpchilds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getChilds</span><span class="p">(</span><span class="n">meshp</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="n">meshpchilds</span><span class="p">:</span>
+                    <span class="n">meshp_children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getChilds</span><span class="p">(</span><span class="n">meshp</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">cc</span> <span class="ow">in</span> <span class="n">meshp_children</span><span class="p">:</span>
                     <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">ToVec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getTranslation</span><span class="p">(</span><span class="n">cc</span><span class="p">))</span>
                     <span class="n">positions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">positions</span></div>
@@ -453,7 +383,7 @@
 <div class="viewcode-block" id="AnalyseAP.getDistanceFrom"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getDistanceFrom">[docs]</a>    <span class="k">def</span> <span class="nf">getDistanceFrom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        target : name or host object target or target position</span>
-<span class="sd">        parent : name of host parent object for the list of object to measre distance from</span>
+<span class="sd">        parent : name of host parent object for the list of object to measure distance from</span>
 <span class="sd">        objects : list of object or list of points</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># get distance from object to the target.</span>
@@ -470,33 +400,33 @@
             <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">o</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">targetPos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">ToVec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getTranslation</span><span class="p">(</span><span class="n">o</span><span class="p">))</span>  <span class="c1"># hostForm</span>
-        <span class="n">listeCenters</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resutl_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">parents</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">resutl_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">listCenters</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">parents</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">listeParent</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_cytoplasm&quot;</span><span class="p">]</span>
                 <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
                     <span class="n">listeParent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_Matrix&quot;</span><span class="p">)</span>
                     <span class="n">listeParent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surface&quot;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">parents</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">resutl_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">parents</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">listeParent</span> <span class="o">=</span> <span class="n">parents</span>
-            <span class="n">listeCenters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPositionsFromObject</span><span class="p">(</span><span class="n">listeParent</span><span class="p">)</span>
+            <span class="n">listCenters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPositionsFromObject</span><span class="p">(</span><span class="n">listeParent</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># use data from file</span>
-            <span class="n">listeCenters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPositionsFromResFile</span><span class="p">(</span><span class="n">listeParent</span><span class="p">)</span>
+            <span class="n">listCenters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPositionsFromResFile</span><span class="p">(</span><span class="n">listeParent</span><span class="p">)</span>
 
-        <span class="n">delta</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">listeCenters</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">targetPos</span><span class="p">)</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">listCenters</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">targetPos</span><span class="p">)</span>
         <span class="n">delta</span> <span class="o">*=</span> <span class="n">delta</span>
         <span class="n">distA</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">distA</span></div>
 
 <div class="viewcode-block" id="AnalyseAP.getClosestDistance"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getClosestDistance">[docs]</a>    <span class="k">def</span> <span class="nf">getClosestDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resutl_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">parents</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">resutl_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">parents</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">listeParent</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_cytoplasm&quot;</span><span class="p">]</span>
                 <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
                     <span class="n">listeParent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_Matrix&quot;</span><span class="p">)</span>
                     <span class="n">listeParent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surface&quot;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">parents</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">resutl_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">parents</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">listeParent</span> <span class="o">=</span> <span class="n">parents</span>
             <span class="n">listeCenters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPositionsFromObject</span><span class="p">(</span><span class="n">listeParent</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -657,7 +587,6 @@
                         <span class="n">ingrpos</span><span class="p">[</span><span class="n">ingrname</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                             <span class="n">data</span><span class="p">[</span><span class="n">recipe</span><span class="p">][</span><span class="n">ingrname</span><span class="p">][</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                         <span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ingrpos</span><span class="p">,</span> <span class="n">ingrrot</span></div>
 
 <div class="viewcode-block" id="AnalyseAP.grabResultFromTXT"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.grabResultFromTXT">[docs]</a>    <span class="k">def</span> <span class="nf">grabResultFromTXT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">doanalyze</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -666,7 +595,6 @@
         <span class="n">ingrrot</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">ingrpos</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
             <span class="n">files</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;results_seed_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
             <span class="n">lines</span> <span class="o">=</span> <span class="n">files</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
             <span class="n">files</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -737,7 +665,6 @@
         <span class="n">area</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r</span> <span class="o">**</span> <span class="mi">2</span>
         <span class="n">chs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">check_sphere_inside</span><span class="p">(</span><span class="n">rect</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">chs</span><span class="p">:</span>  <span class="c1"># sph not completly inside</span>
-            <span class="c1">#            print &quot;rectangle is outside of circle&quot;,r</span>
             <span class="n">ch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">check_rectangle_oustide</span><span class="p">(</span><span class="n">rect</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">ch</span><span class="p">:</span>  <span class="c1"># rectangle not outside</span>
                 <span class="n">leftBound</span><span class="p">,</span> <span class="n">rightBound</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">getBoundary</span><span class="p">(</span><span class="n">rect</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
@@ -759,6 +686,8 @@
 
 <div class="viewcode-block" id="AnalyseAP.getAxesValues"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getAxesValues">[docs]</a>    <span class="k">def</span> <span class="nf">getAxesValues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">):</span>
         <span class="n">pp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
         <span class="n">px</span> <span class="o">=</span> <span class="n">pp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">py</span> <span class="o">=</span> <span class="n">pp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">pz</span> <span class="o">=</span> <span class="n">pp</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
@@ -783,49 +712,61 @@
         <span class="c1"># also check the measure angle one</span>
         <span class="n">angles</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">distA</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">ingrpositions</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">ingr_positions</span> <span class="o">=</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">molecules</span><span class="p">))</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
         <span class="p">]</span>
-        <span class="n">ingrpositions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingrpositions</span><span class="p">)</span>
-        <span class="n">ingrrotation</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">ingr_positions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingr_positions</span><span class="p">)</span>
+        <span class="n">ingr_rotation</span> <span class="o">=</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">molecules</span><span class="p">))</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
         <span class="p">]</span>
-        <span class="n">ingrrotation</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingrrotation</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingrpositions</span><span class="p">):</span>
-            <span class="n">delta</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingrpositions</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+        <span class="n">ingr_rotation</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingr_rotation</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr_positions</span><span class="p">):</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingr_positions</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
             <span class="c1"># lets do it on X,Y,Z and also per positions ?</span>
-            <span class="n">anglesX</span> <span class="o">=</span> <span class="n">anglesX</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                <span class="p">[</span>
-                    <span class="n">signed_angle_between_vectors</span><span class="p">(</span>
-                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">3</span><span class="p">],</span> <span class="o">-</span><span class="n">delta</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
-                    <span class="p">)</span>
-                    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">ingrrotation</span>
-                <span class="p">]</span>
+            <span class="n">anglesX</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="n">signed_angle_between_vectors</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                    <span class="p">]</span>
+                    <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr_positions</span><span class="p">),</span>
+                    <span class="n">ingr_rotation</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
+                    <span class="o">-</span><span class="n">delta</span><span class="p">,</span>
+                    <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="p">)</span>
             <span class="n">anglesY</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                <span class="p">[</span>
-                    <span class="n">signed_angle_between_vectors</span><span class="p">(</span>
-                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">][:</span><span class="mi">3</span><span class="p">],</span> <span class="o">-</span><span class="n">delta</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
-                    <span class="p">)</span>
-                    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">ingrrotation</span>
-                <span class="p">]</span>
+                <span class="n">signed_angle_between_vectors</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                    <span class="p">]</span>
+                    <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr_positions</span><span class="p">),</span>
+                    <span class="n">ingr_rotation</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
+                    <span class="o">-</span><span class="n">delta</span><span class="p">,</span>
+                    <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="p">)</span>
             <span class="n">anglesZ</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                <span class="p">[</span>
-                    <span class="n">signed_angle_between_vectors</span><span class="p">(</span>
-                        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">][:</span><span class="mi">3</span><span class="p">],</span> <span class="o">-</span><span class="n">delta</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
-                    <span class="p">)</span>
-                    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">ingrrotation</span>
-                <span class="p">]</span>
+                <span class="n">signed_angle_between_vectors</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                    <span class="p">]</span>
+                    <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr_positions</span><span class="p">),</span>
+                    <span class="n">ingr_rotation</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span>
+                    <span class="o">-</span><span class="n">delta</span><span class="p">,</span>
+                    <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="p">)</span>
             <span class="n">delta</span> <span class="o">*=</span> <span class="n">delta</span>
             <span class="n">distA</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             <span class="n">angles</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">distA</span><span class="p">,</span> <span class="n">anglesX</span><span class="p">,</span> <span class="n">anglesY</span><span class="p">,</span> <span class="n">anglesZ</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">ingrpositions</span><span class="p">,</span> <span class="n">distA</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">ingr_positions</span><span class="p">,</span> <span class="n">distA</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AnalyseAP.getVolumeShell"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getVolumeShell">[docs]</a>    <span class="k">def</span> <span class="nf">getVolumeShell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bbox</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
         <span class="c1"># rectangle_circle_area</span>
@@ -927,7 +868,6 @@
                 <span class="n">area0</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">e</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># complete circle</span>
                 <span class="n">area1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rectangle_circle_area</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
                 <span class="n">w</span> <span class="o">=</span> <span class="n">area1</span> <span class="o">/</span> <span class="n">area0</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">area1</span><span class="p">,</span> <span class="n">area0</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
                 <span class="n">k</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">di</span> <span class="o">&lt;</span> <span class="n">e</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">N</span> <span class="o">**</span> <span class="mi">2</span>
         <span class="n">Kt</span> <span class="o">=</span> <span class="n">V</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">Lt</span> <span class="o">=</span> <span class="p">(</span><span class="n">Kt</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
@@ -1008,8 +948,7 @@
         <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span>
             <span class="n">basename</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_rdf_simple.csv&quot;</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="n">radii</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">basename</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_rdf_simple.png&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">G</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">G</span><span class="p">),</span> <span class="n">radii</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">basename</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_rdf_simple.png&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AnalyseAP.axis_distribution_total"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.axis_distribution_total">[docs]</a>    <span class="k">def</span> <span class="nf">axis_distribution_total</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_positions</span><span class="p">):</span>
         <span class="n">basename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span>
@@ -1254,13 +1193,6 @@
         <span class="c1">#        bb=self.helper.getCornerPointCube(box)</span>
         <span class="n">gridFileIn</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">gridFileOut</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="c1">#        self.env.grid.reset()</span>
-        <span class="c1">#        self.grid.reset()self.env.grid = None</span>
-        <span class="c1">#        if forceBuild :</span>
-        <span class="c1">#            gridFileOut=wrkDir+os.sep+&quot;fill_grid&quot;</span>
-        <span class="c1">#        else :</span>
-        <span class="c1">#            gridFileIn=wrkDir+os.sep+&quot;fill_grid&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">gridFileIn</span><span class="p">,</span> <span class="n">gridFileOut</span><span class="p">,</span> <span class="n">forceBuild</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">buildGrid</span><span class="p">(</span>
             <span class="n">boundingBox</span><span class="o">=</span><span class="n">bb</span><span class="p">,</span>
             <span class="n">gridFileIn</span><span class="o">=</span><span class="n">gridFileIn</span><span class="p">,</span>
@@ -1268,8 +1200,7 @@
             <span class="n">gridFileOut</span><span class="o">=</span><span class="n">gridFileOut</span><span class="p">,</span>
             <span class="n">previousFill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="c1">#    h.buildGrid(gridFileIn=gridFileIn,</span>
-        <span class="c1">#                  gridFileOut=gridFileOut)</span>
+
         <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
         <span class="n">gridTime</span> <span class="o">=</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span>
         <span class="k">if</span> <span class="n">fill</span><span class="p">:</span>
@@ -1283,7 +1214,7 @@
 <div class="viewcode-block" id="AnalyseAP.pack"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">forceBuild</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">vTestid</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">vAnalysis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fbox_bb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;seed is &quot;</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">fbox_bb</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">fill5</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">pack_grid</span><span class="p">(</span>
             <span class="n">seedNum</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vTestid</span><span class="o">=</span><span class="n">vTestid</span><span class="p">,</span> <span class="n">vAnalysis</span><span class="o">=</span><span class="n">vAnalysis</span><span class="p">,</span> <span class="n">fbox</span><span class="o">=</span><span class="n">fbox_bb</span>
         <span class="p">)</span>
         <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
@@ -1314,7 +1245,6 @@
 <div class="viewcode-block" id="AnalyseAP.merge"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">merge</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span><span class="p">):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d2</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
                 <span class="n">result</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -1324,9 +1254,9 @@
 <div class="viewcode-block" id="AnalyseAP.plotNResult2D"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.plotNResult2D">[docs]</a>    <span class="k">def</span> <span class="nf">plotNResult2D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">]]):</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
             <span class="n">f</span> <span class="o">=</span> <span class="s2">&quot;results_seed_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">plotOneResult2D</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="n">bbox</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_one_result_2d</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="n">bbox</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AnalyseAP.plotOneResult2D"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.plotOneResult2D">[docs]</a>    <span class="k">def</span> <span class="nf">plotOneResult2D</span><span class="p">(</span>
+<div class="viewcode-block" id="AnalyseAP.plot_one_result_2d"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.plot_one_result_2d">[docs]</a>    <span class="k">def</span> <span class="nf">plot_one_result_2d</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">]]</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1350,7 +1280,6 @@
                     <span class="n">ingrpos</span><span class="p">[</span><span class="n">ingrname</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">recipe</span><span class="p">][</span><span class="n">ingrname</span><span class="p">][</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ingrpos</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ingrpos</span><span class="p">[</span><span class="n">ingr</span><span class="p">]):</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">radius</span><span class="p">[</span><span class="n">ingr</span><span class="p">])</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span>
                     <span class="n">Circle</span><span class="p">(</span>
                         <span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">radius</span><span class="p">[</span><span class="n">ingr</span><span class="p">],</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;red&quot;</span>
@@ -1368,8 +1297,43 @@
 
     <span class="c1">#        res=plotOneResult(None,filename=&quot;results_seed_8.json&quot;)</span>
 
-<div class="viewcode-block" id="AnalyseAP.getHaltonUnique"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getHaltonUnique">[docs]</a>    <span class="k">def</span> <span class="nf">getHaltonUnique</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<div class="viewcode-block" id="AnalyseAP.plot_one_result_3D"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.plot_one_result_3D">[docs]</a>    <span class="k">def</span> <span class="nf">plot_one_result_3D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">1000.0</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>  <span class="c1"># closes the current figure</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">molecules</span><span class="p">)):</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">pos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s2">&quot;3d&quot;</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">c</span></div>
 
+<div class="viewcode-block" id="AnalyseAP.one_exp"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.one_exp">[docs]</a>    <span class="k">def</span> <span class="nf">one_exp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">eid</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">nmol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">periodicity</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nmol</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">periodicity</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">use_periodicity</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">autopack</span><span class="o">.</span><span class="n">testPeriodicity</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">use_periodicity</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">autopack</span><span class="o">.</span><span class="n">testPeriodicity</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">autopack</span><span class="o">.</span><span class="n">biasedPeriodicity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">autopack</span><span class="o">.</span><span class="n">biasedPeriodicity</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">output</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnalyseAP.getHaltonUnique"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getHaltonUnique">[docs]</a>    <span class="k">def</span> <span class="nf">getHaltonUnique</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
         <span class="n">seeds_f</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">halton</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">)))</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">)</span>
         <span class="n">seeds_int</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">seeds_f</span><span class="p">),</span> <span class="s2">&quot;int&quot;</span><span class="p">)</span>
         <span class="n">sorted_s</span><span class="p">,</span> <span class="n">indices_u</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">seeds_int</span><span class="p">,</span> <span class="n">return_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1456,7 +1420,6 @@
                 <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">exteriorRecipe</span>
                 <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
-                    <span class="c1">#                    print (&quot;DONERUNXXXCYTO!!!!!&quot;)</span>
                     <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">distances</span><span class="p">:</span>
                             <span class="n">distances</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1494,7 +1457,6 @@
                             <span class="n">total_positions</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">ingrpos</span><span class="p">)</span>
                             <span class="n">total_distances</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 
-                        <span class="c1"># print plot,twod</span>
                         <span class="k">if</span> <span class="n">plot</span> <span class="ow">and</span> <span class="n">twod</span><span class="p">:</span>
                             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ingrpos</span><span class="p">):</span>
                                 <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span>
@@ -1563,9 +1525,7 @@
                                                     <span class="n">facecolor</span><span class="o">=</span><span class="n">ingr</span><span class="o">.</span><span class="n">color</span><span class="p">,</span>
                                                 <span class="p">)</span>
                                             <span class="p">)</span>
-                <span class="c1">#                print (&quot;DONERUNXXXbefore!!!!!&quot;)</span>
                 <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
-                    <span class="c1">#                    print (&quot;DONERUNXXXComp!!!!!&quot;)</span>
                     <span class="n">rs</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">surfaceRecipe</span>
                     <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
                         <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
@@ -1601,7 +1561,6 @@
                                             <span class="n">facecolor</span><span class="o">=</span><span class="n">ingr</span><span class="o">.</span><span class="n">color</span><span class="p">,</span>
                                         <span class="p">)</span>
                                     <span class="p">)</span>
-                    <span class="c1">#                    print (&quot;DONERUNXXXYYY!!!!!&quot;)</span>
                     <span class="n">ri</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">innerRecipe</span>
                     <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
                         <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
@@ -1648,9 +1607,6 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span>
                         <span class="n">output</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;_angleIngr_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">si</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">,</span> <span class="n">anglesingr</span>
                     <span class="p">)</span>
-                <span class="c1"># print (&quot;############&quot;)</span>
-                <span class="c1"># print (output+os.sep+&quot;_dIngr_&quot;+str(si)+&quot;.json&quot;,distances)</span>
-                <span class="c1">#                print (&quot;DONERUNXXX!!!!!&quot;)</span>
                 <span class="k">if</span> <span class="n">plot</span> <span class="ow">and</span> <span class="n">twod</span><span class="p">:</span>
                     <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
                     <span class="n">pyplot</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
@@ -1660,11 +1616,7 @@
                     <span class="n">pyplot</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]])</span>
                     <span class="n">pyplot</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">basename</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span><span class="p">)</span>
                     <span class="n">pylab</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># closes the current figure</span>
-        <span class="c1">#            return</span>
-        <span class="c1">#            print (&quot;DONERUN!!!!!&quot;)</span>
-        <span class="c1">#            self.flush()</span>
-        <span class="c1"># plot(x)</span>
-        <span class="c1">#        print (&quot;DONE1!!!!&quot;)</span>
+
         <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">output</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;seeds&quot;</span><span class="p">,</span> <span class="n">seeds_i</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">use_file</span><span class="p">:</span>
             <span class="n">total_positions</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">position_file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
@@ -1685,17 +1637,12 @@
                     <span class="n">output</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;_angleIngr_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
                 <span class="p">)</span>
                 <span class="n">anglesingr</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">anglesingr</span><span class="p">,</span> <span class="n">dict1</span><span class="p">))</span>
-        <span class="c1">#        print (&quot;DONE2!!!!&quot;)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">writeJSON</span><span class="p">(</span><span class="n">occurences_file</span><span class="p">,</span> <span class="n">occurences</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">ingrpositions</span> <span class="o">=</span> <span class="n">ingrpositions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">distances</span> <span class="o">=</span> <span class="n">distances</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">basename</span> <span class="o">=</span> <span class="n">basename</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">occurences</span> <span class="o">=</span> <span class="n">occurences</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">angles</span> <span class="o">=</span> <span class="n">total_angles</span>
-        <span class="c1">#        if rdf :</span>
-        <span class="c1">#            if twod : self.env.loopThroughIngr(self.rdf_2d)</span>
-        <span class="c1">#            else : self.env.loopThroughIngr(self.rdf_3d)</span>
-        <span class="c1">#            do the X Y histo averge !</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">loopThroughIngr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">axis_distribution</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">loopThroughIngr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">occurence_distribution</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axis_distribution_total</span><span class="p">(</span><span class="n">total_positions</span><span class="p">)</span>
@@ -1721,13 +1668,7 @@
                 <span class="n">bins</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
                 <span class="n">size</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">total_angles</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
             <span class="p">)</span>
-        <span class="c1">#        print (&quot;DONE!!!!&quot;)</span>
         <span class="k">return</span> <span class="n">distances</span></div></div>
-
-
-<span class="c1"># from bhtree import bhtreelib</span>
-<span class="c1"># bht = bhtreelib.BHtree( verts, None, 10)</span>
-<span class="c1"># closest = bht.closestPointsArray(tuple(grdPos), diag, returnNullIfFail)</span>
 </pre></div>
 
            </div>

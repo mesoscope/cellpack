@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -251,8 +254,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
 <div class="viewcode-block" id="Recipe.delIngredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.delIngredient">[docs]</a>    <span class="k">def</span> <span class="nf">delIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; remove the given ingredient from the recipe &quot;&quot;&quot;</span>
-        <span class="c1">#        print ingr,ingr.name</span>
+        <span class="sd">&quot;&quot;&quot;remove the given ingredient from the recipe&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
             <span class="n">ind</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
@@ -260,9 +262,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">exclude</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Recipe.addIngredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.addIngredient">[docs]</a>    <span class="k">def</span> <span class="nf">addIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; add the given ingredient from the recipe &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;add the given ingredient from the recipe&quot;&quot;&quot;</span>
         <span class="c1">#        assert isinstance(ingr, Ingredient)</span>
-        <span class="c1">#        print ingr,ingr.name</span>
         <span class="c1"># we need ingredient unique name</span>
         <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;__&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
@@ -335,32 +336,20 @@
             <span class="c1">#            nbi = int(nbr)              #Mod by Graham 8/18/11</span>
             <span class="n">nbr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">molarity</span> <span class="o">*</span> <span class="mf">0.0006022</span> <span class="o">*</span> <span class="n">volume</span>
             <span class="n">nbi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nbr</span><span class="p">)</span>  <span class="c1"># Mod by Graham 8/18/11</span>
-
-            <span class="c1">#            print &#39;ingr.molarity = &#39;, ingr.molarity</span>
-            <span class="c1">#            print &#39;volume = &#39;, volume</span>
-            <span class="c1">#            print &#39;nbr = &#39;, nbr</span>
-            <span class="c1">#            print &#39;nbi = &#39;, nbi         #Mod by Graham 8/18/11</span>
             <span class="k">if</span> <span class="n">nbi</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">nbmod</span> <span class="o">=</span> <span class="n">nbr</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">nbmod</span> <span class="o">=</span> <span class="n">nbr</span> <span class="o">%</span> <span class="n">nbi</span>  <span class="c1"># Mod by Graham 8/18/11</span>
             <span class="n">randval</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span>  <span class="c1"># Mod by Graham 8/18/11</span>
-            <span class="c1">#            print &#39;randval = &#39;, randval</span>
             <span class="k">if</span> <span class="n">nbmod</span> <span class="o">&gt;=</span> <span class="n">randval</span><span class="p">:</span>  <span class="c1"># Mod by Graham 8/18/11</span>
                 <span class="n">nbi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nbi</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Mod by Graham 8/18/11</span>
-            <span class="c1">#            print &#39;nbi = &#39;, nbi         #Mod by Graham 8/18/11</span>
             <span class="n">nb</span> <span class="o">=</span> <span class="n">nbi</span>  <span class="c1"># Mod by Graham 8/18/11</span>
-            <span class="c1">#            print&#39;nb = &#39;, nb            #Mod by Graham 8/18/11</span>
             <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">overwrite_nbMol</span><span class="p">:</span>  <span class="c1"># DEPRECATED</span>
                 <span class="n">ingr</span><span class="o">.</span><span class="n">vol_nbmol</span> <span class="o">=</span> <span class="n">nb</span>
                 <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">overwrite_nbMol_value</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">ingr</span><span class="o">.</span><span class="n">vol_nbmol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="n">nb</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">overwrite_nbMol_value</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="p">(</span><span class="s2">&quot;RECIPE IS ON&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;volume&quot;</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="si">%d</span><span class="s2"> &quot;</span> <span class="s2">&quot;nb&quot;</span> <span class="s2">&quot; </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="o">%</span> <span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">nb</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="c1"># print &#39;*************************************volume = &#39;%(volume)</span>
+
             <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span>
                     <span class="s2">&quot;WARNING GRAHAM: recipe ingredient </span><span class="si">%s</span><span class="s2"> has 0 molecules as target&quot;</span>
@@ -370,7 +359,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">activeIngredients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Recipe.resetIngr"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.resetIngr">[docs]</a>    <span class="k">def</span> <span class="nf">resetIngr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; reset the states of the given ingredient &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;reset the states of the given ingredient&quot;&quot;&quot;</span>
         <span class="n">ingr</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">ingr</span><span class="o">.</span><span class="n">completion</span> <span class="o">=</span> <span class="mf">0.0</span></div>
@@ -378,14 +367,14 @@
 <div class="viewcode-block" id="Recipe.resetIngrs"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.resetIngrs">[docs]</a>    <span class="k">def</span> <span class="nf">resetIngrs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; reset the states of all recipe ingredients &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;reset the states of all recipe ingredients&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">completion</span> <span class="o">=</span> <span class="mf">0.0</span></div>
 
 <div class="viewcode-block" id="Recipe.getMinMaxProteinSize"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.getMinMaxProteinSize">[docs]</a>    <span class="k">def</span> <span class="nf">getMinMaxProteinSize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; get the mini and maxi radius from all recipe ingredients &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;get the mini and maxi radius from all recipe ingredients&quot;&quot;&quot;</span>
         <span class="n">mini</span> <span class="o">=</span> <span class="mf">9999999.0</span>
         <span class="n">maxi</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
@@ -396,7 +385,7 @@
         <span class="k">return</span> <span class="n">mini</span><span class="p">,</span> <span class="n">maxi</span></div>
 
 <div class="viewcode-block" id="Recipe.sort"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.sort">[docs]</a>    <span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; sort the ingredients using the min Radius &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;sort the ingredients using the min Radius&quot;&quot;&quot;</span>
         <span class="c1"># sort tuples in molecule list according to radius</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">minRadius</span><span class="p">)</span></div>
         <span class="c1"># cmp(y.minRadius, x. minRadius))#(a &gt; b) - (a &lt; b)</span>
@@ -406,7 +395,7 @@
     <span class="c1"># This line is from August 2011 version of code</span>
 
 <div class="viewcode-block" id="Recipe.printFillInfo"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.printFillInfo">[docs]</a>    <span class="k">def</span> <span class="nf">printFillInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; print the states of all recipe ingredients &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;print the states of all recipe ingredients&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span>
                 <span class="n">indent</span>

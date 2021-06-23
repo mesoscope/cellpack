@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -239,8 +242,8 @@
 <div class="section" id="module-cellpack.mgl_tools.geomutils.surface">
 <span id="cellpack-mgl-tools-geomutils-surface-module"></span><h2>cellpack.mgl_tools.geomutils.surface module<a class="headerlink" href="#module-cellpack.mgl_tools.geomutils.surface" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="cellpack.mgl_tools.geomutils.surface.findComponents">
-<code class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.geomutils.surface.</span></code><code class="sig-name descname"><span class="pre">findComponents</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returnOption</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/geomutils/surface.html#findComponents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.geomutils.surface.findComponents" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cellpack.mgl_tools.geomutils.surface.findComponents">
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.geomutils.surface.</span></span><span class="sig-name descname"><span class="pre">findComponents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returnOption</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/geomutils/surface.html#findComponents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.geomutils.surface.findComponents" title="Permalink to this definition">¶</a></dt>
 <dd><p>find the components of a geometry.
 normals are normals of verts not faces.
 returnOptiont:     component return option</p>
@@ -252,15 +255,15 @@ returnOptiont:     component return option</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="cellpack.mgl_tools.geomutils.surface.meshVolume">
-<code class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.geomutils.surface.</span></code><code class="sig-name descname"><span class="pre">meshVolume</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tri</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/geomutils/surface.html#meshVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.geomutils.surface.meshVolume" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cellpack.mgl_tools.geomutils.surface.meshVolume">
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.geomutils.surface.</span></span><span class="sig-name descname"><span class="pre">meshVolume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tri</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/geomutils/surface.html#meshVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.geomutils.surface.meshVolume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the Volume of a mesh specified by vertices, their normals, and
 indices of triangular faces</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="cellpack.mgl_tools.geomutils.surface.triangleArea">
-<code class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.geomutils.surface.</span></code><code class="sig-name descname"><span class="pre">triangleArea</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/geomutils/surface.html#triangleArea"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.geomutils.surface.triangleArea" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cellpack.mgl_tools.geomutils.surface.triangleArea">
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.geomutils.surface.</span></span><span class="sig-name descname"><span class="pre">triangleArea</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/geomutils/surface.html#triangleArea"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.geomutils.surface.triangleArea" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the surface area of a triangle.</p>
 </dd></dl>
 

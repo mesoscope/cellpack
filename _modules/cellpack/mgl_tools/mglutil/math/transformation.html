@@ -1,0 +1,637 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cellpack.mgl_tools.mglutil.math.transformation &mdash; cellPack 0.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../../cellpack.html">cellpack</a> &raquo;</li>
+        
+          <li><a href="../math.html">cellpack.mgl_tools.mglutil.math</a> &raquo;</li>
+        
+      <li>cellpack.mgl_tools.mglutil.math.transformation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cellpack.mgl_tools.mglutil.math.transformation</h1><div class="highlight"><pre>
+<span></span><span class="c1">## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by</span>
+
+<span class="c1">#</span>
+<span class="c1"># $Header: /opt/cvs/python/packages/share1.5/mglutil/math/transformation.py,v 1.45 2007/07/24 17:30:40 vareille Exp $</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">rotax</span>
+
+<span class="c1"># from mglutil.math.VectorModule import Vector</span>
+
+
+<span class="n">Vector</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># sVectorModule.Vector</span>
+
+
+<div class="viewcode-block" id="Quaternion"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Quaternion">[docs]</a><span class="k">class</span> <span class="nc">Quaternion</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Base Quaternion class&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">))):</span>
+        <span class="sd">&quot;&quot;&quot;data is in the form ( c, (x y, z)), where c is the</span>
+<span class="sd">        real part (float) and (x,y,z) is the pure part (Numeric</span>
+<span class="sd">        array of floats)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;1Arguments must be (c,(x,y,z))&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pure</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;2Arguments must be (c,(x,y,z))&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;representation of a general quaternion must be (real,pure),</span>
+<span class="sd">        since not all quaternions are rotations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;Quaternion (</span><span class="si">%g</span><span class="s2"> (</span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2">))&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pure</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pure</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pure</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the sum of two quaternions.&quot;&quot;&quot;</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">real</span>
+        <span class="n">pure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">pure</span>
+        <span class="k">return</span> <span class="n">Quaternion</span><span class="p">((</span><span class="n">real</span><span class="p">,</span> <span class="n">pure</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Multiply two quaternions together.</span>
+<span class="sd">        For unit Quaternons, this is equivalent to concatenating rotations&quot;&quot;&quot;</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">real</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pure</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">pure</span><span class="p">)</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">pure</span>
+        <span class="n">cofactor1</span> <span class="o">=</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">cofactor2</span> <span class="o">=</span> <span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">cofactor3</span> <span class="o">=</span> <span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">pure</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">cofactor1</span><span class="p">,</span> <span class="n">cofactor2</span><span class="p">,</span> <span class="n">cofactor3</span><span class="p">])</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">pure</span>
+            <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">real</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">Quaternion</span><span class="p">((</span><span class="n">real</span><span class="p">,</span> <span class="n">pure</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Quaternion.conjugate"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Quaternion.conjugate">[docs]</a>    <span class="k">def</span> <span class="nf">conjugate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The conjugate of quaternion (c,(x,y,z)) is (c,(-x,-y,-z))</span>
+<span class="sd">        So the product of a quaternion and its conjugate is its</span>
+<span class="sd">        magnitude</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pure</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">pure</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span>
+        <span class="k">return</span> <span class="n">Quaternion</span><span class="p">((</span><span class="n">real</span><span class="p">,</span> <span class="n">pure</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Quaternion.magnitude"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Quaternion.magnitude">[docs]</a>    <span class="k">def</span> <span class="nf">magnitude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Quicker than multiplying conjugates&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pure</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Quaternion.inverse"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Quaternion.inverse">[docs]</a>    <span class="k">def</span> <span class="nf">inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the multiplicative inverse of a quaternion&quot;&quot;&quot;</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">()</span>
+        <span class="n">pure</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">Quaternion</span><span class="p">((</span><span class="n">real</span><span class="p">,</span> <span class="n">pure</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Quaternion.normal"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Quaternion.normal">[docs]</a>    <span class="k">def</span> <span class="nf">normal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Normalise a quaternion by dividing throughout by the</span>
+<span class="sd">        magnitude</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">magnitude</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">/</span> <span class="n">M</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">M</span></div></div>
+
+
+<div class="viewcode-block" id="UnitQuaternion"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion">[docs]</a><span class="k">class</span> <span class="nc">UnitQuaternion</span><span class="p">(</span><span class="n">Quaternion</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Special subclass of Quaternions with magnitude 1.0</span>
+<span class="sd">    Can be used to represent rotations, in which case real =</span>
+<span class="sd">    cos(theta/2) and pure = sin(theta/2)*(unit direction vector)</span>
+<span class="sd">    Input can also be given in the form (x,y,z,theta), where (x,y,z)</span>
+<span class="sd">    is the rotation axis (not necessarily normalized) and theta is the</span>
+<span class="sd">    rotation angle in degrees.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">))):</span>
+        <span class="sd">&quot;&quot;&quot;(real,(pure x,pure y,pure z)) or (x,y,z,theta) (theta in degrees)&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The real part must be between -1.0 and 1.0&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="mf">360.0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Args must be (x,y,z,theta) or (real,pure)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span>
+
+<div class="viewcode-block" id="UnitQuaternion.normal"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.normal">[docs]</a>    <span class="k">def</span> <span class="nf">normal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+            <span class="n">vector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+            <span class="n">vector</span> <span class="o">=</span> <span class="n">vector</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="n">vector</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">vector</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Representation of a unit quaternion is as rx,ry,rz,theta,</span>
+<span class="sd">        so we can see what it does</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="c1"># if it is not the identity</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="mi">360</span> <span class="o">*</span> <span class="n">theta</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+            <span class="n">xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># if it is the identity</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span>
+        <span class="k">return</span> <span class="s2">&quot;Unit Quaternion </span><span class="si">%7.4f</span><span class="s2"> </span><span class="si">%7.4f</span><span class="s2"> </span><span class="si">%7.4f</span><span class="s2"> </span><span class="si">%7.3f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">xyz</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">xyz</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">xyz</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">angle</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="c1"># same as Quaternion, except return another UnitQuaternion</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Quaternion</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">UnitQuaternion</span><span class="p">((</span><span class="n">result</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">pure</span><span class="p">))</span>
+
+<div class="viewcode-block" id="UnitQuaternion.conjugate"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.conjugate">[docs]</a>    <span class="k">def</span> <span class="nf">conjugate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Quaternion</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">UnitQuaternion</span><span class="p">((</span><span class="n">result</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">pure</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="UnitQuaternion.inverse"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.inverse">[docs]</a>    <span class="k">def</span> <span class="nf">inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="UnitQuaternion.getAxisAndAngleDegres"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.getAxisAndAngleDegres">[docs]</a>    <span class="k">def</span> <span class="nf">getAxisAndAngleDegres</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given a quaternion, compute axis and angle.&quot;&quot;&quot;</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="mi">360</span> <span class="o">*</span> <span class="n">theta</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="n">xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">xyz</span><span class="p">,</span> <span class="n">angle</span></div>
+
+<div class="viewcode-block" id="UnitQuaternion.getRotMatrix"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.getRotMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">getRotMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;return the rotation matrix as a Numeric array of shape shape.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">shape</span> <span class="ow">in</span> <span class="p">[(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,),</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;shape must be (3,3), (4,4), (9,) or (16,)&quot;</span><span class="p">)</span>
+
+        <span class="c1"># get the inverse 4x4 from rotax</span>
+        <span class="n">mtx</span> <span class="o">=</span> <span class="n">rotax</span><span class="o">.</span><span class="n">rotax</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="s2">&quot;f&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># strip if necessary</span>
+        <span class="k">if</span> <span class="n">shape</span> <span class="ow">in</span> <span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,)):</span>
+            <span class="n">mtx</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">mtx</span><span class="p">]</span>
+            <span class="n">mtx</span> <span class="o">=</span> <span class="n">mtx</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">transpose</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">mtx</span><span class="p">),</span> <span class="n">shape</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mtx</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UnitQuaternion.apply"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+        <span class="c1"># apply the rotational part alone to a point or list of points</span>
+        <span class="c1"># can be homogeneous coordinates or not.</span>
+        <span class="n">pshape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+        <span class="n">homogeneous</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pshape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pshape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">points</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">)),</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="n">homogeneous</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">pshape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pshape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">points</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">pshape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">)),</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">homogeneous</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">mtx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRotMatrix</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">transpose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">newpoints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">mtx</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">homogeneous</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">newpoints</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># strip the final zero off the coordinates</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pshape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">newpoints</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">newpoints</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">newpoints</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">newpoints</span></div></div>
+
+
+<div class="viewcode-block" id="Transformation"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Transformation">[docs]</a><span class="k">class</span> <span class="nc">Transformation</span><span class="p">(</span><span class="n">UnitQuaternion</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for manipulating transformations.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">trans</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="s2">&quot;f&quot;</span><span class="p">),</span>
+        <span class="n">quaternion</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="s2">&quot;f&quot;</span><span class="p">),</span>
+        <span class="n">scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="s2">&quot;f&quot;</span><span class="p">),</span>
+    <span class="p">):</span>
+        <span class="n">UnitQuaternion</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quaternion</span><span class="p">)</span>
+        <span class="c1"># make the translation homogeneous if it isn&#39;t</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">trans</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">trans</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">trans</span><span class="p">)</span>
+            <span class="n">trans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Representation is of the form tx,ty,tz,qx,qy,qz,theta&quot;&quot;&quot;</span>
+        <span class="c1">#  first check for identity quaternion to avoid nans</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="mi">360</span> <span class="o">*</span> <span class="n">theta</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+            <span class="n">xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;Transformation: tx ty tz rx ry rz angle</span><span class="se">\n</span><span class="s2"> </span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">xyz</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">xyz</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">xyz</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">angle</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+<div class="viewcode-block" id="Transformation.output"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Transformation.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;As __repr__ but without the explanation. For getting the numbers only&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="mi">360</span> <span class="o">*</span> <span class="n">theta</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+            <span class="n">xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">xyz</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">xyz</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">xyz</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">angle</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;concatenate two transformations. self*other (other performed first).&quot;&quot;&quot;</span>
+        <span class="c1"># combined rotation is the product of the two rotations (Rself*Rother):</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">pure</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">real</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+        <span class="n">cofactor1</span> <span class="o">=</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">cofactor2</span> <span class="o">=</span> <span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">cofactor3</span> <span class="o">=</span> <span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">pure</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">cofactor1</span><span class="p">,</span> <span class="n">cofactor2</span><span class="p">,</span> <span class="n">cofactor3</span><span class="p">])</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">pure</span>
+            <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">real</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span>
+        <span class="p">)</span>
+        <span class="c1"># combined translation</span>
+        <span class="n">trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getQuaternion</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">trans</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">trans</span>
+        <span class="n">trans</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">return</span> <span class="n">Transformation</span><span class="p">(</span><span class="n">trans</span><span class="o">=</span><span class="n">trans</span><span class="p">,</span> <span class="n">quaternion</span><span class="o">=</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">pure</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Transformation.reset"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Transformation.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Transformation.getQuaternion"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getQuaternion">[docs]</a>    <span class="k">def</span> <span class="nf">getQuaternion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">UnitQuaternion</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Transformation.getTranslation"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getTranslation">[docs]</a>    <span class="k">def</span> <span class="nf">getTranslation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,)):</span>
+        <span class="sd">&quot;&quot;&quot;get the translation vector with shape = (3,) or (4,)</span>
+<span class="sd">        (default is (4,))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trans</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">4</span><span class="p">,):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trans</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Shape must be (3,) or (4,)&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Transformation.getMatrix"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">getMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">mtx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRotMatrix</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">transpose</span><span class="o">=</span><span class="n">transpose</span><span class="p">)</span>  <span class="c1"># from Quaternion</span>
+        <span class="n">mtx</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTranslation</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">mtx</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">mtx</span><span class="p">),</span> <span class="n">shape</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Transformation.getDejaVuMatrix"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getDejaVuMatrix">[docs]</a>    <span class="k">def</span> <span class="nf">getDejaVuMatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;returns a 4x matrix usable as an instance matrix&quot;&quot;&quot;</span>
+        <span class="n">mtx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getRotMatrix</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># from Quaternion</span>
+        <span class="n">mtx</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTranslation</span><span class="p">()</span>
+        <span class="n">mtx</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">mtx</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">mtx</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">mtx</span></div>
+
+<div class="viewcode-block" id="Transformation.apply"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Transformation.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply the entire transformation to a list of points&quot;&quot;&quot;</span>
+        <span class="n">pshape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+        <span class="n">homogeneous</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pshape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pshape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">points</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">)),</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="n">homogeneous</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">pshape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pshape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">points</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">pshape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">)),</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">homogeneous</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">mtx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMatrix</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">transpose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">newpoints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">mtx</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">homogeneous</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">newpoints</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># strip the final one off the coordinates</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pshape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">newpoints</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">newpoints</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">newpoints</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">newpoints</span></div>
+
+<div class="viewcode-block" id="Transformation.inverse"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Transformation.inverse">[docs]</a>    <span class="k">def</span> <span class="nf">inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># inverse rotation is the same as for a pure rotation</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span>
+        <span class="n">pure</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">pure</span>
+        <span class="c1"># inverse translation is application of inverse rotation</span>
+        <span class="n">transl</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getRotMatrix</span><span class="p">(</span><span class="n">transpose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">trans</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">Transformation</span><span class="p">(</span><span class="n">trans</span><span class="o">=</span><span class="n">transl</span><span class="p">,</span> <span class="n">quaternion</span><span class="o">=</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">pure</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Transformation.getScrewAxis"><a class="viewcode-back" href="../../../../../cellpack.mgl_tools.mglutil.math.html#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getScrewAxis">[docs]</a>    <span class="k">def</span> <span class="nf">getScrewAxis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">linelength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the representation of a transformation in screw</span>
+<span class="sd">        format. Returns two points on the axis and the translation</span>
+<span class="sd">        component along the axis.</span>
+<span class="sd">        Takes an optional center argument. The first point returned is</span>
+<span class="sd">        then the point on the axis nearest to the center.</span>
+<span class="sd">        The optional linelength argument defines the distance between the</span>
+<span class="sd">        two points returned. The default is the translation component.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># first check that there is a rotational component. If not, abort</span>
+        <span class="c1"># if there is a rotation, self.real != 1.0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">&lt;=</span> <span class="mf">0.99999999</span><span class="p">:</span>
+            <span class="c1"># need the direction to determine which way to draw the line</span>
+            <span class="n">trans</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trans</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+            <span class="n">axis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pure</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+            <span class="n">axis</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
+            <span class="n">screw</span> <span class="o">=</span> <span class="n">trans</span> <span class="o">*</span> <span class="n">axis</span>
+            <span class="n">tpar</span> <span class="o">=</span> <span class="n">screw</span> <span class="o">*</span> <span class="n">axis</span>
+            <span class="n">tper</span> <span class="o">=</span> <span class="n">trans</span> <span class="o">-</span> <span class="n">tpar</span>
+            <span class="n">cpt1</span> <span class="o">=</span> <span class="n">tper</span> <span class="o">/</span> <span class="mf">2.0</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="n">tper</span><span class="o">.</span><span class="n">length</span><span class="p">()</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="n">length</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+            <span class="n">cpt2</span> <span class="o">=</span> <span class="n">height</span> <span class="o">*</span> <span class="p">(</span><span class="n">axis</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">tper</span><span class="p">))</span><span class="o">.</span><span class="n">normal</span><span class="p">()</span>
+            <span class="n">point</span> <span class="o">=</span> <span class="n">cpt1</span> <span class="o">+</span> <span class="n">cpt2</span>
+            <span class="k">if</span> <span class="n">center</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">center</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">center</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;center must be a Numeric array of shape (3,)&quot;</span><span class="p">)</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="p">(</span><span class="n">center</span> <span class="o">-</span> <span class="n">point</span><span class="p">)</span> <span class="o">*</span> <span class="n">axis</span>
+                <span class="n">point</span> <span class="o">=</span> <span class="n">point</span> <span class="o">+</span> <span class="n">m</span> <span class="o">*</span> <span class="n">axis</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">linelength</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">point</span><span class="p">,</span> <span class="n">point</span> <span class="o">+</span> <span class="n">axis</span> <span class="o">*</span> <span class="n">screw</span><span class="p">,</span> <span class="n">screw</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">point</span><span class="p">,</span> <span class="n">point</span> <span class="o">+</span> <span class="n">linelength</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">screw</span><span class="p">)</span> <span class="o">*</span> <span class="n">axis</span><span class="p">,</span> <span class="n">screw</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

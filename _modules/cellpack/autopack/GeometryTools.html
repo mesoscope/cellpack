@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
@@ -203,12 +206,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">quad</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-    <span class="n">quad</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;no scipy installed&quot;</span><span class="p">)</span>
-
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">quad</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
 
 
@@ -220,7 +218,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">Left</span> <span class="o">=</span> <span class="n">left</span></div>
 
 
-<div class="viewcode-block" id="GeometriTools"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools">[docs]</a><span class="k">class</span> <span class="nc">GeometriTools</span><span class="p">:</span>
+<div class="viewcode-block" id="GeometryTools"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools">[docs]</a><span class="k">class</span> <span class="nc">GeometryTools</span><span class="p">:</span>
     <span class="n">Resolution</span> <span class="o">=</span> <span class="mf">0.01</span>
 
     <span class="c1"># ==============================================================================</span>
@@ -230,10 +228,10 @@
     <span class="c1">#    // rect is a System.Drawing.RectangleF structure</span>
     <span class="c1">#    which defines our rectangle</span>
     <span class="c1">#    // x is the x coordinate to calculate f(x) for</span>
-<div class="viewcode-block" id="GeometriTools.UpperRectangleFunction"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.UpperRectangleFunction">[docs]</a>    <span class="k">def</span> <span class="nf">UpperRectangleFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.UpperRectangleFunction"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.UpperRectangleFunction">[docs]</a>    <span class="k">def</span> <span class="nf">UpperRectangleFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">rect</span><span class="o">.</span><span class="n">Top</span></div>
 
-<div class="viewcode-block" id="GeometriTools.LowerRectangleFunction"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.LowerRectangleFunction">[docs]</a>    <span class="k">def</span> <span class="nf">LowerRectangleFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.LowerRectangleFunction"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.LowerRectangleFunction">[docs]</a>    <span class="k">def</span> <span class="nf">LowerRectangleFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">rect</span><span class="o">.</span><span class="n">Bottom</span></div>
 
     <span class="c1">#    // m is a System.Drawing.PointF which represents</span>
@@ -244,16 +242,16 @@
     <span class="c1">#      //(x − a)2 + (y − b)2 = r2</span>
     <span class="c1">#      //top coordinate is py+r?</span>
     <span class="c1">#      //y = cy + sqrt[r*r - (cx-4)**2]</span>
-<div class="viewcode-block" id="GeometriTools.UpperCircleFunction"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.UpperCircleFunction">[docs]</a>    <span class="k">def</span> <span class="nf">UpperCircleFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.UpperCircleFunction"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.UpperCircleFunction">[docs]</a>    <span class="k">def</span> <span class="nf">UpperCircleFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">r</span> <span class="o">*</span> <span class="n">r</span><span class="p">)</span> <span class="o">-</span> <span class="nb">pow</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">2</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="GeometriTools.LowerCircleFunction"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.LowerCircleFunction">[docs]</a>    <span class="k">def</span> <span class="nf">LowerCircleFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.LowerCircleFunction"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.LowerCircleFunction">[docs]</a>    <span class="k">def</span> <span class="nf">LowerCircleFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">r</span> <span class="o">*</span> <span class="n">r</span><span class="p">)</span> <span class="o">-</span> <span class="nb">pow</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">2</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="GeometriTools.GetDistance"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.GetDistance">[docs]</a>    <span class="k">def</span> <span class="nf">GetDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.GetDistance"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.GetDistance">[docs]</a>    <span class="k">def</span> <span class="nf">GetDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">pow</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">pow</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="GeometriTools.check_sphere_inside"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.check_sphere_inside">[docs]</a>    <span class="k">def</span> <span class="nf">check_sphere_inside</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.check_sphere_inside"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.check_sphere_inside">[docs]</a>    <span class="k">def</span> <span class="nf">check_sphere_inside</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;check if sphere completly inside rect</span>
 <span class="sd">        check if the four corner are more than radius away from circle center</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -271,7 +269,7 @@
     <span class="c1"># //Check whether the rectangle lies completely outside of the circle.</span>
     <span class="c1"># //Note: It is easier to check if a rectangle is outside another rectangle or</span>
     <span class="c1"># //circle than to check whether it is inside.</span>
-<div class="viewcode-block" id="GeometriTools.check_rectangle_oustide"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.check_rectangle_oustide">[docs]</a>    <span class="k">def</span> <span class="nf">check_rectangle_oustide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.check_rectangle_oustide"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.check_rectangle_oustide">[docs]</a>    <span class="k">def</span> <span class="nf">check_rectangle_oustide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="p">(</span><span class="n">rect</span><span class="o">.</span><span class="n">Bottom</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">rect</span><span class="o">.</span><span class="n">Right</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GetDistance</span><span class="p">([</span><span class="n">rect</span><span class="o">.</span><span class="n">Bottom</span><span class="p">,</span> <span class="n">rect</span><span class="o">.</span><span class="n">Right</span><span class="p">],</span> <span class="n">m</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">r</span><span class="p">)</span>
@@ -285,7 +283,7 @@
             <span class="k">return</span> <span class="mi">0</span>  <span class="c1"># //Terminate fast</span>
         <span class="k">return</span> <span class="mi">1</span></div>
 
-<div class="viewcode-block" id="GeometriTools.getBoundary"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.getBoundary">[docs]</a>    <span class="k">def</span> <span class="nf">getBoundary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.getBoundary"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.getBoundary">[docs]</a>    <span class="k">def</span> <span class="nf">getBoundary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
         <span class="c1"># //A variable storing the nearest horizontal</span>
         <span class="c1"># edge of the rectangle.</span>
         <span class="n">nearestRectangleEdge</span> <span class="o">=</span> <span class="mi">0</span>
@@ -300,13 +298,11 @@
         <span class="c1"># //The bounds of our integration</span>
         <span class="n">leftBound</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">rightBound</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1">#        print m[1] &gt;= rect.Bottom and m[1] &lt;= rect.Top</span>
         <span class="k">if</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">rect</span><span class="o">.</span><span class="n">Bottom</span> <span class="ow">and</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">rect</span><span class="o">.</span><span class="n">Top</span><span class="p">:</span>
             <span class="c1"># //Take care if the circle&#39;s center lies</span>
             <span class="c1"># within the rectangle.</span>
             <span class="n">leftBound</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="n">r</span> <span class="o">+</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rect</span><span class="o">.</span><span class="n">Left</span><span class="p">)</span>
             <span class="n">rightBound</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rect</span><span class="o">.</span><span class="n">Right</span><span class="p">)</span>
-            <span class="c1">#            print leftBound,rightBound</span>
             <span class="k">return</span> <span class="n">leftBound</span><span class="p">,</span> <span class="n">rightBound</span>
         <span class="k">elif</span> <span class="n">r</span> <span class="o">&gt;=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">nearestRectangleEdge</span> <span class="o">-</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
             <span class="c1"># //If the circle&#39;s center lies outside of the rectangle, we can choose optimal bounds.</span>
@@ -321,14 +317,13 @@
             <span class="k">return</span> <span class="n">leftBound</span><span class="p">,</span> <span class="n">rightBound</span>
         <span class="k">return</span> <span class="n">leftBound</span><span class="p">,</span> <span class="n">rightBound</span></div>
 
-<div class="viewcode-block" id="GeometriTools.get_rectangle_cercle_area"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.get_rectangle_cercle_area">[docs]</a>    <span class="k">def</span> <span class="nf">get_rectangle_cercle_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">leftBound</span><span class="p">,</span> <span class="n">rightBound</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.get_rectangle_cercle_area"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.get_rectangle_cercle_area">[docs]</a>    <span class="k">def</span> <span class="nf">get_rectangle_cercle_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">leftBound</span><span class="p">,</span> <span class="n">rightBound</span><span class="p">):</span>
         <span class="c1">#        self.Resolution = 0.01#M;</span>
 
         <span class="c1"># //Loop trough the intersection area and sum up</span>
         <span class="c1"># the area</span>
         <span class="n">a</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">leftBound</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">Resolution</span>
-        <span class="c1">#        print a,i,self.Resolution,leftBound,rightBound</span>
         <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">rightBound</span><span class="p">:</span>
             <span class="n">upperBound</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">UpperRectangleFunction</span><span class="p">(</span><span class="n">rect</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">Resolution</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">),</span>
@@ -338,7 +333,6 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">LowerRectangleFunction</span><span class="p">(</span><span class="n">rect</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">Resolution</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">),</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">LowerCircleFunction</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">Resolution</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">),</span>
             <span class="p">)</span>
-            <span class="c1">#            print upperBound,lowerBound</span>
             <span class="n">a</span> <span class="o">+=</span> <span class="p">(</span><span class="n">upperBound</span> <span class="o">-</span> <span class="n">lowerBound</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">Resolution</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Resolution</span>
         <span class="k">return</span> <span class="n">a</span></div>
@@ -348,17 +342,17 @@
     <span class="c1"># ==============================================================================</span>
     <span class="c1"># Require Scipy</span>
     <span class="c1"># square regions</span>
-<div class="viewcode-block" id="GeometriTools.region_1"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.region_1">[docs]</a>    <span class="k">def</span> <span class="nf">region_1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.region_1"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_1">[docs]</a>    <span class="k">def</span> <span class="nf">region_1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">d</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rho</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">d</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="GeometriTools.region_1_2_theta"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.region_1_2_theta">[docs]</a>    <span class="k">def</span> <span class="nf">region_1_2_theta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.region_1_2_theta"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_1_2_theta">[docs]</a>    <span class="k">def</span> <span class="nf">region_1_2_theta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">d</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rho</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">d</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span></div>
 
     <span class="c1"># curved square regions</span>
-<div class="viewcode-block" id="GeometriTools.region_2_integrand"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.region_2_integrand">[docs]</a>    <span class="k">def</span> <span class="nf">region_2_integrand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.region_2_integrand"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_2_integrand">[docs]</a>    <span class="k">def</span> <span class="nf">region_2_integrand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="p">(</span><span class="n">d</span> <span class="o">/</span> <span class="n">rho</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GeometriTools.region_2"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.region_2">[docs]</a>    <span class="k">def</span> <span class="nf">region_2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.region_2"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_2">[docs]</a>    <span class="k">def</span> <span class="nf">region_2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="c1"># require scipy</span>
         <span class="n">i4</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">d</span> <span class="o">**</span> <span class="mi">3</span>
@@ -380,10 +374,10 @@
         <span class="k">return</span> <span class="n">i4</span> <span class="o">+</span> <span class="n">i3</span></div>
 
     <span class="c1"># spherical region</span>
-<div class="viewcode-block" id="GeometriTools.region_3_integrand"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.region_3_integrand">[docs]</a>    <span class="k">def</span> <span class="nf">region_3_integrand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.region_3_integrand"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_3_integrand">[docs]</a>    <span class="k">def</span> <span class="nf">region_3_integrand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="p">(</span><span class="n">d</span> <span class="o">/</span> <span class="n">rho</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GeometriTools.region_3"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.region_3">[docs]</a>    <span class="k">def</span> <span class="nf">region_3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.region_3"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_3">[docs]</a>    <span class="k">def</span> <span class="nf">region_3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="c1"># require scipy</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">rho</span> <span class="o">**</span> <span class="mi">3</span>
@@ -399,7 +393,7 @@
             <span class="p">)</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GeometriTools.calc_volume"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometriTools.calc_volume">[docs]</a>    <span class="k">def</span> <span class="nf">calc_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<div class="viewcode-block" id="GeometryTools.calc_volume"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.calc_volume">[docs]</a>    <span class="k">def</span> <span class="nf">calc_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="n">alpha</span> <span class="o">=</span> <span class="n">rho</span> <span class="o">/</span> <span class="n">d</span>
         <span class="k">if</span> <span class="n">alpha</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">4.0</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">rho</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span>
