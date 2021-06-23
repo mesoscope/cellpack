@@ -1727,13 +1727,13 @@ class Environment(CompartmentList):
         self.dynamicOptions["surface"]["rotMassClamp"] = 1
 
     def writeArraysToFile(self, f):
-        """write self.gridPtId and self.distToClosestSurf to file. (pickle) """
+        """write self.gridPtId and self.distToClosestSurf to file. (pickle)"""
         pickle.dump(self.grid.masterGridPositions, f)
         pickle.dump(self.grid.gridPtId, f)
         pickle.dump(self.grid.distToClosestSurf, f)
 
     def readArraysFromFile(self, f):
-        """write self.gridPtId and self.distToClosestSurf to file. (pickle) """
+        """write self.gridPtId and self.distToClosestSurf to file. (pickle)"""
         pos = pickle.load(f)
         self.grid.masterGridPositions = pos
 
@@ -2714,7 +2714,7 @@ class Environment(CompartmentList):
     #    import fill3isolated # Graham cut the outdated fill3 from this document and put it in a separate file. turn on here if you want to use it.
 
     def updateIngr(self, ingr, completion=0.0, nbMol=0, counter=0):
-        """helper function for updating the ingredient completion, nbmol and counter """
+        """helper function for updating the ingredient completion, nbmol and counter"""
         ingr.counter = counter
         ingr.nbMol = nbMol
         ingr.completion = completion

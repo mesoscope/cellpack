@@ -65,7 +65,7 @@ class Recipe:
         self.name = name
 
     def delIngredient(self, ingr):
-        """ remove the given ingredient from the recipe """
+        """remove the given ingredient from the recipe"""
         if ingr in self.ingredients:
             ind = self.ingredients.index(ingr)
             self.ingredients.pop(ind)
@@ -73,7 +73,7 @@ class Recipe:
             self.exclude.append(ingr)
 
     def addIngredient(self, ingr):
-        """ add the given ingredient from the recipe """
+        """add the given ingredient from the recipe"""
         #        assert isinstance(ingr, Ingredient)
         # we need ingredient unique name
         if ingr.name.find(self.name) == -1:
@@ -170,7 +170,7 @@ class Recipe:
                 self.activeIngredients.append(i)
 
     def resetIngr(self, ingr):
-        """ reset the states of the given ingredient """
+        """reset the states of the given ingredient"""
         ingr.counter = 0
         ingr.nbMol = 0
         ingr.completion = 0.0
@@ -178,14 +178,14 @@ class Recipe:
     def resetIngrs(
         self,
     ):
-        """ reset the states of all recipe ingredients """
+        """reset the states of all recipe ingredients"""
         for ingr in self.ingredients:
             ingr.counter = 0
             ingr.nbMol = 0
             ingr.completion = 0.0
 
     def getMinMaxProteinSize(self):
-        """ get the mini and maxi radius from all recipe ingredients """
+        """get the mini and maxi radius from all recipe ingredients"""
         mini = 9999999.0
         maxi = 0
         for ingr in self.ingredients:
@@ -196,7 +196,7 @@ class Recipe:
         return mini, maxi
 
     def sort(self):
-        """ sort the ingredients using the min Radius """
+        """sort the ingredients using the min Radius"""
         # sort tuples in molecule list according to radius
         self.ingredients.sort(key=lambda x: x.minRadius)
         # cmp(y.minRadius, x. minRadius))#(a > b) - (a < b)
@@ -206,7 +206,7 @@ class Recipe:
     # This line is from August 2011 version of code
 
     def printFillInfo(self, indent=""):
-        """ print the states of all recipe ingredients """
+        """print the states of all recipe ingredients"""
         for ingr in self.ingredients:
             print(
                 indent

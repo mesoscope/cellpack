@@ -9547,7 +9547,7 @@ class GrowIngredient(MultiCylindersIngr):
                 continue
 
     def walkSphere(self, pt1, pt2, distance, histoVol, marge=90.0, checkcollision=True):
-        """ use a random point on a sphere of radius uLength, and useCylinder collision on the grid """
+        """use a random point on a sphere of radius uLength, and useCylinder collision on the grid"""
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
         found = False
         attempted = 0
@@ -9682,7 +9682,7 @@ class GrowIngredient(MultiCylindersIngr):
     def walkSpherePanda(
         self, pt1, pt2, distance, histoVol, marge=90.0, checkcollision=True, usePP=False
     ):
-        """ use a random point on a sphere of radius uLength, and useCylinder collision on the grid """
+        """use a random point on a sphere of radius uLength, and useCylinder collision on the grid"""
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
         found = False
         attempted = 0
@@ -10099,7 +10099,7 @@ class GrowIngredient(MultiCylindersIngr):
     def walkSpherePandaOLD(
         self, pt1, pt2, distance, histoVol, marge=90.0, checkcollision=True, usePP=False
     ):
-        """ use a random point on a sphere of radius uLength, and useCylinder collision on the grid """
+        """use a random point on a sphere of radius uLength, and useCylinder collision on the grid"""
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
         found = False
         attempted = 0
@@ -10312,7 +10312,7 @@ class GrowIngredient(MultiCylindersIngr):
     def walkSphereRAPIDold(
         self, pt1, pt2, distance, histoVol, marge=90.0, checkcollision=True, usePP=False
     ):
-        """ use a random point on a sphere of radius uLength, and useCylinder collision on the grid """
+        """use a random point on a sphere of radius uLength, and useCylinder collision on the grid"""
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
         found = False
         attempted = 0
@@ -10598,7 +10598,7 @@ class GrowIngredient(MultiCylindersIngr):
     def walkSphereRAPID(
         self, pt1, pt2, distance, histoVol, marge=90.0, checkcollision=True, usePP=False
     ):
-        """ use a random point on a sphere of radius uLength, and useCylinder collision on the grid """
+        """use a random point on a sphere of radius uLength, and useCylinder collision on the grid"""
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
         found = False
         attempted = 0
