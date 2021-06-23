@@ -500,7 +500,7 @@ class Grid:
         if arrays[1:]:
             self.cartesian(arrays[1:], out=out[0:m, 1:])
             for j in range(1, arrays[0].size):
-                out[j * m: (j + 1) * m, 1:] = out[0:m, 1:]
+                out[j * m : (j + 1) * m, 1:] = out[0:m, 1:]
         return out
 
     def getPointFrom3D(self, pt3d):

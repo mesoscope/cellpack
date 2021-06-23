@@ -523,49 +523,61 @@ class AnalyseAP:
         # also check the measure angle one
         angles = []
         distA = []
-        ingrpositions = [
+        ingr_positions = [
             self.env.molecules[i][0]
             for i in range(len(self.env.molecules))
             if self.env.molecules[i][2].name == ingr.name
         ]
-        ingrpositions = numpy.array(ingrpositions)
-        ingrrotation = [
+        ingr_positions = numpy.array(ingr_positions)
+        ingr_rotation = [
             self.env.molecules[i][1]
             for i in range(len(self.env.molecules))
             if self.env.molecules[i][2].name == ingr.name
         ]
-        ingrrotation = numpy.array(ingrrotation)
-        if len(ingrpositions):
-            delta = numpy.array(ingrpositions) - numpy.array(center)
+        ingr_rotation = numpy.array(ingr_rotation)
+        if len(ingr_positions):
+            delta = numpy.array(ingr_positions) - numpy.array(center)
             # lets do it on X,Y,Z and also per positions ?
-            anglesX = anglesX = numpy.array(
-                [
-                    signed_angle_between_vectors(
-                        [0, 0, 1], m[0][:3], -delta, directed=False, axis=1
-                    )
-                    for m in ingrrotation
-                ]
+            anglesX = numpy.array(
+                signed_angle_between_vectors(
+                    [
+                        [0, 0, 1],
+                    ]
+                    * len(ingr_positions),
+                    ingr_rotation[:, 0, :3],
+                    -delta,
+                    directed=False,
+                    axis=1,
+                )
             )
             anglesY = numpy.array(
-                [
-                    signed_angle_between_vectors(
-                        [0, 1, 0], m[1][:3], -delta, directed=False, axis=1
-                    )
-                    for m in ingrrotation
-                ]
+                signed_angle_between_vectors(
+                    [
+                        [0, 1, 0],
+                    ]
+                    * len(ingr_positions),
+                    ingr_rotation[:, 1, :3],
+                    -delta,
+                    directed=False,
+                    axis=1,
+                )
             )
             anglesZ = numpy.array(
-                [
-                    signed_angle_between_vectors(
-                        [1, 0, 0], m[2][:3], -delta, directed=False, axis=1
-                    )
-                    for m in ingrrotation
-                ]
+                signed_angle_between_vectors(
+                    [
+                        [1, 0, 0],
+                    ]
+                    * len(ingr_positions),
+                    ingr_rotation[:, 2, :3],
+                    -delta,
+                    directed=False,
+                    axis=1,
+                )
             )
             delta *= delta
             distA = numpy.sqrt(delta.sum(1)).tolist()
             angles = numpy.array([distA, anglesX, anglesY, anglesZ])
-        return ingrpositions, distA, numpy.degrees(angles)
+        return ingr_positions, distA, numpy.degrees(angles)
 
     def getVolumeShell(self, bbox, radii, center):
         # rectangle_circle_area

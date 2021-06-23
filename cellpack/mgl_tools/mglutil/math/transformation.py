@@ -4,29 +4,27 @@
 # $Header: /opt/cvs/python/packages/share1.5/mglutil/math/transformation.py,v 1.45 2007/07/24 17:30:40 vareille Exp $
 #
 
-import math
-import numpy.oldnumeric as Numeric
-from mglutil.math import rotax
+import numpy as np
+from . import rotax
 
 # from mglutil.math.VectorModule import Vector
 
 
-N = Numeric
 Vector = None  # sVectorModule.Vector
 
 
 class Quaternion:
     """Base Quaternion class"""
 
-    def __init__(self, data=(1.0, N.array((0.0, 0.0, 0.0), "f"))):
+    def __init__(self, data=(1.0, np.array((0.0, 0.0, 0.0), "f"))):
         """data is in the form ( c, (x y, z)), where c is the
         real part (float) and (x,y,z) is the pure part (Numeric
         array of floats)
         """
         try:
             self.real = float(data[0])
-            self.pure = N.array((data[1][0], data[1][1], data[1][2]), "f")
-        except:
+            self.pure = np.array((data[1][0], data[1][1], data[1][2]), "f")
+        except Exception:
             raise ValueError("1Arguments must be (c,(x,y,z))")
         if len(self.pure) != 3:
             raise ValueError("2Arguments must be (c,(x,y,z))")
@@ -52,14 +50,14 @@ class Quaternion:
     def __mul__(self, other):
         """Multiply two quaternions together.
         For unit Quaternons, this is equivalent to concatenating rotations"""
-        real = self.real * other.real - N.innerproduct(self.pure, other.pure)
+        real = self.real * other.real - np.inner(self.pure, other.pure)
         v1 = self.pure
         v2 = other.pure
         cofactor1 = v1[1] * v2[2] - v1[2] * v2[1]
         cofactor2 = v1[2] * v2[0] - v1[0] * v2[2]
         cofactor3 = v1[0] * v2[1] - v1[1] * v2[0]
         pure = (
-            N.array([cofactor1, cofactor2, cofactor3])
+            np.array([cofactor1, cofactor2, cofactor3])
             + self.real * other.pure
             + other.real * self.pure
         )
@@ -76,7 +74,7 @@ class Quaternion:
 
     def magnitude(self):
         """ Quicker than multiplying conjugates"""
-        return self.real ** 2 + N.innerproduct(self.pure, self.pure)
+        return self.real ** 2 + np.inner(self.pure, self.pure)
 
     def inverse(self):
         """Get the multiplicative inverse of a quaternion"""
@@ -88,7 +86,7 @@ class Quaternion:
         """Normalise a quaternion by dividing throughout by the
         magnitude
         """
-        M = N.sqrt(self.magnitude())
+        M = np.sqrt(self.magnitude())
         self.pure = self.pure / M
         self.real = self.real / M
 
@@ -102,31 +100,31 @@ class UnitQuaternion(Quaternion):
     rotation angle in degrees.
     """
 
-    def __init__(self, data=(1.0, N.array((0.0, 0.0, 0.0), "f"))):
+    def __init__(self, data=(1.0, np.array((0.0, 0.0, 0.0), "f"))):
         """(real,(pure x,pure y,pure z)) or (x,y,z,theta) (theta in degrees)"""
         if len(data) == 2:
             self.real = data[0]
             try:
-                theta = N.arccos(self.real)
-                self.pure = N.array((data[1][0], data[1][1], data[1][2]), "f")
-            except:
+                theta = np.arccos(self.real)
+                self.pure = np.array((data[1][0], data[1][1], data[1][2]), "f")
+            except Exception:
                 raise ValueError("The real part must be between -1.0 and 1.0")
         elif len(data) == 4:
-            theta = N.pi * data[3] / 360.0
-            self.real = N.cos(theta)
-            self.pure = N.sin(theta) * N.array((data[0], data[1], data[2]), "f")
+            theta = np.pi * data[3] / 360.0
+            self.real = np.cos(theta)
+            self.pure = np.sin(theta) * np.array((data[0], data[1], data[2]), "f")
         else:
             raise ValueError("Args must be (x,y,z,theta) or (real,pure)")
         self.normal()
 
     def normal(self):
         if self.real != 1.0:
-            theta = N.arccos(self.real)
-            vector = self.pure / N.sin(theta)
-            vector = vector / N.sqrt(N.innerproduct(vector, vector))
-            self.pure = N.sin(theta) * vector
+            theta = np.arccos(self.real)
+            vector = self.pure / np.sin(theta)
+            vector = vector / np.sqrt(np.inner(vector, vector))
+            self.pure = np.sin(theta) * vector
         else:
-            self.pure = N.zeros(3, "f")
+            self.pure = np.zeros(3, "f")
 
     def __repr__(self):
         """Representation of a unit quaternion is as rx,ry,rz,theta,
@@ -134,9 +132,9 @@ class UnitQuaternion(Quaternion):
         """
         if self.real != 1.0:
             # if it is not the identity
-            theta = N.arccos(self.real)
-            angle = 360 * theta / N.pi
-            xyz = self.pure / N.sin(theta)
+            theta = np.arccos(self.real)
+            angle = 360 * theta / np.pi
+            xyz = self.pure / np.sin(theta)
         else:
             # if it is the identity
             angle = 0.0
@@ -162,21 +160,21 @@ class UnitQuaternion(Quaternion):
 
     def getAxisAndAngleDegres(self):
         """Given a quaternion, compute axis and angle."""
-        theta = N.arccos(self.real)
-        angle = 360 * theta / N.pi
-        xyz = self.pure / N.sin(theta)
+        theta = np.arccos(self.real)
+        angle = 360 * theta / np.pi
+        xyz = self.pure / np.sin(theta)
         return xyz, angle
 
     def getRotMatrix(self, shape=(4, 4), transpose=None):
         """return the rotation matrix as a Numeric array of shape shape."""
         try:
             assert shape in [(3, 3), (4, 4), (9,), (16,)]
-        except:
+        except Exception:
             raise ValueError("shape must be (3,3), (4,4), (9,) or (16,)")
 
         # get the inverse 4x4 from rotax
         mtx = rotax.rotax(
-            N.array([0.0, 0.0, 0.0], "f"), self.pure, 2 * N.arccos(self.real)
+            np.array([0.0, 0.0, 0.0], "f"), self.pure, 2 * np.arccos(self.real)
         )
 
         # strip if necessary
@@ -185,27 +183,27 @@ class UnitQuaternion(Quaternion):
             mtx = mtx[:3]
 
         if not transpose:
-            return N.reshape(N.transpose(mtx), shape)
+            return np.reshape(np.transpose(mtx), shape)
         else:
-            return N.reshape(mtx, shape)
+            return np.reshape(mtx, shape)
 
     def apply(self, points):
         # apply the rotational part alone to a point or list of points
         # can be homogeneous coordinates or not.
-        pshape = N.shape(points)
+        pshape = np.shape(points)
         homogeneous = 1
         if len(pshape) == 1:
             if pshape[0] == 3:
-                points = N.array(N.concatenate((points, N.ones(1, "f")), 1))
+                points = np.array(np.concatenate((points, np.ones(1, "f")), 1))
                 homogeneous = 0
         elif len(pshape) == 2:
             if pshape[1] == 3:
-                points = N.array(
-                    N.concatenate((N.array(points), N.ones((pshape[0], 1), "f")), 1)
+                points = np.array(
+                    np.concatenate((np.array(points), np.ones((pshape[0], 1), "f")), 1)
                 )
                 homogeneous = 0
         mtx = self.getRotMatrix((4, 4), transpose=1)
-        newpoints = N.dot(points, mtx)
+        newpoints = np.dot(points, mtx)
         if homogeneous:
             return newpoints
         else:
@@ -222,24 +220,24 @@ class Transformation(UnitQuaternion):
 
     def __init__(
         self,
-        trans=N.array([0.0, 0.0, 0.0, 1.0], "f"),
-        quaternion=N.array([0.0, 0.0, 0.0, 0.0], "f"),
-        scale=N.array([1.0, 1.0, 1.0, 1.0], "f"),
+        trans=np.array([0.0, 0.0, 0.0, 1.0], "f"),
+        quaternion=np.array([0.0, 0.0, 0.0, 0.0], "f"),
+        scale=np.array([1.0, 1.0, 1.0, 1.0], "f"),
     ):
         UnitQuaternion.__init__(self, quaternion)
         # make the translation homogeneous if it isn't
         if len(trans) == 3:
             trans = list(trans)
             trans.append(1.0)
-        self.trans = N.array((trans[0], trans[1], trans[2], trans[3]), "f")
+        self.trans = np.array((trans[0], trans[1], trans[2], trans[3]), "f")
 
     def __repr__(self):
         """Representation is of the form tx,ty,tz,qx,qy,qz,theta"""
         #  first check for identity quaternion to avoid nans
         if self.real != 1:
-            theta = N.arccos(self.real)
-            angle = 360 * theta / N.pi
-            xyz = self.pure / N.sin(theta)
+            theta = np.arccos(self.real)
+            angle = 360 * theta / np.pi
+            xyz = self.pure / np.sin(theta)
         else:
             angle = 0.0
             xyz = self.pure
@@ -257,9 +255,9 @@ class Transformation(UnitQuaternion):
     def output(self):
         """As __repr__ but without the explanation. For getting the numbers only"""
         if self.real != 1:
-            theta = N.arccos(self.real)
-            angle = 360 * theta / N.pi
-            xyz = self.pure / N.sin(theta)
+            theta = np.arccos(self.real)
+            angle = 360 * theta / np.pi
+            xyz = self.pure / np.sin(theta)
         else:
             angle = 0.0
             xyz = self.pure
@@ -279,12 +277,12 @@ class Transformation(UnitQuaternion):
         # combined rotation is the product of the two rotations (Rself*Rother):
         v1 = self.pure
         v2 = other.pure
-        real = self.real * other.real - N.innerproduct(v1, v2)
+        real = self.real * other.real - np.inner(v1, v2)
         cofactor1 = v1[1] * v2[2] - v1[2] * v2[1]
         cofactor2 = v1[2] * v2[0] - v1[0] * v2[2]
         cofactor3 = v1[0] * v2[1] - v1[1] * v2[0]
         pure = (
-            N.array([cofactor1, cofactor2, cofactor3])
+            np.array([cofactor1, cofactor2, cofactor3])
             + self.real * other.pure
             + other.real * self.pure
         )
@@ -295,8 +293,8 @@ class Transformation(UnitQuaternion):
 
     def reset(self):
         self.real = 1.0
-        self.pure = N.array((0.0, 0.0, 0.0))
-        self.trans = N.array([0.0, 0.0, 0.0, 1.0])
+        self.pure = np.array((0.0, 0.0, 0.0))
+        self.trans = np.array([0.0, 0.0, 0.0, 1.0])
 
     def getQuaternion(self):
         return UnitQuaternion((self.real, self.pure))
@@ -316,9 +314,9 @@ class Transformation(UnitQuaternion):
         mtx = self.getRotMatrix((4, 4), transpose=transpose)  # from Quaternion
         mtx[3] = self.getTranslation()
         if transpose:
-            return N.reshape(mtx, shape)
+            return np.reshape(mtx, shape)
         else:
-            return N.reshape(N.transpose(mtx), shape)
+            return np.reshape(np.transpose(mtx), shape)
 
     def getDejaVuMatrix(self):
         """returns a 4x matrix usable as an instance matrix"""
@@ -330,20 +328,20 @@ class Transformation(UnitQuaternion):
 
     def apply(self, points):
         """Apply the entire transformation to a list of points"""
-        pshape = N.shape(points)
+        pshape = np.shape(points)
         homogeneous = 1
         if len(pshape) == 1:
             if pshape[0] == 3:
-                points = N.array(N.concatenate((points, N.ones(1, "f")), 1))
+                points = np.array(np.concatenate((points, np.ones(1, "f")), 1))
                 homogeneous = 0
         elif len(pshape) == 2:
             if pshape[1] == 3:
-                points = N.array(
-                    N.concatenate((N.array(points), N.ones((pshape[0], 1), "f")), 1)
+                points = np.array(
+                    np.concatenate((np.array(points), np.ones((pshape[0], 1), "f")), 1)
                 )
                 homogeneous = 0
         mtx = self.getMatrix((4, 4), transpose=1)
-        newpoints = N.dot(points, mtx)
+        newpoints = np.dot(points, mtx)
         if homogeneous:
             return newpoints
         else:
@@ -359,7 +357,7 @@ class Transformation(UnitQuaternion):
         real = self.real
         pure = -self.pure
         # inverse translation is application of inverse rotation
-        transl = -N.dot(self.getRotMatrix(transpose=1, shape=(3, 3)), self.trans[:3])
+        transl = -np.dot(self.getRotMatrix(transpose=1, shape=(3, 3)), self.trans[:3])
         return Transformation(trans=transl, quaternion=(real, pure))
 
     def getScrewAxis(self, center=None, linelength=None):
@@ -377,28 +375,28 @@ class Transformation(UnitQuaternion):
         if self.real <= 0.99999999:
             # need the direction to determine which way to draw the line
             trans = Vector(self.trans[:3])
-            theta = N.arccos(self.real)
-            axis = self.pure / N.sin(theta)
+            theta = np.arccos(self.real)
+            axis = self.pure / np.sin(theta)
             axis = Vector(axis)
             screw = trans * axis
             tpar = screw * axis
             tper = trans - tpar
             cpt1 = tper / 2.0
             length = tper.length()
-            height = length / (2 * N.tan(theta))
+            height = length / (2 * np.tan(theta))
             cpt2 = height * (axis.cross(tper)).normal()
             point = cpt1 + cpt2
             if center:
                 try:
                     center = Vector(center)
-                except:
+                except Exception:
                     raise ValueError("center must be a Numeric array of shape (3,)")
                 m = (center - point) * axis
                 point = point + m * axis
             if not linelength:
                 return point, point + axis * screw, screw
             else:
-                return point, point + linelength * N.sign(screw) * axis, screw
+                return point, point + linelength * np.sign(screw) * axis, screw
 
         else:
             return None

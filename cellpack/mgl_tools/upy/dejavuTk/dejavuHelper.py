@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
     Copyright (C) <2010>  Autin L. TSRI
     
@@ -16,22 +18,14 @@
     You should have received a copy of the GNU General Public License
     along with upy.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.
 """
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Feb  9 11:18:03 2011
 
-@author: -
-"""
+# standardmodule
+import os
+import numpy
+from PIL import Image
 
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Dec  5 23:30:44 2010
-
-@author: Ludovic Autin - ludovic.autin@gmail.com
-"""
 # DejaVu module
 from cellpack.mgl_tools.upy import hostHelper
-import cellpack.mgl_tools.DejaVu as DejaVu
 from cellpack.mgl_tools.DejaVu.Viewer import Viewer
 from cellpack.mgl_tools.DejaVu.Geom import Geom
 from cellpack.mgl_tools.DejaVu.Spheres import Spheres
@@ -41,34 +35,8 @@ from cellpack.mgl_tools.DejaVu.glfLabels import GlfLabels as Labels
 from cellpack.mgl_tools.DejaVu.IndexedPolygons import IndexedPolygons
 from cellpack.mgl_tools.DejaVu.Polylines import Polylines as dejavuPolylines
 from cellpack.mgl_tools.DejaVu.Texture import Texture
-from cellpack.mgl_tools.DejaVu import Viewer
+import collada
 
-# standardmodule
-import sys
-import os
-import struct
-import string
-import types
-import math
-from math import *
-
-# from types import StringType, ListType
-
-# from DejaVu import Viewer
-
-import numpy
-from numpy import matrix
-from PIL import Image
-
-# base helper class
-
-# from upy import ray
-
-try:
-    import pycollada as collada
-except:
-    collada = None
-    print("can't import pycollada upy")
 
 # Problem instance doesnt really exist as its. Or its instance of mesh/sphere/cylinder directly.
 # check autofill display
@@ -2273,7 +2241,8 @@ class dejavuHelper(hostHelper.Helper):
             if bg.original == geom:
                 m = bg.materialnodebysymbol.values()
                 if len(m):
-                    mat = bg.materialnodebysymbol.values()[0].target
+                    k0 = [*bg.materialnodebysymbol][0]
+                    mat = bg.materialnodebysymbol[k0].target
         return mat
 
     def TextureFaceCoordintesToVertexCoordinates(self, v, f, t, ti):
@@ -2545,8 +2514,7 @@ class dejavuHelper(hostHelper.Helper):
 
     def read(self, filename, **kw):
         fileName, fileExtension = os.path.splitext(filename)
-        #        import collada
-        #        print "load ",filename
+
         if fileExtension == ".dae":
             daeDic = None
             col = collada.Collada(filename)  # , ignore=[collada.DaeUnsupportedError,

@@ -52,10 +52,8 @@ except ImportError:
 import numpy
 from numpy import matrix
 
-try:
-    import collada
-except ImportError:
-    print("no collada")
+import collada
+
 # , weakref
 from math import sqrt, pi, sin, cos, asin
 from cellpack.mgl_tools.bhtree import bhtreelib
@@ -4898,7 +4896,7 @@ class Ingredient(Agent):
                 if sum(self.rotAxis) == 0.0:
                     rotMat = numpy.identity(4)
                 else:
-                    rotMat = afvi.vi.rotation_matrix(
+                    rotMat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
             else:
@@ -5124,7 +5122,7 @@ class Ingredient(Agent):
                     print("PREMATURE ENDING of ingredient", self.name)
                 self.completion = 1.0
         return success, nbFreePoints
-    # NOTE: This is a duplicate function
+
     def jitter_place(
         self,
         histoVol,
@@ -6776,7 +6774,7 @@ class Ingredient(Agent):
                 if sum(self.rotAxis) == 0.0:
                     rotMat = numpy.identity(4)
                 else:
-                    rotMat = afvi.vi.rotation_matrix(
+                    rotMat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
             # for other points we get a random rotation
@@ -7377,7 +7375,7 @@ class Ingredient(Agent):
                 ):  # you need a gradient here
                     rotMat = self.alignRotation(gridPointsCoords[ptInd])
                 elif afvi:
-                    rotMat = afvi.vi.rotation_matrix(
+                    rotMat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
             # for other points we get a random rotation
@@ -7526,7 +7524,7 @@ class Ingredient(Agent):
                         rotMatj = self.getBiasedRotation(rotMat, weight=None)
                     # weight = 1.0 - self.histoVol.gradients[self.gradient].weight[ptInd])
                     else:
-                        rotMatj = afvi.vi.rotation_matrix(
+                        rotMatj = autopack.helper.rotation_matrix(
                             random() * self.rotRange, self.rotAxis
                         )
                 else:
@@ -8129,7 +8127,7 @@ class Ingredient(Agent):
                 if sum(self.rotAxis) == 0.0:
                     rotMat = numpy.identity(4)
                 else:
-                    rotMat = afvi.vi.rotation_matrix(
+                    rotMat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
             else:
@@ -11430,10 +11428,7 @@ class GrowIngredient(MultiCylindersIngr):
         #        self.Ptis=[ptInd,histoVol.grid.getPointFrom3D(secondPoint)]
         dist, pid = histoVol.grid.getClosestGridPoint(secondPoint)
         self.Ptis = [ptInd, pid]
-        # get compartments obj, bhtree and get ID of startingPoint
-        res = self.compartment.OGsrfPtsBht.query(startingPoint)
         print("the starting point on the grid was ", startingPoint, pid, ptInd)
-        self.startGridPoint.append(res[1])
         listePtCurve = [jtrans]
         listePtLinear = [startingPoint, secondPoint]
         # grow until reach self.currentLength >= self.length

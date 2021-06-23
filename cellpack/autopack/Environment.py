@@ -3610,6 +3610,7 @@ class Environment(CompartmentList):
             # shoul check extension filename for type of saved file
             self.saveGridToFile(self.resultfile + "grid")
             self.grid.result_filename = self.resultfile + "grid"
+            self.collectResultPerIngredient()
             self.store()
             self.store_asTxt()
             #            self.store_asJson(resultfilename=self.resultfile+".json")
@@ -3619,6 +3620,7 @@ class Environment(CompartmentList):
                 mixed=True,
                 kwds=["compNum"],
                 result=True,
+                quaternion=True,
                 grid=False,
                 packing_options=False,
                 indent=False,
@@ -4665,9 +4667,8 @@ class Environment(CompartmentList):
             if self.panda_solver == "bullet":
                 from panda3d.bullet import BulletWorld
 
-                self.worldNP = render.attachNewNode(
-                    "World"
-                )  # noqa: F821, global variable from panda3d
+                # global variable from panda3d
+                self.worldNP = render.attachNewNode("World")  # noqa: F821
                 self.world = BulletWorld()
                 self.BitMask32 = BitMask32
             elif self.panda_solver == "ode":
