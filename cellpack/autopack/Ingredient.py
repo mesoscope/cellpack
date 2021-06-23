@@ -52,10 +52,8 @@ except ImportError:
 import numpy
 from numpy import matrix
 
-try:
-    import collada
-except ImportError:
-    print("no collada")
+import collada
+
 # , weakref
 from math import sqrt, pi, sin, cos, asin
 from cellpack.mgl_tools.bhtree import bhtreelib
@@ -63,10 +61,7 @@ from random import uniform, gauss, random
 from time import time, sleep
 import math
 from cellpack.mgl_tools.RAPID import RAPIDlib
-from cellpack.autopack.transformation import (
-    euler_from_matrix,
-    angle_between_vectors
-)
+from cellpack.autopack.transformation import euler_from_matrix, angle_between_vectors
 from cellpack.autopack import Recipe
 
 # RAPID require a uniq mesh. not an empty or an instance
@@ -86,7 +81,6 @@ if helper is not None:
 try:
     import panda3d
 
-    print("Should have Panda3D now because panda3d = ", panda3d)
 except ImportError:
     panda3d = None
 
@@ -2321,7 +2315,6 @@ class Ingredient(Agent):
         else:
             filename = autopack.retrieveFile(filename, cache="geometries")
         if filename is None:
-            print("problem")
             return None
         if not os.path.isfile(filename) and fileExtension != "":
             print("problem with " + filename, fileExtension)
@@ -2394,7 +2387,7 @@ class Ingredient(Agent):
             else:  # if helper is not None:#neeed the helper
                 if helper.host == "dejavu" and helper.nogui:
                     dgeoms = helper.read(filename)
-                    v, vn, f = dgeoms.values()[0]["mesh"]
+                    v, vn, f = list(dgeoms.values())[0]["mesh"]
                     print("vertices nb is ", len(v))
                     #                    vn = self.getVertexNormals(v,f)
                     self.vertices, self.vnormals, self.faces = (
@@ -4903,7 +4896,7 @@ class Ingredient(Agent):
                 if sum(self.rotAxis) == 0.0:
                     rotMat = numpy.identity(4)
                 else:
-                    rotMat = afvi.vi.rotation_matrix(
+                    rotMat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
             else:
@@ -5264,7 +5257,6 @@ class Ingredient(Agent):
             periodic_collision = False
             r = []
             if periodic_pos is not None and self.packingMode != "gradient":
-                print("OK Periodicity ", len(periodic_pos), periodic_pos)
                 for p in periodic_pos:
                     periodic_collision = self.collision_jitter(
                         p,
@@ -5928,7 +5920,6 @@ class Ingredient(Agent):
             )
             perdiodic_collision = False
             if periodic_pos is not None and self.packingMode != "gradient":
-                print("OK Periodicity ", len(periodic_pos), periodic_pos)
                 for p in periodic_pos:
                     histoVol.callFunction(
                         histoVol.moveRBnode,
@@ -6783,7 +6774,7 @@ class Ingredient(Agent):
                 if sum(self.rotAxis) == 0.0:
                     rotMat = numpy.identity(4)
                 else:
-                    rotMat = afvi.vi.rotation_matrix(
+                    rotMat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
             # for other points we get a random rotation
@@ -7383,8 +7374,8 @@ class Ingredient(Agent):
                     self.useOrientBias and self.packingMode == "gradient"
                 ):  # you need a gradient here
                     rotMat = self.alignRotation(gridPointsCoords[ptInd])
-                else:
-                    rotMat = afvi.vi.rotation_matrix(
+                elif afvi:
+                    rotMat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
             # for other points we get a random rotation
@@ -7533,7 +7524,7 @@ class Ingredient(Agent):
                         rotMatj = self.getBiasedRotation(rotMat, weight=None)
                     # weight = 1.0 - self.histoVol.gradients[self.gradient].weight[ptInd])
                     else:
-                        rotMatj = afvi.vi.rotation_matrix(
+                        rotMatj = autopack.helper.rotation_matrix(
                             random() * self.rotRange, self.rotAxis
                         )
                 else:
@@ -8136,7 +8127,7 @@ class Ingredient(Agent):
                 if sum(self.rotAxis) == 0.0:
                     rotMat = numpy.identity(4)
                 else:
-                    rotMat = afvi.vi.rotation_matrix(
+                    rotMat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
             else:
@@ -9556,7 +9547,7 @@ class GrowIngredient(MultiCylindersIngr):
                 continue
 
     def walkSphere(self, pt1, pt2, distance, histoVol, marge=90.0, checkcollision=True):
-        """ use a random point on a sphere of radius uLength, and useCylinder collision on the grid """
+        """use a random point on a sphere of radius uLength, and useCylinder collision on the grid"""
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
         found = False
         attempted = 0
@@ -9691,7 +9682,7 @@ class GrowIngredient(MultiCylindersIngr):
     def walkSpherePanda(
         self, pt1, pt2, distance, histoVol, marge=90.0, checkcollision=True, usePP=False
     ):
-        """ use a random point on a sphere of radius uLength, and useCylinder collision on the grid """
+        """use a random point on a sphere of radius uLength, and useCylinder collision on the grid"""
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
         found = False
         attempted = 0
@@ -10108,7 +10099,7 @@ class GrowIngredient(MultiCylindersIngr):
     def walkSpherePandaOLD(
         self, pt1, pt2, distance, histoVol, marge=90.0, checkcollision=True, usePP=False
     ):
-        """ use a random point on a sphere of radius uLength, and useCylinder collision on the grid """
+        """use a random point on a sphere of radius uLength, and useCylinder collision on the grid"""
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
         found = False
         attempted = 0
@@ -10321,7 +10312,7 @@ class GrowIngredient(MultiCylindersIngr):
     def walkSphereRAPIDold(
         self, pt1, pt2, distance, histoVol, marge=90.0, checkcollision=True, usePP=False
     ):
-        """ use a random point on a sphere of radius uLength, and useCylinder collision on the grid """
+        """use a random point on a sphere of radius uLength, and useCylinder collision on the grid"""
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
         found = False
         attempted = 0
@@ -10607,7 +10598,7 @@ class GrowIngredient(MultiCylindersIngr):
     def walkSphereRAPID(
         self, pt1, pt2, distance, histoVol, marge=90.0, checkcollision=True, usePP=False
     ):
-        """ use a random point on a sphere of radius uLength, and useCylinder collision on the grid """
+        """use a random point on a sphere of radius uLength, and useCylinder collision on the grid"""
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
         found = False
         attempted = 0
@@ -11280,7 +11271,6 @@ class GrowIngredient(MultiCylindersIngr):
                 numpy.array(v).flatten() * self.uLength * self.jitterMax
             )  # = (1,0,0)self.vector.flatten()
             secondPoint = self.startingpoint + self.vector
-            print("newPoints", self.startingpoint, secondPoint)
             # seed="F"
             if seed:
                 seed = "R"
@@ -11299,17 +11289,15 @@ class GrowIngredient(MultiCylindersIngr):
                 k = 0
                 while not inside or closeS:
                     if k > safety:
-                        print("cant find first inside point", inside, closeS)
+                        # print("cant find first inside point", inside, closeS)
                         return None
                     else:
                         k += 1
                     p = self.vi.advance_randpoint_onsphere(
                         self.uLength, marge=math.radians(self.marge), vector=self.vector
                     )
-                    print("p is ", p, k, safety)
                     pt = numpy.array(p) * numpy.array(self.jitterMax)
                     secondPoint = self.startingpoint + numpy.array(pt)
-                    print("secdpoint ", secondPoint)
                     inside = self.histoVol.grid.checkPointInside(
                         secondPoint, dist=self.cutoff_boundary, jitter=self.jitterMax
                     )
@@ -11339,7 +11327,7 @@ class GrowIngredient(MultiCylindersIngr):
                 self.vi.update()
         return secondPoint
 
-    # isit the jitter place ? I guess  Why are there two jitter_place functions?  What is this one?
+    # are there two jitter_place functions?  What is this one?
     def jitter_place(
         self,
         histoVol,
@@ -11440,10 +11428,7 @@ class GrowIngredient(MultiCylindersIngr):
         #        self.Ptis=[ptInd,histoVol.grid.getPointFrom3D(secondPoint)]
         dist, pid = histoVol.grid.getClosestGridPoint(secondPoint)
         self.Ptis = [ptInd, pid]
-        # get compartments obj, bhtree and get ID of startingPoint
-        res = self.compartment.OGsrfPtsBht.query(startingPoint)
         print("the starting point on the grid was ", startingPoint, pid, ptInd)
-        self.startGridPoint.append(res[1])
         listePtCurve = [jtrans]
         listePtLinear = [startingPoint, secondPoint]
         # grow until reach self.currentLength >= self.length
@@ -11577,7 +11562,6 @@ class GrowIngredient(MultiCylindersIngr):
         # return self.pick_random_alternate()
         weights = self.alternates_weight  # python3?#dict.copy().keys()
         rnd = uniform(0, 1.0) * sum(weights)  # * (self.currentLength / self.length)
-        #        print ("alter",weights,rnd)
         i = 0
         for i, w in enumerate(weights):
             rnd -= w

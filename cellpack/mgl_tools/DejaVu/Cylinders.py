@@ -24,10 +24,10 @@ import numpy
 import math
 import sys
 
-import cellpack.mgl_tools.oldnumeric as Numeric
-from cellpack.mgl_tools.oldnumeric import array
 from cellpack.mgl_tools.opengltk.OpenGL import GL
 from cellpack.mgl_tools.opengltk.extent.utillib import solidCylinder
+from cellpack.mgl_tools.mglutil.math.transformation import Transformation
+from cellpack.mgl_tools.DejaVu.IndexedPolygons import IndexedPolygons
 import cellpack.mgl_tools.DejaVu as DejaVu
 from .IndexedGeom import IndexedGeom
 from . import datamodel, viewerConst
@@ -37,7 +37,7 @@ from .Materials import Materials
 
 try:
     from opengltk.extent.utillib import glDrawCylinderSet
-except:
+except ImportError:
     glDrawCylinderSet = None
 
 
@@ -305,13 +305,13 @@ class Cylinders(IndexedGeom):
                     for m in (0, 1, 2, 3, 4):
                         if fp.binding[m] == viewerConst.PER_VERTEX:
                             fpp1[m] = fp.prop[m][vi2]
-                            fpp1[m] = array(fpp1[m], copy=1)
+                            fpp1[m] = numpy.array(fpp1[m], copy=1)
                             fpp2[m] = fp.prop[m][vi1]
-                            fpp2[m] = array(fpp2[m], copy=1)
+                            fpp2[m] = numpy.array(fpp2[m], copy=1)
                         elif fp.binding[m] == viewerConst.PER_PART:
                             fpp2[m] = fpp1[m] = fp.prop[m][i]
-                            fpp1[m] = array(fpp1[m], copy=1)
-                            fpp2[m] = array(fpp2[m], copy=1)
+                            fpp1[m] = numpy.array(fpp1[m], copy=1)
+                            fpp2[m] = numpy.array(fpp2[m], copy=1)
                 else:
                     fpp1 = fpp2 = None
 
@@ -321,13 +321,13 @@ class Cylinders(IndexedGeom):
                     for m in (0, 1, 2, 3, 4):
                         if bp.binding[m] == viewerConst.PER_VERTEX:
                             bpp1[m] = bp.prop[m][vi2]
-                            bpp1[m] = array(bpp1[m], copy=1)
+                            bpp1[m] = numpy.array(bpp1[m], copy=1)
                             bpp2[m] = bp.prop[m][vi1]
-                            bpp2[m] = array(bpp2[m], copy=1)
+                            bpp2[m] = numpy.array(bpp2[m], copy=1)
                         elif bp.binding[m] == viewerConst.PER_PART:
                             bpp2[m] = bpp1[m] = bp.prop[m][i]
-                            bpp1[m] = array(bpp1[m], copy=1)
-                            bpp2[m] = array(bpp2[m], copy=1)
+                            bpp1[m] = numpy.array(bpp1[m], copy=1)
+                            bpp2[m] = numpy.array(bpp2[m], copy=1)
                 else:
                     bpp1 = bpp2 = None
 
@@ -679,8 +679,8 @@ class Cylinders(IndexedGeom):
 
         npoly = self.quality * 5
 
-        v = Numeric.zeros(((npoly + 1), 2, 3), "f")
-        n = Numeric.zeros(((npoly + 1), 3), "f")
+        v = numpy.zeros(((npoly + 1), 2, 3), "f")
+        n = numpy.zeros(((npoly + 1), 3), "f")
         self.npoly = npoly
 
         a = -math.pi  # starting angle
@@ -704,10 +704,8 @@ class Cylinders(IndexedGeom):
         if quality is None:
             quality = self.quality * 5
 
-        import numpy.oldnumeric as Numeric, math
-
-        v = Numeric.zeros(((quality), 2, 3), "f")
-        n = Numeric.zeros(((quality), 3), "f")
+        v = numpy.zeros(((quality), 2, 3), "f")
+        n = numpy.zeros(((quality), 3), "f")
 
         f = []
 
@@ -737,7 +735,7 @@ class Cylinders(IndexedGeom):
 
         return v, f
 
-    def asIndexedPolygons(self, run=1, quality=None, radius=None, **kw):
+    def asIndexedPolygons(self, run=1, quality=0, radius=None, **kw):
         """run=0 returns 1 if this geom can be represented as an
         IndexedPolygon and None if not. run=1 returns the IndexedPolygon
         object."""
@@ -747,8 +745,6 @@ class Cylinders(IndexedGeom):
         if run == 0:
             return 1  # yes, I can be represented as IndexedPolygons
 
-        import numpy.oldnumeric as Numeric, math
-        from mglutil.math.transformation import Transformation
 
         if quality in [1, 2, 3, 4, 5]:
             quality = quality
@@ -764,10 +760,10 @@ class Cylinders(IndexedGeom):
         centers = self.vertexSet.vertices.array
         faces = self.faceSet.faces.array
 
-        tmpltVertices = Numeric.array(tmpltVertices).astype("f")
-        tmpltFaces = Numeric.array(tmpltFaces).astype("f")
+        tmpltVertices = numpy.array(tmpltVertices).astype("f")
+        tmpltFaces = numpy.array(tmpltFaces).astype("f")
 
-        addToFaces = Numeric.ones((tmpltFaces.shape)) * 2 * len(tmpltVertices)
+        addToFaces = numpy.ones((tmpltFaces.shape)) * 2 * len(tmpltVertices)
 
         VV = []  # this list stores all vertices of all cylinders
         FF = []  # this list stores all faces of all cylinders
@@ -854,7 +850,7 @@ class Cylinders(IndexedGeom):
                 k = k + 1
 
             ctv = None
-            ctv = Numeric.concatenate((tv[:, 1], tv[:, 0]))
+            ctv = numpy.concatenate((tv[:, 1], tv[:, 0]))
 
             # now add the data to the big lists
             VV.extend(list(ctv))
@@ -863,12 +859,11 @@ class Cylinders(IndexedGeom):
             # increase face indices by lenght of vertices
             tmpltFaces = tmpltFaces + addToFaces
 
-        VV = Numeric.array(VV).astype("f")
-        FF = Numeric.array(FF).astype("f")
+        VV = numpy.array(VV).astype("f")
+        FF = numpy.array(FF).astype("f")
         # FIXME: should I compute normals?
 
         # now we can build the IndexedPolygon geom
-        from DejaVu.IndexedPolygons import IndexedPolygons
 
         cylGeom = IndexedPolygons(
             "cyl", vertices=VV, faces=FF, visible=1, invertNormals=self.invertNormals
@@ -991,13 +986,13 @@ class CylinderArrows(Cylinders):
                     for m in (0, 1, 2, 3, 4):
                         if fp.binding[m] == viewerConst.PER_VERTEX:
                             fpp1[m] = fp.prop[m][vi2]
-                            fpp1[m] = array(fpp1[m], copy=1)
+                            fpp1[m] = numpy.array(fpp1[m], copy=1)
                             fpp2[m] = fp.prop[m][vi1]
-                            fpp2[m] = array(fpp2[m], copy=1)
+                            fpp2[m] = numpy.array(fpp2[m], copy=1)
                         elif fp.binding[m] == viewerConst.PER_PART:
                             fpp2[m] = fpp1[m] = fp.prop[m][i]
-                            fpp1[m] = array(fpp1[m], copy=1)
-                            fpp2[m] = array(fpp2[m], copy=1)
+                            fpp1[m] = numpy.array(fpp1[m], copy=1)
+                            fpp2[m] = numpy.array(fpp2[m], copy=1)
                 else:
                     fpp1 = fpp2 = None
 
@@ -1007,13 +1002,13 @@ class CylinderArrows(Cylinders):
                     for m in (0, 1, 2, 3, 4):
                         if bp.binding[m] == viewerConst.PER_VERTEX:
                             bpp1[m] = bp.prop[m][vi2]
-                            bpp1[m] = array(bpp1[m], copy=1)
+                            bpp1[m] = numpy.array(bpp1[m], copy=1)
                             bpp2[m] = bp.prop[m][vi1]
-                            bpp2[m] = array(bpp2[m], copy=1)
+                            bpp2[m] = numpy.array(bpp2[m], copy=1)
                         elif bp.binding[m] == viewerConst.PER_PART:
                             bpp2[m] = bpp1[m] = bp.prop[m][i]
-                            bpp1[m] = array(bpp1[m], copy=1)
-                            bpp2[m] = array(bpp2[m], copy=1)
+                            bpp1[m] = numpy.array(bpp1[m], copy=1)
+                            bpp2[m] = numpy.array(bpp2[m], copy=1)
                 else:
                     bpp1 = bpp2 = None
 

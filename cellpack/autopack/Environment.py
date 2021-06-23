@@ -78,6 +78,7 @@ from .Ingredient import GrowIngredient, ActinIngredient
 from .ray import vlen, vdiff
 from cellpack.autopack import IOutils
 from cellpack.autopack.transformation import angle_between_vectors
+
 # backward compatibility with kevin method
 from cellpack.autopack.Grid import Grid as G
 
@@ -193,7 +194,8 @@ def ingredient_compare2(x, y):
 
 
 def cmp_to_key(mycmp):
-    'Convert a cmp= function into a key= function'
+    "Convert a cmp= function into a key= function"
+
     class K:
         def __init__(self, obj, *args):
             self.obj = obj
@@ -400,9 +402,9 @@ class Gradient:
         """
         degree = N / 2
         window = N  # degree*2#-1
-        weight = numpy.array([1.0] * window)
+        weight = numpy.array([1.0]) * window
         weightGauss = []
-        for i in range(window):
+        for i in range(int(window)):
             i = i - degree + 1
             frac = i / float(window)
             gauss = 1 / (numpy.exp((self.gblob * (frac)) ** 2))
@@ -1396,7 +1398,6 @@ class Environment(CompartmentList):
                     partner = ingr.addPartner(ingr_partner, weight=w, properties={})
                 for p in ingr_partner.properties:
                     partner.addProperties(p, ingr_partner.properties[p])
-                partner.setup()
                 w += ((1 - weightinitial) / (total - 1)) - weightinitial
             if ingr.Type == "Grow":
                 ingr.prepare_alternates()
@@ -1726,13 +1727,13 @@ class Environment(CompartmentList):
         self.dynamicOptions["surface"]["rotMassClamp"] = 1
 
     def writeArraysToFile(self, f):
-        """write self.gridPtId and self.distToClosestSurf to file. (pickle) """
+        """write self.gridPtId and self.distToClosestSurf to file. (pickle)"""
         pickle.dump(self.grid.masterGridPositions, f)
         pickle.dump(self.grid.gridPtId, f)
         pickle.dump(self.grid.distToClosestSurf, f)
 
     def readArraysFromFile(self, f):
-        """write self.gridPtId and self.distToClosestSurf to file. (pickle) """
+        """write self.gridPtId and self.distToClosestSurf to file. (pickle)"""
         pos = pickle.load(f)
         self.grid.masterGridPositions = pos
 
@@ -2713,7 +2714,7 @@ class Environment(CompartmentList):
     #    import fill3isolated # Graham cut the outdated fill3 from this document and put it in a separate file. turn on here if you want to use it.
 
     def updateIngr(self, ingr, completion=0.0, nbMol=0, counter=0):
-        """helper function for updating the ingredient completion, nbmol and counter """
+        """helper function for updating the ingredient completion, nbmol and counter"""
         ingr.counter = counter
         ingr.nbMol = nbMol
         ingr.completion = completion
@@ -3609,6 +3610,7 @@ class Environment(CompartmentList):
             # shoul check extension filename for type of saved file
             self.saveGridToFile(self.resultfile + "grid")
             self.grid.result_filename = self.resultfile + "grid"
+            self.collectResultPerIngredient()
             self.store()
             self.store_asTxt()
             #            self.store_asJson(resultfilename=self.resultfile+".json")
@@ -3618,6 +3620,7 @@ class Environment(CompartmentList):
                 mixed=True,
                 kwds=["compNum"],
                 result=True,
+                quaternion=True,
                 grid=False,
                 packing_options=False,
                 indent=False,
@@ -3631,9 +3634,6 @@ class Environment(CompartmentList):
                 unitVol = self.grid.gridSpacing ** 3
                 # totalVolume = self.grid.gridVolume*unitVol
                 wrkDirRes = self.resultfile + "_analyze_"
-                print(
-                    "TODO: overwrite wrkDirRes with specific user directory for each run or each script or put in a cache and offer a chance to save it"
-                )
                 print("self.compartments = ", self.compartments)
                 for o in self.compartments:  # only for compartment ?
                     # totalVolume -= o.surfaceVolume
@@ -4667,7 +4667,8 @@ class Environment(CompartmentList):
             if self.panda_solver == "bullet":
                 from panda3d.bullet import BulletWorld
 
-                self.worldNP = render.attachNewNode("World")  # noqa: F821, global variable from panda3d
+                # global variable from panda3d
+                self.worldNP = render.attachNewNode("World")  # noqa: F821
                 self.world = BulletWorld()
                 self.BitMask32 = BitMask32
             elif self.panda_solver == "ode":

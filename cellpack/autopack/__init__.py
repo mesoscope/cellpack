@@ -46,6 +46,7 @@ import ssl
 # in case simplejson not there
 try:
     import simplejson as json
+
     # we can use the hookup at loading
 except ImportError:
     import json
@@ -118,7 +119,8 @@ if not os.path.exists(appdata):
 def checkURL(URL):
     try:
         response = urllib.urlopen(URL)
-    except:  # noqa: E722
+    except Exception as e:
+        print("Error in checkURL ", URL, e)
         return False
     return response.code != 404
 
@@ -157,6 +159,7 @@ helper = None
 LISTPLACEMETHOD = ["jitter", "spheresBHT", "RAPID"]
 try:
     from panda3d.core import Mat4  # noqa: F401
+
     LISTPLACEMETHOD = ["jitter", "spheresBHT", "pandaBullet", "RAPID"]
 except ImportError:
     LISTPLACEMETHOD = ["jitter", "spheresBHT", "RAPID"]
@@ -185,9 +188,6 @@ autopack_path_pref_file = preferences + os.sep + "path_preferences.json"
 autopack_user_path_pref_file = preferences + os.sep + "path_user_preferences.json"
 
 # Default values
-legacy_autoPACKserver = (
-    "https://autofill.googlecode.com/git/autoPACK_database_1.0.0"  # XML
-)
 autoPACKserver = (
     "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0"
 )
@@ -347,7 +347,8 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
             if checkURL(filename):
                 try:
                     urllib.urlretrieve(filename, tmpFileName, reporthook=reporthook)
-                except:  # noqa: E722
+                except Exception as e:
+                    print("error fetching file ", e)
                     if useAPServer:
                         print("try alternate server")
                         urllib.urlretrieve(
@@ -365,58 +366,51 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
         return filename
     print("autopack search ", filename, os.path.isfile(filename))
     # if no folder provided, use the current_recipe_folder
-    if True:  # use the cache system ? geom / recipes / ingredients / others ?
-        print("search in cache", cache_dir[cache] + os.sep + filename)
-        print("search on server", autoPACKserver + "/" + cache + "/" + filename)
-        print(
-            "search on alternate_backup_server",
-            autoPACKserver_alt + "/" + cache + "/" + filename,
-        )
-        print("search in curr_dir", current_recipe_path + os.sep + filename)
-        if os.path.isfile(cache_dir[cache] + os.sep + filename):
-            return cache_dir[cache] + os.sep + filename
-        if os.path.isfile(current_recipe_path + os.sep + filename):
-            return current_recipe_path + os.sep + filename
-        if checkURL(autoPACKserver + "/" + cache + "/" + filename):
-            reporthook = None
-            if helper is not None:
-                reporthook = helper.reporthook
-            name = filename.split("/")[-1]  # the recipe name
-            tmpFileName = cache_dir[cache] + os.sep + destination + name
-            try:
-                urllib.urlretrieve(
-                    autoPACKserver + "/" + cache + "/" + filename,
-                    tmpFileName,
-                    reporthook=reporthook,
-                )
-                return tmpFileName
-            except:  # noqa: E722
-                print("try alternate server")
-                urllib.urlretrieve(
-                    autoPACKserver_alt + "/" + cache + "/" + filename,
-                    tmpFileName,
-                    reporthook=reporthook,
-                )
-                # check the file is not an error
-                return tmpFileName
-        if checkURL(autoPACKserver_alt + "/" + cache + "/" + filename):
-            reporthook = None
-            if helper is not None:
-                reporthook = helper.reporthook
-            name = filename.split("/")[-1]  # the recipe name
-            tmpFileName = cache_dir[cache] + os.sep + destination + name
-            try:
-                urllib.urlretrieve(
-                    autoPACKserver_alt + "/" + cache + "/" + filename,
-                    tmpFileName,
-                    reporthook=reporthook,
-                )
-            except:  # noqa: E722
-                print("not on alternate server")
-                return None
+
+    if os.path.isfile(cache_dir[cache] + os.sep + filename):
+        return cache_dir[cache] + os.sep + filename
+    if os.path.isfile(current_recipe_path + os.sep + filename):
+        return current_recipe_path + os.sep + filename
+    if checkURL(autoPACKserver + "/" + cache + "/" + filename):
+        reporthook = None
+        if helper is not None:
+            reporthook = helper.reporthook
+        name = filename.split("/")[-1]  # the recipe name
+        tmpFileName = cache_dir[cache] + os.sep + destination + name
+        try:
+            urllib.urlretrieve(
+                autoPACKserver + "/" + cache + "/" + filename,
+                tmpFileName,
+                reporthook=reporthook,
+            )
+            return tmpFileName
+        except:  # noqa: E722
+            print("try alternate server")
+            urllib.urlretrieve(
+                autoPACKserver_alt + "/" + cache + "/" + filename,
+                tmpFileName,
+                reporthook=reporthook,
+            )
             # check the file is not an error
             return tmpFileName
-        print(filename, " not found ")
+    if checkURL(autoPACKserver_alt + "/" + cache + "/" + filename):
+        reporthook = None
+        if helper is not None:
+            reporthook = helper.reporthook
+        name = filename.split("/")[-1]  # the recipe name
+        tmpFileName = cache_dir[cache] + os.sep + destination + name
+        try:
+            urllib.urlretrieve(
+                autoPACKserver_alt + "/" + cache + "/" + filename,
+                tmpFileName,
+                reporthook=reporthook,
+            )
+        except:  # noqa: E722
+            print("not on alternate server")
+            return None
+        # check the file is not an error
+        return tmpFileName
+    print(filename, " not found ")
     return filename
 
 

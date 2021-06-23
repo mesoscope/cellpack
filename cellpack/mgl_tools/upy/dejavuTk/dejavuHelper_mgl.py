@@ -65,7 +65,7 @@ from upy import hostHelper
 # from upy import ray
 
 try:
-    import pycollada as collada
+    import cellpack.mgl_tools.collada as collada
 except:
     collada = None
     print("can't import pycollada dejav helper_mgl")
@@ -2494,8 +2494,7 @@ class dejavuHelper(hostHelper.Helper):
 
     def read(self, filename, **kw):
         fileName, fileExtension = os.path.splitext(filename)
-        #        import collada
-        #        print "load ",filename
+
         if fileExtension == ".dae":
             daeDic = None
             col = collada.Collada(filename)  # , ignore=[collada.DaeUnsupportedError,

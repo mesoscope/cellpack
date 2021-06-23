@@ -4689,7 +4689,7 @@ class Compartment(CompartmentList):
         return insidePoints, surfacePoints
 
     def printFillInfo(self):
-        """ print som info about the compartment and its recipe"""
+        """print some info about the compartment and its recipe"""
         print("compartment %d" % self.number)
         r = self.surfaceRecipe
         if r is not None:

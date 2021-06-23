@@ -2558,13 +2558,13 @@ class AutopackViewer:
                 self.helper.deleteObject(parent)
 
     def clearIngr(self, *args):
-        """ will clear all ingredients instances but leave base parent hierarchie intact"""
+        """will clear all ingredients instances but leave base parent hierarchie intact"""
         self.histo.loopThroughIngr(self.delIngr)
 
     #        [self.delIngr(ingrname) for ingrname in self.ingredients]
 
     def clearRecipe(self, recipe, *args):
-        """ will clear everything related to self.recipe"""
+        """will clear everything related to self.recipe"""
         if not self.helper.instance_dupliFace:
             parent = self.helper.getObject(recipe)
             if parent is not None:
@@ -2722,9 +2722,6 @@ class AutopackViewer:
         for i, sph in enumerate(allSph):
             if sph is not None:
                 self.vi.Sphere("sph" + str(i), pos=sph, radius=8.0)
-
-
-# from collada import *
 
 
 class ColladaExporter:
