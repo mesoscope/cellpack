@@ -46,13 +46,15 @@ class ConvertToSimularium(argparse.Namespace):
         self.viz_types = [[] for x in range(total_steps)]
         self.unique_ids = [[] for x in range(total_steps)]
         self.radii = [[] for x in range(total_steps)]
+        self.n_subpoints = [[] for x in range(total_steps)]
+        self.subpoints = [[] for x in range(total_steps)]
 
+        self.fiber_points = [[] for x in range(total_steps)]
+        self.max_fiber_length = 0
         self.main_scale = 1.0 / 100.0  # could be 1/200.0 like flex
         self.pnames_fiber = []
         self.pnames_fiber_nodes = []
         self.pnames = []
-        self.n_subpoints = []
-        self.subpoints = []
 
     def __parse(self):
         p = argparse.ArgumentParser(
@@ -108,19 +110,43 @@ class ConvertToSimularium(argparse.Namespace):
             raise Exception("Recipe name in results file doesn't match recipe file")
         container = results_data_in["cytoplasme"]
         ingredients = container["ingredients"]
+        id = 0
         for i in range(len(self.unique_ingredient_names)):
             # print(ingredients[ingredient_name])
             ingredient_name = self.unique_ingredient_names[i]
             data = ingredients[ingredient_name]
             if (len(data['results']) > 0):
                 for j in range(len(data['results'])):
-                    id = (i * 10 * (i + 1)) + j
                     self.positions[time_step_index].append(data['results'][j][0])
                     self.viz_types[time_step_index].append(1000)
                     self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
                     self.type_names[time_step_index].append(ingredient_name)
                     self.unique_ids[time_step_index].append(id)
                     self.radii[time_step_index].append(data['radii'][0]['radii'][0])
+                    self.n_subpoints[time_step_index].append(0)
+                    id = id + 1
+
+            elif (data['nbCurve'] is not None):
+                self.positions[time_step_index].append([0, 0, 0])
+                self.viz_types[time_step_index].append(1001)
+                self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
+                self.type_names[time_step_index].append(ingredient_name)
+                self.unique_ids[time_step_index].append(id)
+                self.radii[time_step_index].append(1)
+                self.n_subpoints[time_step_index].append(len(data['curve0'][j]))
+                self.fiber_points[time_step_index].append(data['curve0'])
+                if len(data['curve0']) > self.max_fiber_length:
+                    self.max_fiber_length = len(data['curve0'])
+                id = id + 1
+
+    def fill_in_empty_fiber_data(self, time_step_index):
+        blank_value = [[0, 0, 0] for x in range(self.max_fiber_length)]
+        for viz_type in self.viz_types[time_step_index]:
+            if(viz_type == 1000):
+                self.subpoints[time_step_index].append(blank_value)
+            elif(viz_type == 1001):
+                control_points = self.fiber_points[time_step_index].pop(0)
+                self.subpoints[time_step_index].append(control_points)
 
     def get_all_ingredient_names(self, recipe_in):
         self.recipe_name = recipe_in["recipe"]["name"]
@@ -144,6 +170,10 @@ def main():
         packing_data = json.load(open(results_in, "r"))
         box_size = converter.box_size
         converter.get_positions_per_ingredient(packing_data, 0)
+        converter.fill_in_empty_fiber_data(0)
+        print(converter.n_subpoints)
+        print(converter.subpoints)
+        print(len(converter.subpoints[0]))
         converted_data = CustomData(
             # meta_data=MetaData(
             #     box_size=np.array([converter.box_size, converter.box_size, converter.box_size]),
@@ -163,6 +193,9 @@ def main():
                 types=np.array(converter.type_names),
                 positions=np.array(converter.positions),
                 radii=np.array(converter.radii),
+                subpoints=np.array(converter.subpoints),
+                n_subpoints=np.array(converter.n_subpoints)
+
             )
             # time_units=UnitData("ns"),  # nanoseconds
             # spatial_units=UnitData("nm"),  # nanometers
