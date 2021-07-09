@@ -126,18 +126,20 @@ class ConvertToSimularium(argparse.Namespace):
                     self.n_subpoints[time_step_index].append(0)
                     id = id + 1
 
-            elif (data['nbCurve'] is not None):
-                self.positions[time_step_index].append([0, 0, 0])
-                self.viz_types[time_step_index].append(1001)
-                self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
-                self.type_names[time_step_index].append(ingredient_name)
-                self.unique_ids[time_step_index].append(id)
-                self.radii[time_step_index].append(1)
-                self.n_subpoints[time_step_index].append(len(data['curve0'][j]))
-                self.fiber_points[time_step_index].append(data['curve0'])
-                if len(data['curve0']) > self.max_fiber_length:
-                    self.max_fiber_length = len(data['curve0'])
-                id = id + 1
+            elif (data['nbCurve'] > 0):
+                for i in range(data['nbCurve']):
+                    curve = 'curve' + str(i)
+                    self.positions[time_step_index].append([0, 0, 0])
+                    self.viz_types[time_step_index].append(1001)
+                    self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
+                    self.type_names[time_step_index].append(ingredient_name)
+                    self.unique_ids[time_step_index].append(id)
+                    self.radii[time_step_index].append(1)
+                    self.n_subpoints[time_step_index].append(len(data[curve][j]))
+                    self.fiber_points[time_step_index].append(data[curve])
+                    if len(data[curve]) > self.max_fiber_length:
+                        self.max_fiber_length = len(data[curve])
+                    id = id + 1
 
     def fill_in_empty_fiber_data(self, time_step_index):
         blank_value = [[0, 0, 0] for x in range(self.max_fiber_length)]
@@ -171,9 +173,7 @@ def main():
         box_size = converter.box_size
         converter.get_positions_per_ingredient(packing_data, 0)
         converter.fill_in_empty_fiber_data(0)
-        print(converter.n_subpoints)
-        print(converter.subpoints)
-        print(len(converter.subpoints[0]))
+
         converted_data = CustomData(
             # meta_data=MetaData(
             #     box_size=np.array([converter.box_size, converter.box_size, converter.box_size]),
