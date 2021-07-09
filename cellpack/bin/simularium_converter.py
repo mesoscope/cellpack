@@ -25,12 +25,14 @@ class ConvertToSimularium(argparse.Namespace):
     DEFAULT_INPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/"
     DEFAULT_PACKING_RESULT = "results_seed_0.json"
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
+    DEFAULT_RECIPE_NAME = "NM_Analysis_FigureC"
 
     def __init__(self, total_steps=1):
         # Arguments that could be passed in through the command line
         self.input_directory = self.DEFAULT_INPUT_DIRECTORY
         self.packing_result_file_name = self.DEFAULT_PACKING_RESULT
         self.output = self.DEFAULT_OUTPUT_DIRECTORY
+        self.recipe_name = self.DEFAULT_RECIPE_NAME
         self.debug = True
         self.__parse()
         # simularium parameters
@@ -96,13 +98,14 @@ class ConvertToSimularium(argparse.Namespace):
     def get_bounding_box(self, recipe_data):
         options = recipe_data['options']
         bb = options['boundingBox']
-        print(bb[0][0])
         x_size = bb[1][0] - bb[0][0]
         y_size = bb[1][1] - bb[0][1]
         z_size = bb[1][2] - bb[0][2]
         self.box_size = [x_size, y_size, z_size]
 
-    def get_positions_per_ingredient(self, results_data_in, time_step_index): 
+    def get_positions_per_ingredient(self, results_data_in, time_step_index):
+        if (results_data_in["recipe"]["name"] != self.recipe_name):
+            raise Exception("Recipe name in results file doesn't match recipe file")
         container = results_data_in["cytoplasme"]
         ingredients = container["ingredients"]
         for i in range(len(self.unique_ingredient_names)):
@@ -120,6 +123,7 @@ class ConvertToSimularium(argparse.Namespace):
                     self.radii[time_step_index].append(data['radii'][0]['radii'][0])
 
     def get_all_ingredient_names(self, recipe_in):
+        self.recipe_name = recipe_in["recipe"]["name"]
         container = recipe_in["cytoplasme"]
         ingredients = container["ingredients"]
         self.unique_ingredient_names = list(ingredients)
