@@ -23,7 +23,6 @@ logging.basicConfig(
 
 class ConvertToSimularium(argparse.Namespace):
     DEFAULT_INPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/"
-    DEFAULT_RECIPE_IN = 
     DEFAULT_PACKING_RESULT = "results_seed_0.json"
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
 
@@ -32,11 +31,12 @@ class ConvertToSimularium(argparse.Namespace):
         self.input_directory = self.DEFAULT_INPUT_DIRECTORY
         self.packing_result_file_name = self.DEFAULT_PACKING_RESULT
         self.output = self.DEFAULT_OUTPUT_DIRECTORY
+        self.debug = True
         self.__parse()
         # simularium parameters
         self.total_steps = total_steps
         self.timestep = 1
-        self.box_size = 100
+        self.box_size = 1000
         self.n_agents = [0 for x in range(total_steps)]
         self.points_per_fiber = 0
         self.type_names = [[] for x in range(total_steps)]
@@ -45,7 +45,6 @@ class ConvertToSimularium(argparse.Namespace):
         self.unique_ids = [[] for x in range(total_steps)]
         self.radii = [[] for x in range(total_steps)]
 
-        self.bounds = [[0.0, 0.0, 0.0], [-1.0, -1.0, -1.0]]
         self.main_scale = 1.0 / 100.0  # could be 1/200.0 like flex
         self.pnames_fiber = []
         self.pnames_fiber_nodes = []
@@ -94,6 +93,15 @@ class ConvertToSimularium(argparse.Namespace):
         )
         p.parse_args(namespace=self)
 
+    def get_bounding_box(self, recipe_data):
+        options = recipe_data['options']
+        bb = options['boundingBox']
+        print(bb[0][0])
+        x_size = bb[1][0] - bb[0][0]
+        y_size = bb[1][1] - bb[0][1]
+        z_size = bb[1][2] - bb[0][2]
+        self.box_size = [x_size, y_size, z_size]
+
     def get_positions_per_ingredient(self, results_data_in, time_step_index): 
         container = results_data_in["cytoplasme"]
         ingredients = container["ingredients"]
@@ -104,7 +112,6 @@ class ConvertToSimularium(argparse.Namespace):
             if (len(data['results']) > 0):
                 for j in range(len(data['results'])):
                     id = (i * 10 * (i + 1)) + j
-                    print(i, j, id)
                     self.positions[time_step_index].append(data['results'][j][0])
                     self.viz_types[time_step_index].append(1000)
                     self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
@@ -126,9 +133,10 @@ def main():
     dbg = converter.debug
     try:
         recipe_in = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
-        results_in = converter.input_directory + converter.packing_result_file_name  
+        results_in = converter.input_directory + converter.packing_result_file_name
         recipe_data = json.load(open(recipe_in, "r"), object_pairs_hook=OrderedDict)
         converter.get_all_ingredient_names(recipe_data)
+        converter.get_bounding_box(recipe_data)
         packing_data = json.load(open(results_in, "r"))
         box_size = converter.box_size
         converter.get_positions_per_ingredient(packing_data, 0)
@@ -141,7 +149,7 @@ def main():
             #         fov_degrees=60.0,
             #     ),
             # ),
-            box_size=np.array([box_size, box_size, box_size]),
+            box_size=np.array(box_size),
 
             agent_data=AgentData(
                 times=converter.timestep * np.array(list(range(converter.total_steps))),
@@ -159,7 +167,7 @@ def main():
 
     except Exception as e:
         log.error("=============================================")
-        if dbg: 
+        if dbg:
             log.error("\n\n" + traceback.format_exc())
             log.error("=============================================")
         log.error("\n\n" + str(e) + "\n")
