@@ -121,7 +121,6 @@ class ConvertToSimularium(argparse.Namespace):
         ingredients = container["ingredients"]
         id = 0
         for i in range(len(self.unique_ingredient_names)):
-            # print(ingredients[ingredient_name])
             ingredient_name = self.unique_ingredient_names[i]
             data = ingredients[ingredient_name]
             if (len(data["results"]) > 0):
@@ -160,7 +159,6 @@ class ConvertToSimularium(argparse.Namespace):
 
     def fill_in_empty_fiber_data(self, time_step_index):
         blank_value = [[0, 0, 0] for x in range(self.max_fiber_length)]
-        print(blank_value)
         for viz_type in self.viz_types[time_step_index]:
             if viz_type == 1000:
                 self.subpoints[time_step_index].append(blank_value)
@@ -186,6 +184,7 @@ def main():
     converter = ConvertToSimularium()
     dbg = converter.debug
     try:
+        time_point_index = 0
         recipe_in = converter.input_recipe
         results_in = converter.input_directory + converter.packing_result_file_name
         recipe_data = json.load(open(recipe_in, "r"), object_pairs_hook=OrderedDict)
@@ -193,11 +192,11 @@ def main():
         converter.get_bounding_box(recipe_data)
         packing_data = json.load(open(results_in, "r"))
         box_size = converter.box_size
-        converter.get_positions_per_ingredient(packing_data, 0)
-        converter.fill_in_empty_fiber_data(0)
+        converter.get_positions_per_ingredient(packing_data, time_point_index)
+        converter.fill_in_empty_fiber_data(time_point_index)
         if converter.debug:
-            print("SUBPOINTS LENGTH", len(converter.subpoints[0]), converter.subpoints[0])
-            print("N_SUBPOINTS LENGTH", len(converter.n_subpoints[0]), converter.n_subpoints[0])
+            print("SUBPOINTS LENGTH", len(converter.subpoints[time_point_index]))
+            print("N_SUBPOINTS LENGTH", len(converter.n_subpoints[time_point_index]))
 
         converted_data = CustomData(
             # meta_data=MetaData(
