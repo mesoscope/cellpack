@@ -25,14 +25,15 @@ class ConvertToSimularium(argparse.Namespace):
     DEFAULT_INPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/"
     DEFAULT_PACKING_RESULT = "results_seed_0.json"
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
-    DEFAULT_RECIPE_NAME = "NM_Analysis_FigureC"
-
+    DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
+   
     def __init__(self, total_steps=1):
         # Arguments that could be passed in through the command line
         self.input_directory = self.DEFAULT_INPUT_DIRECTORY
+        self.input_recipe = self.DEFAULT_INPUT_RECIPE
         self.packing_result_file_name = self.DEFAULT_PACKING_RESULT
         self.output = self.DEFAULT_OUTPUT_DIRECTORY
-        self.recipe_name = self.DEFAULT_RECIPE_NAME
+        self.recipe_name = ""
         self.debug = True
         self.__parse()
         # simularium parameters
@@ -49,12 +50,11 @@ class ConvertToSimularium(argparse.Namespace):
         self.n_subpoints = [[] for x in range(total_steps)]
         self.subpoints = [[] for x in range(total_steps)]
 
+        # stored data for processesing
         self.fiber_points = [[] for x in range(total_steps)]
         self.max_fiber_length = 0
-        self.main_scale = 1.0 / 100.0  # could be 1/200.0 like flex
-        self.pnames_fiber = []
-        self.pnames_fiber_nodes = []
-        self.pnames = []
+        # defaults for missing data
+        self.default_radius = 5
 
     def __parse(self):
         p = argparse.ArgumentParser(
@@ -68,7 +68,16 @@ class ConvertToSimularium(argparse.Namespace):
             dest="input_directory",
             type=str,
             default=self.input_directory,
-            help="Full path for where to read the cellpack results",
+            help="Full path for the directory to read the cellpack result file(s)",
+        )
+        p.add_argument(
+            "-r",
+            "--input-recipe",
+            action="store",
+            dest="inp",
+            type=str,
+            default=self.input_recipe,
+            help="Full path for the input recipe file",
         )
         p.add_argument(
             "-p",
@@ -98,8 +107,8 @@ class ConvertToSimularium(argparse.Namespace):
         p.parse_args(namespace=self)
 
     def get_bounding_box(self, recipe_data):
-        options = recipe_data['options']
-        bb = options['boundingBox']
+        options = recipe_data["options"]
+        bb = options["boundingBox"]
         x_size = bb[1][0] - bb[0][0]
         y_size = bb[1][1] - bb[0][1]
         z_size = bb[1][2] - bb[0][2]
@@ -115,39 +124,52 @@ class ConvertToSimularium(argparse.Namespace):
             # print(ingredients[ingredient_name])
             ingredient_name = self.unique_ingredient_names[i]
             data = ingredients[ingredient_name]
-            if (len(data['results']) > 0):
-                for j in range(len(data['results'])):
-                    self.positions[time_step_index].append(data['results'][j][0])
+            if (len(data["results"]) > 0):
+                for j in range(len(data["results"])):
+                    self.positions[time_step_index].append(data["results"][j][0])
                     self.viz_types[time_step_index].append(1000)
                     self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
                     self.type_names[time_step_index].append(ingredient_name)
                     self.unique_ids[time_step_index].append(id)
-                    self.radii[time_step_index].append(data['radii'][0]['radii'][0])
+                    if "radii" in data:
+                        self.radii[time_step_index].append(data["radii"][0]["radii"][0])
+                    elif "encapsulatingRadius" in data:
+                        self.radii[time_step_index].append(data["encapsulatingRadius"])
+                    else:
+                        self.radii[time_step_index].append(self.default_radius)
+
                     self.n_subpoints[time_step_index].append(0)
                     id = id + 1
 
-            elif (data['nbCurve'] > 0):
-                for i in range(data['nbCurve']):
-                    curve = 'curve' + str(i)
+            elif (data["nbCurve"] > 0):
+                for i in range(data["nbCurve"]):
+                    curve = "curve" + str(i)
                     self.positions[time_step_index].append([0, 0, 0])
                     self.viz_types[time_step_index].append(1001)
                     self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
                     self.type_names[time_step_index].append(ingredient_name)
                     self.unique_ids[time_step_index].append(id)
-                    self.radii[time_step_index].append(1)
-                    self.n_subpoints[time_step_index].append(len(data[curve][j]))
+                    self.radii[time_step_index].append(data["encapsulatingRadius"])
+                    self.n_subpoints[time_step_index].append(len(data[curve]))
                     self.fiber_points[time_step_index].append(data[curve])
                     if len(data[curve]) > self.max_fiber_length:
+                        if self.debug:
+                            print("found longer fiber, new max", len(data[curve]))
                         self.max_fiber_length = len(data[curve])
                     id = id + 1
 
     def fill_in_empty_fiber_data(self, time_step_index):
         blank_value = [[0, 0, 0] for x in range(self.max_fiber_length)]
+        print(blank_value)
         for viz_type in self.viz_types[time_step_index]:
-            if(viz_type == 1000):
+            if viz_type == 1000:
                 self.subpoints[time_step_index].append(blank_value)
-            elif(viz_type == 1001):
+            elif viz_type == 1001:
+                if self.debug:
+                    print("adding control points")
                 control_points = self.fiber_points[time_step_index].pop(0)
+                while len(control_points) < self.max_fiber_length:
+                    control_points.append([0, 0, 0])
                 self.subpoints[time_step_index].append(control_points)
 
     def get_all_ingredient_names(self, recipe_in):
@@ -164,7 +186,7 @@ def main():
     converter = ConvertToSimularium()
     dbg = converter.debug
     try:
-        recipe_in = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
+        recipe_in = converter.input_recipe
         results_in = converter.input_directory + converter.packing_result_file_name
         recipe_data = json.load(open(recipe_in, "r"), object_pairs_hook=OrderedDict)
         converter.get_all_ingredient_names(recipe_data)
@@ -173,6 +195,9 @@ def main():
         box_size = converter.box_size
         converter.get_positions_per_ingredient(packing_data, 0)
         converter.fill_in_empty_fiber_data(0)
+        if converter.debug:
+            print("SUBPOINTS LENGTH", len(converter.subpoints[0]), converter.subpoints[0])
+            print("N_SUBPOINTS LENGTH", len(converter.n_subpoints[0]), converter.n_subpoints[0])
 
         converted_data = CustomData(
             # meta_data=MetaData(
