@@ -14,8 +14,8 @@ def AdjustBounds(bounds, X):
     Check if a coordinate lies within the box boundary.
     If not, update the box boundary.
     """
-    assert(len(bounds) == 2)
-    assert(len(bounds[0]) == len(bounds[1]) == len(X))
+    assert len(bounds) == 2
+    assert len(bounds[0]) == len(bounds[1]) == len(X)
 
     for d in range(0, len(X)):
         if bounds[1][d] < bounds[0][d]:
@@ -29,23 +29,23 @@ def AdjustBounds(bounds, X):
                 bounds[1][d] = X[d]
 
 
-def FromToRotation(dir1, dir2) :
+def FromToRotation(dir1, dir2):
     r = 1.0 + np.dot(np.array(dir1), np.array(dir2))
     w = [0, 0, 0]
-    if(r < 1E-6) :
+    if r < 1e-6:
         r = 0
         if abs(dir1[0]) > abs(dir1[2]):
             w = [-dir1[1], dir1[0], 0]
-        else :
+        else:
             w = [0.0, -dir1[2], dir1[1]]
-    else :
+    else:
         w = np.cross(np.array(dir1), np.array(dir2))
     q = np.array([w[0], w[1], w[2], r])
     q /= tr.vector_norm(q)
     return q
 
 
-def QuaternionTransform(q, v) :
+def QuaternionTransform(q, v):
     qxyz = np.array([q[0], q[1], q[2]])
     t = 2.0 * np.cross(qxyz, np.array(v))
     return v + q[3] * t + np.cross(qxyz, t)
@@ -58,9 +58,10 @@ def toGfVec3f(a):
 def GetModelData(model_in):
     # change to latest format
     import struct
+
     f = open(model_in, "rb")
-    ninst = struct.unpack('<i', f.read(4))[0]
-    ncurve = struct.unpack('<i', f.read(4))[0]
+    ninst = struct.unpack("<i", f.read(4))[0]
+    ncurve = struct.unpack("<i", f.read(4))[0]
     pos = []
     quat = []
     ctrl_pts = []
@@ -68,18 +69,24 @@ def GetModelData(model_in):
     ctrl_info = []
     if ninst != 0:
         data = f.read(ninst * 4 * 4)
-        pos = np.frombuffer(data, dtype='f').reshape((ninst, 4))
+        pos = np.frombuffer(data, dtype="f").reshape((ninst, 4))
         data = f.read(ninst * 4 * 4)
-        quat = np.frombuffer(data, dtype='f').reshape((ninst, 4))
+        quat = np.frombuffer(data, dtype="f").reshape((ninst, 4))
     if ncurve != 0:
         data = f.read(ncurve * 4 * 4)
-        ctrl_pts = np.frombuffer(data, dtype='f').reshape((ncurve, 4))
+        ctrl_pts = np.frombuffer(data, dtype="f").reshape((ncurve, 4))
         data = f.read(ncurve * 4 * 4)
-        ctrl_normal = np.frombuffer(data, dtype='f').reshape((ncurve, 4))
+        ctrl_normal = np.frombuffer(data, dtype="f").reshape((ncurve, 4))
         data = f.read(ncurve * 4 * 4)
-        ctrl_info = np.frombuffer(data, dtype='f').reshape((ncurve, 4))
+        ctrl_info = np.frombuffer(data, dtype="f").reshape((ncurve, 4))
     f.close()
-    return {"pos": pos, "quat": quat, "cpts": ctrl_pts, "cnorm": ctrl_normal, "cinfo": ctrl_info}
+    return {
+        "pos": pos,
+        "quat": quat,
+        "cpts": ctrl_pts,
+        "cnorm": ctrl_normal,
+        "cinfo": ctrl_info,
+    }
 
 
 def ingredientToAsset(ingr_node, compId):
@@ -88,38 +95,45 @@ def ingredientToAsset(ingr_node, compId):
     LevelPoints = []
     ingr_source = ingr_node["source"]
     pcpalVector = ingr_node["principalVector"]
-    if (pcpalVector == [0, 0, 0]) :
+    if pcpalVector == [0, 0, 0]:
         pcpalVector = [0, 0, 1]
     offsetnode = ingr_source["transform"]["offset"]
-    offset = [0, 0, 0]  # //should be ingr_node["source"]["transform"]["offset"] if exist
-    if (offsetnode is not None) :
+    offset = [
+        0,
+        0,
+        0,
+    ]  # //should be ingr_node["source"]["transform"]["offset"] if exist
+    if offsetnode is not None:
         offset = np.array(offsetnode) * main_scale
-        if (compId <= 0) :
+        if compId <= 0:
             offset = offset * -1
     # parse the proxy and create a rigid body asset
     # check if "Type":"Grow"
     # IngredientSphereTree ingr_spheres;
-    if (ingr_node["ingtype"] == "Grow" or ingr_node["ingtype"] == "fiber"):
+    if ingr_node["ingtype"] == "Grow" or ingr_node["ingtype"] == "fiber":
         pnames_fiber.append(ingr_node["name"])
         pnames_fiber_nodes.append(ingr_node)
-    else :
+    else:
         p = lodproxy_to_use
         jsonpos = ingr_node["positions"][p]["coords"]
         radii = ingr_node["radii_lod"][p]["radii"]
         raxe = FromToRotation([0, 0, 1], pcpalVector)
         # if (pcpalVector == Vec3(0, 0, 1)) raxe = Quat(0, 0, 0, 1);
         # std::cout << "ingr raxe  : " << raxe.x << " " << raxe.y << " " << raxe.z << " " << raxe.w << endl;
-        for i in range(int(len(jsonpos) / 3)) :  # (int i = 0; i < jsonpos.size()/3; i++){//1
-            beadp = np.array([jsonpos[i * 3],
-                              jsonpos[i * 3 + 1],
-                              jsonpos[i * 3 + 2]]) * main_scale
+        for i in range(
+            int(len(jsonpos) / 3)
+        ):  # (int i = 0; i < jsonpos.size()/3; i++){//1
+            beadp = (
+                np.array([jsonpos[i * 3], jsonpos[i * 3 + 1], jsonpos[i * 3 + 2]])
+                * main_scale
+            )
             beadp = QuaternionTransform(raxe, beadp + offset)  # //rotate
             LevelPoints.append(beadp)  # *main_scale
             # std::cout << jsonpos[i*3].asFloat() << endl;
         # std::cout << "ingr positions  nb " << ingr_spheres.LevelPoints.size() << endl;
         # points_to_use = ingr_spheres.LevelPoints;
 
-        if (len(LevelPoints) == 0) :
+        if len(LevelPoints) == 0:
             # std::cout << "ingr proxy  0 return " << points_to_use.size() << endl;
             # try to do it from the mesh ?
             return
@@ -131,7 +145,7 @@ def ingredientToAsset(ingr_node, compId):
         proteins_beads_radii.append(radii)
 
 
-def parseJsonIngredientsSerialized(ingr_nodes, comp) :
+def parseJsonIngredientsSerialized(ingr_nodes, comp):
     # iteration is using alphabetic order?
     # JsonCpp keeps its values in a std::map<CZString, Value>, which is always sorted by the CZString comparison,
     nIngredients = len(ingr_nodes)
@@ -140,12 +154,12 @@ def parseJsonIngredientsSerialized(ingr_nodes, comp) :
         ingredientToAsset(ingr_node_name, comp)
 
 
-def loadIngredientFromCompartment(comp, compid) :
+def loadIngredientFromCompartment(comp, compid):
     # std::cout << "load IngredientFromCompartment " << comp["name"].asString() << endl;
-    if (len(comp["IngredientGroups"]) != 0):
+    if len(comp["IngredientGroups"]) != 0:
         # std::cout << "comp[IngredientGroups].size() " << comp["IngredientGroups"].size() << endl;
         igroup = comp["IngredientGroups"][0]
-        if (len(igroup["Ingredients"]) != 0) :
+        if len(igroup["Ingredients"]) != 0:
             ingredients = igroup["Ingredients"]
             # std::cout << "compartment should have n ingredients " << ingredients.size() << endl;
             parseJsonIngredientsSerialized(ingredients, compid)
@@ -156,27 +170,31 @@ def loadRecipe(book_json):
     loadIngredientFromCompartment(root, 0)
     comp = book_json["Compartments"]
     i = 0
-    if (len(comp) != 0):
+    if len(comp) != 0:
         # std::cout << "find compartments " << comp.size() << endl;
-        for i in range(len(comp)) :  # (int i=0;i< comp.size();i++)
+        for i in range(len(comp)):  # (int i=0;i< comp.size();i++)
             compid = i + 1
             comp_name = comp[i]
             # CompMask* cm = new CompMask();
             # std::cout << "compartment should have several childs " << comp_name.size() << " " << comp_name["name"].asString() << endl;
-            if (len(comp_name) == 0) :
+            if len(comp_name) == 0:
                 continue
 
             comp_childs = comp_name["Compartments"]
-            for j in range(len(comp_childs)) :  # (int j = 0; j < comp_childs.size(); j++) {
-                if (comp_childs[j]["name"] == "surface") :
+            for j in range(
+                len(comp_childs)
+            ):  # (int j = 0; j < comp_childs.size(); j++) {
+                if comp_childs[j]["name"] == "surface":
                     loadIngredientFromCompartment(comp_childs[j], compid)
-                elif (comp_childs[j]["name"] == "interior") :
+                elif comp_childs[j]["name"] == "interior":
                     loadIngredientFromCompartment(comp_childs[j], -compid)
 
 
 def oneModel():
-    bounds = [[0.0, 0.0, 0.0],  # Box big enough to enclose all the particles
-              [-1.0, -1.0, -1.0]]
+    bounds = [
+        [0.0, 0.0, 0.0],  # Box big enough to enclose all the particles
+        [-1.0, -1.0, -1.0],
+    ]
 
     wdir = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid"
     file_in = wdir + "results_seed_0.json"  # recipe.json
@@ -204,7 +222,9 @@ def oneModel():
         print(ptype, pnames[ptype], p, q)
         # add beads to positions and radii after transformation
         for j in range(len(proteins_beads[ptype])):
-            bead_p = np.array([p[0], p[1], p[2]]) + QuaternionTransform(q, proteins_beads[ptype][j])
+            bead_p = np.array([p[0], p[1], p[2]]) + QuaternionTransform(
+                q, proteins_beads[ptype][j]
+            )
             bead_r = proteins_beads_radii[ptype][j]
             positions.append([bead_p[0], bead_p[1], bead_p[2]])
             radii.append(bead_r)
@@ -219,11 +239,13 @@ def oneModel():
         for i in ncurves:
             indices = cpts_info[:, 0] == i
             infos = cpts_info[indices]  # curve_id, curve_type, angle, uLength
-            pts = model_data["cpts"][indices] * np.array([-1.0, 1.0, 1.0, 1.0])  # xyz_radius
+            pts = model_data["cpts"][indices] * np.array(
+                [-1.0, 1.0, 1.0, 1.0]
+            )  # xyz_radius
             ptype = infos[0][1]
-            print("ingredient fiber ", i , ptype, pnames_fiber[int(ptype)])
+            print("ingredient fiber ", i, ptype, pnames_fiber[int(ptype)])
             # add pts to positions and radii
-            for cp in pts :
+            for cp in pts:
                 positions.append([cp[0], cp[1], cp[2]])
                 radii.append(cp[3])
                 type_names.append(pnames_fiber[int(ptype)])
@@ -249,15 +271,17 @@ def oneModel():
             types=[type_names],
             positions=np.array([positions]),
             radii=np.array([radii]),
-        )
+        ),
     )
 
     CustomConverter(example_default_data).write_JSON("test3")
 
 
 # def multiModel():
-bounds = [[0.0, 0.0, 0.0],  # Box big enough to enclose all the particles
-          [-1.0, -1.0, -1.0]]
+bounds = [
+    [0.0, 0.0, 0.0],  # Box big enough to enclose all the particles
+    [-1.0, -1.0, -1.0],
+]
 
 main_scale = 1.0 / 100.0  # could be 1/200.0 like flex
 pnames_fiber = []
@@ -289,7 +313,7 @@ total_steps = len(listOfFile)
 STOP = 20
 counter = 0
 for entry in sorted(listOfFile, key=lambda x: int(x.split(".bin")[0].split("_")[2])):
-    if (counter > STOP) :
+    if counter > STOP:
         break
     # Create full path
     fullPath = os.path.join(path_to_traj, entry)
@@ -317,7 +341,9 @@ for entry in sorted(listOfFile, key=lambda x: int(x.split(".bin")[0].split("_")[
         # print (ptype,pnames[ptype], p, q );
         # add beads to positions and radii after transformation
         for j in range(len(proteins_beads[ptype])):
-            bead_p = np.array([p[0], p[1], p[2]]) * main_scale + QuaternionTransform(q, proteins_beads[ptype][j])
+            bead_p = np.array([p[0], p[1], p[2]]) * main_scale + QuaternionTransform(
+                q, proteins_beads[ptype][j]
+            )
             bead_r = float(proteins_beads_radii[ptype][j]) * main_scale
             positions.append([bead_p[0], bead_p[1], bead_p[2]])
             radii.append(bead_r)
@@ -333,13 +359,17 @@ for entry in sorted(listOfFile, key=lambda x: int(x.split(".bin")[0].split("_")[
         for i in ncurves:
             indices = cpts_info[:, 0] == i
             infos = cpts_info[indices]  # curve_id, curve_type, angle, uLength
-            pts = model_data["cpts"][indices] * np.array([-1.0, 1.0, 1.0, 1.0])  # xyz_radius
+            pts = model_data["cpts"][indices] * np.array(
+                [-1.0, 1.0, 1.0, 1.0]
+            )  # xyz_radius
             normal = model_data["cnorm"][indices]  # xyz_0
             ptype = infos[0][1]
             # print ("ingredient fiber ",i , ptype, pnames_fiber[int(ptype)])
             # add pts to positions and radii
-            for cp in pts :
-                positions.append([cp[0] * main_scale, cp[1] * main_scale, cp[2] * main_scale])
+            for cp in pts:
+                positions.append(
+                    [cp[0] * main_scale, cp[1] * main_scale, cp[2] * main_scale]
+                )
                 radii.append(cp[3] * main_scale)
                 type_names.append(pnames_fiber[int(ptype)])
                 # types.append(int(ptype))
@@ -370,7 +400,7 @@ example_default_data = CustomData(
         types=all_type_names,
         positions=np.array(all_positions),
         radii=np.array(all_radii),
-    )
+    ),
 )
 CustomConverter(example_default_data).write_JSON("traj1")
 

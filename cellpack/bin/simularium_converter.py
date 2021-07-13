@@ -9,6 +9,7 @@ import json
 import logging
 
 from simulariumio import CustomData, AgentData, CustomConverter
+
 ###############################################################################
 
 log = logging.getLogger()
@@ -20,7 +21,9 @@ logging.basicConfig(
 
 
 class ConvertToSimularium(argparse.Namespace):
-    DEFAULT_INPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/"
+    DEFAULT_INPUT_DIRECTORY = (
+        "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/"
+    )
     DEFAULT_PACKING_RESULT = "results_seed_0.json"
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
@@ -113,7 +116,7 @@ class ConvertToSimularium(argparse.Namespace):
         self.box_size = [x_size, y_size, z_size]
 
     def get_positions_per_ingredient(self, results_data_in, time_step_index):
-        if (results_data_in["recipe"]["name"] != self.recipe_name):
+        if results_data_in["recipe"]["name"] != self.recipe_name:
             raise Exception("Recipe name in results file doesn't match recipe file")
         container = results_data_in["cytoplasme"]
         ingredients = container["ingredients"]
@@ -121,7 +124,7 @@ class ConvertToSimularium(argparse.Namespace):
         for i in range(len(self.unique_ingredient_names)):
             ingredient_name = self.unique_ingredient_names[i]
             data = ingredients[ingredient_name]
-            if (len(data["results"]) > 0):
+            if len(data["results"]) > 0:
                 for j in range(len(data["results"])):
                     self.positions[time_step_index].append(data["results"][j][0])
                     self.viz_types[time_step_index].append(1000)
@@ -138,7 +141,7 @@ class ConvertToSimularium(argparse.Namespace):
                     self.n_subpoints[time_step_index].append(0)
                     id = id + 1
 
-            elif (data["nbCurve"] > 0):
+            elif data["nbCurve"] > 0:
                 for i in range(data["nbCurve"]):
                     curve = "curve" + str(i)
                     self.positions[time_step_index].append([0, 0, 0])
@@ -208,7 +211,6 @@ def main():
             #     ),
             # ),
             box_size=np.array(box_size),
-
             agent_data=AgentData(
                 times=converter.timestep * np.array(list(range(converter.total_steps))),
                 n_agents=np.array(converter.n_agents),
@@ -218,13 +220,14 @@ def main():
                 positions=np.array(converter.positions),
                 radii=np.array(converter.radii),
                 subpoints=np.array(converter.subpoints),
-                n_subpoints=np.array(converter.n_subpoints)
-
+                n_subpoints=np.array(converter.n_subpoints),
             )
             # time_units=UnitData("ns"),  # nanoseconds
             # spatial_units=UnitData("nm"),  # nanometers
         )
-        CustomConverter(converted_data).write_JSON(converter.output + converter.packing_result_file_name)
+        CustomConverter(converted_data).write_JSON(
+            converter.output + converter.packing_result_file_name
+        )
 
     except Exception as e:
         log.error("=============================================")
