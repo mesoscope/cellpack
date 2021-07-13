@@ -8,18 +8,9 @@ from collections import OrderedDict
 import transformation as tr
 import os
 
-main_scale = 1.0 / 100.0  # could be 1/200.0 like flex
-pnames_fiber = []
-pnames_fiber_nodes = []
-pnames = []
-proteins_nodes = []
-proteins_beads = []
-proteins_beads_radii = []
-lodproxy_to_use = 0
-
 
 def AdjustBounds(bounds, X):
-    """ 
+    """
     Check if a coordinate lies within the box boundary.
     If not, update the box boundary.
     """
@@ -174,44 +165,31 @@ def loadRecipe(book_json):
             # std::cout << "compartment should have several childs " << comp_name.size() << " " << comp_name["name"].asString() << endl;
             if (len(comp_name) == 0) :
                 continue
-            comp_geom = comp_name["geom_type"]  # //at 0 ?
-            #if (comp_geom.asString() != "None")
-            #{
-            #    if (!ignore_comp) compartmentMesh(comp_name);
-            #    //if (!ignore_comp)compartmentsSDF(comp_name);
-            #}
-            #//check if compartments child
+
             comp_childs = comp_name["Compartments"]
             for j in range(len(comp_childs)) :  # (int j = 0; j < comp_childs.size(); j++) {
                 if (comp_childs[j]["name"] == "surface") :
                     loadIngredientFromCompartment(comp_childs[j], compid)
                 elif (comp_childs[j]["name"] == "interior") :
                     loadIngredientFromCompartment(comp_childs[j], -compid)
-                else :
-                    loadOneCompartmentSerialized(comp_childs[j], compid)
 
 
 def oneModel():
     bounds = [[0.0, 0.0, 0.0],  # Box big enough to enclose all the particles
               [-1.0, -1.0, -1.0]]
 
-    wdir = "D:\\Dev\\FLEX_EXP\\nvidia_flex.git\\data\\cellpack\\"
-    wdir = "D:\\Data\\coronavirus\\cellpack\\"
-    file_in = wdir + "recipe_serialized.json"  # recipe.json
+    wdir = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid"
+    file_in = wdir + "results_seed_0.json"  # recipe.json
     model_in = wdir + "model.bin"  # bin or traj
     tree = json.load(open(file_in, "r"), object_pairs_hook=OrderedDict)
     model_data = GetModelData(model_in)
     ninstances = len(model_data["pos"])
 
     n_agents = []
-    viz_types = []
-    unique_ids = []
     type_names = []
     types = []
     positions = []
     radii = []
-    n_subpoints = []
-    subpoints = []
 
     loadRecipe(tree)
 
@@ -219,13 +197,12 @@ def oneModel():
         p = model_data["pos"][i]
         q = model_data["quat"][i]
         ptype = int(p[3])
-        #ingredient, cname, path = FindIngredientInTreeFromId(ptype,tree)
-        #print (ptype,ingredient["name"])
-        #name = ingredient["name"]
-        #int ingrIndex = (int) pos[i][3];
-        #//std::cout << "instance " << i << " with pid " << ingrIndex << " " << pnames[ingrIndex] << endl;
+        # print (ptype,ingredient["name"])
+        # name = ingredient["name"]
+        # int ingrIndex = (int) pos[i][3];
+        # //std::cout << "instance " << i << " with pid " << ingrIndex << " " << pnames[ingrIndex] << endl;
         print(ptype, pnames[ptype], p, q)
-        #add beads to positions and radii after transformation
+        # add beads to positions and radii after transformation
         for j in range(len(proteins_beads[ptype])):
             bead_p = np.array([p[0], p[1], p[2]]) + QuaternionTransform(q, proteins_beads[ptype][j])
             bead_r = proteins_beads_radii[ptype][j]
@@ -239,15 +216,13 @@ def oneModel():
     cpts_info = model_data["cinfo"]
     if ncpts != 0:
         ncurves = np.unique(cpts_info[:, 0])
-        curves = np.array([cpts_info[cpts_info[:, 0] == i, :] for i in ncurves])
         for i in ncurves:
             indices = cpts_info[:, 0] == i
             infos = cpts_info[indices]  # curve_id, curve_type, angle, uLength
             pts = model_data["cpts"][indices] * np.array([-1.0, 1.0, 1.0, 1.0])  # xyz_radius
-            normal = model_data["cnorm"][indices]  # xyz_0
             ptype = infos[0][1]
             print("ingredient fiber ", i , ptype, pnames_fiber[int(ptype)])
-            #add pts to positions and radii
+            # add pts to positions and radii
             for cp in pts :
                 positions.append([cp[0], cp[1], cp[2]])
                 radii.append(cp[3])
@@ -262,12 +237,9 @@ def oneModel():
     timestep = 0.5  # seconds
     box_size = 3500
     n_agents = len(positions)  # n instances
-    min_radius = 5
-    max_radius = 10
-    points_per_fiber = 4
 
     example_default_data = CustomData(
-        #spatial_unit_factor_meters=1e-10,  # angstrom
+        # spatial_unit_factor_meters=1e-10,  # angstrom
         box_size=np.array([box_size, box_size, box_size]),
         agent_data=AgentData(
             times=timestep * np.array(list(range(total_steps))),
@@ -287,8 +259,17 @@ def oneModel():
 bounds = [[0.0, 0.0, 0.0],  # Box big enough to enclose all the particles
           [-1.0, -1.0, -1.0]]
 
-wdir = "D:\\Dev\\FLEX_EXP\\nvidia_flex.git\\data\\cellpack\\"
-file_in = wdir + "recipe_serialized.json"  # recipe.json
+main_scale = 1.0 / 100.0  # could be 1/200.0 like flex
+pnames_fiber = []
+pnames_fiber_nodes = []
+pnames = []
+proteins_nodes = []
+proteins_beads = []
+proteins_beads_radii = []
+lodproxy_to_use = 0
+
+wdir = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/"
+file_in = wdir + "results_seed_0.json"  # recipe.json
 model_in = wdir + "model.bin"  # bin or traj
 tree = json.load(open(file_in, "r"), object_pairs_hook=OrderedDict)
 loadRecipe(tree)
@@ -341,7 +322,7 @@ for entry in sorted(listOfFile, key=lambda x: int(x.split(".bin")[0].split("_")[
             positions.append([bead_p[0], bead_p[1], bead_p[2]])
             radii.append(bead_r)
             type_names.append(pnames[ptype])
-            #types.append(ptype)
+            # types.append(ptype)
             AdjustBounds(bounds, [bead_p[0], bead_p[1], bead_p[2]])
 
     ncpts = len(model_data["cpts"])
@@ -355,13 +336,13 @@ for entry in sorted(listOfFile, key=lambda x: int(x.split(".bin")[0].split("_")[
             pts = model_data["cpts"][indices] * np.array([-1.0, 1.0, 1.0, 1.0])  # xyz_radius
             normal = model_data["cnorm"][indices]  # xyz_0
             ptype = infos[0][1]
-            #print ("ingredient fiber ",i , ptype, pnames_fiber[int(ptype)])
-            #add pts to positions and radii
+            # print ("ingredient fiber ",i , ptype, pnames_fiber[int(ptype)])
+            # add pts to positions and radii
             for cp in pts :
                 positions.append([cp[0] * main_scale, cp[1] * main_scale, cp[2] * main_scale])
                 radii.append(cp[3] * main_scale)
                 type_names.append(pnames_fiber[int(ptype)])
-                #types.append(int(ptype))
+                # types.append(int(ptype))
     all_positions.append(positions)
     all_radii.append(radii)
     all_type_names.append(type_names)
@@ -392,7 +373,6 @@ example_default_data = CustomData(
     )
 )
 CustomConverter(example_default_data).write_JSON("traj1")
-
 
 
 """

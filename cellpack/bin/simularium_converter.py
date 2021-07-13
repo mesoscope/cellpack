@@ -1,5 +1,3 @@
-
-import os
 import sys
 import argparse
 import traceback
@@ -26,7 +24,7 @@ class ConvertToSimularium(argparse.Namespace):
     DEFAULT_PACKING_RESULT = "results_seed_0.json"
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
-   
+
     def __init__(self, total_steps=1):
         # Arguments that could be passed in through the command line
         self.input_directory = self.DEFAULT_INPUT_DIRECTORY
@@ -185,11 +183,13 @@ def main():
     dbg = converter.debug
     try:
         time_point_index = 0
+
         recipe_in = converter.input_recipe
         results_in = converter.input_directory + converter.packing_result_file_name
         recipe_data = json.load(open(recipe_in, "r"), object_pairs_hook=OrderedDict)
         converter.get_all_ingredient_names(recipe_data)
         converter.get_bounding_box(recipe_data)
+
         packing_data = json.load(open(results_in, "r"))
         box_size = converter.box_size
         converter.get_positions_per_ingredient(packing_data, time_point_index)
