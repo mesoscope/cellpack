@@ -207,6 +207,60 @@
 <div class="section" id="cellpack-bin-analyze-module">
 <h2>cellpack.bin.analyze module<a class="headerlink" href="#cellpack-bin-analyze-module" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-cellpack.bin.simularium_converter">
+<span id="cellpack-bin-simularium-converter-module"></span><h2>cellpack.bin.simularium_converter module<a class="headerlink" href="#module-cellpack.bin.simularium_converter" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.bin.simularium_converter.ConvertToSimularium">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.bin.simularium_converter.</span></span><span class="sig-name descname"><span class="pre">ConvertToSimularium</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">total_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/bin/simularium_converter.html#ConvertToSimularium"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.bin.simularium_converter.ConvertToSimularium" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.bin.simularium_converter.ConvertToSimularium.DEFAULT_INPUT_DIRECTORY">
+<span class="sig-name descname"><span class="pre">DEFAULT_INPUT_DIRECTORY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/'</span></em><a class="headerlink" href="#cellpack.bin.simularium_converter.ConvertToSimularium.DEFAULT_INPUT_DIRECTORY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.bin.simularium_converter.ConvertToSimularium.DEFAULT_INPUT_RECIPE">
+<span class="sig-name descname"><span class="pre">DEFAULT_INPUT_RECIPE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json'</span></em><a class="headerlink" href="#cellpack.bin.simularium_converter.ConvertToSimularium.DEFAULT_INPUT_RECIPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.bin.simularium_converter.ConvertToSimularium.DEFAULT_OUTPUT_DIRECTORY">
+<span class="sig-name descname"><span class="pre">DEFAULT_OUTPUT_DIRECTORY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/Users/meganriel-mehan/Dropbox/cellPack/'</span></em><a class="headerlink" href="#cellpack.bin.simularium_converter.ConvertToSimularium.DEFAULT_OUTPUT_DIRECTORY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.bin.simularium_converter.ConvertToSimularium.DEFAULT_PACKING_RESULT">
+<span class="sig-name descname"><span class="pre">DEFAULT_PACKING_RESULT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'results_seed_0.json'</span></em><a class="headerlink" href="#cellpack.bin.simularium_converter.ConvertToSimularium.DEFAULT_PACKING_RESULT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.bin.simularium_converter.ConvertToSimularium.fill_in_empty_fiber_data">
+<span class="sig-name descname"><span class="pre">fill_in_empty_fiber_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_step_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/bin/simularium_converter.html#ConvertToSimularium.fill_in_empty_fiber_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.bin.simularium_converter.ConvertToSimularium.fill_in_empty_fiber_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.bin.simularium_converter.ConvertToSimularium.get_all_ingredient_names">
+<span class="sig-name descname"><span class="pre">get_all_ingredient_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipe_in</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/bin/simularium_converter.html#ConvertToSimularium.get_all_ingredient_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.bin.simularium_converter.ConvertToSimularium.get_all_ingredient_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.bin.simularium_converter.ConvertToSimularium.get_bounding_box">
+<span class="sig-name descname"><span class="pre">get_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipe_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/bin/simularium_converter.html#ConvertToSimularium.get_bounding_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.bin.simularium_converter.ConvertToSimularium.get_bounding_box" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.bin.simularium_converter.ConvertToSimularium.get_positions_per_ingredient">
+<span class="sig-name descname"><span class="pre">get_positions_per_ingredient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results_data_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/bin/simularium_converter.html#ConvertToSimularium.get_positions_per_ingredient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.bin.simularium_converter.ConvertToSimularium.get_positions_per_ingredient" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cellpack.bin.simularium_converter.main">
+<span class="sig-prename descclassname"><span class="pre">cellpack.bin.simularium_converter.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/bin/simularium_converter.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.bin.simularium_converter.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
 <div class="section" id="module-cellpack.bin">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.bin" title="Permalink to this headline">¶</a></h2>
 <p>Bin scripts package for cellpack.</p>

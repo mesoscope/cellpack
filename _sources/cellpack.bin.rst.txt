@@ -12,6 +12,14 @@ cellpack.bin.analyze module
    :undoc-members:
    :show-inheritance:
 
+cellpack.bin.simularium\_converter module
+-----------------------------------------
+
+.. automodule:: cellpack.bin.simularium_converter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

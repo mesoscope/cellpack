@@ -68,6 +68,14 @@ cellpack.autopack.Ingredient module
    :undoc-members:
    :show-inheritance:
 
+cellpack.autopack.OutputSimularium module
+-----------------------------------------
+
+.. automodule:: cellpack.autopack.OutputSimularium
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.Recipe module
 -------------------------------
 
