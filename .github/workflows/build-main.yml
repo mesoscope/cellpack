@@ -52,7 +52,7 @@ jobs:
         flake8 cellpack --count --verbose --show-source --statistics
     - name: Check with black
       run: |
-        black --check cellpack
+        black --check cellpack --exclude '/cellpack/mgl_tools/'
 
   publish:
     if: "contains(github.event.head_commit.message, 'Bump version')"
