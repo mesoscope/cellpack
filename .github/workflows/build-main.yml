@@ -75,5 +75,5 @@ jobs:
     - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@master
       with:
-        user: mesoscope
+        user: meganrm
         password: ${{ secrets.PYPI_TOKEN }}
