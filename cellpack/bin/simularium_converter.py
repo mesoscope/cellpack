@@ -3,7 +3,6 @@ import argparse
 import traceback
 
 # import cellpack.autopack.transformation as tr
-from collections import OrderedDict
 import numpy as np
 import json
 import logging
@@ -21,18 +20,14 @@ logging.basicConfig(
 
 
 class ConvertToSimularium(argparse.Namespace):
-    DEFAULT_INPUT_DIRECTORY = (
-        "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/"
-    )
-    DEFAULT_PACKING_RESULT = "results_seed_0.json"
+    DEFAULT_PACKING_RESULT = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/results_seed_0.json"
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
 
     def __init__(self, total_steps=1):
         # Arguments that could be passed in through the command line
-        self.input_directory = self.DEFAULT_INPUT_DIRECTORY
         self.input_recipe = self.DEFAULT_INPUT_RECIPE
-        self.packing_result_file_name = self.DEFAULT_PACKING_RESULT
+        self.packing_result = self.DEFAULT_PACKING_RESULT
         self.output = self.DEFAULT_OUTPUT_DIRECTORY
         self.recipe_name = ""
         self.debug = True
@@ -63,19 +58,10 @@ class ConvertToSimularium(argparse.Namespace):
             description="Convert cellpack result to simularium",
         )
         p.add_argument(
-            "-i",
-            "--input-directory",
-            action="store",
-            dest="input_directory",
-            type=str,
-            default=self.input_directory,
-            help="Full path for the directory to read the cellpack result file(s)",
-        )
-        p.add_argument(
             "-r",
             "--input-recipe",
             action="store",
-            dest="inp",
+            dest="input_recipe",
             type=str,
             default=self.input_recipe,
             help="Full path for the input recipe file",
@@ -84,10 +70,10 @@ class ConvertToSimularium(argparse.Namespace):
             "-p",
             "--packing-result",
             action="store",
-            dest="packing_result_file_name",
+            dest="packing_result",
             type=str,
-            default=self.packing_result_file_name,
-            help="Name of the packing result file",
+            default=self.packing_result,
+            help="Full path of the packing result file",
         )
         p.add_argument(
             "-o",
@@ -115,16 +101,38 @@ class ConvertToSimularium(argparse.Namespace):
         z_size = bb[1][2] - bb[0][2]
         self.box_size = [x_size, y_size, z_size]
 
-    def get_positions_per_ingredient(self, results_data_in, time_step_index):
-        if results_data_in["recipe"]["name"] != self.recipe_name:
-            raise Exception("Recipe name in results file doesn't match recipe file")
-        container = results_data_in["cytoplasme"]
-        ingredients = container["ingredients"]
+    def get_ingredient_data(self, main_container, ingredient, version):
+        data = None
+        if version == 0:
+            ingredient_name = ingredient
+            ingredients = main_container["ingredients"]
+            data = ingredients[ingredient]
+        elif version == 1:
+            ingredient_name = ingredient["name"]
+            compartment = main_container[ingredient["compartment"]]
+            position = ingredient["position"]
+            try:
+                compartment[position]
+                data = compartment[ingredient["position"]]["ingredients"][ingredient_name]
+            except Exception as e:
+                # Ingredient in recipe wasn't packed
+                print(e, position, ingredient_name)
+        return (ingredient_name, data)
+
+    def loop_through_ingredients(self, results_data_in, time_step_index):
+        if "cytoplasme" in results_data_in:
+            main_container = results_data_in["cytoplasme"]
+            version = 0
+        elif "compartments" in results_data_in:
+            main_container = results_data_in["compartments"]
+            version = 1
         id = 0
         for i in range(len(self.unique_ingredient_names)):
-            ingredient_name = self.unique_ingredient_names[i]
-            data = ingredients[ingredient_name]
-            if len(data["results"]) > 0:
+            ingredient = self.unique_ingredient_names[i]
+            (ingredient_name, data) = self.get_ingredient_data(main_container, ingredient, version)
+            if data is None:
+                continue
+            elif len(data["results"]) > 0:
                 for j in range(len(data["results"])):
                     self.positions[time_step_index].append(data["results"][j][0])
                     self.viz_types[time_step_index].append(1000)
@@ -157,6 +165,11 @@ class ConvertToSimularium(argparse.Namespace):
                             print("found longer fiber, new max", len(data[curve]))
                         self.max_fiber_length = len(data[curve])
                     id = id + 1
+                
+    def get_positions_per_ingredient(self, results_data_in, time_step_index):
+        if results_data_in["recipe"]["name"] != self.recipe_name:
+            raise Exception("Recipe name in results file doesn't match recipe file", "result:", results_data_in["recipe"]["name"], "recipe", self.recipe_name)
+        self.loop_through_ingredients(results_data_in, time_step_index)
 
     def fill_in_empty_fiber_data(self, time_step_index):
         blank_value = [[0, 0, 0] for x in range(self.max_fiber_length)]
@@ -173,9 +186,28 @@ class ConvertToSimularium(argparse.Namespace):
 
     def get_all_ingredient_names(self, recipe_in):
         self.recipe_name = recipe_in["recipe"]["name"]
-        container = recipe_in["cytoplasme"]
-        ingredients = container["ingredients"]
-        self.unique_ingredient_names = list(ingredients)
+        if "cytoplasme" in recipe_in:
+            container = recipe_in["cytoplasme"]
+            ingredients = container["ingredients"]
+            self.unique_ingredient_names = list(ingredients)
+        elif "compartments" in recipe_in:
+            ingredients = []
+            for compartment in recipe_in["compartments"]:
+                current_compartment = recipe_in["compartments"][compartment]
+                if "surface" in current_compartment:
+                    ingredients = ingredients + [{
+                        "name": ingredient,
+                        "compartment": compartment,
+                        "position": "surface"
+                    } for ingredient in current_compartment["surface"]["ingredients"]]
+                if "interior" in current_compartment:
+
+                    ingredients = ingredients + ingredients + [{
+                        "name": ingredient,
+                        "compartment": compartment,
+                        "position": "interior"
+                    } for ingredient in current_compartment["interior"]["ingredients"]]
+            self.unique_ingredient_names = ingredients
 
 
 ###############################################################################
@@ -188,8 +220,8 @@ def main():
         time_point_index = 0
 
         recipe_in = converter.input_recipe
-        results_in = converter.input_directory + converter.packing_result_file_name
-        recipe_data = json.load(open(recipe_in, "r"), object_pairs_hook=OrderedDict)
+        results_in = converter.packing_result
+        recipe_data = json.load(open(recipe_in, "r"))
         converter.get_all_ingredient_names(recipe_data)
         converter.get_bounding_box(recipe_data)
 
@@ -226,7 +258,7 @@ def main():
             # spatial_units=UnitData("nm"),  # nanometers
         )
         CustomConverter(converted_data).write_JSON(
-            converter.output + converter.packing_result_file_name
+            converter.output + converter.recipe_name
         )
 
     except Exception as e:
