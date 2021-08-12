@@ -6,8 +6,9 @@ import traceback
 import numpy as np
 import json
 import logging
+from scipy.spatial.transform import Rotation as R
 
-from simulariumio import CustomData, AgentData, CustomConverter
+from simulariumio import TrajectoryConverter, TrajectoryData, AgentData, UnitData, MetaData, CameraData
 
 ###############################################################################
 
@@ -40,6 +41,7 @@ class ConvertToSimularium(argparse.Namespace):
         self.points_per_fiber = 0
         self.type_names = [[] for x in range(total_steps)]
         self.positions = [[] for x in range(total_steps)]
+        self.rotations = [[] for x in range(total_steps)]
         self.viz_types = [[] for x in range(total_steps)]
         self.unique_ids = [[] for x in range(total_steps)]
         self.radii = [[] for x in range(total_steps)]
@@ -119,6 +121,25 @@ class ConvertToSimularium(argparse.Namespace):
                 print(e, position, ingredient_name)
         return (ingredient_name, data)
 
+    def get_euler_from_matrix(self, data_in):
+        rotation_matrix = [data_in[0][0:3], data_in[1][0:3], data_in[2][0:3]]
+        return R.from_matrix(rotation_matrix).as_euler('xyz', degrees=True)
+
+    def get_euler_from_quat(self, data_in):
+        return R.from_quat(data_in).as_euler('xyz', degrees=True)
+
+    def is_matrix(self, data_in):
+        if isinstance(data_in[0], list):
+            return True
+        else:
+            return False
+
+    def get_euler(self, data_in):
+        if self.is_matrix(data_in):
+            return self.get_euler_from_matrix(data_in)
+        else:
+            return self.get_euler_from_quat(data_in)
+
     def loop_through_ingredients(self, results_data_in, time_step_index):
         if "cytoplasme" in results_data_in:
             main_container = results_data_in["cytoplasme"]
@@ -135,6 +156,8 @@ class ConvertToSimularium(argparse.Namespace):
             elif len(data["results"]) > 0:
                 for j in range(len(data["results"])):
                     self.positions[time_step_index].append(data["results"][j][0])
+                    rotation = self.get_euler(data["results"][j][1])
+                    self.rotations[time_step_index].append(rotation)
                     self.viz_types[time_step_index].append(1000)
                     self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
                     self.type_names[time_step_index].append(ingredient_name)
@@ -153,6 +176,7 @@ class ConvertToSimularium(argparse.Namespace):
                 for i in range(data["nbCurve"]):
                     curve = "curve" + str(i)
                     self.positions[time_step_index].append([0, 0, 0])
+                    self.rotations[time_step_index].append([0, 0, 0])
                     self.viz_types[time_step_index].append(1001)
                     self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
                     self.type_names[time_step_index].append(ingredient_name)
@@ -233,16 +257,15 @@ def main():
             print("SUBPOINTS LENGTH", len(converter.subpoints[time_point_index]))
             print("N_SUBPOINTS LENGTH", len(converter.n_subpoints[time_point_index]))
 
-        converted_data = CustomData(
-            # meta_data=MetaData(
-            #     box_size=np.array([converter.box_size, converter.box_size, converter.box_size]),
-            #     camera_defaults=CameraData(
-            #         position=np.array([10.0, 0.0, 200.0]),
-            #         look_at_position=np.array([10.0, 0.0, 0.0]),
-            #         fov_degrees=60.0,
-            #     ),
-            # ),
-            box_size=np.array(box_size),
+        converted_data = TrajectoryData(
+            meta_data=MetaData(
+                box_size=np.array(box_size),
+                camera_defaults=CameraData(
+                    position=np.array([10.0, 0.0, box_size[2] ]),
+                    look_at_position=np.array([10.0, 0.0, 0.0]),
+                    fov_degrees=60.0,
+                ),
+            ),
             agent_data=AgentData(
                 times=converter.timestep * np.array(list(range(converter.total_steps))),
                 n_agents=np.array(converter.n_agents),
@@ -250,14 +273,15 @@ def main():
                 unique_ids=np.array(converter.unique_ids),
                 types=np.array(converter.type_names),
                 positions=np.array(converter.positions),
+                rotations=np.array(converter.rotations),
                 radii=np.array(converter.radii),
                 subpoints=np.array(converter.subpoints),
                 n_subpoints=np.array(converter.n_subpoints),
-            )
-            # time_units=UnitData("ns"),  # nanoseconds
-            # spatial_units=UnitData("nm"),  # nanometers
+            ),
+            time_units=UnitData("ns"),  # nanoseconds
+            spatial_units=UnitData("nm"),  # nanometers
         )
-        CustomConverter(converted_data).write_JSON(
+        TrajectoryConverter(converted_data).write_JSON(
             converter.output + converter.recipe_name
         )
 
