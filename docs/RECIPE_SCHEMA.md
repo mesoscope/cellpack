@@ -41,11 +41,17 @@ _Optional boolean_
 
 ### placeMethod
 
-_Optional enum_. One of `"RAPID"`
+_Optional enum_. One of `"RAPID"`, `"jitter"`, `"spheresBHT"`, `"pandaBullet"`
 
 Will be use if placeMethod isn't in an ingredient setup
 
 `"RAPID"`
+
+`"jitter"`
+
+`"spheresBHT"`
+
+`"pandaBullet"`
 
 ### saveResult
 _boolean_
@@ -57,7 +63,24 @@ _boolean_
 _boolean_
 
 ### innerGridMethod
-_enum_. One of `"bhtree"`, `"jordan"`
+_enum_. One of `"bhtree"`, `"jordan"`, `"sdf"`, `"jordan3"`, `"pyray"`, `"floodfill"`, `"binvox"`, `"trimesh"`, `"scanline"`
+ `"bhtree"`
+ 
+ `"jordan"`
+
+`"sdf"`
+
+ `"jordan3"`
+ 
+ `"pyray"`
+ 
+ `"floodfill"`
+ 
+ `"binvox"`
+ 
+ `"trimesh"`
+ 
+ `"scanline"`
 
 ### boundingBox 
 _Required [[number, number, number], [number, number, number]]_
