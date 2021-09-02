@@ -41,7 +41,7 @@ _Optional boolean_
 
 ### placeMethod
 
-_Optional enum_. One of `"RAPID"`, `"jitter"`, `"spheresBHT"`, `"pandaBullet"`
+_Optional enum_. One of `"RAPID"`, `"jitter"`, `"spheresBHT"`, `"pandaBullet"`_
 
 Will be use if placeMethod isn't in an ingredient setup
 
@@ -235,14 +235,27 @@ _number_
 ### packingMode
 _Optional enum. One of `"random"`,_
 ### Type
-_Optional enum. One of `"SingleSphere"`, `"Grow"`_
+_Optional enum. One of `"SingleSphere"`,`"SingleCube"`,`"MultiSphere"`,`"MultiCylinder"`,`"Grow"`,`"Mesh"`_
+
+`"SingleSphere"`
+
+`"SingleCube"`
+
+`"MultiSphere"`
+
+`"MultiCylinder"`
+
+`"Grow"`: A spline ingredient
+
+`"Mesh"`
+
 ### excluded_partners_name
 _Optional string[]_
 ### rejectionThreshold
 _number_
 
 ### placeType
-_Optional enum. One of `"jitter"`,_
+_Optional enum. One of `"RAPID"`, `"jitter"`, `"spheresBHT"`, `"pandaBullet"`_
 ### cutoff_surface
 _number_
 ### packingPriority
