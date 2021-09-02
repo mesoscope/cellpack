@@ -261,7 +261,7 @@ def main():
             meta_data=MetaData(
                 box_size=np.array(box_size),
                 camera_defaults=CameraData(
-                    position=np.array([10.0, 0.0, box_size[2] ]),
+                    position=np.array([10.0, 0.0, box_size[2]]),
                     look_at_position=np.array([10.0, 0.0, 0.0]),
                     fov_degrees=60.0,
                 ),
