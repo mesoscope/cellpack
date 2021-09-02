@@ -103,7 +103,7 @@ example Options:
     "\_hackFreepts": false,
     "windowsSize": 10,
     "use_gradient": false,
-    "placeMethod": "RAPID", // default to use if not defined by ingredient
+    "placeMethod": "RAPID",
     "saveResult": false,
     "runTimeDisplay": false,
     "overwritePlaceMethod": true,
@@ -193,7 +193,7 @@ _number_
 ### packingMode
 _Optional enum. One of `"random"`,_
 ### Type
-_Optional enum. One of `"SingleSphere"`,_
+_Optional enum. One of `"SingleSphere"`, `"Grow"`_
 ### excluded_partners_name
 _Optional string[]_
 ### rejectionThreshold
@@ -226,9 +226,9 @@ _boolean_
 ### example ingredient
 ```JSON
 "Sphere_radius_100": {
-    "overwrite_nbMol_value": 6, // not sure different with nbMol, might be a complete override, not additive with molarity
-    "nbJitter": 6, // attempts to jitter (check packing loop)
-    "molarity": 0, // concentration
+    "overwrite_nbMol_value": 6, 
+    "nbJitter": 6, 
+    "molarity": 0,
     "partners_position": [],
     "rotRange": 6.2831,
     "color": [ 0.498, 0.498, 0.498 ],
@@ -236,10 +236,10 @@ _boolean_
     "sphereFile": null,
     "weight": 0.2,
     "orientBiasRotRangeMin": -3.1415927,
-    "radii": [[100]], // prop of a sphere
+    "radii": [[100]], 
     "cutoff_boundary": 0,
     "coordsystem": "left",
-    "jitterMax": [ 1, 1, 0], // keep it in 2D, by default it would be 1, 1, 1
+    "jitterMax": [ 1, 1, 0], 
     "perturbAxisAmplitude": 0.1,
     "encapsulatingRadius": 100,
     "positions2": null,
@@ -249,16 +249,16 @@ _boolean_
     "principalVector": [ 1, 0, 0 ],
     "properties": {},
     "partners_name": [],
-    "nbMol": 6, // explicit number to pack
+    "nbMol": 6, 
     "name": "Sphere_radius_100",
     "orientBiasRotRangeMax": -3.1415927,
     "packingMode": "random",
-    "Type": "SingleSphere", // primitive type, other options: Boxes, cylinder, splines (Grow)
+    "Type": "SingleSphere", 
     "excluded_partners_name": [],
     "rejectionThreshold": 60,
     "placeType": "jitter",
     "cutoff_surface": 100,
-    "packingPriority": 0, // largest negative number gets packed first
+    "packingPriority": 0, 
     "proba_binding": 0.5,
     "rotAxis": null,
     "positions": [ [ [ 0, 0, 0] ] ],
