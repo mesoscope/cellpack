@@ -87,11 +87,14 @@ _boolean_
 _boolean_
 ### largestProteinSize
 _Required number_
+
 ### resultfile
 _Optional string_
+
 Location of publicly hosted packing result 
 ### use_periodicity
 _boolean_
+
 Whether to consider periodicity when packing objects. If `true` a packed object at the edge of the bounding will wrap to the other side of the bounding box. 
 ### EnviroOnly
 _boolean_
@@ -129,12 +132,15 @@ example Options:
 ## Ingredient Properties
 ### overwrite_nbMol_value 
 _Optional number_
+
 not sure different with nbMol, might be a complete override, not additive with molarity
 ### nbJitter
 _Required number_
+
 How many times it will attempts to pack before rejecting the ingredient
 ### molarity
 _Optional number_
+
 Concentration. Will default to 0
 ### partners_position
 _Optional number[][]_
@@ -145,17 +151,23 @@ _number_
 _[number, number, number]_
 ### meshFile
 _Optional string_
+
 Location of mesh file 
+
 ### sphereFile
 _Optional string_
+
 Location of sphere file 
+
 ### weight
 _number_
 ### orientBiasRotRangeMin
 _number_
 ### radii
 _Optional number[][]_
+
 Property of a primitive sphere
+
 ### cutoff_boundary
 _number_
 ### coordsystem
@@ -163,12 +175,15 @@ _Optional enum. One of `"left"` `"right"`._
 
 ### jitterMax
 _Optional [number, number, number]_
+
 The amount this ingredient can move in x, y and z. If z is set to 0, will be a 2D packing. Defaults to `[1, 1, 1]`
 ### perturbAxisAmplitude
 _number_
 ### encapsulatingRadius
 _Required number_
+
 Smallest radius that completely includes all the geometry. 
+
 ### positions2
 _Optional_
 ### useOrientBias
@@ -184,7 +199,9 @@ _Optional object_
 _Optional string[]_
 ### nbMol
 _Optional number_
+
 Number to pack, additive with molarity. 
+
 ### name
 _Required string_
 Name of the ingredient
@@ -205,7 +222,9 @@ _Optional enum. One of `"jitter"`,_
 _number_
 ### packingPriority
 _Optional number_
+
 Order to pack, largest negative number gets packed first. 
+
 ### proba_binding
 _number_ 
 ### rotAxis
@@ -218,7 +237,9 @@ _number_
 _boolean_
 ### pdb
 _Optional string_
+
 PDB id in the protein database
+
 ### useRotAxis
 _boolean_
 
