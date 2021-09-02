@@ -43,7 +43,7 @@ requirements = [
     "panda3d==1.10.9",
     "pmw==2.0.1",
     "scipy==1.6.2",
-    "simulariumio==1.1.0",
+    "simulariumio==1.0.1",
     "pycollada==0.7.1",
 ]
 
