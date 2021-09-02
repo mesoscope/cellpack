@@ -61,6 +61,7 @@ _boolean_
 
 ### overwritePlaceMethod
 _boolean_
+if==true, the Enviro-level placeMethod will overwrite all of the ingredient-level place method in a recipe
 
 ### innerGridMethod
 _enum_. One of `"bhtree"`, `"jordan"`, `"sdf"`, `"jordan3"`, `"pyray"`, `"floodfill"`, `"binvox"`, `"trimesh"`, `"scanline"`
@@ -123,6 +124,7 @@ Whether to consider periodicity when packing objects. If `true` a packed object 
 
 ### EnviroOnly
 _boolean_
+expect no compartments, only a bounding box volume
 
 example Options:
 ```JSON
