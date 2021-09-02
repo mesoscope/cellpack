@@ -92,10 +92,12 @@ _Required number_
 _Optional string_
 
 Location of publicly hosted packing result 
+
 ### use_periodicity
 _boolean_
 
 Whether to consider periodicity when packing objects. If `true` a packed object at the edge of the bounding will wrap to the other side of the bounding box. 
+
 ### EnviroOnly
 _boolean_
 
