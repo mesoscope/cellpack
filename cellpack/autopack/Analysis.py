@@ -454,9 +454,7 @@ class AnalyseAP:
         # wr.writerows(data) list of list ?
         # resultFile.close()
         for item in data:
-            wr.writerow(
-                [item]
-            )
+            wr.writerow([item])
         resultFile.close()
 
     def rectangle_circle_area(self, bbox, center, radius):
