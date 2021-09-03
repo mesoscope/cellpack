@@ -26,27 +26,78 @@ Version of the recipe
 
 ## Options properties
 
+
+### saveResult
+_Optional boolean_ Defaults to `false`. 
+
+Save packing result to .apr file.
+
+### resultfile
+_Optional string_
+
+Location of publicly hosted packing result 
+
+### EnviroOnly
+_Optional boolean_ Defaults to `false`.
+
+Expect no compartments, only a bounding box volume
+
 ### cancelDialog
+_Optional boolean_ Defaults to `false`. 
 
-_boolean_
+### pickWeightedIngr
+_Optional boolean_ Defaults to `true`. 
 
-### hackFreepts
+Prioritize ingredient selection by packingWeight.
+
+### pickRandPt
+_Optional boolean_ Defaults to `true`.
+
+Pick drop position point randomly.
+
+### ingrLookForNeighbours
+_Optional boolean_ Defaults to `false`. 
+
+Look for ingredients attractor and partner.
+
+### overwritePlaceMethod
+_Optional boolean_ Defaults to `true`. 
+If `true`, the Enviro-level placeMethod will overwrite all of the ingredient-level place method in a recipe
+
+
+### boundingBox 
+_Optional [[number, number, number], [number, number, number]]_ Defaults to `[0, 0, 0], [0.1, 0.1, 0.1]`.
+
+An array of two points that define the corners of the bounding box.
+
+### smallestProteinSize
+_Optional number_ Defaults to `15`. 
+
+Smallest ingredient packing radius override (low=accurate | high=fast). As with largestProteinSize, if not defined, this value will be calculated by the algorithm based on the spheretree input file (packing radius) or the packingRadius calculated from ingredients that use primitives for their geometries.
+
+### largestProteinSize
+_Optional number_
+
+As with smallestProteinSize, if not defined, this value will be calculated by the algorithm based on the spheretree input file (packing radius) or the packingRadius calculated from ingredients that use primitives for their geometries.
+
+### computeGridParams
+_Optional boolean_ Defaults to `true`.
 
 ### windowsSize
-_number_
+_Optional number_ Defaults to `100`.
 
-### use_gradient
+### runTimeDisplay
+_Optional boolean_ Defaults to `false`.
 
-_Optional boolean_
+Display packing in realtime (slow)
 
 ### placeMethod
 
-_Optional enum_. One of `"RAPID"`, `"jitter"`, `"spheresBHT"`, `"pandaBullet"`_
+_Optional enum_. One of `"RAPID"`, `"jitter"`, `"spheresBHT"`, `"pandaBullet"`. Defaults to `"jitter"`.
 
 Will be use if placeMethod isn't in an ingredient setup
 
 `"RAPID"` uses ["Robust and Accurate Polygon Interference Detection (RAPID)"](http://gamma.cs.unc.edu/OBB/) to test if the ingredient being placed in the packing loop is colliding with any neighboring objects fed into the list of neighbors.
-
 
 `"jitter"` uses a simple algorithm developed by GJ, M-A-A, MS, and LA to test if a single sphere, sphere-tree, or other primative (box and cylinder) are colliding with masked/unallowed points on the grid... I can't recall all of the allowed types, but check the input parameters that it accepts. I believe there is also an option to perform simple collisions directly between primatives, e.g. sphere-sphere, sphere-box, sphere-cylinder, cylinder-box, and spheretree-others
 
@@ -54,19 +105,20 @@ Will be use if placeMethod isn't in an ingredient setup
 
 `"pandaBullet"`  Python wrapper for Bullet Physics Engine (popular in ~2010 and used by C4D, Maya, Blender, etc) that provides a variety of object-object collision detection, including collision min/max overlap distance, etc. Allows relaxation in its own loop, springs, rejection, meshes, primitives, etc.
 
+### use_gradient
+_Optional boolean_ Defaults to `false`.
 
-### saveResult
-_boolean_
+Use gradients if they are defined. 
 
-### runTimeDisplay
-_boolean_
+### gradients 
+_Optional string[]_
 
-### overwritePlaceMethod
-_boolean_
-if==true, the Enviro-level placeMethod will overwrite all of the ingredient-level place method in a recipe
+An array that defines the names of directional gradients to use.
 
 ### innerGridMethod
-_enum_. One of `"bhtree"`, `"jordan"`, `"sdf"`, `"jordan3"`, `"pyray"`, `"floodfill"`, `"binvox"`, `"trimesh"`, `"scanline"`
+_enum_. One of `"bhtree"`, `"jordan"`, `"sdf"`, `"jordan3"`, `"pyray"`, `"floodfill"`, `"binvox"`, `"trimesh"`, `"scanline"`. Defaults to `"jordan3"`.
+
+
  `"bhtree"`
  
  `"jordan"`
@@ -85,52 +137,25 @@ _enum_. One of `"bhtree"`, `"jordan"`, `"sdf"`, `"jordan3"`, `"pyray"`, `"floodf
  
  `"scanline"`
 
-### boundingBox 
-_Required [[number, number, number], [number, number, number]]_
-
-An array of two points that define the corners of the bounding box.
-
-### gradients 
-_Optional string[]_
-
-An array that defines the names of directional gradients to use.
-
-### smallestProteinSize
-_Optional number_
-
-As with largestProteinSize, if not defined, this value will be calculated by the algorithm based on the spheretree input file (packing radius) or the packingRadius calculated from ingredients that use primitives for their geometries.
-
-### computeGridParams
-_boolean_
-
 ### freePtsUpdateThreshold
-_number_
-### pickWeightedIngr
-_boolean_
-### \_timer
-_boolean_
-### ingrLookForNeighbours
-_boolean_
-### pickRandPt
-_boolean_
-### largestProteinSize
-_Required number_
+_Optional number_ Defaults to `0.0`.
 
-As with smallestProteinSize, if not defined, this value will be calculated by the algorithm based on the spheretree input file (packing radius) or the packingRadius calculated from ingredients that use primitives for their geometries.
-
-### resultfile
-_Optional string_
-
-Location of publicly hosted packing result 
+Mask grid while packing (0=always | 1=never)
 
 ### use_periodicity
-_boolean_
+_Optional boolean_ Defaults to `false`. 
 
 Whether to consider periodicity when packing objects. If `true` a packed object at the edge of the bounding will wrap to the other side of the bounding box. 
 
-### EnviroOnly
-_boolean_
-expect no compartments, only a bounding box volume
+### _timer
+_Optional boolean_ Defaults to `false`.
+
+Evaluate time per function.
+
+### _hackFreepts
+_Optional boolean_ Defaults to `false`.
+
+no free point update
 
 example Options:
 ```JSON
@@ -163,85 +188,77 @@ example Options:
 
 
 ## Ingredient Properties
+
+### name
+_Required string_
+
+Name of the ingredient.
+
 ### overwrite_nbMol_value 
-_Optional number_
+_Optional number_ Defaults to `0`.
 
-not sure different with nbMol, might be a complete override, not additive with molarity
-### nbJitter
-_Required number_
+A complete override of concentration and nbMol, not additive with molarity.
 
-How many times it will attempts to pack before rejecting the ingredient
 ### molarity
+_Optional number_ Defaults to `0`.
+
+Concentration of the ingredient. 
+
+### nbMol
 _Optional number_
 
-Concentration. Will default to 0
-### partners_position
+Number to pack, additive with molarity. Defaults to `0`. 
+
+### encapsulatingRadius
+_Optional number_ Defaults to `5`.
+
+Smallest radius that completely includes all the geometry. 
+
+### radii
 _Optional number[][]_
-### rotRange
-_number_
 
-### color
-_[number, number, number]_
-### meshFile
-_Optional string_
+Property of a primitive sphere. 
 
-Location of mesh file 
+### positions
+_Optional [number, number, number][]_
+
+### positions2
+_Optional [number, number, number][]_
 
 ### sphereFile
 _Optional string_
 
 Location of sphere file 
 
-### weight
-_number_
-### orientBiasRotRangeMin
-_number_
-### radii
-_Optional number[][]_
+### packingPriority
+_Optional number_ Default to `0.0`.
 
-Property of a primitive sphere
+Order to pack, largest negative number gets packed first. 
 
-### cutoff_boundary
-_number_
-### coordsystem
-_Optional enum. One of `"left"` `"right"`._
+### pdb
+_Optional string_
 
-### jitterMax
-_Optional [number, number, number]_
+PDB id in the protein database
 
-The amount this ingredient can move in x, y and z. If z is set to 0, will be a 2D packing. Defaults to `[1, 1, 1]`
-### perturbAxisAmplitude
-_number_
-### encapsulatingRadius
-_Required number_
-
-Smallest radius that completely includes all the geometry. 
-
-### positions2
-_Optional_
-### useOrientBias
-_Optional boolean_
-### gradient
-### isAttractor
-_Optional boolean_
-### principalVector
+### color
 _[number, number, number]_
-### properties
-_Optional object_
-### partners_name
-_Optional string[]_
-### nbMol
-_Optional number_
 
-Number to pack, additive with molarity. 
+### meshFile
+_Optional string_
 
-### name
-_Required string_
-Name of the ingredient
-### orientBiasRotRangeMax
-_number_
-### packingMode
-_Optional enum. One of `"random"`,_
+Location of mesh file 
+
+### meshName
+_Optional string_
+
+Name of the mesh file. 
+
+### coordsystem
+_Optional enum. One of `"left"` `"right"`._ Defaults to `"left"`.
+
+### principalVector
+_[number, number, number]_ Defaults to `[0.0, 0.0, 0.0]`.
+
 ### Type
 _Optional enum. One of `"SingleSphere"`,`"SingleCube"`,`"MultiSphere"`,`"MultiCylinder"`,`"Grow"`,`"Mesh"`_
 
@@ -257,13 +274,48 @@ _Optional enum. One of `"SingleSphere"`,`"SingleCube"`,`"MultiSphere"`,`"MultiCy
 
 `"Mesh"`
 
-### excluded_partners_name
-_Optional string[]_
-### rejectionThreshold
-_number_
+### offset 
+_Optional [number, number, number]_ Defaults to `[0.0, 0.0, 0.0]`.
+
+### jitterMax
+_Optional [number, number, number]_ Defaults to `[1, 1, 1]`.
+
+### nbJitter
+_Required number_  Defaults to `5`.
+
+How many times it will attempts to pack before rejecting the ingredient.
+
+### perturbAxisAmplitude
+_Optional number_ Defaults to `0.1`.
+
+### useRotAxis
+_Optional boolean_ Defaults to `false`.
+
+### rotAxis 
+_Optional [number, number, number]_ Defaults to `[0.0, 0.0, 0.0]`.
+
+### rotRange
+_Optional number_ Defaults to `6.2831`.
+
+### useOrientBias
+_Optional boolean_ Defaults to `false`.
+
+### orientBiasRotRangeMin
+_Optional number_ Defaults to `-pi`.
+
+### orientBiasRotRangeMax
+_number_ Defaults to `pi`.
+
+### cutoff_boundary
+_Optional number_ Defaults to `1.0`.
+
+The amount this ingredient can move in x, y and z. If z is set to 0, will be a 2D packing. 
+
+### cutoff_surface
+_Optional number_ Defaults to `5.0`.
 
 ### placeType
-_Optional enum. One of `"RAPID"`, `"jitter"`, `"spheresBHT"`, `"pandaBullet"`_
+_Optional enum. One of `"RAPID"`, `"jitter"`, `"spheresBHT"`, `"pandaBullet"`_. Defaults to `"jitter"`.
 
 `"RAPID"` uses ["Robust and Accurate Polygon Interference Detection (RAPID)"](http://gamma.cs.unc.edu/OBB/) to test if the ingredient being placed in the packing loop is colliding with any neighboring objects fed into the list of neighbors.
 
@@ -274,31 +326,51 @@ _Optional enum. One of `"RAPID"`, `"jitter"`, `"spheresBHT"`, `"pandaBullet"`_
 
 `"pandaBullet"`  Python wrapper for Bullet Physics Engine (popular in ~2010 and used by C4D, Maya, Blender, etc) that provides a variety of object-object collision detection, including collision min/max overlap distance, etc. Allows relaxation in its own loop, springs, rejection, meshes, primitives, etc.
 
-### cutoff_surface
-_number_
-### packingPriority
-_Optional number_
+### use_mesh_rb
+_Optional boolean_ Defaults to `false`.
 
-Order to pack, largest negative number gets packed first. 
+### rejectionThreshold
+_Optional number_ Defaults to `30`.
+
+### packingMode
+_Optional enum. One of `"random"`, `"close"`, `"closePartner"`, `"randomPartner"`, `"gradient"`, `"hexatile"`, `"squaretile"`, `"triangletile"`_ Defaults to `"random"`.
+
+### gradient
+_Optional_ 
+Gradient name to use if `use_gradient` is `true`. 
 
 ### proba_binding
-_number_ 
-### rotAxis
-_Optional_
-### positions
-_[number, number, number][]
+_Optional number between `0` and `1`_ Defaults to `0.5`.
+
 ### proba_not_binding
 _number_
-### use_mesh_rb
-_boolean_
-### pdb
+
+### isAttractor
+_Optional boolean_ Defaults to `false`.
+
+### weight
+_Optional number_ Defaults to `0.2`.
+
+### partners_name
+_Optional string[]_
+
+### excluded_partners_name
+_Optional string[]_
+
+### partners_position
+_Optional number[][]_
+
+### partners_weight
+_Optional number_ Defaults to `0.5`.
+
+### properties
+_Optional object_ Defaults to `{}`.
+
+### score
 _Optional string_
 
-PDB id in the protein database
-
-### useRotAxis
-_boolean_
-
+### organism
+_Optional string_
 
 ### example ingredient
 ```JSON
