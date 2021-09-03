@@ -119,23 +119,38 @@ An array that defines the names of directional gradients to use.
 _enum_. One of `"bhtree"`, `"jordan"`, `"sdf"`, `"jordan3"`, `"pyray"`, `"floodfill"`, `"binvox"`, `"trimesh"`, `"scanline"`. Defaults to `"jordan3"`.
 
 
- `"bhtree"`
+ `"bhtree"` build sthe compartment grid ie surface and inside point using bhtree.
  
- `"jordan"`
+ `"jordan"` builds the compartment grid ie surface and inside point using jordan theorem and host raycast.  Only computes the inner point. No grid.
+        This is independent from the packing. Help build ingredient sphere tree and representation.
+        - Uses BHTree to compute surface points
+        - Uses Jordan raycasting to determine inside/outside (defaults to 1 iteration, can use 3 iterations)
+        
 
-`"sdf"`
+`"sdf"` builds the compartment grid ie surface and inside point using signed distance fields
+        from the UT package.
+        
 
- `"jordan3"`
+ `"jordan3"` builds the compartment grid ie surface and inside point using jordan theorem and host raycast, with ray set to `3`.
  
  `"pyray"`
  
- `"floodfill"`
+ `"floodfill"` builds the compartment grid ie surface and inside point using flood filling algo from kevin. Takes a polyhedron, and builds a grid. In this grid:
+            - Projects the polyhedron to the grid.
+            - Determines which points are inside/outside the polyhedron
+            - Determines point's distance to the polyhedron.
+        superFine provides the option doing a super leakproof test when determining
+        which points are inside or outside. Instead of raycasting to nearby faces to
+        determine inside/outside, setting this setting to true will force the algorithm
+        to raycast to the entire polyhedron. This usually not necessary, because the
+        built-in algorithm has no known leakage cases, even in extreme edge cases.
+        It is simply there as a safeguard.
  
- `"binvox"`
+ `"binvox"` 
  
- `"trimesh"`
+ `"trimesh"` 
  
- `"scanline"`
+ `"scanline"` builds the compartment grid ie surface and inside point using scanline.
 
 ### freePtsUpdateThreshold
 _Optional number_ Defaults to `0.0`.
