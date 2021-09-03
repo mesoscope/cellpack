@@ -441,13 +441,7 @@ class IOingredientTool(object):
         elif kw["Type"] == "MultiCylinder":
             ingr = MultiCylindersIngr(**kw)
         elif kw["Type"] == "SingleCube":
-            kw["positions"] = [
-                [
-                    [0, 0, 0],
-                    [0, 0, 0],
-                    [0, 0, 0],
-                ]
-            ]
+            kw["positions"] = [[[0, 0, 0], [0, 0, 0], [0, 0, 0]]]
             kw["positions2"] = None
             ingr = SingleCubeIngr(**kw)
         elif kw["Type"] == "Grow":
@@ -470,8 +464,7 @@ class IOingredientTool(object):
                 recipe.addIngredient(ingre)
             else:
                 print(
-                    "PROBLEM creating ingredient from ",
-                    ingrnode,
+                    "PROBLEM creating ingredient from ", ingrnode,
                 )
             # check for includes
         ingrnodes_include = xmlnode.getElementsByTagName("include")
@@ -1958,9 +1951,7 @@ def load_JsonString(env, astring):
     Setup the environment according the given json file.
     """
     env.jsondic = json.loads(astring, object_pairs_hook=OrderedDict)
-    setupFromJsonDic(
-        env,
-    )
+    setupFromJsonDic(env,)
 
 
 def load_Json(env, setupfile):
@@ -1978,14 +1969,10 @@ def load_Json(env, setupfile):
                 )  # ,indent=4, separators=(',', ': ')
             else:
                 env.jsondic = json.load(fp)
-    setupFromJsonDic(
-        env,
-    )
+    setupFromJsonDic(env,)
 
 
-def setupFromJsonDic(
-    env,
-):
+def setupFromJsonDic(env,):
 
     env.current_path = os.path.dirname(os.path.abspath(env.setupfile))
     io_ingr = IOingredientTool(env=env)

@@ -161,9 +161,7 @@ class AnalyseAP:
                 largest = maxi
         return smallest, largest
 
-    def getPositionsFromResFile(
-        self,
-    ):
+    def getPositionsFromResFile(self):
         # could actually restore file using histoVol.
         # or not
         # need to parse apr file here anyway
@@ -457,9 +455,7 @@ class AnalyseAP:
         # resultFile.close()
         for item in data:
             wr.writerow(
-                [
-                    item,
-                ]
+                [item]
             )
         resultFile.close()
 
@@ -540,10 +536,7 @@ class AnalyseAP:
             # lets do it on X,Y,Z and also per positions ?
             anglesX = numpy.array(
                 signed_angle_between_vectors(
-                    [
-                        [0, 0, 1],
-                    ]
-                    * len(ingr_positions),
+                    [[0, 0, 1]] * len(ingr_positions),
                     ingr_rotation[:, 0, :3],
                     -delta,
                     directed=False,
@@ -552,10 +545,7 @@ class AnalyseAP:
             )
             anglesY = numpy.array(
                 signed_angle_between_vectors(
-                    [
-                        [0, 1, 0],
-                    ]
-                    * len(ingr_positions),
+                    [[0, 1, 0]] * len(ingr_positions),
                     ingr_rotation[:, 1, :3],
                     -delta,
                     directed=False,
@@ -564,10 +554,7 @@ class AnalyseAP:
             )
             anglesZ = numpy.array(
                 signed_angle_between_vectors(
-                    [
-                        [1, 0, 0],
-                    ]
-                    * len(ingr_positions),
+                    [[1, 0, 0]] * len(ingr_positions),
                     ingr_rotation[:, 2, :3],
                     -delta,
                     directed=False,
@@ -667,13 +654,7 @@ class AnalyseAP:
         edges = numpy.arange(dr, rMax + 1.1 * dr, dr)
         k = numpy.zeros((N, len(edges)))
         for i, p in enumerate(positions):
-            di = scipy.spatial.distance.cdist(
-                positions,
-                [
-                    p,
-                ],
-                "euclidean",
-            )
+            di = scipy.spatial.distance.cdist(positions, [p], "euclidean",)
             # dV = np.array(analyse.getAreaShell(analyse.bbox,edges,p))
             for j, e in enumerate(edges):
                 area0 = math.pi * e ** 2  # complete circle
@@ -697,13 +678,7 @@ class AnalyseAP:
         dv = []
         density = float(N) / float(V)
         for i, p in enumerate(positions):
-            di = scipy.spatial.distance.cdist(
-                positions,
-                [
-                    p,
-                ],
-                "euclidean",
-            )
+            di = scipy.spatial.distance.cdist(positions, [p], "euclidean",)
             dN, bins = numpy.histogram(di, bins=edges)
             dV = numpy.array(self.getAreaShell(self.bbox, edges, p))
             dv.append(dV)

@@ -988,10 +988,7 @@ class AutopackViewer:
                 if self.vi.host.find("blender") != -1:
                     # is that not correctly scaled ?
                     circle = self.vi.build_2dshape(
-                        name + "_shape",
-                        opts=[
-                            ingr.encapsulatingRadius,
-                        ],
+                        name + "_shape", opts=[ingr.encapsulatingRadius],
                     )[0]
                     extruder, shape = self.vi.extrudeSpline(
                         snake, shape=circle, parent=parent
@@ -1029,9 +1026,7 @@ class AutopackViewer:
                 if extruder is not None:
                     self.helper.deleteObject(extruder)
 
-    def prepareIngredient(
-        self,
-    ):
+    def prepareIngredient(self):
         # cyto ingr
         r = self.histo.exteriorRecipe
         if r:
@@ -1665,8 +1660,7 @@ class AutopackViewer:
                     self.name + "ParentHiders", parent=self.master
                 )
                 self.psph = self.vi.newEmpty(
-                    self.name + "base_shape",
-                    parent=vParentHiders,
+                    self.name + "base_shape", parent=vParentHiders,
                 )
 
             self.vi.Points(
@@ -1936,17 +1930,9 @@ class AutopackViewer:
                 size = self.helper.getPropertyObject(child0, key=["length"])[0]
                 ingr = SingleCubeIngr(
                     1.0,
-                    [
-                        self.helper.ToVec(size * s[0]),
-                    ],
+                    [self.helper.ToVec(size * s[0])],
                     name=name,
-                    positions=[
-                        [
-                            [0, 0, 0],
-                            [0, 0, 0],
-                            [0, 0, 0],
-                        ]
-                    ],
+                    positions=[[[0, 0, 0], [0, 0, 0], [0, 0, 0]]],
                     meshObject=obj,
                 )
             else:
@@ -1973,11 +1959,7 @@ class AutopackViewer:
             ingr = MultiCylindersIngr(
                 1.0,
                 name=name,
-                radii=[
-                    [
-                        r,
-                    ]
-                ],
+                radii=[[r]],
                 positions=[[[0, -h / 2.0, 0]]],
                 positions2=[[[0, h / 2.0, 0]]],
                 meshObject=ingrobj,
@@ -1995,17 +1977,9 @@ class AutopackViewer:
             size = self.helper.getPropertyObject(obj, key=["length"])[0]
             ingr = SingleCubeIngr(
                 1.0,
-                [
-                    self.helper.ToVec(size),
-                ],
+                [self.helper.ToVec(size)],
                 name=name,
-                positions=[
-                    [
-                        [0, 0, 0],
-                        [0, 0, 0],
-                        [0, 0, 0],
-                    ]
-                ],
+                positions=[[[0, 0, 0], [0, 0, 0], [0, 0, 0]]],
                 meshObject=ingrobj,
             )
         else:
@@ -2368,9 +2342,7 @@ class AutopackViewer:
         if recipe:
             [self.exportIngredient(ingr) for ingr in recipe.ingredients]
 
-    def exportAsIndexedMeshs(
-        self,
-    ):
+    def exportAsIndexedMeshs(self,):
         # compartment mesh and ingredient
         for o in self.histo.compartments:
             if o.mesh is None:
@@ -2399,9 +2371,7 @@ class AutopackViewer:
         PS.FreeAllParticles()
         ids = list(range(N))
         PS = helper.particle(histoVol.grid.masterGridPositions)
-        life = [
-            c4d.BaseTime(10.0),
-        ] * N
+        life = [c4d.BaseTime(10.0)] * N
         list(map(PS.SetLife, ids, life))  # should avoid map
         ages = [c4d.BaseTime((d / 100.0) * 10.0) for d in distance]
         list(map(PS.SetAge, ids, ages))  # should avoid map
@@ -2435,9 +2405,7 @@ class AutopackViewer:
         pts = self.histo.freePointsAfterFill
         coords = [gridC[pts[i]] for i in range(N)]
         PS = helper.particle(coords)
-        life = [
-            c4d.BaseTime(10.0),
-        ] * N
+        life = [c4d.BaseTime(10.0)] * N
         list(map(PS.SetLife, ids, life))
 
     #        ages = [c4d.BaseTime((d/100.0)*10.) for d in distance]
@@ -2495,9 +2463,7 @@ class AutopackViewer:
                     "node" + str(self.counter), node, ind + i, onode
                 )
 
-    def displayOctree(
-        self,
-    ):
+    def displayOctree(self,):
         # display the octree if any
         self.counter = 0
         if self.histo.octree is None:
@@ -2514,9 +2480,7 @@ class AutopackViewer:
             self.counter += 1
             self.displayOneNodeOctree("node" + str(i), node, i, oroot)
 
-    def displayOctreeLeaf(
-        self,
-    ):
+    def displayOctreeLeaf(self,):
         # display the octree if any
         self.counter = 0
         if self.histo.octree is None:
@@ -2605,12 +2569,7 @@ class AutopackViewer:
 
     def displayRoot(self, root):
         self.helper.box(
-            "octreeroot",
-            center=root.position,
-            size=[
-                root.size,
-            ]
-            * 3,
+            "octreeroot", center=root.position, size=[root.size] * 3,
         )
         print("root", len(root.objects))
 
@@ -2621,12 +2580,7 @@ class AutopackViewer:
             if subnode is None:
                 continue
             self.helper.box(
-                "node" + str(i),
-                center=subnode.position,
-                size=[
-                    subnode.size,
-                ]
-                * 3,
+                "node" + str(i), center=subnode.position, size=[subnode.size] * 3,
             )
             self.displaysubnode(subnode, i)
             i += 1

@@ -2613,13 +2613,7 @@ class Ingredient(Agent):
         newDistPoints = {}
         cent1T = self.transformPoints(jtrans, rotMat, self.positions[0])[0]  # bb1
         cent2T = self.transformPoints(jtrans, rotMat, self.positions2[0])[0]  # bb2
-        center = self.transformPoints(
-            jtrans,
-            rotMat,
-            [
-                self.center,
-            ],
-        )[0]
+        center = self.transformPoints(jtrans, rotMat, [self.center],)[0]
         #        cylNum = 0
         #        for radc, p1, p2 in zip(radii, cent1T, cent2T):
         x1, y1, z1 = cent1T
@@ -3482,13 +3476,7 @@ class Ingredient(Agent):
         """
         cent1T = self.transformPoints(jtrans, rotMat, centers1)[0]  # bb1
         cent2T = self.transformPoints(jtrans, rotMat, centers2)[0]  # bb2
-        center = self.transformPoints(
-            jtrans,
-            rotMat,
-            [
-                self.center,
-            ],
-        )[0]
+        center = self.transformPoints(jtrans, rotMat, [self.center],)[0]
 
         insidePoints = {}
         newDistPoints = {}
@@ -3585,13 +3573,7 @@ class Ingredient(Agent):
         """
         cent1T = self.transformPoints(jtrans, rotMat, centers1)[0]  # bb1
         cent2T = self.transformPoints(jtrans, rotMat, centers2)[0]  # bb2
-        center = self.transformPoints(
-            jtrans,
-            rotMat,
-            [
-                self.center,
-            ],
-        )[0]
+        center = self.transformPoints(jtrans, rotMat, [self.center])[0]
 
         #        for radc, p1, p2 in zip(radii, cent1T, cent2T):
         x1, y1, z1 = cent1T
@@ -3697,15 +3679,7 @@ class Ingredient(Agent):
                 continue
             if autopack.verbose:
                 print("test compartment ", o.name, o.OGsrfPtsBht)
-            res = o.OGsrfPtsBht.query(
-                tuple(
-                    numpy.array(
-                        [
-                            point,
-                        ]
-                    )
-                )
-            )
+            res = o.OGsrfPtsBht.query(tuple(numpy.array([point])))
             if len(res) == 2:
                 d = res[0][0]
                 # pt=res[1][0]
@@ -4086,13 +4060,7 @@ class Ingredient(Agent):
                     10,
                 )
         nb = self.histoVol.close_ingr_bhtree.closePointsPairs(
-            tuple(
-                [
-                    position,
-                ]
-            ),
-            tuple([self.encapsulatingRadius]),
-            1.0,
+            tuple([position]), tuple([self.encapsulatingRadius]), 1.0,
         )
         p = self.get_new_pos(self, position, rotation)
         if len(nb) != 0:
@@ -4370,15 +4338,7 @@ class Ingredient(Agent):
             orbnode = o.get_rb_model()
             if orbnode is not None:
                 # test distance to surface ?
-                res = o.OGsrfPtsBht.query(
-                    tuple(
-                        numpy.array(
-                            [
-                                currentpt,
-                            ]
-                        )
-                    )
-                )
+                res = o.OGsrfPtsBht.query(tuple(numpy.array([currentpt])))
                 if len(res) == 2:
                     d = res[0][0]
                     if d < self.encapsulatingRadius:
@@ -4510,9 +4470,7 @@ class Ingredient(Agent):
                         self.histoVol.rTrans, leafsize=10
                     )
 
-    def reject(
-        self,
-    ):
+    def reject(self,):
         # got rejected
         self.haveBeenRejected = True
         self.rejectionCounter += 1
@@ -5911,35 +5869,20 @@ class Ingredient(Agent):
                 jtrans, getNormedVectorOnes(self.jitterMax), self.encapsulatingRadius
             )
             histoVol.callFunction(
-                histoVol.moveRBnode,
-                (
-                    rbnode,
-                    jtrans,
-                    rotMatj,
-                ),
+                histoVol.moveRBnode, (rbnode, jtrans, rotMatj,),
             )
             perdiodic_collision = False
             if periodic_pos is not None and self.packingMode != "gradient":
                 for p in periodic_pos:
                     histoVol.callFunction(
-                        histoVol.moveRBnode,
-                        (
-                            rbnode,
-                            p,
-                            rotMatj,
-                        ),
+                        histoVol.moveRBnode, (rbnode, p, rotMatj,),
                     )
                     perdiodic_collision = self.pandaBullet_collision(p, rotMatj, rbnode)
                     r.extend([perdiodic_collision])
                     if True in r:
                         break
                     histoVol.callFunction(
-                        histoVol.moveRBnode,
-                        (
-                            rbnode,
-                            jtrans,
-                            rotMatj,
-                        ),
+                        histoVol.moveRBnode, (rbnode, jtrans, rotMatj,),
                     )
                     rbnode2 = self.get_rb_model(alt=True)
                     self.histoVol.moveRBnode(rbnode2, p, rotMatj)  # Pb here ?
@@ -6857,13 +6800,7 @@ class Ingredient(Agent):
         # we may increase the jitter, or pick from xyz->Id free for its radius
         # create the rb only once and not at ever jitter
         rbnode = histoVol.callFunction(
-            self.histoVol.addRB,
-            (
-                self,
-                jtrans,
-                rotMat,
-            ),
-            {"rtype": self.Type},
+            self.histoVol.addRB, (self, jtrans, rotMat,), {"rtype": self.Type},
         )
         # should I create the rbnode on the fly ?
         # ningr_rb = histoVol.callFunction(self.getNeighboursInBox,(histoVol,trans,rotMat,organelle,afvi),{"rb":True})
@@ -6944,12 +6881,7 @@ class Ingredient(Agent):
 
             # rbnode = histoVol.callFunction(self.histoVol.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
             histoVol.callFunction(
-                histoVol.moveRBnode,
-                (
-                    rbnode,
-                    jtrans,
-                    rotMatj,
-                ),
+                histoVol.moveRBnode, (rbnode, jtrans, rotMatj,),
             )
             #       checkif rb collide
             #            result2 = self.histoVol.world.contactTest(rbnode)
@@ -8219,31 +8151,15 @@ class Ingredient(Agent):
                     #       should be panda util
                     #        add the rigid body
         self.histoVol.moving = rbnode = self.histoVol.callFunction(
-            self.histoVol.addRB,
-            (
-                self,
-                jtrans,
-                rotMat,
-            ),
-            {"rtype": self.Type},
+            self.histoVol.addRB, (self, jtrans, rotMat,), {"rtype": self.Type},
         )
         self.histoVol.callFunction(
-            self.histoVol.moveRBnode,
-            (
-                rbnode,
-                jtrans,
-                rotMatj,
-            ),
+            self.histoVol.moveRBnode, (rbnode, jtrans, rotMatj,),
         )
         # run he simulation for simulationTimes
         #        afvi.vi.frameAdvanced(duration = simulationTimes,display = runTimeDisplay)#,
         histoVol.callFunction(
-            self.histoVol.runBullet,
-            (
-                self,
-                simulationTimes,
-                runTimeDisplay,
-            ),
+            self.histoVol.runBullet, (self, simulationTimes, runTimeDisplay,),
         )
         # cb=self.getTransfo)
         rTrans, rRot = self.histoVol.getRotTransRB(rbnode)
@@ -8463,9 +8379,7 @@ class SingleSphereIngr(Ingredient):
         Ingredient.__init__(
             self,
             molarity=molarity,
-            radii=[
-                [radius],
-            ],
+            radii=[[radius]],
             positions=[[position]],  # positions2=None,
             sphereFile=sphereFile,
             packingPriority=packingPriority,
@@ -8542,13 +8456,7 @@ class SingleCubeIngr(Ingredient):
         self,
         molarity=0.0,
         radii=None,
-        positions=[
-            [
-                [0, 0, 0],
-                [0, 0, 0],
-                [0, 0, 0],
-            ]
-        ],
+        positions=[[[0, 0, 0], [0, 0, 0], [0, 0, 0]]],
         positions2=[[[0, 0, 0]]],
         sphereFile=None,
         packingPriority=0,
@@ -9423,12 +9331,8 @@ class GrowIngredient(MultiCylindersIngr):
                 if checkcollision:
                     m = numpy.identity(4)
                     collision = self.checkSphCollisions(
-                        [
-                            v,
-                        ],
-                        [
-                            float(self.uLength) * 1.0,
-                        ],
+                        [v],
+                        [float(self.uLength) * 1.0],
                         [0.0, 0.0, 0.0],
                         m,
                         0,
@@ -9515,12 +9419,8 @@ class GrowIngredient(MultiCylindersIngr):
                 if checkcollision:
                     m = numpy.identity(4)
                     collision = self.checkSphCollisions(
-                        [
-                            v,
-                        ],
-                        [
-                            float(self.uLength) * 1.0,
-                        ],
+                        [v],
+                        [float(self.uLength) * 1.0],
                         [0.0, 0.0, 0.0],
                         m,
                         0,
@@ -9919,12 +9819,7 @@ class GrowIngredient(MultiCylindersIngr):
                     )
                     rbnode = self.get_rb_model()
                     self.histoVol.callFunction(
-                        self.histoVol.moveRBnode,
-                        (
-                            rbnode,
-                            jtrans,
-                            rotMatj,
-                        ),
+                        self.histoVol.moveRBnode, (rbnode, jtrans, rotMatj,),
                     )
                     if len(self.histoVol.rTrans) == 0:
                         r = [False]
@@ -10206,11 +10101,7 @@ class GrowIngredient(MultiCylindersIngr):
                     else:
                         rbnode = histoVol.callFunction(
                             histoVol.addRB,
-                            (
-                                self,
-                                numpy.array(jtrans),
-                                numpy.array(rotMatj),
-                            ),
+                            (self, numpy.array(jtrans), numpy.array(rotMatj),),
                             {"rtype": self.Type},
                         )  # cylinder
                     # histoVol.callFunction(histoVol.moveRBnode,(rbnode, jtrans, rotMatj,))
@@ -11504,9 +11395,7 @@ class GrowIngredient(MultiCylindersIngr):
             print("completion", self.completion, self.nbCurve, self.nbMol)
         return success, nbFreePoints
 
-    def prepare_alternates(
-        self,
-    ):
+    def prepare_alternates(self,):
         if len(self.partners):
             self.alternates_names = (
                 self.partners.keys()
@@ -11519,9 +11408,7 @@ class GrowIngredient(MultiCylindersIngr):
                 self.partners[name].ingr.proba_binding for name in self.partners
             ]
 
-    def prepare_alternates_proba(
-        self,
-    ):
+    def prepare_alternates_proba(self,):
         thw = []
         tw = 0.0
         weights = self.alternates_proba  # python3?#dict.copy().keys()
@@ -11530,9 +11417,7 @@ class GrowIngredient(MultiCylindersIngr):
             thw.append(tw)
         self.alternates_proba = thw
 
-    def pick_random_alternate(
-        self,
-    ):
+    def pick_random_alternate(self,):
         if not len(self.alternates_names):
             return None, 0
         r = uniform(0, 1.0)
@@ -11545,9 +11430,7 @@ class GrowIngredient(MultiCylindersIngr):
             return self.alternates_names[alti], alti
         return None, 0
 
-    def pick_alternate(
-        self,
-    ):
+    def pick_alternate(self,):
         # whats he current length ie number of point so far
         # whats are he number of alternate and theyre proba
         # pick an alternate according length and proba
@@ -11774,9 +11657,7 @@ class ActinIngredient(GrowIngredient):
     def __init__(
         self,
         molarity,
-        radii=[
-            [50.0],
-        ],
+        radii=[[50.0]],
         positions=None,
         positions2=None,
         sphereFile=None,

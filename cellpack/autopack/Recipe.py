@@ -175,9 +175,7 @@ class Recipe:
         ingr.nbMol = 0
         ingr.completion = 0.0
 
-    def resetIngrs(
-        self,
-    ):
+    def resetIngrs(self,):
         """reset the states of all recipe ingredients"""
         for ingr in self.ingredients:
             ingr.counter = 0

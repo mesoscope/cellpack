@@ -771,9 +771,7 @@ class cHaltonSequence3:
         self.mBase3 = 0
         self.mBase5 = 0
 
-    def inc(
-        self,
-    ):
+    def inc(self):
         #    ///< Advance to next point in the sequence. Returns the index of this point.
         #    /////////////////////////////////////
         #    // base 2
@@ -848,9 +846,7 @@ class cHaltonSequence3:
 
         return self.mBase2  # return the index of this sequence point
 
-    def reset(
-        self,
-    ):
+    def reset(self):
         #    ///< Move back to first point in the sequence (i.e. the origin.)
         self.mBase2 = 0
         self.mBase3 = 0

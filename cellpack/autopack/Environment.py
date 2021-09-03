@@ -750,9 +750,7 @@ class Grid(G):
         self.freePoints = list(range(self.gridVolume))
         self.nbFreePoints = len(self.freePoints)
 
-    def reset(
-        self,
-    ):
+    def reset(self):
         # reset the  distToClosestSurf and the freePoints
         # boundingBox shoud be the same otherwise why keeping the grid
 
@@ -1357,13 +1355,7 @@ class Environment(CompartmentList):
         elif kw["Type"] == "MultiCylinder":
             ingr = MultiCylindersIngr(**kw)
         elif kw["Type"] == "SingleCube":
-            kw["positions"] = [
-                [
-                    [0, 0, 0],
-                    [0, 0, 0],
-                    [0, 0, 0],
-                ]
-            ]
+            kw["positions"] = [[[0, 0, 0], [0, 0, 0], [0, 0, 0]]]
             kw["positions2"] = None
             ingr = SingleCubeIngr(**kw)
         elif kw["Type"] == "Grow":
@@ -1414,10 +1406,7 @@ class Environment(CompartmentList):
             if ingre:
                 recipe.addIngredient(ingre)
             else:
-                print(
-                    "PROBLEM creating ingredient from ",
-                    ingrnode,
-                )
+                print("PROBLEM creating ingredient from ", ingrnode)
             # check for includes
         ingrnodes_include = xmlnode.getElementsByTagName("include")
         for inclnode in ingrnodes_include:
@@ -4070,9 +4059,7 @@ class Environment(CompartmentList):
     def dropOneIngr(self, pos, rot, ingrname, ingrcompNum, ptInd, rad=1.0):
         line = ""
         line += ("<%f,%f,%f>,") % (pos[0], pos[1], pos[2])
-        r = rot.reshape(
-            16,
-        )
+        r = rot.reshape(16)
         line += "<"
         for i in range(15):
             line += ("%f,") % (r[i])
@@ -4587,9 +4574,7 @@ class Environment(CompartmentList):
                 # panda ode
                 # ==============================================================================
 
-    def setupOctree(
-        self,
-    ):
+    def setupOctree(self,):
         if self.octree is None:
             #            from autopack.octree import Octree
             from autopack import octree_exteneded as octree
@@ -4601,9 +4586,7 @@ class Environment(CompartmentList):
                 self.grid.getRadius(), helper=helper
             )  # Octree((0,0,0),self.grid.getRadius())   #0,0,0 or center of grid?
 
-    def setupPanda(
-        self,
-    ):
+    def setupPanda(self):
         try:
             import panda3d
         except Exception:
@@ -4617,9 +4600,7 @@ class Environment(CompartmentList):
                 "Grow": self.addMultiCylinderRB,
                 "Mesh": self.addMeshRB,
             },
-            "ode": {
-                "SingleSphere": self.addSingleSphereRBODE,
-            },
+            "ode": {"SingleSphere": self.addSingleSphereRBODE},
         }
         from panda3d.core import loadPrcFileData
 
@@ -5187,9 +5168,7 @@ class Environment(CompartmentList):
                     self.tem.addAutoPackIngredient(ingr)
         self.tem.write()
 
-    def exportToTEM(
-        self,
-    ):
+    def exportToTEM(self,):
         # limited to 20 ingredients, call the TEM exporter plugin ?
         # ingredient -> PDB file or mrc volume file
         # ingredient -> coordinate.txt file
@@ -5206,9 +5185,7 @@ class Environment(CompartmentList):
         f = open(output, "w")
         f.write(aStr)
 
-    def exportToReaDDy(
-        self,
-    ):
+    def exportToReaDDy(self):
         # wehn I will get it running ... plugin ?
         return
 
@@ -5230,17 +5207,13 @@ class Environment(CompartmentList):
             self.traj = molbTrajectory(filename, lenIngrInstance)
         self.traj.completeMapping(self)
 
-    def linkTraj(
-        self,
-    ):
+    def linkTraj(self):
         # link the traj usin upy for creating a new synchronized calleback?
         if not self.traj_linked:
             autopack.helper.synchronize(self.applyStep)
             self.traj_linked = True
 
-    def unlinkTraj(
-        self,
-    ):
+    def unlinkTraj(self):
         # link the traj usin upy for creating a new synchronized calleback?
         if self.traj_linked:
             autopack.helper.unsynchronize(self.applyStep)
