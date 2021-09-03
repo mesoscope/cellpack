@@ -189,7 +189,7 @@ class ConvertToSimularium(argparse.Namespace):
                             print("found longer fiber, new max", len(data[curve]))
                         self.max_fiber_length = len(data[curve])
                     id = id + 1
-                
+
     def get_positions_per_ingredient(self, results_data_in, time_step_index):
         if results_data_in["recipe"]["name"] != self.recipe_name:
             raise Exception("Recipe name in results file doesn't match recipe file", "result:", results_data_in["recipe"]["name"], "recipe", self.recipe_name)
