@@ -96,7 +96,9 @@ _Optional string[]_
 An array that defines the names of directional gradients to use.
 
 ### smallestProteinSize
-_Required number_
+_Optional number_
+
+As with largestProteinSize, if not defined, this value will be calculated by the algorithm based on the spheretree input file (packing radius) or the packingRadius calculated from ingredients that use primitives for their geometries.
 
 ### computeGridParams
 _boolean_
@@ -113,6 +115,8 @@ _boolean_
 _boolean_
 ### largestProteinSize
 _Required number_
+
+As with smallestProteinSize, if not defined, this value will be calculated by the algorithm based on the spheretree input file (packing radius) or the packingRadius calculated from ingredients that use primitives for their geometries.
 
 ### resultfile
 _Optional string_
