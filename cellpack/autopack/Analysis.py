@@ -652,7 +652,11 @@ class AnalyseAP:
         edges = numpy.arange(dr, rMax + 1.1 * dr, dr)
         k = numpy.zeros((N, len(edges)))
         for i, p in enumerate(positions):
-            di = scipy.spatial.distance.cdist(positions, [p], "euclidean",)
+            di = scipy.spatial.distance.cdist(
+                positions,
+                [p],
+                "euclidean",
+            )
             # dV = np.array(analyse.getAreaShell(analyse.bbox,edges,p))
             for j, e in enumerate(edges):
                 area0 = math.pi * e ** 2  # complete circle
@@ -676,7 +680,11 @@ class AnalyseAP:
         dv = []
         density = float(N) / float(V)
         for i, p in enumerate(positions):
-            di = scipy.spatial.distance.cdist(positions, [p], "euclidean",)
+            di = scipy.spatial.distance.cdist(
+                positions,
+                [p],
+                "euclidean",
+            )
             dN, bins = numpy.histogram(di, bins=edges)
             dV = numpy.array(self.getAreaShell(self.bbox, edges, p))
             dv.append(dV)

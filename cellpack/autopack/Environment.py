@@ -4574,7 +4574,9 @@ class Environment(CompartmentList):
                 # panda ode
                 # ==============================================================================
 
-    def setupOctree(self,):
+    def setupOctree(
+        self,
+    ):
         if self.octree is None:
             #            from autopack.octree import Octree
             from autopack import octree_exteneded as octree
@@ -5168,7 +5170,9 @@ class Environment(CompartmentList):
                     self.tem.addAutoPackIngredient(ingr)
         self.tem.write()
 
-    def exportToTEM(self,):
+    def exportToTEM(
+        self,
+    ):
         # limited to 20 ingredients, call the TEM exporter plugin ?
         # ingredient -> PDB file or mrc volume file
         # ingredient -> coordinate.txt file

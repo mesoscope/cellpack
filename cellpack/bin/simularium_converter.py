@@ -95,7 +95,10 @@ class ConvertToSimularium(argparse.Namespace):
         )
 
         p.add_argument(
-            "--debug", action="store_true", dest="debug", help=argparse.SUPPRESS,
+            "--debug",
+            action="store_true",
+            dest="debug",
+            help=argparse.SUPPRESS,
         )
         p.parse_args(namespace=self)
 

@@ -1140,7 +1140,11 @@ class Compartment(CompartmentList):
         f = [0, 1, 2]
         ray_model = RAPIDlib.RAPID_model()
         ray_model.addTriangles(
-            numpy.array([v1, v2, v3], "f"), numpy.array([f], "i",),
+            numpy.array([v1, v2, v3], "f"),
+            numpy.array(
+                [f],
+                "i",
+            ),
         )
         RAPIDlib.RAPID_Collide_scaled(
             numpy.identity(3),
@@ -2531,7 +2535,8 @@ class Compartment(CompartmentList):
         #        returnNullIfFail = 0
         if autopack.verbose:
             print(
-                "compartment build grid jordan", diag,
+                "compartment build grid jordan",
+                diag,
             )
 
         helper = autopack.helper

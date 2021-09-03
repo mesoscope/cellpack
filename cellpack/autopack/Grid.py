@@ -178,7 +178,9 @@ class Grid:
         self.setupBoundaryPeriodicity()
         return self.gridSpacing
 
-    def reset(self,):
+    def reset(
+        self,
+    ):
         # reset the  distToClosestSurf and the freePoints
         # boundingBox should be the same otherwise why keeping the grid
         # self.gridPtId = numpy.zeros(self.gridVolume,'i')
@@ -979,7 +981,11 @@ class Grid:
         f = [0, 1, 2]
         ray_model = RAPIDlib.RAPID_model()
         ray_model.addTriangles(
-            numpy.array([v1, v2, v3], "f"), numpy.array([f], "i",),
+            numpy.array([v1, v2, v3], "f"),
+            numpy.array(
+                [f],
+                "i",
+            ),
         )
         RAPIDlib.RAPID_Collide_scaled(
             numpy.identity(3),
@@ -1132,7 +1138,9 @@ class HaltonGrid(Grid):
         scalexyz = numpy.array(boundingBox[1]) - txyz
         return scalexyz, txyz
 
-    def getNBgridPoints(self,):
+    def getNBgridPoints(
+        self,
+    ):
         a = numpy.array(self.boundingBox[0])
         b = numpy.array(self.boundingBox[1])
         lx = abs(int((a[0] - b[0]) / self.gridSpacing))
