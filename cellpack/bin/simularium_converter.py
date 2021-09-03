@@ -8,7 +8,14 @@ import json
 import logging
 from scipy.spatial.transform import Rotation as R
 
-from simulariumio import TrajectoryConverter, TrajectoryData, AgentData, UnitData, MetaData, CameraData
+from simulariumio import (
+    TrajectoryConverter,
+    TrajectoryData,
+    AgentData,
+    UnitData,
+    MetaData,
+    CameraData,
+)
 
 ###############################################################################
 
@@ -88,10 +95,7 @@ class ConvertToSimularium(argparse.Namespace):
         )
 
         p.add_argument(
-            "--debug",
-            action="store_true",
-            dest="debug",
-            help=argparse.SUPPRESS,
+            "--debug", action="store_true", dest="debug", help=argparse.SUPPRESS,
         )
         p.parse_args(namespace=self)
 
@@ -115,7 +119,9 @@ class ConvertToSimularium(argparse.Namespace):
             position = ingredient["position"]
             try:
                 compartment[position]
-                data = compartment[ingredient["position"]]["ingredients"][ingredient_name]
+                data = compartment[ingredient["position"]]["ingredients"][
+                    ingredient_name
+                ]
             except Exception as e:
                 # Ingredient in recipe wasn't packed
                 print(e, position, ingredient_name)
@@ -123,10 +129,10 @@ class ConvertToSimularium(argparse.Namespace):
 
     def get_euler_from_matrix(self, data_in):
         rotation_matrix = [data_in[0][0:3], data_in[1][0:3], data_in[2][0:3]]
-        return R.from_matrix(rotation_matrix).as_euler('xyz', degrees=True)
+        return R.from_matrix(rotation_matrix).as_euler("xyz", degrees=True)
 
     def get_euler_from_quat(self, data_in):
-        return R.from_quat(data_in).as_euler('xyz', degrees=True)
+        return R.from_quat(data_in).as_euler("xyz", degrees=True)
 
     def is_matrix(self, data_in):
         if isinstance(data_in[0], list):
@@ -150,7 +156,9 @@ class ConvertToSimularium(argparse.Namespace):
         id = 0
         for i in range(len(self.unique_ingredient_names)):
             ingredient = self.unique_ingredient_names[i]
-            (ingredient_name, data) = self.get_ingredient_data(main_container, ingredient, version)
+            (ingredient_name, data) = self.get_ingredient_data(
+                main_container, ingredient, version
+            )
             if data is None:
                 continue
             elif len(data["results"]) > 0:
@@ -192,7 +200,13 @@ class ConvertToSimularium(argparse.Namespace):
 
     def get_positions_per_ingredient(self, results_data_in, time_step_index):
         if results_data_in["recipe"]["name"] != self.recipe_name:
-            raise Exception("Recipe name in results file doesn't match recipe file", "result:", results_data_in["recipe"]["name"], "recipe", self.recipe_name)
+            raise Exception(
+                "Recipe name in results file doesn't match recipe file",
+                "result:",
+                results_data_in["recipe"]["name"],
+                "recipe",
+                self.recipe_name,
+            )
         self.loop_through_ingredients(results_data_in, time_step_index)
 
     def fill_in_empty_fiber_data(self, time_step_index):
@@ -219,18 +233,30 @@ class ConvertToSimularium(argparse.Namespace):
             for compartment in recipe_in["compartments"]:
                 current_compartment = recipe_in["compartments"][compartment]
                 if "surface" in current_compartment:
-                    ingredients = ingredients + [{
-                        "name": ingredient,
-                        "compartment": compartment,
-                        "position": "surface"
-                    } for ingredient in current_compartment["surface"]["ingredients"]]
+                    ingredients = ingredients + [
+                        {
+                            "name": ingredient,
+                            "compartment": compartment,
+                            "position": "surface",
+                        }
+                        for ingredient in current_compartment["surface"]["ingredients"]
+                    ]
                 if "interior" in current_compartment:
 
-                    ingredients = ingredients + ingredients + [{
-                        "name": ingredient,
-                        "compartment": compartment,
-                        "position": "interior"
-                    } for ingredient in current_compartment["interior"]["ingredients"]]
+                    ingredients = (
+                        ingredients
+                        + ingredients
+                        + [
+                            {
+                                "name": ingredient,
+                                "compartment": compartment,
+                                "position": "interior",
+                            }
+                            for ingredient in current_compartment["interior"][
+                                "ingredients"
+                            ]
+                        ]
+                    )
             self.unique_ingredient_names = ingredients
 
 
