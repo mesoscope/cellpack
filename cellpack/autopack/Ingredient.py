@@ -2616,9 +2616,7 @@ class Ingredient(Agent):
         center = self.transformPoints(
             jtrans,
             rotMat,
-            [
-                self.center,
-            ],
+            [self.center],
         )[0]
         #        cylNum = 0
         #        for radc, p1, p2 in zip(radii, cent1T, cent2T):
@@ -3485,9 +3483,7 @@ class Ingredient(Agent):
         center = self.transformPoints(
             jtrans,
             rotMat,
-            [
-                self.center,
-            ],
+            [self.center],
         )[0]
 
         insidePoints = {}
@@ -3585,13 +3581,7 @@ class Ingredient(Agent):
         """
         cent1T = self.transformPoints(jtrans, rotMat, centers1)[0]  # bb1
         cent2T = self.transformPoints(jtrans, rotMat, centers2)[0]  # bb2
-        center = self.transformPoints(
-            jtrans,
-            rotMat,
-            [
-                self.center,
-            ],
-        )[0]
+        center = self.transformPoints(jtrans, rotMat, [self.center])[0]
 
         #        for radc, p1, p2 in zip(radii, cent1T, cent2T):
         x1, y1, z1 = cent1T
@@ -3697,15 +3687,7 @@ class Ingredient(Agent):
                 continue
             if autopack.verbose:
                 print("test compartment ", o.name, o.OGsrfPtsBht)
-            res = o.OGsrfPtsBht.query(
-                tuple(
-                    numpy.array(
-                        [
-                            point,
-                        ]
-                    )
-                )
-            )
+            res = o.OGsrfPtsBht.query(tuple(numpy.array([point])))
             if len(res) == 2:
                 d = res[0][0]
                 # pt=res[1][0]
@@ -4086,11 +4068,7 @@ class Ingredient(Agent):
                     10,
                 )
         nb = self.histoVol.close_ingr_bhtree.closePointsPairs(
-            tuple(
-                [
-                    position,
-                ]
-            ),
+            tuple([position]),
             tuple([self.encapsulatingRadius]),
             1.0,
         )
@@ -4370,15 +4348,7 @@ class Ingredient(Agent):
             orbnode = o.get_rb_model()
             if orbnode is not None:
                 # test distance to surface ?
-                res = o.OGsrfPtsBht.query(
-                    tuple(
-                        numpy.array(
-                            [
-                                currentpt,
-                            ]
-                        )
-                    )
-                )
+                res = o.OGsrfPtsBht.query(tuple(numpy.array([currentpt])))
                 if len(res) == 2:
                     d = res[0][0]
                     if d < self.encapsulatingRadius:
@@ -8463,9 +8433,7 @@ class SingleSphereIngr(Ingredient):
         Ingredient.__init__(
             self,
             molarity=molarity,
-            radii=[
-                [radius],
-            ],
+            radii=[[radius]],
             positions=[[position]],  # positions2=None,
             sphereFile=sphereFile,
             packingPriority=packingPriority,
@@ -8542,13 +8510,7 @@ class SingleCubeIngr(Ingredient):
         self,
         molarity=0.0,
         radii=None,
-        positions=[
-            [
-                [0, 0, 0],
-                [0, 0, 0],
-                [0, 0, 0],
-            ]
-        ],
+        positions=[[[0, 0, 0], [0, 0, 0], [0, 0, 0]]],
         positions2=[[[0, 0, 0]]],
         sphereFile=None,
         packingPriority=0,
@@ -9423,12 +9385,8 @@ class GrowIngredient(MultiCylindersIngr):
                 if checkcollision:
                     m = numpy.identity(4)
                     collision = self.checkSphCollisions(
-                        [
-                            v,
-                        ],
-                        [
-                            float(self.uLength) * 1.0,
-                        ],
+                        [v],
+                        [float(self.uLength) * 1.0],
                         [0.0, 0.0, 0.0],
                         m,
                         0,
@@ -9515,12 +9473,8 @@ class GrowIngredient(MultiCylindersIngr):
                 if checkcollision:
                     m = numpy.identity(4)
                     collision = self.checkSphCollisions(
-                        [
-                            v,
-                        ],
-                        [
-                            float(self.uLength) * 1.0,
-                        ],
+                        [v],
+                        [float(self.uLength) * 1.0],
                         [0.0, 0.0, 0.0],
                         m,
                         0,
@@ -11774,9 +11728,7 @@ class ActinIngredient(GrowIngredient):
     def __init__(
         self,
         molarity,
-        radii=[
-            [50.0],
-        ],
+        radii=[[50.0]],
         positions=None,
         positions2=None,
         sphereFile=None,

@@ -983,9 +983,7 @@ class Grid:
         ray_model.addTriangles(
             numpy.array([v1, v2, v3], "f"),
             numpy.array(
-                [
-                    f,
-                ],
+                [f],
                 "i",
             ),
         )

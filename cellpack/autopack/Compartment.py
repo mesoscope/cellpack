@@ -361,9 +361,7 @@ class Compartment(CompartmentList):
             self.create_rapid_model()
         return self.rapid_model
 
-    def addShapeRB(
-        self,
-    ):
+    def addShapeRB(self):
         # in case our shape is a regular primitive
         if self.stype == "capsule":
             shape = BulletCapsuleShape(self.radius, self.height, self.axis)
@@ -408,9 +406,7 @@ class Compartment(CompartmentList):
     #        pts.setVertices(geomFacesDataArray)
     #
 
-    def addMeshRB(
-        self,
-    ):
+    def addMeshRB(self):
         from panda3d.core import GeomEnums
         from panda3d.core import (
             GeomVertexFormat,
@@ -463,9 +459,7 @@ class Compartment(CompartmentList):
         #        inodenp.node().addShape(shape)#,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
         return shape
 
-    def create_rbnode(
-        self,
-    ):
+    def create_rbnode(self):
         # Sphere
         if panda3d is None:
             return None
@@ -1148,9 +1142,7 @@ class Compartment(CompartmentList):
         ray_model.addTriangles(
             numpy.array([v1, v2, v3], "f"),
             numpy.array(
-                [
-                    f,
-                ],
+                [f],
                 "i",
             ),
         )
@@ -4651,9 +4643,7 @@ class Compartment(CompartmentList):
         insidePoints = []
         surfacePoints = self.vertices
         NPT = len(grdPos)
-        rads = [
-            spacing,
-        ] * NPT
+        rads = [spacing] * NPT
         helper.progressBar(label="BuildWorldAndNode")
         t = time()
 

@@ -441,13 +441,7 @@ class IOingredientTool(object):
         elif kw["Type"] == "MultiCylinder":
             ingr = MultiCylindersIngr(**kw)
         elif kw["Type"] == "SingleCube":
-            kw["positions"] = [
-                [
-                    [0, 0, 0],
-                    [0, 0, 0],
-                    [0, 0, 0],
-                ]
-            ]
+            kw["positions"] = [[[0, 0, 0], [0, 0, 0], [0, 0, 0]]]
             kw["positions2"] = None
             ingr = SingleCubeIngr(**kw)
         elif kw["Type"] == "Grow":

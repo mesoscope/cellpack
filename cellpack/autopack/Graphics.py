@@ -989,9 +989,7 @@ class AutopackViewer:
                     # is that not correctly scaled ?
                     circle = self.vi.build_2dshape(
                         name + "_shape",
-                        opts=[
-                            ingr.encapsulatingRadius,
-                        ],
+                        opts=[ingr.encapsulatingRadius],
                     )[0]
                     extruder, shape = self.vi.extrudeSpline(
                         snake, shape=circle, parent=parent
@@ -1029,9 +1027,7 @@ class AutopackViewer:
                 if extruder is not None:
                     self.helper.deleteObject(extruder)
 
-    def prepareIngredient(
-        self,
-    ):
+    def prepareIngredient(self):
         # cyto ingr
         r = self.histo.exteriorRecipe
         if r:
@@ -1936,17 +1932,9 @@ class AutopackViewer:
                 size = self.helper.getPropertyObject(child0, key=["length"])[0]
                 ingr = SingleCubeIngr(
                     1.0,
-                    [
-                        self.helper.ToVec(size * s[0]),
-                    ],
+                    [self.helper.ToVec(size * s[0])],
                     name=name,
-                    positions=[
-                        [
-                            [0, 0, 0],
-                            [0, 0, 0],
-                            [0, 0, 0],
-                        ]
-                    ],
+                    positions=[[[0, 0, 0], [0, 0, 0], [0, 0, 0]]],
                     meshObject=obj,
                 )
             else:
@@ -1973,11 +1961,7 @@ class AutopackViewer:
             ingr = MultiCylindersIngr(
                 1.0,
                 name=name,
-                radii=[
-                    [
-                        r,
-                    ]
-                ],
+                radii=[[r]],
                 positions=[[[0, -h / 2.0, 0]]],
                 positions2=[[[0, h / 2.0, 0]]],
                 meshObject=ingrobj,
@@ -1995,17 +1979,9 @@ class AutopackViewer:
             size = self.helper.getPropertyObject(obj, key=["length"])[0]
             ingr = SingleCubeIngr(
                 1.0,
-                [
-                    self.helper.ToVec(size),
-                ],
+                [self.helper.ToVec(size)],
                 name=name,
-                positions=[
-                    [
-                        [0, 0, 0],
-                        [0, 0, 0],
-                        [0, 0, 0],
-                    ]
-                ],
+                positions=[[[0, 0, 0], [0, 0, 0], [0, 0, 0]]],
                 meshObject=ingrobj,
             )
         else:
@@ -2399,9 +2375,7 @@ class AutopackViewer:
         PS.FreeAllParticles()
         ids = list(range(N))
         PS = helper.particle(histoVol.grid.masterGridPositions)
-        life = [
-            c4d.BaseTime(10.0),
-        ] * N
+        life = [c4d.BaseTime(10.0)] * N
         list(map(PS.SetLife, ids, life))  # should avoid map
         ages = [c4d.BaseTime((d / 100.0) * 10.0) for d in distance]
         list(map(PS.SetAge, ids, ages))  # should avoid map
@@ -2435,9 +2409,7 @@ class AutopackViewer:
         pts = self.histo.freePointsAfterFill
         coords = [gridC[pts[i]] for i in range(N)]
         PS = helper.particle(coords)
-        life = [
-            c4d.BaseTime(10.0),
-        ] * N
+        life = [c4d.BaseTime(10.0)] * N
         list(map(PS.SetLife, ids, life))
 
     #        ages = [c4d.BaseTime((d/100.0)*10.) for d in distance]
@@ -2607,10 +2579,7 @@ class AutopackViewer:
         self.helper.box(
             "octreeroot",
             center=root.position,
-            size=[
-                root.size,
-            ]
-            * 3,
+            size=[root.size] * 3,
         )
         print("root", len(root.objects))
 
@@ -2623,10 +2592,7 @@ class AutopackViewer:
             self.helper.box(
                 "node" + str(i),
                 center=subnode.position,
-                size=[
-                    subnode.size,
-                ]
-                * 3,
+                size=[subnode.size] * 3,
             )
             self.displaysubnode(subnode, i)
             i += 1
