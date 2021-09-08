@@ -36,13 +36,14 @@
 @author: Ludovic Autin, Graham Johnson,  & Michel Sanner
 """
 import numpy
-import cellpack.autopack as autopack
-from cellpack.autopack.ldSequence import cHaltonSequence3
 from scipy import spatial
 import math
 from math import ceil, floor
 from random import randrange
+import cellpack.autopack as autopack
+from cellpack.autopack.ldSequence import cHaltonSequence3
 from cellpack.mgl_tools.RAPID import RAPIDlib
+from cellpack.mgl_tools.bhtree import bhtreelib
 
 
 # Kevin Grid point class
@@ -65,7 +66,7 @@ class gridPoint:
         )  # Stores the global coordinate associated with this point
 
 
-class Grid:
+class BaseGrid:
     """
     The Grid class
     ==========================
@@ -77,7 +78,7 @@ class Grid:
     def __init__(
         self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=True, lookup=0
     ):
-        # a grid is attached to an environement
+        # a grid is attached to an environnement
         self.boundingBox = boundingBox
         # this list provides the id of the component this grid points belongs
         # to. The id is an integer where 0 is the Histological Volume, and +i is
@@ -101,7 +102,7 @@ class Grid:
         self.gridSpacing = space  # * 1.1547#cubic grid with a diagonal spacing equal to that smallest packing radius
         self.nbGridPoints = None
         self.nbSurfacePoints = 0
-        self.gridVolume = 0  # will be the toatl number of grid points
+        self.gridVolume = 0  # will be the total number of grid points
         # list of (x,y,z) for each grid point (x index moving fastest)
         self.masterGridPositions = []
         self._x = None
@@ -132,8 +133,6 @@ class Grid:
     def setup(self, boundingBox, space):
         self.gridSpacing = space  # * 1.1547
         self.boundingBox = boundingBox
-        # self.gridVolume,self.nbGridPoints=self.computeGridNumberOfPoint(boundingBox,self.gridSpacing)
-        #        self.create3DPointLookup()
 
         if self.lookup == 0:
             self.create3DPointLookupCover()
@@ -163,8 +162,6 @@ class Grid:
             self.gridSpacing,
             len(self.gridPtId),
         )
-        #        self.create3DPointLookup()
-        #        self.create3DPointLookup_loop()#whatdoI do it twice ?
         print(
             "$$$$$$$$  gridVolume = nbPoints = ",
             self.gridVolume,
@@ -198,27 +195,6 @@ class Grid:
         self.freePoints[self.nbFreePoints] = pti
         self.freePoints[pti] = tmp
         self.nbFreePoints -= 1
-
-    # Very dangerous to manipulate the grids... lets solve this problem much earlier in the setup with the new PseudoCode
-    #    def updateDistances(self, histoVol ,insidePoints, freePoints,
-    #                        nbFreePoints ):
-    #        verbose = histoVol.verbose
-    #        nbPts = len(insidePoints)
-    #        for pt in insidePoints:  #Reversing is not necessary if you use the correct Swapping GJ Aug 17,2012
-    #            try :
-    #                # New system replaced by Graham on Aug 18, 2012
-    #                nbFreePoints -= 1
-    #                vKill = freePoints[pt]
-    #                vLastFree = freePoints[nbFreePoints]
-    #                freePoints[vKill] = vLastFree
-    #                freePoints[vLastFree] = vKill
-    #            except :
-    #                pass
-    #
-    #        return nbFreePoints,freePoints
-    #
-    #    def removeFreePointdeque(self,pti):
-    #        self.freePoints.remove(pti)
 
     def getDiagonal(self, boundingBox=None):
         if boundingBox is None:
@@ -852,51 +828,6 @@ class Grid:
         NOTE : need to fix with grid build with numpy arrange
         """
         return self.getPointsInSphere(bb, pt, radius, addSP=addSP, info=info)
-        spacing1 = 1.0 / (self.gridSpacing)  # / 1.1547)
-
-        NX, NY, NZ = self.nbGridPoints
-        OX, OY, OZ = self.boundingBox[
-            0
-        ]  # origin of fill grid-> bottom lef corner not origin. can be or
-        ox, oy, oz = bb[0]
-        ex, ey, ez = bb[1]
-
-        #        i0 = max(0, int((ox-OX)*spacing1)+1)
-        # use floor or round ?
-        i0 = int(max(0, round((ox - OX) * spacing1)))
-        i1 = int(
-            min(NX, round((ex - OX) * spacing1) + 1)
-        )  # +! ? +1 is when the grid doesnt cover everything.
-        #        j0 = max(0, int((oy-OY)*spacing1)+1)
-        j0 = int(max(0, round((oy - OY) * spacing1)))
-        j1 = int(min(NY, int((ey - OY) * spacing1) + 1))
-        #        k0 = max(0, int((oz-OZ)*spacing1)+1)
-        k0 = int(max(0, round((oz - OZ) * spacing1)))
-        k1 = int(min(NZ, round((ez - OZ) * spacing1) + 1))
-
-        zPlaneLength = NX * NY
-
-        ptIndices = []
-        for z in range(int(k0), int(k1)):
-            offz = z * zPlaneLength
-            for y in range(int(j0), int(j1)):
-                off = y * NX + offz
-                # ptIndices.extend(numpy.arange(i0,i1)+off)
-                for x in range(int(i0), int(i1)):
-                    ptIndices.append(x + off)
-        # add surface points
-        if addSP and self.nbSurfacePoints != 0:
-            result = numpy.zeros((self.nbSurfacePoints,), "i")
-            nb = self.surfPtsBht.closePoints(tuple(pt), radius, result)
-            #            nb = self.surfPtsBht.query(tuple(pt),k=self.nbSurfacePoints)
-            dimx, dimy, dimz = self.nbGridPoints
-            # divide by 1.1547?
-            #            ptIndices.extend(list(map(lambda x, length=(self.gridVolume/1.1547):x+length,
-            #                             result[:nb])) )
-            ptIndices.extend(
-                list(map(lambda x, length=self.gridVolume: x + length, result[:nb]))
-            )
-        return ptIndices
 
     def computeGridNumberOfPoint(self, boundingBox, space):
         """
@@ -916,15 +847,12 @@ class Grid:
         return nx * ny * nz, (nx, ny, nz)
 
     def set_surfPtsBht(self, verts):
-        from bhtree import bhtreelib
-
         self.surfPtsBht = None
         if verts is not None and len(verts):
             self.surfPtsBht = bhtreelib.BHtree(verts, None, 10)
         self.nbSurfacePoints = len(verts)
 
     def set_surfPtscht(self, verts):
-        from scipy import spatial
 
         self.surfPtsBht = None
         if verts is not None and len(verts):
@@ -1042,8 +970,6 @@ class Grid:
 
         # Get surface points using bhtree (stored in bht and OGsrfPtsBht)
         # otherwise, regard vertices as surface points.
-        #        from bhtree import bhtreelib
-        from scipy import spatial
 
         self.ogsurfacePoints = vertices[
             :
@@ -1109,9 +1035,9 @@ class Grid:
 
 
 # dont forget to use spatial.distance.cdist
-class HaltonGrid(Grid):
+class HaltonGrid(BaseGrid):
     def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=False):
-        Grid.__init__(self, boundingBox=boundingBox, space=space, setup=setup, lookup=1)
+        BaseGrid.__init__(self, boundingBox=boundingBox, space=space, setup=setup, lookup=1)
         self.haltonseq = cHaltonSequence3()
         self.tree = None
         self.lookup = 1

@@ -52,7 +52,10 @@ from random import random, uniform, seed
 from scipy import spatial
 import numpy
 import pickle
-from math import floor, sqrt, pi
+from scipy.spatial.transform import Rotation as R
+from math import floor, pi
+import json
+from json import encoder
 
 # PANDA3D Physics engine ODE and Bullet
 import panda3d
@@ -78,7 +81,7 @@ from cellpack.autopack import IOutils
 from .Gradient import Gradient
 
 # backward compatibility with kevin method
-from cellpack.autopack.Grid import Grid as G
+from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
 
 try:
     from collections import OrderedDict
@@ -93,13 +96,7 @@ except ImportError:
     helper = None
 print("Environment helper is " + str(helper))
 
-# could replace by a faster json python library
-try:
-    import simplejson as json
-    from simplejson import encoder
-except ImportError:
-    import json
-    from json import encoder
+
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
 LISTPLACEMETHOD = autopack.LISTPLACEMETHOD
@@ -219,7 +216,7 @@ def cmp_to_key(mycmp):
     return K
 
 
-class Grid(G):
+class Grid(BaseGrid):
     """
     The Grid class
     ==========================
@@ -230,55 +227,14 @@ class Grid(G):
 
     def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=10.0):
         # a grid is attached to an environement
-        G.__init__(self, boundingBox=boundingBox, space=space, setup=False)
-        self.boundingBox = boundingBox
-        # this list provides the id of the component this grid points belongs
-        # to. The id is an integer where 0 is the Histological Volume, and +i is
-        # the surface of compartment i and -i is the interior of compartment i
-        # in the list self. compartments
-        self.gridPtId = []
-        # will be a list of indices into 3D of Environment
-        # of points that have not yet been used by the packing algorithm
-        # entries are removed from this list as grid points are used up
-        # during packing. This list is used to pick points randomly during
-        # the packing
-        self.freePoints = []
-        self.nbFreePoints = 0
-        # this list evolves in parallel with self.freePoints and provides
-        # the distance to the closest surface (either an already placed
-        # object (or an compartment surface NOT IMPLEMENTED)
-        self.distToClosestSurf = []
-        self.distToClosestSurf_store = []
+        BaseGrid.__init__(self, boundingBox=boundingBox, space=space, setup=False)
 
-        self.diag = self.getDiagonal()
         self.gridSpacing = space * 1.1547
-        self.nbGridPoints = None
-        self.nbSurfacePoints = 0
-        self.gridVolume = 0  # will be the toatl number of grid points
-        # list of (x,y,z) for each grid point (x index moving fastest)
-        self.masterGridPositions = []
-
-        # this are specific for each compartment
-        self.aInteriorGrids = []
-        self.aSurfaceGrids = []
-        # bhtree
-        self.surfPtsBht = None
-        self.ijkPtIndice = []
-        self.filename = None  # used for storing before pack so no need rebuild
-        self.result_filename = None  # used after pack to store result
-
         self.encapsulatingGrid = 1
         self.gridVolume, self.nbGridPoints = self.computeGridNumberOfPoint(
             boundingBox, space
         )
         self.create3DPointLookup()
-        self.getDiagonal()
-        self.nbSurfacePoints = 0
-        self.gridPtId = numpy.zeros(self.gridVolume, "i")  # [0]*nbPoints
-        # self.distToClosestSurf = [self.diag]*self.gridVolume#surface point too?
-        self.distToClosestSurf = (
-            numpy.ones(self.gridVolume) * self.diag
-        )  # (self.distToClosestSurf)
         self.freePoints = list(range(self.gridVolume))
         self.nbFreePoints = len(self.freePoints)
 
@@ -293,35 +249,6 @@ class Grid(G):
         self.freePointsAfterFill = []
         self.nbFreePointsAfterFill = []
         self.distanceAfterFill = []
-
-    def removeFreePoint(self, pti):
-        tmp = self.freePoints[self.nbFreePoints]  # last one
-        self.freePoints[self.nbFreePoints] = pti
-        self.freePoints[pti] = tmp
-        self.nbFreePoints -= 1
-
-    # Very dangerous to manipulate the grids... lets solve this problem much earlier
-    # in the setup with the new PseudoCode
-    #    def updateDistances(self, histoVol ,insidePoints, freePoints,
-    #                        nbFreePoints ):
-    #        verbose = histoVol.verbose
-    #        nbPts = len(insidePoints)
-    #        for pt in insidePoints:  #Reversing is not necessary if you use the
-    # correct Swapping GJ Aug 17,2012
-    #            try :
-    #                # New system replaced by Graham on Aug 18, 2012
-    #                nbFreePoints -= 1
-    #                vKill = freePoints[pt]
-    #                vLastFree = freePoints[nbFreePoints]
-    #                freePoints[vKill] = vLastFree
-    #                freePoints[vLastFree] = vKill
-    #            except :
-    #                pass
-    #
-    #        return nbFreePoints,freePoints
-    #
-    #    def removeFreePointdeque(self,pti):
-    #        self.freePoints.remove(pti)
 
     def create3DPointLookup(self, boundingBox=None):
         """
@@ -350,28 +277,6 @@ class Grid(G):
                     self.ijkPtIndice[i] = (xi, yi, zi)
                     i += 1
         self.masterGridPositions = pointArrayRaw
-
-    def getPointFrom3D(self, pt3d):
-        """
-        get point number from 3d coordinates
-        """
-        x, y, z = pt3d  # Continuous 3D point to be discretized
-        spacing1 = (
-            1.0 / self.gridSpacing
-        )  # Grid spacing = diagonal of the voxel determined by smalled packing radius
-        (
-            NX,
-            NY,
-            NZ,
-        ) = (
-            self.nbGridPoints
-        )  # vector = [length, height, depth] of grid, units = gridPoints
-        OX, OY, OZ = self.boundingBox[0]  # origin of Pack grid
-        # Algebra gives nearest gridPoint ID to pt3D
-        i = min(NX - 1, max(0, round((x - OX) * spacing1)))
-        j = min(NY - 1, max(0, round((y - OY) * spacing1)))
-        k = min(NZ - 1, max(0, round((z - OZ) * spacing1)))
-        return int(k * NX * NY + j * NX + i)
 
     def getIJK(self, ptInd):
         """
@@ -414,14 +319,6 @@ class Grid(G):
             center[i] = (self.boundingBox[0][i] + self.boundingBox[1][i]) / 2.0
         return center
 
-    def getRadius(self):
-        """
-        Get the radius the grid
-        """
-        d = numpy.array(self.boundingBox[0]) - numpy.array(self.boundingBox[1])
-        s = numpy.sum(d * d)
-        return sqrt(s)
-
     def getPointsInCube(self, bb, pt, radius, addSP=True, info=False):
         """
         Return all grid points indicesinside the given bouding box.
@@ -460,24 +357,6 @@ class Grid(G):
                 list(map(lambda x, length=self.gridVolume: x + length, result[:nb]))
             )
         return ptIndices
-
-    def computeGridNumberOfPoint(self, boundingBox, space):
-        """
-        Return the grid size : total number of point and number of point per axes
-        """
-        xl, yl, zl = boundingBox[0]
-        xr, yr, zr = boundingBox[1]
-
-        # Graham Added on Oct17 to allow for truly 2D grid for test packs,
-        # may break everything!
-        encapsulatingGrid = self.encapsulatingGrid
-
-        from math import ceil
-
-        nx = int(ceil((xr - xl) / space)) + encapsulatingGrid
-        ny = int(ceil((yr - yl) / space)) + encapsulatingGrid
-        nz = int(ceil((zr - zl) / space)) + encapsulatingGrid
-        return nx * ny * nz, (nx, ny, nz)
 
         # ==============================================================================
 
@@ -1602,11 +1481,11 @@ class Environment(CompartmentList):
         or restored using given file.
         """
         if self.use_halton:
-            from cellpack.autopack.Grid import HaltonGrid as Grid
+            from cellpack.autopack.BaseGrid import HaltonGrid as Grid
         elif self.innerGridMethod == "floodfill":
             from cellpack.autopack.Environment import Grid
         else:
-            from cellpack.autopack.Grid import Grid
+            from cellpack.autopack.BaseGrid import BaseGrid as Grid
         # check viewer, and setup the progress bar
         self.reportprogress(label="Building the Master Grid")
         if self.smallestProteinSize == 0:
@@ -1763,259 +1642,17 @@ class Environment(CompartmentList):
                 )
                 compartment.computeVolumeAndSetNbMol(self, b, a, areas=vSurfaceArea)
                 print("The size of the grid I build = ", len(a))
-
-            if (
-                self.innerGridMethod == "sdf"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # A fillSelection can now be a mesh too... it can use either of these methods
-                a, b = compartment.BuildGrid_utsdf(
-                    self
-                )  # to make the outer most selection from the master and then the compartment
-            elif (
-                self.innerGridMethod == "bhtree"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
+            else:
                 a, b = compartment.BuildGrid(self)
-            elif (
-                self.innerGridMethod == "jordan"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
-                a, b = compartment.BuildGrid_jordan(self)
-            elif (
-                self.innerGridMethod == "jordan3"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
-                a, b = compartment.BuildGrid_jordan(self, ray=3)
-            elif (
-                self.innerGridMethod == "pyray"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
-                a, b = compartment.BuildGrid_pyray(self)
-            elif (
-                self.innerGridMethod == "floodfill"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
-                a, b = compartment.BuildGrid_kevin(self)
-            elif (
-                self.innerGridMethod == "binvox"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
-                a, b = compartment.BuildGrid_binvox(self)
-            elif (
-                self.innerGridMethod == "trimesh"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
-                a, b = compartment.BuildGrid_trimesh(self)
-            elif (
-                self.innerGridMethod == "scanline"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
-                a, b = compartment.BuildGrid_scanline(self)
-
+         
             aInteriorGrids.append(a)
-            print("I'm ruther in the loop")
             aSurfaceGrids.append(b)
 
         self.grid.aInteriorGrids = aInteriorGrids
         print("I'm out of the loop and have build my grid with inside points")
         self.grid.aSurfaceGrids = aSurfaceGrids
         print("build Grids", self.innerGridMethod, len(self.grid.aSurfaceGrids))
-
-    def buildGridOld(
-        self,
-        boundingBox=None,
-        gridFileIn=None,
-        rebuild=True,
-        gridFileOut=None,
-        previousFill=False,
-        previousfreePoint=None,
-    ):
-        """
-        The main build grid function. Setup the main grid and merge the
-        compartment grid. The setup is de novo or using previously builded grid
-        or restored using given file. This funcion should be
-        split in smaller function for clarity.
-        """
-        if self.afviewer is not None and hasattr(self.afviewer, "vi"):
-            self.afviewer.vi.progressBar(label="Building the Master Grid")
-        if boundingBox is None:
-            boundingBox = self.boundingBox
-        else:
-            assert len(boundingBox) == 2
-            assert len(boundingBox[0]) == 3
-            assert len(boundingBox[1]) == 3
-        # make sure all recipes are sorted from large to small radius
-        if self.exteriorRecipe:
-            self.exteriorRecipe.sort()
-
-        for o in self.compartments:
-            o.molecules = []
-            if rebuild:
-                o.reset()
-            if o.innerRecipe:
-                o.innerRecipe.sort()
-            if o.surfaceRecipe:
-                o.surfaceRecipe.sort()
-
-        if self.afviewer is not None and hasattr(self.afviewer, "vi"):
-            self.afviewer.vi.progressBar(label="Computing the number of grid points")
-        if rebuild or gridFileIn is not None:
-            # save bb for current fill
-            self.fillBB = boundingBox
-            grid = Grid()
-            self.grid = grid
-            grid.boundingBox = boundingBox
-            # compute grid spacing
-            grid.gridSpacing = space = self.smallestProteinSize * 1.1547  # 2/sqrt(3)
-            print("$$$$$$$$  ", boundingBox, space, self.smallestProteinSize)
-            grid.gridVolume, grid.nbGridPoints = self.callFunction(
-                grid.computeGridNumberOfPoint, (boundingBox, space)
-            )
-        grid = self.grid
-        nbPoints = self.grid.gridVolume
-        print(
-            "$$$$$$$$  gridVolume = nbPoints = ",
-            nbPoints,
-            " grid.nbGridPoints = ",
-            self.grid.nbGridPoints,
-        )
-        # compute 3D point coordiantes for all grid points
-        if rebuild or gridFileIn is not None:
-            self.callFunction(
-                grid.create3DPointLookup
-            )  # generate grid.masterGridPositions
-            grid.nbSurfacePoints = 0
-            # self.isFree = numpy.ones( (nbPoints,), 'i') # Will never shrink
-            # Id is set set to None initially
-            grid.gridPtId = numpy.zeros(nbPoints)  # [0]*nbPoints
-
-        xl, yl, zl = boundingBox[0]
-        xr, yr, zr = boundingBox[1]
-        # distToClosestSurf is set to self.diag initially
-        self.grid.diag = diag = vlen(vdiff((xr, yr, zr), (xl, yl, zl)))
-        if rebuild or gridFileIn is not None:
-            self.grid.distToClosestSurf = [diag] * nbPoints  # surface point too?
-            self.grid.distToClosestSurf = numpy.array(self.grid.distToClosestSurf)
-            self.grid.freePoints = list(range(nbPoints))
-        else:
-            # just reset
-            self.grid.distToClosestSurf = [diag] * len(
-                self.grid.distToClosestSurf
-            )  # surface point too?
-            self.grid.distToClosestSurf = numpy.array(self.grid.distToClosestSurf)
-            self.grid.freePoints = list(range(len(self.grid.freePoints)))
-            nbPoints = len(self.grid.freePoints)
-        #        print 'DIAG', diag,self.grid.distToClosestSurf
-        self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
-        #        if gridFileIn is None :
-        #            gridFileIn = self.grid_filename
-        #        if gridFileOut is None :
-        #            gridFileOut= self.grid_filename
-        #        if self.grid_filename is not None and not os.path.isfile(self.grid_filename):
-        #            gridFileIn = None
-
-        #        if rebuild :
-        # this restore/store the grid information of the organelle.
-        if gridFileIn is not None:  # and not rebuild:
-            print("file in for building grid but it doesnt work well")
-            self.grid.filename = gridFileIn
-            if self.nFill == 0:  # ?:
-                print("restore from file")
-                self.restoreGridFromFile(gridFileIn)
-        elif gridFileIn is None and rebuild:
-            # assign ids to grid points
-            print("file is None for building grid")
-            self.BuildGrids()
-        else:
-            print("file is not rebuild")
-        if gridFileOut is not None:
-            self.saveGridToFile(gridFileOut)
-            self.grid.filename = gridFileOut
-            # get new set of freePoints which includes surface points
-            #       nbPoints = nbPoints-1            #Graham Turned off this redundant nbPoints-1 call on 8/27/11
-            #       nbPoints = nbPoints-1          #Graham Turned this one off on 5/16/12 to match August repair in Hybrid
-        grid.nbFreePoints = nbPoints  # -1
-        grdPts = grid.masterGridPositions
-        grid.nbFreePoints = len(grdPts)
-        # build BHTree for surface points (off grid)
-        if rebuild:
-            verts = []
-            for orga in self.compartments:
-                if orga.surfacePointsCoords:
-                    for pt3d in orga.surfacePointsCoords:
-                        verts.append(pt3d)
-
-            from bhtree import bhtreelib
-
-            grid.surfPtsBht = None
-            if verts:
-                grid.surfPtsBht = bhtreelib.BHtree(verts, None, 10)
-
-        # build list of compartments without a recipe#????
-        noRecipe = []
-        if self.exteriorRecipe is None:
-            noRecipe.append(0)
-        for o in self.compartments:
-            if o.surfaceRecipe is None:
-                noRecipe.append(o.number)
-            if o.innerRecipe is None:
-                noRecipe.append(-o.number)
-
-        # compute exterior volume
-        unitVol = grid.gridSpacing ** 3
-        totalVolume = grid.gridVolume * unitVol
-        if self.fbox_bb is not None:
-            V, nbG = self.callFunction(
-                grid.computeGridNumberOfPoint, (self.fbox_bb, space)
-            )
-            totalVolume = V * unitVol
-        for o in self.compartments:
-            # totalVolume -= o.surfaceVolume
-            totalVolume -= o.interiorVolume
-        self.exteriorVolume = totalVolume
-
-        r = self.exteriorRecipe
-        if r:
-            r.setCount(totalVolume)  # should actually use the fillBB
-
-        if self.use_gradient and len(self.gradients) and rebuild:
-            for g in self.gradients:
-                self.gradients[g].buildWeigthMap(boundingBox, grid.masterGridPositions)
-        if not rebuild:
-            self.grid.distToClosestSurf = self.grid.distToClosestSurf_store[:]
-        else:
-            self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
-
-            # we should be able here to update the number of free point using a
-            # previous grid overlap
-        if previousFill:  # actually if there is a previous fill
-            # get the intersecting point and update freePoints from this one if they
-            # are not free previousfreePoint
-            # compute the intersection bounding box and get ptindice for both grid
-            # by getPointsInCube
-            # check which one are in freePoints from previous,
-            # and update the current one
-            # update the curentpass
-            #            #how to update the distance for each prest ingr ?
-            distance = self.grid.distToClosestSurf  # [:]
-            nbFreePoints = nbPoints
-            for i, mingrs in enumerate(
-                self.molecules
-            ):  # ( jtrans, rotMatj, self, ptInd )
-                nbFreePoints = self.onePrevIngredient(
-                    i, mingrs, distance, nbFreePoints, self.molecules
-                )
-            for organelle in self.compartments:
-                for i, mingrs in enumerate(
-                    organelle.molecules
-                ):  # ( jtrans, rotMatj, self, ptInd )
-                    nbFreePoints = self.onePrevIngredient(
-                        i, mingrs, distance, nbFreePoints, organelle.molecules
-                    )
-
-            self.grid.nbFreePoints = nbFreePoints
-        self.setCompatibility()
-
+    
     def onePrevIngredient(self, i, mingrs, distance, nbFreePoints, marray):
         """
         Unused
@@ -3240,9 +2877,7 @@ class Environment(CompartmentList):
                             mat = rot.copy()
                             mat[:3, 3] = pos
                             import math
-                            from ePMV import comput_util as c
-
-                            r = c.matrixToEuler(mat)
+                            r = R.from_matrix(mat).as_euler("xyz", degrees=False)
                             h1 = math.degrees(math.pi + r[0])
                             p1 = math.degrees(r[1])
                             b1 = math.degrees(-math.pi + r[2])
