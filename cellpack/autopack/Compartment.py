@@ -65,6 +65,8 @@ import math
 from cellpack.mgl_tools.RAPID import RAPIDlib
 import cellpack.autopack as autopack
 from cellpack.autopack import transformation as tr, binvox_rw
+from cellpack.autopack.BaseGrid import gridPoint
+
 from .Recipe import Recipe
 from .ray import (
     makeMarchingCube,
@@ -277,7 +279,7 @@ class Compartment(CompartmentList):
         @return:  the created dejavu mesh
         """
         # filename or URL
-        from DejaVu.IndexedPolygons import IndexedPolygons
+        from mgl_tools.DejaVu.IndexedPolygons import IndexedPolygons
 
         v = numpy.loadtxt(filename + ".indpolvert", numpy.float32)
         f = numpy.loadtxt(filename + ".indpolface", numpy.int32)
@@ -599,7 +601,7 @@ class Compartment(CompartmentList):
             else:  # if helper is not None:#neeed the helper
                 if helper.host == "dejavu" and helper.nogui:
                     dgeoms = helper.read(filename)
-                    v, vn, f = dgeoms.values()[0]["mesh"]
+                    v, vn, f = list(dgeoms.values())[0]["mesh"]
                     # fix the normal Should transform first ?
                     vn = helper.normal_array(v, numpy.array(f))
                     v = numpy.array(v) * self.scale
@@ -764,8 +766,6 @@ class Compartment(CompartmentList):
 
     def getBoundingBox(self):
         """get the bounding box"""
-        from autopack.Environment import vlen, vdiff
-
         mini = numpy.min(self.vertices, 0)
         maxi = numpy.max(self.vertices, 0)
         xl, yl, zl = mini
@@ -2479,8 +2479,6 @@ class Compartment(CompartmentList):
             self.ogsurfacePointsNormals = self.vnormals[:]
         else:
             self.createSurfacePoints(maxl=env.grid.gridSpacing)
-
-        from autopack.Grid import gridPoint
 
         # Graham Sum the SurfaceArea for each polyhedron
         vertices = self.vertices[
