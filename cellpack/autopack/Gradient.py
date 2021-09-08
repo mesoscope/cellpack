@@ -332,7 +332,7 @@ class Gradient:
 
     def buildWeigthMapDirection(self, bb, MasterPosition):
         """
-        from a given direction build a linear weigth according the choosen mode
+        from a given direction build a linear weight according the chosen mode
         (linear, gauss, etc...)
         """
         N = len(MasterPosition)
