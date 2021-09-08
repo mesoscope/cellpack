@@ -50,9 +50,7 @@ import cellpack.autopack as autopack
 #
 # ===============================================================================
 import cellpack.mgl_tools.upy as upy
-from cellpack.mgl_tools.upy import colors as upyColors
-
-from cellpack.mgl_tools.DejaVu.colorTool import Map
+from cellpack.autopack.upy import colors as upyColors
 
 from .Ingredient import GrowIngredient, ActinIngredient
 
@@ -545,7 +543,6 @@ class AutopackViewer:
             self.vi.setLayers(p, [1])
 
         if self.ViewerType == "dejavu":
-            #            from DejaVu.colorTool import RGBRamp#, Map
             verts = []
             labels = []
             p = self.vi.getObject("autopackHider")
@@ -2152,21 +2149,13 @@ class AutopackViewer:
         print("datas", len(datas))
         print("objs", len(listeObjs))
         if datas and datas is not None:
-            #            from DejaVu.colorTool import Map
-            lcol = Map(datas, ramp, mini=mini, maxi=maxi)
+            lcol = upyColors.map_colors(datas, ramp, mini=mini, maxi=maxi)
             for i, io in enumerate(listeObjs):
                 # print io
                 io = self.vi.getObject(io)
                 if useMaterial:
                     # this will add a material if no material
                     self.vi.changeObjColorMat(io, lcol[i])
-                if useObjectColors:
-                    import c4d
-
-                    io[c4d.ID_BASEOBJECT_USECOLOR] = 1  # automatic
-                    io[c4d.ID_BASEOBJECT_COLOR] = self.vi.FromVec(
-                        lcol[i], pos=False
-                    )  # get a vector 0,0,0
         return datas, listeObjs
 
     # export distance ...
@@ -2412,23 +2401,6 @@ class AutopackViewer:
         life = [c4d.BaseTime(10.0)] * N
         list(map(PS.SetLife, ids, life))
 
-    #        ages = [c4d.BaseTime((d/100.0)*10.) for d in distance]
-    #        map(PS.SetAge,ids,ages)
-    #        #render ?
-    #        #render("md%.4d" % i,640,480)
-    #        name = "/Users/ludo/DEV/AutoFill/TestSnake/render/renderdistance"
-
-    #        rd = doc.GetActiveRenderData().GetData()
-    #        bmp = c4d.bitmaps.BaseBitmap()
-    # Initialize the bitmap with the result size.
-    # The resolution must match with the output size of the render settings.
-    #        bmp.Init(x=640, y=480, depth=32)
-    #        fps = doc.GetFps()
-    #        next = c4d.BaseTime(self.i/fps)
-    #        doc.SetTime(bc2)
-    #        c4d.documents.RenderDocument(doc, rd, bmp, c4d.RENDERFLAGS_EXTERNAL)
-    #        c4d.CallCommand(12414)
-
     def displayLeafOctree(self, name, node, ind, parent):
         if node is None:
             return
@@ -2611,7 +2583,7 @@ class AutopackViewer:
         #        ind=numpy.nonzero(mask)[0]
         #        distances[ind]=cutoff
         pindices = numpy.nonzero(numpy.greater(gw, 0.0001))[0]
-        colors = Map(numpy.take(gw, pindices, 0), ramp)
+        colors = upyColors.map_colors(numpy.take(gw, pindices, 0), ramp)
         self.vi.instancesSphere(
             self.histo.name + "gradientSphere",
             numpy.take(positions, pindices, 0),
@@ -2639,7 +2611,7 @@ class AutopackViewer:
         mask = distances < -cutoff
         ind = numpy.nonzero(mask)[0]
         distances[ind] = cutoff
-        colors = Map(distances, ramp)
+        colors = upyColors.map_colors(distances, ramp)
         base = self.helper.getObject(self.env.name + "distances_base")
         if base is None:
             base = self.helper.Sphere(self.env.name + "distances_base")[0]

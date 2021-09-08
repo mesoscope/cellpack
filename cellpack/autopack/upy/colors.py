@@ -18,7 +18,7 @@
 """
 import numpy
 
-IPRECISION = numpy.Int32
+IPRECISION = numpy.int32
 
 color_names = [
     "aliceblue",
