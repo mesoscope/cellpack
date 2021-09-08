@@ -20,7 +20,7 @@ from matplotlib import pyplot
 from matplotlib.patches import Circle
 from matplotlib import pyplot as plt
 
-from cellpack.mgl_tools.upy import colors as col
+from cellpack.autopack.upy import colors as col
 import cellpack.autopack as autopack
 from cellpack.autopack.transformation import signed_angle_between_vectors
 from cellpack.autopack.ldSequence import halton
@@ -1010,7 +1010,7 @@ class AnalyseAP:
             seedNum=seed, verbose=0, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb
         )
         t2 = time()
-        print("time to run Fill5", t2 - t1)
+        print("time to run pack_grid", t2 - t1)
 
     def calcDistanceMatrixFastEuclidean2(self, nDimPoints):
         nDimPoints = numpy.array(nDimPoints)
