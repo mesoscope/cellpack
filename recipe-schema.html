@@ -1,0 +1,691 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Cellpack Recipe Schema 1.0 &mdash; cellPack 0.1.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> cellPack
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cellPack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Cellpack Recipe Schema 1.0</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/recipe-schema.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="cellpack-recipe-schema-1-0">
+<h1>Cellpack Recipe Schema 1.0<a class="headerlink" href="#cellpack-recipe-schema-1-0" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="recipe-definition-properties">
+<h2>Recipe definition properties<a class="headerlink" href="#recipe-definition-properties" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="name">
+<h3>name<a class="headerlink" href="#name" title="Permalink to this headline">¶</a></h3>
+<p><em>Required string.</em></p>
+<p>Unique recipe name</p>
+</div>
+<div class="section" id="version">
+<h3>version<a class="headerlink" href="#version" title="Permalink to this headline">¶</a></h3>
+<p><em>Required string.</em></p>
+<p>Version of the recipe</p>
+<div class="section" id="example-of-recipe-definition">
+<h4>example of recipe definition:<a class="headerlink" href="#example-of-recipe-definition" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;recipe&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NM_Analysis_FigureA&quot;</span>
+    <span class="p">},</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="options-properties">
+<h2>Options properties<a class="headerlink" href="#options-properties" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="saveresult">
+<h3>saveResult<a class="headerlink" href="#saveresult" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p>Save packing result to .apr file.</p>
+</div>
+<div class="section" id="resultfile">
+<h3>resultfile<a class="headerlink" href="#resultfile" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional string</em></p>
+<p>Location of publicly hosted packing result</p>
+</div>
+<div class="section" id="enviroonly">
+<h3>EnviroOnly<a class="headerlink" href="#enviroonly" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p>Expect no compartments, only a bounding box volume</p>
+</div>
+<div class="section" id="canceldialog">
+<h3>cancelDialog<a class="headerlink" href="#canceldialog" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</div>
+<div class="section" id="pickweightedingr">
+<h3>pickWeightedIngr<a class="headerlink" href="#pickweightedingr" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+<p>Prioritize ingredient selection by packingWeight.</p>
+</div>
+<div class="section" id="pickrandpt">
+<h3>pickRandPt<a class="headerlink" href="#pickrandpt" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+<p>Pick drop position point randomly.</p>
+</div>
+<div class="section" id="ingrlookforneighbours">
+<h3>ingrLookForNeighbours<a class="headerlink" href="#ingrlookforneighbours" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p>Look for ingredients attractor and partner.</p>
+</div>
+<div class="section" id="overwriteplacemethod">
+<h3>overwritePlaceMethod<a class="headerlink" href="#overwriteplacemethod" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">true</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">true</span></code>, the Enviro-level placeMethod will overwrite all of the ingredient-level place method in a recipe</p>
+</div>
+<div class="section" id="boundingbox">
+<h3>boundingBox<a class="headerlink" href="#boundingbox" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional [[number, number, number], [number, number, number]]</em> Defaults to <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0],</span> <span class="pre">[0.1,</span> <span class="pre">0.1,</span> <span class="pre">0.1]</span></code>.</p>
+<p>An array of two points that define the corners of the bounding box.</p>
+</div>
+<div class="section" id="smallestproteinsize">
+<h3>smallestProteinSize<a class="headerlink" href="#smallestproteinsize" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">15</span></code>.</p>
+<p>Smallest ingredient packing radius override (low=accurate | high=fast). As with largestProteinSize, if not defined, this value will be calculated by the algorithm based on the spheretree input file (packing radius) or the packingRadius calculated from ingredients that use primitives for their geometries.</p>
+</div>
+<div class="section" id="largestproteinsize">
+<h3>largestProteinSize<a class="headerlink" href="#largestproteinsize" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em></p>
+<p>As with smallestProteinSize, if not defined, this value will be calculated by the algorithm based on the spheretree input file (packing radius) or the packingRadius calculated from ingredients that use primitives for their geometries.</p>
+</div>
+<div class="section" id="computegridparams">
+<h3>computeGridParams<a class="headerlink" href="#computegridparams" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</div>
+<div class="section" id="windowssize">
+<h3>windowsSize<a class="headerlink" href="#windowssize" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p>
+</div>
+<div class="section" id="runtimedisplay">
+<h3>runTimeDisplay<a class="headerlink" href="#runtimedisplay" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p>Display packing in realtime (slow)</p>
+</div>
+<div class="section" id="placemethod">
+<h3>placeMethod<a class="headerlink" href="#placemethod" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional enum</em>. One of <code class="docutils literal notranslate"><span class="pre">&quot;RAPID&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;spheresBHT&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>.</p>
+<p>Will be use if placeMethod isn’t in an ingredient setup</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;RAPID&quot;</span></code> uses <a class="reference external" href="http://gamma.cs.unc.edu/OBB/">“Robust and Accurate Polygon Interference Detection (RAPID)”</a> to test if the ingredient being placed in the packing loop is colliding with any neighboring objects fed into the list of neighbors.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code> uses a simple algorithm developed by GJ, M-A-A, MS, and LA to test if a single sphere, sphere-tree, or other primative (box and cylinder) are colliding with masked/unallowed points on the grid… I can’t recall all of the allowed types, but check the input parameters that it accepts. I believe there is also an option to perform simple collisions directly between primatives, e.g. sphere-sphere, sphere-box, sphere-cylinder, cylinder-box, and spheretree-others</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;spheresBHT&quot;</span></code> gets the sphereTrees of the potential colliding neighbors, and does an efficient sphereTree-sphereTree collision detection of the sphereTree for the object being packed against the sphereTrees of each neighbor- returns false if a collision is detected</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code>  Python wrapper for Bullet Physics Engine (popular in ~2010 and used by C4D, Maya, Blender, etc) that provides a variety of object-object collision detection, including collision min/max overlap distance, etc. Allows relaxation in its own loop, springs, rejection, meshes, primitives, etc.</p>
+</div>
+<div class="section" id="use-gradient">
+<h3>use_gradient<a class="headerlink" href="#use-gradient" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p>Use gradients if they are defined.</p>
+</div>
+<div class="section" id="gradients">
+<h3>gradients<a class="headerlink" href="#gradients" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional string[]</em></p>
+<p>An array that defines the names of directional gradients to use.</p>
+</div>
+<div class="section" id="innergridmethod">
+<h3>innerGridMethod<a class="headerlink" href="#innergridmethod" title="Permalink to this headline">¶</a></h3>
+<p><em>enum</em>. One of <code class="docutils literal notranslate"><span class="pre">&quot;bhtree&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;jordan&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;sdf&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;jordan3&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;pyray&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;floodfill&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;binvox&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;trimesh&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;scanline&quot;</span></code>. Defaults to <code class="docutils literal notranslate"><span class="pre">&quot;jordan3&quot;</span></code>.</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">&quot;bhtree&quot;</span></code> build sthe compartment grid ie surface and inside point using bhtree.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;jordan&quot;</span></code> builds the compartment grid ie surface and inside point using jordan theorem and host raycast.  Only computes the inner point. No grid.</dt><dd><p>This is independent from the packing. Help build ingredient sphere tree and representation.</p>
+</dd>
+</dl>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">Uses</span> <span class="n">BHTree</span> <span class="n">to</span> <span class="n">compute</span> <span class="n">surface</span> <span class="n">points</span>
+<span class="o">-</span> <span class="n">Uses</span> <span class="n">Jordan</span> <span class="n">raycasting</span> <span class="n">to</span> <span class="n">determine</span> <span class="n">inside</span><span class="o">/</span><span class="n">outside</span> <span class="p">(</span><span class="n">defaults</span> <span class="n">to</span> <span class="mi">1</span> <span class="n">iteration</span><span class="p">,</span> <span class="n">can</span> <span class="n">use</span> <span class="mi">3</span> <span class="n">iterations</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">&quot;sdf&quot;</span></code> builds the compartment grid ie surface and inside point using signed distance fields</dt><dd><blockquote>
+<div><p>from the UT package.</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;jordan3&quot;</span></code> builds the compartment grid ie surface and inside point using jordan theorem and host raycast, with ray set to <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;pyray&quot;</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;floodfill&quot;</span></code> builds the compartment grid ie surface and inside point using flood filling algo from kevin. Takes a polyhedron, and builds a grid. In this grid:</p>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>          - Projects the polyhedron to the grid.
+          - Determines which points are inside/outside the polyhedron
+          - Determines point&#39;s distance to the polyhedron.
+      superFine provides the option doing a super leakproof test when determining
+      which points are inside or outside. Instead of raycasting to nearby faces to
+      determine inside/outside, setting this setting to true will force the algorithm
+      to raycast to the entire polyhedron. This usually not necessary, because the
+      built-in algorithm has no known leakage cases, even in extreme edge cases.
+      It is simply there as a safeguard.
+
+
+``&quot;binvox&quot;``
+
+``&quot;trimesh&quot;``
+
+``&quot;scanline&quot;`` builds the compartment grid ie surface and inside point using scanline.
+</pre></div>
+</div>
+</div>
+<div class="section" id="freeptsupdatethreshold">
+<h3>freePtsUpdateThreshold<a class="headerlink" href="#freeptsupdatethreshold" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+<p>Mask grid while packing (0=always | 1=never)</p>
+</div>
+<div class="section" id="use-periodicity">
+<h3>use_periodicity<a class="headerlink" href="#use-periodicity" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p>Whether to consider periodicity when packing objects. If <code class="docutils literal notranslate"><span class="pre">true</span></code> a packed object at the edge of the bounding will wrap to the other side of the bounding box.</p>
+</div>
+<div class="section" id="timer">
+<h3>_timer<a class="headerlink" href="#timer" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p>Evaluate time per function.</p>
+</div>
+<div class="section" id="hackfreepts">
+<h3>_hackFreepts<a class="headerlink" href="#hackfreepts" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p>no free point update</p>
+<p>example Options:</p>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;options&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;cancelDialog&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;\_hackFreepts&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;windowsSize&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="nt">&quot;use_gradient&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;placeMethod&quot;</span><span class="p">:</span> <span class="s2">&quot;RAPID&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;saveResult&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;runTimeDisplay&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;overwritePlaceMethod&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;innerGridMethod&quot;</span><span class="p">:</span> <span class="s2">&quot;bhtree&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;boundingBox&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span>
+    <span class="nt">&quot;gradients&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="nt">&quot;smallestProteinSize&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nt">&quot;computeGridParams&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;freePtsUpdateThreshold&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nt">&quot;pickWeightedIngr&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nt">&quot;\_timer&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;ingrLookForNeighbours&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;pickRandPt&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;largestProteinSize&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="nt">&quot;resultfile&quot;</span><span class="p">:</span> <span class="s2">&quot;autoPACKserver/results/NM_Analysis_FigureA1.0.apr.json&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;use_periodicity&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;EnviroOnly&quot;</span><span class="p">:</span> <span class="kc">false</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="ingredient-properties">
+<h2>Ingredient Properties<a class="headerlink" href="#ingredient-properties" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>name<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p><em>Required string</em></p>
+<p>Name of the ingredient.</p>
+</div>
+<div class="section" id="overwrite-nbmol-value">
+<h3>overwrite_nbMol_value<a class="headerlink" href="#overwrite-nbmol-value" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+<p>A complete override of concentration and nbMol, not additive with molarity.</p>
+</div>
+<div class="section" id="molarity">
+<h3>molarity<a class="headerlink" href="#molarity" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+<p>Concentration of the ingredient.</p>
+</div>
+<div class="section" id="nbmol">
+<h3>nbMol<a class="headerlink" href="#nbmol" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em></p>
+<p>Number to pack, additive with molarity. Defaults to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+</div>
+<div class="section" id="encapsulatingradius">
+<h3>encapsulatingRadius<a class="headerlink" href="#encapsulatingradius" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p>
+<p>Smallest radius that completely includes all the geometry.</p>
+</div>
+<div class="section" id="radii">
+<h3>radii<a class="headerlink" href="#radii" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number[][]</em></p>
+<p>Property of a primitive sphere.</p>
+</div>
+<div class="section" id="positions">
+<h3>positions<a class="headerlink" href="#positions" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional [number, number, number][]</em></p>
+</div>
+<div class="section" id="positions2">
+<h3>positions2<a class="headerlink" href="#positions2" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional [number, number, number][]</em></p>
+</div>
+<div class="section" id="spherefile">
+<h3>sphereFile<a class="headerlink" href="#spherefile" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional string</em></p>
+<p>Location of sphere file</p>
+</div>
+<div class="section" id="packingpriority">
+<h3>packingPriority<a class="headerlink" href="#packingpriority" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Default to <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+<p>Order to pack, largest negative number gets packed first.</p>
+</div>
+<div class="section" id="pdb">
+<h3>pdb<a class="headerlink" href="#pdb" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional string</em></p>
+<p>PDB id in the protein database</p>
+</div>
+<div class="section" id="color">
+<h3>color<a class="headerlink" href="#color" title="Permalink to this headline">¶</a></h3>
+<p><em>[number, number, number]</em></p>
+</div>
+<div class="section" id="meshfile">
+<h3>meshFile<a class="headerlink" href="#meshfile" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional string</em></p>
+<p>Location of mesh file</p>
+</div>
+<div class="section" id="meshname">
+<h3>meshName<a class="headerlink" href="#meshname" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional string</em></p>
+<p>Name of the mesh file.</p>
+</div>
+<div class="section" id="coordsystem">
+<h3>coordsystem<a class="headerlink" href="#coordsystem" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional enum. One of ``”left”`` ``”right”``.</em> Defaults to <code class="docutils literal notranslate"><span class="pre">&quot;left&quot;</span></code>.</p>
+</div>
+<div class="section" id="principalvector">
+<h3>principalVector<a class="headerlink" href="#principalvector" title="Permalink to this headline">¶</a></h3>
+<p><em>[number, number, number]</em> Defaults to <code class="docutils literal notranslate"><span class="pre">[0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></code>.</p>
+</div>
+<div class="section" id="type">
+<h3>Type<a class="headerlink" href="#type" title="Permalink to this headline">¶</a></h3>
+<p><a href="#id2"><span class="problematic" id="id3">*</span></a>Optional enum. One of <code class="docutils literal notranslate"><span class="pre">&quot;SingleSphere&quot;</span></code>,<code class="docutils literal notranslate"><span class="pre">&quot;SingleCube&quot;</span></code>,<code class="docutils literal notranslate"><span class="pre">&quot;MultiSphere&quot;</span></code>,<code class="docutils literal notranslate"><span class="pre">&quot;MultiCylinder&quot;</span></code>,<code class="docutils literal notranslate"><span class="pre">&quot;Grow&quot;</span></code>,<code class="docutils literal notranslate"><span class="pre">&quot;Mesh&quot;</span></code>*</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;SingleSphere&quot;</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;SingleCube&quot;</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;MultiSphere&quot;</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;MultiCylinder&quot;</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;Grow&quot;</span></code>: A spline ingredient</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;Mesh&quot;</span></code></p>
+</div>
+<div class="section" id="offset">
+<h3>offset<a class="headerlink" href="#offset" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional [number, number, number]</em> Defaults to <code class="docutils literal notranslate"><span class="pre">[0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></code>.</p>
+</div>
+<div class="section" id="jittermax">
+<h3>jitterMax<a class="headerlink" href="#jittermax" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional [number, number, number]</em> Defaults to <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">1,</span> <span class="pre">1]</span></code>.</p>
+</div>
+<div class="section" id="nbjitter">
+<h3>nbJitter<a class="headerlink" href="#nbjitter" title="Permalink to this headline">¶</a></h3>
+<p><em>Required number</em>  Defaults to <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p>
+<p>How many times it will attempts to pack before rejecting the ingredient.</p>
+</div>
+<div class="section" id="perturbaxisamplitude">
+<h3>perturbAxisAmplitude<a class="headerlink" href="#perturbaxisamplitude" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p>
+</div>
+<div class="section" id="userotaxis">
+<h3>useRotAxis<a class="headerlink" href="#userotaxis" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</div>
+<div class="section" id="rotaxis">
+<h3>rotAxis<a class="headerlink" href="#rotaxis" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional [number, number, number]</em> Defaults to <code class="docutils literal notranslate"><span class="pre">[0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></code>.</p>
+</div>
+<div class="section" id="rotrange">
+<h3>rotRange<a class="headerlink" href="#rotrange" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">6.2831</span></code>.</p>
+</div>
+<div class="section" id="useorientbias">
+<h3>useOrientBias<a class="headerlink" href="#useorientbias" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</div>
+<div class="section" id="orientbiasrotrangemin">
+<h3>orientBiasRotRangeMin<a class="headerlink" href="#orientbiasrotrangemin" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">-pi</span></code>.</p>
+</div>
+<div class="section" id="orientbiasrotrangemax">
+<h3>orientBiasRotRangeMax<a class="headerlink" href="#orientbiasrotrangemax" title="Permalink to this headline">¶</a></h3>
+<p><em>number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">pi</span></code>.</p>
+</div>
+<div class="section" id="cutoff-boundary">
+<h3>cutoff_boundary<a class="headerlink" href="#cutoff-boundary" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+<p>The amount this ingredient can move in x, y and z. If z is set to 0, will be a 2D packing.</p>
+</div>
+<div class="section" id="cutoff-surface">
+<h3>cutoff_surface<a class="headerlink" href="#cutoff-surface" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">5.0</span></code>.</p>
+</div>
+<div class="section" id="placetype">
+<h3>placeType<a class="headerlink" href="#placetype" title="Permalink to this headline">¶</a></h3>
+<p><a href="#id4"><span class="problematic" id="id5">*</span></a>Optional enum. One of <code class="docutils literal notranslate"><span class="pre">&quot;RAPID&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;spheresBHT&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code><a href="#id6"><span class="problematic" id="id7">*</span></a>. Defaults to <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;RAPID&quot;</span></code> uses <a class="reference external" href="http://gamma.cs.unc.edu/OBB/">“Robust and Accurate Polygon Interference Detection (RAPID)”</a> to test if the ingredient being placed in the packing loop is colliding with any neighboring objects fed into the list of neighbors.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code> uses a simple algorithm developed by GJ, M-A-A, MS, and LA to test if a single sphere, sphere-tree, or other primative (box and cylinder) are colliding with masked/unallowed points on the grid… I can’t recall all of the allowed types, but check the input parameters that it accepts. I believe there is also an option to perform simple collisions directly between primatives, e.g. sphere-sphere, sphere-box, sphere-cylinder, cylinder-box, and spheretree-others</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;spheresBHT&quot;</span></code> gets the sphereTrees of the potential colliding neighbors, and does an efficient sphereTree-sphereTree collision detection of the sphereTree for the object being packed against the sphereTrees of each neighbor- returns false if a collision is detected</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code>  Python wrapper for Bullet Physics Engine (popular in ~2010 and used by C4D, Maya, Blender, etc) that provides a variety of object-object collision detection, including collision min/max overlap distance, etc. Allows relaxation in its own loop, springs, rejection, meshes, primitives, etc.</p>
+</div>
+<div class="section" id="use-mesh-rb">
+<h3>use_mesh_rb<a class="headerlink" href="#use-mesh-rb" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</div>
+<div class="section" id="rejectionthreshold">
+<h3>rejectionThreshold<a class="headerlink" href="#rejectionthreshold" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">30</span></code>.</p>
+</div>
+<div class="section" id="packingmode">
+<h3>packingMode<a class="headerlink" href="#packingmode" title="Permalink to this headline">¶</a></h3>
+<p><a href="#id9"><span class="problematic" id="id10">*</span></a>Optional enum. One of <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;close&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;closePartner&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;randomPartner&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;gradient&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;hexatile&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;squaretile&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;triangletile&quot;</span></code>* Defaults to <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code>.</p>
+</div>
+<div class="section" id="gradient">
+<h3>gradient<a class="headerlink" href="#gradient" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional</em>
+Gradient name to use if <code class="docutils literal notranslate"><span class="pre">use_gradient</span></code> is <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</div>
+<div class="section" id="proba-binding">
+<h3>proba_binding<a class="headerlink" href="#proba-binding" title="Permalink to this headline">¶</a></h3>
+<p><a href="#id11"><span class="problematic" id="id12">*</span></a>Optional number between <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code>* Defaults to <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+</div>
+<div class="section" id="proba-not-binding">
+<h3>proba_not_binding<a class="headerlink" href="#proba-not-binding" title="Permalink to this headline">¶</a></h3>
+<p><em>number</em></p>
+</div>
+<div class="section" id="isattractor">
+<h3>isAttractor<a class="headerlink" href="#isattractor" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional boolean</em> Defaults to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+</div>
+<div class="section" id="weight">
+<h3>weight<a class="headerlink" href="#weight" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p>
+</div>
+<div class="section" id="partners-name">
+<h3>partners_name<a class="headerlink" href="#partners-name" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional string[]</em></p>
+</div>
+<div class="section" id="excluded-partners-name">
+<h3>excluded_partners_name<a class="headerlink" href="#excluded-partners-name" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional string[]</em></p>
+</div>
+<div class="section" id="partners-position">
+<h3>partners_position<a class="headerlink" href="#partners-position" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number[][]</em></p>
+</div>
+<div class="section" id="partners-weight">
+<h3>partners_weight<a class="headerlink" href="#partners-weight" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional number</em> Defaults to <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+</div>
+<div class="section" id="properties">
+<h3>properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional object</em> Defaults to <code class="docutils literal notranslate"><span class="pre">{}</span></code>.</p>
+</div>
+<div class="section" id="score">
+<h3>score<a class="headerlink" href="#score" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional string</em></p>
+</div>
+<div class="section" id="organism">
+<h3>organism<a class="headerlink" href="#organism" title="Permalink to this headline">¶</a></h3>
+<p><em>Optional string</em></p>
+</div>
+<div class="section" id="example-ingredient">
+<h3>example ingredient<a class="headerlink" href="#example-ingredient" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;Sphere_radius_100&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;overwrite_nbMol_value&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="nt">&quot;nbJitter&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="nt">&quot;molarity&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nt">&quot;partners_position&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="nt">&quot;rotRange&quot;</span><span class="p">:</span> <span class="mf">6.2831</span><span class="p">,</span>
+    <span class="nt">&quot;color&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="mf">0.498</span><span class="p">,</span> <span class="mf">0.498</span><span class="p">,</span> <span class="mf">0.498</span> <span class="p">],</span>
+    <span class="nt">&quot;meshFile&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;sphereFile&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;weight&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+    <span class="nt">&quot;orientBiasRotRangeMin&quot;</span><span class="p">:</span> <span class="mf">-3.1415927</span><span class="p">,</span>
+    <span class="nt">&quot;radii&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">100</span><span class="p">]],</span>
+    <span class="nt">&quot;cutoff_boundary&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nt">&quot;coordsystem&quot;</span><span class="p">:</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;jitterMax&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="nt">&quot;perturbAxisAmplitude&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="nt">&quot;encapsulatingRadius&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="nt">&quot;positions2&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;useOrientBias&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;gradient&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;isAttractor&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;principalVector&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">],</span>
+    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="nt">&quot;partners_name&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="nt">&quot;nbMol&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Sphere_radius_100&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;orientBiasRotRangeMax&quot;</span><span class="p">:</span> <span class="mf">-3.1415927</span><span class="p">,</span>
+    <span class="nt">&quot;packingMode&quot;</span><span class="p">:</span> <span class="s2">&quot;random&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Type&quot;</span><span class="p">:</span> <span class="s2">&quot;SingleSphere&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;excluded_partners_name&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="nt">&quot;rejectionThreshold&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+    <span class="nt">&quot;placeType&quot;</span><span class="p">:</span> <span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;cutoff_surface&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="nt">&quot;packingPriority&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nt">&quot;proba_binding&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="nt">&quot;rotAxis&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;positions&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">[</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="p">]</span> <span class="p">],</span>
+    <span class="nt">&quot;proba_not_binding&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="nt">&quot;use_mesh_rb&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nt">&quot;pdb&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="nt">&quot;useRotAxis&quot;</span><span class="p">:</span> <span class="kc">false</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Megan Riel-Mehan.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
