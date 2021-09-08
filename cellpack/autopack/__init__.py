@@ -42,14 +42,7 @@ import shutil
 from os import path, environ
 
 import ssl
-
-# in case simplejson not there
-try:
-    import simplejson as json
-
-    # we can use the hookup at loading
-except ImportError:
-    import json
+import json
 
 try:
     from collections import OrderedDict
