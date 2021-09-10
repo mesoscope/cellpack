@@ -1,5 +1,3 @@
-## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by
-
 #############################################################################
 #
 # Author: Michel F. SANNER
@@ -15,10 +13,9 @@
 # $Id: colorMap.py,v 1.98 2007/07/24 17:30:41 vareille Exp $
 #
 
-import numpy.oldnumeric as Numeric
+import numpy as Numeric
 import os
 import warnings
-import types
 
 from DejaVu import viewerConst
 from DejaVu.colorTool import RGBRamp, ToHSV, TkColor
@@ -163,7 +160,6 @@ class ColorMap:
             if lenLabels == 0:
                 self.labels = list(range(lenRamp))
             elif lenLabels < lenRamp:
-                lMissingLength = lenRamp - lenLabels
                 lMissingLabels = list(range(lenLabels, lenRamp))
                 # print "lMissingLabels", lMissingLabels
                 self.labels += lMissingLabels
@@ -243,15 +239,15 @@ class ColorMap:
 
     def read(self, fileName):
         """Reinitialize colormap with data from file"""
-        l = {}
+        local = {}
         g = {}
         try:
-            exec(compile(open(fileName).read(), fileName, "exec"), g, l)
-        except:
+            exec(compile(open(fileName).read(), fileName, "exec"), g, local)
+        except Exception:
             return False
 
         cm = None
-        for name, object in list(l.items()):
+        for name, object in list(local.items()):
             if isinstance(object, ColorMap):
                 cm = object
                 break

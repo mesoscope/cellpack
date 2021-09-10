@@ -45,7 +45,7 @@ import cellpack.autopack as autopack
 # to do :
 #      - use layer for hiding the parent of ingredient ! probably faster than creating a specific hider object
 #      - save-restore + grid intersecting continuation
-#          =>imply decompose histoVol in Grid class and HistoVol class
+#          =>imply decompose env in Grid class and HistoVol class
 #      - hierarchy
 #
 # ===============================================================================
@@ -191,7 +191,7 @@ class AutopackViewer:
         @type  pad: float
         @param pad: the pading value to extend the histo volume bounding box
         @type  display: boolean
-        @param display: if a geometry is created to represent the histoVolume box
+        @param display: if a geometry is created to represent the envume box
 
         """
 
@@ -223,7 +223,7 @@ class AutopackViewer:
         bb[1] = [x + px, y + py, z + pz]
         print("Bounding box x with padding", self.histo.boundingBox)
         if display:
-            self.displayHistoVol()
+            self.displayEnv()
 
     def addMasterIngr(self, ingr, parent=None):
         """
@@ -315,7 +315,7 @@ class AutopackViewer:
             self.name + "_PreviousOrga", parent=self.prevIngrOrga
         )  # g
 
-    def displayHistoVol(self):
+    def displayEnv(self):
         """
         display histo volume bounding box
         """
@@ -447,22 +447,22 @@ class AutopackViewer:
 
     def displayCompartments(self):
         """
-        Create and display geometry for all compartments defined for the histoVolume.
+        Create and display geometry for all compartments defined for the envume.
         """
         for orga in self.histo.compartments:
             self.displayCompartment(orga)
 
     def displayPreFill(self):
         """
-        Use this function once a histoVol and his compartments are defined.
+        Use this function once a env and his compartments are defined.
         displayPreFill will prepare all master, and will create the geometry for
         the histovolume bounding box, and the different compartments defined.
         """
 
-        # use this script once a histoVol and compartments are defined
+        # use this script once a env and compartments are defined
         self.prepareMaster()
         self.displayCompartments()
-        self.displayHistoVol()
+        self.displayEnv()
         self.prepareIngredient()
         self.prepareDynamic()
         if self.vi.host.find("blender") != -1:
@@ -683,7 +683,7 @@ class AutopackViewer:
 
     def displayCompartmentsPoints(self):
         """
-        Create and display grid points for all compartments defined for the histoVolume.
+        Create and display grid points for all compartments defined for the envume.
         """
         for orga in self.histo.compartments:
             self.displayCompartmentPoints(orga)
@@ -1803,7 +1803,7 @@ class AutopackViewer:
 
     def createTemplate(self, **kw):
         self.prepareMaster()
-        self.displayHistoVol()
+        self.displayEnv()
         setup = self.checkCreateEmpty(self.name + "_Setup", parent=self.master)
         g = self.checkCreateEmpty(self.name + "_compartments_geometries", parent=setup)
         self.checkCreateEmpty("Place here your compartments geometries", parent=g)
@@ -1989,12 +1989,12 @@ class AutopackViewer:
                 ingr.compNum = 0
                 g = self.vi.getObject(self.name + "_cytoplasm")
                 self.addMasterIngr(ingr, parent=g)
-                ingr.histoVol = self.histo
+                ingr.env = self.histo
             else:
                 recipe.addIngredient(ingr)
                 ingr.compNum = recipe.number
                 # g = self.vi.getObject("O" + o.name)
-                ingr.histoVol = self.histo
+                ingr.env = self.histo
             rep = self.vi.getObject(ingr.o_name + "_mesh")
             print(ingr.o_name + "_mesh is", rep)
             if rep is not None:
@@ -2300,7 +2300,6 @@ class AutopackViewer:
                                 listeOrder.append(order)
                                 listeObjs.append(cc)
             else:
-                # use histovol.molecules and .order
                 # for each mol get the order and color the poly
                 inds = {}
                 for pos, rot, ingr, ptInd in self.histo.molecules:
@@ -2354,7 +2353,7 @@ class AutopackViewer:
         # ingredients in out recipe
         self.exportRecipeIngredients(self.histo.exteriorRecipe)
 
-    def displayParticleVolumeDistance(self, distance, histoVol):
+    def displayParticleVolumeDistance(self, distance, env):
         N = len(distance)
         helper = self.vi
         import c4d
@@ -2363,7 +2362,7 @@ class AutopackViewer:
         PS = doc.GetParticleSystem()
         PS.FreeAllParticles()
         ids = list(range(N))
-        PS = helper.particle(histoVol.grid.masterGridPositions)
+        PS = helper.particle(env.grid.masterGridPositions)
         life = [c4d.BaseTime(10.0)] * N
         list(map(PS.SetLife, ids, life))  # should avoid map
         ages = [c4d.BaseTime((d / 100.0) * 10.0) for d in distance]

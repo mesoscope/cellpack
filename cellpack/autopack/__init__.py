@@ -35,6 +35,7 @@ AF
 @author: Ludovic Autin with editing by Graham Johnson
 """
 
+import logging
 import sys
 import os
 import re
@@ -64,6 +65,7 @@ afdir = os.path.abspath(__path__[0])
 # ==============================================================================
 # the dir will have all the recipe + cache.
 APPNAME = "autoPACK"
+log = logging.getLogger("autopack")
 if sys.platform == "darwin":
     # from AppKit import NSSearchPathForDirectoriesInDomains
     # http://developer.apple.com/DOCUMENTATION/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Functions/Reference/reference.html#//apple_ref/c/func/NSSearchPathForDirectoriesInDomains
@@ -78,7 +80,7 @@ else:
     appdata = path.expanduser(path.join("~", "." + APPNAME))
 if not os.path.exists(appdata):
     os.makedirs(appdata)
-    print("autoPACK data dir created", appdata)
+    log.info("autoPACK data dir created", appdata)
 
 # ==============================================================================
 # setup Panda directory
@@ -113,7 +115,7 @@ def checkURL(URL):
     try:
         response = urllib.urlopen(URL)
     except Exception as e:
-        print("Error in checkURL ", URL, e)
+        log.error("Error in checkURL ", URL, e)
         return False
     return response.code != 404
 
@@ -204,12 +206,12 @@ def checkPath():
         if checkURL(fileName):
             urllib.urlretrieve(fileName, autopack_path_pref_file)
         else:
-            print("problem accessing path " + fileName)
+            log.error("problem accessing path %s", fileName)
 
 
 # get user / default value
 if not os.path.isfile(autopack_path_pref_file):
-    print(autopack_path_pref_file + " file is not found")
+    log.error(autopack_path_pref_file + " file is not found")
     checkPath()
 
 doit = False
@@ -220,12 +222,11 @@ elif os.path.isfile(autopack_path_pref_file):
     f = open(autopack_path_pref_file, "r")
     doit = True
 if doit:
-    print("autopack_path_pref_file ", autopack_path_pref_file)
+    log.info("autopack_path_pref_file %s", autopack_path_pref_file)
     pref_path = json.load(f)
     f.close()
     if "autoPACKserver" not in pref_path:
-        print("problem with autopack_path_pref_file ", autopack_path_pref_file)
-        print("reset to default")
+        log.warning("problem with autopack_path_pref_file %s", autopack_path_pref_file)
     else:
         autoPACKserver = pref_path["autoPACKserver"]
         if "filespath" in pref_path:
@@ -322,7 +323,7 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
         force = forceFetch
     if filename.find("http") == -1 and filename.find("ftp") == -1:
         filename = fixOnePath(filename)
-    print("autopack retrieve file ", filename)
+    log.info("autopack retrieve file %s", filename)
     if filename.find("http") != -1 or filename.find("ftp") != -1:
         # check if using autoPACKserver
         useAPServer = False
@@ -341,9 +342,9 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
                 try:
                     urllib.urlretrieve(filename, tmpFileName, reporthook=reporthook)
                 except Exception as e:
-                    print("error fetching file ", e)
+                    log.error("error fetching file %r", e)
                     if useAPServer:
-                        print("try alternate server")
+                        log.info("try alternate server")
                         urllib.urlretrieve(
                             autoPACKserver_alt + "/" + cache + "/" + name,
                             tmpFileName,
@@ -351,13 +352,13 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
                         )
             else:
                 if not os.path.isfile(tmpFileName):
-                    print("not isfile ", tmpFileName)
+                    log.error("not isfile %s", tmpFileName)
                     return None
         filename = tmpFileName
-        print("autopack return grabbed ", filename)
+        log.info("autopack return grabbed %s", filename)
         # check the file is not an error
         return filename
-    print("autopack search ", filename, os.path.isfile(filename))
+    log.info("autopack search %s %s", filename, os.path.isfile(filename))
     # if no folder provided, use the current_recipe_folder
 
     if os.path.isfile(cache_dir[cache] + os.sep + filename):
@@ -378,7 +379,6 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
             )
             return tmpFileName
         except:  # noqa: E722
-            print("try alternate server")
             urllib.urlretrieve(
                 autoPACKserver_alt + "/" + cache + "/" + filename,
                 tmpFileName,
@@ -399,11 +399,10 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
                 reporthook=reporthook,
             )
         except:  # noqa: E722
-            print("not on alternate server")
             return None
         # check the file is not an error
         return tmpFileName
-    print(filename, " not found ")
+    log.error("not found %s", filename)
     return filename
 
 
@@ -416,17 +415,10 @@ def fixPath(adict):  # , k, v):
             adict[key] = fixOnePath(adict[key])
 
 
-# if type(v) is list or type(v) is tuple:
-#                adict[key]=adict[key].replace(v[0],v[1])
-#            else :
-#                adict[key] = v
-#        elif type(adict[key]) is dict:
-#            fixPath(adict[key], k, v)
-
 
 def updatePathJSON():
     if not os.path.isfile(autopack_path_pref_file):
-        print(autopack_path_pref_file + " file is not found")
+        log.error(autopack_path_pref_file + " file is not found")
         return
     if os.path.isfile(autopack_user_path_pref_file):
         f = open(autopack_user_path_pref_file, "r")
@@ -483,7 +475,7 @@ def updateRecipAvailableJSON(recipesfile):
         recipes = json.load(f)
     f.close()
     RECIPES.update(recipes)
-    print("recipes updated " + str(len(RECIPES)))
+    log.info("recipes updated %d" + str(len(RECIPES)))
 
 
 def updateRecipAvailableXML(recipesfile):
@@ -533,7 +525,7 @@ def updateRecipAvailableXML(recipesfile):
                 if text[0] != "/" and text.find("http") == -1:
                     text = afdir + os.sep + text
                 RECIPES[name][version][info] = str(text)
-    print("recipes updated " + str(len(RECIPES)))
+    log.info("recipes updated %d" + str(len(RECIPES)))
 
 
 def updateRecipAvailable(recipesfile):
@@ -548,7 +540,7 @@ def updateRecipAvailable(recipesfile):
     fixPath(RECIPES)
     #    fixPath(RECIPES,"wrkdir")#or autopackdata
     #    fixPath(RECIPES,"resultfile")
-    print("recipes updated and path fixed " + str(len(RECIPES)))
+    log.info("recipes updated and path fixed %d" + str(len(RECIPES)))
 
 
 def saveRecipeAvailable(recipe_dictionary, recipefile):
@@ -597,7 +589,7 @@ def clearCaches(*args):
 if checkAtstartup:
     checkPath()
     updatePathJSON()
-    print("path are updated ")
+    log.info("path are updated ")
 
 if checkAtstartup:
     # get from server the list of recipe
@@ -607,7 +599,7 @@ if checkAtstartup:
     updateRecipAvailable(recipe_user_pref_file)
     updateRecipAvailable(recipe_dev_pref_file)
 
-print("currently nb recipes is " + str(len(RECIPES)))
+log.info("currently nb recipes is %s" + str(len(RECIPES)))
 # check cache directory create if doesnt exit.abs//should be in user pref?
 # ?
 # need a distinction between autopackdir and cachdir

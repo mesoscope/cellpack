@@ -145,7 +145,6 @@ class dejavuHelper(hostHelper.Helper):
         # we can define here some function alias
         self.nogui = False
 
-        print("INITHELPER1")
         if master is not None:
             if type(master) is dict:
                 self.viewer = master["master"]

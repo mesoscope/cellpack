@@ -95,10 +95,6 @@ class RandomRot:
     def __init__(self, seed=16):
         self.seedTable = RandomState(seed)
 
-    #        from .deg06Rot import allRtotations
-    #        self.rot = allRtotations
-    #        self.nbRot = len(allRtotations)-1
-
     def getOld(self):
         n = int(uniform(0, self.nbRot))
         return self.rot[n]
@@ -187,27 +183,6 @@ class RandomRot:
         return self.quaternion_matrix(self.random_quaternion(rand))
 
 
-# def getRotations(filename):
-
-#     #read rotations
-#     f = open(filename)
-#     data = f.readlines()
-#     f.close()
-
-#     allRot = []
-#     for line in data:
-#         rotString = line
-#         rot = numpy.array( map(float, line.split()))
-#         rot.shape = (3,3)
-#         allRot.append( rot )
-
 if __name__ == "__main__":
-    # from time import time
-    # t1 = time()
-    # allRot = getRotations('deg06.matrix')
-
-    #     t1 = time()
-    #     from deg06Rotations import allRtotations
-
     rr = RandomRot()
     mat = rr.get()

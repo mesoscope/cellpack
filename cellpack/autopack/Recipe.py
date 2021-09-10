@@ -39,13 +39,8 @@
 #version on May 16, 2012, re-merged on July 5, 2012 with thesis versions
 """
 
-# import weakref
+import logging
 from random import random, seed
-
-
-# randint,gauss,uniform added by Graham 8/18/11
-# seedNum = 14
-# seed(seedNum)               #Mod by Graham 8/18/11
 
 
 class Recipe:
@@ -55,7 +50,7 @@ class Recipe:
     """
 
     def __init__(self, name="ext"):
-
+        self.log = logging.getLogger("recipe")
         self.ingredients = []
         self.activeIngredients = []
         self.compartment = None  # the weeek ref ?
@@ -74,8 +69,6 @@ class Recipe:
 
     def addIngredient(self, ingr):
         """add the given ingredient from the recipe"""
-        #        assert isinstance(ingr, Ingredient)
-        # we need ingredient unique name
         if ingr.name.find(self.name) == -1:
             ingr.name = self.name + "__" + ingr.name
         # I'd like to turn this off but it breaks the GUI's ability to turn off
@@ -83,12 +76,11 @@ class Recipe:
         # Right now the ingredients become way too long with it on.
         if ingr not in self.ingredients:
             self.ingredients.append(ingr)
-        #        ingr.recipe = weakref.ref(self)
         ingr.recipe = self
         if ingr in self.exclude:
             ind = self.exclude.index(ingr)
             self.exclude.pop(ind)
-        print("add ingredient ", ingr.name)
+        self.log.info("add ingredient %s", ingr.name)
 
     def setCount(self, volume, reset=True, **kw):  # area=False,
         """set the count of n of molecule for every ingredients
@@ -119,14 +111,12 @@ class Recipe:
         """
         seedNum = 14
         seed(seedNum)
-        # Mod by Graham 8/18/11, revised 9/6...
         # this now allows consistent refilling via seed)
         # compute number of molecules for a given volume
         for i, ingr in enumerate(self.ingredients):
             # 6.02 / 10000)# 1x10^27 / 1x10^23 = 10000
             if reset:
                 self.resetIngr(ingr)
-            #            nb = int(ingr.molarity * volume * .000602)
             # Overridden by next 18 lines marked Mod
             # by Graham 8/18/11 into Hybrid on 5/16/12
             # Mod by Graham 8/18/11: Needed this to give
@@ -162,9 +152,9 @@ class Recipe:
                 ingr.vol_nbmol = ingr.nbMol = nb + ingr.overwrite_nbMol_value
 
             if ingr.nbMol == 0:
-                print(
-                    "WARNING GRAHAM: recipe ingredient %s has 0 molecules as target"
-                    % (ingr.name)
+                self.info.warning(
+                    "WARNING GRAHAM: recipe ingredient %s has 0 molecules as target",
+                    ingr.name
                 )
             else:
                 self.activeIngredients.append(i)
@@ -199,11 +189,6 @@ class Recipe:
         """sort the ingredients using the min Radius"""
         # sort tuples in molecule list according to radius
         self.ingredients.sort(key=lambda x: x.minRadius)
-        # cmp(y.minRadius, x. minRadius))#(a > b) - (a < b)
-
-    #        self.ingredients.sort(lambda x,y: cmp(y.minRadius, x. minRadius))
-    # Do we need to sort y.minRadius too for ellipses/Cyl?
-    # This line is from August 2011 version of code
 
     def printFillInfo(self, indent=""):
         """print the states of all recipe ingredients"""

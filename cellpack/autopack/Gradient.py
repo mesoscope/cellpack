@@ -518,5 +518,3 @@ class Gradient:
             rnd -= w
             if rnd < 0:
                 return listPts[i]
-
-

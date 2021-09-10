@@ -23,7 +23,7 @@ from math import cos, sin, sqrt
 import random
 import numpy
 import PIL as Image
-from pymunk import is_clockwise, calc_area
+from pymunk.util import is_clockwise, calc_area
 
 
 from cellpack.mgl_tools.upy import colors

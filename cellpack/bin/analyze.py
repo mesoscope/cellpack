@@ -10,6 +10,7 @@ import sys
 import os
 from os import path
 import logging
+import logging.config
 import traceback
 
 # Third party
@@ -26,8 +27,7 @@ from cellpack.autopack.Analysis import AnalyseAP
 
 log_file_path = path.join(path.dirname(path.abspath(__file__)), "../../logging.conf")
 logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
-
-log = logging.getLogger("root")
+log = logging.getLogger()
 ###############################################################################
 
 
@@ -130,11 +130,11 @@ def main():
             os.mkdir(output)
         dim = args.dim
         place_method = args.place_method
-        print("Recipe : {}\n".format(args.recipe))
+        log.info("Recipe : {}\n".format(args.recipe))
         localdir = wrkDir = autopack.__path__[0]
         helperClass = upy.getHelperClass()
         helper = helperClass(vi="nogui")
-        print("HELPER", helper)
+        log.info("HELPER %r", helper)
 
         autopack.helper = helper
 
@@ -160,7 +160,7 @@ def main():
         env.loopThroughIngr(setCompartment)
 
         if do_analysis:
-            log.info("DOING ANALYSIS %b", do_analysis)
+            log.info("DOING ANALYSIS %r", do_analysis)
             if place_method == "RAPID":
                 env.placeMethod = "RAPID"
                 env.encapsulatingGrid = 0
@@ -188,8 +188,8 @@ def main():
                 autopack.biasedPeriodicity = [1, 1, 1]
                 analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
                 analyse.g.Resolution = 1.0
-                env.smallestProteinSize = 30.0  # get it faster? same result ?
-                env.boundingBox = numpy.array([[0, 0, 0], [1000.0, 1000.0, 15.0]])
+                # env.boundingBox = numpy.array([[0, 0, 0], [1000.0, 1000.0, 15.0]])
+                env.boundingBox = numpy.array(env.boundingBox)
                 log.info("bounding box %r", env.boundingBox)
                 analyse.doloop(
                     1,

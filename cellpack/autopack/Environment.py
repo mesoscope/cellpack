@@ -57,7 +57,7 @@ from math import floor, pi
 import json
 from json import encoder
 import logging
-import logging.config
+from collections import OrderedDict
 
 # PANDA3D Physics engine ODE and Bullet
 import panda3d
@@ -85,10 +85,6 @@ from .Gradient import Gradient
 # backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
 
-try:
-    from collections import OrderedDict
-except ImportError:
-    from ordereddict import OrderedDict
 
 from .randomRot import RandomRot
 
@@ -96,7 +92,6 @@ try:
     helper = autopack.helper
 except ImportError:
     helper = None
-print("Environment helper is " + str(helper))
 
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
@@ -287,47 +282,9 @@ class Grid(BaseGrid):
         # ptInd = k*(sizex)*(sizey)+j*(sizex)+i;#want i,j,k
         return self.ijkPtIndice[ptInd]
 
-    def checkPointInside(self, pt3d, dist=None, jitter=[1, 1, 1]):
-        """
-        Check if the given 3d points is inside the grid
-        """
-        origin = numpy.array(self.boundingBox[0])
-        edge = numpy.array(self.boundingBox[1])
-        packing_location = numpy.array(pt3d)
-        test1 = packing_location < origin
-        test2 = packing_location > edge
-        self.log.info("Check point inside, Env Grid")
-        if True in test1 or True in test2:
-            # outside
-            self.log.info("location outside of the bounding box, rejected")
-            return False
-        else:
-            if dist is not None:
-                self.log.info("checking distance %d", dist)
-                # distance to closest wall
-                d1 = packing_location - origin
-                s1 = min(x for x in (d1 * jitter) if x != 0)
-                # s1 = numpy.sum(d1*d1)
-                d2 = edge - packing_location
-                s2 = min(x for x in (d2 * jitter) if x != 0)
-                # s2 = numpy.sum(d2*d2)
-                if s1 <= dist or s2 <= dist:
-                    self.log.inf("s1 or s2 was less than dist %d %d", s1, s2)
-                    return False
-            return True
-
-    def getCenter(self):
-        """
-        Get the center of the grid
-        """
-        center = [0.0, 0.0, 0.0]
-        for i in range(3):
-            center[i] = (self.boundingBox[0][i] + self.boundingBox[1][i]) / 2.0
-        return center
-
     def getPointsInCube(self, bb, pt, radius, addSP=True, info=False):
         """
-        Return all grid points indicesinside the given bouding box.
+        Return all grid points indicesinside the given bounding box.
         """
         spacing1 = 1.0 / self.gridSpacing
         NX, NY, NZ = self.nbGridPoints
@@ -1001,23 +958,23 @@ class Environment(CompartmentList):
                 self.log.info(
                     "*************************************************** vDistance String Should be on"
                 )
-                print("unitVolume2 = %d", unitVol)
+                self.log.info("unitVolume2 = %d", unitVol)
                 self.log.info("Number of Points Unused = %d", unUsedPts)
                 self.log.info("Number of Points Used   = %d", usedPts)
                 self.log.info("Volume Used   = %d", usedPts * unitVol)
                 self.log.info("Volume Unused = %d", unUsedPts * unitVol)
                 self.log.info("vTestid = %d", vTestid)
-                self.log.info("self.nbGridPoints = %d", self.nbGridPoints)
+                self.log.info("self.nbGridPoints = %r", self.nbGridPoints)
                 self.log.info("self.gridVolume = %d", self.gridVolume)
                 #        self.exteriorVolume = totalVolume
 
-        print("self.compartments In Environment = ", len(self.compartments))
+        self.log.info("self.compartments In Environment = %d", len(self.compartments))
         if self.compartments == []:
             unitVol = self.grid.gridSpacing ** 3
             innerPointNum = len(freePoints)
             self.log.info("  .  .  .  . ")
-            self.log.info("inner Point Count = ", innerPointNum)
-            self.log.info("innerVolume temp Confirm = ", innerPointNum * unitVol)
+            self.log.info("inner Point Count = %d", innerPointNum)
+            self.log.info("innerVolume temp Confirm = %d", innerPointNum * unitVol)
             usedPts = 0
             unUsedPts = 0
             # fpts = self.freePointsAfterFill
@@ -1042,7 +999,7 @@ class Environment(CompartmentList):
             self.log.info("Volume Used   = %d", usedPts * unitVol)
             self.log.info("Volume Unused = %d", unUsedPts * unitVol)
             self.log.info("vTestid = %s", vTestid)
-            self.log.info("self.nbGridPoints = %d", self.nbGridPoints)
+            self.log.info("self.nbGridPoints = %r", self.nbGridPoints)
             self.log.info("self.gridVolume = %d", self.gridVolume)
             self.log.info("histoVol.timeUpDistLoopTotal = %d", self.timeUpDistLoopTotal)
 
@@ -1643,9 +1600,8 @@ class Environment(CompartmentList):
 
         self.grid.aInteriorGrids = aInteriorGrids
         self.grid.aSurfaceGrids = aSurfaceGrids
-        if autopack.verbose:
-            print("I'm out of the loop and have build my grid with inside points")
-            print("build Grids", self.innerGridMethod, len(self.grid.aSurfaceGrids))
+        self.log.info("I'm out of the loop and have build my grid with inside points")
+        self.log.info("build Grids %r %d", self.innerGridMethod, len(self.grid.aSurfaceGrids))
 
     def buildGrid(
         self,
@@ -1932,7 +1888,7 @@ class Environment(CompartmentList):
         self.surfPtsBht = self.grid.surfPtsBht
         self.gridPtId = self.grid.gridPtId = numpy.array(self.grid.gridPtId, int)
 
-    def getSortedActiveIngredients(self, allIngredients, verbose=0):
+    def getSortedActiveIngredients(self, allIngredients):
         """
         Sort the active ingredient according their pirority and radius.
         # first get the ones with a packing priority
@@ -1995,8 +1951,7 @@ class Environment(CompartmentList):
             self.lowestPriority = lowestIng.packingPriority
         else:
             self.lowestPriority = 1.0
-        if verbose:
-            print("self.lowestPriority for Ing1 = ", self.lowestPriority)
+        self.log.info("self.lowestPriority for Ing1 = %d", self.lowestPriority)
         self.totalRadii = 0
         for radii in ingr2:
             if radii.modelType == "Cylinders":
@@ -2006,8 +1961,7 @@ class Environment(CompartmentList):
             elif radii.modelType == "Cube":
                 r = radii.minRadius
             self.totalRadii = self.totalRadii + r
-            if verbose:
-                print("self.totalRadii += ", r, "=", self.totalRadii)
+            self.log.info("self.totalRadii += %d = %d", r, self.totalRadii)
             if r == 0:
                 # safety
                 self.totalRadii = self.totalRadii + 1.0
@@ -2021,21 +1975,14 @@ class Environment(CompartmentList):
             np = float(r) / float(self.totalRadii) * self.lowestPriority
             self.normalizedPriorities0.append(np)
             priors2.packingPriority = np
-            if verbose:
-                print("self.normalizedPriorities0 = ", self.normalizedPriorities0)
+            self.log.info("self.normalizedPriorities0 = %r", self.normalizedPriorities0)
         activeIngr0 = ingr0  # +ingr1+ingr2  #cropped to 0 on 7/20/10
 
-        if verbose:
-            print("len(activeIngr0)", len(activeIngr0))
+        self.log.info("len(activeIngr0) %d", len(activeIngr0))
         activeIngr12 = ingr1 + ingr2
-        if verbose:
-            print("len(activeIngr12)", len(activeIngr12))
+        self.log.info("len(activeIngr12) %d", len(activeIngr12))
         packingPriorities = priorities0 + priorities1 + priorities2
-        if verbose:
-            print("priorities0 is ", priorities0)
-            print("priorities1 is ", priorities1)
-            print("priorities2 is ", priorities2)
-            print("packingPriorities", packingPriorities)
+        self.log.info("packingPriorities %r", packingPriorities)
 
         return activeIngr0, activeIngr12
 
@@ -2213,8 +2160,6 @@ class Environment(CompartmentList):
                 if verbose:
                     print("weighted", prob, vThreshStart, ingrInd, ingr.name)
         else:
-            # if verbose:
-            #    print "random in activeIngr"
             r = random()  # randint(0, len(self.activeIngr)-1)#random()
             # n=int(r*(len(self.activeIngr)-1))
             n = int(r * len(self.activeIngr))
@@ -2314,8 +2259,7 @@ class Environment(CompartmentList):
             #    if compId[pt] == compNum and d >= cut:
             #        allIngrPts.append(pt)
             #        allIngrDist.append(d)
-            # if verbose > 1:
-            #    print("time to filter using for loop ", time() - t1)
+
         else:
             allIngrPts = []
             if ingr.modelType == "Cylinders" and ingr.useLength:
@@ -2331,7 +2275,6 @@ class Environment(CompartmentList):
                 # use periodic update according size ration grid
                 update = self.checkIfUpdate(ingr, nbFreePoints)
                 if update:
-                    self.log.info("in update loop")
                     for i in range(nbFreePoints):
                         pt = freePoints[i]
                         d = distance[pt]
@@ -2367,7 +2310,7 @@ class Environment(CompartmentList):
             # Start of massive overruling section from corrected thesis file of Sept. 25, 2012
             # this function also depend on the ingr.completiion that can be restored ?
             self.activeIngr0, self.activeIngr12 = self.callFunction(
-                self.getSortedActiveIngredients, (self.activeIngr, False)
+                self.getSortedActiveIngredients, ([self.activeIngr])
             )
             self.log.info(
                 "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d",
@@ -2573,9 +2516,7 @@ class Environment(CompartmentList):
         self.failedJitter = []
 
         # this function also depend on the ingr.completiion that can be restored ?
-        self.activeIngr0, self.activeIngr12 = self.callFunction(
-            self.getSortedActiveIngredients, (allIngredients, verbose)
-        )
+        self.activeIngr0, self.activeIngr12 = self.callFunction(self.getSortedActiveIngredients, ([allIngredients]))
 
         self.log.info("len(allIngredients %d", len(allIngredients))
         self.log.info("len(self.activeIngr0) %d", len(self.activeIngr0))
@@ -2734,8 +2675,6 @@ class Environment(CompartmentList):
                     self.compartments[ingr.compNum - 1].surfacePointsNormals.keys()
                 )
                 res = [True, allSrfpts[int(random() * len(allSrfpts))]]
-            #  Replaced this with Sept 25, 2011 thesis version on July 5, 2012
-            self.log.info("get drop point res %d", res[1])
             if res[0]:
                 ptInd = res[1]
                 if ptInd > len(distance):
@@ -2769,22 +2708,17 @@ class Environment(CompartmentList):
                 success,
                 nbFreePoints,
             )
-            self.log.info("grid %r", self.grid.masterGridPositions)
             if success:
                 self.grid.distToClosestSurf = numpy.array(distance[:])
                 self.grid.freePoints = numpy.array(freePoints[:])
                 self.grid.nbFreePoints = len(freePoints)  # -1
-                if verbose > 1:
-                    print("success", ingr.completion)
                 # update largest protein size
                 # problem when the encapsulatingRadius is actually wrong
                 if ingr.encapsulatingRadius > self.largestProteinSize:
                     self.largestProteinSize = ingr.encapsulatingRadius
                 PlacedMols += 1
             else:
-                if verbose > 1:
-                    print("rejected", ingr.rejectionCounter)
-                    print("picked reduced ?", ptInd, distance[ptInd])
+                self.log.info("rejected %r", ingr.rejectionCounter)
 
             if ingr.completion >= 1.0:
                 ind = self.activeIngr.index(ingr)
@@ -2809,7 +2743,7 @@ class Environment(CompartmentList):
                         )
                 self.activeIngr.pop(ind)
                 self.activeIngr0, self.activeIngr12 = self.callFunction(
-                    self.getSortedActiveIngredients, (self.activeIngr, verbose)
+                    self.getSortedActiveIngredients, ([self.activeIngr])
                 )
                 if verbose > 2:
                     print("len(self.activeIngr", len(self.activeIngr))
@@ -3569,7 +3503,7 @@ class Environment(CompartmentList):
         if self.octree is None:
             #            from autopack.octree import Octree
             from autopack import octree_exteneded as octree
-            from autopack.octree_exteneded import Octree
+            from autopack import Octree
 
             octree.MINIMUM_SIZE = self.smallestProteinSize
             octree.MAX_OBJECTS_PER_NODE = 10

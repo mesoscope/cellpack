@@ -201,11 +201,11 @@ class BaseGrid:
         Fill the orthogonal bounding box described by two global corners
         with an array of points spaces pGridSpacing apart.:
         """
+        self.log.info("Using create3DPointLookup_loop")
 
         if boundingBox is None:
             boundingBox = self.boundingBox
         xl, yl, zl = boundingBox[0]
-        xr, yr, zr = boundingBox[1]
         self.gridVolume, self.nbGridPoints = self.computeGridNumberOfPoint(
             boundingBox, self.gridSpacing
         )
@@ -241,7 +241,8 @@ class BaseGrid:
         space = self.gridSpacing
         # we want the diagonal of the voxel, not the diagonal of the plane, so the second 1.1547 is was incorrect
         environmentBoxEqualFillBox = False
-        # np.linspace(2.0, 3.0, num=5)
+
+        self.log.info("Using create3DPointLookup")
         if environmentBoxEqualFillBox:  # environment.environmentBoxEqualFillBox:
             self._x = x = numpy.arange(
                 boundingBox[0][0], boundingBox[1][0], space
@@ -300,6 +301,7 @@ class BaseGrid:
             NY = 1
         if NZ == 0:
             NZ = 1
+        self.log.info("using create3DPointLookupCover")
         # we want the diagonal of the voxel, not the diagonal of the plane, so the second 1.1547 is was incorrect
         environmentBoxEqualFillBox = True
         # np.linspace(2.0, 3.0, num=5)
@@ -601,7 +603,6 @@ class BaseGrid:
                 tr.append(pt3d + corner[i])
         if len(tr):
             translation = tr
-            self.log.info("periodicity %d %r", len(translation), tr)
         return translation
 
     def getPositionPeridocityBroke(self, pt3d, jitter, cutoff):
@@ -689,19 +690,23 @@ class BaseGrid:
         if bb is None:
             bb = self.boundingBox
         origin = numpy.array(bb[0])
-        E = numpy.array(bb[1])
-        P = numpy.array(pt3d)  # *jitter
-        test1 = P < origin
-        test2 = P > E
+        edge = numpy.array(bb[1])
+        for i in range(len(edge)):
+            if edge[i] < self.gridSpacing:
+                edge[i] = self.gridSpacing
+
+        packing_location = numpy.array(pt3d)  # *jitter
+        test1 = packing_location < origin
+        test2 = packing_location > edge
         if True in test1 or True in test2:
             # outside
             return False
         else:
             if dist is not None:
                 # distance to closest wall
-                d1 = (P - origin) * jitter
+                d1 = (packing_location - origin) * jitter
                 s1 = min(x for x in d1[d1 != 0] if x != 0)
-                d2 = (E - P) * jitter
+                d2 = (edge - packing_location) * jitter
                 s2 = min(x for x in d2[d2 != 0] if x != 0)
                 if s1 <= dist or s2 <= dist:
                     self.log.info("s1 s2 smaller than dist %d %d %d", s1, s2, dist)

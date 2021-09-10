@@ -51,6 +51,7 @@ except ImportError:
     autopack = None
 import numpy
 from numpy import matrix
+import logging
 
 import collada
 
@@ -63,6 +64,7 @@ import math
 from cellpack.mgl_tools.RAPID import RAPIDlib
 from cellpack.autopack.transformation import euler_from_matrix, angle_between_vectors
 from cellpack.autopack import Recipe
+from cellpack.autopack.ldSequence import SphereHalton
 
 # RAPID require a uniq mesh. not an empty or an instance
 # need to combine the vertices and the build the rapid model
@@ -71,7 +73,6 @@ from cellpack.autopack import Recipe
 
 import cellpack.autopack as autopack
 
-AFDIR = autopack.__path__[0]  # working dir ?
 verbose = autopack.verbose
 helper = autopack.helper
 reporthook = None
@@ -84,7 +85,6 @@ try:
 except ImportError:
     panda3d = None
 
-degtorad = pi / 180.0
 KWDS = {
     "molarity": {
         "type": "float",
@@ -409,54 +409,6 @@ def getDihedral(a, b, c, d):
     return angle_between_vectors(v1v2, v2v3)
 
 
-def SphereHalton(n, p2, marge=math.pi):
-    p = 0.0
-    t = 0.0
-    st = 0.0
-    phi = 0.0
-    phirad = 0.0
-    ip = 0.0
-    k = 0
-    kk = 0
-    #    pos=0
-    result = []
-    a = 0
-    for k in range(n):
-        # for (k=0, pos=0 ; k<n ; k++)
-        t = 0
-        p = 0.5
-        kk = k
-        #        for (p=0.5, kk=k ; kk ; p*=0.5, kk>>=1)
-        while kk:
-            if kk & 1:  # // kk mod 2 == 1
-                t += p
-            kk >>= 1
-            p *= 0.5
-        t = 2.0 * t - 1.0
-        # // map from [0,1] to [-1,1]
-        st = math.sqrt(1.0 - t * t)
-        phi = 0
-        ip = 1.0 / p2
-        # // inverse of p2
-        #        for (p=ip, kk=k ; kk ; p*=ip, kk/=p2) #// kk = (int)(kk/p2)
-        p = ip
-        kk = k
-        while kk:
-            a = kk % p2
-            if a:
-                phi += a * p
-            kk /= p2
-            p *= ip
-        phirad = phi * 4.0 * marge
-        # // map from [0,0.5] to [0, 2 pi)
-        px = st * math.cos(phirad)
-        py = st * math.sin(phirad)
-        pz = t
-        result.append([px, py, pz])
-    return result
-
-
-# from mglutil.math.rotax import rotax, rotVectToVect
 def rotax(a, b, tau, transpose=1):
     """
     Build 4x4 matrix of clockwise rotation about axis a-->b
@@ -628,14 +580,12 @@ def ApplyMatrix(coords, mat):
 
 def bullet_checkCollision_mp(world, node1, node2):
     #    world =
-    #    node1 = histoVol.callFunction(self.histoVol.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
-    #    node2 = histoVol.callFunction(self.histoVol.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
+    #    node1 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
+    #    node2 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
     return world.contactTestPair(node1, node2).getNumContacts() > 0
 
 
-# (v1,f1,numpy.array(rotMatj[:3,:3],'f'),numpy.array(jtrans,'f'),v2,f2,liste_nodes[n][2],liste_nodes[n][1],liste_nodes[n][3].name)
 def rapid_checkCollision_rmp(liste_input):
-    from RAPID import RAPIDlib
 
     node1 = RAPIDlib.RAPID_model()
     node1.addTriangles(
@@ -665,8 +615,6 @@ def rapid_checkCollision_rmp(liste_input):
 
 
 def rapid_checkCollision_mp(v1, f1, rot1, trans1, v2, f2, rot2, trans2):
-    from RAPID import RAPIDlib
-
     node1 = RAPIDlib.RAPID_model()
     node1.addTriangles(numpy.array(v1, "f"), numpy.array(f1, "i"))
     node2 = RAPIDlib.RAPID_model()
@@ -997,10 +945,10 @@ class Agent:
             print("binding to " + ing.name)
         targetPoint = mingrs[0][ing_indice]  # [0]
         if self.compNum > 0:
-            #            organelle = self.histoVol.compartments[abs(self.compNum)-1]
+            #            organelle = self.env.compartments[abs(self.compNum)-1]
             #            dist,ind = organelle.OGsrfPtsBht.query(targetPoint)
             #            organelle.ogsurfacePoints[]
-            targetPoint = self.histoVol.grid.getClosestFreeGridPoint(
+            targetPoint = self.env.grid.getClosestFreeGridPoint(
                 targetPoint,
                 compId=self.compNum,
                 ball=(ing.encapsulatingRadius + self.encapsulatingRadius),
@@ -1029,45 +977,6 @@ class Agent:
             targetPoint = numpy.array(targetPoint) - factor
         if autopack.verbose > 1:
             print("tPa", targetPoint)
-        return targetPoint, b
-
-    def pickPartner_old(self, mingrs, listePartner, currentPos=[0, 0, 0]):
-        # pick the highest weighted partner
-        # pick one instance of this ingredient
-        # (distance or random or density nb of instance)
-        # roll a dice to decide if bind or not
-        # problem where put the cb function
-        # listePartner is (i,partner,d)
-        sorted_listePartner = self.sortPartner(listePartner)
-        # sortedListe is [ingrP,(weight,(instances indices))]
-        binding = False
-        targetPoint = None
-        #        pickedIngr = None
-        #        found = False
-        #        safetycutoff=10 #10 roll dice, save most prob
-        # do we take the one with highest weight of binding,
-        # or do we choose with a dice
-        #        p = random()
-        #        for bindingIngr in sorted_listePartner:
-        #            if p < part[1][0] :
-        #                break
-        bindingIngr = sorted_listePartner[0]
-        # pick the instance random, or distance
-        i = self.pickPartnerInstance(bindingIngr, mingrs, currentPos=currentPos)
-        # roll a dice to see if we bind
-        b = random()
-        if b < self.proba_binding:
-            binding = True
-        if binding:
-            ing = mingrs[i][2]
-            targetPoint = mingrs[i][0]
-            if self.placeType == "rigid-body":
-                # the new point is actually
-                # tPt -normalise(tPt-current)*radius
-                v = numpy.array(targetPoint) - numpy.array(currentPos)
-                s = numpy.sum(v * v)
-                factor = (v / s) * ing.radii[0][0]
-                targetPoint = numpy.array(targetPoint) - factor
         return targetPoint, b
 
     def pickPartnerInstance(self, bindingIngr, mingrs, currentPos=None):
@@ -1149,12 +1058,14 @@ class Ingredient(Agent):
         Agent.__init__(
             self, name, molarity, packingMode=packingMode, placeType=placeType, **kw
         )
+        self.log = logging.getLogger("ingredient")
+        self.log.propagate = False
         self.molarity = molarity
         self.packingPriority = packingPriority
-        print(packingPriority, self.packingPriority)
+        self.log.info("packingPriority %d,  self.packingPriority %r", packingPriority, self.packingPriority)
         if name is None:
             name = "%f" % molarity
-        print("CREATE INGREDIENT", str(name), ("rejectionThreshold" in kw))
+        self.log.info("CREATE INGREDIENT %s %r", str(name), ("rejectionThreshold" in kw))
         self.name = str(name)
         self.o_name = str(name)
         self.Type = Type
@@ -1209,8 +1120,8 @@ class Ingredient(Agent):
         # level 0 should be encapsulated sphere ?
         if sphereFile is not None and str(sphereFile) != "None":
             sphereFileo = autopack.retrieveFile(sphereFile, cache="collisionTrees")
-            fileName, fileExtension = os.path.splitext(sphereFile)
-            print("sphereTree", sphereFileo)
+            fileExtension = os.path.splitext(sphereFile)
+            self.log.info("sphereTree" %r, sphereFileo)
             if sphereFileo is not None and os.path.isfile(sphereFileo):
                 self.sphereFile = sphereFile
                 sphereFile = sphereFileo
@@ -1311,7 +1222,7 @@ class Ingredient(Agent):
         if "meshType" in kw:
             self.meshType = kw["meshType"]
         if meshFile is not None:
-            print(
+            self.log.debug(
                 "OK, meshFile is not none, it is = ",
                 meshFile,
                 self.name,
@@ -1322,10 +1233,10 @@ class Ingredient(Agent):
                 gname = self.meshName
             if self.meshType == "file":
                 self.mesh = self.getMesh(meshFile, gname)  # self.name)
-                print("OK got", self.mesh)
+                self.log.info("OK got", self.mesh)
                 if self.mesh is None:
                     # display a message ?
-                    print("no geometrie for ingredient " + self.name)
+                    self.log.warning("no geometries for ingredient " + self.name)
                 # should we reparent it ?
                 self.meshFile = meshFile
             elif self.meshType == "raw":
@@ -2060,9 +1971,6 @@ class Ingredient(Agent):
                     rM = sqrt(max(numpy.sum(delta * delta, 1)))
                     self.minRadius = rM
                     self.encapsulatingRadius = rM
-                    #        print "sphereFile",sphereFile
-                    #        print "positions",positions,len(positions)
-                    #        print "rad",radii,len(radii)
             if radii is not None and positions is not None:
                 for r, c in zip(radii, positions):
                     assert len(r) == len(c)
@@ -2076,25 +1984,22 @@ class Ingredient(Agent):
 
     def setTilling(self, comp):
         if self.packingMode == "hexatile":
-            from autopack.hexagonTile import tileHexaIngredient
+            from cellpack.autopack.hexagonTile import tileHexaIngredient
 
-            # self.histoVol attached to compratmentsmes
             self.tilling = tileHexaIngredient(
-                self, comp, self.encapsulatingRadius, init_seed=self.histoVol.seed_used
+                self, comp, self.encapsulatingRadius, init_seed=self.env.seed_used
             )
         elif self.packingMode == "squaretile":
-            from autopack.hexagonTile import tileSquareIngredient
+            from cellpack.autopack.hexagonTile import tileSquareIngredient
 
-            # self.histoVol attached to compratmentsmes
             self.tilling = tileSquareIngredient(
-                self, comp, self.encapsulatingRadius, init_seed=self.histoVol.seed_used
+                self, comp, self.encapsulatingRadius, init_seed=self.env.seed_used
             )
         elif self.packingMode == "triangletile":
-            from autopack.hexagonTile import tileTriangleIngredient
+            from cellpack.autopack.hexagonTile import tileTriangleIngredient
 
-            # self.histoVol attached to compratmentsmes
             self.tilling = tileTriangleIngredient(
-                self, comp, self.encapsulatingRadius, init_seed=self.histoVol.seed_used
+                self, comp, self.encapsulatingRadius, init_seed=self.env.seed_used
             )
 
     def DecomposeMesh(self, poly, edit=True, copy=False, tri=True, transform=True):
@@ -2106,7 +2011,7 @@ class Ingredient(Agent):
         else:
             m = helper.getMesh(helper.getName(poly))
             tr = True
-        print("Decompose Mesh ingredient", helper.getName(poly), m)
+        self.log.info("Decompose Mesh ingredient %s %s", helper.getName(poly), m)
         # what about empty, hierarchical, should merged all the data?
         faces, vertices, vnormals = helper.DecomposeMesh(
             m, edit=edit, copy=copy, tri=tri, transform=tr
@@ -2161,7 +2066,7 @@ class Ingredient(Agent):
 
     def rejectOnce(self, rbnode, moving, afvi):
         if rbnode:
-            self.histoVol.callFunction(self.histoVol.delRB, (rbnode,))
+            self.env.callFunction(self.env.delRB, (rbnode,))
         if afvi is not None and moving is not None:
             afvi.vi.deleteObject(moving)
         self.haveBeenRejected = True
@@ -2170,7 +2075,7 @@ class Ingredient(Agent):
             self.rejectionCounter >= self.rejectionThreshold
         ):  # Graham set this to 6000 for figure 13b (Results Fig 3 Test1) otehrwise it fails to fill small guys
             # if verbose :
-            print("PREMATURE ENDING of ingredient", self.name)
+            self.log.info("PREMATURE ENDING of ingredient rejectOnce", self.name)
             self.completion = 1.0
 
     def addRBsegment(self, pt1, pt2):
@@ -2215,7 +2120,7 @@ class Ingredient(Agent):
                     return
                 if mesh is None:
                     mesh = self.mesh
-                print("getEncapsulatingRadius ", self.mesh, mesh)
+                self.log.info("getEncapsulatingRadius %r %r", self.mesh, mesh)
                 self.faces, self.vertices, vnormals = self.DecomposeMesh(
                     mesh, edit=True, copy=False, tri=True
                 )
@@ -2227,7 +2132,7 @@ class Ingredient(Agent):
                 (v * v).sum(axis=1)
             )  # FloatingPointError: underflow encountered in multiply
             r = float(max(length)) + 15.0
-            print("self.encapsulatingRadius ", self.encapsulatingRadius, r)
+            self.log.info("self.encapsulatingRadius %r %r", self.encapsulatingRadius, r)
             self.encapsulatingRadius = r
         except Exception:
             pass
@@ -2240,7 +2145,6 @@ class Ingredient(Agent):
                 helper = autopack.helper
                 if helper.host == "3dsmax":
                     return
-                print("getData ", self.mesh)
                 self.faces, self.vertices, self.vnormals = self.DecomposeMesh(
                     self.mesh, edit=True, copy=False, tri=True
                 )
@@ -2275,7 +2179,7 @@ class Ingredient(Agent):
         if alt:
             ret = 1
         if self.bullet_nodes[ret] is None:
-            self.bullet_nodes[ret] = self.histoVol.addRB(
+            self.bullet_nodes[ret] = self.env.addRB(
                 self, [0.0, 0.0, 0.0], numpy.identity(4), rtype=self.Type
             )
         return self.bullet_nodes[ret]
@@ -2317,10 +2221,10 @@ class Ingredient(Agent):
         if filename is None:
             return None
         if not os.path.isfile(filename) and fileExtension != "":
-            print("problem with " + filename, fileExtension)
+            self.log.error("problem with %s %s", filename, fileExtension)
             return None
         fileName, fileExtension = os.path.splitext(filename)
-        print("found fileName " + fileName + " fileExtension " + fileExtension)
+        self.log.info("found fileName %s", fileName)
         if fileExtension.lower() == ".fbx":
             #            print ("read fbx withHelper",filename,helper,autopack.helper)
             # use the host helper if any to read
@@ -2329,7 +2233,7 @@ class Ingredient(Agent):
                 helper.read(filename)
                 #                print "try to get the object "+geomname
                 geom = helper.getObject(geomname)
-                print("geom ", geom, geomname, helper.getName(geom))
+                self.log.info("geom %r %s %s", geom, geomname, helper.getName(geom))
                 # reparent to the fill parent
                 if helper.host == "3dsmax" or helper.host.find("blender") != -1:
                     helper.resetTransformation(
@@ -2691,15 +2595,15 @@ class Ingredient(Agent):
             x, y, z = posc
             # this have already be done in the checkCollision why doing it again
             bb = ([x - rad, y - rad, z - rad], [x + rad, y + rad, z + rad])
-            pointsInCube = self.histoVol.callFunction(
-                self.histoVol.grid.getPointsInCube, (bb, posc, rad)
+            pointsInCube = self.env.callFunction(
+                self.env.grid.getPointsInCube, (bb, posc, rad)
             )
             #
             delta = numpy.take(gridPointsCoords, pointsInCube, 0) - posc
             delta *= delta
             distA = numpy.sqrt(delta.sum(1))
             ptsInSphere = numpy.nonzero(numpy.less_equal(distA, rad))[0]
-            #            ptsInSphere =self.histoVol.grid.getPointsInSphere(self, bb, pt, radius,addSP=True,info=False)
+            #            ptsInSphere =self.env.grid.getPointsInSphere(self, bb, pt, radius,addSP=True,info=False)
             for pti in ptsInSphere:
                 pt = pointsInCube[pti]
                 if pt in insidePoints:
@@ -2736,8 +2640,8 @@ class Ingredient(Agent):
             cx, cy, cz = posc = x1 + vx * 0.5, y1 + vy * 0.5, z1 + vz * 0.5
             radt = length + radc + dpad
             bb = ([cx - radt, cy - radt, cz - radt], [cx + radt, cy + radt, cz + radt])
-            pointsInCube = self.histoVol.callFunction(
-                self.histoVol.grid.getPointsInCube, (bb, posc, radt)
+            pointsInCube = self.env.callFunction(
+                self.env.grid.getPointsInCube, (bb, posc, radt)
             )
 
             pd = numpy.take(gridPointsCoords, pointsInCube, 0) - p1
@@ -2791,24 +2695,21 @@ class Ingredient(Agent):
             )
         elif self.modelType == "Cube":
             insidePoints, newDistPoints = self.getDistancesCube(
-                jtrans, rotMatj, gridPointsCoords, distance, self.histoVol.grid
+                jtrans, rotMatj, gridPointsCoords, distance, self.env.grid
             )
         return insidePoints, newDistPoints
 
     def updateDistances(
         self,
-        histoVol,
         insidePoints,
         newDistPoints,
         freePoints,
         nbFreePoints,
         distance,
-        masterGridPositions,
-        verbose,
     ):
-        verbose = histoVol.verbose
-        if verbose:
-            print("*************updating Distances", nbFreePoints, len(insidePoints))
+        self.log.info(
+            "*************updating Distances %d %d", nbFreePoints, len(insidePoints)
+        )
         t1 = time()
         # distChanges = {}
         self.nbPts = len(insidePoints)
@@ -2819,10 +2720,6 @@ class Ingredient(Agent):
             # Reversing the walk through the masked points cures this!
             # swap reverse point at ptIndr with last free one
             # pt is the grid point indice not the freePt indice
-            # try :
-            #    fi = freePoints.index(pt)#too slow
-            # except :
-            #    pass
             try:
                 # New system replaced by Graham on Aug 18, 2012
                 nbFreePoints -= 1
@@ -2834,32 +2731,25 @@ class Ingredient(Agent):
                 print(pt, "not in freeePoints********************************")
                 pass
 
-                # Turn on these printlines if there is a problem with incorrect points showing in display points
-            #            print("*************pt = masterGridPointValue = ", pt)
-            #            print("nbFreePointAfter = ", nbFreePoints)
-            #            print("vKill = ", vKill)
-            #            print("vLastFree = ", vLastFree)
-            #            print("freePoints[vKill] = ", freePoints[vKill])
-            #            print("freePoints[vLastFree] = ", freePoints[vLastFree])
-            #            print("pt = masterGridPointValue = ", pt)
-            #            print("freePoints[nbFreePoints-1] = ", freePoints[nbFreePoints])
-            #            print("freePoints[pt] = ", freePoints[pt])
+            # Turn on these printlines if there is a problem with incorrect points showing in display points
+            self.log.debug("*************pt = masterGridPointValue = %d", pt)
+            self.log.debug("nbFreePointAfter = %d", nbFreePoints)
+            self.log.debug("vKill = %d", vKill)
+            self.log.debug("vLastFree = %d", vLastFree)
+            self.log.debug("freePoints[vKill] = %d", freePoints[vKill])
+            self.log.debug("freePoints[vLastFree] = %d", freePoints[vLastFree])
+            self.log.debug("pt = masterGridPointValue = %d", pt)
+            self.log.debug("freePoints[nbFreePoints-1] = %d", freePoints[nbFreePoints])
+            self.log.debug("freePoints[pt] = %d", freePoints[pt])
 
-            # distChanges[pt] = (masterGridPositions[pt],
-            #                    distance[pt], dist)
             distance[pt] = dist
-        if verbose > 4:
-            print("update free points loop", time() - t1)
-        if verbose > 5:
-            print(nbFreePoints)
+        self.log.debug("update free points loop %d", time() - t1)
         t2 = time()
         for pt, dist in list(newDistPoints.items()):
             if pt not in insidePoints:
-                # distChanges[pt] = (masterGridPositions[pt],
-                #                    distance[pt], dist)
+
                 distance[pt] = dist
-        if verbose > 4:
-            print("update distance loop", time() - t2)
+        self.log.debug("update distance loop %d", time() - t2)
         return nbFreePoints
 
     def perturbAxis(self, amplitude):
@@ -2901,7 +2791,7 @@ class Ingredient(Agent):
         # aligns the principalVector with the surface normal
         vx, vy, vz = v1 = self.principalVector
         # surfacePointsNormals problem here
-        gradient_center = self.histoVol.gradients[self.gradient].direction
+        gradient_center = self.env.gradients[self.gradient].direction
         v2 = numpy.array(gradient_center) - numpy.array(jtrans)
         try:
             rotMat = numpy.array(rotVectToVect(v1, v2), "f")
@@ -2957,9 +2847,9 @@ class Ingredient(Agent):
         if not hasattr(self, "histoVol"):
             return False
         if self.compNum == 0:
-            compartment = self.histoVol
+            compartment = self.env
         else:
-            compartment = self.histoVol.compartments[abs(self.compNum) - 1]
+            compartment = self.env.compartments[abs(self.compNum) - 1]
         compNum = self.compNum
         #        print "compNum ",compNum
         if compNum < 0:
@@ -2972,7 +2862,7 @@ class Ingredient(Agent):
             if True in test:
                 return True
         elif compNum == 0:
-            for o in self.histoVol.compartments:
+            for o in self.env.compartments:
                 sfpts = o.surfacePointsCoords
                 delta = numpy.array(sfpts) - numpy.array(point)
                 delta *= delta
@@ -3002,7 +2892,7 @@ class Ingredient(Agent):
     def isInGoodComp(self, pId, nbs=None):
         # cID ie [-2,-1,-2,0...], ptsinsph = [519,300,etc]
         current = self.compNum
-        cId = self.histoVol.grid.gridPtId[pId]
+        cId = self.env.grid.gridPtId[pId]
         if current <= 0:  # inside
             if current != cId:
                 return False
@@ -3018,7 +2908,7 @@ class Ingredient(Agent):
     ):
         collisionComp = False
         if self.modelType == "Spheres":
-            collisionComp = self.histoVol.callFunction(
+            collisionComp = self.env.callFunction(
                 self.checkSphCompart,
                 (
                     self.positions[level],
@@ -3028,11 +2918,11 @@ class Ingredient(Agent):
                     level,
                     gridPointsCoords,
                     distance,
-                    self.histoVol,
+                    self.env,
                 ),
             )
         elif self.modelType == "Cylinders":
-            collisionComp = self.histoVol.callFunction(
+            collisionComp = self.env.callFunction(
                 self.checkCylCompart,
                 (
                     self.positions[level],
@@ -3042,11 +2932,11 @@ class Ingredient(Agent):
                     rotMatj,
                     gridPointsCoords,
                     distance,
-                    self.histoVol,
+                    self.env,
                 ),
             )
         elif self.modelType == "Cube":
-            collisionComp = self.histoVol.callFunction(
+            collisionComp = self.env.callFunction(
                 self.checkCubeCompart,
                 (
                     self.positions[0],
@@ -3056,7 +2946,7 @@ class Ingredient(Agent):
                     rotMatj,
                     gridPointsCoords,
                     distance,
-                    self.histoVol,
+                    self.env,
                 ),
             )
         return collisionComp
@@ -3077,7 +2967,7 @@ class Ingredient(Agent):
         #        print (ptsInSphere)
         if self.compareCompartment:
             cId = numpy.take(
-                self.histoVol.grid.gridPtId, ptsInSphere, 0
+                self.env.grid.gridPtId, ptsInSphere, 0
             )  # shoud be the same ?
             if nbs is not None:
                 # print ("cId ",cId,ptsInSphere)
@@ -3616,19 +3506,19 @@ class Ingredient(Agent):
 
     def checkPointComp(self, point):
         # if grid too sparse this will not work.
-        # ptID = self.histoVol.grid.getPointFrom3D(point)
-        cID = self.histoVol.getPointCompartmentId(point)  # offset ?
+        # ptID = self.env.grid.getPointFrom3D(point)
+        cID = self.env.getPointCompartmentId(point)  # offset ?
         # print ("check comp ", cID, self.compNum)
-        # dist,ptID = self.histoVol.grid.getClosestGridPoint(point)
-        # cID = self.histoVol.grid.gridPtId[ptID]
+        # dist,ptID = self.env.grid.getClosestGridPoint(point)
+        # cID = self.env.grid.gridPtId[ptID]
         if self.compNum == 0:
-            organelle = self.histoVol
+            organelle = self.env
         else:
-            organelle = self.histoVol.compartments[abs(self.compNum) - 1]
+            organelle = self.env.compartments[abs(self.compNum) - 1]
         # print ("comp is ", organelle.name)
         if self.compNum > 0:  # surface ingredient
             # print ("surface ingr of type ",self.Type)
-            # r=compartment.checkPointInside_rapid(point,self.histoVol.grid.diag,ray=3)
+            # r=compartment.checkPointInside_rapid(point,self.env.grid.diag,ray=3)
             if self.Type == "Grow":
                 # need a list of accepted compNum
                 check = False
@@ -3646,16 +3536,14 @@ class Ingredient(Agent):
                 #                        check = True #grid probably too sparse, need to check where we are
                 return check
             return True
-        # for i,o in self.histoVol.compartments:
+        # for i,o in self.env.compartments:
         #        if self.compNum != cID:
         #            return False
         #        else :
         #            return True
         if self.compNum < 0:
             # print ("inside ingredients ?")
-            inside = organelle.checkPointInside_rapid(
-                point, self.histoVol.grid.diag, ray=3
-            )
+            inside = organelle.checkPointInside_rapid(point, self.env.grid.diag, ray=3)
             if inside:  # and cID < 0:
                 return True
             else:
@@ -3665,8 +3553,8 @@ class Ingredient(Agent):
                 #            if not inside and self.compNum < 0 :
                 #                return False
         if self.compNum == 0:  # shouldnt be in any compartments
-            for o in self.histoVol.compartments:
-                inside = o.checkPointInside_rapid(point, self.histoVol.grid.diag, ray=3)
+            for o in self.env.compartments:
+                inside = o.checkPointInside_rapid(point, self.env.grid.diag, ray=3)
                 if inside:
                     return False
         if self.compNum != cID:
@@ -3678,11 +3566,11 @@ class Ingredient(Agent):
         if not hasattr(self, "histoVol"):
             return False
         if self.compNum == 0:
-            compartment = self.histoVol
+            compartment = self.env
         else:
-            compartment = self.histoVol.compartments[abs(self.compNum) - 1]
+            compartment = self.env.compartments[abs(self.compNum) - 1]
         compNum = self.compNum
-        for o in self.histoVol.compartments:
+        for o in self.env.compartments:
             if self.compNum > 0 and o.name == compartment.name:
                 continue
             if autopack.verbose:
@@ -3699,37 +3587,26 @@ class Ingredient(Agent):
                 if d < cutoff:
                     return True
                 if compNum < 0 and o.name == compartment.name:
-                    inside = o.checkPointInside(
-                        numpy.array(point), self.histoVol.grid.diag
-                    )
+                    inside = o.checkPointInside(numpy.array(point), self.env.grid.diag)
                     if autopack.verbose:
                         print("inside ? ", inside)
                     if not inside:
                         return True
         return False
 
-    def testPoint(self, newPt):
+    def point_is_not_available(self, newPt):
+        """Takes in a vector"""
         inComp = True
         closeS = False
-        inside = self.histoVol.grid.checkPointInside(
-            newPt, dist=self.cutoff_boundary, jitter=getNormedVectorOnes(self.jitterMax)
+        inside = self.env.grid.checkPointInside(
+            newPt, dist=self.cutoff_boundary, jitter=getNormedVectorOnes([1, 1, 1])
         )
-        # print ("testPoint",newPt,inside,self.jitterMax)
         if inside:
             inComp = self.checkPointComp(newPt)
             if inComp:
                 # check how far from surface ?
                 closeS = self.checkPointSurface(newPt, cutoff=self.cutoff_surface)
-        if autopack.verbose:
-            print(
-                "test",
-                self.name,
-                newPt,
-                not inside,
-                closeS,
-                not inComp,
-                (not inside or closeS or not inComp),
-            )
+        self.log.info("testing point avialable: %s %r %r %r %r", self.name, newPt, not inside, closeS, not inComp)
         return not inside or closeS or not inComp
 
     def oneJitter(self, spacing, trans, rotMat):
@@ -3845,7 +3722,7 @@ class Ingredient(Agent):
                 #                print (bb,rotMatj)
                 pointsInCube = grid.getPointsInCube(bb, posc, radt)
                 #                print ("correct BB ",bb," posc ",posc, " radt ",radt," poInCube",max(pointsInCube))
-                if hasattr(self, "histoVol") and self.histoVol.runTimeDisplay > 1:
+                if hasattr(self, "histoVol") and self.env.runTimeDisplay > 1:
                     box = self.vi.getObject("insidePtBox")
                     if box is None:
                         box = self.vi.Box("insidePtBox", cornerPoints=bb, visible=1)
@@ -3951,11 +3828,11 @@ class Ingredient(Agent):
         return mingrs
 
     def getIngredientsInTree(self, close_indice):
-        if len(self.histoVol.rIngr):
-            ingrs = [self.histoVol.rIngr[i] for i in close_indice["indices"]]
+        if len(self.env.rIngr):
+            ingrs = [self.env.rIngr[i] for i in close_indice["indices"]]
             return [
-                numpy.array(self.histoVol.rTrans)[close_indice["indices"]],
-                numpy.array(self.histoVol.rRot)[close_indice["indices"]],
+                numpy.array(self.env.rTrans)[close_indice["indices"]],
+                numpy.array(self.env.rRot)[close_indice["indices"]],
                 ingrs,
                 close_indice["distances"],
             ]
@@ -4054,20 +3931,20 @@ class Ingredient(Agent):
         return overlap
 
     def bht_check_collision(self, position, rotation):
-        # use self.histoVol.ingr_bhtree
+        # use self.env.ingr_bhtree
         overlap = False
-        if self.histoVol.treemode != "bhtree":
-            self.histoVol.treemode = "bhtree"
-        if not len(self.histoVol.rTrans):
+        if self.env.treemode != "bhtree":
+            self.env.treemode = "bhtree"
+        if not len(self.env.rTrans):
             return overlap
         else:
-            if self.histoVol.close_ingr_bhtree is None:
-                self.histoVol.close_ingr_bhtree = bhtreelib.BHtree(
-                    self.histoVol.rTrans,
-                    [ing.encapsulatingRadius for ing in self.histoVol.rIngr],
+            if self.env.close_ingr_bhtree is None:
+                self.env.close_ingr_bhtree = bhtreelib.BHtree(
+                    self.env.rTrans,
+                    [ing.encapsulatingRadius for ing in self.env.rIngr],
                     10,
                 )
-        nb = self.histoVol.close_ingr_bhtree.closePointsPairs(
+        nb = self.env.close_ingr_bhtree.closePointsPairs(
             tuple([position]),
             tuple([self.encapsulatingRadius]),
             1.0,
@@ -4085,13 +3962,13 @@ class Ingredient(Agent):
                 #                print ("nbi ",nb[i])
                 indice = nb[i][1]
                 pos = self.get_new_pos(
-                    self.histoVol.rIngr[indice],
-                    self.histoVol.rTrans[indice],
-                    self.histoVol.rRot[indice],
+                    self.env.rIngr[indice],
+                    self.env.rTrans[indice],
+                    self.env.rRot[indice],
                 )
                 nbo = sphtree.closePointsPairs(
                     tuple(pos.tolist()),
-                    tuple(self.histoVol.rIngr[indice].radii[0]),
+                    tuple(self.env.rIngr[indice].radii[0]),
                     1.0,
                 )
                 if autopack.verbose:
@@ -4100,10 +3977,10 @@ class Ingredient(Agent):
                     overlap = True
                     break
         if self.compNum == 0:
-            organelle = self.histoVol
+            organelle = self.env
         else:
-            organelle = self.histoVol.compartments[abs(self.compNum) - 1]
-        for o in self.histoVol.compartments:
+            organelle = self.env.compartments[abs(self.compNum) - 1]
+        for o in self.env.compartments:
             if organelle.name == o.name:
                 continue
             d, i = o.OGsrfPtsBht.query(position)
@@ -4117,19 +3994,17 @@ class Ingredient(Agent):
         return overlap
 
     def np_check_collision(self, position, rotation):
-        # use self.histoVol.ingr_bhtree
+        # use self.env.ingr_bhtree
         overlap = False
-        if not len(self.histoVol.rTrans):
+        if not len(self.env.rTrans):
             return overlap
         else:
-            if self.histoVol.close_ingr_bhtree is None:
-                self.histoVol.close_ingr_bhtree = spatial.cKDTree(
-                    self.histoVol.rTrans, leafsize=10
+            if self.env.close_ingr_bhtree is None:
+                self.env.close_ingr_bhtree = spatial.cKDTree(
+                    self.env.rTrans, leafsize=10
                 )
-        d, indices = self.histoVol.close_ingr_bhtree.query(
-            position, len(self.histoVol.rTrans)
-        )
-        R = numpy.array([ing.encapsulatingRadius for ing in self.histoVol.rIngr])
+        d, indices = self.env.close_ingr_bhtree.query(position, len(self.env.rTrans))
+        R = numpy.array([ing.encapsulatingRadius for ing in self.env.rIngr])
         D = d - (self.encapsulatingRadius + R) * 1.1
         nb = numpy.nonzero(D < 0.0)[0]
         # pdb.set_trace()
@@ -4139,17 +4014,17 @@ class Ingredient(Agent):
             for i in range(len(nb)):
                 indice = indices[nb[i]]
                 pos = self.get_new_pos(
-                    self.histoVol.rIngr[indice],
-                    self.histoVol.rTrans[indice],
-                    self.histoVol.rRot[indice],
+                    self.env.rIngr[indice],
+                    self.env.rTrans[indice],
+                    self.env.rRot[indice],
                 )
                 dist, ind = sph1.query(pos, len(p))
                 # return indice of sph1 closest to pos
                 cradii = numpy.take(self.radii[0], ind)
-                oradii = numpy.array(self.histoVol.rIngr[indice].radii[0])
+                oradii = numpy.array(self.env.rIngr[indice].radii[0])
                 sumradii = numpy.add(cradii.transpose(), oradii).transpose()
                 sD = dist - sumradii
-                # sD = dist - (numpy.take(self.radii[0], ind)+numpy.array(self.histoVol.rIngr[indice].radii[0]))
+                # sD = dist - (numpy.take(self.radii[0], ind)+numpy.array(self.env.rIngr[indice].radii[0]))
                 nbo = numpy.nonzero(sD < 0.0)[0]
                 # pdb.set_trace()
                 if len(nbo):
@@ -4157,10 +4032,10 @@ class Ingredient(Agent):
                     break
             del sph1
         if self.compNum == 0:
-            organelle = self.histoVol
+            organelle = self.env
         else:
-            organelle = self.histoVol.compartments[abs(self.compNum) - 1]
-        for o in self.histoVol.compartments:
+            organelle = self.env.compartments[abs(self.compNum) - 1]
+        for o in self.env.compartments:
             if organelle.name == o.name:
                 continue
             d, i = o.OGsrfPtsBht.query(position)
@@ -4176,18 +4051,18 @@ class Ingredient(Agent):
 
     def checkDistance(self, liste_nodes, point, cutoff):
         for node in liste_nodes:
-            rTrans, rRot = self.histoVol.getRotTransRB(node)
+            rTrans, rRot = self.env.getRotTransRB(node)
             d = self.vi.measure_distance(rTrans, point)
             print("checkDistance", d, d < cutoff)
 
     def get_rapid_nodes(self, close_indice, curentpt, removelast=False, prevpoint=None):
         if self.compNum == 0:
-            organelle = self.histoVol
+            organelle = self.env
         else:
-            organelle = self.histoVol.compartments[abs(self.compNum) - 1]
+            organelle = self.env.compartments[abs(self.compNum) - 1]
         nodes = []
         #        ingrCounter={}
-        #        a=numpy.asarray(self.histoVol.rTrans)[close_indice["indices"]]
+        #        a=numpy.asarray(self.env.rTrans)[close_indice["indices"]]
         #        b=numpy.array([curentpt,])
         #        distances=spatial.distance.cdist(a,b)
         distances = close_indice[
@@ -4199,13 +4074,13 @@ class Ingredient(Agent):
                 continue
             if n == len(close_indice["indices"]):
                 continue
-            if n >= len(self.histoVol.rIngr):
+            if n >= len(self.env.rIngr):
                 continue
             if distances[nid] == 0.0:
                 continue
-            ingr = self.histoVol.rIngr[n]
-            jtrans = self.histoVol.rTrans[n]
-            rotMat = self.histoVol.rRot[n]
+            ingr = self.env.rIngr[n]
+            jtrans = self.env.rTrans[n]
+            rotMat = self.env.rRot[n]
             # print (self.name+" is close to "+ingr.name,jtrans,curentpt)
             if prevpoint is not None:
                 # print distances[nid],
@@ -4220,7 +4095,7 @@ class Ingredient(Agent):
                 # shouldnt we use sphere instead
                 if self.name == ingr.name:
                     # dont want last n-2  point?
-                    c = len(self.histoVol.rIngr)
+                    c = len(self.env.rIngr)
                     #                    print jtrans,curentpt
                     #                    print ("whats ",n,nid,c,(n==c) or n==(c-1) or  (n==c-2),
                     #                                (nid==c) or nid==(c-1) or  (nid==c-2))
@@ -4229,7 +4104,7 @@ class Ingredient(Agent):
                         continue
             if ingr.name in self.partners and self.Type == "Grow":
                 # for now just do nothing
-                c = len(self.histoVol.rIngr)
+                c = len(self.env.rIngr)
                 #                    print jtrans,curentpt
                 #                print ("whats ",n,nid,c,(n==c) or n==(c-1) or  (n==c-2),
                 #                            (nid==c) or nid==(c-1) or  (nid==c-2))
@@ -4237,7 +4112,7 @@ class Ingredient(Agent):
                 if (n == c) or n == (c - 1) or (n == c - 2):
                     continue
             if self.name in ingr.partners and ingr.Type == "Grow":
-                c = len(self.histoVol.rIngr)
+                c = len(self.env.rIngr)
                 if (n == c) or n == (c - 1) or (n == c - 2):
                     continue
                     # else :
@@ -4245,7 +4120,7 @@ class Ingredient(Agent):
             if (
                 distances[nid]
                 > (ingr.encapsulatingRadius + self.encapsulatingRadius)
-                * self.histoVol.scaleER
+                * self.env.scaleER
             ):
                 # print (distances[nid][0],ingr.encapsulatingRadius+self.encapsulatingRadius)
                 continue
@@ -4256,7 +4131,7 @@ class Ingredient(Agent):
             )
         # append organelle rb nodes
         node = None
-        for o in self.histoVol.compartments:
+        for o in self.env.compartments:
             node = None
             if self.Type != "Grow":
                 if self.compNum > 0 and o.name == organelle.name:
@@ -4265,20 +4140,20 @@ class Ingredient(Agent):
             if node is not None:
                 nodes.append([node, numpy.zeros((3), "f"), numpy.identity(3, "f"), o])
                 #        print len(nodes),nodes
-        self.histoVol.nodes = nodes
+        self.env.nodes = nodes
         return nodes
 
     def get_rbNodes(
         self, close_indice, currentpt, removelast=False, prevpoint=None, getInfo=False
     ):
         # move around the rbnode and return it
-        # self.histoVol.loopThroughIngr( self.histoVol.reset_rbnode )
+        # self.env.loopThroughIngr( self.env.reset_rbnode )
         if self.compNum == 0:
-            organelle = self.histoVol
+            organelle = self.env
         else:
-            organelle = self.histoVol.compartments[abs(self.compNum) - 1]
+            organelle = self.env.compartments[abs(self.compNum) - 1]
         nodes = []
-        #        a=numpy.asarray(self.histoVol.rTrans)[close_indice["indices"]]
+        #        a=numpy.asarray(self.env.rTrans)[close_indice["indices"]]
         #        b=numpy.array([currentpt,])
         distances = close_indice[
             "distances"
@@ -4289,21 +4164,21 @@ class Ingredient(Agent):
                 continue
             # if n == len(close_indice["indices"]):
             #                continue
-            if n >= len(self.histoVol.rIngr):
+            if n >= len(self.env.rIngr):
                 continue
-            ingr = self.histoVol.rIngr[n]
+            ingr = self.env.rIngr[n]
             if len(distances):
                 if distances[nid] == 0.0:
                     continue
                 if (
                     distances[nid]
                     > (ingr.encapsulatingRadius + self.encapsulatingRadius)
-                    * self.histoVol.scaleER
+                    * self.env.scaleER
                 ):
                     continue
 
-            jtrans = self.histoVol.rTrans[n]
-            rotMat = self.histoVol.rRot[n]
+            jtrans = self.env.rTrans[n]
+            rotMat = self.env.rRot[n]
             if prevpoint is not None:
                 # if prevpoint == jtrans : continue
                 d = self.vi.measure_distance(
@@ -4313,15 +4188,15 @@ class Ingredient(Agent):
                     continue
             if self.Type == "Grow":
                 if self.name == ingr.name:
-                    c = len(self.histoVol.rIngr)
+                    c = len(self.env.rIngr)
                     if (n == c) or n == (c - 1):  # or  (n==(c-2)):
                         continue
             if ingr.name in self.partners and self.Type == "Grow":
-                c = len(self.histoVol.rIngr)
+                c = len(self.env.rIngr)
                 if (n == c) or n == (c - 1):  # or (n==c-2):
                     continue
             if self.name in ingr.partners and ingr.Type == "Grow":
-                c = len(self.histoVol.rIngr)
+                c = len(self.env.rIngr)
                 if (n == c) or n == (c - 1):  # or (n==c-2):
                     continue
                     #            if self.packingMode == 'hexatile' :
@@ -4335,7 +4210,7 @@ class Ingredient(Agent):
                 nodes.append(rbnode)
                 #            print "get",ingr.name,self.name,rbnode,distances[nid],(ingr.encapsulatingRadius+self.encapsulatingRadius)
         # append organelle rb nodes
-        for o in self.histoVol.compartments:
+        for o in self.env.compartments:
             if self.compNum > 0 and o.name == organelle.name:
                 # this i notworking for growing ingredient like hair.
                 # should had after second segments
@@ -4357,19 +4232,19 @@ class Ingredient(Agent):
                         else:
                             nodes.append([orbnode, [0, 0, 0], numpy.identity(4), o])
                             #        if self.compNum < 0 or self.compNum == 0 :
-                            #            for o in self.histoVol.compartments:
+                            #            for o in self.env.compartments:
                             #                if o.rbnode is not None :
                             #                    if not getInfo :
                             #                        nodes.append(o.rbnode)
                             #        print ("GetNode ",len(nodes),nodes)
-        self.histoVol.nodes = nodes
+        self.env.nodes = nodes
         return nodes
 
     def getClosePairIngredient(self, point, histoVol, cutoff=10.0):
         R = {"indices": [], "distances": []}
-        radius = [ingr.encapsulatingRadius for ingr in self.histoVol.rIngr]
+        radius = [ingr.encapsulatingRadius for ingr in self.env.rIngr]
         radius.append(self.encapsulatingRadius)
-        pos = self.histoVol.rTrans[:]  # ).tolist()
+        pos = self.env.rTrans[:]  # ).tolist()
         pos.append([point[0], point[1], point[2]])
         ind = len(pos) - 1
         bht = bhtreelib.BHtree(pos, radius, 10)
@@ -4441,14 +4316,14 @@ class Ingredient(Agent):
     def update_data_tree(
         self, jtrans, rotMatj, ptInd=0, pt1=None, pt2=None, updateTree=True
     ):
-        # self.histoVol.static.append(rbnode)
-        # self.histoVol.moving = None
-        self.histoVol.nb_ingredient += 1
-        self.histoVol.rTrans.append(numpy.array(jtrans).flatten().tolist())
-        self.histoVol.rRot.append(numpy.array(rotMatj))  # rotMatj
-        self.histoVol.rIngr.append(self)
+        # self.env.static.append(rbnode)
+        # self.env.moving = None
+        self.env.nb_ingredient += 1
+        self.env.rTrans.append(numpy.array(jtrans).flatten().tolist())
+        self.env.rRot.append(numpy.array(rotMatj))  # rotMatj
+        self.env.rIngr.append(self)
         if pt1 is not None:
-            self.histoVol.result.append(
+            self.env.result.append(
                 [
                     [
                         numpy.array(pt1).flatten().tolist(),
@@ -4460,7 +4335,7 @@ class Ingredient(Agent):
                 ]
             )
         else:
-            self.histoVol.result.append(
+            self.env.result.append(
                 [
                     numpy.array(jtrans).flatten().tolist(),
                     numpy.array(rotMatj),
@@ -4469,15 +4344,13 @@ class Ingredient(Agent):
                 ]
             )
         if updateTree:
-            if self.histoVol.treemode == "bhtree":  # "cKDTree"
-                # if len(self.histoVol.rTrans) >= 1 : bhtreelib.freeBHtree(self.histoVol.close_ingr_bhtree)
-                self.histoVol.close_ingr_bhtree = bhtreelib.BHtree(
-                    self.histoVol.rTrans, None, 10
-                )
+            if self.env.treemode == "bhtree":  # "cKDTree"
+                # if len(self.env.rTrans) >= 1 : bhtreelib.freeBHtree(self.env.close_ingr_bhtree)
+                self.env.close_ingr_bhtree = bhtreelib.BHtree(self.env.rTrans, None, 10)
             else:
-                if len(self.histoVol.rTrans) >= 1:
-                    self.histoVol.close_ingr_bhtree = spatial.cKDTree(
-                        self.histoVol.rTrans, leafsize=10
+                if len(self.env.rTrans) >= 1:
+                    self.env.close_ingr_bhtree = spatial.cKDTree(
+                        self.env.rTrans, leafsize=10
                     )
 
     def reject(
@@ -4495,52 +4368,22 @@ class Ingredient(Agent):
             print("PREMATURE ENDING of ingredient", self.name)
             self.completion = 1.0
 
-    def place(
-        self,
-        histoVol,
-        ptInd,
-        freePoints,
-        nbFreePoints,
-        distance,
-        dpad,
-        usePP,
-        stepByStep=False,
-        verbose=False,
-        sphGeom=None,
-        labDistGeom=None,
-        debugFunc=None,
-        sphCenters=None,
-        sphRadii=None,
-        sphColors=None,
-    ):
+    def place(self, env, ptInd, freePoints, nbFreePoints, distance, dpad, usePP):
         success = False
         # print self.placeType
         self.vi = autopack.helper
         #        if histoVol.afviewer != None:
         #            self.vi = histoVol.afviewer.vi
-        self.histoVol = histoVol
+        self.env = env  # NOTE: do we need to store the env on the ingredient?
+        self.log.info("PLACING INGREDIENT %s", self.placeType)
         # grow doesnt use panda.......but could use all the geom produce by the grow as rb
         if self.placeType == "jitter" or self.Type == "Grow" or self.Type == "Actine":
             success, nbFreePoints = self.jitter_place(
-                histoVol,
-                ptInd,
-                freePoints,
-                nbFreePoints,
-                distance,
-                dpad,
-                stepByStep=False,
-                verbose=verbose,
-                sphGeom=None,
-                labDistGeom=None,
-                debugFunc=None,
-                sphCenters=None,
-                sphRadii=None,
-                sphColors=None,
-                usePP=usePP,
+                env, ptInd, freePoints, nbFreePoints, distance, dpad, env.afviewer
             )
         elif self.placeType == "spring" or self.placeType == "rigid-body":
             success, nbFreePoints = self.rigid_place(
-                histoVol,
+                env,
                 ptInd,
                 freePoints,
                 nbFreePoints,
@@ -4558,7 +4401,7 @@ class Ingredient(Agent):
             )
         elif self.placeType == "pandaDev":
             success, nbFreePoints = self.pandaBullet_place_dev(
-                histoVol,
+                env,
                 ptInd,
                 freePoints,
                 nbFreePoints,
@@ -4576,7 +4419,7 @@ class Ingredient(Agent):
             )
         elif self.placeType == "spheresBHT":
             success, nbFreePoints = self.pandaBullet_placeBHT(
-                histoVol,
+                env,
                 ptInd,
                 freePoints,
                 nbFreePoints,
@@ -4595,7 +4438,7 @@ class Ingredient(Agent):
         elif self.placeType == "pandaBullet":
             if panda3d is None:
                 success, nbFreePoints = self.pandaBullet_placeBHT(
-                    histoVol,
+                    env,
                     ptInd,
                     freePoints,
                     nbFreePoints,
@@ -4613,20 +4456,13 @@ class Ingredient(Agent):
                 )
             else:
                 success, nbFreePoints = self.pandaBullet_place(
-                    histoVol,
+                    env,
                     ptInd,
                     freePoints,
                     nbFreePoints,
                     distance,
                     dpad,
-                    stepByStep=False,
-                    verbose=verbose,
-                    sphGeom=None,
-                    labDistGeom=None,
-                    debugFunc=None,
-                    sphCenters=None,
-                    sphRadii=None,
-                    sphColors=None,
+                    env.afviewer,
                     usePP=usePP,
                 )
         elif (
@@ -4634,7 +4470,7 @@ class Ingredient(Agent):
             or self.placeType == "pandaBulletSpring"
         ):
             success, nbFreePoints = self.pandaBullet_relax(
-                histoVol,
+                env,
                 ptInd,
                 freePoints,
                 nbFreePoints,
@@ -4651,7 +4487,7 @@ class Ingredient(Agent):
             )
         elif self.placeType == "RAPID":
             success, nbFreePoints = self.rapid_place(
-                histoVol,
+                env,
                 ptInd,
                 freePoints,
                 nbFreePoints,
@@ -4715,7 +4551,7 @@ class Ingredient(Agent):
                     # set useRotAxis = 1 and set rotAxis = 0, 0, 0 for that ingredient
                 elif self.useOrientBias and self.packingMode == "gradient":
                     jitter_rotation = self.getBiasedRotation(rotation, weight=None)
-                # weight = 1.0 - self.histoVol.gradients[self.gradient].weight[ptInd])
+                # weight = 1.0 - self.env.gradients[self.gradient].weight[ptInd])
                 else:
                     # should we align to this rotAxis ?
                     jitter_rotation = autopack.helper.rotation_matrix(
@@ -4787,7 +4623,7 @@ class Ingredient(Agent):
         self.vi = autopack.helper
         #        if histoVol.afviewer != None:
         #            self.vi = histoVol.afviewer.vi
-        self.histoVol = histoVol
+        self.env = histoVol
 
         if self.placeType == "jitter" or self.Type == "Grow" or self.Type == "Actine":
             success, insidePts, newDistancePts = self.jitter_place(
@@ -4836,16 +4672,16 @@ class Ingredient(Agent):
         simulationTimes = histoVol.simulationTimes
         runTimeDisplay = histoVol.runTimeDisplay
         springOptions = histoVol.springOptions
-        self.histoVol = histoVol
+        self.env = histoVol
         spacing = histoVol.smallestProteinSize
         spacing = histoVol.grid.gridSpacing
         jx, jy, jz = self.jitterMax
         self.getMaxJitter(spacing)
 
         if self.compNum == 0:
-            compartment = self.histoVol
+            compartment = self.env
         else:
-            compartment = self.histoVol.compartments[abs(self.compNum) - 1]
+            compartment = self.env.compartments[abs(self.compNum) - 1]
             # this is hisotVol for cytoplasme
         compNum = self.compNum
         gridPointsCoords = histoVol.grid.masterGridPositions
@@ -5089,60 +4925,42 @@ class Ingredient(Agent):
                 )
             if self.rejectionCounter >= 30:
                 if verbose:
-                    print("PREMATURE ENDING of ingredient", self.name)
+                    print("PREMATURE ENDING of ingredient rigid_place", self.name)
                 self.completion = 1.0
         return success, nbFreePoints
 
     def jitter_place(
         self,
-        histoVol,
+        env,
         ptInd,
         freePoints,
         nbFreePoints,
         distance,
         dpad,
-        stepByStep=False,
-        verbose=False,
-        sphGeom=None,
-        labDistGeom=None,
-        debugFunc=None,
-        sphCenters=None,
-        sphRadii=None,
-        sphColors=None,
+        afvi,
         drop=True,
-        usePP=False,
     ):
         """
         drop the ingredient on grid point ptInd
         """
-        verbose = histoVol.verbose
-        afvi = histoVol.afviewer
-        spacing = histoVol.smallestProteinSize
-        jx, jy, jz = self.jitterMax
-        jitter = histoVol.callFunction(self.getMaxJitter, (spacing,))
-        jitter = histoVol.grid.gridSpacing
+        jitter = env.grid.gridSpacing
         jitter2 = jitter * jitter
-
-        if self.compNum == 0:
-            compartment = histoVol
-        else:
-            compartment = histoVol.compartments[abs(self.compNum) - 1]
-
-        rot_mat = self.get_rotation(ptInd, histoVol)
+        compartment = self.get_compartment(env)
+        rot_mat = self.get_rotation(ptInd, env)
 
         # jitter position loop
         jitterList = []
         collD1 = []
         collD2 = []
 
-        trans = histoVol.masterGridPositions[ptInd]  # drop point, surface points.
+        trans = env.masterGridPositions[ptInd]  # drop point, surface points.
         if numpy.sum(self.offset) != 0.0:
             trans = numpy.array(trans) + ApplyMatrix([self.offset], rot_mat)[0]
         if verbose:
             print("use offset ", self.offset)
         target_point = trans
         moving = None
-        if histoVol.runTimeDisplay and self.mesh:
+        if env.runTimeDisplay and self.mesh:
             if hasattr(self, "mesh_3d"):
                 # create an instance of mesh3d and place it
                 name = self.name + str(ptInd)
@@ -5161,37 +4979,8 @@ class Ingredient(Agent):
                             location=target_point,
                             parent=afvi.staticMesh,
                         )
-        # do we get the list of neighbours first > and give a different trans...
-        # closer to the partner
-        # we should look up for an available ptID around the picked partner if any
-        # getListPartner
-        # if histoVol.ingrLookForNeighbours and self.packingMode == "closePartner":
-        #     mingrs, listePartner = self.getListePartners(histoVol, trans, rot_mat, compartment, afvi)
-        #     # if liste:pickPartner
-        #     if listePartner:  # self.packingMode=="closePartner":
-        #         #                print "ok partner",len(listePartner)
-        #         if not self.force_random:
-        #             target_point, weight = self.pickPartner(mingrs, listePartner, currentPos=trans)
-        #             if target_point is None:
-        #                 target_point = trans
-        #             else:  # maybe get the ptid that can have it
-        #                 # find a newpoint here?
-        #                 x, y, z = target_point
-        #                 rad = self.radii[0][0] * 2.  # why by 2.0
-        #                 bb = ([x - rad, y - rad, z - rad], [x + rad, y + rad, z + rad])
-        #                 pointsInCube = histoVol.grid.getPointsInCube(bb, target_point, rad)
-        #                 # is one of this point can receive the current ingredient
-        #                 cut = rad - jitter
-        #                 for pt in pointsInCube:
-        #                     d = distance[pt]
-        #                     if d >= cut:
-        #                         # lets just take the first one
-        #                         target_point = histoVol.masterGridPositions[pt]
-        #                         break
-        #         else:
-        #             target_point = trans
-        #             # if partner:pickNewPoit like in fill3
-        tx, ty, tz = jitter_trans = target_point
+
+        jitter_trans = target_point
         # we may increase the jitter, or pick from xyz->Id free for its radius
 
         # jitter loop
@@ -5206,12 +4995,9 @@ class Ingredient(Agent):
             jitter_trans = self.randomize_translation(
                 target_point, rot_mat, jitter, jitter2
             )
-            histoVol.totnbJitter += 1
-            # jitterList.append((dx, dy, dz))
-
-            # randomize rotation about axis
-            jitter_rot = self.randomize_rotation(rot_mat, histoVol)
-            if histoVol.runTimeDisplay and moving is not None:
+            env.totnbJitter += 1
+            jitter_rot = self.randomize_rotation(rot_mat, env)
+            if env.runTimeDisplay and moving is not None:
                 self.update_display_rt(moving, jitter_trans, jitter_rot)
                 self.vi.update()
             # check for collisions
@@ -5219,7 +5005,7 @@ class Ingredient(Agent):
             level = self.collisionLevel
             collision = False
             # periodicity check
-            periodic_pos = self.histoVol.grid.getPositionPeridocity(
+            periodic_pos = self.env.grid.getPositionPeridocity(
                 jitter_trans,
                 getNormedVectorOnes(self.jitterMax),
                 self.encapsulatingRadius,
@@ -5232,13 +5018,13 @@ class Ingredient(Agent):
                         p,
                         jitter_rot,
                         level,
-                        histoVol.masterGridPositions,
+                        env.masterGridPositions,
                         distance,
-                        histoVol,
+                        env,
                         dpad,
                     )
                     r.extend([periodic_collision])
-                    if histoVol.runTimeDisplay and moving is not None:
+                    if env.runTimeDisplay and moving is not None:
                         box = self.vi.getObject("collBox")
                         self.vi.changeObjColorMat(
                             box, [0.5, 0, 0] if True in r else [0, 0.5, 0]
@@ -5253,206 +5039,102 @@ class Ingredient(Agent):
                 print("check collision ")
             closeS = False  # self.checkPointSurface(jitter_trans, cutoff=self.cutoff_surface)
             # r = closeS
-            test = closeS  # self.testPoint(jtrans)
+            test = closeS  # self.point_is_not_available(jtrans)
             if not test and not (True in r):
                 collision, insidePoints, newDistPoints = self.collision_jitter(
                     jitter_trans,
                     jitter_rot,
                     level,
-                    histoVol.masterGridPositions,
+                    env.masterGridPositions,
                     distance,
-                    histoVol,
+                    env,
                     dpad,
                 )
             if verbose:
                 print("ingredient collision ", collision, test, r)
-            if histoVol.runTimeDisplay and moving is not None:
+            if env.runTimeDisplay and moving is not None:
                 box = self.vi.getObject("collBox")
                 self.vi.changeObjColorMat(box, [1, 0, 0] if collision else [0, 1, 0])
             if not collision:
                 break  # break out of jitter pos loop
-        if verbose:
-            print(
-                "end jitter loop ",
-                time() - t1,
-                collision,
-                len(insidePoints),
-                len(newDistPoints),
-            )
-            print(insidePoints, newDistPoints)
-            print("continue")
+
+        self.log.info(
+            "end jitter loop %d %b %d %d",
+            time() - t1,
+            collision,
+            len(insidePoints),
+            len(newDistPoints),
+        )
+        self.log.info(insidePoints, newDistPoints)
+        self.log.info("continue")
         if not collision and not (True in r):
             # get inside points and update distance
             # use best spherical approximation
 
             t3 = time()
             # should be replace by self.getPointInside
-            # if self.modelType == 'Spheres':
-            #     pass
-            # elif self.modelType == 'Cylinders':
-            #     cent1T = self.transformPoints(jitter_trans, jitter_rot, self.positions[-1])
-            #     cent2T = self.transformPoints(jitter_trans, jitter_rot, self.positions2[-1])
-            #
-            #     for radc, p1, p2 in zip(self.radii[-1], cent1T, cent2T):
-            #
-            #         x1, y1, z1 = p1
-            #         x2, y2, z2 = p2
-            #         vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
-            #         lengthsq = vx * vx + vy * vy + vz * vz
-            #         l = sqrt(lengthsq)
-            #         cx, cy, cz = posc = x1 + vx * .5, y1 + vy * .5, z1 + vz * .5
-            #         radt = l + radc + dpad
-            #         bb = ([cx - radt, cy - radt, cz - radt], [cx + radt, cy + radt, cz + radt])
-            #         pointsInCube = histoVol.callFunction(histoVol.grid.getPointsInCube,
-            #                                              (bb, posc, radt))
-            #
-            #         pd = numpy.take(histoVol.masterGridPositions, pointsInCube, 0) - p1
-            #         dotp = numpy.dot(pd, vect)
-            #         rad2 = radc * radc
-            #         d2toP1 = numpy.sum(pd * pd, 1)
-            #         dsq = d2toP1 - dotp * dotp / lengthsq
-            #
-            #         pd2 = numpy.take(histoVol.masterGridPositions, pointsInCube, 0) - p2
-            #         d2toP2 = numpy.sum(pd2 * pd2, 1)
-            #
-            #         for pti, pt in enumerate(pointsInCube):
-            #             if pt in insidePoints:
-            #                 continue
-            #             if dotp[pti] < 0.0:  # outside 1st cap
-            #                 d = sqrt(d2toP1[pti])
-            #                 if d < distance[pt]:  # point in region of influence
-            #                     if pt in newDistPoints:
-            #                         if d < newDistPoints[pt]:
-            #                             newDistPoints[pt] = d
-            #                     else:
-            #                         newDistPoints[pt] = d
-            #             elif dotp[pti] > lengthsq:
-            #                 d = sqrt(d2toP2[pti])
-            #                 if d < distance[pt]:  # point in region of influence
-            #                     if pt in newDistPoints:
-            #                         if d < newDistPoints[pt]:
-            #                             newDistPoints[pt] = d
-            #                     else:
-            #                         newDistPoints[pt] = d
-            #             else:
-            #                 d = sqrt(dsq[pti]) - radc
-            #                 if d < 0.:  # point is inside dropped sphere
-            #                     if pt in insidePoints:
-            #                         if d < insidePoints[pt]:
-            #                             insidePoints[pt] = d
-            #                     else:
-            #                         insidePoints[pt] = d
-            # elif self.modelType == 'Cube':
-            #     insidePoints, newDistPoints = self.getDistancesCube(jitter_trans, jitter_rot,
-            #                                                         histoVol.masterGridPositions, distance,
-            #                                                         histoVol)
+
             # save dropped ingredient
-            if verbose:
-                print("end compute distance loop ", time() - t3)
+            self.log.info("end compute distance loop ", time() - t3)
             if drop:
                 compartment.molecules.append([jitter_trans, jitter_rot, self, ptInd])
-                histoVol.order[ptInd] = histoVol.lastrank
-                histoVol.lastrank += 1
-                histoVol.nb_ingredient += 1
-                # if False:  # usePP
-                #     self.counter += 1
-                #     self.completion = float(self.counter) / float(self.nbMol)
-                #
-                #     if jitterPos > 0:
-                #         histoVol.successfullJitter.append(
-                #             (self, jitterList, collD1, collD2))
-                #
-                #     print('Success nbfp:%d %d/%d dpad %.2f' % (
-                #         nbFreePoints, self.counter, self.nbMol, dpad))
-                #     if self.name == 'in  inside':
-                #         histoVol.jitterVectors.append((trans, jtrans))
-                #
-                #     success = True
-                #     self.rejectionCounter = 0
-                #     return True, insidePoints, newDistPoints
+                env.order[ptInd] = env.lastrank
+                env.lastrank += 1
+                env.nb_ingredient += 1
+
             # update free points
-            if verbose:
-                print("updating distances and verbose = ", verbose)
+            self.log.info("updating distances")
             timeUpDistLoopStart = time()
 
-            nbFreePoints = histoVol.callFunction(
+            nbFreePoints = env.callFunction(
                 self.updateDistances,
                 (
-                    histoVol,
                     insidePoints,
                     newDistPoints,
                     freePoints,
                     nbFreePoints,
                     distance,
-                    histoVol.masterGridPositions,
-                    verbose,
                 ),
             )
-            histoVol.timeUpDistLoopTotal += time() - timeUpDistLoopStart
+            env.timeUpDistLoopTotal += time() - timeUpDistLoopStart
             if periodic_pos is not None and self.packingMode != "gradient":
                 for p in periodic_pos:
                     insidePoints, newDistPoints = self.getDistances(
-                        p, jitter_rot, histoVol.masterGridPositions, distance, dpad
+                        p, jitter_rot, env.masterGridPositions, distance, dpad
                     )
-                    nbFreePoints = histoVol.callFunction(
+                    nbFreePoints = env.callFunction(
                         self.updateDistances,
                         (
-                            histoVol,
                             insidePoints,
                             newDistPoints,
                             freePoints,
                             nbFreePoints,
                             distance,
-                            histoVol.masterGridPositions,
-                            verbose,
                         ),
                     )
-            # if sphGeom is not None:
-            #     for po1, ra1 in zip(modCent, modRad):
-            #         sphCenters.append(po1)
-            #         sphRadii.append(ra1)
-            #         sphColors.append(self.color)
-
-            # if labDistGeom is not None:
-            #     verts = []
-            #     labels = []
-            #     colors = []
-            #     # for po1, d1,d2 in distChanges.values():
-            #     fpts = freePoints
-            #     for i in range(nbFreePoints):
-            #         pt = fpts[i]
-            #         verts.append(histoVol.masterGridPositions[pt])
-            #         labels.append("%.2f" % distance[pt])
-            #     #                for pt in freePoints[:nbFreePoints]:
-            #     #                    verts.append(histoVol.masterGridPositions[pt])
-            #     #                    labels.append( "%.2f"%distance[pt])
-            #     labDistGeom.Set(vertices=verts, labels=labels)
-            #     # materials=colors, inheritMaterial=0)
 
             # add one to molecule counter for this ingredient
             self.counter += 1
             self.completion = float(self.counter) / float(self.nbMol)
 
             if jitterPos > 0:
-                histoVol.successfullJitter.append((self, jitterList, collD1, collD2))
+                env.successfullJitter.append((self, jitterList, collD1, collD2))
 
             if verbose:
                 print(
                     "Success nb free point :%d %d/%d dpad %.2f"
                     % (nbFreePoints, self.counter, self.nbMol, dpad)
                 )
-            # if self.name == 'in  inside':
-            #     histoVol.jitterVectors.append((trans, jtrans))
 
             success = True
             self.rejectionCounter = 0
         else:
             # got rejected
-            if histoVol.runTimeDisplay and moving is not None:
+            if env.runTimeDisplay and moving is not None:
                 afvi.vi.deleteObject(moving)
             success = False
             self.haveBeenRejected = True
-            histoVol.failedJitter.append((self, jitterList, collD1, collD2))
+            env.failedJitter.append((self, jitterList, collD1, collD2))
             # reduce distance at this point, less chance to pick it next
             # should we really do that ? Commented on 6/1/2016
             # distance[ptInd] = max(0, distance[ptInd] * 0.9)
@@ -5465,15 +5147,8 @@ class Ingredient(Agent):
                 # Graham set this to 6000 for figure 13b (Results Fig 3 Test1)
                 # otherwise it fails to fill small guys
                 # if verbose :
-                print("PREMATURE ENDING of ingredient", self.name)
+                print("PREMATURE ENDING of ingredient using jitter_place", self.name)
                 self.completion = 1.0
-                #            if usePP :
-                #                return False,None,None
-        # if sphGeom is not None:
-        #     sphGeom.Set(vertices=sphCenters, radii=sphRadii,
-        #                 materials=sphColors)
-        #     sphGeom.viewer.OneRedraw()
-        #     sphGeom.viewer.update()
 
         if drop:
             return success, nbFreePoints
@@ -5484,7 +5159,7 @@ class Ingredient(Agent):
         self, trans, rotMat, organelle, afvi, distance, closest_indice=None
     ):
         mingrs, listePartner = self.getListePartners(
-            self.histoVol, trans, rotMat, organelle, afvi, close_indice=closest_indice
+            self.env, trans, rotMat, organelle, afvi, close_indice=closest_indice
         )
         targetPoint = trans
         found = False
@@ -5520,15 +5195,15 @@ class Ingredient(Agent):
                     #                    x,y,z = targetPoint
                     #                    rad = self.radii[0][0]*2.
                     #                    bb = ( [x-rad, y-rad, z-rad], [x+rad, y+rad, z+rad] )
-                    #                    pointsInCube = self.histoVol.grid.getPointsInCube(bb, targetPoint,rad )
+                    #                    pointsInCube = self.env.grid.getPointsInCube(bb, targetPoint,rad )
                     #                    #is one of this point can receive the current ingredient
-                    #                    cut  = rad-self.histoVol.smallestProteinSize
+                    #                    cut  = rad-self.env.smallestProteinSize
                     #                    for pt in pointsInCube:
                     #                        #get the closest point to object?
                     #                        d = distance[pt]
-                    #                        if d>=cut and self.compNum == self.histoVol.grid.gridPtId[pt]:
+                    #                        if d>=cut and self.compNum == self.env.grid.gridPtId[pt]:
                     #                            #lets just take the first one
-                    #                            targetPoint = self.histoVol.masterGridPositions[pt]
+                    #                            targetPoint = self.env.masterGridPositions[pt]
                     #                            break
             else:
                 targetPoint = trans
@@ -5540,14 +5215,13 @@ class Ingredient(Agent):
     def pandaBullet_collision(self, pos, rot, rbnode, getnodes=False):
         r = [False]
         liste_nodes = []
-        if len(self.histoVol.rTrans) == 0:
+        if len(self.env.rTrans) == 0:
             r = [False]
         else:
             closesbody_indice = self.getClosestIngredient(
                 pos,
-                self.histoVol,
-                cutoff=self.histoVol.largestProteinSize
-                + self.encapsulatingRadius * 2.0,
+                self.env,
+                cutoff=self.env.largestProteinSize + self.encapsulatingRadius * 2.0,
             )  # vself.radii[0][0]*2.0
             if len(closesbody_indice["indices"]) == 0:
                 r = [False]  # closesbody_indice[0] == -1
@@ -5556,7 +5230,7 @@ class Ingredient(Agent):
                     print("get RB ", len(closesbody_indice["indices"]))
                 if rbnode is None:
                     rbnode = self.get_rb_model()
-                    self.histoVol.moveRBnode(rbnode, pos, rot)
+                    self.env.moveRBnode(rbnode, pos, rot)
                     if autopack.verbose > 1:
                         print("get RB for ", self.name, pos, rot)
                 liste_nodes = self.get_rbNodes(closesbody_indice, pos, getInfo=True)
@@ -5565,11 +5239,9 @@ class Ingredient(Agent):
                 for node in liste_nodes:
                     if autopack.verbose > 1:
                         print("collision test with ", node)
-                    self.histoVol.moveRBnode(node[0], node[1], node[2])  # Pb here ?
+                    self.env.moveRBnode(node[0], node[1], node[2])  # Pb here ?
                     col = (
-                        self.histoVol.world.contactTestPair(
-                            rbnode, node[0]
-                        ).getNumContacts()
+                        self.env.world.contactTestPair(rbnode, node[0]).getNumContacts()
                         > 0
                     )
                     r = [col]
@@ -5580,6 +5252,12 @@ class Ingredient(Agent):
         else:
             return True in r
 
+    def get_compartment(self, env):
+        if self.compNum == 0:
+            return env
+        else:
+            return env.compartments[abs(self.compNum) - 1]
+
     def pandaBullet_place(
         self,
         histoVol,
@@ -5588,14 +5266,7 @@ class Ingredient(Agent):
         nbFreePoints,
         distance,
         dpad,
-        stepByStep=False,
-        verbose=False,
-        sphGeom=None,
-        labDistGeom=None,
-        debugFunc=None,
-        sphCenters=None,
-        sphRadii=None,
-        sphColors=None,
+        afvi,
         drop=True,
         usePP=False,
     ):
@@ -5603,55 +5274,43 @@ class Ingredient(Agent):
         drop the ingredient on grid point ptInd
         """
         histoVol.setupPanda()
-        afvi = histoVol.afviewer
         spacing = histoVol.grid.gridSpacing  # /1.1547#  histoVol.smallestProteinSize
         jx, jy, jz = self.jitterMax
         jitter = spacing / 2.0  # histoVol.callFunction(self.getMaxJitter,(spacing,))
-        jitter2 = jitter * jitter
+        jitter_sq = jitter * jitter
 
-        if self.compNum == 0:
-            organelle = histoVol
-        else:
-            organelle = histoVol.compartments[abs(self.compNum) - 1]
-        compartment = organelle
-        compNum = self.compNum
-        runTimeDisplay = histoVol.runTimeDisplay
+        compartment = self.get_compartment(histoVol)
 
         gridPointsCoords = histoVol.masterGridPositions
         periodic_pos = None
         # compute rotation matrix rotMat
-        if compNum > 0:
+        if self.compNum > 0:
             # for surface points we compute the rotation which
             # aligns the principalVector with the surface normal
             # no noise ?
-            vx, vy, vz = v1 = self.principalVector
+            v1 = self.principalVector
             # surfacePointsNormals problem here
-            v2 = organelle.surfacePointsNormals[ptInd]
+            v2 = compartment.surfacePointsNormals[ptInd]
             try:
                 rotMat = numpy.array(rotVectToVect(v1, v2), "f")
             except Exception:
                 print("PROBLEM ", self.name)
                 rotMat = numpy.identity(4)
         else:
-            #            self.useOrientBias = True
             if self.useRotAxis:
-                #                angle = random()*6.2831#math.radians(random()*360.)#random()*pi*2.
-                #                print "angle",angle,math.degrees(angle)
-                #                direction = self.rotAxis
+
                 if sum(self.rotAxis) == 0.0:
                     rotMat = numpy.identity(4)
                 elif (
                     self.useOrientBias and self.packingMode == "gradient"
                 ):  # you need a gradient here
                     rotMat = self.alignRotation(gridPointsCoords[ptInd])
-                # print("rotAxis = ", self.rotAxis)
-                #                    print("rotRange = ", self.rotRange)
-                #                    print("rotMat aligned = ", rotMatAligned)
-                #                    print("**************************************************Rotate GRADIENT ON **************************")
-                #                    rotMatRand = autopack.helper.rotation_matrix(random()*self.rotRange,self.rotAxis)
-                #                    print("rotMat random = ", rotMatRand)
-                #
-                #                    print("rotMat biased = ", rotMat)
+                    self.log.info("rotAxis = %d", self.rotAxis)
+                    self.log.info("rotRange = %d", self.rotRange)
+                    self.log.info(
+                        "**************************************************Rotate GRADIENT ON **************************"
+                    )
+                    self.log.info("rotMat biased = %d", rotMat)
                 else:
                     rotMat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
@@ -5659,10 +5318,6 @@ class Ingredient(Agent):
             # for other points we get a random rotation
             else:
                 rotMat = histoVol.randomRot.get()
-
-                #        if verbose :
-                #            pass#print('%s nbs:%2d'%(self.pdb, len(self.positions[0])), end=' ')
-
         # jitter position loop
         jitterList = []
         collD1 = []
@@ -5673,7 +5328,8 @@ class Ingredient(Agent):
             trans = numpy.array(trans) + ApplyMatrix([self.offset], rotMat)[0]
         targetPoint = trans
         moving = None
-        if runTimeDisplay and self.mesh:
+        # real time results
+        if histoVol.runTimeDisplay and self.mesh:
             if hasattr(self, "mesh_3d"):
                 # create an instance of mesh3d and place it
                 name = self.name + str(ptInd)
@@ -5702,20 +5358,21 @@ class Ingredient(Agent):
         # do we get the list of neighbours first > and give a different trans...closer to the partner
         # we should look up for an available ptID around the picked partner if any
         # getListCloseIngredient
-        # should se a distance_of_influence ? or self.histoVol.largestProteinSize+self.encapsulatingRadius*2.0
+        # should se a distance_of_influence ? or self.env.largestProteinSize+self.encapsulatingRadius*2.0
         # or the grid diagonal
         # we need to change here in case tilling, the pos,rot ade deduced fromte tilling.
         if self.packingMode[-4:] == "tile":
+
             if self.tilling is None:
                 self.setTilling(compartment)
             if self.counter != 0:
                 # pick the next Hexa pos/rot.
-                t, r = self.tilling.getNextHexaPosRot()
+                t, result = self.tilling.getNextHexaPosRot()
                 if len(t):
                     trans = t
-                    rotMat = r
+                    rotMat = result
                     targetPoint = trans
-                    if runTimeDisplay and self.mesh:
+                    if histoVol.runTimeDisplay and self.mesh:
                         mat = rotMat.copy()
                         mat[:3, 3] = targetPoint
                         afvi.vi.setObjectMatrix(moving, mat, transpose=True)
@@ -5725,34 +5382,11 @@ class Ingredient(Agent):
                     return False, nbFreePoints  # ,targetPoint, rotMat
             else:
                 self.tilling.init_seed(histoVol.seed_used)
-                #        if histoVol.ingrLookForNeighbours and self.packingMode == "closePartner":
-                #            bind = True
-                #            #print ("look for ingredient",trans)
-                #            #roll a dice about proba_not_binding
-                #            if self.proba_not_binding != 0 :#between 0 and 1
-                #                b=random()
-                #                if b <= self.proba_not_binding :
-                #                    bind = False
-                #            if bind :
-                #                closesbody_indice = self.getClosestIngredient(trans,self.histoVol,
-                #                    cutoff=self.histoVol.grid.diag)#vself.radii[0][0]*2.0
-                #                #return R[indice] and distance R["distances"]
-                #                targetPoint,rotMat,found = self.lookForNeighbours(trans,rotMat,organelle,afvi,distance,
-                #                                                     closest_indice=closesbody_indice)
-                #                if not found and self.counter!=0:
-                #                    self.reject()
-                #                    return False, nbFreePoints#,targetPoint, rotMat
-                #
-                #                #if partner:pickNewPoit like in fill3
-                #                if runTimeDisplay and self.mesh:
-                #                    mat = rotMat.copy()
-                #                    mat[:3, 3] = targetPoint
-                #                    afvi.vi.setObjectMatrix(moving,mat,transpose=True)
-                #                    afvi.vi.update()
+
         tx, ty, tz = jtrans = targetPoint
         # we may increase the jitter, or pick from xyz->Id free for its radius
         # create the rb only once and not at ever jitter
-        # rbnode = histoVol.callFunction(self.histoVol.addRB,(self, jtrans, rotMat,),{"rtype":self.Type},)
+        # rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMat,),{"rtype":self.Type},)
         # jitter loop
         collision2 = False
         for jitterPos in range(
@@ -5760,6 +5394,7 @@ class Ingredient(Agent):
         ):  # This expensive Gauusian rejection system should not be the default should it?
             if histoVol.ingrLookForNeighbours and self.packingMode == "closePartner":
                 bind = True
+                self.log.info("closePartner packingMode")
                 # print ("look for ingredient",trans)
                 # roll a dice about proba_not_binding
                 if self.proba_not_binding != 0:  # between 0 and 1
@@ -5768,13 +5403,13 @@ class Ingredient(Agent):
                         bind = False
                 if bind:
                     closesbody_indice = self.getClosestIngredient(
-                        trans, self.histoVol, cutoff=self.histoVol.grid.diag
+                        trans, self.env, cutoff=self.env.grid.diag
                     )  # vself.radii[0][0]*2.0
                     # return R[indice] and distance R["distances"]
                     targetPoint, rotMat, found = self.lookForNeighbours(
                         trans,
                         rotMat,
-                        organelle,
+                        compartment,
                         afvi,
                         distance,
                         closest_indice=closesbody_indice,
@@ -5784,39 +5419,21 @@ class Ingredient(Agent):
                         return False, nbFreePoints  # ,targetPoint, rotMat
 
                     # if partner:pickNewPoit like in fill3
-                    if runTimeDisplay and self.mesh:
+                    if histoVol.runTimeDisplay and self.mesh:
                         mat = rotMat.copy()
                         mat[:3, 3] = targetPoint
                         afvi.vi.setObjectMatrix(moving, mat, transpose=True)
                         afvi.vi.update()
                     tx, ty, tz = jtrans = targetPoint
             collision2 = False
-            # jitter points location
-            #            print ("jitter ",jitterPos,self.nbJitter)
-            if jitter2 > 0.0:
-                found = False
-                while not found:
-                    #                    dx = jx*jitter*gauss(0., 0.3)
-                    #                    dy = jy*jitter*gauss(0., 0.3)
-                    #                    dz = jz*jitter*gauss(0., 0.3)
-                    dx = jx * jitter * uniform(-1.0, 1.0)
-                    dy = jy * jitter * uniform(-1.0, 1.0)
-                    dz = jz * jitter * uniform(-1.0, 1.0)
-                    if True:  # d2 < jitter2:
-                        if compNum > 0:  # jitter less among normal
-                            # if self.name=='2uuh C4 SYNTHASE':
-                            #    import pdb
-                            #    pdb.set_trace()
-                            dx, dy, dz, dum = numpy.dot(rotMat, (dx, dy, dz, 0))
-                        jtrans = (tx + dx, ty + dy, tz + dz)
-                        found = True
-                        #                    else:  #Graham Killed thse unnecessary updates
-                        #                        if verbose :  #Graham Killed thse unnecessary updates
-                        #                            print('JITTER REJECTED', d2, jitter2)  #Graham Killed thse unnecessary updates
-                        #                    if runTimeDisplay and moving is not None :  #Graham Killed thse unnecessary updates
-                        #                        afvi.vi.setTranslation(moving,pos=jtrans)
-                        #                        afvi.vi.update()
-                        #                        print "ok moving"
+            if jitter_sq > 0.0:
+                dx = jx * jitter * uniform(-1.0, 1.0)
+                dy = jy * jitter * uniform(-1.0, 1.0)
+                dz = jz * jitter * uniform(-1.0, 1.0)
+                if self.compNum > 0:  # jitter less among normal
+                    dx, dy, dz = numpy.dot(rotMat, (dx, dy, dz, 0))
+                jtrans = (tx + dx, ty + dy, tz + dz)
+
             else:
                 jtrans = targetPoint
                 dx = dy = dz = 0.0
@@ -5825,26 +5442,20 @@ class Ingredient(Agent):
             histoVol.jitterLength += dx * dx + dy * dy + dz * dz
             jitterList.append((dx, dy, dz))
 
-            # print 'j%d %.2f,%.2f,%.2f,'%(jitterPos,tx, ty, tz),
-            #            if verbose :
-            #                print('j%d'%jitterPos)# end=' '
-
             # loop over all spheres representing ingredient
             # check for collisions
             #
             level = self.collisionLevel
 
             # randomize rotation about axis
-            if compNum > 0:
+            if self.compNum > 0:
                 rotMatj = self.getAxisRotation(rotMat)
             else:
                 if self.useRotAxis:
                     if sum(self.rotAxis) == 0.0:
                         rotMatj = numpy.identity(4)
                     elif self.useOrientBias and self.packingMode == "gradient":
-                        #                        rotMatj = self.getAxisRotation(rotMat)
                         rotMatj = self.getBiasedRotation(rotMat, weight=None)
-                    # weight = 1.0 - self.histoVol.gradients[self.gradient].weight[ptInd])
                     else:
                         rotMatj = autopack.helper.rotation_matrix(
                             random() * self.rotRange, self.rotAxis
@@ -5861,25 +5472,21 @@ class Ingredient(Agent):
                 # rotMat = euler_matrix(euler[0],euler[1],0).transpose()
                 jtrans = targetPoint
                 rotMatj = rotMat[:]  # self.tilling.getNextHexaPosRot()
-            if runTimeDisplay and moving is not None:
+            if histoVol.runTimeDisplay and moving is not None:
                 #                print "ok rot copy"
                 mat = rotMatj.copy()
                 mat[:3, 3] = jtrans
                 afvi.vi.setObjectMatrix(moving, mat, transpose=True)
                 #                afvi.vi.setTranslation(moving,pos=jtrans)
                 afvi.vi.update()
-            # closeS = self.checkPointSurface(jtrans,cutoff=float(self.cutoff_surface))
-            #            if closeS :
-            #                print ("ok reject once")
-            #                self.rejectOnce(None,moving,afvi)
-            #                continue
-            r = [False]
+
+            result = [False]
             rbnode = self.get_rb_model()
-            #            print ("periodicity ?",getNormedVectorU(self.jitterMax),self.encapsulatingRadius)
-            # cutoff ?
-            periodic_pos = self.histoVol.grid.getPositionPeridocity(
+            periodic_pos = self.env.grid.getPositionPeridocity(
                 jtrans, getNormedVectorOnes(self.jitterMax), self.encapsulatingRadius
             )
+            # self.log.info("periodic_pos %r", periodic_pos)
+            periodic_pos = None
             histoVol.callFunction(
                 histoVol.moveRBnode,
                 (
@@ -5900,8 +5507,8 @@ class Ingredient(Agent):
                         ),
                     )
                     perdiodic_collision = self.pandaBullet_collision(p, rotMatj, rbnode)
-                    r.extend([perdiodic_collision])
-                    if True in r:
+                    result.extend([perdiodic_collision])
+                    if True in result:
                         break
                     histoVol.callFunction(
                         histoVol.moveRBnode,
@@ -5912,47 +5519,40 @@ class Ingredient(Agent):
                         ),
                     )
                     rbnode2 = self.get_rb_model(alt=True)
-                    self.histoVol.moveRBnode(rbnode2, p, rotMatj)  # Pb here ?
+                    self.env.moveRBnode(rbnode2, p, rotMatj)  # Pb here ?
                     col = (
-                        self.histoVol.world.contactTestPair(
-                            rbnode, rbnode2
-                        ).getNumContacts()
+                        self.env.world.contactTestPair(rbnode, rbnode2).getNumContacts()
                         > 0
                     )
-                    #                    perdiodic_collision.extend([col])
-                    r.extend([col])  # = True in perdiodic_collision
-                    if runTimeDisplay and moving is not None:
+                    self.log.info("col = %r", col)
+                    result.extend([col])  # = True in perdiodic_collision
+                    if histoVol.runTimeDisplay and moving is not None:
                         mat = rotMatj.copy()
                         mat[:3, 3] = jtrans
                         afvi.vi.setObjectMatrix(moving, mat, transpose=True)
                         afvi.vi.update()
-                    if True in r:
+                    if True in result:
                         break
-                    #            rbnode = histoVol.callFunction(self.histoVol.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
-                    #            rbnode = histoVol.callFunction(self.histoVol.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},
             t = time()
-            test = self.testPoint(jtrans)
-            #            print ("testPoints",r,test,jtrans)
-            #       checkif rb collide
-            #            r=[ (self.histoVol.world.contactTestPair(rbnode, n).getNumContacts() > 0 ) for n in self.histoVol.static]
-            if not test and not (True in r):
+            point_is_available = not self.point_is_not_available(jtrans)
+            if point_is_available and not (True in result):
                 # check for close surface ?
                 # closeS = self.checkPointSurface(newPt,cutoff=self.cutoff_surface)
                 #                raw_input()
-                #                if self.histoVol.close_ingr_bhtree.FreePts.NumPts == 0 : r=[False]
-                if len(self.histoVol.rTrans) == 0:
-                    r = [False]
+                #                if self.env.close_ingr_bhtree.FreePts.NumPts == 0 : r=[False]
+                if len(self.env.rTrans) == 0:
+                    result = [False]
                 else:
                     #                    print("getClosestIngredient",jtrans)
                     closesbody_indice = self.getClosestIngredient(
                         jtrans,
-                        self.histoVol,
-                        cutoff=self.histoVol.largestProteinSize
+                        self.env,
+                        cutoff=self.env.largestProteinSize
                         + self.encapsulatingRadius * 2.0,
                     )  # vself.radii[0][0]*2.0
-                    #                    print ("len(closesbody_indice) ",len(closesbody_indice["indices"]),str(self.histoVol.largestProteinSize+self.encapsulatingRadius) )
+                    #                    print ("len(closesbody_indice) ",len(closesbody_indice["indices"]),str(self.env.largestProteinSize+self.encapsulatingRadius) )
                     if len(closesbody_indice["indices"]) == 0:
-                        r = [False]  # closesbody_indice[0] == -1
+                        result = [False]  # closesbody_indice[0] == -1
                     else:
                         liste_nodes = self.get_rbNodes(
                             closesbody_indice, jtrans, getInfo=True
@@ -5962,56 +5562,47 @@ class Ingredient(Agent):
                             # use self.grab_cb and self.pp_server
                             # Divide the task or just submit job
                             n = 0
-                            self.histoVol.grab_cb.reset()  # can't pickle bullet world
+                            self.env.grab_cb.reset()  # can't pickle bullet world
                             print("usePP ", autopack.ncpus)
                             for i in range(len(liste_nodes) / autopack.ncpus):
                                 for c in range(autopack.ncpus):
                                     print("submit job", i, c, n)
-                                    self.histoVol.pp_server.submit(
+                                    self.env.pp_server.submit(
                                         bullet_checkCollision_mp,
-                                        (self.histoVol.world, rbnode, liste_nodes[n]),
-                                        callback=self.histoVol.grab_cb.grab,
+                                        (self.env.world, rbnode, liste_nodes[n]),
+                                        callback=self.env.grab_cb.grab,
                                     )
-                                    #                                    self.histoVol.pp_server.submit(self.histoVol.world.contactTestPair,
                                     #                                                          (rbnode, liste_nodes[n]),
-                                    #                                            callback=self.histoVol.grab_cb.grab)
+                                    #                                            callback=self.env.grab_cb.grab)
                                     n += 1
-                                self.histoVol.pp_server.wait()
-                                r.extend(self.histoVol.grab_cb.collision[:])
-                                if True in r:
+                                self.env.pp_server.wait()
+                                result.extend(self.env.grab_cb.collision[:])
+                                if True in result:
                                     break
                         else:
                             # why will it be not woking with organelle ?
                             # tranformation prolem ?
                             for node in liste_nodes:
-                                self.histoVol.moveRBnode(
+                                self.env.moveRBnode(
                                     node[0], node[1], node[2]
                                 )  # Pb here ?
-                                #                                print (node[0],node[1])
                                 col = (
-                                    self.histoVol.world.contactTestPair(
+                                    self.env.world.contactTestPair(
                                         rbnode, node[0]
                                     ).getNumContacts()
                                     > 0
                                 )
-                                #                                print ("collision ?",self.name,node[3].name,col,autopack.helper.measure_distance(jtrans,node[1]))
-                                r = [col]
+                                result = [col]
                                 if col:
                                     break
-                                    # r=[ (self.histoVol.world.contactTestPair(rbnode, node).getNumContacts() > 0 ) for node in liste_nodes]# in closesbody_indice if n != len(self.histoVol.rTrans)-1]  #except last one  that should be last drop fragment
-                                    #                        r=[ (self.histoVol.world.contactTestPair(rbnode, self.histoVol.static[n]).getNumContacts() > 0 ) for n in closesbody_indice if n < len(self.histoVol.static)]  #except last one  that should be last drop fragment
-                                    #            else :
-                                    #                result2 = self.histoVol.world.contactTest(rbnode)
-                                    #                r = [( result2.getNumContacts() > 0),]
-                                    #            print ("contact All ",(True in r), time()-t, len(r),self.encapsulatingRadius*2.,len(self.histoVol.rTrans))
-                                    #            t=time()
-            collision2 = True in r
+
+            collision2 = True in result
             collisionComp = False
             #            print("collide??",collision2,r,test)
             #            print ("contactTestPair",collision2,time()-t)
-            #            print ("contact Pair ",collision, r,self.histoVol.static) #gave nothing ???
+            #            print ("contact Pair ",collision, r,self.env.static) #gave nothing ???
             # need to check compartment too
-            if not collision2 and not test:  # and not collision2:
+            if not collision2 and point_is_available:  # and not collision2:
                 # print ("no collision")
                 if self.compareCompartment:
                     collisionComp = self.compareCompartmentPrimitive(
@@ -6019,47 +5610,40 @@ class Ingredient(Agent):
                     )
                 if not collisionComp:
                     # self.update_data_tree(jtrans,rotMatj,ptInd=ptInd)?
-                    self.histoVol.static.append(rbnode)
-                    self.histoVol.moving = None
-                    self.histoVol.rTrans.append(jtrans)
-                    self.histoVol.rRot.append(rotMatj)
-                    self.histoVol.rIngr.append(self)
-                    self.histoVol.result.append([jtrans, rotMatj, self, ptInd])
+                    self.env.static.append(rbnode)
+                    self.env.moving = None
+                    self.env.rTrans.append(jtrans)
+                    self.env.rRot.append(rotMatj)
+                    self.env.rIngr.append(self)
+                    self.env.result.append([jtrans, rotMatj, self, ptInd])
                     #                histoVol.close_ingr_bhtree.MoveRBHPoint(histoVol.nb_ingredient,(jtrans[0],jtrans[1],jtrans[2]),1)
-                    #                    self.histoVol.nb_ingredient+=1
+                    #                    self.env.nb_ingredient+=1
                     if periodic_pos is not None and self.packingMode != "gradient":
                         for p in periodic_pos:
-                            self.histoVol.rTrans.append(p)
-                            self.histoVol.rRot.append(rotMatj)
-                            self.histoVol.rIngr.append(self)
-                            self.histoVol.result.append([p, rotMatj, self, ptInd])
-                            # self.histoVol.nb_ingredient+=1
-                    if self.histoVol.treemode == "bhtree":  # "cKDTree"
-                        if len(self.histoVol.rTrans) >= 1:
-                            bhtreelib.freeBHtree(self.histoVol.close_ingr_bhtree)
-                        if len(self.histoVol.rTrans):
-                            self.histoVol.close_ingr_bhtree = bhtreelib.BHtree(
-                                self.histoVol.rTrans, None, 10
+                            self.env.rTrans.append(p)
+                            self.env.rRot.append(rotMatj)
+                            self.env.rIngr.append(self)
+                            self.env.result.append([p, rotMatj, self, ptInd])
+                            # self.env.nb_ingredient+=1
+                    if self.env.treemode == "bhtree":  # "cKDTree"
+                        if len(self.env.rTrans) >= 1:
+                            bhtreelib.freeBHtree(self.env.close_ingr_bhtree)
+                        if len(self.env.rTrans):
+                            self.env.close_ingr_bhtree = bhtreelib.BHtree(
+                                self.env.rTrans, None, 10
                             )
                     else:
                         # rebuild kdtree
-                        if len(self.histoVol.rTrans) >= 1:
-                            self.histoVol.close_ingr_bhtree = spatial.cKDTree(
-                                self.histoVol.rTrans, leafsize=10
+                        if len(self.env.rTrans) >= 1:
+                            self.env.close_ingr_bhtree = spatial.cKDTree(
+                                self.env.rTrans, leafsize=10
                             )
-                    # self.histoVol.callFunction(self.histoVol.delRB,(rbnode,))
                     break  # break out of jitter pos loop
                 else:
                     #                    print ("collision")
                     collision2 = collisionComp
-                    #            else :
-                    #                histoVol.callFunction(self.histoVol.delRB,(rbnode,))
-                    # remove the node
-                    #        if verbose:
-                    #        print("jitter loop ",time()-t1)
-                    #            self.histoVol.callFunction(self.histoVol.delRB,(rbnode,))
-        if not collision2 and not test:  # and not collision2:
-            #            print("jtrans for NotCollision= ", jtrans)
+
+        if not collision2 and point_is_available:
             drop = True
             # get inside points and update distance
             #
@@ -6072,19 +5656,15 @@ class Ingredient(Agent):
                 jtrans, rotMatj, gridPointsCoords, distance, dpad
             )
             # save dropped ingredient
-            if verbose:
-                print("compute distance loop ", time() - t3)
+            self.log.info("compute distance loop %d", time() - t3)
             nbFreePoints = histoVol.callFunction(
                 self.updateDistances,
                 (
-                    histoVol,
                     insidePoints,
                     newDistPoints,
                     freePoints,
                     nbFreePoints,
                     distance,
-                    histoVol.masterGridPositions,
-                    verbose,
                 ),
             )
             if periodic_pos is not None and self.packingMode != "gradient":
@@ -6095,20 +5675,17 @@ class Ingredient(Agent):
                     nbFreePoints = histoVol.callFunction(
                         self.updateDistances,
                         (
-                            histoVol,
                             insidePoints,
                             newDistPoints,
                             freePoints,
                             nbFreePoints,
                             distance,
-                            histoVol.masterGridPositions,
-                            verbose,
                         ),
                     )
 
             if drop:
                 # print "ok drop",organelle.name,self.name
-                organelle.molecules.append([jtrans, rotMatj, self, ptInd])
+                compartment.molecules.append([jtrans, rotMatj, self, ptInd])
                 histoVol.order[ptInd] = histoVol.lastrank
                 histoVol.lastrank += 1
                 if self.packingMode[-4:] == "tile":
@@ -6121,19 +5698,10 @@ class Ingredient(Agent):
                         self.tilling.idc,
                         self.tilling.edge_id,
                     )
-                    # ('drop next hexa', 'hexa_0_', 0, '')
-                    #                if periodic_pos is not None and self.packingMode !="gradient" :
-                    #                    for p in periodic_pos :
-                    #                        organelle.molecules.append([ p, rotMatj, self, -1 ])
 
             # add one to molecule counter for this ingredient
             self.counter += 1
             self.completion = float(self.counter) / float(self.nbMol)
-            #            if periodic_pos is not None :
-            #                for p in periodic_pos :
-            #                    self.counter += 1
-            #                    self.completion = float(self.counter)/float(self.nbMol)
-
             if jitterPos > 0:
                 histoVol.successfullJitter.append((self, jitterList, collD1, collD2))
 
@@ -6149,8 +5717,7 @@ class Ingredient(Agent):
             self.rejectionCounter = 0
 
         else:  # got rejected
-            #            histoVol.callFunction(histoVol.delRB,(rbnode,))
-            if runTimeDisplay and moving is not None:
+            if histoVol.runTimeDisplay and moving is not None:
                 afvi.vi.deleteObject(moving)
             success = False
             self.haveBeenRejected = True
@@ -6164,15 +5731,17 @@ class Ingredient(Agent):
                     #            distance[ptInd] = max(0, distance[ptInd]*0.9)# ???
             distance[ptInd] = distance[ptInd] - 1.0
             self.rejectionCounter += 1
-            if verbose:
-                print(
-                    "Failed ingr:%s rejections:%d" % (self.name, self.rejectionCounter)
-                )
+            self.log.info(
+                "Failed ingr:%s rejections:%d", self.name, self.rejectionCounter
+            )
             if (
                 self.rejectionCounter >= self.rejectionThreshold
             ):  # Graham set this to 6000 for figure 13b (Results Fig 3 Test1) otehrwise it fails to fill small guys
                 # if verbose :
-                print("PREMATURE ENDING of ingredient", self.name)
+                self.log.info(
+                    "PREMATURE ENDING of ingredient using pandaBullet_place %s",
+                    self.name,
+                )
                 self.completion = 1.0
         if drop:
             return success, nbFreePoints
@@ -6206,13 +5775,9 @@ class Ingredient(Agent):
         spacing = histoVol.grid.gridSpacing  # /1.1547#  histoVol.smallestProteinSize
         jx, jy, jz = self.jitterMax
         jitter = spacing / 2.0  # histoVol.callFunction(self.getMaxJitter,(spacing,))
-        jitter2 = jitter * jitter
+        jitter_sq = jitter * jitter
 
-        if self.compNum == 0:
-            organelle = histoVol
-        else:
-            organelle = histoVol.compartments[abs(self.compNum) - 1]
-        compartment = organelle
+        compartment = self.get_compartment(histoVol)
         compNum = self.compNum
         runTimeDisplay = histoVol.runTimeDisplay
 
@@ -6223,9 +5788,9 @@ class Ingredient(Agent):
             # for surface points we compute the rotation which
             # aligns the principalVector with the surface normal
             # no noise ?
-            vx, vy, vz = v1 = self.principalVector
+            v1 = self.principalVector
             # surfacePointsNormals problem here
-            v2 = organelle.surfacePointsNormals[ptInd]
+            v2 = compartment.surfacePointsNormals[ptInd]
             try:
                 rotMat = numpy.array(rotVectToVect(v1, v2), "f")
             except Exception:
@@ -6301,7 +5866,7 @@ class Ingredient(Agent):
         # do we get the list of neighbours first > and give a different trans...closer to the partner
         # we should look up for an available ptID around the picked partner if any
         # getListCloseIngredient
-        # should se a distance_of_influence ? or self.histoVol.largestProteinSize+self.encapsulatingRadius*2.0
+        # should se a distance_of_influence ? or self.env.largestProteinSize+self.encapsulatingRadius*2.0
         # or the grid diagonal
         # we need to change here in case tilling, the pos,rot ade deduced fromte tilling.
         if self.packingMode[-4:] == "tile":
@@ -6327,7 +5892,7 @@ class Ingredient(Agent):
         tx, ty, tz = jtrans = targetPoint
         # we may increase the jitter, or pick from xyz->Id free for its radius
         # create the rb only once and not at ever jitter
-        # rbnode = histoVol.callFunction(self.histoVol.addRB,(self, jtrans, rotMat,),{"rtype":self.Type},)
+        # rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMat,),{"rtype":self.Type},)
         # jitter loop
         collision2 = False
         for jitterPos in range(self.nbJitter):
@@ -6342,13 +5907,13 @@ class Ingredient(Agent):
                         bind = False
                 if bind:
                     closesbody_indice = self.getClosestIngredient(
-                        trans, self.histoVol, cutoff=self.histoVol.grid.diag
+                        trans, self.env, cutoff=self.env.grid.diag
                     )  # vself.radii[0][0]*2.0
                     # return R[indice] and distance R["distances"]
                     targetPoint, rotMat, found = self.lookForNeighbours(
                         trans,
                         rotMat,
-                        organelle,
+                        compartment,
                         afvi,
                         distance,
                         closest_indice=closesbody_indice,
@@ -6367,7 +5932,7 @@ class Ingredient(Agent):
             collision2 = False
             # jitter points location
             #            print ("jitter ",jitterPos,self.nbJitter)
-            if jitter2 > 0.0:
+            if jitter_sq > 0.0:
                 found = False
                 while not found:
                     #                    dx = jx*jitter*gauss(0., 0.3)
@@ -6418,7 +5983,7 @@ class Ingredient(Agent):
                     elif self.useOrientBias and self.packingMode == "gradient":
                         #                        rotMatj = self.getAxisRotation(rotMat)
                         rotMatj = self.getBiasedRotation(rotMat, weight=None)
-                    # weight = 1.0 - self.histoVol.gradients[self.gradient].weight[ptInd])
+                    # weight = 1.0 - self.env.gradients[self.gradient].weight[ptInd])
                     else:
                         rotMatj = autopack.helper.rotation_matrix(
                             random() * self.rotRange, self.rotAxis
@@ -6451,7 +6016,7 @@ class Ingredient(Agent):
             rbnode = self.get_rb_model()
             #            print ("periodicity ?",getNormedVectorU(self.jitterMax),self.encapsulatingRadius)
             # cutoff ?
-            periodic_pos = self.histoVol.grid.getPositionPeridocity(
+            periodic_pos = self.env.grid.getPositionPeridocity(
                 jtrans, getNormedVectorOnes(self.jitterMax), self.encapsulatingRadius
             )
             # histoVol.callFunction(histoVol.moveRBnode,(rbnode, jtrans, rotMatj,))
@@ -6469,8 +6034,8 @@ class Ingredient(Agent):
                     col = self.bht_check_pair(self, p, rotMatj, self, jtrans, rotMatj)
                     # histoVol.callFunction(histoVol.moveRBnode,(rbnode, jtrans, rotMatj,))
                     # rbnode2 = self.get_rb_model(alt=True)
-                    # self.histoVol.moveRBnode(rbnode2, p, rotMatj)  #Pb here ?
-                    # col = (self.histoVol.world.contactTestPair(rbnode, rbnode2).getNumContacts() > 0 )
+                    # self.env.moveRBnode(rbnode2, p, rotMatj)  #Pb here ?
+                    # col = (self.env.world.contactTestPair(rbnode, rbnode2).getNumContacts() > 0 )
                     #                    perdiodic_collision.extend([col])
                     r.extend([col])  # = True in perdiodic_collision
                     if runTimeDisplay and moving is not None:
@@ -6480,15 +6045,11 @@ class Ingredient(Agent):
                         afvi.vi.update()
                     if True in r:
                         break
-                    #            rbnode = histoVol.callFunction(self.histoVol.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
-                    #            rbnode = histoVol.callFunction(self.histoVol.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},
+                    #            rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
+                    #            rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},
             t = time()
             closeS = self.checkPointSurface(jtrans, cutoff=self.cutoff_surface)
-            # r = closeS  # self.testPoint(jtrans)
-            test = closeS  # self.testPoint(jtrans)
-            # print ("testPoints",r,test,jtrans)
-            #       checkif rb collide
-            #            r=[ t(self.histoVol.world.contactTestPair(rbnode, n).getNumContacts() > 0 ) for n in self.histoVol.static]
+            test = closeS  # self.point_is_not_available(jtrans)
             overlap = False
             if not test and not (True in r):  # and not ( True in r):
                 overlap = self.bht_check_collision(jtrans, rotMatj)
@@ -6496,7 +6057,7 @@ class Ingredient(Agent):
             collisionComp = False
             # print("collide??", collision2, r, test)
             #            print ("contactTestPair",collision2,time()-t)
-            #            print ("contact Pair ",collision, r,self.histoVol.static) #gave nothing ???
+            #            print ("contact Pair ",collision, r,self.env.static) #gave nothing ???
             # need to check compartment too
             if not collision2 and not test:  # and not collision2:
                 if verbose > 1:
@@ -6507,54 +6068,41 @@ class Ingredient(Agent):
                     )
                 if not collisionComp:
                     # self.update_data_tree(jtrans,rotMatj,ptInd=ptInd)?
-                    self.histoVol.static.append(rbnode)
-                    self.histoVol.moving = None
-                    self.histoVol.rTrans.append(jtrans)
-                    self.histoVol.rRot.append(rotMatj)
-                    self.histoVol.rIngr.append(self)
-                    self.histoVol.result.append([jtrans, rotMatj, self, ptInd])
+                    self.env.static.append(rbnode)
+                    self.env.moving = None
+                    self.env.rTrans.append(jtrans)
+                    self.env.rRot.append(rotMatj)
+                    self.env.rIngr.append(self)
+                    self.env.result.append([jtrans, rotMatj, self, ptInd])
                     #                histoVol.close_ingr_bhtree.MoveRBHPoint(histoVol.nb_ingredient,(jtrans[0],jtrans[1],jtrans[2]),1)
-                    #                    self.histoVol.nb_ingredient+=1
+                    #                    self.env.nb_ingredient+=1
                     if periodic_pos is not None and self.packingMode != "gradient":
                         for p in periodic_pos:
-                            self.histoVol.rTrans.append(p)
-                            self.histoVol.rRot.append(rotMatj)
-                            self.histoVol.rIngr.append(self)
-                            self.histoVol.result.append([p, rotMatj, self, ptInd])
-                            # self.histoVol.nb_ingredient+=1
-                    if self.histoVol.treemode == "bhtree":  # "cKDTree"
-                        # if len(self.histoVol.rTrans) >= 1 : bhtreelib.freeBHtree(self.histoVol.close_ingr_bhtree)
-                        if len(self.histoVol.rTrans):
-                            self.histoVol.close_ingr_bhtree = bhtreelib.BHtree(
-                                self.histoVol.rTrans,
-                                [
-                                    ing.encapsulatingRadius
-                                    for ing in self.histoVol.rIngr
-                                ],
+                            self.env.rTrans.append(p)
+                            self.env.rRot.append(rotMatj)
+                            self.env.rIngr.append(self)
+                            self.env.result.append([p, rotMatj, self, ptInd])
+                            # self.env.nb_ingredient+=1
+                    if self.env.treemode == "bhtree":  # "cKDTree"
+                        # if len(self.env.rTrans) >= 1 : bhtreelib.freeBHtree(self.env.close_ingr_bhtree)
+                        if len(self.env.rTrans):
+                            self.env.close_ingr_bhtree = bhtreelib.BHtree(
+                                self.env.rTrans,
+                                [ing.encapsulatingRadius for ing in self.env.rIngr],
                                 10,
                             )
                     else:
                         # rebuild kdtree
-                        if len(self.histoVol.rTrans) >= 1:
-                            del self.histoVol.close_ingr_bhtree
-                            self.histoVol.close_ingr_bhtree = spatial.cKDTree(
-                                self.histoVol.rTrans, leafsize=10
+                        if len(self.env.rTrans) >= 1:
+                            del self.env.close_ingr_bhtree
+                            self.env.close_ingr_bhtree = spatial.cKDTree(
+                                self.env.rTrans, leafsize=10
                             )
-                            # if len(self.histoVol.rTrans) >= 1:
-                            #    bhtreelib.freeBHtree(self.histoVol.ingr_bhtree)
-                            # if len(self.histoVol.rTrans):
-                            #    self.histoVol.ingr_bhtree = bhtreelib.BHtree(self.histoVol.rTrans, [ing.encapsulatingRadius for ing in self.histoVol.rIngr], 10)
-                    # self.histoVol.callFunction(self.histoVol.delRB,(rbnode,))
+
                     break  # break out of jitter pos loop
                 else:
                     #                    print ("collision")
                     collision2 = collisionComp
-                    #            else :
-                    #                histoVol.callFunction(self.histoVol.delRB,(rbnode,))
-                    # remove the node
-                    #        if verbose:
-                    #        print("jitter loop ",time()-t1)
-                    #            self.histoVol.callFunction(self.histoVol.delRB,(rbnode,))
         if not collision2 and not test:  # and not collision2:
             #            print("jtrans for NotCollision= ", jtrans)
             drop = True
@@ -6569,19 +6117,15 @@ class Ingredient(Agent):
                 jtrans, rotMatj, gridPointsCoords, distance, dpad
             )
             # save dropped ingredient
-            if verbose > 1:
-                print("compute distance loop ", time() - t3)
+            self.log.info("compute distance loop ", time() - t3)
             nbFreePoints = histoVol.callFunction(
                 self.updateDistances,
                 (
-                    histoVol,
                     insidePoints,
                     newDistPoints,
                     freePoints,
                     nbFreePoints,
                     distance,
-                    histoVol.masterGridPositions,
-                    verbose,
                 ),
             )
             if periodic_pos is not None and self.packingMode != "gradient":
@@ -6592,20 +6136,17 @@ class Ingredient(Agent):
                     nbFreePoints = histoVol.callFunction(
                         self.updateDistances,
                         (
-                            histoVol,
                             insidePoints,
                             newDistPoints,
                             freePoints,
                             nbFreePoints,
                             distance,
-                            histoVol.masterGridPositions,
-                            verbose,
                         ),
                     )
 
             if drop:
                 # print "ok drop",organelle.name,self.name
-                organelle.molecules.append([jtrans, rotMatj, self, ptInd])
+                compartment.molecules.append([jtrans, rotMatj, self, ptInd])
                 histoVol.order[ptInd] = histoVol.lastrank
                 histoVol.lastrank += 1
                 if self.packingMode[-4:] == "tile":
@@ -6619,10 +6160,6 @@ class Ingredient(Agent):
                             self.tilling.idc,
                             self.tilling.edge_id,
                         )
-                        # ('drop next hexa', 'hexa_0_', 0, '')
-                        #                if periodic_pos is not None and self.packingMode !="gradient" :
-                        #                    for p in periodic_pos :
-                        #                        organelle.molecules.append([ p, rotMatj, self, -1 ])
 
             # add one to molecule counter for this ingredient
             self.counter += 1
@@ -6671,7 +6208,9 @@ class Ingredient(Agent):
             ):  # Graham set this to 6000 for figure 13b (Results Fig 3 Test1) otehrwise it fails to fill small guys
                 # if verbose :
                 if verbose > 1:
-                    print("PREMATURE ENDING of ingredient", self.name)
+                    print(
+                        "PREMATURE ENDING of ingredient pandaBullet_placeBHT", self.name
+                    )
                 self.completion = 1.0
         if drop:
             return success, nbFreePoints
@@ -6703,7 +6242,7 @@ class Ingredient(Agent):
         histoVol.setupOctree()  # do I need this everytime?
 
         if histoVol.panda_solver == "bullet":
-            collideFunc = self.histoVol.world.contactTestPair
+            collideFunc = self.env.world.contactTestPair
         elif histoVol.panda_solver == "ode":
             from panda3d.ode import OdeUtil
 
@@ -6827,7 +6366,7 @@ class Ingredient(Agent):
         # we may increase the jitter, or pick from xyz->Id free for its radius
         # create the rb only once and not at ever jitter
         rbnode = histoVol.callFunction(
-            self.histoVol.addRB,
+            self.env.addRB,
             (
                 self,
                 jtrans,
@@ -6912,7 +6451,7 @@ class Ingredient(Agent):
                 #                afvi.vi.setTranslation(moving,pos=jtrans)
                 afvi.vi.update()
 
-            # rbnode = histoVol.callFunction(self.histoVol.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
+            # rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
             histoVol.callFunction(
                 histoVol.moveRBnode,
                 (
@@ -6922,13 +6461,13 @@ class Ingredient(Agent):
                 ),
             )
             #       checkif rb collide
-            #            result2 = self.histoVol.world.contactTest(rbnode)
+            #            result2 = self.env.world.contactTest(rbnode)
             #            collision = ( result2.getNumContacts() > 0)
             #            print ("contact All ",collision, time()-t, result2.getNumContacts())
             #            t=time()
             #            ningr_rb = self.getNeighboursInBox(histoVol,trans,rotMat,organelle,afvi,rb=True)
             r = [False]
-            #            result = self.histoVol.world.contactTest(rbnode).getNumContacts() > 0
+            #            result = self.env.world.contactTest(rbnode).getNumContacts() > 0
             #            print ("contactTest find ",result)
             #            if not result :
             # ningr_rb = histoVol.octree.findPosition(histoVol.octree.root, jtrans)
@@ -6940,8 +6479,6 @@ class Ingredient(Agent):
                     (collideFunc(rbnode, n.rigid_body).getNumContacts() > 0)
                     for n in ningr_rb
                 ]
-                # r=[ (self.histoVol.world.contactTestPair(rbnode, n).getNumContacts() > 0 ) for n in self.histoVol.static]
-            #                print ("contactTestPair find ",len(r),( True in r))
             # print(("time contactPair", time()-t1))
             collision2 = True in r
             collisionComp = False
@@ -6999,20 +6536,20 @@ class Ingredient(Agent):
                         )
                 if not collisionComp:
                     # self.rbnode[ptInd] = rbnode
-                    self.histoVol.static.append(rbnode)
-                    self.histoVol.moving = None
-                    #                    if len(self.histoVol.rTrans) > 1 : bhtreelib.freeBHtree(self.histoVol.close_ingr_bhtree)
-                    #                    self.histoVol.close_ingr_bhtree=bhtreelib.BHtree( self.histoVol.rTrans, None, 10)
-                    if self.histoVol.treemode == "bhtree":  # "cKDTree"
-                        # if len(self.histoVol.rTrans) > 1 : bhtreelib.freeBHtree(self.histoVol.close_ingr_bhtree)
-                        self.histoVol.close_ingr_bhtree = bhtreelib.BHtree(
-                            self.histoVol.rTrans, None, 10
+                    self.env.static.append(rbnode)
+                    self.env.moving = None
+                    #                    if len(self.env.rTrans) > 1 : bhtreelib.freeBHtree(self.env.close_ingr_bhtree)
+                    #                    self.env.close_ingr_bhtree=bhtreelib.BHtree( self.env.rTrans, None, 10)
+                    if self.env.treemode == "bhtree":  # "cKDTree"
+                        # if len(self.env.rTrans) > 1 : bhtreelib.freeBHtree(self.env.close_ingr_bhtree)
+                        self.env.close_ingr_bhtree = bhtreelib.BHtree(
+                            self.env.rTrans, None, 10
                         )
                     else:
                         # rebuild kdtree
-                        if len(self.histoVol.rTrans) > 1:
-                            self.histoVol.close_ingr_bhtree = spatial.cKDTree(
-                                self.histoVol.rTrans, leafsize=10
+                        if len(self.env.rTrans) > 1:
+                            self.env.close_ingr_bhtree = spatial.cKDTree(
+                                self.env.rTrans, leafsize=10
                             )
 
                         # add to the octree
@@ -7020,7 +6557,7 @@ class Ingredient(Agent):
                 else:
                     collision2 = collisionComp
                     #            else :
-                    #                histoVol.callFunction(self.histoVol.delRB,(rbnode,))
+                    #                histoVol.callFunction(self.env.delRB,(rbnode,))
                     # remove the node
                     #        if verbose:
                     #        print("jitter loop ",time()-t1)
@@ -7172,16 +6709,7 @@ class Ingredient(Agent):
             # update free points
             nbFreePoints = histoVol.callFunction(
                 self.updateDistances,
-                (
-                    histoVol,
-                    insidePoints,
-                    newDistPoints,
-                    freePoints,
-                    nbFreePoints,
-                    distance,
-                    histoVol.masterGridPositions,
-                    verbose,
-                ),
+                (insidePoints, newDistPoints, freePoints, nbFreePoints, distance),
             )
 
             #            distChanges = {}
@@ -7266,7 +6794,7 @@ class Ingredient(Agent):
                 self.rejectionCounter >= self.rejectionThreshold
             ):  # Graham set this to 6000 for figure 13b (Results Fig 3 Test1) otehrwise it fails to fill small guys
                 # if verbose :
-                print("PREMATURE ENDING of ingredient", self.name)
+                print("PREMATURE ENDING of ingredient pandaBullet_place_dev", self.name)
                 self.completion = 1.0
                 #        [histoVol.delRB(n) for n in ningr_rb]
         if sphGeom is not None:
@@ -7404,7 +6932,7 @@ class Ingredient(Agent):
                     bind = False
             if bind:
                 closesbody_indice = self.getClosestIngredient(
-                    trans, self.histoVol, cutoff=self.histoVol.grid.diag
+                    trans, self.env, cutoff=self.env.grid.diag
                 )  # vself.radii[0][0]*2.0
                 # return R[indice] and distance R["distances"]
                 targetPoint, rotMat, found = self.lookForNeighbours(
@@ -7429,7 +6957,7 @@ class Ingredient(Agent):
         tx, ty, tz = jtrans = targetPoint
         # we may increase the jitter, or pick from xyz->Id free for its radius
         # create the rb only once and not at ever jitter
-        # rbnode = histoVol.callFunction(self.histoVol.addRB,(self, jtrans, rotMat,),{"rtype":self.Type},)
+        # rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMat,),{"rtype":self.Type},)
         # jitter loop
         collision2 = False
         for jitterPos in range(
@@ -7440,9 +6968,6 @@ class Ingredient(Agent):
             if jitter2 > 0.0:
                 found = False
                 while not found:
-                    #                    dx = jx*jitter*gauss(0., 0.3)
-                    #                    dy = jy*jitter*gauss(0., 0.3)
-                    #                    dz = jz*jitter*gauss(0., 0.3)
                     dx = jx * jitter * uniform(-1.0, 1.0)
                     dy = jy * jitter * uniform(-1.0, 1.0)
                     dz = jz * jitter * uniform(-1.0, 1.0)
@@ -7454,13 +6979,7 @@ class Ingredient(Agent):
                             dx, dy, dz, dum = numpy.dot(rotMat, (dx, dy, dz, 0))
                         jtrans = (tx + dx, ty + dy, tz + dz)
                         found = True
-                        #                    else:  #Graham Killed thse unnecessary updates
-                        #                        if verbose :  #Graham Killed thse unnecessary updates
-                        #                            print('JITTER REJECTED', d2, jitter2)  #Graham Killed thse unnecessary updates
-                        #                    if runTimeDisplay and moving is not None :  #Graham Killed thse unnecessary updates
-                        #                        afvi.vi.setTranslation(moving,pos=jtrans)
-                        #                        afvi.vi.update()
-                        #                        print "ok moving"
+
             else:
                 jtrans = targetPoint
                 dx = dy = dz = 0.0
@@ -7492,7 +7011,6 @@ class Ingredient(Agent):
                     elif self.useOrientBias and self.packingMode == "gradient":
                         #                        rotMatj = self.getAxisRotation(rotMat)
                         rotMatj = self.getBiasedRotation(rotMat, weight=None)
-                    # weight = 1.0 - self.histoVol.gradients[self.gradient].weight[ptInd])
                     else:
                         rotMatj = autopack.helper.rotation_matrix(
                             random() * self.rotRange, self.rotAxis
@@ -7516,7 +7034,7 @@ class Ingredient(Agent):
             #                continue
 
             perdiodic_collision = False
-            periodic_pos = self.histoVol.grid.getPositionPeridocity(
+            periodic_pos = self.env.grid.getPositionPeridocity(
                 jtrans, getNormedVectorOnes(self.jitterMax), self.encapsulatingRadius
             )
             r = [False]
@@ -7556,7 +7074,7 @@ class Ingredient(Agent):
                         break
 
             closeS = False  # self.checkPointSurface(jtrans, cutoff=self.cutoff_surface)
-            test = closeS  # self.testPoint(jtrans)
+            test = closeS  # self.point_is_not_available(jtrans)
             collisionComp = False
             if not test and not (True in r):
                 collision2, liste_nodes = self.collision_rapid(
@@ -7565,7 +7083,7 @@ class Ingredient(Agent):
                 collisionComp = False
             if autopack.verbose:
                 print("collision", collision2, r)
-            # print ("contact Pair ",collision, r,self.histoVol.static) #gave nothing ???
+            # print ("contact Pair ",collision, r,self.env.static) #gave nothing ???
             # need to check compartment too
             if not collision2:  # and not r:  # and not collision2:
                 if self.compareCompartment:
@@ -7617,34 +7135,9 @@ class Ingredient(Agent):
                 if not collisionComp:
                     # update_data_tree
                     self.update_data_tree(jtrans, rotMatj, ptInd=ptInd)
-                    #                    self.histoVol.static.append(rbnode)
-                    #                    self.histoVol.moving = None
-                    #                    self.histoVol.rTrans.append(jtrans)
-                    #                    self.histoVol.rRot.append(rotMatj)
-                    #                    self.histoVol.rIngr.append(self)
-                    #                    self.histoVol.result.append([ jtrans, rotMatj, self, ptInd ])
-                    #    #                histoVol.close_ingr_bhtree.MoveRBHPoint(histoVol.nb_ingredient,(jtrans[0],jtrans[1],jtrans[2]),1)
-                    #                    self.histoVol.nb_ingredient+=1
-                    #                    self.histoVol.close_ingr_bhtree.InsertRBHPoint((jtrans[0],jtrans[1],jtrans[2]),radius,None,histoVol.nb_ingredient)
-                    #                    #update bhree
-                    #                    if len(self.histoVol.rTrans) > 1 : bhtreelib.freeBHtree(self.histoVol.close_ingr_bhtree)
-                    #                    if len(self.histoVol.rTrans) : self.histoVol.close_ingr_bhtree=bhtreelib.BHtree( self.histoVol.rTrans, None, 10)
-                    #                    if self.histoVol.treemode == "bhtree":# "cKDTree"
-                    #                        if len(self.histoVol.rTrans) > 1 : bhtreelib.freeBHtree(self.histoVol.close_ingr_bhtree)
-                    #                        if len(self.histoVol.rTrans) : self.histoVol.close_ingr_bhtree=bhtreelib.BHtree( self.histoVol.rTrans, None, 10)
-                    #                    else :
-                    #                        #rebuild kdtree
-                    #                        if len(self.histoVol.rTrans) > 1 :self.histoVol.close_ingr_bhtree= spatial.cKDTree(self.histoVol.rTrans, leafsize=10)
-                    #                    #self.histoVol.callFunction(self.histoVol.delRB,(rbnode,))
                     break  # break out of jitter pos loop
                 else:
                     collision2 = collisionComp
-                    #            else :
-                    #                histoVol.callFunction(self.histoVol.delRB,(rbnode,))
-                    # remove the node
-                    #        if verbose:
-                    #        print("jitter loop ",time()-t1)
-                    #            self.histoVol.callFunction(self.histoVol.delRB,(rbnode,))
         if not collision2 and not (True in r):  # and not collision2:
             insidePoints = {}
             newDistPoints = {}
@@ -7772,16 +7265,7 @@ class Ingredient(Agent):
             # update free points
             nbFreePoints = histoVol.callFunction(
                 self.updateDistances,
-                (
-                    histoVol,
-                    insidePoints,
-                    newDistPoints,
-                    freePoints,
-                    nbFreePoints,
-                    distance,
-                    histoVol.masterGridPositions,
-                    verbose,
-                ),
+                (insidePoints, newDistPoints, freePoints, nbFreePoints, distance),
             )
 
             #            distChanges = {}
@@ -7848,14 +7332,13 @@ class Ingredient(Agent):
             self.rejectionCounter = 0
 
         else:  # got rejected
-            # histoVol.callFunction(histoVol.delRB,(rbnode,))
             if runTimeDisplay and moving is not None:
                 afvi.vi.deleteObject(moving)
             success = False
             self.haveBeenRejected = True
             histoVol.failedJitter.append((self, jitterList, collD1, collD2))
 
-            if (self.encapsulatingRadius - self.histoVol.smallestProteinSize) == 0:
+            if (self.encapsulatingRadius - self.env.smallestProteinSize) == 0:
                 distance[ptInd] = distance[ptInd] - 10.0
             # distance[ptInd] = distance[ptInd]-5.0# ???
             else:
@@ -7954,21 +7437,21 @@ class Ingredient(Agent):
         usePP = False
         # liste_nodes=[]
         if cutoff is None:
-            cutoff = self.histoVol.largestProteinSize + self.encapsulatingRadius * 2.0
+            cutoff = self.env.largestProteinSize + self.encapsulatingRadius * 2.0
         rbnode = self.get_rapid_model()
         # liste_nodes=None
-        if len(self.histoVol.rTrans) == 0:
-            print("no history rTrans")
+        if len(self.env.rTrans) == 0:
+            self.log.info("no history rTrans")
             r = [False]
         else:
             if liste_nodes is None:
                 if point is not None:
                     closesbody_indice = self.getClosestIngredient(
-                        point, self.histoVol, cutoff=cutoff
+                        point, self.env, cutoff=cutoff
                     )
                 else:
                     closesbody_indice = self.getClosestIngredient(
-                        jtrans, self.histoVol, cutoff=cutoff
+                        jtrans, self.env, cutoff=cutoff
                     )
                 if len(closesbody_indice) == 0:
                     # print ("no closesbody_indice")
@@ -7982,7 +7465,7 @@ class Ingredient(Agent):
             r = []
             if usePP:
                 n = 0
-                self.histoVol.grab_cb.reset()
+                self.env.grab_cb.reset()
                 inputp = {}
                 for c in range(autopack.ncpus):
                     inputp[c] = []
@@ -8011,15 +7494,15 @@ class Ingredient(Agent):
                 for c in range(autopack.ncpus):
                     if not len(inputp[c]):
                         continue
-                    j = self.histoVol.pp_server.submit(
+                    j = self.env.pp_server.submit(
                         rapid_checkCollision_rmp,
                         (inputp[c],),
-                        callback=self.histoVol.grab_cb.grab,
+                        callback=self.env.grab_cb.grab,
                         modules=("numpy",),
                     )
                     jobs.append(j)
-                self.histoVol.pp_server.wait()
-                r.extend(self.histoVol.grab_cb.collision[:])
+                self.env.pp_server.wait()
+                r.extend(self.env.grab_cb.collision[:])
             else:
                 #                    print jtrans, rotMatj
                 for node, trans, rot, ingr in liste_nodes:
@@ -8067,15 +7550,15 @@ class Ingredient(Agent):
         afvi = histoVol.afviewer
         simulationTimes = histoVol.simulationTimes
         runTimeDisplay = histoVol.runTimeDisplay
-        self.histoVol = histoVol
+        self.env = histoVol
         spacing = histoVol.smallestProteinSize
         jx, jy, jz = self.jitterMax
         self.getMaxJitter(spacing)
 
         if self.compNum == 0:
-            compartment = self.histoVol
+            compartment = self.env
         else:
-            compartment = self.histoVol.compartments[abs(self.compNum) - 1]
+            compartment = self.env.compartments[abs(self.compNum) - 1]
             # this is hisotVol for cytoplasme
         compNum = self.compNum
 
@@ -8188,8 +7671,8 @@ class Ingredient(Agent):
                     #        print "targetPt",len(targetPoint),targetPoint
                     #       should be panda util
                     #        add the rigid body
-        self.histoVol.moving = rbnode = self.histoVol.callFunction(
-            self.histoVol.addRB,
+        self.env.moving = rbnode = self.env.callFunction(
+            self.env.addRB,
             (
                 self,
                 jtrans,
@@ -8197,8 +7680,8 @@ class Ingredient(Agent):
             ),
             {"rtype": self.Type},
         )
-        self.histoVol.callFunction(
-            self.histoVol.moveRBnode,
+        self.env.callFunction(
+            self.env.moveRBnode,
             (
                 rbnode,
                 jtrans,
@@ -8208,7 +7691,7 @@ class Ingredient(Agent):
         # run he simulation for simulationTimes
         #        afvi.vi.frameAdvanced(duration = simulationTimes,display = runTimeDisplay)#,
         histoVol.callFunction(
-            self.histoVol.runBullet,
+            self.env.runBullet,
             (
                 self,
                 simulationTimes,
@@ -8216,11 +7699,11 @@ class Ingredient(Agent):
             ),
         )
         # cb=self.getTransfo)
-        rTrans, rRot = self.histoVol.getRotTransRB(rbnode)
+        rTrans, rRot = self.env.getRotTransRB(rbnode)
         # 5- we get the resuling transofrmation matrix and decompose ->rTrans rRot
         # use
-        # r=[ (self.histoVol.world.contactTestPair(rbnode, n).getNumContacts() > 0 ) for n in self.histoVol.static]
-        self.histoVol.static.append(rbnode)
+        # r=[ (self.env.world.contactTestPair(rbnode, n).getNumContacts() > 0 ) for n in self.env.static]
+        self.env.static.append(rbnode)
         #        rbnode.setMass(0.0)#make it non dynmaics
         #        rTrans = afvi.vi.ToVec(afvi.vi.getTranslation(moving))#getPos
         #        rRot = afvi.vi.getMatRotation(moving)                   #getRot or getMat?
@@ -8349,14 +7832,7 @@ class Ingredient(Agent):
             histoVol.lastrank += 1
             histoVol.nb_ingredient += 1
             nbFreePoints = self.updateDistances(
-                histoVol,
-                insidePoints,
-                newDistPoints,
-                freePoints,
-                nbFreePoints,
-                distance,
-                histoVol.grid.masterGridPositions,
-                verbose,
+                insidePoints, newDistPoints, freePoints, nbFreePoints, distance
             )
 
             # save dropped ingredient
@@ -9105,11 +8581,11 @@ class GrowIngredient(MultiCylindersIngr):
 
     def mask_sphere_points_boundary(self, pt, boundingBox=None):
         if boundingBox is None:
-            boundingBox = self.histoVol.fillBB
+            boundingBox = self.env.fillBB
         pts = (numpy.array(self.sphere_points) * self.uLength) + pt
         points_mask = numpy.nonzero(self.sphere_points_mask)[0]
         if len(points_mask):
-            mask = [not self.testPoint(pt) for pt in pts[points_mask]]
+            mask = [not self.point_is_not_available(pt) for pt in pts[points_mask]]
             if len(mask):
                 self.sphere_points_mask[points_mask] = numpy.logical_and(
                     mask, self.sphere_points_mask[points_mask]
@@ -9348,7 +8824,7 @@ class GrowIngredient(MultiCylindersIngr):
         step = histoVol.grid.gridSpacing * size
         bb = ([cx - step, cy - step, cz - step], [cx + step, cy + step, cz + step])
         pointsInCube = histoVol.grid.getPointsInCube(bb, posc, step, addSP=False)
-        o = self.histoVol.compartments[abs(self.compNum) - 1]
+        o = self.env.compartments[abs(self.compNum) - 1]
         sfpts = o.surfacePointsCoords
 
         found = False
@@ -9619,18 +9095,18 @@ class GrowIngredient(MultiCylindersIngr):
         # build a rigid body of multisphere along pt1topt2
         r, p = self.getInterpolatedSphere(pt1, pt2)
         print("pos len", len(p), " ", len(r))
-        inodenp = self.histoVol.multiSphereRB(self.name + nodeid, p, r)
+        inodenp = self.env.multiSphereRB(self.name + nodeid, p, r)
         print("node build ", inodenp)
-        inodenp.setCollideMask(self.histoVol.BitMask32.allOn())
+        inodenp.setCollideMask(self.env.BitMask32.allOn())
         inodenp.node().setAngularDamping(1.0)
         inodenp.node().setLinearDamping(1.0)
         print("attach node to world")
         # inodenp.setMat(pmat)
-        self.histoVol.world.attachRigidBody(inodenp.node())
+        self.env.world.attachRigidBody(inodenp.node())
         print("node attached to world")
         inodenp = inodenp.node()
         print("add msphere ", inodenp)
-        self.histoVol.rb_panda.append(inodenp)
+        self.env.rb_panda.append(inodenp)
         return inodenp
 
     def walkSpherePanda(
@@ -9652,8 +9128,8 @@ class GrowIngredient(MultiCylindersIngr):
             # sp.SetAbsPos(self.vi.FromVec(startingPoint))
             self.vi.update()
         liste_nodes = []
-        cutoff = self.histoVol.largestProteinSize + self.uLength
-        closesbody_indice = self.getClosestIngredient(pt2, self.histoVol, cutoff=cutoff)
+        cutoff = self.env.largestProteinSize + self.uLength
+        closesbody_indice = self.getClosestIngredient(pt2, self.env, cutoff=cutoff)
         liste_nodes = self.get_rbNodes(
             closesbody_indice, pt2, prevpoint=pt1, getInfo=True
         )
@@ -9661,7 +9137,7 @@ class GrowIngredient(MultiCylindersIngr):
         print("pick alternate", alternate, ia, self.prev_alt)
         if self.prev_was_alternate:
             alternate = None
-        p_alternate = None  # self.partners[alternate]#self.histoVol.getIngrFromNameInRecipe(alternate,self.recipe )
+        p_alternate = None  # self.partners[alternate]#self.env.getIngrFromNameInRecipe(alternate,self.recipe )
         # if p_alternate.getProperties("bend"):
         nextPoint = None  # p_alternate.getProperties("pt2")
         marge_in = None  # p_alternate.getProperties("marge_in")
@@ -9689,12 +9165,12 @@ class GrowIngredient(MultiCylindersIngr):
                 )
             alternate = None
         if self.prev_alt is not None:
-            test = True
+            point_is_not_available = True
         elif alternate and not self.prev_was_alternate:
             # next point shouldnt be an alternate
             p_alternate = self.partners[
                 alternate
-            ]  # self.histoVol.getIngrFromNameInRecipe(alternate,self.recipe )
+            ]  # self.env.getIngrFromNameInRecipe(alternate,self.recipe )
             # if p_alternate.getProperties("bend"):
             entrypoint = p_alternate.getProperties("pt1")
             nextPoint = p_alternate.getProperties("pt2")
@@ -9739,7 +9215,7 @@ class GrowIngredient(MultiCylindersIngr):
                 print("break too much attempt ", attempted, safetycutoff)
                 return None, False  # numpy.array(pt2).flatten()+numpy.array(pt),False
             # pt = numpy.array(self.vi.randpoint_onsphere(self.uLength,biased=(uniform(0.,1.0)*marge)/360.0))*numpy.array([1,1,0])
-            test = True
+            point_is_not_available = True
             newPt = None
             if self.prev_alt is not None:
                 if dihedral is not None:
@@ -9797,16 +9273,16 @@ class GrowIngredient(MultiCylindersIngr):
                 print("no  points available")
                 return None, False
             r = [False]
-            test = self.testPoint(newPt)
+            point_is_not_available = self.point_is_not_available(newPt)
             print(
-                "testPoint",
-                test,
+                "point is available",
+                point_is_not_available,
                 self.constraintMarge,
                 marge,
                 attempted,
                 self.rejectionThreshold,
             )
-            if test:
+            if point_is_not_available:
                 if not self.constraintMarge:
                     if marge >= 175:
                         attempted += 1
@@ -9872,20 +9348,20 @@ class GrowIngredient(MultiCylindersIngr):
                         numpy.array(pt2).flatten(), newPt
                     )
                     rbnode = self.get_rb_model()
-                    self.histoVol.callFunction(
-                        self.histoVol.moveRBnode,
+                    self.env.callFunction(
+                        self.env.moveRBnode,
                         (
                             rbnode,
                             jtrans,
                             rotMatj,
                         ),
                     )
-                    if len(self.histoVol.rTrans) == 0:
+                    if len(self.env.rTrans) == 0:
                         r = [False]
                     else:
                         prev = None
-                        if len(self.histoVol.rTrans) > 2:
-                            prev = self.histoVol.rTrans[-1]
+                        if len(self.env.rTrans) > 2:
+                            prev = self.env.rTrans[-1]
                         closesbody_indice = self.getClosestIngredient(
                             newPt, histoVol, cutoff=cutoff
                         )  # vself.radii[0][0]*2.0
@@ -9901,25 +9377,25 @@ class GrowIngredient(MultiCylindersIngr):
                                 # use self.grab_cb and self.pp_server
                                 # Divide the task or just submit job
                                 n = 0
-                                self.histoVol.grab_cb.reset()
+                                self.env.grab_cb.reset()
                                 for i in range(len(liste_nodes) / autopack.ncpus):
                                     for c in range(autopack.ncpus):
-                                        self.histoVol.pp_server.submit(
-                                            self.histoVol.world.contactTestPair,
+                                        self.env.pp_server.submit(
+                                            self.env.world.contactTestPair,
                                             (rbnode, liste_nodes[n][0]),
-                                            callback=self.histoVol.grab_cb.grab,
+                                            callback=self.env.grab_cb.grab,
                                         )
                                         n += 1
-                                    self.histoVol.pp_server.wait()
-                                    r.extend(self.histoVol.grab_cb.collision[:])
+                                    self.env.pp_server.wait()
+                                    r.extend(self.env.grab_cb.collision[:])
                                     if True in r:
                                         break
                             else:
                                 for node in liste_nodes:
                                     print("collision test with ", node)
-                                    self.histoVol.moveRBnode(node[0], node[1], node[2])
+                                    self.env.moveRBnode(node[0], node[1], node[2])
                                     col = (
-                                        self.histoVol.world.contactTestPair(
+                                        self.env.world.contactTestPair(
                                             rbnode, node[0]
                                         ).getNumContacts()
                                         > 0
@@ -9979,7 +9455,7 @@ class GrowIngredient(MultiCylindersIngr):
                         )
                         if start_ingr_name is not None:
                             # add new starting positions
-                            start_ingr = self.histoVol.getIngrFromName(start_ingr_name)
+                            start_ingr = self.env.getIngrFromName(start_ingr_name)
                             matrice = numpy.array(rotMatj)  # .transpose()
                             matrice[3, :3] = jtrans
                             newPts = self.get_alternate_starting_point(
@@ -10174,12 +9650,12 @@ class GrowIngredient(MultiCylindersIngr):
                     # check collision using bullet
                     # get closest object?
                     cutoff = histoVol.largestProteinSize + self.uLength
-                    if len(self.histoVol.rTrans) == 0:
+                    if len(self.env.rTrans) == 0:
                         r = [False]
                     else:
                         prev = None
-                        if len(self.histoVol.rTrans) > 2:
-                            prev = self.histoVol.rTrans[-1]
+                        if len(self.env.rTrans) > 2:
+                            prev = self.env.rTrans[-1]
                         closesbody_indice = self.getClosestIngredient(
                             newPt, histoVol, cutoff=cutoff
                         )  # vself.radii[0][0]*2.0
@@ -10193,23 +9669,23 @@ class GrowIngredient(MultiCylindersIngr):
                                 # use self.grab_cb and self.pp_server
                                 # Divide the task or just submit job
                                 n = 0
-                                self.histoVol.grab_cb.reset()
+                                self.env.grab_cb.reset()
                                 for i in range(len(liste_nodes) / autopack.ncpus):
                                     for c in range(autopack.ncpus):
-                                        self.histoVol.pp_server.submit(
-                                            self.histoVol.world.contactTestPair,
+                                        self.env.pp_server.submit(
+                                            self.env.world.contactTestPair,
                                             (rbnode, liste_nodes[n][0]),
-                                            callback=self.histoVol.grab_cb.grab,
+                                            callback=self.env.grab_cb.grab,
                                         )
                                         n += 1
-                                    self.histoVol.pp_server.wait()
-                                    r.extend(self.histoVol.grab_cb.collision[:])
+                                    self.env.pp_server.wait()
+                                    r.extend(self.env.grab_cb.collision[:])
                                     if True in r:
                                         break
                             else:
                                 for node in liste_nodes:
                                     col = (
-                                        self.histoVol.world.contactTestPair(
+                                        self.env.world.contactTestPair(
                                             rbnode, node[0]
                                         ).getNumContacts()
                                         > 0
@@ -10238,7 +9714,7 @@ class GrowIngredient(MultiCylindersIngr):
                             )
                         else:
                             # rebuild kdtree
-                            if len(self.histoVol.rTrans) > 1:
+                            if len(self.env.rTrans) > 1:
                                 histoVol.close_ingr_bhtree = spatial.cKDTree(
                                     histoVol.rTrans, leafsize=10
                                 )
@@ -10283,8 +9759,8 @@ class GrowIngredient(MultiCylindersIngr):
             self.vi.update()
         # do we use the cylindr or the alternate / partner
         liste_nodes = []
-        cutoff = self.histoVol.largestProteinSize + self.uLength
-        closesbody_indice = self.getClosestIngredient(pt2, self.histoVol, cutoff=cutoff)
+        cutoff = self.env.largestProteinSize + self.uLength
+        closesbody_indice = self.getClosestIngredient(pt2, self.env, cutoff=cutoff)
         liste_nodes = self.get_rapid_nodes(closesbody_indice, pt2, prevpoint=pt1)
         # mask using boundary and ingredient
         # self.mask_sphere_points_boundary(pt2)
@@ -10322,7 +9798,7 @@ class GrowIngredient(MultiCylindersIngr):
             elif alternate:
                 p_alternate = self.partners[
                     alternate
-                ]  # self.histoVol.getIngrFromNameInRecipe(alternate,self.recipe )
+                ]  # self.env.getIngrFromNameInRecipe(alternate,self.recipe )
                 # if p_alternate.getProperties("bend"):
                 nextPoint = p_alternate.getProperties("pt2")
                 marge_in = p_alternate.getProperties("marge_in")
@@ -10379,7 +9855,7 @@ class GrowIngredient(MultiCylindersIngr):
                 self.vi.update()
             print("time to pick point ", time() - t1)
             if test:
-                test = self.testPoint(newPt)
+                test = self.point_is_not_available(newPt)
                 if test:
                     if not self.constraintMarge:
                         if marge >= 175:
@@ -10480,9 +9956,7 @@ class GrowIngredient(MultiCylindersIngr):
                             )
                             if start_ingr_name is not None:
                                 # add new starting positions
-                                start_ingr = self.histoVol.getIngrFromName(
-                                    start_ingr_name
-                                )
+                                start_ingr = self.env.getIngrFromName(start_ingr_name)
                                 matrice = numpy.array(rotMatj)  # .transpose()
                                 matrice[3, :3] = jtrans
                                 newPts = self.get_alternate_starting_point(
@@ -10571,8 +10045,8 @@ class GrowIngredient(MultiCylindersIngr):
             self.vi.update()
         # do we use the cylinder or the alternate / partner
         liste_nodes = []
-        cutoff = self.histoVol.largestProteinSize + self.uLength
-        closesbody_indice = self.getClosestIngredient(pt2, self.histoVol, cutoff=cutoff)
+        cutoff = self.env.largestProteinSize + self.uLength
+        closesbody_indice = self.getClosestIngredient(pt2, self.env, cutoff=cutoff)
         liste_nodes = self.get_rapid_nodes(closesbody_indice, pt2, prevpoint=pt1)
         # mask using boundary and ingredient
         # self.mask_sphere_points_boundary(pt2)
@@ -10582,7 +10056,7 @@ class GrowIngredient(MultiCylindersIngr):
         print("pick alternate", alternate, ia, self.prev_alt)
         if self.prev_was_alternate:
             alternate = None
-        p_alternate = None  # self.partners[alternate]#self.histoVol.getIngrFromNameInRecipe(alternate,self.recipe )
+        p_alternate = None  # self.partners[alternate]#self.env.getIngrFromNameInRecipe(alternate,self.recipe )
         # if p_alternate.getProperties("bend"):
         nextPoint = None  # p_alternate.getProperties("pt2")
         marge_in = None  # p_alternate.getProperties("marge_in")
@@ -10609,12 +10083,12 @@ class GrowIngredient(MultiCylindersIngr):
                 )
             alternate = None
         if self.prev_alt is not None:
-            test = True
+            point_is_not_available = True
         elif alternate and not self.prev_was_alternate:
             # next point shouldnt be an alternate
             p_alternate = self.partners[
                 alternate
-            ]  # self.histoVol.getIngrFromNameInRecipe(alternate,self.recipe )
+            ]  # self.env.getIngrFromNameInRecipe(alternate,self.recipe )
             # if p_alternate.getProperties("bend"):
             nextPoint = p_alternate.getProperties("pt2")
             marge_in = p_alternate.getProperties("marge_in")
@@ -10652,7 +10126,7 @@ class GrowIngredient(MultiCylindersIngr):
                 print("break too much attempt ", attempted, safetycutoff)
                 return None, False  # numpy.array(pt2).flatten()+numpy.array(pt),False
             # pt = numpy.array(self.vi.randpoint_onsphere(self.uLength,biased=(uniform(0.,1.0)*marge)/360.0))*numpy.array([1,1,0])
-            test = True
+            point_is_not_available = True
             newPt = None
             if self.prev_alt is not None:
                 if dihedral is not None:
@@ -10707,8 +10181,8 @@ class GrowIngredient(MultiCylindersIngr):
             if newPt is None:
                 print("no  points available")
                 return None, False
-            test = self.testPoint(newPt)
-            if test:
+            point_is_not_available = self.point_is_not_available(newPt)
+            if point_is_not_available:
                 if not self.constraintMarge:
                     if marge >= 175:
                         attempted += 1
@@ -10822,7 +10296,7 @@ class GrowIngredient(MultiCylindersIngr):
                         )
                         if start_ingr_name is not None:
                             # add new starting positions
-                            start_ingr = self.histoVol.getIngrFromName(start_ingr_name)
+                            start_ingr = self.env.getIngrFromName(start_ingr_name)
                             matrice = numpy.array(rotMatj)  # .transpose()
                             matrice[3, :3] = jtrans
                             snewPts = self.get_alternate_starting_point(
@@ -10887,23 +10361,21 @@ class GrowIngredient(MultiCylindersIngr):
         return numpy.array(pt2).flatten() + numpy.array(pt), True
 
     def resetLastPoint(self, listePtCurve):
-        self.histoVol.nb_ingredient -= 1
-        self.histoVol.rTrans.pop(len(self.histoVol.rTrans) - 1)
-        self.histoVol.rRot.pop(len(self.histoVol.rRot) - 1)  # rotMatj
-        self.histoVol.rIngr.pop(len(self.histoVol.rIngr) - 1)
-        self.histoVol.result.pop(len(self.histoVol.result) - 1)
-        if self.histoVol.treemode == "bhtree":  # "cKDTree"
-            if len(self.histoVol.rTrans) > 1:
-                bhtreelib.freeBHtree(self.histoVol.close_ingr_bhtree)
-            if len(self.histoVol.rTrans):
-                self.histoVol.close_ingr_bhtree = bhtreelib.BHtree(
-                    self.histoVol.rTrans, None, 10
-                )
+        self.env.nb_ingredient -= 1
+        self.env.rTrans.pop(len(self.env.rTrans) - 1)
+        self.env.rRot.pop(len(self.env.rRot) - 1)  # rotMatj
+        self.env.rIngr.pop(len(self.env.rIngr) - 1)
+        self.env.result.pop(len(self.env.result) - 1)
+        if self.env.treemode == "bhtree":  # "cKDTree"
+            if len(self.env.rTrans) > 1:
+                bhtreelib.freeBHtree(self.env.close_ingr_bhtree)
+            if len(self.env.rTrans):
+                self.env.close_ingr_bhtree = bhtreelib.BHtree(self.env.rTrans, None, 10)
         else:
             # rebuild kdtree
-            if len(self.histoVol.rTrans) > 1:
-                self.histoVol.close_ingr_bhtree = spatial.cKDTree(
-                    self.histoVol.rTrans, leafsize=10
+            if len(self.env.rTrans) > 1:
+                self.env.close_ingr_bhtree = spatial.cKDTree(
+                    self.env.rTrans, leafsize=10
                 )
 
         # also remove from the result ?
@@ -10944,7 +10416,7 @@ class GrowIngredient(MultiCylindersIngr):
         counter = 0
         mask = None
         if self.walkingMode == "lattice" and self.compNum > 0:
-            o = self.histoVol.compartments[abs(self.compNum) - 1]
+            o = self.env.compartments[abs(self.compNum) - 1]
             v = o.surfacePointsCoords
             mask = numpy.ones(len(v), int)
         alternate = False
@@ -11127,14 +10599,11 @@ class GrowIngredient(MultiCylindersIngr):
                     )
 
                     nbFreePoints = self.updateDistances(
-                        histoVol,
                         insidePoints,
                         newDistPoints,
                         freePoints,
                         nbFreePoints,
                         distance,
-                        gridPointsCoords,
-                        verbose,
                     )
 
                 if histoVol.afviewer is not None and hasattr(histoVol.afviewer, "vi"):
@@ -11195,20 +10664,13 @@ class GrowIngredient(MultiCylindersIngr):
             )
             # update free points
             nbFreePoints = self.updateDistances(
-                histoVol,
-                insidePoints,
-                newDistPoints,
-                freePoints,
-                nbFreePoints,
-                distance,
-                gridPointsCoords,
-                verbose,
+                insidePoints, newDistPoints, freePoints, nbFreePoints, distance
             )
             return nbFreePoints, freePoints
 
     def getFirstPoint(self, ptInd, seed=0):
         if self.compNum > 0:  # surfacegrowing: first point is aling to the normal:
-            v2 = self.histoVol.compartments[abs(self.compNum) - 1].surfacePointsNormals[
+            v2 = self.env.compartments[abs(self.compNum) - 1].surfacePointsNormals[
                 ptInd
             ]
             secondPoint = (
@@ -11231,7 +10693,7 @@ class GrowIngredient(MultiCylindersIngr):
                 secondPoint = self.startingpoint - self.vector
             else:
                 seed = "F"
-            inside = self.histoVol.grid.checkPointInside(
+            inside = self.env.grid.checkPointInside(
                 secondPoint, dist=self.cutoff_boundary, jitter=self.jitterMax
             )
             closeS = False
@@ -11252,7 +10714,7 @@ class GrowIngredient(MultiCylindersIngr):
                     )
                     pt = numpy.array(p) * numpy.array(self.jitterMax)
                     secondPoint = self.startingpoint + numpy.array(pt)
-                    inside = self.histoVol.grid.checkPointInside(
+                    inside = self.env.grid.checkPointInside(
                         secondPoint, dist=self.cutoff_boundary, jitter=self.jitterMax
                     )
                     if self.compNum <= 0:
@@ -11260,11 +10722,11 @@ class GrowIngredient(MultiCylindersIngr):
                             secondPoint, cutoff=self.cutoff_surface
                         )
             if self.runTimeDisplay:
-                parent = self.histoVol.afviewer.orgaToMasterGeom[self]
+                parent = self.env.afviewer.orgaToMasterGeom[self]
                 name = "Startsp" + self.name + seed
                 # sp=self.vi.Sphere(name,radius=self.radii[0][0],parent=parent)[0]
                 if seed == "F":
-                    # sp=self.vi.newInstance(name,self.histoVol.afviewer.pesph,
+                    # sp=self.vi.newInstance(name,self.env.afviewer.pesph,
                     #                   location=self.startingpoint,parent=parent)
                     # self.vi.scaleObj(sp,self.radii[0][0])
                     sp = self.vi.Sphere(name, radius=self.radii[0][0], parent=parent)[0]
@@ -11274,7 +10736,7 @@ class GrowIngredient(MultiCylindersIngr):
                     name + "cyl",
                     self.startingpoint,
                     secondPoint,
-                    instance=self.histoVol.afviewer.becyl,
+                    instance=self.env.afviewer.becyl,
                     parent=parent,
                     radius=self.radii[0][0],
                 )
@@ -11305,7 +10767,7 @@ class GrowIngredient(MultiCylindersIngr):
             self.prepare_alternates()
         success = True
         self.vi = autopack.helper
-        self.histoVol = histoVol
+        self.env = histoVol
         gridPointsCoords = histoVol.grid.masterGridPositions
         self.runTimeDisplay = histoVol.runTimeDisplay
         normal = None
@@ -11327,9 +10789,9 @@ class GrowIngredient(MultiCylindersIngr):
         if u != self.uLength:
             self.positions2 = [[self.vector]]
         if self.compNum == 0:
-            compartment = self.histoVol
+            compartment = self.env
         else:
-            compartment = self.histoVol.compartments[abs(self.compNum) - 1]
+            compartment = self.env.compartments[abs(self.compNum) - 1]
         self.compartment = compartment
 
         secondPoint = self.getFirstPoint(ptInd)
@@ -11347,35 +10809,33 @@ class GrowIngredient(MultiCylindersIngr):
         # return success, nbFreePoints
         self.results.append([jtrans, rotMatj])
         if self.placeType == "pandaBullet":
-            self.histoVol.nb_ingredient += 1
-            self.histoVol.rTrans.append(numpy.array(startingPoint).flatten())
-            self.histoVol.rRot.append(numpy.array(numpy.identity(4)))  # rotMatj
-            self.histoVol.rIngr.append(self)
-            self.histoVol.result.append(
+            self.env.nb_ingredient += 1
+            self.env.rTrans.append(numpy.array(startingPoint).flatten())
+            self.env.rRot.append(numpy.array(numpy.identity(4)))  # rotMatj
+            self.env.rIngr.append(self)
+            self.env.result.append(
                 [[numpy.array(startingPoint).flatten(), secondPoint], rotMatj, self, 0]
             )
-        # if len(self.histoVol.rTrans) > 1 : bhtreelib.freeBHtree(self.histoVol.close_ingr_bhtree)
-        #           if len(self.histoVol.rTrans) : self.histoVol.close_ingr_bhtree=bhtreelib.BHtree( self.histoVol.rTrans, None, 10)
+        # if len(self.env.rTrans) > 1 : bhtreelib.freeBHtree(self.env.close_ingr_bhtree)
+        #           if len(self.env.rTrans) : self.env.close_ingr_bhtree=bhtreelib.BHtree( self.env.rTrans, None, 10)
         elif self.placeType == "RAPID":
-            self.histoVol.nb_ingredient += 1
-            self.histoVol.rTrans.append(numpy.array(jtrans).flatten())
-            self.histoVol.rRot.append(numpy.array(rotMatj))  # rotMatj
-            self.histoVol.rIngr.append(self)
-            self.histoVol.result.append(
+            self.env.nb_ingredient += 1
+            self.env.rTrans.append(numpy.array(jtrans).flatten())
+            self.env.rRot.append(numpy.array(rotMatj))  # rotMatj
+            self.env.rIngr.append(self)
+            self.env.result.append(
                 [[numpy.array(startingPoint).flatten(), secondPoint], rotMatj, self, 0]
             )
 
-        if self.histoVol.treemode == "bhtree":  # "cKDTree"
-            # if len(self.histoVol.rTrans) > 1 : bhtreelib.freeBHtree(self.histoVol.close_ingr_bhtree)
-            if len(self.histoVol.rTrans):
-                self.histoVol.close_ingr_bhtree = bhtreelib.BHtree(
-                    self.histoVol.rTrans, None, 10
-                )
+        if self.env.treemode == "bhtree":  # "cKDTree"
+            # if len(self.env.rTrans) > 1 : bhtreelib.freeBHtree(self.env.close_ingr_bhtree)
+            if len(self.env.rTrans):
+                self.env.close_ingr_bhtree = bhtreelib.BHtree(self.env.rTrans, None, 10)
         else:
             # rebuild kdtree
-            if len(self.histoVol.rTrans) > 1:
-                self.histoVol.close_ingr_bhtree = spatial.cKDTree(
-                    self.histoVol.rTrans, leafsize=10
+            if len(self.env.rTrans) > 1:
+                self.env.close_ingr_bhtree = spatial.cKDTree(
+                    self.env.rTrans, leafsize=10
                 )
 
         self.currentLength = 0.0
@@ -11685,7 +11145,7 @@ class GrowIngredient(MultiCylindersIngr):
         # should apply first to get the new list of point, and length
         p_alternate = self.partners[
             alternate
-        ]  # self.histoVol.getIngrFromNameInRecipe(alternate,self.recipe )
+        ]  # self.env.getIngrFromNameInRecipe(alternate,self.recipe )
         # if p_alternate.getProperties("bend"):
         out1 = p_alternate.getProperties("pt1")
         out2 = p_alternate.getProperties("pt2")

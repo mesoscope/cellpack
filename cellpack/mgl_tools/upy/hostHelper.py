@@ -20,24 +20,11 @@
 import sys
 import os
 import math
+from math import cos, sin, sqrt
 import random
-from math import *
+import numpy
+import PIL as Image
 
-usenumpy = False
-try:
-    import numpy
-
-    usenumpy = True
-except:
-    usenumpy = False
-
-usePIL = False
-try:
-    import Image
-
-    usePIL = True
-except:
-    usePIL = False
 
 from cellpack.mgl_tools.upy import colors
 
@@ -71,18 +58,15 @@ def dot(v1, v2):
     return (x1 * x2) + (y1 * y2) + (z1 * z2)
 
 
-from math import sqrt
-
-
 def vnorm(v1):
     x1, y1, z1 = v1
-    n1 = 1.0 / sqrt(x1 * x1 + y1 * y1 + z1 * z1)
+    n1 = 1.0 / math.sqrt(x1 * x1 + y1 * y1 + z1 * z1)
     return (x1 * n1, y1 * n1, z1 * n1)
 
 
 def vlen(v1):
     x1, y1, z1 = v1
-    return sqrt(x1 * x1 + y1 * y1 + z1 * z1)
+    return math.sqrt(x1 * x1 + y1 * y1 + z1 * z1)
 
 
 class Helper:
@@ -104,9 +88,6 @@ class Helper:
 
     """
 
-    _usenumpy = usenumpy
-    _MGLTools = False
-    _usePIL = usePIL
     BONES = None
     IK = None
 
@@ -122,13 +103,7 @@ class Helper:
     def __init__(
         self,
     ):
-        try:
-            import DejaVu
 
-            _MGLTools = True
-        except:
-            _MGLTools = False
-        #        self.createColorsMat()
         self.noise_type = {
             "boxNoise": None,
             "buya": None,
@@ -162,7 +137,6 @@ class Helper:
             "wavyTurbulence": None,
             "zada": None,
         }
-        self.usenumpy = self._usenumpy
         self.nogui = False
         self.instance_dupliFace = False
         self.quad = {
@@ -208,7 +182,7 @@ class Helper:
         @type b: float
         @param b:  second value of the vector
         @type c: float
-        @param c:  thid value of the vector
+        @param c:  third value of the vector
 
         @rtype: float
         @return: the norm of the vector
@@ -252,29 +226,23 @@ class Helper:
         @rtype: float ? vector
         @return: the distance, and optionly the distance vetor
         """
-        if usenumpy:
-            d = numpy.array(c1) - numpy.array(c0)
-            s = numpy.sum(d * d)
-        else:
-            s = 0.0
-            d = [0.0, 0.0, 0.0]
-            for i in range(3):
-                d[i] = c1[i] - c0[i]
-                s += d[i] ^ 2
+        d = numpy.array(c1) - numpy.array(c0)
+        s = numpy.sum(d * d)
+
         if vec:
             return d, math.sqrt(s)
         else:
             return math.sqrt(s)
 
     # direction, angle authorized
-    def advance_randpoint_onsphere(self, radius, marge=pi, vector=None):
+    def advance_randpoint_onsphere(self, radius, marge=math.pi, vector=None):
         # radius r, inclination θ, azimuth φ
         r = radius
         azimuth = random.uniform(-1, 1) * (marge * 2.0)
         inclination = random.uniform(-1, 1) * (marge)
-        x = r * sin(inclination) * cos(azimuth)
-        y = r * sin(inclination) * sin(azimuth)
-        z = r * cos(inclination)
+        x = r * math.sin(inclination) * math.cos(azimuth)
+        y = r * math.sin(inclination) * math.sin(azimuth)
+        z = r * math.cos(inclination)
         pos = [x, y, z]
         if vector is not None:
             absolute_vector = numpy.array([0, 0, radius])
@@ -335,17 +303,13 @@ class Helper:
 
         """
         if biased is not None:
-            theta = biased * (2 * pi)
+            theta = biased * (2 * math.pi)
             u = biased * 2 - 1  # represent sin(phi)
         else:
-            theta = random.uniform(0.0, 1.0) * (2 * pi)
+            theta = random.uniform(0.0, 1.0) * (2 * math.pi)
             u = random.uniform(0.0, 1.0) * 2 - 1
-        #        print ("u ",u," theta ",theta)
-        #        print ("radius ",radius)
-        #        print ("sqrt ",( 1 - u**2)," sqrt ",sqrt(  1 - u**2))
-        #        print ("cos ",cos(theta))
-        x = radius * sqrt(1 - u ** 2) * cos(theta)
-        y = radius * sqrt(1 - u ** 2) * sin(theta)
+        x = radius * math.sqrt(1 - u ** 2) * math.cos(theta)
+        y = radius * math.sqrt(1 - u ** 2) * math.sin(theta)
         z = radius * u
         return [x, y, z]
 
@@ -356,10 +320,7 @@ class Helper:
                 mat = matrice.transpose().tolist()
                 return mat
             else:
-                return matrice  #  = mat#numpy.array(matrice)
-        #            blender_mat=mathutils.Matrix(mat)#from Blender.Mathutils
-        #            blender_mat.transpose()
-        #            return blender_mat
+                return matrice 
         return matrice
 
     def rotatePoint(self, pt, m, ax):
@@ -399,8 +360,8 @@ class Helper:
         wx = w * x
         wy = w * y
         wz = w * z
-        sa = sin(ax[3])
-        ca = cos(ax[3])
+        sa = math.sin(ax[3])
+        ca = math.cos(ax[3])
         pt[0] = (
             u * (ux + vy + wz)
             + (x * (v * v + w * w) - u * (vy + wz)) * ca
@@ -510,25 +471,19 @@ class Helper:
         laenge = math.sqrt(
             (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) + (z1 - z2) * (z1 - z2)
         )
-        wsz = atan2((y1 - y2), (x1 - x2))
-        wz = acos((z1 - z2) / laenge)
+        wsz = math.atan2((y1 - y2), (x1 - x2))
+        wz = math.acos((z1 - z2) / laenge)
         return laenge, wsz, wz, [float(x1 + x2) / 2, (y1 + y2) / 2, (z1 + z2) / 2]
 
     def isSphere(self, obj):
         v = self.getMeshVertices(obj)
         dmd = 10
         r = 10.0
-        if usenumpy:
-            alld = numpy.linalg.norm(v, axis=1)
-            # dmd = numpy.average(alld - numpy.average(alld))
-            r = alld.max()
-            dmd = r - numpy.average(alld)
-        else:
-            alld = [self.norm(ve[0], ve[1], ve[2]) for ve in v]
-            dm = sum(alld) / float(len(alld))
-            alldm = [ad - dm for ad in alld]
-            r = max(alld)
-            dmd = r - sum(alldm) / float(len(alldm))
+        alld = numpy.linalg.norm(v, axis=1)
+        # dmd = numpy.average(alld - numpy.average(alld))
+        r = alld.max()
+        dmd = r - numpy.average(alld)
+
         if dmd < 0.1:
             obj["radius"] = r
             return True
@@ -743,21 +698,13 @@ class Helper:
         # get the object name
         name = ""
         # if the object is not already in the scene
-        if self.getObject(name) == None:
-            if parent != None:
+        if self.getObject(name) is None:
+            if parent is not None:
                 if type(parent) == str:
                     parent = self.getObject(parent)
                 # if parent exist, insert the object under it
                 pass
-                if centerRoot:
-                    # get the current position of the object
-                    currentPos = []
-                    if rePos != None:
-                        parentPos = rePos
-                    else:
-                        parentPos = self.getPosUntilRoot(obj)  # parent.GetPos()
-                    # set the new position of the object
-                    pass
+
             else:
                 # insert the object
                 pass
@@ -853,7 +800,7 @@ class Helper:
         soft=1.0,
         shadow=False,
         center=[0.0, 0.0, 0.0],
-        sc=None,
+        scene=None,
         **kw
     ):
         """
@@ -920,8 +867,8 @@ class Helper:
         @return:  the null object
         """
         empty = None  #
-        if location != None:
-            if parentCenter != None:
+        if location is not None:
+            if parentCenter is not None:
                 location = location - parentCenter
             # set the position of the object to location
         return empty
@@ -958,7 +905,7 @@ class Helper:
         # instance = None#
         # instance parent = object
         # instance name = name
-        if location != None:
+        if location is not None:
             # set the position of instance with location
             pass
         # set the instance matrice
@@ -1091,10 +1038,10 @@ class Helper:
 
         """
 
-        if hostmatrice != None:
+        if hostmatrice is not None:
             # set the instance matrice
             pass
-        if matrice != None:
+        if matrice is not None:
             # convert the matrice in host format
             # set the instance matrice
             pass
@@ -1113,11 +1060,11 @@ class Helper:
         @param matrice: transformation matrix in epmv/numpy format
         """
         # get current transformation
-        if hostmatrice != None:
+        if hostmatrice is not None:
             # compute the new matrix: matrice*current
             # set the new matrice
             pass
-        if matrice != None:
+        if matrice is not None:
             # convert the matrice in host format
             # compute the new matrix: matrice*current
             # set the new matrice
@@ -1390,7 +1337,7 @@ class Helper:
         if type(color) == str or type(color) == unicode:
             if color in colors.cnames:
                 if mat is None:
-                    return self.addMaterial(color, eval("colors." + col))
+                    return self.addMaterial(color, eval("colors." + color))
             else:
                 return mat
         for col in colors.cnames:
@@ -1804,7 +1751,6 @@ class Helper:
         if res is None:
             return None, None
         pos, rot, l, axis = res
-        #        if self.usenumpy :
         h = numpy.array(axis) * l / 2.0
         t = numpy.array(axis) * l / 2.0
         m = numpy.matrix(rot)
@@ -1910,7 +1856,7 @@ class Helper:
         box = None
         # set the name 'name'
         # if corner is provided compute the cube dimension in x,y,z, and the center
-        if cornerPoints != None:
+        if cornerPoints is not None:
             for i in range(3):
                 size[i] = cornerPoints[1][i] - cornerPoints[0][i]
             center = (numpy.array(cornerPoints[0]) + numpy.array(cornerPoints[1])) / 2.0
@@ -1951,7 +1897,7 @@ class Helper:
         box = None
         # set the name 'name'
         # if corner is provided compute the cube dimension in x,y,z, and the center
-        if cornerPoints != None:
+        if cornerPoints is not None:
             for i in range(3):
                 size[i] = cornerPoints[1][i] - cornerPoints[0][i]
             center = (numpy.array(cornerPoints[0]) + numpy.array(cornerPoints[1])) / 2.0
@@ -2024,7 +1970,7 @@ class Helper:
             # set every i point
             pass
         # add the object to the scene
-        if scene != None:
+        if scene is not None:
             self.addObjectToScene(scene, spline, parent=parent)
         return spline, None
 
@@ -2062,7 +2008,7 @@ class Helper:
         plane = None
         # set the name 'name'
         # if corner is provided compute the cube dimension in x,y,z, and the center
-        if cornerPoints != None:
+        if cornerPoints is not None:
             for i in range(3):
                 size[i] = cornerPoints[1][i] - cornerPoints[0][i]
             center = (numpy.array(cornerPoints[0]) + numpy.array(cornerPoints[1])) / 2.0
@@ -2155,13 +2101,6 @@ class Helper:
             (a, -a, -a),
             (-a, -a, -a),
         )
-        diameter = radius * 2
-        width = diameter
-        height = diameter
-        depth = diameter
-        boundingRadius = radius
-        surfaceArea = (sqrt(3) / 2) * (radius ** 2)
-        volume = (4 / 3) * (radius ** 3)
         _corners = (
             (-radius, 0.0, 0.0),
             (radius, 0.0, 0.0),
@@ -2213,13 +2152,7 @@ class Helper:
         )
         a = 1.0
         faceNormals = None
-        diameter = radius * 2
-        width = diameter
-        height = diameter
-        depth = radius * sin(radians(45.0))
-        boundingRadius = radius
-        surfaceArea = (sqrt(3) / 2) * (radius ** 2)
-        volume = (4 / 3) * (radius ** 3)
+        depth = radius * sin(math.radians(45.0))
         _corners = (
             (-radius, 0.0, -depth),
             (radius, 0.0, -depth),
@@ -2282,13 +2215,6 @@ class Helper:
             (-a, -a, -a),
             (-a, -a, a),
         )
-        diameter = radius * 2
-        width = diameter
-        height = diameter
-        depth = diameter
-        boundingRadius = radius
-        surfaceArea = (sqrt(3) / 2) * (radius ** 2)
-        volume = (4 / 3) * (radius ** 3)
         _corners = (
             (-radius, 0.0, 0.0),
             (radius, 0.0, 0.0),
@@ -3649,20 +3575,6 @@ class Helper:
         else:
             return [[f[0], f[1], f[3]], [f[3], f[1], f[3]]]
 
-    def triangulateFaceArray(self, faces, vertices):
-        trifaces = []
-        for f in faces:
-            if len(f) == 2:
-                trifaces.append([f[0], f[1], f[1]])
-            elif len(f) == 3:
-                trifaces.append(f)
-            elif len(f) == 4:  # triangulate
-                trifaces.extend(triangulateFace(f))
-        #               f1 = [f[0],f[1],f[3]]
-        #               f2 = [f[3],f[1],f[2]]
-        #               trifaces.extend([f1,f2])
-        return trifaces
-
     def triangulateFaceArray(self, faces):
         trifaces = []
         for f in faces:
@@ -3679,7 +3591,7 @@ class Helper:
     #    from pymunk.vec2d import Vec2d
     #    from pymunk.util import is_clockwise, calc_area, is_convex
 
-    ### "hidden" functions
+    # "hidden" functions
 
     def _is_corner(self, a, b, c):
         # returns if point b is an outer corner
@@ -4266,9 +4178,9 @@ class Helper:
                 print("truncating nc on step:", i, nc)
             nc = 1.0
 
-        alpha = asin(nc)
+        alpha = math.asin(nc)
         if (v1x * v2x + v1y * v2y + v1z * v2z) < 0.0:
-            alpha = pi - alpha
+            alpha = math.pi - alpha
 
         # rotate about nc by alpha
         # Compute 3x3 rotation matrix
@@ -4594,6 +4506,12 @@ class Helper:
     # ===============================================================================
     # depends on PIL
     # ===============================================================================
+    def getImage(self, img, draw, sizex, sizey):
+        if img is None and draw:
+            img = Image.new("RGB", (int(sizex), int(sizey)), (0, 0, 0))
+        elif not draw:
+            img = numpy.zeros((int(sizex), int(sizey), 3))
+        return img
 
     def makeTexture(
         self,
@@ -4614,14 +4532,8 @@ class Helper:
         """
 
         invert = False
-        if img is None and draw:
-            if not self._usePIL:
-                return None
-            img = Image.new("RGB", (int(sizex), int(sizey)), (0, 0, 0))
-        elif not draw and usenumpy:
-            img = numpy.zeros((int(sizex), int(sizey), 3))
-            # ramp = numpy.ones( (size, n), 'd')
-        if draw and self._usePIL:
+        img = self.getImage(img, draw, sizex, sizey)
+        if draw:
             import ImageDraw
 
             imdraw = ImageDraw.Draw(img)
@@ -4647,8 +4559,7 @@ class Helper:
                 self.drawGradientLine(imdraw, c1, c2, c3, xys)
                 # self.drawPtCol(imdraw,numpy.array([c1,c2,c3]),xys,debug=0)
             else:
-                if usenumpy:
-                    img = self.fillTriangleColor(img, c1, c2, c3, xys)
+                img = self.fillTriangleColor(img, c1, c2, c3, xys)
             if invert:
                 uv = [
                     [(x + 2) / sizex, 1 - ((y + 2) / sizey), 0],
@@ -4682,7 +4593,6 @@ class Helper:
             mode = "RGB"
             # else : mode = "RGBA"
             print(mode)
-            import Image
 
             pilImage = Image.fromstring(mode, img.shape[0:2], img.tostring())
             # img=numpy.array(img)
@@ -4708,13 +4618,9 @@ class Helper:
         Experiment for baking object colors using a PIL image
 
         """
-        if img is None and draw and self._usePIL:
-            import Image
+        img = self.getImage(img, draw, sizex, sizey)
 
-            img = Image.new("RGB", (int(sizex), int(sizey)), (0, 0, 0))
-        elif not draw and usenumpy:
-            img = numpy.zeros((int(sizex), int(sizey), 3))
-        if draw and self._usePIL:
+        if draw:
             import ImageDraw
 
             imdraw = ImageDraw.Draw(img)
@@ -4776,14 +4682,8 @@ class Helper:
         Experiment for baking object colors using UV coordinate and PIL image
 
         """
-        if not self._usePIL:
-            return None
-        if img is None and draw:
-            import Image
+        img = self.getImage(img, draw, sizex, sizey)
 
-            img = Image.new("RGB", (int(sizex), int(sizey)), (0, 0, 0))
-        elif not draw and usenumpy:
-            img = numpy.zeros((int(sizex), int(sizey), 3))
         if draw:
             import ImageDraw
 
@@ -4836,8 +4736,6 @@ class Helper:
         Draw and color a gradient using either PIL rectangle or point drawing methods
 
         """
-        if not self._usePIL:
-            return None
         if col1 is col2 and col2 is col3:
             imdraw.rectangle([xys[0], xys[1]], fill=(col1[0], col1[1], col1[2]))
         else:
@@ -4859,8 +4757,7 @@ class Helper:
 
         """
         # uv is the 3 vertex coordinate in UV
-        if not self._usenumpy:
-            return
+
         if debug:
             print(uv)
         #        uv=extendUV(uv)
@@ -5005,8 +4902,6 @@ class Helper:
             x = x + 1.0
 
     def getOrder(self, distu, uv):
-        if not self._usenumpy:
-            return
         order = [0, 1, 2]
         u, v = uv.transpose()
         imaxu = numpy.nonzero(u == u.max())[0]  # [0]
@@ -5072,15 +4967,13 @@ class Helper:
         vnormal = []
         for i in range(len(data)):
             v, vn, f = data[i]["mesh"]
-            if usenumpy:
-                f = numpy.array(f, int)
-                faces.extend((f + len(vertices)).tolist())
-            else:
-                f = [fa + len(vertices) for fa in f]
+            f = numpy.array(f, int)
+            faces.extend((f + len(vertices)).tolist())
+
             if transform and len(data[i]["instances"]):
                 v = self.ApplyMatrix(v, data[i]["instances"][0])
             vertices.extend(v)
-            if type(vn) != type(None):
+            if vn is not None:
                 vnormal.extend(vn)
         return vertices, vnormal, faces
 
@@ -5243,9 +5136,7 @@ class Helper:
             (file.write("%f %f %f %f %f %f\n" % tuple(tuple(v) + tuple(n))))
             for v, n in zip(verts, vnorms)
         ]
-        ##        map( lambda v, n, f=file: \
-        ##                 f.write("%f %f %f %f %f %f\n"%tuple(tuple(v)+tuple(n))),
-        ##             verts, vnorms)
+
         file.close()
 
         file = open(filename + ".indpolface", "w")

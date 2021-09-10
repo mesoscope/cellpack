@@ -1,5 +1,3 @@
-## Automatically adapted for numpy.oldnumeric Jul 23, 2007 by
-
 #############################################################################
 #
 # Author: Michel F. SANNER
@@ -20,6 +18,7 @@ from math import sqrt, fabs, pi, cos, sin, acos, atan2
 from .Geom import Geom
 from . import viewerConst
 from .viewerFns import getkw
+
 
 def valideFloat(values, length):
     """This function takes a single float, or int or a list of them and a
@@ -299,8 +298,6 @@ class Arcs3D(Geom):
     def arcdraw(self, x, n, radius, colxf=None):
 
         # determine scale and rotation of template
-        import math
-
         sz = 0.0
         y = [0, 0, 0]
         for i in (0, 1, 2):
@@ -332,7 +329,6 @@ class Arcs3D(Geom):
 
 
 if __name__ == "__main__":
-    from DejaVu.Arcs3D import Arcs3D, Fan3D
 
     c = Arcs3D(
         "arc3d",

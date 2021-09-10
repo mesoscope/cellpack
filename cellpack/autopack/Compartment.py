@@ -61,12 +61,15 @@ import pickle
 import numpy
 from time import time
 import math
+import trimesh
+import trimesh.voxel as Voxel
+from scipy import spatial
 
 from cellpack.mgl_tools.RAPID import RAPIDlib
 import cellpack.autopack as autopack
+from cellpack.mgl_tools.bhtree import bhtreelib
 from cellpack.autopack import transformation as tr, binvox_rw
 from cellpack.autopack.BaseGrid import gridPoint
-
 from .Recipe import Recipe
 from .ray import (
     makeMarchingCube,
@@ -780,26 +783,6 @@ class Compartment(CompartmentList):
             sizexyz[i] = self.bb[1][i] - self.bb[0][i]
         return sizexyz
 
-    #    def checkPointInsideBBold(self,pt3d,dist=None):
-    #        """check if the given 3d coordinate is inside the compartment bounding box"""
-    #        O = numpy.array(self.bb[0])
-    #        E = numpy.array(self.bb[1])
-    #        P = numpy.array(pt3d)
-    #        test1 = P < O
-    #        test2 =  P > E
-    #        if True in test1 or True in test2:
-    #            #outside
-    #            return False
-    #        else :
-    #            if dist is not None:
-    #                d1 = P - O
-    #                s1 = numpy.sum(d1*d1)
-    #                d2 = E - P
-    #                s2 = numpy.sum(d2*d2)
-    #                if s1 <= dist or s2 <=dist:
-    #                    return False
-    #            return True
-
     def checkPointInsideBB(self, pt3d, dist=None):
         """check if the given 3d coordinate is inside the compartment bounding box"""
         origin = numpy.array(self.bb[0])
@@ -1448,12 +1431,7 @@ class Compartment(CompartmentList):
                 insidePoints.append(ptInd)
                 idarray.itemset(ptInd, -number)
                 # idarray[ptInd] = -number
-            p = (ptInd / float(len(grdPos))) * 100.0
             if (ptInd % 100) == 0:
-                helper.progressBar(
-                    progress=int(p),
-                    label=str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(r),
-                )
                 if autopack.verbose:
                     print(str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(r))
         if autopack.verbose:
@@ -1776,12 +1754,9 @@ class Compartment(CompartmentList):
         # now check if point inside
 
         # build trimer mesh
-        import trimesh
-
         mesh = trimesh.Trimesh(vertices=vertices, faces=faces)
         # get the volume ? mesh.volume
         # voxelized
-        from trimesh.voxel import Voxel
 
         trimesh_grid = Voxel(mesh, env.grid.gridSpacing / 1.1547, size_max=numpy.inf)
 
@@ -1806,12 +1781,7 @@ class Compartment(CompartmentList):
                     insidePoints.append(ptInd)
                     idarray.itemset(ptInd, -number)
                 # idarray[ptInd] = -number
-            p = (ptInd / float(len(grdPos))) * 100.0
             if (ptInd % 1000) == 0:
-                helper.progressBar(
-                    progress=int(p),
-                    label=str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(r),
-                )
                 if autopack.verbose:
                     print(str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(r))
         if autopack.verbose:
@@ -1990,7 +1960,7 @@ class Compartment(CompartmentList):
                             insidePoints.append(ptInd)
                             idarray.itemset(ptInd, -number)
                     p = (ptInd / float(len(grdPos))) * 100.0
-                    if (ptInd % 1000) == 0:
+                    if (ptInd % 1000) == 0 and autopack.verbose:
                         helper.progressBar(
                             progress=int(p),
                             label=str(ptInd)
@@ -2045,7 +2015,7 @@ class Compartment(CompartmentList):
         )
         return self.insidePoints, self.surfacePoints
 
-    def BuildGrid_pyray(self, histoVol, ray=1):
+    def BuildGrid_pyray(self, env, ray=1):
         """Build the compartment grid ie surface and inside point using bhtree"""
         # create surface points
         if self.ghost:
@@ -2057,7 +2027,7 @@ class Compartment(CompartmentList):
             self.ogsurfacePoints = self.vertices[:]
             self.ogsurfacePointsNormals = self.vnormals[:]
         else:
-            self.createSurfacePoints(maxl=histoVol.grid.gridSpacing)
+            self.createSurfacePoints(maxl=env.grid.gridSpacing)
 
         # Graham Sum the SurfaceArea for each polyhedron
         vertices = (
@@ -2066,28 +2036,22 @@ class Compartment(CompartmentList):
         faces = (
             self.faces
         )  # Should be able to use self.ogsurfacePoints and collect faces too from above
-        normalList2, areas = self.getFaceNormals(
-            vertices, faces, fillBB=histoVol.fillBB
-        )
+        normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
         vSurfaceArea = sum(areas)
         # for gnum in range(len(normalList2)):
         #    vSurfaceArea = vSurfaceArea + areas[gnum]
 
         # build a BHTree for the vertices
         if self.isBox:
-            nbGridPoints = len(histoVol.grid.masterGridPositions)
-            insidePoints = histoVol.grid.getPointsInCube(
-                self.bb, None, None, addSP=False
-            )
+            nbGridPoints = len(env.grid.masterGridPositions)
+            insidePoints = env.grid.getPointsInCube(self.bb, None, None, addSP=False)
             for p in insidePoints:
-                histoVol.grid.gridPtId[p] = -self.number
+                env.grid.gridPtId[p] = -self.number
             print("is BOX Total time", time() - t0)
-            surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(
-                self.ogsurfacePoints, histoVol
-            )
+            surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(self.ogsurfacePoints, env)
             srfPts = surfPtsBB
             surfacePoints, surfacePointsNormals = self.extendGridArrays(
-                nbGridPoints, srfPts, surfPtsBBNorms, histoVol
+                nbGridPoints, srfPts, surfPtsBBNorms, env
             )
             self.insidePoints = insidePoints
             self.surfacePoints = surfacePoints
@@ -2099,12 +2063,12 @@ class Compartment(CompartmentList):
                     len(self.surfacePoints),
                     len(self.insidePoints),
                     nbGridPoints,
-                    len(histoVol.grid.masterGridPositions),
+                    len(env.grid.masterGridPositions),
                 )
             )
 
             self.computeVolumeAndSetNbMol(
-                histoVol, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
+                env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
             )
             print(
                 "time to create surface points", time() - t1, len(self.ogsurfacePoints)
@@ -2113,15 +2077,11 @@ class Compartment(CompartmentList):
 
         print("time to create surface points", time() - t1, len(self.ogsurfacePoints))
 
-        distances = histoVol.grid.distToClosestSurf
-        idarray = histoVol.grid.gridPtId
-        diag = histoVol.grid.diag
+        distances = env.grid.distToClosestSurf
+        idarray = env.grid.gridPtId
+        diag = env.grid.diag
 
         t1 = time()
-
-        # build BHTree for off grid surface points
-        from bhtree import bhtreelib
-        from scipy import spatial
 
         srfPts = self.ogsurfacePoints
         # ??why the bhtree behave like this
@@ -2134,7 +2094,7 @@ class Compartment(CompartmentList):
 
         # find closest off grid surface point for each grid point
         # FIXME sould be diag of compartment BB inside fillBB
-        grdPos = histoVol.grid.masterGridPositions
+        grdPos = env.grid.masterGridPositions
         print(
             "compartment build grid ", grdPos, "XX", diag, "XX", len(grdPos)
         )  # [],None
@@ -2211,9 +2171,9 @@ class Compartment(CompartmentList):
         print("time to update distance field and idarray", time() - t1)
 
         t1 = time()
-        nbGridPoints = len(histoVol.grid.masterGridPositions)
+        nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, histoVol)
+        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, env)
         srfPts = surfPtsBB
         print(
             "compare length id distances",
@@ -2225,7 +2185,7 @@ class Compartment(CompartmentList):
         # back to list type
         # histoVol.grid.distToClosestSurf = histoVol.grid.distToClosestSurf.tolist()
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
-            nbGridPoints, srfPts, surfPtsBBNorms, histoVol, extended=ex
+            nbGridPoints, srfPts, surfPtsBBNorms, env, extended=ex
         )
 
         insidePoints = insidePoints
@@ -2243,17 +2203,17 @@ class Compartment(CompartmentList):
                 len(self.surfacePoints),
                 len(self.insidePoints),
                 nbGridPoints,
-                len(histoVol.grid.masterGridPositions),
+                len(env.grid.masterGridPositions),
             )
         )
 
         self.computeVolumeAndSetNbMol(
-            histoVol, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
+            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
         bhtreelib.freeBHtree(bht)
         return self.insidePoints, self.surfacePoints
 
-    def BuildGrid_bhtree(self, histoVol):
+    def BuildGrid_bhtree(self, env):
         """Build the compartment grid ie surface and inside point using bhtree"""
         # create surface points
         if self.ghost:
@@ -2265,7 +2225,7 @@ class Compartment(CompartmentList):
             self.ogsurfacePoints = self.vertices[:]
             self.ogsurfacePointsNormals = self.vnormals[:]
         else:
-            self.createSurfacePoints(maxl=histoVol.grid.gridSpacing)
+            self.createSurfacePoints(maxl=env.grid.gridSpacing)
 
         # Graham Sum the SurfaceArea for each polyhedron
         vertices = (
@@ -2274,28 +2234,22 @@ class Compartment(CompartmentList):
         faces = (
             self.faces
         )  # Should be able to use self.ogsurfacePoints and collect faces too from above
-        normalList2, areas = self.getFaceNormals(
-            vertices, faces, fillBB=histoVol.fillBB
-        )
+        normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
         vSurfaceArea = sum(areas)
         # for gnum in range(len(normalList2)):
         #    vSurfaceArea = vSurfaceArea + areas[gnum]
 
         # build a BHTree for the vertices
         if self.isBox:
-            nbGridPoints = len(histoVol.grid.masterGridPositions)
-            insidePoints = histoVol.grid.getPointsInCube(
-                self.bb, None, None, addSP=False
-            )
+            nbGridPoints = len(env.grid.masterGridPositions)
+            insidePoints = env.grid.getPointsInCube(self.bb, None, None, addSP=False)
             for p in insidePoints:
-                histoVol.grid.gridPtId[p] = -self.number
+                env.grid.gridPtId[p] = -self.number
             print("is BOX Total time", time() - t0)
-            surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(
-                self.ogsurfacePoints, histoVol
-            )
+            surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(self.ogsurfacePoints, env)
             srfPts = surfPtsBB
             surfacePoints, surfacePointsNormals = self.extendGridArrays(
-                nbGridPoints, srfPts, surfPtsBBNorms, histoVol
+                nbGridPoints, srfPts, surfPtsBBNorms, env
             )
             self.insidePoints = insidePoints
             self.surfacePoints = surfacePoints
@@ -2307,12 +2261,12 @@ class Compartment(CompartmentList):
                     len(self.surfacePoints),
                     len(self.insidePoints),
                     nbGridPoints,
-                    len(histoVol.grid.masterGridPositions),
+                    len(env.grid.masterGridPositions),
                 )
             )
 
             self.computeVolumeAndSetNbMol(
-                histoVol, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
+                env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
             )
             print(
                 "time to create surface points", time() - t1, len(self.ogsurfacePoints)
@@ -2321,14 +2275,11 @@ class Compartment(CompartmentList):
 
         print("time to create surface points", time() - t1, len(self.ogsurfacePoints))
 
-        distances = histoVol.grid.distToClosestSurf
-        idarray = histoVol.grid.gridPtId
-        diag = histoVol.grid.diag
+        distances = env.grid.distToClosestSurf
+        idarray = env.grid.gridPtId
+        diag = env.grid.diag
 
         t1 = time()
-
-        # build BHTree for off grid surface points
-        from bhtree import bhtreelib
 
         srfPts = self.ogsurfacePoints
         # ??why the bhtree behave like this
@@ -2343,7 +2294,7 @@ class Compartment(CompartmentList):
 
         # find closest off grid surface point for each grid point
         # FIXME sould be diag of compartment BB inside fillBB
-        grdPos = histoVol.grid.masterGridPositions
+        grdPos = env.grid.masterGridPositions
         returnNullIfFail = 0
         print(
             "compartment build grid ", grdPos, "XX", diag, "XX", len(grdPos)
@@ -2426,9 +2377,9 @@ class Compartment(CompartmentList):
         print("time to update distance field and idarray", time() - t1)
 
         t1 = time()
-        nbGridPoints = len(histoVol.grid.masterGridPositions)
+        nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, histoVol)
+        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, env)
         srfPts = surfPtsBB
         print(
             "compare length id distances",
@@ -2438,7 +2389,7 @@ class Compartment(CompartmentList):
         )
         ex = True  # True if nbGridPoints == len(idarray) else False
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
-            nbGridPoints, srfPts, surfPtsBBNorms, histoVol, extended=ex
+            nbGridPoints, srfPts, surfPtsBBNorms, env, extended=ex
         )
 
         insidePoints = insidePoints
@@ -2456,12 +2407,12 @@ class Compartment(CompartmentList):
                 len(self.surfacePoints),
                 len(self.insidePoints),
                 nbGridPoints,
-                len(histoVol.grid.masterGridPositions),
+                len(env.grid.masterGridPositions),
             )
         )
 
         self.computeVolumeAndSetNbMol(
-            histoVol, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
+            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
         #        bhtreelib.freeBHtree(bht)
         return self.insidePoints, self.surfacePoints
@@ -2781,16 +2732,7 @@ class Compartment(CompartmentList):
                     gridPoints[i].isOutside = isOutsideTracker
                 # Because we have filled in all the unknowns, we can reset that counter.
                 emptyPointIndicies = []
-            p = (g.index / float(len(gridPoints))) * 100.0
             if (g.index % 100) == 0:
-                helper.progressBar(
-                    progress=int(p),
-                    label=str(g.index)
-                    + "/"
-                    + str(len(gridPoints))
-                    + " inside "
-                    + str(g.isOutside),
-                )
                 if autopack.verbose:
                     print(
                         str(g.index)
@@ -2861,31 +2803,31 @@ class Compartment(CompartmentList):
         return self.insidePoints, self.surfacePoints
 
     def extendGridArrays(
-        self, nbGridPoints, srfPts, surfPtsBBNorms, histoVol, extended=True
+        self, nbGridPoints, srfPts, surfPtsBBNorms, env, extended=True
     ):
         """Extend the environment grd using the compartment point"""
         if extended:
             length = len(srfPts)
             pointArrayRaw = numpy.zeros((nbGridPoints + length, 3), "f")
-            pointArrayRaw[:nbGridPoints] = histoVol.grid.masterGridPositions
+            pointArrayRaw[:nbGridPoints] = env.grid.masterGridPositions
             pointArrayRaw[nbGridPoints:] = srfPts
             self.surfacePointscoords = srfPts
-            histoVol.grid.nbSurfacePoints += length
-            histoVol.grid.masterGridPositions = pointArrayRaw
-            if type(histoVol.grid.distToClosestSurf) == numpy.ndarray:
+            env.grid.nbSurfacePoints += length
+            env.grid.masterGridPositions = pointArrayRaw
+            if type(env.grid.distToClosestSurf) == numpy.ndarray:
                 # histoVol.grid.distToClosestSurf = numpy.append(histoVol.grid.distToClosestSurf,numpy.array([histoVol.grid.diag,]*length ))
-                distCS = numpy.ones(length) * histoVol.grid.diag
-                histoVol.grid.distToClosestSurf = numpy.hstack(
-                    (histoVol.grid.distToClosestSurf, distCS)
+                distCS = numpy.ones(length) * env.grid.diag
+                env.grid.distToClosestSurf = numpy.hstack(
+                    (env.grid.distToClosestSurf, distCS)
                 )
             else:
-                histoVol.grid.distToClosestSurf.extend(
-                    (numpy.ones(length) * histoVol.grid.diag).tolist()
+                env.grid.distToClosestSurf.extend(
+                    (numpy.ones(length) * env.grid.diag).tolist()
                 )
             ptId = numpy.ones(length, "i") * self.number  # surface point
-            histoVol.grid.gridPtId = numpy.hstack((histoVol.grid.gridPtId, ptId))
+            env.grid.gridPtId = numpy.hstack((env.grid.gridPtId, ptId))
             # histoVol.grid.gridPtId=numpy.append(numpy.array(histoVol.grid.gridPtId), [self.number]*length ,axis=0)#surface point ID
-            histoVol.grid.freePoints = numpy.arange(nbGridPoints + length)
+            env.grid.freePoints = numpy.arange(nbGridPoints + length)
             surfacePoints = list(range(nbGridPoints, nbGridPoints + length))
             # histoVol.grid.freePoints.extend(surfacePoints)
 
@@ -2894,20 +2836,20 @@ class Compartment(CompartmentList):
                 surfacePointsNormals[nbGridPoints + i] = n
         else:
             length = len(srfPts)
-            pointArrayRaw = histoVol.grid.masterGridPositions
+            pointArrayRaw = env.grid.masterGridPositions
             self.surfacePointscoords = srfPts
-            histoVol.grid.nbSurfacePoints += length
+            env.grid.nbSurfacePoints += length
             surfacePoints = list(range(nbGridPoints - length, nbGridPoints))
             surfacePointsNormals = {}
             for i, n in enumerate(surfPtsBBNorms):
                 surfacePointsNormals[nbGridPoints - length + i] = n
         return surfacePoints, surfacePointsNormals
 
-    def getSurfaceBB(self, srfPts, histoVol):
+    def getSurfaceBB(self, srfPts, env):
         """get the bounding box from the environment grid that encapsulated the mesh"""
         surfPtsBB = []
         surfPtsBBNorms = []
-        mini, maxi = histoVol.fillBB
+        mini, maxi = env.fillBB
         mx, my, mz = mini
         Mx, My, Mz = maxi
         ogNorms = self.ogsurfacePointsNormals
@@ -2927,149 +2869,11 @@ class Compartment(CompartmentList):
         srfPts = surfPtsBB
         return surfPtsBB, surfPtsBBNorms
 
-    #    def BuildGrid_break(self, histoVol):
-    #        # create surface points
-    #        t0 = t1 = time()
-    #        self.createSurfacePoints(maxl=histoVol.grid.gridSpacing)
-    #        # Graham Sum the SurfaceArea for each polyhedron
-    #        vertices = self.vertices  #NEED to make these limited to selection box, not whole compartment
-    #        faces = self.faces #         Should be able to use self.ogsurfacePoints and collect faces too from above
-    #        normalList2,areas = self.getFaceNormals(vertices, faces,fillBB=histoVol.fillBB)
-    #        vSurfaceArea = sum(areas)
-    #        #for gnum in range(len(normalList2)):
-    #        #    vSurfaceArea = vSurfaceArea + areas[gnum]
-    #
-    #        # build a BHTree for the vertices
-    #
-    #
-    #        distances = histoVol.grid.distToClosestSurf
-    #        idarray = histoVol.grid.gridPtId
-    #        diag = histoVol.grid.diag
-    #
-    #        t1 = time()
-    #
-    #        #build BHTree for off grid surface points
-    #        from bhtree import bhtreelib
-    #        srfPts = self.ogsurfacePoints
-    #        bht = self.OGsrfPtsBht = bhtreelib.BHtree( srfPts, None, 10)
-    #
-    #        number = self.number
-    #        ogNormals = self.ogsurfacePointsNormals
-    #        insidePoints = []
-    #        #self.vnormals = ogNormals = normalList2
-    #        # find closest off grid surface point for each grid point
-    #        #FIXME sould be diag of compartment BB inside fillBB
-    #        grdPos = histoVol.grid.masterGridPositions
-    #        returnNullIfFail = 0
-    #        closest = bht.closestPointsArray(grdPos, diag, returnNullIfFail)
-    #        def distanceLoop(ptInd,distances,grdPos,closest,srfPts,ogNormals,idarray,insidePoints,number):
-    #            # find closest OGsurfacepoint
-    #            gx, gy, gz = grdPos[ptInd]
-    #            sptInd = closest[ptInd]
-    #            if closest[ptInd]==-1:
-    #                pdb.set_trace()
-    #            sx, sy, sz = srfPts[sptInd]
-    #
-    #            # update distance field
-    #            d = sqrt( (gx-sx)*(gx-sx) + (gy-sy)*(gy-sy) +
-    #                      (gz-sz)*(gz-sz))
-    #            if distances[ptInd]>d: distances[ptInd] = d
-    #
-    #            # check if ptInd in inside
-    #            nx, ny, nz = ogNormals[sptInd]
-    #            # check on what side of the surface point the grid point is
-    #            vx,vy,vz = (gx-sx, gy-sy, gz-sz)
-    #            dot = vx*nx + vy*ny + vz*nz
-    #            if dot < 0: # inside
-    #                idarray[ptInd] = -number
-    #                insidePoints.append(ptInd)
-    #
-    #
-    #        #[distanceLoop(x,distances,grdPos,closest,srfPts,ogNormals,idarray,insidePoints,number) for x in xrange(len(grdPos))]
-    #        for ptInd in range(len(grdPos)):
-    #
-    #            # find closest OGsurfacepoint
-    #            gx, gy, gz = grdPos[ptInd]
-    #            sptInd = closest[ptInd]
-    #            if closest[ptInd]==-1:
-    #                pdb.set_trace()
-    #            sx, sy, sz = srfPts[sptInd]
-    #
-    #            # update distance field
-    #            #measure distance between the grid Point and the surface point
-    #            d = sqrt( (gx-sx)*(gx-sx) + (gy-sy)*(gy-sy) +
-    #                      (gz-sz)*(gz-sz))
-    #            if distances[ptInd] > d :
-    #                distances[ptInd] = d
-    #
-    #            # check if ptInd in inside, and look at the normal at this points
-    #            nx, ny, nz = ogNormals[sptInd]
-    #            # check on what side of the surface point the grid point is
-    #            vx,vy,vz = (gx-sx, gy-sy, gz-sz)
-    #            dot = vx*nx + vy*ny + vz*nz
-    #            if dot < 0: # inside
-    #                idarray[ptInd] = -number
-    #                insidePoints.append(ptInd)
-    #
-    #        print('time to update distance field and idarray', time()-t1)
-    #
-    #        t1 = time()
-    #        nbGridPoints = len(histoVol.grid.masterGridPositions)
-    #
-    #        surfPtsBB = []
-    #        surfPtsBBNorms  = []
-    #        mini, maxi = histoVol.fillBB
-    #        mx, my, mz = mini
-    #        Mx, My, Mz = maxi
-    #        ogNorms = self.ogsurfacePointsNormals
-    #        for i,p in enumerate(srfPts):
-    #            x,y,z = p
-    #            if (x>=mx and x<=Mx and y>=my and y<=My and z>=mz and z<=Mz):
-    #                surfPtsBB.append(p)
-    #                surfPtsBBNorms.append(ogNorms[i])
-    #
-    #        print('surf points going from to', len(srfPts), len(surfPtsBB))
-    #        srfPts = surfPtsBB
-    #        length = len(srfPts)
-    #
-    #        pointArrayRaw = numpy.zeros( (nbGridPoints + length, 3), 'f')
-    #        pointArrayRaw[:nbGridPoints] = histoVol.grid.masterGridPositions
-    #        pointArrayRaw[nbGridPoints:] = srfPts
-    #        self.surfacePointsCoords = srfPts #surfacePointscoords ?
-    #        histoVol.grid.nbSurfacePoints += length
-    #        histoVol.grid.masterGridPositions = pointArrayRaw
-    #        histoVol.grid.distToClosestSurf.extend( [histoVol.grid.diag]*length )
-    #
-    #        histoVol.grid.gridPtId.extend( [number]*length )
-    #        surfacePoints = list(range(nbGridPoints, nbGridPoints+length))
-    #        histoVol.grid.freePoints.extend(surfacePoints)
-    #
-    #        surfacePointsNormals = {}
-    #        for i, n in enumerate(surfPtsBBNorms):
-    #            surfacePointsNormals[nbGridPoints + i] = n
-    #
-    #        insidePoints = insidePoints
-    #        print('time to extend arrays', time()-t1)
-    #
-    #        print('Total time', time()-t0)
-    #
-    #        self.insidePoints = insidePoints
-    #        self.surfacePoints = surfacePoints
-    #        self.surfacePointsCoords = surfPtsBB
-    #        self.surfacePointsNormals = surfacePointsNormals
-    #        print('%s surface pts, %d inside pts, %d tot grid pts, %d master grid'%(
-    #            len(self.surfacePoints), len(self.insidePoints),
-    #            nbGridPoints, len(histoVol.grid.masterGridPositions)))
-    #
-    #        self.computeVolumeAndSetNbMol(histoVol, self.surfacePoints,
-    #                                      self.insidePoints,areas=vSurfaceArea)
-    #        return self.insidePoints, self.surfacePoints
-
-    def BuildGridEnviroOnly(self, histoVol, location=None):
+    def BuildGridEnviroOnly(self, env, location=None):
         """Build the compartment grid ie surface and inside only environment"""
         # create surface points
         t0 = t1 = time()
-        self.createSurfacePoints(maxl=histoVol.grid.gridSpacing)
+        self.createSurfacePoints(maxl=env.grid.gridSpacing)
 
         # Graham Sum the SurfaceArea for each polyhedron
         vertices = (
@@ -3078,22 +2882,15 @@ class Compartment(CompartmentList):
         faces = (
             self.faces
         )  # Should be able to use self.ogsurfacePoints and collect faces too from above
-        normalList2, areas = self.getFaceNormals(
-            vertices, faces, fillBB=histoVol.fillBB
-        )
+        normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
         vSurfaceArea = sum(areas)
-        # for gnum in range(len(normalList2)):
-        #    vSurfaceArea = vSurfaceArea + areas[gnum]
-        # print 'Graham says Surface Area is %d' %(vSurfaceArea)
-        # print 'Graham says the last triangle area is is %d' %(areas[-1])
-        # print '%d surface points %.2f unitVol'%(len(surfacePoints), unitVol)
 
         # build a BHTree for the vertices
 
         print("time to create surface points", time() - t1, len(self.ogsurfacePoints))
 
-        distances = histoVol.grid.distToClosestSurf
-        idarray = histoVol.grid.gridPtId
+        distances = env.grid.distToClosestSurf
+        idarray = env.grid.gridPtId
         #        diag = histoVol.grid.diag
 
         t1 = time()
@@ -3109,7 +2906,7 @@ class Compartment(CompartmentList):
 
         # find closest off grid surface point for each grid point
         # FIXME sould be diag of compartment BB inside fillBB
-        grdPos = histoVol.grid.masterGridPositions
+        grdPos = env.grid.masterGridPositions
         #        returnNullIfFail = 0
         closest = []  # bht.closestPointsArray(grdPos, diag, returnNullIfFail)
 
@@ -3168,37 +2965,14 @@ class Compartment(CompartmentList):
                 distances[ptInd] = 99999.0
                 idarray[ptInd] = location
 
-            #        for ptInd in xrange(len(grdPos)):
-
-            # find closest OGsurfacepoint
-            #            gx, gy, gz = grdPos[ptInd]
-            #            sptInd = closest[ptInd]
-            #            if closest[ptInd]==-1:
-            #                pdb.set_trace()
-            #            sx, sy, sz = srfPts[sptInd]
-
-            # update distance field
-            #            d = sqrt( (gx-sx)*(gx-sx) + (gy-sy)*(gy-sy) +
-            #                      (gz-sz)*(gz-sz))
-            #            if distances[ptInd]>d: distances[ptInd] = d
-
-            # check if ptInd in inside
-            #            nx, ny, nz = ogNormals[sptInd]
-            # check on what side of the surface point the grid point is
-            #            vx,vy,vz = (gx-sx, gy-sy, gz-sz)
-            #            dot = vx*nx + vy*ny + vz*nz
-            #            if dot < 0: # inside
-            #                idarray[ptInd] = -number
-            #                insidePoints.append(ptInd)
-
         print("time to update distance field and idarray", time() - t1)
 
         t1 = time()
-        nbGridPoints = len(histoVol.grid.masterGridPositions)
+        nbGridPoints = len(env.grid.masterGridPositions)
 
         surfPtsBB = []
         surfPtsBBNorms = []
-        mini, maxi = histoVol.fillBB
+        mini, maxi = env.fillBB
         mx, my, mz = mini
         Mx, My, Mz = maxi
         ogNorms = self.ogsurfacePointsNormals
@@ -3213,16 +2987,16 @@ class Compartment(CompartmentList):
         length = len(srfPts)
 
         pointArrayRaw = numpy.zeros((nbGridPoints + length, 3), "f")
-        pointArrayRaw[:nbGridPoints] = histoVol.grid.masterGridPositions
+        pointArrayRaw[:nbGridPoints] = env.grid.masterGridPositions
         pointArrayRaw[nbGridPoints:] = srfPts
         self.surfacePointsCoords = srfPts  # surfacePointscoords ?
-        histoVol.grid.nbSurfacePoints += length
-        histoVol.grid.masterGridPositions = pointArrayRaw
-        histoVol.grid.distToClosestSurf.extend([histoVol.grid.diag] * length)
+        env.grid.nbSurfacePoints += length
+        env.grid.masterGridPositions = pointArrayRaw
+        env.grid.distToClosestSurf.extend([env.grid.diag] * length)
 
-        histoVol.grid.gridPtId.extend([number] * length)
+        env.grid.gridPtId.extend([number] * length)
         surfacePoints = list(range(nbGridPoints, nbGridPoints + length))
-        histoVol.grid.freePoints.extend(surfacePoints)
+        env.grid.freePoints.extend(surfacePoints)
 
         surfacePointsNormals = {}
         for i, n in enumerate(surfPtsBBNorms):
@@ -3243,16 +3017,16 @@ class Compartment(CompartmentList):
                 len(self.surfacePoints),
                 len(self.insidePoints),
                 nbGridPoints,
-                len(histoVol.grid.masterGridPositions),
+                len(env.grid.masterGridPositions),
             )
         )
 
         self.computeVolumeAndSetNbMol(
-            histoVol, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
+            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
         return self.insidePoints, self.surfacePoints
 
-    def BuildGrid_utsdf(self, histoVol):
+    def BuildGrid_utsdf(self, env):
         """
         Build the compartment grid ie surface and inside point using signed distance fields
         from the UT package
@@ -3262,9 +3036,7 @@ class Compartment(CompartmentList):
         self.ogsurfacePointsNormals = self.vnormals[:]
         vertices = self.vertices
         faces = self.faces
-        normalList2, areas = self.getFaceNormals(
-            vertices, faces, fillBB=histoVol.fillBB
-        )
+        normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
         vSurfaceArea = sum(areas)
         #        labels = numpy.ones(len(faces), 'i')
 
@@ -3308,18 +3080,10 @@ class Compartment(CompartmentList):
             1.0 / (sizex[2] / dim),
         )
         origin = self.bb[0]
-        distFromSurf = trilinterp(
-            histoVol.grid.masterGridPositions, volarr, invstep, origin
-        )
-
-        # save SDF
-        #        self.sdfData = volarr
-        #        self.sdfOrigin = origin
-        #        self.sdfGridSpacing = (gSizeX, gSizeY, gSizeZ)
-        #        self.sdfDims = (dimx, dimy, dimz)
+        distFromSurf = trilinterp(env.grid.masterGridPositions, volarr, invstep, origin)
 
         # update histoVol.distToClosestSurf
-        distance = histoVol.grid.distToClosestSurf
+        distance = env.grid.distToClosestSurf
         for i, d in enumerate(distFromSurf):
             if distance[i] > d:
                 distance[i] = d
@@ -3328,33 +3092,28 @@ class Compartment(CompartmentList):
         # identify inside and surface points and update the distance field
         insidePoints = []
         surfacePoints = []
-        # surfaceCutOff = histoVol.gridSpacing*.5
-        # print 'BBBBBBBBBBBBBB', surfaceCutOff, min(distFromSurf), max(distFromSurf)
-        # print 'We should get', len(filter(lambda x:fabs(x)<surfaceCutOff, distance))
 
-        # import pdb
-        # pdb.set_trace()
         indice = numpy.nonzero(numpy.less(distance, 0.0))
-        pointinside = numpy.take(histoVol.grid.masterGridPositions, indice, 0)[0]
+        pointinside = numpy.take(env.grid.masterGridPositions, indice, 0)[0]
         #        print (len(indice[0]),indice,len(pointinside))
         if len(indice) == 1 and len(indice[0]) != 1:
             indice = indice[0]
         if len(pointinside) == 1 and len(pointinside[0]) != 1:
             pointinside = pointinside[0]
-        histoVol.grid.gridPtId[indice] = -self.number
+        env.grid.gridPtId[indice] = -self.number
         print(
             "sdf pointID N ",
             self.number,
-            len(histoVol.grid.gridPtId[indice]),
-            histoVol.grid.gridPtId[indice],
+            len(env.grid.gridPtId[indice]),
+            env.grid.gridPtId[indice],
         )
         t1 = time()
-        nbGridPoints = len(histoVol.grid.masterGridPositions)
+        nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, histoVol)
+        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, env)
         srfPts = surfPtsBB
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
-            nbGridPoints, srfPts, surfPtsBBNorms, histoVol
+            nbGridPoints, srfPts, surfPtsBBNorms, env
         )
 
         insidePoints = pointinside
@@ -3372,11 +3131,11 @@ class Compartment(CompartmentList):
                 len(self.surfacePoints),
                 len(self.insidePoints),
                 nbGridPoints,
-                len(histoVol.grid.masterGridPositions),
+                len(env.grid.masterGridPositions),
             )
         )
         self.computeVolumeAndSetNbMol(
-            histoVol, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
+            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
         return insidePoints, surfacePoints
 
@@ -3770,14 +3529,6 @@ class Compartment(CompartmentList):
         built-in algorithm has no known leakage cases, even in extreme edge cases.
         It is simply there as a safeguard.
         """
-        #        from autopack.Environment import Grid
-        #        if self.grid_type == "halton" :
-        #            from autopack.Grid import HaltonGrid as Grid
-        #        else :
-        #            from autopack.Grid import Grid
-        from autopack.Environment import Grid
-        from autopack.Grid import gridPoint
-
         # Start the timer.
         from time import time
 
@@ -4091,9 +3842,9 @@ class Compartment(CompartmentList):
         helper = autopack.helper
         #        from autopack.Environment import Grid
         if self.grid_type == "halton":
-            from autopack.Grid import HaltonGrid as Grid
+            from cellpack.autopack.BaseGrid import HaltonGrid as Grid
         else:
-            from autopack.Grid import Grid
+            from cellpack.autopack.BaseGrid import BaseGrid as Grid
 
             # Initiate a default grid object and set its properties based on inputs and other calculations
         self.grid = grid = Grid(setup=False)
@@ -4272,8 +4023,6 @@ class Compartment(CompartmentList):
         idarray = grid.gridPtId
         diag = grid.diag
 
-        from bhtree import bhtreelib
-
         self.ogsurfacePoints = self.vertices[:]
         self.ogsurfacePointsNormals = self.vnormals[
             :
@@ -4310,8 +4059,7 @@ class Compartment(CompartmentList):
         self.closestId = closest
         t1 = time()
         helper.resetProgressBar()
-        #        helper.progressBar(label="checking point %d" % point)
-        #       what abou intractive display ?
+
         if display:
             sph = helper.Sphere("gPts", res=10, radius=20.0)[0]
             sph2 = helper.Sphere("sPts", res=10, radius=20.0)[0]
@@ -4497,8 +4245,6 @@ class Compartment(CompartmentList):
         grid.distToClosestSurf = [diag] * nbPoints
         idarray = grid.gridPtId
         diag = grid.diag
-
-        from bhtree import bhtreelib
 
         self.ogsurfacePoints = self.vertices[:]
         self.ogsurfacePointsNormals = helper.FixNormals(
