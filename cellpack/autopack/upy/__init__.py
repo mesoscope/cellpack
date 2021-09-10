@@ -1,4 +1,3 @@
-
 def getHClass(host):
     """
     Return the base class for modelling design according the provide host.

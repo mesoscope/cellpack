@@ -56,6 +56,8 @@ from scipy.spatial.transform import Rotation as R
 from math import floor, pi
 import json
 from json import encoder
+import logging
+import logging.config
 
 # PANDA3D Physics engine ODE and Bullet
 import panda3d
@@ -290,23 +292,27 @@ class Grid(BaseGrid):
         Check if the given 3d points is inside the grid
         """
         origin = numpy.array(self.boundingBox[0])
-        E = numpy.array(self.boundingBox[1])
-        P = numpy.array(pt3d)
-        test1 = P < origin
-        test2 = P > E
+        edge = numpy.array(self.boundingBox[1])
+        packing_location = numpy.array(pt3d)
+        test1 = packing_location < origin
+        test2 = packing_location > edge
+        self.log.info("Check point inside, Env Grid")
         if True in test1 or True in test2:
             # outside
+            self.log.info("location outside of the bounding box, rejected")
             return False
         else:
             if dist is not None:
+                self.log.info("checking distance %d", dist)
                 # distance to closest wall
-                d1 = P - origin
+                d1 = packing_location - origin
                 s1 = min(x for x in (d1 * jitter) if x != 0)
                 # s1 = numpy.sum(d1*d1)
-                d2 = E - P
+                d2 = edge - packing_location
                 s2 = min(x for x in (d2 * jitter) if x != 0)
                 # s2 = numpy.sum(d2*d2)
                 if s1 <= dist or s2 <= dist:
+                    self.log.inf("s1 or s2 was less than dist %d %d", s1, s2)
                     return False
             return True
 
@@ -384,7 +390,8 @@ class Environment(CompartmentList):
 
     def __init__(self, name="H"):
         CompartmentList.__init__(self)
-        self.verbose = verbose  # "global variable Verbose"
+
+        self.log = logging.getLogger("env")
         self.timeUpDistLoopTotal = 0
         self.name = name
         self.exteriorRecipe = None
@@ -807,7 +814,7 @@ class Environment(CompartmentList):
         if ingr.excluded_partners_name:
             for iname in ingr.excluded_partners_name:
                 ingr.addExcludedPartner(iname)
-        ingr.histoVol = self
+        ingr.env = self
 
     def set_recipe_ingredient(self, xmlnode, recipe, io_ingr):
         # get the defined ingredient
@@ -849,6 +856,198 @@ class Environment(CompartmentList):
 
     def loadRecipeString(self, astring):
         return IOutils.load_JsonString(self, astring)
+
+    def save_result(self, freePoints, distances, t0, vAnalysis, vTestid, seedNum):
+        self.grid.freePoints = freePoints[:]
+        self.grid.distToClosestSurf = distances[:]
+        # should check extension filename for type of saved file
+        self.saveGridToFile(self.resultfile + "grid")
+        self.grid.result_filename = self.resultfile + "grid"
+        self.collectResultPerIngredient()
+        self.store()
+        self.store_asTxt()
+        #            self.store_asJson(resultfilename=self.resultfile+".json")
+        self.saveRecipe(
+            self.resultfile + ".json",
+            useXref=False,
+            mixed=True,
+            kwds=["compNum"],
+            result=True,
+            quaternion=True,
+        )  # pdb ?
+        self.log.info("time to save result file %d", time.time() - t0)
+        if vAnalysis == 1:
+            #    START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
+            unitVol = self.grid.gridSpacing ** 3
+            # totalVolume = self.grid.gridVolume*unitVol
+            wrkDirRes = self.resultfile + "_analyze_"
+            for o in self.compartments:  # only for compartment ?
+                # totalVolume -= o.surfaceVolume
+                # totalVolume -= o.interiorVolume
+                innerPointNum = len(o.insidePoints) - 1
+                self.log.info("  .  .  .  . ")
+                self.log.info("for compartment o = %s", o.name)
+                self.log.info("inner Point Count = %d", innerPointNum)
+                self.log.info("inner Volume = %s", o.interiorVolume)
+                self.log.info("innerVolume temp Confirm = %d", innerPointNum * unitVol)
+                usedPts = 0
+                unUsedPts = 0
+                vDistanceString = ""
+                insidepointindce = numpy.nonzero(
+                    numpy.equal(self.grid.gridPtId, -o.number)
+                )[0]
+                for i in insidepointindce:  # xrange(innerPointNum):
+                    #                        pt = o.insidePoints[i] #fpts[i]
+                    #                        print (pt,type(pt))
+                    # for pt in self.histo.freePointsAfterFill:#[:self.histo.nbFreePointsAfterFill]:
+                    d = self.distancesAfterFill[i]
+                    vDistanceString += str(d) + "\n"
+                    if d <= 0:  # >self.smallestProteinSize-0.001:
+                        usedPts += 1
+                    else:
+                        unUsedPts += 1
+                filename = (
+                    wrkDirRes
+                    + "vResultMatrix1"
+                    + o.name
+                    + "_Testid"
+                    + str(vTestid)
+                    + "_Seed"
+                    + str(seedNum)
+                    + "_dists.txt"
+                )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
+                #            filename = wrkDirRes+"/vDistances1.txt"
+                f = open(filename, "w")
+                f.write(vDistanceString)
+                f.close()
+
+                # result is [pos,rot,ingr.name,ingr.compNum,ptInd]
+                # if resultfilename == None:
+                # resultfilename = self.resultfile
+                resultfilenameT = (
+                    wrkDirRes
+                    + "vResultMatrix1"
+                    + o.name
+                    + "_Testid"
+                    + str(vTestid)
+                    + "_Seed"
+                    + str(seedNum)
+                    + "_Trans.txt"
+                )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
+                resultfilenameR = (
+                    wrkDirRes
+                    + "vResultMatrix1"
+                    + o.name
+                    + "_Testid"
+                    + str(vTestid)
+                    + "_Seed"
+                    + str(seedNum)
+                    + "_Rot.txt"
+                )
+                vTranslationString = ""
+                vRotationString = ""
+                result = []
+                matCount = 0
+                for pos, rot, ingr, ptInd in o.molecules:
+                    # BEGIN: newer code from Theis version added July 5, 2012
+                    if hasattr(self, "afviewer"):
+                        mat = rot.copy()
+                        mat[:3, 3] = pos
+                        import math
+
+                        r = R.from_matrix(mat).as_euler("xyz", degrees=False)
+                        h1 = math.degrees(math.pi + r[0])
+                        p1 = math.degrees(r[1])
+                        b1 = math.degrees(-math.pi + r[2])
+                        print("rot from matrix = ", r, h1, p1, b1)
+                        # END: newer code from Theis version added July 5, 2012
+                    result.append([pos, rot])
+                    pt3d = result[matCount][0]
+                    (
+                        x,
+                        y,
+                        z,
+                    ) = pt3d
+
+                    vTranslationString += (
+                        str(x) + ",\t" + str(y) + ",\t" + str(z) + "\n"
+                    )
+                    # vRotationString += str(rot3d) #str(h)+ ",\t" + str(p) + ",\t" + str(b) + "\n"
+                    vRotationString += (
+                        str(h1)
+                        + ",\t"
+                        + str(p1)
+                        + ",\t"
+                        + str(b1)
+                        + ",\t"
+                        + ingr.name
+                        + "\n"
+                    )
+                    matCount += 1
+
+                rfile = open(resultfilenameT, "w")
+                rfile.write(vTranslationString)
+                rfile.close()
+
+                rfile = open(resultfilenameR, "w")
+                rfile.write(vRotationString)
+                rfile.close()
+                self.log.info("len(result) = %d", len(result))
+                self.log.info("len(self.molecules) = %d", len(self.molecules))
+                # Graham Note:  There is overused disk space- the rotation matrix is 4x4 with an offset of 0,0,0
+                # and we have a separate translation vector in the results and molecules arrays.
+                #  Get rid of the translation vector and move it to the rotation matrix to save space...
+                # will that slow the time it takes to extract the vector from the matrix when we need to call it?
+                self.log.info(
+                    "*************************************************** vDistance String Should be on"
+                )
+                print("unitVolume2 = %d", unitVol)
+                self.log.info("Number of Points Unused = %d", unUsedPts)
+                self.log.info("Number of Points Used   = %d", usedPts)
+                self.log.info("Volume Used   = %d", usedPts * unitVol)
+                self.log.info("Volume Unused = %d", unUsedPts * unitVol)
+                self.log.info("vTestid = %d", vTestid)
+                self.log.info("self.nbGridPoints = %d", self.nbGridPoints)
+                self.log.info("self.gridVolume = %d", self.gridVolume)
+                #        self.exteriorVolume = totalVolume
+
+        print("self.compartments In Environment = ", len(self.compartments))
+        if self.compartments == []:
+            unitVol = self.grid.gridSpacing ** 3
+            innerPointNum = len(freePoints)
+            self.log.info("  .  .  .  . ")
+            self.log.info("inner Point Count = ", innerPointNum)
+            self.log.info("innerVolume temp Confirm = ", innerPointNum * unitVol)
+            usedPts = 0
+            unUsedPts = 0
+            # fpts = self.freePointsAfterFill
+            vDistanceString = ""
+            for i in range(innerPointNum):
+                pt = freePoints[i]  # fpts[i]
+                # for pt in self.histo.freePointsAfterFill:#[:self.histo.nbFreePointsAfterFill]:
+                d = self.distancesAfterFill[pt]
+                vDistanceString += str(d) + "\n"
+                if d <= 0:  # >self.smallestProteinSize-0.001:
+                    usedPts += 1
+                else:
+                    unUsedPts += 1
+            # Graham Note:  There is overused disk space- the rotation matrix is 4x4 with an offset of 0,0,0
+            # and we have a separate translation vector in the results and molecules arrays.
+            # Get rid of the translation vector and move it to the rotation matrix to save space...
+            # will that slow the time it takes to extract the vector from the matrix when we need to call it?
+
+            self.log.info("unitVolume2 = %d", unitVol)
+            self.log.info("Number of Points Unused = %d", unUsedPts)
+            self.log.info("Number of Points Used   = %d", usedPts)
+            self.log.info("Volume Used   = %d", usedPts * unitVol)
+            self.log.info("Volume Unused = %d", unUsedPts * unitVol)
+            self.log.info("vTestid = %s", vTestid)
+            self.log.info("self.nbGridPoints = %d", self.nbGridPoints)
+            self.log.info("self.gridVolume = %d", self.gridVolume)
+            self.log.info("histoVol.timeUpDistLoopTotal = %d", self.timeUpDistLoopTotal)
+
+            #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
+        self.log.info("time to save end %d", time.time() - t0)
 
     def saveRecipe(
         self,
@@ -1304,22 +1503,6 @@ class Environment(CompartmentList):
         d, pid = self.grid.getClosestGridPoint(point)
         cid = self.grid.gridPtId[pid]
         return cid
-        ncomp = len(self.compartments)
-        if ncomp:
-            comp = ncomp
-            for i in range(ncomp):
-                inside = self.compartments[comp - 1].checkPointInside_rapid(
-                    point, self.grid.diag, ray=ray
-                )
-                if inside:
-                    return -(comp)
-                comp = comp - 1
-            # the point is not inside , is it on the surface ? ie distance to surface < X?
-            for i in range(ncomp):
-                distance, nb = self.compartments[i].OGsrfPtsBht.query(point)
-                if distance < 1.0:
-                    return i + 1
-        return 0
 
     def longestIngrdientName(self):
         """
@@ -1450,11 +1633,10 @@ class Environment(CompartmentList):
         aSurfaceGrids = []
         # thread ?
         for compartment in self.compartments:
-            if autopack.verbose:
-                print(
-                    "in Environment, compartment.isOrthogonalBoundingBox =",
-                    compartment.isOrthogonalBoundingBox,
-                )
+            self.log(
+                "in Environment, compartment.isOrthogonalBoundingBox =",
+                compartment.isOrthogonalBoundingBox,
+            )
             a, b = compartment.BuildGrid(self)  # return inside and surface point
             aInteriorGrids.append(a)
             aSurfaceGrids.append(b)
@@ -1507,43 +1689,34 @@ class Environment(CompartmentList):
             rebuild = True
         if rebuild or gridFileIn is not None or self.grid is None or self.nFill == 0:
             # save bb for current fill
-            print("####BUILD GRID - step ", self.smallestProteinSize)
+            self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
             self.grid = Grid(
                 boundingBox=boundingBox, space=self.smallestProteinSize, lookup=lookup
             )
             nbPoints = self.grid.gridVolume
-            if autopack.verbose:
-                print("new Grid with  ", boundingBox, self.grid.gridVolume)
+            self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
             if rebuild:
                 self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
                 nbPoints = self.grid.gridVolume
         else:
-            if autopack.verbose:
-                print("$$$$$$$$  reset the grid")
+            self.log.info("$$$$$$$$  reset the grid")
             self.grid.reset()
             nbPoints = len(self.grid.freePoints)
-            if autopack.verbose:
-                print("$$$$$$$$  reset the grid")
-        if autopack.verbose:
-            print(
-                "$$$$$$$$  gridVolume = nbPoints = ",
-                nbPoints,
-                " grid.nbGridPoints = ",
-                self.grid.nbGridPoints,
-            )
+            self.log.info("$$$$$$$$  reset the grid")
+        self.log.info(
+            "nbPoints = %d, grid.nbGridPoints = %d", nbPoints, self.grid.nbGridPoints
+        )
 
         if gridFileIn is not None:  # and not rebuild:
-            if autopack.verbose:
-                print("file in for building grid but it doesnt work well")
+            self.log.warning("file in for building grid but it doesnt work well")
             self.grid.filename = gridFileIn
             if self.nFill == 0:  # first fill, after we can just reset
-                print("restore from file")
+                self.log.info("restore from file")
                 self.restoreGridFromFile(gridFileIn)
         elif (gridFileIn is None and rebuild) or self.nFill == 0:
             # assign ids to grid points
-            if autopack.verbose:
-                print("file is None thus re/building grid distance")
+            self.log.info("file is None thus re/building grid distance")
             self.BuildCompartmentsGrids()
             self.exteriorVolume = self.grid.computeExteriorVolume(
                 compartments=self.compartments,
@@ -1551,7 +1724,7 @@ class Environment(CompartmentList):
                 fbox_bb=self.fbox_bb,
             )
         else:
-            print("file is not rebuild nor restore from file")
+            self.log.info("file is not rebuild nor restore from file")
         if len(self.compartments):
             verts = numpy.array(self.compartments[0].surfacePointsCoords)
             for i in range(1, len(self.compartments)):
@@ -1571,7 +1744,6 @@ class Environment(CompartmentList):
                 c.setCount()
         else:
             self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
-        print("file is not rebuild nor restore from file")
         if self.use_gradient and len(self.gradients) and rebuild:
             for g in self.gradients:
                 self.gradients[g].buildWeigthMap(
@@ -1644,7 +1816,7 @@ class Environment(CompartmentList):
                 print("The size of the grid I build = ", len(a))
             else:
                 a, b = compartment.BuildGrid(self)
-         
+
             aInteriorGrids.append(a)
             aSurfaceGrids.append(b)
 
@@ -1652,7 +1824,7 @@ class Environment(CompartmentList):
         print("I'm out of the loop and have build my grid with inside points")
         self.grid.aSurfaceGrids = aSurfaceGrids
         print("build Grids", self.innerGridMethod, len(self.grid.aSurfaceGrids))
-    
+
     def onePrevIngredient(self, i, mingrs, distance, nbFreePoints, marray):
         """
         Unused
@@ -1686,8 +1858,6 @@ class Environment(CompartmentList):
             # ingr.rbnode.pop(ptInd)
             marray[i][3] = -ptInd  # uniq Id ?
             # ingr.rbnode[-1] = rbnode
-        # (self, histoVol,insidePoints, newDistPoints, freePoints,
-        #        nbFreePoints, distance, masterGridPositions, verbose)
         # doesnt seem to work properly...
         nbFreePoints = ingr.updateDistances(
             self,
@@ -2110,14 +2280,12 @@ class Environment(CompartmentList):
         compNum,
         vRangeStart,
         vThreshStart,
-        verbose=False,
     ):
         """
         Decide next point to use for dropping a given ingredent. The picking can be
         random, based on closest distance, based on gradients, ordered.
         This function also update the available free point except when hack is on.
         """
-        verbose = autopack.verbose
         radius = ingr.encapsulatingRadius
         if ingr.packingMode == "close":
             allIngrPts = []
@@ -2155,18 +2323,15 @@ class Environment(CompartmentList):
             else:
                 cut = radius - jitter
             # for pt in freePoints[:nbFreePoints]:
-            if verbose > 1:
-                print("find grid point with distance >= ", cut)
+            self.log.info("find grid point with distance >= %d", cut)
             if hasattr(ingr, "allIngrPts") and self._hackFreepts:
                 allIngrPts = ingr.allIngrPts
-                if verbose > 1:
-                    print("Running nofreepoint HACK")
+                self.log.warning("Running nofreepoint HACK")
             else:
                 # use periodic update according size ration grid
                 update = self.checkIfUpdate(ingr, nbFreePoints)
                 if update:
-                    if verbose > 1:
-                        print("in update loop")
+                    self.log.info("in update loop")
                     for i in range(nbFreePoints):
                         pt = freePoints[i]
                         d = distance[pt]
@@ -2175,8 +2340,9 @@ class Environment(CompartmentList):
                     # allIngrDist.append(d)
                     ingr.allIngrPts = allIngrPts
                     ingr.cut = cut
-                    if verbose:
-                        print("getPointToDrop len(allIngrPts) = ", len(allIngrPts))
+                    self.log.info(
+                        "getPointToDrop len(allIngrPts) = %d", len(allIngrPts)
+                    )
                 else:
                     if hasattr(ingr, "allIngrPts"):
                         allIngrPts = ingr.allIngrPts
@@ -2184,8 +2350,7 @@ class Environment(CompartmentList):
                         allIngrPts = freePoints[:nbFreePoints]
                         ingr.allIngrPts = allIngrPts
 
-        if verbose > 1:
-            print("len (allIngrPts) = ", len(allIngrPts))
+        self.log.info("len (allIngrPts) = %d", len(allIngrPts))
         if len(allIngrPts) == 0:
             t = time.time()
             ingr.completion = 1.0
@@ -2204,22 +2369,24 @@ class Environment(CompartmentList):
             self.activeIngr0, self.activeIngr12 = self.callFunction(
                 self.getSortedActiveIngredients, (self.activeIngr, False)
             )
-            if verbose > 1:
-                print(
-                    "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d"
-                    % (ingr.name, ingr.molarity, radius, jitter, compNum)
-                )
-                print("len(allIngredients", len(self.activeIngr))
-                print("len(self.activeIngr0)", len(self.activeIngr0))
-                print("len(self.activeIngr12)", len(self.activeIngr12))
+            self.log.info(
+                "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d",
+                ingr.name,
+                ingr.molarity,
+                radius,
+                jitter,
+                compNum,
+            )
+            self.log.info("len(allIngredients %d", len(self.activeIngr))
+            self.log.info("len(self.activeIngr0) %d", len(self.activeIngr0))
+            self.log.info("len(self.activeIngr12) %d", len(self.activeIngr12))
+
             self.activeIngre_saved = self.activeIngr[:]
 
             self.totalPriorities = 0  # 0.00001
             for priors in self.activeIngr12:
                 pp = priors.packingPriority
                 self.totalPriorities = self.totalPriorities + pp
-                if verbose > 1:
-                    print("totalPriorities = ", self.totalPriorities)
             previousThresh = 0
             self.normalizedPriorities = []
             self.thresholdPriorities = []
@@ -2243,31 +2410,9 @@ class Environment(CompartmentList):
                 self.thresholdPriorities.append(np + previousThresh)
                 previousThresh = np + float(previousThresh)
             self.activeIngr = self.activeIngr0 + self.activeIngr12
-
-            #            nls=0
-            #            totalNumMols = 0
-            #            for threshProb in self.thresholdPriorities:
-            #                nameMe = self.activeIngr[nls]
-            #                if verbose:
-            #                    print ('threshprop Get Point is %f for ingredient: %s %s %d'%(threshProb, nameMe,nameMe.name,nameMe.nbMol))
-            #                totalNumMols += nameMe.nbMol
-            #                if verbose:
-            #                    print ('totalNumMols Get Point= ', totalNumMols)
-            #                nls+=1
-
-            # print 'vThreshStart before = ', vThreshStart
-            # vThreshStart = self.thresholdPriorities[0]
-            # print 'vThreshStart after = ', vThreshStart
-            # print 'because vself.thresholdPriorities[0] = ', self.thresholdPriorities[0]
-
-            # self.thresholdPriorities.pop(ind)
-            # self.normalizedPriorities.pop(ind)
-            if verbose > 1:
-                print("time to reject the picking", time.time() - t)
+            self.log.info("time to reject the picking %d", time.time() - t)
             # End of massive overruling section from corrected thesis file of Sept. 25, 2011
             # this chunk overwrites the next three lines from July version. July 5, 2012
-            #            self.thresholdPriorities.pop(ind)
-            #            self.normalizedPriorities.pop(ind)
             return False, vRangeStart
 
         if self.pickRandPt:
@@ -2290,8 +2435,7 @@ class Environment(CompartmentList):
             elif ingr.packingMode == "gradient" and self.use_gradient:
                 # get the most probable point using the gradient
                 # use the gradient weighted map and get mot probabl point
-                if verbose > 1:
-                    print("pick point from gradients", (len(allIngrPts)))
+                self.log.info("pick point from gradients %d", (len(allIngrPts)))
                 ptInd = self.gradients[ingr.gradient].pickPoint(allIngrPts)
             else:
                 # pick a point randomly among free points
@@ -2300,11 +2444,14 @@ class Environment(CompartmentList):
                 ptInd = allIngrPts[ptIndr]
             if ptInd is None:
                 t = time.time()
-                if verbose > 1:
-                    print(
-                        "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d"
-                        % (ingr.name, ingr.molarity, radius, jitter, compNum)
-                    )
+                self.log.info(
+                    "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d",
+                    ingr.name,
+                    ingr.molarity,
+                    radius,
+                    jitter,
+                    compNum,
+                )
                 ingr.completion = 1.0
                 ind = self.activeIngr.index(ingr)
                 # if ind == 0:
@@ -2328,7 +2475,6 @@ class Environment(CompartmentList):
                 return False, vRangeStart
 
         else:
-            #            t3=time()
             allIngrPts.sort()
             ptInd = allIngrPts[0]
         return True, ptInd
@@ -2362,9 +2508,6 @@ class Environment(CompartmentList):
         self,
         seedNum=14,
         stepByStep=False,
-        verbose=False,
-        sphGeom=None,
-        labDistGeom=None,
         debugFunc=None,
         name=None,
         vTestid=3,
@@ -2378,16 +2521,14 @@ class Environment(CompartmentList):
         ## find a suitable point using the ingredient's placer object
         """
         # set periodicity
-        autopack.verbose = verbose
         autopack.testPeriodicity = self.use_periodicity
         self.grid.testPeriodicity = self.use_periodicity
 
         t1 = time.time()
-        self.timeUpDistLoopTotal = 0  # Graham added to try to make universal "global variable Verbose" on Aug 28
+        self.timeUpDistLoopTotal = 0
         self.static = []
         if self.grid is None:
-            if verbose > 1:
-                print("no grid setup")
+            self.log.error("no grid setup")
             return
         # create a list of active ingredients indices in all recipes to allow
         # removing inactive ingredients when molarity is reached
@@ -2397,7 +2538,9 @@ class Environment(CompartmentList):
         usePP = False
         if "usePP" in kw:
             usePP = kw["usePP"]
+
         self.cFill = self.nFill
+
         if name is None:
             name = "F" + str(self.nFill)
         self.FillName.append(name)
@@ -2405,7 +2548,7 @@ class Environment(CompartmentList):
         # seed random number generator
         self.setSeed(seedNum)
         # create copies of the distance array as they change when molecules
-        # are added, theses array can be restored/saved before feeling
+        # are added, this array can be restored/saved before filling
         freePoints = self.grid.freePoints[:]
         self.grid.nbFreePoints = nbFreePoints = len(freePoints)  # -1
         if "fbox" in kw:
@@ -2419,7 +2562,6 @@ class Environment(CompartmentList):
         compId = self.grid.gridPtId
         # why a copy? --> can we split ?
         distance = self.grid.distToClosestSurf[:]
-
         spacing = self.smallestProteinSize
 
         # DEBUG stuff, should be removed later
@@ -2435,18 +2577,16 @@ class Environment(CompartmentList):
             self.getSortedActiveIngredients, (allIngredients, verbose)
         )
 
-        if verbose > 1:
-            print("len(allIngredients", len(allIngredients))
-            print("len(self.activeIngr0)", len(self.activeIngr0))
-            print("len(self.activeIngr12)", len(self.activeIngr12))
+        self.log.info("len(allIngredients %d", len(allIngredients))
+        self.log.info("len(self.activeIngr0) %d", len(self.activeIngr0))
+        self.log.info("len(self.activeIngr12) %d", len(self.activeIngr12))
         self.activeIngre_saved = self.activeIngr[:]
 
         self.totalPriorities = 0  # 0.00001
         for priors in self.activeIngr12:
             pp = priors.packingPriority
             self.totalPriorities = self.totalPriorities + pp
-            if verbose > 1:
-                print("totalPriorities = ", self.totalPriorities)
+            self.log.info("totalPriorities = %d", self.totalPriorities)
         previousThresh = 0
         self.normalizedPriorities = []
         self.thresholdPriorities = []
@@ -2465,8 +2605,6 @@ class Environment(CompartmentList):
             else:
                 np = 0.0
             self.normalizedPriorities.append(np)
-            if verbose > 1:
-                print("np is ", np, " pp is ", pp, " tp is ", np + previousThresh)
             self.thresholdPriorities.append(np + previousThresh)
             previousThresh = np + float(previousThresh)
         self.activeIngr = self.activeIngr0 + self.activeIngr12
@@ -2477,18 +2615,19 @@ class Environment(CompartmentList):
         if len(self.thresholdPriorities) == 0:
             for ingr in allIngredients:
                 totalNumMols += ingr.nbMol
-            if verbose > 1:
-                print("totalNumMols pack_grid if = ", totalNumMols)
+            self.log.info("totalNumMols pack_grid if = %d", totalNumMols)
         else:
             for threshProb in self.thresholdPriorities:
                 nameMe = self.activeIngr[nls]
                 totalNumMols += nameMe.nbMol
-                if verbose > 1:
-                    print(
-                        "threshprop pack_grid else is %f for ingredient: %s %s %d"
-                        % (threshProb, nameMe, nameMe.name, nameMe.nbMol)
-                    )
-                    print("totalNumMols pack_grid else = ", totalNumMols)
+                self.log.info(
+                    "threshprop pack_grid else is %f for ingredient: %s %s %d",
+                    threshProb,
+                    nameMe,
+                    nameMe.name,
+                    nameMe.nbMol,
+                )
+                self.log.info("totalNumMols pack_grid else = %d", totalNumMols)
                 nls += 1
 
         vRangeStart = 0.0
@@ -2502,11 +2641,6 @@ class Environment(CompartmentList):
         if self.placeMethod == "pandaBullet":
             self.setupPanda()
 
-        # if usePP:
-        #     # deprecated in python 3
-        #     import pp
-        #     self.grab_cb = IOutils.GrabResult()
-        #     self.pp_server = pp.Server(ncpus=autopack.ncpus)
         # ==============================================================================
         #         #the big loop
         # ==============================================================================
@@ -2514,66 +2648,51 @@ class Environment(CompartmentList):
         dump = self.dump
         stime = time.time()
         while nbFreePoints:
-            if verbose > 1:
-                print(
-                    ".........At start of while loop, with vRangeStart = ", vRangeStart
-                )
-                print("Points Remaining", nbFreePoints, len(freePoints))
-                print("len(self.activeIngr)", len(self.activeIngr))
+            self.log.info(
+                ".........At start of while loop, with vRangeStart = %d", vRangeStart
+            )
+            self.log.info("Points Remaining %d %d", nbFreePoints, len(freePoints))
+            self.log.info("len(self.activeIngr) %d", len(self.activeIngr))
 
             # breakin test
             if len(self.activeIngr) == 0:
-                print("exit packing loop because of len****")
+                self.log.warn("exit packing loop because of len****")
                 if hasattr(self, "afviewer"):
                     if self.afviewer is not None and hasattr(self.afviewer, "vi"):
                         self.afviewer.vi.resetProgressBar()
                         self.afviewer.vi.progressBar(label="Filling Complete")
                 break
             if vRangeStart > 1:
-                print("exit packing loop because vRange and hence Done!!!****")
+                self.log.info("exit packing loop because vRange and hence Done!!!****")
                 break
             if self.cancelDialog:
                 tCancel = time.time()
                 if tCancel - tCancelPrev > 10.0:
                     cancel = self.displayCancelDialog()
                     if cancel:
-                        print(
-                            "canceled by user: we'll fill with current objects up to time",  # noqa: E510
+                        self.log.info(
+                            "canceled by user: we'll fill with current objects up to time %d",  # noqa: E510
                             tCancel,
                         )
                         break
                     # if OK, do nothing, i.e., continue loop
                     # (but not the function continue)
                     tCancelPrev = time.time()
+
             # pick an ingredient
-
             ingr = self.callFunction(self.pickIngredient, (vThreshStart,))
-            if verbose > 1:
-                print("picked Ingr ", ingr.name)
+            self.log.info("picked Ingr %s", ingr.name)
             if hasattr(self, "afviewer"):
-                # C4D safety check added by Graham on July 10, 2012 until we can fix
-                # the uPy status bar for C4D
-                # if self.host == 'c4d':
-                try:
-                    import c4d
-
-                    p = float(PlacedMols) / float(totalNumMols) * 100.0
-                    c4d.StatusSetBar(int(p))
-                    c4d.StatusSetText(ingr.name + " " + str(ingr.completion))
-
-                except ImportError:
-                    p = (
-                        (float(PlacedMols)) / float(totalNumMols)
-                    ) * 100.0  # This code shows 100% of ingredients all the time
-                    if self.afviewer is not None and hasattr(self.afviewer, "vi"):
-                        self.afviewer.vi.progressBar(
-                            progress=int(p),
-                            label=ingr.name + " " + str(ingr.completion),
-                        )
-                        if self.afviewer.renderDistance:
-                            self.afviewer.vi.displayParticleVolumeDistance(
-                                distance, self
-                            )
+                p = (
+                    (float(PlacedMols)) / float(totalNumMols)
+                ) * 100.0  # This code shows 100% of ingredients all the time
+                if self.afviewer is not None and hasattr(self.afviewer, "vi"):
+                    self.afviewer.vi.progressBar(
+                        progress=int(p),
+                        label=ingr.name + " " + str(ingr.completion),
+                    )
+                    if self.afviewer.renderDistance:
+                        self.afviewer.vi.displayParticleVolumeDistance(distance, self)
 
             compNum = ingr.compNum
             radius = ingr.minRadius
@@ -2584,8 +2703,12 @@ class Environment(CompartmentList):
             mr = self.get_dpad(compNum)
             dpad = ingr.minRadius + mr + jitter
 
-            if verbose > 2:
-                print("picked Ingr radius compNum dpad", radius, compNum, dpad)
+            self.log.info(
+                "picked Ingr radius compNum dpad %d %s %d",
+                ingr.minRadius,
+                compNum,
+                dpad,
+            )
 
             # find the points that can be used for this ingredients
             ##
@@ -2612,28 +2735,22 @@ class Environment(CompartmentList):
                 )
                 res = [True, allSrfpts[int(random() * len(allSrfpts))]]
             #  Replaced this with Sept 25, 2011 thesis version on July 5, 2012
-            if verbose > 1:
-                print("get drop point res", res)
+            self.log.info("get drop point res %d", res[1])
             if res[0]:
                 ptInd = res[1]
                 if ptInd > len(distance):
-                    print("problem ", ptInd)
+                    self.log.warning("problem ", ptInd)
                     continue
             else:
-                if verbose > 1:
-                    print("vRangeStart coninue ", res)
+                self.log.info("vRangeStart coninue ", res)
                 vRangeStart = res[1]
                 continue
-                print("picked ", ptInd, distance[ptInd])
             # place the ingredient
             if self.overwritePlaceMethod:
                 ingr.placeType = self.placeMethod
-            # if self.rejectionThreshold is not None:
-            #    ingr.rejectionThreshold = self.rejectionThreshold
-            # check the largestProteinSize
+
             if ingr.encapsulatingRadius > self.largestProteinSize:
                 self.largestProteinSize = ingr.encapsulatingRadius
-                # histoVol, ptInd, freePoints, nbFreePoints, distance, dpad,usePP,
             # stepByStep=False, verbose=False,
             success, nbFreePoints = self.callFunction(
                 ingr.place,
@@ -2645,11 +2762,14 @@ class Environment(CompartmentList):
                     distance,
                     dpad,
                     usePP,
-                    stepByStep,
-                    verbose,
                 ),
-                {"debugFunc": debugFunc},
             )
+            self.log.info(
+                "after place attempt placed: %r, number of free points:%d",
+                success,
+                nbFreePoints,
+            )
+            self.log.info("grid %r", self.grid.masterGridPositions)
             if success:
                 self.grid.distToClosestSurf = numpy.array(distance[:])
                 self.grid.freePoints = numpy.array(freePoints[:])
@@ -2733,21 +2853,14 @@ class Environment(CompartmentList):
                     mixed=True,
                     kwds=["source", "name", "positions", "radii"],
                     result=True,
-                    grid=False,
-                    packing_options=False,
-                    indent=False,
                     quaternion=True,
-                    transpose=False,
                 )
                 self.saveRecipe(
-                    self.resultfile + "_temporaray_tr.json",
+                    self.resultfile + "_temporaray_transpose.json",
                     useXref=True,
                     mixed=True,
                     kwds=["source", "name", "positions", "radii"],
                     result=True,
-                    grid=False,
-                    packing_options=False,
-                    indent=False,
                     quaternion=True,
                     transpose=True,
                 )
@@ -2757,310 +2870,19 @@ class Environment(CompartmentList):
         self.freePointsAfterFill = freePoints[:]
         self.nbFreePointsAfterFill = nbFreePoints
         self.distanceAfterFill = distance[:]
-        # self.rejectionCount = rejectionCount
-        #        c4d.documents.RunAnimation(doc, True)
         t2 = time.time()
-        print("time to fill", t2 - t1)
+        self.log.info("time to fill %d", t2 - t1)
 
         if self.saveResult:
-            self.grid.freePoints = freePoints[:]
-            self.grid.distToClosestSurf = distance[:]
-            # shoul check extension filename for type of saved file
-            self.saveGridToFile(self.resultfile + "grid")
-            self.grid.result_filename = self.resultfile + "grid"
-            self.collectResultPerIngredient()
-            self.store()
-            self.store_asTxt()
-            #            self.store_asJson(resultfilename=self.resultfile+".json")
-            self.saveRecipe(
-                self.resultfile + ".json",
-                useXref=False,
-                mixed=True,
-                kwds=["compNum"],
-                result=True,
-                quaternion=True,
-                grid=False,
-                packing_options=False,
-                indent=False,
-            )  # pdb ?
-            # self.saveGridToFile_asTxt(self.resultfile+"grid")freePointsAfterFill
-            # should we save to text as well
-            print("time to save in fil5", time.time() - t2)
-            #            vAnalysis = 0
-            if vAnalysis == 1:
-                #    START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
-                unitVol = self.grid.gridSpacing ** 3
-                # totalVolume = self.grid.gridVolume*unitVol
-                wrkDirRes = self.resultfile + "_analyze_"
-                print("self.compartments = ", self.compartments)
-                for o in self.compartments:  # only for compartment ?
-                    # totalVolume -= o.surfaceVolume
-                    # totalVolume -= o.interiorVolume
-                    innerPointNum = len(o.insidePoints) - 1
-                    print("  .  .  .  . ")
-                    print("for compartment o = ", o.name)
-                    print("inner Point Count = ", innerPointNum)
-                    print("inner Volume = ", o.interiorVolume)
-                    print("innerVolume temp Confirm = ", innerPointNum * unitVol)
-                    usedPts = 0
-                    unUsedPts = 0
-                    # fpts = self.freePointsAfterFill
-                    vDistanceString = ""
-                    insidepointindce = numpy.nonzero(
-                        numpy.equal(self.grid.gridPtId, -o.number)
-                    )[0]
-                    for i in insidepointindce:  # xrange(innerPointNum):
-                        #                        pt = o.insidePoints[i] #fpts[i]
-                        #                        print (pt,type(pt))
-                        # for pt in self.histo.freePointsAfterFill:#[:self.histo.nbFreePointsAfterFill]:
-                        d = self.distancesAfterFill[i]
-                        vDistanceString += str(d) + "\n"
-                        if d <= 0:  # >self.smallestProteinSize-0.001:
-                            usedPts += 1
-                        else:
-                            unUsedPts += 1
-                    filename = (
-                        wrkDirRes
-                        + "vResultMatrix1"
-                        + o.name
-                        + "_Testid"
-                        + str(vTestid)
-                        + "_Seed"
-                        + str(seedNum)
-                        + "_dists.txt"
-                    )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                    #            filename = wrkDirRes+"/vDistances1.txt"
-                    f = open(filename, "w")
-                    f.write(vDistanceString)
-                    f.close()
+            self.save_result(
+                freePoints,
+                distances=distance,
+                t0=t2,
+                vAnalysis=vAnalysis,
+                vTestid=vTestid,
+                seedNum=seedNum,
+            )
 
-                    # result is [pos,rot,ingr.name,ingr.compNum,ptInd]
-                    # if resultfilename == None:
-                    # resultfilename = self.resultfile
-                    resultfilenameT = (
-                        wrkDirRes
-                        + "vResultMatrix1"
-                        + o.name
-                        + "_Testid"
-                        + str(vTestid)
-                        + "_Seed"
-                        + str(seedNum)
-                        + "_Trans.txt"
-                    )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                    resultfilenameR = (
-                        wrkDirRes
-                        + "vResultMatrix1"
-                        + o.name
-                        + "_Testid"
-                        + str(vTestid)
-                        + "_Seed"
-                        + str(seedNum)
-                        + "_Rot.txt"
-                    )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                    #            resultfilenameT = wrkDirRes+"/vResultMatrix1" + o.name + "_Trans.txt"
-                    #            resultfilenameR = wrkDirRes+"/vResultMatrix1" + o.name + "_Rot.txt"
-                    # pickle.dump(self.molecules, rfile)
-                    # OR
-                    vTranslationString = ""
-                    vRotationString = ""
-                    result = []
-                    matCount = 0
-                    # Add safety check for C4D until we can get uPy working for this matrix to hbp rotation function?
-                    #            from c4d import utils   # Removed by Graham on July 10, 2012 because replaced with more recent Thesis code on July 5, 2012 below
-                    # what do you save everthing inleft hand ? and you actually dont use it ??
-                    # Note July 4, 2012: the results are saved as right handed (see 2, 1, 0 for h, p, b) and used for analysis tools
-                    # Note July 5, 2012: I found the better version we made and added it below to override the C4D version!
-                    for pos, rot, ingr, ptInd in o.molecules:
-                        # vMatrixString += str(result([pos]))+"\n"
-                        # BEGIN: newer code from Theis version added July 5, 2012
-                        if hasattr(self, "afviewer"):
-                            mat = rot.copy()
-                            mat[:3, 3] = pos
-                            import math
-                            r = R.from_matrix(mat).as_euler("xyz", degrees=False)
-                            h1 = math.degrees(math.pi + r[0])
-                            p1 = math.degrees(r[1])
-                            b1 = math.degrees(-math.pi + r[2])
-                            # angles[0] = 180.0+angles[0]
-                            # angles[2] = 180.0-angles[2]
-                            # hmat = self.afviewer.vi.FromMat(mat,transpose=True)
-                            # rot = utils.MatrixToHPB(hmat)
-                            print("rot from matrix = ", r, h1, p1, b1)
-                            # END: newer code from Theis version added July 5, 2012
-                        result.append([pos, rot])
-                        pt3d = result[matCount][0]
-                        (
-                            x,
-                            y,
-                            z,
-                        ) = pt3d  # ADDDED this line back from newer code from Theis version added July 5, 2012
-                        # BEGIN: retired SVN version, retired July 5, 2012
-                        #                x, y, z = pt3d
-                        #                rot3d = result[matCount][1][2]
-                        #                h1 = rot3d[2]
-                        #                p1 = rot3d[1]
-                        #                b1 = rot3d[0]
-                        #                rot3d = result[matCount][1][1]
-                        #                h2 = rot3d[2]
-                        #                p2 = rot3d[1]
-                        #                b2 = rot3d[0]
-                        #                rot3d = result[matCount][1][0]
-                        #                h3 = rot3d[2]
-                        #                p3 = rot3d[1]
-                        #                b3 = rot3d[0]
-                        # can we test for C4D for these last 6 lines until we can get same functionality from uPy?
-                        #                off = c4d.Vector(0)
-                        #                vec = c4d.Matrix(off, c4d.Vector(h1, p1, b1), c4d.Vector(h2,p2,b2), c4d.Vector(h3,p3,b3) )
-                        #                print vec
-                        #                #m = rot3d #obj.GetMg()
-                        #                rot = utils.MatrixToHPB(vec)
-                        #                print 'rot from matrix = ', rot
-                        # END: retired SVN version, retired July 5, 2012
-                        vTranslationString += (
-                            str(x) + ",\t" + str(y) + ",\t" + str(z) + "\n"
-                        )
-                        # vRotationString += str(rot3d) #str(h)+ ",\t" + str(p) + ",\t" + str(b) + "\n"
-                        vRotationString += (
-                            str(h1)
-                            + ",\t"
-                            + str(p1)
-                            + ",\t"
-                            + str(b1)
-                            + ",\t"
-                            + ingr.name
-                            + "\n"
-                        )  # ADDDED this line back from newer code from Theis version added July 5, 2012 to replace next line from SVN
-                        #                vRotationString += str(h1)+ ",\t" + str(p1) + ",\t" + str(b1) + ingr.name +"\n"
-                        # vRotationString += str( (result[matCount][1]).x )+"\n"
-                        matCount += 1
-
-                    # result.append([pos,rot,ingr.name,ingr.compNum,ptInd])
-                    # d = self.distancesAfterFill[pt]
-                    # vDistanceString += str(d)+"\n"
-                    # pickle.dump(result, rfile)
-                    rfile = open(resultfilenameT, "w")
-                    rfile.write(vTranslationString)
-                    rfile.close()
-
-                    rfile = open(resultfilenameR, "w")
-                    rfile.write(vRotationString)
-                    rfile.close()
-                    print("len(result) = ", len(result))
-                    print("len(self.molecules) = ", len(self.molecules))
-                    # Graham Note:  There is overused disk space- the rotation matrix is 4x4 with an offset of 0,0,0
-                    # and we have a separate translation vector in the results and molecules arrays.
-                    #  Get rid of the translation vector and move it to the rotation matrix to save space...
-                    # will that slow the time it takes to extract the vector from the matrix when we need to call it?
-                    print(
-                        "*************************************************** vDistance String Should be on"
-                    )
-                    print("unitVolume2 = ", unitVol)
-                    print("Number of Points Unused = ", unUsedPts)
-                    print("Number of Points Used   = ", usedPts)
-                    print("Volume Used   = ", usedPts * unitVol)
-                    print("Volume Unused = ", unUsedPts * unitVol)
-                    print("vTestid = ", vTestid)
-                    print("self.nbGridPoints = ", self.nbGridPoints)
-                    print("self.gridVolume = ", self.gridVolume)
-                    #        self.exteriorVolume = totalVolume
-
-            print("self.compartments In Environment = ", len(self.compartments))
-            if self.compartments == []:
-                # o = self.histoVol
-                #                o = self.exteriorRecipe
-                unitVol = self.grid.gridSpacing ** 3
-                innerPointNum = len(freePoints)
-                print("  .  .  .  . ")
-                print("inner Point Count = ", innerPointNum)
-                print("innerVolume temp Confirm = ", innerPointNum * unitVol)
-                usedPts = 0
-                unUsedPts = 0
-                # fpts = self.freePointsAfterFill
-                vDistanceString = ""
-                for i in range(innerPointNum):
-                    pt = freePoints[i]  # fpts[i]
-                    # for pt in self.histo.freePointsAfterFill:#[:self.histo.nbFreePointsAfterFill]:
-                    d = self.distancesAfterFill[pt]
-                    vDistanceString += str(d) + "\n"
-                    if d <= 0:  # >self.smallestProteinSize-0.001:
-                        usedPts += 1
-                    else:
-                        unUsedPts += 1
-                    #                filename = wrkDirRes+"/vResultMatrix1" + o.name + "_Testid" + str(vTestid) + "_Seed" + str(seedNum) + "_dists.txt" # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                    #                #            filename = wrkDirRes+"/vDistances1.txt"
-                    #                f = open(filename,"w")
-                    #                vMyString = "I am on" + "\nThis is a new line."
-                    #                f.write(vDistanceString)
-                    #                f.close()
-                    #                resultfilenameT = wrkDirRes+"/vResultMatrix1" + o.name + "_Testid" + str(vTestid) + "_Seed" + str(seedNum) + "_Trans.txt" # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                    #                resultfilenameR = wrkDirRes+"/vResultMatrix1" + o.name + "_Testid" + str(vTestid) + "_Seed" + str(seedNum) + "_Rot.txt" # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                    #                vTranslationString = ""
-                    #                vRotationString = ""
-                    #                result=[]
-                    #                matCount = 0
-                    #                # Add safety check for C4D until we can get uPy working for this matrix to hbp rotation function?
-                    #                #            from c4d import utils   # Removed by Graham on July 10, 2012 because replaced with more recent Thesis code on July 5, 2012 below
-                    #                #what do you save everthing in left hand ? and you actually dont use it ??
-                    #                # Note July 4, 2012: the results are saved as right handed (see 2, 1, 0 for h, p, b) and used for analysis tools
-                    #                # Note July 5, 2012: I found the better version we made and added it below to override the C4D version!
-                    #                for pos, rot, ingr, ptInd in o.molecules:
-                    #                    #vMatrixString += str(result([pos]))+"\n"
-                    #                    # BEGIN: newer code from Theis version added July 5, 2012
-                    #                    if hasattr(self,"afviewer"):
-                    #                        mat = rot.copy()
-                    #                        mat[:3, 3] = pos
-                    #                        import math
-                    #                        from ePMV import comput_util as c
-                    #                        r  = c.matrixToEuler(mat)
-                    #                        h1 = math.degrees(math.pi + r[0])
-                    #                        p1 = math.degrees(r[1])
-                    #                        b1 = math.degrees(-math.pi + r[2])
-                    #                        #angles[0] = 180.0+angles[0]
-                    #                        #angles[2] = 180.0-angles[2]
-                    #                        #hmat = self.afviewer.vi.FromMat(mat,transpose=True)
-                    #                        #rot = utils.MatrixToHPB(hmat)
-                    #                        print 'rot from matrix = ', r,h1,p1,b1
-                    #                    # END: newer code from Theis version added July 5, 2012
-                    #                    result.append([pos,rot])
-                    #                    pt3d = result[matCount][0]
-                    #                    x, y, z = pt3d #  ADDDED this line back from newer code from Theis version added July 5, 2012
-                    #                    vTranslationString += str(x)+ ",\t" + str(y) + ",\t" + str(z) + "\n"
-                    #                    vRotationString += str(h1)+ ",\t" + str(p1) + ",\t" + str(b1) + ",\t" + ingr.name +"\n"  #  ADDDED this line back from newer code from Theis version
-                    #                    matCount += 1
-                    #                rfile = open(resultfilenameT, 'w')
-                    #                rfile.write( vTranslationString )
-                    #                rfile.close()
-                    #
-                    #                rfile = open(resultfilenameR, 'w')
-                    #                rfile.write( vRotationString )
-                    #                rfile.close()
-                    #                print ('len(result) = ', len(result))
-                    #                print ('len(self.molecules) = ', len(self.molecules))
-                # Graham Note:  There is overused disk space- the rotation matrix is 4x4 with an offset of 0,0,0
-                # and we have a separate translation vector in the results and molecules arrays.
-                # Get rid of the translation vector and move it to the rotation matrix to save space...
-                # will that slow the time it takes to extract the vector from the matrix when we need to call it?
-                print(
-                    "*************************************************** vDistance String Should be on"
-                )
-                print("unitVolume2 = ", unitVol)
-                print("Number of Points Unused = ", unUsedPts)
-                print("Number of Points Used   = ", usedPts)
-                print("Volume Used   = ", usedPts * unitVol)
-                print("Volume Unused = ", unUsedPts * unitVol)
-                print("vTestid = ", vTestid)
-                print("self.nbGridPoints = ", self.nbGridPoints)
-                print("self.gridVolume = ", self.gridVolume)
-                print("histoVol.timeUpDistLoopTotal = ", self.timeUpDistLoopTotal)
-
-                # totalVolume = self.grid.gridVolume*unitVol
-                # fpts = self.nbFreePointsAfterFill
-                #        print 'self.freePointsAfterFill = ', self.freePointsAfterFill
-                # print 'nnbFreePointsAfterFill = ', self.nbFreePointsAfterFill
-                # print 'Total Points = ', self.grid.gridVolume
-                # print 'Total Volume = ', totalVolume
-                #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
-        print("time to save end", time.time() - t2)
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):
             self.afviewer.vi.progressBar(label="Filling Complete")
             self.afviewer.vi.resetProgressBar()

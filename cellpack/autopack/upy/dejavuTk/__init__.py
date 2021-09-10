@@ -1,6 +1,6 @@
 """
     Copyright (C) <2010>  Autin L. TSRI
-    
+
     This file git_upy/dejavuTk/__init__.py is part of upy.
 
     upy is free software: you can redistribute it and/or modify

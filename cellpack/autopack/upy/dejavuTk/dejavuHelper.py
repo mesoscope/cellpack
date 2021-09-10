@@ -2,7 +2,7 @@
 
 """
     Copyright (C) <2010>  Autin L. TSRI
-    
+
     This file git_upy/dejavuTk/dejavuHelper.py is part of upy.
 
     upy is free software: you can redistribute it and/or modify
@@ -19,13 +19,15 @@
     along with upy.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.
 """
 
-# standardmodule
+# standard module
 import os
 import numpy
 from PIL import Image
+import collada
+
+from cellpack.autopack.upy import hostHelper
 
 # DejaVu module
-from cellpack.mgl_tools.upy import hostHelper
 from cellpack.mgl_tools.DejaVu.Viewer import Viewer
 from cellpack.mgl_tools.DejaVu.Geom import Geom
 from cellpack.mgl_tools.DejaVu.Spheres import Spheres
@@ -35,7 +37,6 @@ from cellpack.mgl_tools.DejaVu.glfLabels import GlfLabels as Labels
 from cellpack.mgl_tools.DejaVu.IndexedPolygons import IndexedPolygons
 from cellpack.mgl_tools.DejaVu.Polylines import Polylines as dejavuPolylines
 from cellpack.mgl_tools.DejaVu.Texture import Texture
-import collada
 
 
 # Problem instance doesnt really exist as its. Or its instance of mesh/sphere/cylinder directly.
@@ -113,7 +114,6 @@ class dejavuHelper(hostHelper.Helper):
         # we can define here some function alias
         self.nogui = False
 
-        print("INITHELPER1")
         if master is not None:
             if type(master) is dict:
                 self.viewer = master["master"]
@@ -194,9 +194,6 @@ class dejavuHelper(hostHelper.Helper):
     def resetProgressBar(self):
         """reset the Progress Bar, using value"""
         return
-        if hasattr(self.viewer, "Bar"):
-            self.viewer.Bar.reset()
-        self.update()
 
     def update(self):
         vi = self.getCurrentScene()
@@ -219,8 +216,6 @@ class dejavuHelper(hostHelper.Helper):
     def getName(self, o):
         if type(o) is str:
             o = self.getCurrentScene().findGeomsByName(o)
-        else:
-            print("getName", o, type(o))
         return o.name
 
     def getObject(self, name):
@@ -674,7 +669,7 @@ class dejavuHelper(hostHelper.Helper):
         parent = None
         if "parent" in kw:
             parent = kw.pop("parent")
-        from DejaVu.Points import Points
+        from cellpack.mgl_tools.DejaVu.Points import Points
 
         obj = Points(name, **kw)
         self.addObjectToScene(self.getCurrentScene(), obj, parent=parent)
@@ -1215,7 +1210,7 @@ class dejavuHelper(hostHelper.Helper):
         if len(sh) == 2 and sh[1] == 3:
             f = g.primitives[0].vertex_index
         else:
-            f = g.primitives[0].vertex_index[: nf].reshape(int(nf / 3), 3)
+            f = g.primitives[0].vertex_index[:nf].reshape(int(nf / 3), 3)
         n = g.primitives[0].normal
         ni = g.primitives[0].normal_index
         vn = []
@@ -1336,7 +1331,7 @@ class dejavuHelper(hostHelper.Helper):
         #            for i,node in enumerate(col.scene.nodes) :
         #                self.transformNode(node,i,col,col.scene.xmlnode[i])
         else:
-            from DejaVu.IndexedPolygons import IndexedPolygonsFromFile
+            from cellpack.mgl_tools.DejaVu.IndexedPolygons import IndexedPolygonsFromFile
 
             geoms = IndexedPolygonsFromFile(filename, fileName)
             self.AddObject(geoms)
