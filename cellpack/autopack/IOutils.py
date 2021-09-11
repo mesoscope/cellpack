@@ -271,17 +271,8 @@ class IOingredientTool(object):
         kw = {}
         for k in KWDS:
             v = getValueToXMLNode(KWDS[k]["type"], ingrnode, k)
-            # example of debugging...
-            #            if k=="sphereFile":
-            #                print (k,v)
-            #            if k == "rejectionThreshold" :
-            #                print "rejectionThreshold",KWDS[k]["type"],v,v is not None
-            #                print "rejectionThreshold",ingrnode.getAttribute(k)
             if v is not None:
                 kw[k] = v
-                # create the ingredient according the type
-            #        ingre = self1.makeIngredient(**kw)
-            #        kw.update({"name":name})
         return kw
 
     def ingrXmlNode(self, ingr, xmldoc=None):
@@ -2069,8 +2060,6 @@ def setupFromJsonDic(
                 else:
                     rep = None
                     rep_file = None
-                    print("NONENE")
-                print("add compartment ", name, geom, gname, rep, rep_file)
                 o = Compartment(
                     name,
                     None,

@@ -1204,7 +1204,6 @@ class dejavuHelper(hostHelper.Helper):
         if name == "":
             name = g.id
         v = numpy.array(g.primitives[0].vertex)  # multiple primitive ?
-        print("vertices nb is ", len(v))
         nf = len(g.primitives[0].vertex_index)
         sh = g.primitives[0].vertex_index.shape
         if len(sh) == 2 and sh[1] == 3:
@@ -1268,7 +1267,6 @@ class dejavuHelper(hostHelper.Helper):
             dicgeoms[g.id]["geom"] = g
             dicgeoms[g.id]["id"] = g.id
             v, vn, f = self.decomposeColladaGeom(g, col)
-            print("vertices nb is ", len(v))
             if self.nogui:
                 # apply transformation from boundGeom
                 dicgeoms[g.id]["node"] = None

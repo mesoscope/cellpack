@@ -80,6 +80,8 @@ class BaseGrid:
         self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=True, lookup=0
     ):
         self.log = logging.getLogger("grid")
+        self.log.propagate = False
+
         # a grid is attached to an environnement
         self.boundingBox = boundingBox
         # this list provides the id of the component this grid points belongs
@@ -157,10 +159,9 @@ class BaseGrid:
         self.freePoints = list(range(self.gridVolume))
         self.nbFreePoints = len(self.freePoints)
         self.log.info(
-            "Lookup %d, bounding box %r, space %r, gridSpacking %r, length gridPtId %r",
+            "Lookup: %d, bounding box: %r, gridSpacing %r, length gridPtId %r",
             self.lookup,
             boundingBox,
-            space,
             self.gridSpacing,
             len(self.gridPtId),
         )
@@ -201,8 +202,6 @@ class BaseGrid:
         Fill the orthogonal bounding box described by two global corners
         with an array of points spaces pGridSpacing apart.:
         """
-        self.log.info("Using create3DPointLookup_loop")
-
         if boundingBox is None:
             boundingBox = self.boundingBox
         xl, yl, zl = boundingBox[0]
@@ -212,22 +211,20 @@ class BaseGrid:
         nx, ny, nz = self.nbGridPoints
         pointArrayRaw = numpy.zeros((nx * ny * nz, 3), "f")
         self.ijkPtIndice = numpy.zeros((nx * ny * nz, 3), "i")  # this is unused
-        # try :
-        # self.ijkPtIndice = numpy.ndindex(nx,ny,nz)
         space = self.gridSpacing
         # Vector for lower left broken into real of only the z coord.
         i = 0
         for zi in range(nz):
             for yi in range(ny):
                 for xi in range(nx):
-                    pointArrayRaw[i] = (
-                        xl + xi * space + space / 2.0,
-                        yl + yi * space + space / 2.0,
-                        zl + zi * space + space / 2.0,
-                    )
+
+                    x = xl + xi * space + space / 2.0
+                    y = yl + yi * space + space / 2.0
+                    z = zl + zi * space + space / 2.0
+                    pointArrayRaw[i] = (x, y, z)
                     self.ijkPtIndice[i] = (xi, yi, zi)
                     i += 1
-        self.log.info(" in create3d point lookup loop, grid spacing %d", space)
+        self.log.info("grid spacing %d", space)
         self.masterGridPositions = pointArrayRaw
 
     def create3DPointLookup(self, boundingBox=None):

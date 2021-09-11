@@ -221,7 +221,6 @@ class Gradient:
         """
         build the actual gradient value according the gradint mode
         """
-        print("gradient ", self.name, self.mode)
         if self.mode in self.axes:
             self.buildWeigthMapAxe(bb, MasterPosition)
         elif self.mode == "direction":

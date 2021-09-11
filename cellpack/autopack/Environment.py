@@ -46,13 +46,13 @@
 # TODO: fix the save/restore grid
 """
 
+from cellpack.autopack.transformation import euler_from_matrix
 import os
 import time
 from random import random, uniform, seed
 from scipy import spatial
 import numpy
 import pickle
-from scipy.spatial.transform import Rotation as R
 from math import floor, pi
 import json
 from json import encoder
@@ -912,11 +912,12 @@ class Environment(CompartmentList):
                         mat[:3, 3] = pos
                         import math
 
-                        r = R.from_matrix(mat).as_euler("xyz", degrees=False)
+                        # r = R.from_matrix(mat).as_euler("xyz", degrees=False)
+                        r = euler_from_matrix(mat, "rxyz")
                         h1 = math.degrees(math.pi + r[0])
                         p1 = math.degrees(r[1])
                         b1 = math.degrees(-math.pi + r[2])
-                        print("rot from matrix = ", r, h1, p1, b1)
+                        self.log.info("rot from matrix = %r %r %r %r", r, h1, p1, b1)
                         # END: newer code from Theis version added July 5, 2012
                     result.append([pos, rot])
                     pt3d = result[matCount][0]
@@ -1590,7 +1591,7 @@ class Environment(CompartmentList):
         aSurfaceGrids = []
         # thread ?
         for compartment in self.compartments:
-            self.log(
+            self.log.info(
                 "in Environment, compartment.isOrthogonalBoundingBox =",
                 compartment.isOrthogonalBoundingBox,
             )

@@ -55,6 +55,7 @@
 
 # NOTE changing smallest molecule radius changes grid spacing and invalidates
 #      arrays saved to file
+import logging
 import os
 import pickle
 
@@ -100,6 +101,9 @@ class CompartmentList:
     """
 
     def __init__(self):
+        self.log = logging.getLogger("compartment")
+        self.log.propagate = False
+
         # list of compartments inside this compartment
         self.compartments = []
 
@@ -458,7 +462,7 @@ class Compartment(CompartmentList):
         mesh = BulletTriangleMesh()
         mesh.addGeom(geom)
         shape = BulletTriangleMeshShape(mesh, dynamic=False)  # BulletConvexHullShape
-        print("shape ok", shape)
+        self.log.info("shape ok %r", shape)
         # inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
         # inodenp.node().setMass(1.0)
         #        inodenp.node().addShape(shape)#,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
@@ -537,7 +541,7 @@ class Compartment(CompartmentList):
             gname = rep
             if helper is not None:
                 parent = helper.getObject("O%s" % self.name)
-        print("compartments ", self.name, filename, gname, rep)
+        self.log.info("compartments %s %s %s %r", self.name, filename, gname, rep)
         # identify extension
         name = filename.split("/")[-1]
         fileName, fileExtension = os.path.splitext(name)
@@ -549,8 +553,8 @@ class Compartment(CompartmentList):
         else:
             filename = autopack.retrieveFile(filename, cache="geometries")
         if filename is None:
-            print(
-                "problem with getMesh of compartment",
+            self.log.error(
+                "problem with getMesh of compartment %s %s %s %r",
                 self.name,
                 fileName,
                 fileExtension,
@@ -558,13 +562,11 @@ class Compartment(CompartmentList):
             )
             return
         if not os.path.isfile(filename) and fileExtension != "":
-            print("problem with " + filename)
+            self.log.error("problem with %s" + filename)
             return
-        print("filename compartments is", filename, type(filename))
         fileName, fileExtension = os.path.splitext(filename)
-        print("found fileName " + fileName + " fileExtension " + fileExtension)
+        self.log.info("found fileName %s", fileName)
         if fileExtension.lower() == ".fbx":
-            print("read withHelper", filename)
             # use the host helper if any to read
             if helper is not None:  # neeed the helper
                 helper.read(filename)
@@ -620,7 +622,6 @@ class Compartment(CompartmentList):
                         gname = helper.getName(geom)
                         # rename
                     helper.reParent(geom, parent)
-                print("should have read...", gname, geom, parent)
                 # helper.update()
                 if helper.host == "3dsmax" or helper.host.find("blender") != -1:
                     helper.resetTransformation(
@@ -1065,9 +1066,7 @@ class Compartment(CompartmentList):
                 continue
 
             dl1 = l1 / (nbp1 + 1)
-            # if dl1<15:
-            #    pdb.set_trace()
-            # print l1, nbp1, dl1, lengthRatio
+
             dx1 = dl1 * v1[0] / l1
             dy1 = dl1 * v1[1] / l1
             dz1 = dl1 * v1[2] / l1
@@ -1085,10 +1084,7 @@ class Compartment(CompartmentList):
                     continue
                 # dl2 = l2*percentage/(nbp2+1)
                 dl2 = l2c / (nbp2 + 1)
-                # print '   ',i, percentage, dl1, l2c, dl2, nbp2, l2
-                # if dl2<15:
-                #    pdb.set_trace()
-
+ 
                 dx2 = dl2 * v2[0] / l2
                 dy2 = dl2 * v2[1] / l2
                 dz2 = dl2 * v2[2] / l2
@@ -1141,7 +1137,6 @@ class Compartment(CompartmentList):
             RAPIDlib.cvar.RAPID_ALL_CONTACTS,
         )
         # could display it ?
-        # print numpy.array([v1,v2,v3],'f')
         return RAPIDlib.cvar.RAPID_num_contacts
 
     def checkPointInside_rapid(self, point, diag, ray=1):
@@ -1272,20 +1267,14 @@ class Compartment(CompartmentList):
         AreaYplane = (bb1x - bb0x) * (bb1z - bb0z)
         AreaZplane = (bb1y - bb0y) * (bb1x - bb0x)
         vSurfaceArea = abs(AreaXplane) * 2 + abs(AreaYplane) * 2 + abs(AreaZplane) * 2
-        if autopack.verbose:
-            print("vSurfaceArea = ", vSurfaceArea)
+        self.log.info("vSurfaceArea = %r", vSurfaceArea)
         self.insidePoints = a
         self.surfacePoints = []
         self.surfacePointsCoords = []
         self.surfacePointsNormals = []
-        if autopack.verbose:
-            print(
-                " %d inside pts, %d tot grid pts, %d master grid"
-                % (len(a), len(a), len(self.grid.masterGridPositions))
-            )
+        self.log.info("%d inside pts, %d tot grid pts, %d master grid", len(a), len(a), len(self.grid.masterGridPositions))
         self.computeVolumeAndSetNbMol(env, b, a, areas=vSurfaceArea)
-        if autopack.verbose:
-            print("The size of the grid I build = ", len(a))
+
         return a, b, vSurfaceArea
 
     def BuildGrid_box(self, env, vSurfaceArea):
@@ -1302,17 +1291,7 @@ class Compartment(CompartmentList):
         self.surfacePoints = surfacePoints
         self.surfacePointsCoords = surfPtsBB
         self.surfacePointsNormals = surfacePointsNormals
-        if autopack.verbose:
-            print(
-                "%s surface pts, %d inside pts, %d tot grid pts, %d master grid"
-                % (
-                    len(self.surfacePoints),
-                    len(self.insidePoints),
-                    nbGridPoints,
-                    len(env.grid.masterGridPositions),
-                )
-            )
-
+        self.log.info("%s surface pts, %d inside pts, %d tot grid pts, %d master grid", len(self.surfacePoints), len(self.insidePoints), nbGridPoints, len(env.grid.masterGridPositions))
         self.computeVolumeAndSetNbMol(
             env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
@@ -1355,16 +1334,12 @@ class Compartment(CompartmentList):
             self.BuildGrid_box(env, vSurfaceArea)
             return self.insidePoints, self.surfacePoints
 
-        if autopack.verbose:
-            print(
-                "time to create surface points", time() - t1, len(self.ogsurfacePoints)
-            )
+        self.log.info("time to create surface points %d %d", time() - t1, len(self.ogsurfacePoints))
 
         distances = env.grid.distToClosestSurf
         idarray = env.grid.gridPtId
         diag = env.grid.diag
-        if autopack.verbose:
-            print("distance ", len(distances), "idarray ", len(idarray))
+        self.log.info("distance %d", len(distances))
         t1 = time()
 
         # build BHTree for off grid surface points
@@ -1386,13 +1361,7 @@ class Compartment(CompartmentList):
         # FIXME sould be diag of compartment BB inside fillBB
         grdPos = env.grid.masterGridPositions
         #        returnNullIfFail = 0
-        if autopack.verbose:
-            print(
-                "compartment build grid jordan",
-                diag,
-                " nb points in grid ",
-                len(grdPos),
-            )  # [],None
+        self.log.info("compartment build grid jordan %r", diag)  # [],None
         #        closest = bht.closestPointsArray(tuple(grdPos), diag,
         #                                         returnNullIfFail)
         closest = bht.query(tuple(grdPos))  # return both indices and distances
@@ -1432,10 +1401,8 @@ class Compartment(CompartmentList):
                 idarray.itemset(ptInd, -number)
                 # idarray[ptInd] = -number
             if (ptInd % 100) == 0:
-                if autopack.verbose:
-                    print(str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(r))
-        if autopack.verbose:
-            print("time to update distance field and idarray", time() - t1)
+                self.log.info("%s inside %s", str(ptInd) + str(len(grdPos)), str(r))
+        self.log.info("time to update distance field and idarray %d", time() - t1)
 
         t1 = time()
         nbGridPoints = len(env.grid.masterGridPositions)
@@ -2865,7 +2832,7 @@ class Compartment(CompartmentList):
                 x, y, z = p
                 if x >= mx and x <= Mx and y >= my and y <= My and z >= mz and z <= Mz:
                     surfPtsBB.append(p)
-        print("surf points going from to", len(srfPts), len(surfPtsBB))
+        self.log.info("surf points going from to %d %d", len(srfPts), len(surfPtsBB))
         srfPts = surfPtsBB
         return surfPtsBB, surfPtsBBNorms
 
@@ -2982,7 +2949,7 @@ class Compartment(CompartmentList):
                 surfPtsBB.append(p)
                 surfPtsBBNorms.append(ogNorms[i])
 
-        print("surf points going from to", len(srfPts), len(surfPtsBB))
+        self.log.info("surf points going from to %d %d", len(srfPts), len(surfPtsBB))
         srfPts = surfPtsBB
         length = len(srfPts)
 
@@ -3330,7 +3297,7 @@ class Compartment(CompartmentList):
         """
         unitVol = histoVol.grid.gridSpacing ** 3
         if surfacePoints:
-            print("%d surface points %.2f unitVol" % (len(surfacePoints), unitVol))
+            self.log.info("%d surface points %.2f unitVol", len(surfacePoints), unitVol)
             # FIXME .. should be surface per surface point instead of unitVol
             self.surfaceVolume = len(surfacePoints) * unitVol
         area = False
@@ -3339,11 +3306,9 @@ class Compartment(CompartmentList):
             area = True
         self.interiorVolume = len(insidePoints) * unitVol
         if self.surfaceVolume is not None:
-            print(
-                "%d surface volume %.2f interior volume"
-                % (self.surfaceVolume, self.interiorVolume)
-            )
-        print("%.2f interior volume" % (self.interiorVolume))
+            self.log.info(
+                "%d surface volume %.2f interior volume", self.surfaceVolume, self.interiorVolume)
+        self.log.info("%.2f interior volume", self.interiorVolume)
 
         # compute number of molecules and save in recipes
         rs = self.surfaceRecipe
@@ -3355,10 +3320,9 @@ class Compartment(CompartmentList):
         if ri:
             volume = self.interiorVolume
             a = ri.setCount(volume)
-            print(
-                "number of molecules for Special Cube = ",
+            self.log.info(
+                "number of molecules for Special Cube = %r, because interiorVolume = %r",
                 a,
-                ", because interiorVolume = ",
                 volume,
             )
 
@@ -3540,7 +3504,7 @@ class Compartment(CompartmentList):
         # Make a copy of faces, vertices, and vnormals.
         faces = self.faces[:]
         vertices = self.vertices[:]
-
+        from cellpack.autopack.Environment import Grid
         # Grid initialization referenced from getSurfaceInnerPointsJordan()
         self.grid = grid = Grid()  # setup=False)
         grid.boundingBox = boundingBox

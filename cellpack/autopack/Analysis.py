@@ -1334,7 +1334,7 @@ class AnalyseAP:
                                 f_handle = open(distance_file, "a")
                                 numpy.savetxt(f_handle, d, delimiter=",")
                                 f_handle.close()
-                                distances[ingr.name] = d.tolist()
+                                distances[ingr.name] = d
                                 ingrpositions[ingr.name] = ingrpos.tolist()
                             else:
                                 distances[ingr.name].extend(d)
@@ -1369,7 +1369,7 @@ class AnalyseAP:
                                 f_handle = open(distance_file, "a")
                                 numpy.savetxt(f_handle, d, delimiter=",")
                                 f_handle.close()
-                                distances[ingr.name] = d.tolist()
+                                distances[ingr.name] = d
                                 ingrpositions[ingr.name] = ingrpos.tolist()
                             else:
                                 distances[ingr.name].extend(d)

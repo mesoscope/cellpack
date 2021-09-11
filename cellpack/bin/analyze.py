@@ -161,64 +161,24 @@ def main():
 
         if do_analysis:
             log.info("DOING ANALYSIS %r", do_analysis)
-            if place_method == "RAPID":
-                env.placeMethod = "RAPID"
-                env.encapsulatingGrid = 0
-                autopack.testPeriodicity = False
-                analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
-                analyse.g.Resolution = 1.0
-                env.boundingBox = numpy.array(env.boundingBox)
-                log.info("bounding box %r", env.boundingBox)
+   
+            env.placeMethod = place_method
+            env.encapsulatingGrid = 0
+            autopack.testPeriodicity = False
+            analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
+            analyse.g.Resolution = 1.0
+            env.boundingBox = numpy.array(env.boundingBox)
 
-                analyse.doloop(
-                    1,
-                    env.boundingBox,
-                    wrkDir,
-                    output,
-                    rdf=True,
-                    render=False,
-                    twod=(dim == 2),
-                    use_file=True,
-                )  # ,fbox_bb=fbox_bb)
-            elif place_method == "pandaBullet":
-                env.placeMethod = "pandaBullet"
-                env.encapsulatingGrid = 0
-                env.use_periodicity = True
-                autopack.testPeriodicity = True
-                autopack.biasedPeriodicity = [1, 1, 1]
-                analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
-                analyse.g.Resolution = 1.0
-                # env.boundingBox = numpy.array([[0, 0, 0], [1000.0, 1000.0, 15.0]])
-                env.boundingBox = numpy.array(env.boundingBox)
-                log.info("bounding box %r", env.boundingBox)
-                analyse.doloop(
-                    1,
-                    env.boundingBox,
-                    wrkDir,
-                    output,
-                    rdf=True,
-                    render=False,
-                    twod=(dim == 2),
-                    use_file=True,
-                )  # ,fbox_bb=fbox_bb)
-            else:
-                env.placeMethod = place_method
-                env.encapsulatingGrid = 0
-                autopack.testPeriodicity = False
-                analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
-                analyse.g.Resolution = 1.0
-                env.boundingBox = numpy.array(env.boundingBox)
-
-                analyse.doloop(
-                    2,
-                    env.boundingBox,
-                    wrkDir,
-                    output,
-                    rdf=True,
-                    render=False,
-                    twod=(dim == 2),
-                    use_file=True,
-                )  # ,fbox_bb=fbox_bb)
+            analyse.doloop(
+                2,
+                env.boundingBox,
+                wrkDir,
+                output,
+                rdf=True,
+                render=False,
+                twod=(dim == 2),
+                use_file=True,
+            )  # ,fbox_bb=fbox_bb)
         else:
             gridfile = (
                 localdir

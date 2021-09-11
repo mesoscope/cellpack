@@ -1121,7 +1121,7 @@ class Ingredient(Agent):
         if sphereFile is not None and str(sphereFile) != "None":
             sphereFileo = autopack.retrieveFile(sphereFile, cache="collisionTrees")
             fileExtension = os.path.splitext(sphereFile)
-            self.log.info("sphereTree" %r, sphereFileo)
+            self.log.info("sphereTree %r", sphereFileo)
             if sphereFileo is not None and os.path.isfile(sphereFileo):
                 self.sphereFile = sphereFile
                 sphereFile = sphereFileo
@@ -1153,7 +1153,7 @@ class Ingredient(Agent):
                         # and encapsulate the ingredient
                         self.encapsulatingRadius = rM
                 else:
-                    print("sphere file extension not recognized " + fileExtension)
+                    self.log.info("sphere file extension not recognized %r", fileExtension)
         self.getSpheresPositions(positions, radii)
 
         self.positions2 = positions2
@@ -1210,7 +1210,7 @@ class Ingredient(Agent):
             self.coordsystem = kw["coordsystem"]
         self.rejectionThreshold = 30
         if "rejectionThreshold" in kw:
-            print("rejectionThreshold", kw["rejectionThreshold"])
+            self.log.info("rejectionThreshold %d", kw["rejectionThreshold"])
             self.rejectionThreshold = kw["rejectionThreshold"]
 
         # get the collision mesh
@@ -1945,10 +1945,14 @@ class Ingredient(Agent):
     def getSpheresPositions(self, positions, radii):
         # positions and radii are passed to the constructor
         # check the format old nested array, new array of dictionary
-        nLOD = len(positions)
+        nLOD = 0
+        
+        if positions is not None:
+            nLOD = len(positions)
+
         self.positions = []
         self.radii = []
-        if isinstance(positions[0], dict):
+        if positions is not None and isinstance(positions[0], dict):
             for i in range(nLOD):
                 c = numpy.array(positions[i]["coords"])
                 n = len(c)
@@ -2204,13 +2208,13 @@ class Ingredient(Agent):
         # should wetry to see if it already exist inthescene
         if helper is not None and not helper.nogui:
             o = helper.getObject(geomname)
-            print("retrieve ", geomname, o)
+            self.log.info("retrieve %s %r", geomname, o)
             if o is not None:
                 return o
         # identify extension
         name = filename.split("/")[-1]
         fileName, fileExtension = os.path.splitext(name)
-        print("retrieve ", filename, fileExtension)
+        self.log.info("retrieve %s %r", filename, fileExtension)
         if fileExtension == "":
             tmpFileName1 = autopack.retrieveFile(
                 filename + ".indpolface", cache="geometries"
@@ -2270,7 +2274,7 @@ class Ingredient(Agent):
                 return geom
             return None
         elif fileExtension == ".dae":
-            print("read dae withHelper", filename, helper, autopack.helper)
+            self.log.info("read dae withHelper", filename, helper, autopack.helper)
             # use the host helper if any to read
             if helper is None:
                 from upy.dejavuTk.dejavuHelper import dejavuHelper
@@ -2292,14 +2296,12 @@ class Ingredient(Agent):
                 if helper.host == "dejavu" and helper.nogui:
                     dgeoms = helper.read(filename)
                     v, vn, f = list(dgeoms.values())[0]["mesh"]
-                    print("vertices nb is ", len(v))
-                    #                    vn = self.getVertexNormals(v,f)
+                    self.log.info("vertices nb is %d", len(v))
                     self.vertices, self.vnormals, self.faces = (
                         v,
                         vn,
                         f,
                     )  # helper.combineDaeMeshData(dgeoms.values())
-                    print("after coombine vertices nb is ", len(v))
                     self.vnormals = (
                         []
                     )  # helper.normal_array(self.vertices,numpy.array(self.faces))
@@ -3270,13 +3272,12 @@ class Ingredient(Agent):
                             histoVol,
                         )
                         if not collision and level > 0:
-                            print("returning regular collision level")
+                            self.log.info("returning regular collision level")
                             return collision, insidePoints, newDistPoints
-                        print("returning regular collision")
+                        self.log.info("returning regular collision")
                         return collision, insidePoints, newDistPoints
                     else:
-                        if histoVol.verbose:
-                            print("in Collision, grid point already occupied")
+                        self.log.info("in Collision, grid point already occupied")
                         return True, insidePoints, newDistPoints
                         # FIXME DEBUG INFO
                         # dist = distA[pti]
@@ -3606,7 +3607,6 @@ class Ingredient(Agent):
             if inComp:
                 # check how far from surface ?
                 closeS = self.checkPointSurface(newPt, cutoff=self.cutoff_surface)
-        self.log.info("testing point avialable: %s %r %r %r %r", self.name, newPt, not inside, closeS, not inComp)
         return not inside or closeS or not inComp
 
     def oneJitter(self, spacing, trans, rotMat):
@@ -4068,7 +4068,6 @@ class Ingredient(Agent):
         distances = close_indice[
             "distances"
         ]  # spatial.distance.cdist(a,b)#close_indice["distance"]
-        # print ("retrieve ",len(close_indice["indices"]),close_indice["indices"],distances)
         for nid, n in enumerate(close_indice["indices"]):
             if n == -1:
                 continue
@@ -4158,7 +4157,6 @@ class Ingredient(Agent):
         distances = close_indice[
             "distances"
         ]  # spatial.distance.cdist(a,b)#close_indice["distance"]
-        # print ("retrieve ",len(close_indice["indices"]),close_indice["indices"],distances)
         for nid, n in enumerate(close_indice["indices"]):
             if n == -1:
                 continue
@@ -5059,14 +5057,12 @@ class Ingredient(Agent):
                 break  # break out of jitter pos loop
 
         self.log.info(
-            "end jitter loop %d %b %d %d",
+            "end jitter loop time=%d, collision=%r, num inside points=%d, num dist points=%d",
             time() - t1,
             collision,
             len(insidePoints),
             len(newDistPoints),
         )
-        self.log.info(insidePoints, newDistPoints)
-        self.log.info("continue")
         if not collision and not (True in r):
             # get inside points and update distance
             # use best spherical approximation
@@ -5075,7 +5071,7 @@ class Ingredient(Agent):
             # should be replace by self.getPointInside
 
             # save dropped ingredient
-            self.log.info("end compute distance loop ", time() - t3)
+            self.log.info("end compute distance loop %d", time() - t3)
             if drop:
                 compartment.molecules.append([jitter_trans, jitter_rot, self, ptInd])
                 env.order[ptInd] = env.lastrank
@@ -5367,10 +5363,10 @@ class Ingredient(Agent):
                 self.setTilling(compartment)
             if self.counter != 0:
                 # pick the next Hexa pos/rot.
-                t, result = self.tilling.getNextHexaPosRot()
+                t, collision_results = self.tilling.getNextHexaPosRot()
                 if len(t):
                     trans = t
-                    rotMat = result
+                    rotMat = collision_results
                     targetPoint = trans
                     if histoVol.runTimeDisplay and self.mesh:
                         mat = rotMat.copy()
@@ -5431,7 +5427,7 @@ class Ingredient(Agent):
                 dy = jy * jitter * uniform(-1.0, 1.0)
                 dz = jz * jitter * uniform(-1.0, 1.0)
                 if self.compNum > 0:  # jitter less among normal
-                    dx, dy, dz = numpy.dot(rotMat, (dx, dy, dz, 0))
+                    dx, dy, dz, _ = numpy.dot(rotMat, (dx, dy, dz, 0))
                 jtrans = (tx + dx, ty + dy, tz + dz)
 
             else:
@@ -5480,7 +5476,7 @@ class Ingredient(Agent):
                 #                afvi.vi.setTranslation(moving,pos=jtrans)
                 afvi.vi.update()
 
-            result = [False]
+            collision_results = [False]
             rbnode = self.get_rb_model()
             periodic_pos = self.env.grid.getPositionPeridocity(
                 jtrans, getNormedVectorOnes(self.jitterMax), self.encapsulatingRadius
@@ -5507,8 +5503,8 @@ class Ingredient(Agent):
                         ),
                     )
                     perdiodic_collision = self.pandaBullet_collision(p, rotMatj, rbnode)
-                    result.extend([perdiodic_collision])
-                    if True in result:
+                    collision_results.extend([perdiodic_collision])
+                    if True in collision_results:
                         break
                     histoVol.callFunction(
                         histoVol.moveRBnode,
@@ -5525,39 +5521,33 @@ class Ingredient(Agent):
                         > 0
                     )
                     self.log.info("col = %r", col)
-                    result.extend([col])  # = True in perdiodic_collision
+                    collision_results.extend([col])  # = True in perdiodic_collision
                     if histoVol.runTimeDisplay and moving is not None:
                         mat = rotMatj.copy()
                         mat[:3, 3] = jtrans
                         afvi.vi.setObjectMatrix(moving, mat, transpose=True)
                         afvi.vi.update()
-                    if True in result:
+                    if True in collision_results:
                         break
             t = time()
             point_is_available = not self.point_is_not_available(jtrans)
-            if point_is_available and not (True in result):
-                # check for close surface ?
-                # closeS = self.checkPointSurface(newPt,cutoff=self.cutoff_surface)
-                #                raw_input()
-                #                if self.env.close_ingr_bhtree.FreePts.NumPts == 0 : r=[False]
+            if point_is_available and not (True in collision_results):
+                self.log.info("point is availabe, and haven't found any collisions")
                 if len(self.env.rTrans) == 0:
-                    result = [False]
+                    collision_results = [False]
                 else:
-                    #                    print("getClosestIngredient",jtrans)
                     closesbody_indice = self.getClosestIngredient(
                         jtrans,
                         self.env,
                         cutoff=self.env.largestProteinSize
                         + self.encapsulatingRadius * 2.0,
                     )  # vself.radii[0][0]*2.0
-                    #                    print ("len(closesbody_indice) ",len(closesbody_indice["indices"]),str(self.env.largestProteinSize+self.encapsulatingRadius) )
                     if len(closesbody_indice["indices"]) == 0:
-                        result = [False]  # closesbody_indice[0] == -1
+                        collision_results = [False]  # closesbody_indice[0] == -1
                     else:
                         liste_nodes = self.get_rbNodes(
                             closesbody_indice, jtrans, getInfo=True
                         )
-                        #                        print ("len(liste_nodes) ",len(liste_nodes) )
                         if usePP:
                             # use self.grab_cb and self.pp_server
                             # Divide the task or just submit job
@@ -5572,14 +5562,13 @@ class Ingredient(Agent):
                                         (self.env.world, rbnode, liste_nodes[n]),
                                         callback=self.env.grab_cb.grab,
                                     )
-                                    #                                                          (rbnode, liste_nodes[n]),
-                                    #                                            callback=self.env.grab_cb.grab)
+
                                     n += 1
                                 self.env.pp_server.wait()
-                                result.extend(self.env.grab_cb.collision[:])
-                                if True in result:
+                                collision_results.extend(self.env.grab_cb.collision[:])
+                                if True in collision_results:
                                     break
-                        else:
+                        # else:
                             # why will it be not woking with organelle ?
                             # tranformation prolem ?
                             for node in liste_nodes:
@@ -5592,18 +5581,17 @@ class Ingredient(Agent):
                                     ).getNumContacts()
                                     > 0
                                 )
-                                result = [col]
+                                collision_results = [col]
                                 if col:
+                                    self.log.info("col %r", col)
                                     break
 
-            collision2 = True in result
+            collision2 = True in collision_results
             collisionComp = False
-            #            print("collide??",collision2,r,test)
-            #            print ("contactTestPair",collision2,time()-t)
-            #            print ("contact Pair ",collision, r,self.env.static) #gave nothing ???
+
             # need to check compartment too
-            if not collision2 and point_is_available:  # and not collision2:
-                # print ("no collision")
+            if not collision2 and point_is_available: 
+                self.log.info("no additional collisions, checking compartment")
                 if self.compareCompartment:
                     collisionComp = self.compareCompartmentPrimitive(
                         level, jtrans, rotMatj, gridPointsCoords, distance
@@ -5645,6 +5633,7 @@ class Ingredient(Agent):
 
         if not collision2 and point_is_available:
             drop = True
+
             # get inside points and update distance
             #
             # use best sperical approcimation
@@ -5717,6 +5706,7 @@ class Ingredient(Agent):
             self.rejectionCounter = 0
 
         else:  # got rejected
+            self.log.info("rejecting packing, collision=%r, point_is_available=%r", collision2, point_is_available)
             if histoVol.runTimeDisplay and moving is not None:
                 afvi.vi.deleteObject(moving)
             success = False
@@ -5739,7 +5729,7 @@ class Ingredient(Agent):
             ):  # Graham set this to 6000 for figure 13b (Results Fig 3 Test1) otehrwise it fails to fill small guys
                 # if verbose :
                 self.log.info(
-                    "PREMATURE ENDING of ingredient using pandaBullet_place %s",
+                    "PREMATURE ENDING of ingredient %s",
                     self.name,
                 )
                 self.completion = 1.0
