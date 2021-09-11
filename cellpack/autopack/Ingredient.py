@@ -3644,18 +3644,8 @@ class Ingredient(Agent):
             jtrans = trans
             dx = dy = dz = 0.0
             # randomize rotation about axis
-        if compNum > 0:
-            rotMatj = self.getAxisRotation(rotMat)
-        else:
-            if self.useRotAxis:  # is not None :
-                if sum(self.rotAxis) == 0.0:
-                    rotMatj = numpy.identity(4)
-                else:
-                    rotMatj = self.vi.rotation_matrix(
-                        random() * self.rotRange, self.rotAxis
-                    )
-            else:
-                rotMatj = rotMat.copy()
+        rotMatj = self.randomize_rotation(rotMat)
+
         return jtrans, rotMatj
 
     def getInsidePoints(
@@ -4491,32 +4481,26 @@ class Ingredient(Agent):
                 nbFreePoints,
                 distance,
                 dpad,
-                stepByStep=False,
-                verbose=verbose,
-                sphGeom=None,
-                labDistGeom=None,
-                debugFunc=None,
-                sphCenters=None,
-                sphRadii=None,
-                sphColors=None,
+                env.afviewer,
                 usePP=usePP,
             )
         return success, nbFreePoints
 
-    def get_rotation(self, pt_ind, histovol):
+    def get_rotation(self, pt_ind, histovol, compartment):
         # compute rotation matrix rotMat
         comp_num = self.compNum
-        if self.compNum == 0:
-            compartment = histovol
-        else:
-            compartment = histovol.compartments[abs(self.compNum) - 1]
+  
         rot_mat = numpy.identity(4)
         if comp_num > 0:
             # for surface points we compute the rotation which
             # aligns the principalVector with the surface normal
             v1 = self.principalVector
             v2 = compartment.surfacePointsNormals[pt_ind]
-            rot_mat = numpy.array(rotVectToVect(v1, v2), "f")
+            try:
+                rot_mat = numpy.array(rotVectToVect(v1, v2), "f")
+            except Exception:
+                print("PROBLEM ", self.name)
+                rot_mat = numpy.identity(4)
         else:
             # this is where we could apply biased rotation ie gradient/attractor
             if self.useRotAxis:
@@ -4537,9 +4521,8 @@ class Ingredient(Agent):
 
     def randomize_rotation(self, rotation, histovol):
         # randomize rotation about axis
-        comp_num = self.compNum
         jitter_rotation = numpy.identity(4)
-        if comp_num > 0:
+        if self.compNum > 0:
             jitter_rotation = self.getAxisRotation(rotation)
         else:
             if self.useRotAxis:
@@ -4556,9 +4539,10 @@ class Ingredient(Agent):
                         random() * self.rotRange, self.rotAxis
                     )
             else:
-                jitter_rotation = histovol.randomRot.get()
-                # Graham turned this back on to replace rotMat.copy() so ing rotate each time
-                #                    rotMatj = rotMat.copy()
+                if histovol is not None:
+                    jitter_rotation = histovol.randomRot.get()
+                else:
+                    jitter_rotation = rotation.copy()
         return jitter_rotation
 
     def randomize_translation(self, translation, rotation, jitter, jitter2):
@@ -4569,6 +4553,7 @@ class Ingredient(Agent):
         dx, dy, dz, d2 = [0.0, 0.0, 0.0, 0.0]
         jitter_trans = [0.0, 0.0, 0.0]
         jitter = jitter / 2.0
+
         if jitter2 > 0.0:
             found = False
             while not found:
@@ -4587,7 +4572,7 @@ class Ingredient(Agent):
         else:
             jitter_trans = translation
             dx = dy = dz = 0.0
-        return jitter_trans
+        return jitter_trans, dx, dy, dz
 
     def update_display_rt(self, moving, translation, rotation):
         mat = rotation.copy()
@@ -4681,34 +4666,10 @@ class Ingredient(Agent):
         else:
             compartment = self.env.compartments[abs(self.compNum) - 1]
             # this is hisotVol for cytoplasme
-        compNum = self.compNum
         gridPointsCoords = histoVol.grid.masterGridPositions
 
         # compute rotation matrix rotMat
-        if compNum > 0:
-            # for surface points we compute the rotation which
-            # aligns the principalVector with the surface normal
-            vx, vy, vz = v1 = self.principalVector
-            v2 = compartment.surfacePointsNormals[ptInd]
-            try:
-                rotMat = numpy.array(rotVectToVect(v1, v2), "f")
-            except:  # noqa: E722
-                print("PROBLEM ", self.name)
-                rotMat = numpy.identity(4)
-        else:
-            if self.useRotAxis:
-                if sum(self.rotAxis) == 0.0:
-                    rotMat = numpy.identity(4)
-                else:
-                    rotMat = autopack.helper.rotation_matrix(
-                        random() * self.rotRange, self.rotAxis
-                    )
-            else:
-                rotMat = histoVol.randomRot.get()
-
-        if verbose:
-            pass  # print('%s nbs:%2d'%(self.pdb, len(self.positions[0])), end=' ')
-
+        rotMat = self.get_rotation(ptInd, histoVol, compartment)
         # jitter position loop
         jitterList = []
         collD1 = []
@@ -4944,7 +4905,7 @@ class Ingredient(Agent):
         jitter = env.grid.gridSpacing
         jitter2 = jitter * jitter
         compartment = self.get_compartment(env)
-        rot_mat = self.get_rotation(ptInd, env)
+        rot_mat = self.get_rotation(ptInd, env, compartment)
 
         # jitter position loop
         jitterList = []
@@ -4959,24 +4920,7 @@ class Ingredient(Agent):
         target_point = trans
         moving = None
         if env.runTimeDisplay and self.mesh:
-            if hasattr(self, "mesh_3d"):
-                # create an instance of mesh3d and place it
-                name = self.name + str(ptInd)
-                moving = afvi.vi.getObject(name)
-                if moving is None:
-                    if self.mesh_3d is None:
-                        moving = afvi.vi.Sphere(
-                            name, radius=self.radii[0][0], parent=afvi.staticMesh
-                        )[0]
-                        afvi.vi.setTranslation(moving, pos=target_point)
-                    else:
-                        moving = afvi.vi.newInstance(
-                            name,
-                            self.mesh_3d,
-                            matrice=rot_mat,
-                            location=target_point,
-                            parent=afvi.staticMesh,
-                        )
+            moving = self.handle_real_time_visualization(afvi, ptInd, target_point, rot_mat)
 
         jitter_trans = target_point
         # we may increase the jitter, or pick from xyz->Id free for its radius
@@ -5254,6 +5198,62 @@ class Ingredient(Agent):
         else:
             return env.compartments[abs(self.compNum) - 1]
 
+    def close_partner_check(self, translation, rotation, compartment, afvi, distance, runTimeDisplay, moving):
+        bind = True
+        self.log.info("look for ingredient %r", translation)
+        # roll a dice about proba_not_binding
+        if self.proba_not_binding != 0:  # between 0 and 1
+            b = random()
+            if b <= self.proba_not_binding:
+                bind = False
+        if bind:
+            closesbody_indice = self.getClosestIngredient(
+                translation, self.env, cutoff=self.env.grid.diag
+            )  # vself.radii[0][0]*2.0
+            # return R[indice] and distance R["distances"]
+            target_point, rot_matrix, found = self.lookForNeighbours(
+                translation,
+                rotation,
+                compartment,
+                afvi,
+                distance,
+                closest_indice=closesbody_indice,
+            )
+            if not found and self.counter != 0:
+                self.reject()
+                return translation, rotation
+
+            # if partner:pickNewPoit like in fill3
+            if runTimeDisplay and self.mesh:
+                self.update_display_rt(moving, target_point, rot_matrix)
+            
+            return target_point, rot_matrix
+
+    def handle_real_time_visualization(self, afvi, ptInd, target_point, rot_mat):
+        moving = None
+
+        if hasattr(self, "mesh_3d"):
+            # create an instance of mesh3d and place it
+            name = self.name + str(ptInd)
+            moving = afvi.vi.getObject(name)
+            if moving is None:
+                if self.mesh_3d is None:
+                    moving = afvi.vi.Sphere(
+                        name, radius=self.radii[0][0], parent=afvi.staticMesh
+                    )[0]
+                    afvi.vi.setTranslation(moving, pos=target_point)
+                else:
+                    moving = afvi.vi.newInstance(
+                        name,
+                        self.mesh_3d,  # .GetDown(),
+                        matrice=rot_mat,
+                        location=target_point,
+                        parent=afvi.staticMesh,
+                    )
+            else:
+                self.update_display_rt(moving, target_point, rot_mat)
+        return moving
+
     def pandaBullet_place(
         self,
         histoVol,
@@ -5280,40 +5280,7 @@ class Ingredient(Agent):
         gridPointsCoords = histoVol.masterGridPositions
         periodic_pos = None
         # compute rotation matrix rotMat
-        if self.compNum > 0:
-            # for surface points we compute the rotation which
-            # aligns the principalVector with the surface normal
-            # no noise ?
-            v1 = self.principalVector
-            # surfacePointsNormals problem here
-            v2 = compartment.surfacePointsNormals[ptInd]
-            try:
-                rotMat = numpy.array(rotVectToVect(v1, v2), "f")
-            except Exception:
-                print("PROBLEM ", self.name)
-                rotMat = numpy.identity(4)
-        else:
-            if self.useRotAxis:
-
-                if sum(self.rotAxis) == 0.0:
-                    rotMat = numpy.identity(4)
-                elif (
-                    self.useOrientBias and self.packingMode == "gradient"
-                ):  # you need a gradient here
-                    rotMat = self.alignRotation(gridPointsCoords[ptInd])
-                    self.log.info("rotAxis = %d", self.rotAxis)
-                    self.log.info("rotRange = %d", self.rotRange)
-                    self.log.info(
-                        "**************************************************Rotate GRADIENT ON **************************"
-                    )
-                    self.log.info("rotMat biased = %d", rotMat)
-                else:
-                    rotMat = autopack.helper.rotation_matrix(
-                        random() * self.rotRange, self.rotAxis
-                    )
-            # for other points we get a random rotation
-            else:
-                rotMat = histoVol.randomRot.get()
+        rot_mat = self.get_rotation(ptInd, histoVol, compartment)
         # jitter position loop
         jitterList = []
         collD1 = []
@@ -5321,36 +5288,11 @@ class Ingredient(Agent):
 
         trans = gridPointsCoords[ptInd]  # drop point, surface points.
         if numpy.sum(self.offset) != 0.0:
-            trans = numpy.array(trans) + ApplyMatrix([self.offset], rotMat)[0]
-        targetPoint = trans
-        moving = None
+            trans = numpy.array(trans) + ApplyMatrix([self.offset], rot_mat)[0]
+        target_point = trans
         # real time results
         if histoVol.runTimeDisplay and self.mesh:
-            if hasattr(self, "mesh_3d"):
-                # create an instance of mesh3d and place it
-                name = self.name + str(ptInd)
-                moving = afvi.vi.getObject(name)
-                if moving is None:
-                    if self.mesh_3d is None:
-                        moving = afvi.vi.Sphere(
-                            name, radius=self.radii[0][0], parent=afvi.staticMesh
-                        )[0]
-                        afvi.vi.setTranslation(moving, pos=targetPoint)
-                    else:
-                        moving = afvi.vi.newInstance(
-                            name,
-                            self.mesh_3d,  # .GetDown(),
-                            matrice=rotMat,
-                            location=targetPoint,
-                            parent=afvi.staticMesh,
-                        )
-                else:
-                    # afvi.vi.setTranslation(moving,pos=targetPoint)#rot?
-                    mat = rotMat.copy()
-                    mat[:3, 3] = targetPoint
-                    afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                    #                afvi.vi.update()  #Graham Killed this unneccesarry redraw
-                    #            print ('Must check for collision here before accepting final position')
+            moving = self.handle_real_time_visualization(afvi, ptInd, target_point, rot_mat)
         # do we get the list of neighbours first > and give a different trans...closer to the partner
         # we should look up for an available ptID around the picked partner if any
         # getListCloseIngredient
@@ -5366,20 +5308,17 @@ class Ingredient(Agent):
                 t, collision_results = self.tilling.getNextHexaPosRot()
                 if len(t):
                     trans = t
-                    rotMat = collision_results
-                    targetPoint = trans
+                    rot_mat = collision_results
+                    target_point = trans
                     if histoVol.runTimeDisplay and self.mesh:
-                        mat = rotMat.copy()
-                        mat[:3, 3] = targetPoint
-                        afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                        afvi.vi.update()
+                        self.update_display_rt(moving, target_point, rot_mat)
                 else:
                     self.reject()
                     return False, nbFreePoints  # ,targetPoint, rotMat
             else:
                 self.tilling.init_seed(histoVol.seed_used)
 
-        tx, ty, tz = jtrans = targetPoint
+        tx, ty, tz = jtrans = target_point
         # we may increase the jitter, or pick from xyz->Id free for its radius
         # create the rb only once and not at ever jitter
         # rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMat,),{"rtype":self.Type},)
@@ -5389,50 +5328,10 @@ class Ingredient(Agent):
             self.nbJitter
         ):  # This expensive Gauusian rejection system should not be the default should it?
             if histoVol.ingrLookForNeighbours and self.packingMode == "closePartner":
-                bind = True
-                self.log.info("closePartner packingMode")
-                # print ("look for ingredient",trans)
-                # roll a dice about proba_not_binding
-                if self.proba_not_binding != 0:  # between 0 and 1
-                    b = random()
-                    if b <= self.proba_not_binding:
-                        bind = False
-                if bind:
-                    closesbody_indice = self.getClosestIngredient(
-                        trans, self.env, cutoff=self.env.grid.diag
-                    )  # vself.radii[0][0]*2.0
-                    # return R[indice] and distance R["distances"]
-                    targetPoint, rotMat, found = self.lookForNeighbours(
-                        trans,
-                        rotMat,
-                        compartment,
-                        afvi,
-                        distance,
-                        closest_indice=closesbody_indice,
-                    )
-                    if not found and self.counter != 0:
-                        self.reject()
-                        return False, nbFreePoints  # ,targetPoint, rotMat
-
-                    # if partner:pickNewPoit like in fill3
-                    if histoVol.runTimeDisplay and self.mesh:
-                        mat = rotMat.copy()
-                        mat[:3, 3] = targetPoint
-                        afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                        afvi.vi.update()
-                    tx, ty, tz = jtrans = targetPoint
+                target_point, rot_mat = self.close_partner_check(trans, rot_mat, compartment, afvi, distance, histoVol.runTimeDisplay, moving)
+                tx, ty, tz = jtrans = target_point
             collision2 = False
-            if jitter_sq > 0.0:
-                dx = jx * jitter * uniform(-1.0, 1.0)
-                dy = jy * jitter * uniform(-1.0, 1.0)
-                dz = jz * jitter * uniform(-1.0, 1.0)
-                if self.compNum > 0:  # jitter less among normal
-                    dx, dy, dz, _ = numpy.dot(rotMat, (dx, dy, dz, 0))
-                jtrans = (tx + dx, ty + dy, tz + dz)
-
-            else:
-                jtrans = targetPoint
-                dx = dy = dz = 0.0
+            jtrans, dx, dy, dz = self.randomize_translation(target_point, rot_mat, jitter, jitter_sq)
 
             histoVol.totnbJitter += 1
             histoVol.jitterLength += dx * dx + dy * dy + dz * dz
@@ -5440,41 +5339,19 @@ class Ingredient(Agent):
 
             # loop over all spheres representing ingredient
             # check for collisions
-            #
             level = self.collisionLevel
 
             # randomize rotation about axis
-            if self.compNum > 0:
-                rotMatj = self.getAxisRotation(rotMat)
-            else:
-                if self.useRotAxis:
-                    if sum(self.rotAxis) == 0.0:
-                        rotMatj = numpy.identity(4)
-                    elif self.useOrientBias and self.packingMode == "gradient":
-                        rotMatj = self.getBiasedRotation(rotMat, weight=None)
-                    else:
-                        rotMatj = autopack.helper.rotation_matrix(
-                            random() * self.rotRange, self.rotAxis
-                        )
-                else:
-                    rotMatj = (
-                        histoVol.randomRot.get()
-                    )  # Graham turned this back on to replace rotMat.copy() so ing rotate each time
-                    #                    rotMatj = rotMat.copy()
+            rotMatj = self.randomize_rotation(rot_mat, histoVol)
             if self.packingMode[-4:] == "tile":
                 if self.counter == 0:
-                    euler = euler_from_matrix(rotMat)
+                    euler = euler_from_matrix(rot_mat)
                     print(euler)
                 # rotMat = euler_matrix(euler[0],euler[1],0).transpose()
-                jtrans = targetPoint
-                rotMatj = rotMat[:]  # self.tilling.getNextHexaPosRot()
+                jtrans = target_point
+                rotMatj = rot_mat[:]  # self.tilling.getNextHexaPosRot()
             if histoVol.runTimeDisplay and moving is not None:
-                #                print "ok rot copy"
-                mat = rotMatj.copy()
-                mat[:3, 3] = jtrans
-                afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                #                afvi.vi.setTranslation(moving,pos=jtrans)
-                afvi.vi.update()
+                self.update_display_rt(moving, target_point, rot_mat)
 
             collision_results = [False]
             rbnode = self.get_rb_model()
@@ -5482,7 +5359,6 @@ class Ingredient(Agent):
                 jtrans, getNormedVectorOnes(self.jitterMax), self.encapsulatingRadius
             )
             # self.log.info("periodic_pos %r", periodic_pos)
-            periodic_pos = None
             histoVol.callFunction(
                 histoVol.moveRBnode,
                 (
@@ -5523,10 +5399,7 @@ class Ingredient(Agent):
                     self.log.info("col = %r", col)
                     collision_results.extend([col])  # = True in perdiodic_collision
                     if histoVol.runTimeDisplay and moving is not None:
-                        mat = rotMatj.copy()
-                        mat[:3, 3] = jtrans
-                        afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                        afvi.vi.update()
+                        self.update_display_rt(moving, jtrans, rotMatj)
                     if True in collision_results:
                         break
             t = time()
@@ -5768,55 +5641,12 @@ class Ingredient(Agent):
         jitter_sq = jitter * jitter
 
         compartment = self.get_compartment(histoVol)
-        compNum = self.compNum
         runTimeDisplay = histoVol.runTimeDisplay
 
         gridPointsCoords = histoVol.masterGridPositions
         periodic_pos = None
         # compute rotation matrix rotMat
-        if compNum > 0:
-            # for surface points we compute the rotation which
-            # aligns the principalVector with the surface normal
-            # no noise ?
-            v1 = self.principalVector
-            # surfacePointsNormals problem here
-            v2 = compartment.surfacePointsNormals[ptInd]
-            try:
-                rotMat = numpy.array(rotVectToVect(v1, v2), "f")
-            except Exception:
-                print("PROBLEM ", self.name)
-                rotMat = numpy.identity(4)
-        else:
-            #            self.useOrientBias = True
-            if self.useRotAxis:
-                #                angle = random()*6.2831#math.radians(random()*360.)#random()*pi*2.
-                #                print "angle",angle,math.degrees(angle)
-                #                direction = self.rotAxis
-                if sum(self.rotAxis) == 0.0:
-                    rotMat = numpy.identity(4)
-                elif (
-                    self.useOrientBias and self.packingMode == "gradient"
-                ):  # you need a gradient here
-                    rotMat = self.alignRotation(gridPointsCoords[ptInd])
-                # print("rotAxis = ", self.rotAxis)
-                #                    print("rotRange = ", self.rotRange)
-                #                    print("rotMat aligned = ", rotMatAligned)
-                #                    print("**************************************************Rotate GRADIENT ON **************************")
-                #                    rotMatRand = autopack.helper.rotation_matrix(random()*self.rotRange,self.rotAxis)
-                #                    print("rotMat random = ", rotMatRand)
-                #
-                #                    print("rotMat biased = ", rotMat)
-                else:
-                    rotMat = autopack.helper.rotation_matrix(
-                        random() * self.rotRange, self.rotAxis
-                    )
-            # for other points we get a random rotation
-            else:
-                rotMat = histoVol.randomRot.get()
-
-                #        if verbose :
-                #            pass#print('%s nbs:%2d'%(self.pdb, len(self.positions[0])), end=' ')
-
+        rotMat = self.get_rotation(ptInd, histoVol, compartment)
         # jitter position loop
         jitterList = []
         collD1 = []
@@ -5847,12 +5677,8 @@ class Ingredient(Agent):
                             parent=afvi.staticMesh,
                         )
                 else:
-                    # afvi.vi.setTranslation(moving,pos=targetPoint)#rot?
-                    mat = rotMat.copy()
-                    mat[:3, 3] = targetPoint
-                    afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                    #                afvi.vi.update()  #Graham Killed this unneccesarry redraw
-                    #            print ('Must check for collision here before accepting final position')
+                    self.update_display_rt(moving, targetPoint, rotMat)
+               
         # do we get the list of neighbours first > and give a different trans...closer to the partner
         # we should look up for an available ptID around the picked partner if any
         # getListCloseIngredient
@@ -5870,10 +5696,7 @@ class Ingredient(Agent):
                     rotMat = r
                     targetPoint = trans
                     if runTimeDisplay and self.mesh:
-                        mat = rotMat.copy()
-                        mat[:3, 3] = targetPoint
-                        afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                        afvi.vi.update()
+                        self.update_display_rt(moving, targetPoint, rotMat)
                 else:
                     self.reject()
                     return False, nbFreePoints  # ,targetPoint, rotMat
@@ -5888,75 +5711,16 @@ class Ingredient(Agent):
         for jitterPos in range(self.nbJitter):
             #  This expensive Gauusian rejection system should not be the default should it?
             if histoVol.ingrLookForNeighbours and self.packingMode == "closePartner":
-                bind = True
-                # print ("look for ingredient",trans)
-                # roll a dice about proba_not_binding
-                if self.proba_not_binding != 0:  # between 0 and 1
-                    b = random()
-                    if b <= self.proba_not_binding:
-                        bind = False
-                if bind:
-                    closesbody_indice = self.getClosestIngredient(
-                        trans, self.env, cutoff=self.env.grid.diag
-                    )  # vself.radii[0][0]*2.0
-                    # return R[indice] and distance R["distances"]
-                    targetPoint, rotMat, found = self.lookForNeighbours(
-                        trans,
-                        rotMat,
-                        compartment,
-                        afvi,
-                        distance,
-                        closest_indice=closesbody_indice,
-                    )
-                    if not found and self.counter != 0:
-                        self.reject()
-                        return False, nbFreePoints  # ,targetPoint, rotMat
+                targetPoint, rotMat = self.close_partner_check(trans, rotMat, compartment, afvi, distance, histoVol.runTimeDisplay, moving)
 
-                    # if partner:pickNewPoit like in fill3
-                    if runTimeDisplay and self.mesh:
-                        mat = rotMat.copy()
-                        mat[:3, 3] = targetPoint
-                        afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                        afvi.vi.update()
-                    tx, ty, tz = jtrans = targetPoint
+                jtrans = targetPoint
             collision2 = False
             # jitter points location
-            #            print ("jitter ",jitterPos,self.nbJitter)
-            if jitter_sq > 0.0:
-                found = False
-                while not found:
-                    #                    dx = jx*jitter*gauss(0., 0.3)
-                    #                    dy = jy*jitter*gauss(0., 0.3)
-                    #                    dz = jz*jitter*gauss(0., 0.3)
-                    dx = jx * jitter * uniform(-1.0, 1.0)
-                    dy = jy * jitter * uniform(-1.0, 1.0)
-                    dz = jz * jitter * uniform(-1.0, 1.0)
-                    if True:  # d2 < jitter2:
-                        if compNum > 0:  # jitter less among normal
-                            # if self.name=='2uuh C4 SYNTHASE':
-                            #    import pdb
-                            #    pdb.set_trace()
-                            dx, dy, dz, dum = numpy.dot(rotMat, (dx, dy, dz, 0))
-                        jtrans = (tx + dx, ty + dy, tz + dz)
-                        found = True
-                        #                    else:  #Graham Killed thse unnecessary updates
-                        #                        if verbose :  #Graham Killed thse unnecessary updates
-                        #                            print('JITTER REJECTED', d2, jitter2)  #Graham Killed thse unnecessary updates
-                        #                    if runTimeDisplay and moving is not None :  #Graham Killed thse unnecessary updates
-                        #                        afvi.vi.setTranslation(moving,pos=jtrans)
-                        #                        afvi.vi.update()
-                        #                        print "ok moving"
-            else:
-                jtrans = targetPoint
-                dx = dy = dz = 0.0
+            jtrans, dx, dy, dz = self.randomize_translation(targetPoint, rotMat, jitter, jitter_sq)
 
             histoVol.totnbJitter += 1
             histoVol.jitterLength += dx * dx + dy * dy + dz * dz
             jitterList.append((dx, dy, dz))
-
-            # print 'j%d %.2f,%.2f,%.2f,'%(jitterPos,tx, ty, tz),
-            #            if verbose :
-            #                print('j%d'%jitterPos)# end=' '
 
             # loop over all spheres representing ingredient
             # check for collisions
@@ -5964,25 +5728,8 @@ class Ingredient(Agent):
             level = self.collisionLevel
 
             # randomize rotation about axis
-            if compNum > 0:
-                rotMatj = self.getAxisRotation(rotMat)
-            else:
-                if self.useRotAxis:
-                    if sum(self.rotAxis) == 0.0:
-                        rotMatj = numpy.identity(4)
-                    elif self.useOrientBias and self.packingMode == "gradient":
-                        #                        rotMatj = self.getAxisRotation(rotMat)
-                        rotMatj = self.getBiasedRotation(rotMat, weight=None)
-                    # weight = 1.0 - self.env.gradients[self.gradient].weight[ptInd])
-                    else:
-                        rotMatj = autopack.helper.rotation_matrix(
-                            random() * self.rotRange, self.rotAxis
-                        )
-                else:
-                    rotMatj = (
-                        histoVol.randomRot.get()
-                    )  # Graham turned this back on to replace rotMat.copy() so ing rotate each time
-                    #                    rotMatj = rotMat.copy()
+            rotMatj = self.randomize_rotation(rotMat, histoVol)
+
             if self.packingMode[-4:] == "tile":
                 if self.counter == 0:
                     euler = euler_from_matrix(rotMat)
@@ -5991,12 +5738,8 @@ class Ingredient(Agent):
                 jtrans = targetPoint
                 rotMatj = rotMat[:]  # self.tilling.getNextHexaPosRot()
             if runTimeDisplay and moving is not None:
-                #                print "ok rot copy"
-                mat = rotMatj.copy()
-                mat[:3, 3] = jtrans
-                afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                #                afvi.vi.setTranslation(moving,pos=jtrans)
-                afvi.vi.update()
+                self.update_display_rt(moving, jtrans, rotMatj)
+
             # closeS = self.checkPointSurface(jtrans,cutoff=float(self.cutoff_surface))
             #            if closeS :
             #                print ("ok reject once")
@@ -6029,10 +5772,8 @@ class Ingredient(Agent):
                     #                    perdiodic_collision.extend([col])
                     r.extend([col])  # = True in perdiodic_collision
                     if runTimeDisplay and moving is not None:
-                        mat = rotMatj.copy()
-                        mat[:3, 3] = jtrans
-                        afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                        afvi.vi.update()
+                        self.update_display_rt(moving, jtrans, rotMatj)
+
                     if True in r:
                         break
                     #            rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
@@ -6247,42 +5988,13 @@ class Ingredient(Agent):
             compartment = histoVol
         else:
             compartment = histoVol.compartments[abs(self.compNum) - 1]
-        compNum = self.compNum
+
         runTimeDisplay = histoVol.runTimeDisplay
 
         gridPointsCoords = histoVol.masterGridPositions
 
         # compute rotation matrix rotMat
-        if compNum > 0:
-            # for surface points we compute the rotation which
-            # aligns the principalVector with the surface normal
-            vx, vy, vz = v1 = self.principalVector
-            v2 = compartment.surfacePointsNormals[
-                ptInd
-            ]  # 1000 and it is a dictionary ?
-            try:
-                rotMat = numpy.array(rotVectToVect(v1, v2), "f")
-            except Exception as e:
-                print("PROBLEM ", self.name, e)
-                rotMat = numpy.identity(4)
-        else:
-            if self.useRotAxis:
-                #                angle = random()*6.2831#math.radians(random()*360.)#random()*pi*2.
-                #                print "angle",angle,math.degrees(angle)
-                #                direction = self.rotAxis
-                if sum(self.rotAxis) == 0.0:
-                    rotMat = numpy.identity(4)
-                else:
-                    rotMat = autopack.helper.rotation_matrix(
-                        random() * self.rotRange, self.rotAxis
-                    )
-            # for other points we get a random rotation
-            else:
-                rotMat = histoVol.randomRot.get()
-
-                #        if verbose :
-                #            pass#print('%s nbs:%2d'%(self.pdb, len(self.positions[0])), end=' ')
-
+        rotMat = self.get_rotation(ptInd, histoVol, compartment)
         # jitter position loop
         jitterList = []
         collD1 = []
@@ -6312,11 +6024,7 @@ class Ingredient(Agent):
                         )
                 else:
                     # afvi.vi.setTranslation(moving,pos=targetPoint)#rot?
-                    mat = rotMat.copy()
-                    mat[:3, 3] = targetPoint
-                    afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                    #                afvi.vi.update()  #Graham Killed this unneccesarry redraw
-                    #            print ('Must check for collision here before accepting final position')
+                    self.update_display_rt(moving, targetPoint, rotMat)
         # do we get the list of neighbours first > and give a different trans...closer to the partner
         # we should look up for an available ptID around the picked partner if any
         # getListPartner
@@ -6378,33 +6086,7 @@ class Ingredient(Agent):
             self.nbJitter
         ):  # This expensive Gauusian rejection system should not be the default should it?
             # jitter points location
-            if jitter2 > 0.0:
-                found = False
-                while not found:
-                    #                    dx = jx*jitter*gauss(0., 0.3)
-                    #                    dy = jy*jitter*gauss(0., 0.3)
-                    #                    dz = jz*jitter*gauss(0., 0.3)
-                    dx = jx * jitter * uniform(-1.0, 1.0)
-                    dy = jy * jitter * uniform(-1.0, 1.0)
-                    dz = jz * jitter * uniform(-1.0, 1.0)
-                    if True:  # d2 < jitter2:
-                        if compNum > 0:  # jitter less among normal
-                            # if self.name=='2uuh C4 SYNTHASE':
-                            #    import pdb
-                            #    pdb.set_trace()
-                            dx, dy, dz, dum = numpy.dot(rotMat, (dx, dy, dz, 0))
-                        jtrans = (tx + dx, ty + dy, tz + dz)
-                        found = True
-                        #                    else:  #Graham Killed thse unnecessary updates
-                        #                        if verbose :  #Graham Killed thse unnecessary updates
-                        #                            print('JITTER REJECTED', d2, jitter2)  #Graham Killed thse unnecessary updates
-                        #                    if runTimeDisplay and moving is not None :  #Graham Killed thse unnecessary updates
-                        #                        afvi.vi.setTranslation(moving,pos=jtrans)
-                        #                        afvi.vi.update()
-                        #                        print "ok moving"
-            else:
-                jtrans = targetPoint
-                dx = dy = dz = 0.0
+            jtrans, dx, dy, dz = self.randomize_translation(targetPoint, rotMat, jitter, jitter2)
 
             histoVol.totnbJitter += 1
             histoVol.jitterLength += dx * dx + dy * dy + dz * dz
@@ -6418,28 +6100,11 @@ class Ingredient(Agent):
             level = self.collisionLevel
 
             # randomize rotation about axis
-            if compNum > 0:
-                rotMatj = self.getAxisRotation(rotMat)
-            else:
-                if self.useRotAxis:
-                    if sum(self.rotAxis) == 0.0:
-                        rotMatj = numpy.identity(4)
-                    else:
-                        rotMatj = afvi.vi.rotation_matrix(
-                            random() * self.rotRange, self.rotAxis
-                        )
-                else:
-                    rotMatj = (
-                        histoVol.randomRot.get()
-                    )  # Graham turned this back on to replace rotMat.copy() so ing rotate each time
-                    #                    rotMatj = rotMat.copy()
+            rotMatj = self.randomize_rotation(rotMat, histoVol)
+
             if runTimeDisplay and moving is not None:
                 #                print "ok rot copy"
-                mat = rotMatj.copy()
-                mat[:3, 3] = jtrans
-                afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                #                afvi.vi.setTranslation(moving,pos=jtrans)
-                afvi.vi.update()
+                self.update_display_rt(moving, jtrans, rotMatj)
 
             # rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
             histoVol.callFunction(
@@ -6799,17 +6464,15 @@ class Ingredient(Agent):
 
     def rapid_place(
         self,
-        histoVol,
+        env,
         ptInd,
         freePoints,
         nbFreePoints,
         distance,
         dpad,
-        stepByStep=False,
-        verbose=False,
+        afvi,
         sphGeom=None,
         labDistGeom=None,
-        debugFunc=None,
         sphCenters=None,
         sphRadii=None,
         sphColors=None,
@@ -6819,59 +6482,20 @@ class Ingredient(Agent):
         """
         drop the ingredient on grid point ptInd
         """
-        # histoVol.setupPanda()
-        afvi = histoVol.afviewer
         spacing = (
-            histoVol.grid.gridSpacing
+            env.grid.gridSpacing
         )  # histoVol.smallestProteinSize#or the gridSpace?
         jx, jy, jz = self.jitterMax
         jitter = spacing / 2.0  # histoVol.callFunction(self.getMaxJitter,(spacing,))
-        jitter2 = jitter * jitter
-
-        if self.compNum == 0:
-            organelle = histoVol
-        else:
-            organelle = histoVol.compartments[abs(self.compNum) - 1]
-        compNum = self.compNum
-        runTimeDisplay = histoVol.runTimeDisplay
-
-        gridPointsCoords = histoVol.masterGridPositions
+        jitter_sq = jitter * jitter
+        compartment = self.get_compartment(env)
+    
+        gridPointsCoords = env.masterGridPositions
 
         periodic_pos = None
 
         # compute rotation matrix rotMat
-        if compNum > 0:
-            # for surface points we compute the rotation which
-            # aligns the principalVector with the surface normal
-            vx, vy, vz = v1 = self.principalVector
-            # surfacePointsNormals problem here
-            v2 = organelle.surfacePointsNormals[ptInd]
-            try:
-                rotMat = numpy.array(rotVectToVect(v1, v2), "f")
-            except Exception:
-                print("PROBLEM ", self.name)
-                rotMat = numpy.identity(4)
-        else:
-            if self.useRotAxis:
-                #                angle = random()*6.2831#math.radians(random()*360.)#random()*pi*2.
-                #                print "angle",angle,math.degrees(angle)
-                #                direction = self.rotAxis
-                if sum(self.rotAxis) == 0.0:
-                    rotMat = numpy.identity(4)
-                elif (
-                    self.useOrientBias and self.packingMode == "gradient"
-                ):  # you need a gradient here
-                    rotMat = self.alignRotation(gridPointsCoords[ptInd])
-                elif afvi:
-                    rotMat = autopack.helper.rotation_matrix(
-                        random() * self.rotRange, self.rotAxis
-                    )
-            # for other points we get a random rotation
-            else:
-                rotMat = histoVol.randomRot.get()
-
-                #        if verbose :
-                #            pass#print('%s nbs:%2d'%(self.pdb, len(self.positions[0])), end=' ')
+        rot_matrix = self.get_rotation(ptInd, env, compartment)
 
         # jitter position loop
         jitterList = []
@@ -6879,72 +6503,18 @@ class Ingredient(Agent):
         collD2 = []
         trans = gridPointsCoords[ptInd]  # drop point, surface points.
         if numpy.sum(self.offset) != 0.0:
-            trans = numpy.array(trans) + ApplyMatrix([self.offset], rotMat)[0]
-        targetPoint = trans
-        moving = None
-        if runTimeDisplay and self.mesh:
-            if hasattr(self, "mesh_3d"):
-                # create an instance of mesh3d and place it
-                name = self.name + str(ptInd)
-                moving = afvi.vi.getObject(name)
-                if moving is None:
-                    if self.mesh_3d is None:
-                        moving = afvi.vi.Sphere(
-                            name, radius=self.radii[0][0], parent=afvi.staticMesh
-                        )[0]
-                        afvi.vi.setTranslation(moving, pos=targetPoint)
-                    else:
-                        moving = afvi.vi.newInstance(
-                            name,
-                            self.mesh_3d,  # .GetDown(),
-                            matrice=rotMat,
-                            location=targetPoint,
-                            parent=afvi.staticMesh,
-                        )
-                else:
-                    # afvi.vi.setTranslation(moving,pos=targetPoint)#rot?
-                    mat = rotMat.copy()
-                    mat[:3, 3] = targetPoint
-                    afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                    #                afvi.vi.update()  #Graham Killed this unneccesarry redraw
-                    #            print ('Must check for collision here before accepting final position')
+            trans = numpy.array(trans) + ApplyMatrix([self.offset], rot_matrix)[0]
+        target_point = trans
+        if env.runTimeDisplay and self.mesh:
+            moving = self.handle_real_time_visualization(afvi, ptInd, target_point, rot_matrix)
+        # print ('Must check for collision here before accepting final position')
         # do we get the list of neighbours first > and give a different trans...closer to the partner
         # we should look up for an available ptID around the picked partner if any
         # getListPartner
-        if histoVol.ingrLookForNeighbours and self.packingMode == "closePartner":
-            bind = True
-            if verbose > 1:
-                print("look for ingredient", trans)
-            # roll a dice about proba_not_binding
-            if self.proba_not_binding != 0:  # between 0 and 1
-                b = random()
-                if b <= self.proba_not_binding:
-                    bind = False
-            if bind:
-                closesbody_indice = self.getClosestIngredient(
-                    trans, self.env, cutoff=self.env.grid.diag
-                )  # vself.radii[0][0]*2.0
-                # return R[indice] and distance R["distances"]
-                targetPoint, rotMat, found = self.lookForNeighbours(
-                    trans,
-                    rotMat,
-                    organelle,
-                    afvi,
-                    distance,
-                    closest_indice=closesbody_indice,
-                )
-                if not found and self.counter != 0:
-                    self.reject()
-                    return False, nbFreePoints  # ,targetPoint, rotMat
+        if env.ingrLookForNeighbours and self.packingMode == "closePartner":
+            target_point, rot_matrix = self.close_partner_check(trans, rot_matrix, compartment, afvi, distance, env.runTimeDisplay, moving)
 
-                # if partner:pickNewPoit like in fill3
-                if runTimeDisplay and self.mesh:
-                    mat = rotMat.copy()
-                    mat[:3, 3] = targetPoint
-                    afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                    afvi.vi.update()
-
-        tx, ty, tz = jtrans = targetPoint
+        tx, ty, tz = jtrans = target_point
         # we may increase the jitter, or pick from xyz->Id free for its radius
         # create the rb only once and not at ever jitter
         # rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMat,),{"rtype":self.Type},)
@@ -6955,32 +6525,11 @@ class Ingredient(Agent):
         ):  # This expensive Gauusian rejection system should not be the default should it?
             collision2 = False
             # jitter points location
-            if jitter2 > 0.0:
-                found = False
-                while not found:
-                    dx = jx * jitter * uniform(-1.0, 1.0)
-                    dy = jy * jitter * uniform(-1.0, 1.0)
-                    dz = jz * jitter * uniform(-1.0, 1.0)
-                    if True:  # d2 < jitter2:
-                        if compNum > 0:  # jitter less among normal
-                            # if self.name=='2uuh C4 SYNTHASE':
-                            #    import pdb
-                            #    pdb.set_trace()
-                            dx, dy, dz, dum = numpy.dot(rotMat, (dx, dy, dz, 0))
-                        jtrans = (tx + dx, ty + dy, tz + dz)
-                        found = True
+            jtrans, dx, dy, dz = self.randomize_translation(target_point, rot_matrix, jitter, jitter_sq)
 
-            else:
-                jtrans = targetPoint
-                dx = dy = dz = 0.0
-
-            histoVol.totnbJitter += 1
-            histoVol.jitterLength += dx * dx + dy * dy + dz * dz
+            env.totnbJitter += 1
+            env.jitterLength += dx * dx + dy * dy + dz * dz
             jitterList.append((dx, dy, dz))
-
-            # print 'j%d %.2f,%.2f,%.2f,'%(jitterPos,tx, ty, tz),
-            #            if verbose :
-            #                print('j%d'%jitterPos)# end=' '
 
             # loop over all spheres representing ingredient
             if sphGeom is not None:
@@ -6988,57 +6537,29 @@ class Ingredient(Agent):
                 modRad = []
 
             # check for collisions
-            #
             level = self.collisionLevel
 
             # randomize rotation about axis
-            if compNum > 0:
-                rotMatj = self.getAxisRotation(rotMat)
-            else:
-                if self.useRotAxis:
-                    if sum(self.rotAxis) == 0.0:
-                        rotMatj = numpy.identity(4)
-                    elif self.useOrientBias and self.packingMode == "gradient":
-                        #                        rotMatj = self.getAxisRotation(rotMat)
-                        rotMatj = self.getBiasedRotation(rotMat, weight=None)
-                    else:
-                        rotMatj = autopack.helper.rotation_matrix(
-                            random() * self.rotRange, self.rotAxis
-                        )
-                else:
-                    rotMatj = (
-                        histoVol.randomRot.get()
-                    )  # Graham turned this back on to replace rotMat.copy() so ing rotate each time
-                    #                    rotMatj = rotMat.copy()
-            if runTimeDisplay and moving is not None:
-                #                print "ok rot copy"
-                mat = rotMatj.copy()
-                mat[:3, 3] = jtrans
-                afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                #                afvi.vi.setTranslation(moving,pos=jtrans)
-                afvi.vi.update()
+            rotMatj = self.randomize_rotation(rot_matrix, env)
 
-            # closeS = self.checkPointSurface(jtrans,cutoff=float(self.cutoff_surface))
-            #            if closeS :
-            #                self.rejectOnce(None,moving,afvi)
-            #                continue
+            if env.runTimeDisplay and moving is not None:
+                self.update_display_rt(moving, jtrans, rotMatj)
 
             perdiodic_collision = False
             periodic_pos = self.env.grid.getPositionPeridocity(
                 jtrans, getNormedVectorOnes(self.jitterMax), self.encapsulatingRadius
             )
-            r = [False]
+            collision_results = [False]
             if periodic_pos is not None and self.packingMode != "gradient":
-                if verbose > 1:
-                    print("OK Periodicity ", len(periodic_pos), periodic_pos)
+                self.log.info("OK Periodicity %d, %r", len(periodic_pos), periodic_pos)
                 for p in periodic_pos:
                     perdiodic_collision, liste_nodes = self.collision_rapid(
                         p, rotMatj, usePP=usePP
                     )
                     # histoVol.callFunction(histoVol.moveRBnode,(rbnode, p, rotMatj,))
                     # perdiodic_collision = self.pandaBullet_collision(p,rotMatj,rbnode)
-                    r.extend([perdiodic_collision])
-                    if True in r:
+                    collision_results.extend([perdiodic_collision])
+                    if True in collision_results:
                         break
                     col = self.bht_check_pair(self, p, rotMatj, self, jtrans, rotMatj)
                     rbnode = self.get_rapid_model()
@@ -7054,25 +6575,22 @@ class Ingredient(Agent):
                         RAPIDlib.cvar.RAPID_FIRST_CONTACT,
                     )
                     col = RAPIDlib.cvar.RAPID_num_contacts != 0
-                    r.extend([col])  # = True in perdiodic_collision
-                    if runTimeDisplay and moving is not None:
-                        mat = rotMatj.copy()
-                        mat[:3, 3] = jtrans
-                        afvi.vi.setObjectMatrix(moving, mat, transpose=True)
-                        afvi.vi.update()
-                    if True in r:
+                    collision_results.extend([col])  # = True in perdiodic_collision
+                    if env.runTimeDisplay and moving is not None:
+                        self.update_display_rt(moving, jtrans, rotMatj)
+
+                    if True in collision_results:
                         break
 
             closeS = False  # self.checkPointSurface(jtrans, cutoff=self.cutoff_surface)
             test = closeS  # self.point_is_not_available(jtrans)
             collisionComp = False
-            if not test and not (True in r):
+            if not test and not (True in collision_results):
                 collision2, liste_nodes = self.collision_rapid(
                     jtrans, rotMatj, usePP=usePP
                 )
                 collisionComp = False
-            if autopack.verbose:
-                print("collision", collision2, r)
+            self.log.info("collision %r %r", collision2, collision_results)
             # print ("contact Pair ",collision, r,self.env.static) #gave nothing ???
             # need to check compartment too
             if not collision2:  # and not r:  # and not collision2:
@@ -7080,7 +6598,7 @@ class Ingredient(Agent):
                     if self.modelType == "Spheres":
                         # print("running jitter number ", histoVol.totnbJitter, " on Spheres for pt = ", ptInd)
                         # print("jtrans = ", jtrans)
-                        collisionComp = histoVol.callFunction(
+                        collisionComp = env.callFunction(
                             self.checkSphCompart,
                             (
                                 self.positions[level],
@@ -7090,12 +6608,12 @@ class Ingredient(Agent):
                                 level,
                                 gridPointsCoords,
                                 distance,
-                                histoVol,
+                                env,
                             ),
                         )
                         #                print("jitter collision = ", collision, " for pt = ", ptInd, " with jtrans = ", jtrans)
                     elif self.modelType == "Cylinders":
-                        collisionComp = histoVol.callFunction(
+                        collisionComp = env.callFunction(
                             self.checkCylCompart,
                             (
                                 self.positions[level],
@@ -7105,11 +6623,11 @@ class Ingredient(Agent):
                                 rotMatj,
                                 gridPointsCoords,
                                 distance,
-                                histoVol,
+                                env,
                             ),
                         )
                     elif self.modelType == "Cube":
-                        collisionComp = histoVol.callFunction(
+                        collisionComp = env.callFunction(
                             self.checkCubeCompart,
                             (
                                 self.positions[0],
@@ -7119,7 +6637,7 @@ class Ingredient(Agent):
                                 rotMatj,
                                 gridPointsCoords,
                                 distance,
-                                histoVol,
+                                env,
                             ),
                         )
                 if not collisionComp:
@@ -7128,7 +6646,7 @@ class Ingredient(Agent):
                     break  # break out of jitter pos loop
                 else:
                     collision2 = collisionComp
-        if not collision2 and not (True in r):  # and not collision2:
+        if not collision2 and not (True in collision_results):  # and not collision2:
             insidePoints = {}
             newDistPoints = {}
             t3 = time()
@@ -7149,8 +6667,8 @@ class Ingredient(Agent):
                     x, y, z = posc
                     #                    #this have already be done in the checkCollision why doing it again
                     bb = ([x - rad, y - rad, z - rad], [x + rad, y + rad, z + rad])
-                    pointsInCube = histoVol.callFunction(
-                        histoVol.grid.getPointsInCube, (bb, posc, rad)
+                    pointsInCube = env.callFunction(
+                        env.grid.getPointsInCube, (bb, posc, rad)
                     )
                     #
                     delta = numpy.take(gridPointsCoords, pointsInCube, 0) - posc
@@ -7194,8 +6712,8 @@ class Ingredient(Agent):
                         [cx - radt, cy - radt, cz - radt],
                         [cx + radt, cy + radt, cz + radt],
                     )
-                    pointsInCube = histoVol.callFunction(
-                        histoVol.grid.getPointsInCube, (bb, posc, radt)
+                    pointsInCube = env.callFunction(
+                        env.grid.getPointsInCube, (bb, posc, radt)
                     )
 
                     pd = numpy.take(gridPointsCoords, pointsInCube, 0) - p1
@@ -7236,51 +6754,21 @@ class Ingredient(Agent):
                                     insidePoints[pt] = d
             elif self.modelType == "Cube":
                 insidePoints, newDistPoints = self.getDistancesCube(
-                    jtrans, rotMatj, gridPointsCoords, distance, histoVol
+                    jtrans, rotMatj, gridPointsCoords, distance, env
                 )
 
             # save dropped ingredient
-            if verbose:
-                print("compute distance loop ", time() - t3)
+            self.log.info("compute distance loop %d", time() - t3)
             if drop:
-                # print "ok drop",organelle.name,self.name
-                organelle.molecules.append([jtrans, rotMatj, self, ptInd])
-                histoVol.order[ptInd] = histoVol.lastrank
-                histoVol.lastrank += 1
-            # histoVol.rTrans.append(jtrans)
-            #                histoVol.close_ingr_bhtree.MoveRBHPoint(histoVol.nb_ingredient,(jtrans[0],jtrans[1],jtrans[2]),1)
-            #                histoVol.nb_ingredient+=1
-            #                histoVol.close_ingr_bhtree.InsertRBHPoint((jtrans[0],jtrans[1],jtrans[2]),radius,None,histoVol.nb_ingredient)
-            #                print ("RBHTree", histoVol.close_ingr_bhtree.FreePts.NumPts)
+                compartment.molecules.append([jtrans, rotMatj, self, ptInd])
+                env.order[ptInd] = env.lastrank
+                env.lastrank += 1
+      
             # update free points
-            nbFreePoints = histoVol.callFunction(
+            nbFreePoints = env.callFunction(
                 self.updateDistances,
                 (insidePoints, newDistPoints, freePoints, nbFreePoints, distance),
             )
-
-            #            distChanges = {}
-            #            for pt,dist in insidePoints.items():
-            #                # swap point at ptIndr with last free one
-            #                try:
-            #                    ind = freePoints.index(pt)
-            #                    tmp = freePoints[nbFreePoints] #last one
-            #                    freePoints[nbFreePoints] = pt
-            #                    freePoints[ind] = tmp
-            #                    nbFreePoints -= 1
-            #                except ValueError: # pt not in list of free points
-            #                    pass
-            #                distChanges[pt] = (histoVol.masterGridPositions[pt],
-            #                                   distance[pt], dist)
-            #                distance[pt] = dist
-            #            print "update freepoints loop ",time()-t4
-            #            t5=time()
-            #            # update distances
-            #            for pt,dist in newDistPoints.items():
-            #                if not insidePoints.has_key(pt):
-            #                    distChanges[pt] = (histoVol.masterGridPositions[pt],
-            #                                       distance[pt], dist)
-            #                    distance[pt] = dist
-            #            print "update distances loop ",time()-t5
 
             if sphGeom is not None:
                 for po1, ra1 in zip(modCent, modRad):
@@ -7291,42 +6779,34 @@ class Ingredient(Agent):
             if labDistGeom is not None:
                 verts = []
                 labels = []
-                # for po1, d1,d2 in distChanges.values():
                 fpts = freePoints
                 for i in range(nbFreePoints):
                     pt = fpts[i]
-                    verts.append(histoVol.masterGridPositions[pt])
+                    verts.append(env.masterGridPositions[pt])
                     labels.append("%.2f" % distance[pt])
-                # for pt in freePoints[:nbFreePoints]:
-                #                    verts.append(histoVol.masterGridPositions[pt])
-                #                    labels.append( "%.2f"%distance[pt])
+
                 labDistGeom.Set(vertices=verts, labels=labels)
-                # materials=colors, inheritMaterial=0)
 
             # add one to molecule counter for this ingredient
             self.counter += 1
             self.completion = float(self.counter) / float(self.nbMol)
 
             if jitterPos > 0:
-                histoVol.successfullJitter.append((self, jitterList, collD1, collD2))
+                env.successfullJitter.append((self, jitterList, collD1, collD2))
 
-            if verbose:
-                print(
-                    "Success nbfp:%d %d/%d dpad %.2f"
-                    % (nbFreePoints, self.counter, self.nbMol, dpad)
-                )
+            self.log.info("Success nbfp:%d %d/%d dpad %.2f", nbFreePoints, self.counter, self.nbMol, dpad)
             if self.name == "in  inside":
-                histoVol.jitterVectors.append((trans, jtrans))
+                env.jitterVectors.append((trans, jtrans))
 
             success = True
             self.rejectionCounter = 0
 
         else:  # got rejected
-            if runTimeDisplay and moving is not None:
+            if env.runTimeDisplay and moving is not None:
                 afvi.vi.deleteObject(moving)
             success = False
             self.haveBeenRejected = True
-            histoVol.failedJitter.append((self, jitterList, collD1, collD2))
+            env.failedJitter.append((self, jitterList, collD1, collD2))
 
             if (self.encapsulatingRadius - self.env.smallestProteinSize) == 0:
                 distance[ptInd] = distance[ptInd] - 10.0
@@ -7335,11 +6815,8 @@ class Ingredient(Agent):
                 distance[ptInd] = max(0, distance[ptInd] * 0.9)  # ???
 
             self.rejectionCounter += 1
-            if verbose:
-                print("distance reduce ", distance[ptInd])
-                print(
-                    "Failed ingr:%s rejections:%d" % (self.name, self.rejectionCounter)
-                )
+            self.log.info("distance reduce %r", distance[ptInd])
+            self.log.info("Failed ingr:%s rejections:%d", self.name, self.rejectionCounter)
             if (
                 self.rejectionCounter >= self.rejectionThreshold
             ):  # Graham set this to 6000 for figure 13b (Results Fig 3 Test1) otehrwise it fails to fill small guys
@@ -7522,14 +6999,7 @@ class Ingredient(Agent):
         nbFreePoints,
         distance,
         dpad,
-        stepByStep=False,
         verbose=False,
-        sphGeom=None,
-        labDistGeom=None,
-        debugFunc=None,
-        sphCenters=None,
-        sphRadii=None,
-        sphColors=None,
         drop=True,
     ):
         """
@@ -7545,39 +7015,12 @@ class Ingredient(Agent):
         jx, jy, jz = self.jitterMax
         self.getMaxJitter(spacing)
 
-        if self.compNum == 0:
-            compartment = self.env
-        else:
-            compartment = self.env.compartments[abs(self.compNum) - 1]
-            # this is hisotVol for cytoplasme
-        compNum = self.compNum
+        compartment = self.get_compartment(histoVol)
 
         gridPointsCoords = histoVol.grid.masterGridPositions
 
         # compute rotation matrix rotMat
-        if compNum > 0:
-            # for surface points we compute the rotation which
-            # aligns the principalVector with the surface normal
-            vx, vy, vz = v1 = self.principalVector
-            v2 = compartment.surfacePointsNormals[ptInd]
-            try:
-                rotMat = numpy.array(rotVectToVect(v1, v2), "f")
-            except Exception as e:
-                print("PROBLEM ", self.name, e)
-                rotMat = numpy.identity(4)
-        else:
-            if self.useRotAxis:
-                if sum(self.rotAxis) == 0.0:
-                    rotMat = numpy.identity(4)
-                else:
-                    rotMat = autopack.helper.rotation_matrix(
-                        random() * self.rotRange, self.rotAxis
-                    )
-            else:
-                rotMat = histoVol.randomRot.get()
-
-        if verbose:
-            pass  # print('%s nbs:%2d'%(self.pdb, len(self.positions[0])), end=' ')
+        rotMat = self.get_rotation(ptInd, histoVol, compartment)
 
         # jitter position loop
         jitterList = []
@@ -7585,15 +7028,11 @@ class Ingredient(Agent):
         collD2 = []
 
         trans = gridPointsCoords[ptInd]  # drop point
-        #        print ("ptID ",ptInd," coord ",trans)
         jtrans, rotMatj = self.oneJitter(spacing, trans, rotMat)
-        #        print ("jtrans ",jtrans)
         ok = False
         # here should go the simulation
         # 1- we build the ingredient if not already and place the ingredient at jtrans, rotMatj
         targetPoint = jtrans
-        #        import c4d
-        # c4d.documents.RunAnimation(c4d.documents.GetActiveDocument(), True)
 
         if runTimeDisplay and self.mesh:
             if hasattr(self, "mesh_3d"):
@@ -7835,11 +7274,7 @@ class Ingredient(Agent):
 
             if jitterPos > 0:
                 histoVol.successfullJitter.append((self, jitterList, collD1, collD2))
-            if verbose:
-                print(
-                    "Success nbfp:%d %d/%d dpad %.2f"
-                    % (nbFreePoints, self.counter, self.nbMol, dpad)
-                )
+            self.log.info("Success nbfp:%d %d/%d dpad %.2f", nbFreePoints, self.counter, self.nbMol, dpad)
             if self.name == "in  inside":
                 histoVol.jitterVectors.append((trans, jtrans))
 
@@ -7852,13 +7287,10 @@ class Ingredient(Agent):
 
             distance[ptInd] = max(0, distance[ptInd] * 0.9)
             self.rejectionCounter += 1
-            if verbose:
-                print(
-                    "Failed ingr:%s rejections:%d" % (self.name, self.rejectionCounter)
-                )
+            self.log.info("Failed ingr:%s rejections:%d", self.name, self.rejectionCounter)
+
             if self.rejectionCounter >= 30:
-                if verbose:
-                    print("PREMATURE ENDING of ingredient", self.name)
+                self.log.info("PREMATURE ENDING of ingredient %s", self.name)
                 self.completion = 1.0
         if drop:
             return success, nbFreePoints
