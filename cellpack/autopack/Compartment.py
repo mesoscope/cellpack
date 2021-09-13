@@ -1084,7 +1084,7 @@ class Compartment(CompartmentList):
                     continue
                 # dl2 = l2*percentage/(nbp2+1)
                 dl2 = l2c / (nbp2 + 1)
- 
+
                 dx2 = dl2 * v2[0] / l2
                 dy2 = dl2 * v2[1] / l2
                 dz2 = dl2 * v2[2] / l2
@@ -1272,7 +1272,12 @@ class Compartment(CompartmentList):
         self.surfacePoints = []
         self.surfacePointsCoords = []
         self.surfacePointsNormals = []
-        self.log.info("%d inside pts, %d tot grid pts, %d master grid", len(a), len(a), len(self.grid.masterGridPositions))
+        self.log.info(
+            "%d inside pts, %d tot grid pts, %d master grid",
+            len(a),
+            len(a),
+            len(self.grid.masterGridPositions),
+        )
         self.computeVolumeAndSetNbMol(env, b, a, areas=vSurfaceArea)
 
         return a, b, vSurfaceArea
@@ -1291,7 +1296,13 @@ class Compartment(CompartmentList):
         self.surfacePoints = surfacePoints
         self.surfacePointsCoords = surfPtsBB
         self.surfacePointsNormals = surfacePointsNormals
-        self.log.info("%s surface pts, %d inside pts, %d tot grid pts, %d master grid", len(self.surfacePoints), len(self.insidePoints), nbGridPoints, len(env.grid.masterGridPositions))
+        self.log.info(
+            "%s surface pts, %d inside pts, %d tot grid pts, %d master grid",
+            len(self.surfacePoints),
+            len(self.insidePoints),
+            nbGridPoints,
+            len(env.grid.masterGridPositions),
+        )
         self.computeVolumeAndSetNbMol(
             env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
@@ -1334,7 +1345,11 @@ class Compartment(CompartmentList):
             self.BuildGrid_box(env, vSurfaceArea)
             return self.insidePoints, self.surfacePoints
 
-        self.log.info("time to create surface points %d %d", time() - t1, len(self.ogsurfacePoints))
+        self.log.info(
+            "time to create surface points %d %d",
+            time() - t1,
+            len(self.ogsurfacePoints),
+        )
 
         distances = env.grid.distToClosestSurf
         idarray = env.grid.gridPtId
@@ -3307,7 +3322,10 @@ class Compartment(CompartmentList):
         self.interiorVolume = len(insidePoints) * unitVol
         if self.surfaceVolume is not None:
             self.log.info(
-                "%d surface volume %.2f interior volume", self.surfaceVolume, self.interiorVolume)
+                "%d surface volume %.2f interior volume",
+                self.surfaceVolume,
+                self.interiorVolume,
+            )
         self.log.info("%.2f interior volume", self.interiorVolume)
 
         # compute number of molecules and save in recipes
@@ -3505,6 +3523,7 @@ class Compartment(CompartmentList):
         faces = self.faces[:]
         vertices = self.vertices[:]
         from cellpack.autopack.Environment import Grid
+
         # Grid initialization referenced from getSurfaceInnerPointsJordan()
         self.grid = grid = Grid()  # setup=False)
         grid.boundingBox = boundingBox

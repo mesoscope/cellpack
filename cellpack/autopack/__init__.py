@@ -415,7 +415,6 @@ def fixPath(adict):  # , k, v):
             adict[key] = fixOnePath(adict[key])
 
 
-
 def updatePathJSON():
     if not os.path.isfile(autopack_path_pref_file):
         log.error(autopack_path_pref_file + " file is not found")

@@ -1329,7 +1329,9 @@ class dejavuHelper(hostHelper.Helper):
         #            for i,node in enumerate(col.scene.nodes) :
         #                self.transformNode(node,i,col,col.scene.xmlnode[i])
         else:
-            from cellpack.mgl_tools.DejaVu.IndexedPolygons import IndexedPolygonsFromFile
+            from cellpack.mgl_tools.DejaVu.IndexedPolygons import (
+                IndexedPolygonsFromFile,
+            )
 
             geoms = IndexedPolygonsFromFile(filename, fileName)
             self.AddObject(geoms)

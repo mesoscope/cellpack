@@ -161,7 +161,7 @@ def main():
 
         if do_analysis:
             log.info("DOING ANALYSIS %r", do_analysis)
-   
+
             env.placeMethod = place_method
             env.encapsulatingGrid = 0
             autopack.testPeriodicity = False

@@ -154,7 +154,7 @@ class Recipe:
             if ingr.nbMol == 0:
                 self.info.warning(
                     "WARNING GRAHAM: recipe ingredient %s has 0 molecules as target",
-                    ingr.name
+                    ingr.name,
                 )
             else:
                 self.activeIngredients.append(i)

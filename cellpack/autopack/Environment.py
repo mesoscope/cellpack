@@ -1602,7 +1602,9 @@ class Environment(CompartmentList):
         self.grid.aInteriorGrids = aInteriorGrids
         self.grid.aSurfaceGrids = aSurfaceGrids
         self.log.info("I'm out of the loop and have build my grid with inside points")
-        self.log.info("build Grids %r %d", self.innerGridMethod, len(self.grid.aSurfaceGrids))
+        self.log.info(
+            "build Grids %r %d", self.innerGridMethod, len(self.grid.aSurfaceGrids)
+        )
 
     def buildGrid(
         self,
@@ -2517,7 +2519,9 @@ class Environment(CompartmentList):
         self.failedJitter = []
 
         # this function also depend on the ingr.completiion that can be restored ?
-        self.activeIngr0, self.activeIngr12 = self.callFunction(self.getSortedActiveIngredients, ([allIngredients]))
+        self.activeIngr0, self.activeIngr12 = self.callFunction(
+            self.getSortedActiveIngredients, ([allIngredients])
+        )
 
         self.log.info("len(allIngredients %d", len(allIngredients))
         self.log.info("len(self.activeIngr0) %d", len(self.activeIngr0))
@@ -3959,6 +3963,7 @@ class Environment(CompartmentList):
             print("problem Matrix", node)
             return
         if self.panda_solver == "bullet":
+            print("bullet")
             pMat = Mat4(
                 mat[0],
                 mat[1],
