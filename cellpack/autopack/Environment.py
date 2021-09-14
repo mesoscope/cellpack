@@ -46,6 +46,7 @@
 # TODO: fix the save/restore grid
 """
 
+from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.upy.colors import create_divergent_color_map_with_scaled_values
 from cellpack.autopack.transformation import euler_from_matrix
 import os
@@ -489,7 +490,7 @@ class Environment(CompartmentList):
         self.freePointsAfterFill = []
         self.nbFreePointsAfterFill = []
         self.distanceAfterFill = []
-
+        self.plotly = PlotlyAnalysis(self.placeMethod)
         self.OPTIONS = {
             "smallestProteinSize": {
                 "name": "smallestProteinSize",
@@ -804,14 +805,15 @@ class Environment(CompartmentList):
         # check the extension of the filename none, txt or json
         fileName, fileExtension = os.path.splitext(setupfile)
         if fileExtension == ".xml":
-            return IOutils.load_XML(self, setupfile)
+            IOutils.load_XML(self, setupfile)
         elif fileExtension == ".py":  # execute ?
-            return IOutils.load_Python(self, setupfile)
+            IOutils.load_Python(self, setupfile)
         elif fileExtension == ".json":
-            return IOutils.load_Json(self, setupfile)
+            IOutils.load_Json(self, setupfile)
         else:
             print("can't read or recognize " + setupfile)
             return None
+        self.plotly.update_title(self.placeMethod)
         return None
 
     def loadRecipeString(self, astring):
@@ -823,7 +825,9 @@ class Environment(CompartmentList):
         # should check extension filename for type of saved file
         self.saveGridToFile(self.resultfile + "grid")
         self.saveGridLogsAsJson(self.resultfile + "_grid-data.json")
-        self.save_grid_heatmap()
+        self.plotly.make_grid_heatmap(self)
+        self.plotly.add_ingredient_positions(self)
+        self.plotly.show()
         self.grid.result_filename = self.resultfile + "grid"
         self.collectResultPerIngredient()
         self.store()
@@ -1351,61 +1355,6 @@ class Environment(CompartmentList):
             json.dump(data, fp=f)
         f.close()
 
-    def save_grid_heatmap(self):
-        ids = []
-        x = []
-        y = []
-        colors = []
-        color_scale = pcolors.diverging.PiYG
-   
-        for i in range(len(self.grid.masterGridPositions)):
-            ids.append(i)
-            x.append(self.grid.masterGridPositions[i][0])
-            y.append(self.grid.masterGridPositions[i][1])
-            dist = self.grid.distToClosestSurf[i]
-            colors.append(dist)
-
-        min_value = min(colors)
-        max_value = max(colors)
-        color_map = create_divergent_color_map_with_scaled_values(min_value, max_value, color_scale)
-        print(color_map)
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            ids=ids,
-            x=x,
-            y=y,
-            text=list(zip(colors, ids)),
-            mode="markers",
-            marker=go.scatter.Marker(
-                size=10,
-                color=colors,
-                opacity=1,
-                symbol="square",
-                showscale=True,
-                colorscale=color_map
-
-            )
-        ))
-        for pos, rot, ingr, ptInd in self.molecules:
-            fig.add_shape(type="circle",
-                xref="x", yref="y",
-                x0=pos[0] - ingr.encapsulatingRadius , y0=pos[1] - ingr.encapsulatingRadius, 
-                x1=pos[0] + ingr.encapsulatingRadius, y1=pos[1] + ingr.encapsulatingRadius,
-                line_color="LightSeaGreen",
-            )
-  
-
-        fig.update_layout(
-            width=700,
-            height=700,
-            title=self.placeMethod
-        )
-        fig.update_xaxes(range=[-200, 1200])
-        fig.update_yaxes(range=[-200, 1200])
-        self.plot = fig
-        fig.show()
-
-        
     def restoreGridFromFile(self, gridFileName):
         """
         Read and setup the grid from the given filename. (pickle)
@@ -2674,7 +2623,7 @@ class Environment(CompartmentList):
         dump_freq = self.dump_freq  # 120.0#every minute
         dump = self.dump
         stime = time.time()
-        self.save_grid_heatmap()
+        self.plotly.make_grid_heatmap(self)
         while nbFreePoints:
             self.log.info(
                 ".........At start of while loop, with vRangeStart = %d", vRangeStart
@@ -2798,7 +2747,6 @@ class Environment(CompartmentList):
                 self.grid.distToClosestSurf = numpy.array(distance[:])
                 self.grid.freePoints = numpy.array(freePoints[:])
                 self.grid.nbFreePoints = len(freePoints)  # -1
-                self.save_grid_heatmap()
                 # update largest protein size
                 # problem when the encapsulatingRadius is actually wrong
                 if ingr.encapsulatingRadius > self.largestProteinSize:
