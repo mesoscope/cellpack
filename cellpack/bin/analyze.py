@@ -170,7 +170,7 @@ def main():
             env.boundingBox = numpy.array(env.boundingBox)
 
             analyse.doloop(
-                2,
+                1,
                 env.boundingBox,
                 wrkDir,
                 output,

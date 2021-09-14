@@ -46,6 +46,7 @@
 # TODO: fix the save/restore grid
 """
 
+from cellpack.autopack.upy.colors import create_divergent_color_map_with_scaled_values
 from cellpack.autopack.transformation import euler_from_matrix
 import os
 import time
@@ -58,7 +59,8 @@ import json
 from json import encoder
 import logging
 from collections import OrderedDict
-
+import plotly.graph_objects as go
+import plotly.colors as pcolors
 # PANDA3D Physics engine ODE and Bullet
 import panda3d
 
@@ -349,6 +351,7 @@ class Environment(CompartmentList):
         CompartmentList.__init__(self)
 
         self.log = logging.getLogger("env")
+        self.log.propagate = False
         self.timeUpDistLoopTotal = 0
         self.name = name
         self.exteriorRecipe = None
@@ -819,6 +822,8 @@ class Environment(CompartmentList):
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
         self.saveGridToFile(self.resultfile + "grid")
+        self.saveGridLogsAsJson(self.resultfile + "_grid-data.json")
+        self.save_grid_heatmap()
         self.grid.result_filename = self.resultfile + "grid"
         self.collectResultPerIngredient()
         self.store()
@@ -835,8 +840,8 @@ class Environment(CompartmentList):
         self.log.info("time to save result file %d", time.time() - t0)
         if vAnalysis == 1:
             #    START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
-            unitVol = self.grid.gridSpacing ** 3
             # totalVolume = self.grid.gridVolume*unitVol
+            unitVol = self.grid.gridSpacing ** 3
             wrkDirRes = self.resultfile + "_analyze_"
             for o in self.compartments:  # only for compartment ?
                 # totalVolume -= o.surfaceVolume
@@ -1320,6 +1325,87 @@ class Environment(CompartmentList):
             compartment.saveGridToFile(f)
         f.close()
 
+    def saveGridLogsAsJson(self, gridFileOut):
+        """
+        Save the current grid and the compartment grid information in a file. (pickle)
+        """
+        d = os.path.dirname(gridFileOut)
+        if not os.path.exists(d):
+            print("gridfilename path problem", gridFileOut)
+        data = {}
+        for i in range(len(self.grid.masterGridPositions)):
+            data[i] = {
+                "position": [
+                    str(self.grid.masterGridPositions[i][0]), 
+                    str(self.grid.masterGridPositions[i][1]),
+                    str(self.grid.masterGridPositions[i][2])
+                            ],
+                "distance": str(self.grid.distToClosestSurf[i]),
+            }
+        # data = {
+        #     # "gridPositions": json.loads(self.grid.masterGridPositions),
+        #     "distances": json.loads(self.grid.distToClosestSurf)
+        # }
+
+        with open(gridFileOut, "w") as f:
+            json.dump(data, fp=f)
+        f.close()
+
+    def save_grid_heatmap(self):
+        ids = []
+        x = []
+        y = []
+        colors = []
+        color_scale = pcolors.diverging.PiYG
+   
+        for i in range(len(self.grid.masterGridPositions)):
+            ids.append(i)
+            x.append(self.grid.masterGridPositions[i][0])
+            y.append(self.grid.masterGridPositions[i][1])
+            dist = self.grid.distToClosestSurf[i]
+            colors.append(dist)
+
+        min_value = min(colors)
+        max_value = max(colors)
+        color_map = create_divergent_color_map_with_scaled_values(min_value, max_value, color_scale)
+        print(color_map)
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
+            ids=ids,
+            x=x,
+            y=y,
+            text=list(zip(colors, ids)),
+            mode="markers",
+            marker=go.scatter.Marker(
+                size=10,
+                color=colors,
+                opacity=1,
+                symbol="square",
+                showscale=True,
+                colorscale=color_map
+
+            )
+        ))
+        for pos, rot, ingr, ptInd in self.molecules:
+            fig.add_shape(type="circle",
+                xref="x", yref="y",
+                x0=pos[0] - ingr.encapsulatingRadius , y0=pos[1] - ingr.encapsulatingRadius, 
+                x1=pos[0] + ingr.encapsulatingRadius, y1=pos[1] + ingr.encapsulatingRadius,
+                line_color="LightSeaGreen",
+            )
+  
+
+        fig.update_layout(
+            width=700,
+            height=700,
+            title=self.placeMethod
+        )
+        fig.update_xaxes(range=[-200, 1200])
+        fig.update_yaxes(range=[-200, 1200])
+        self.plot = fig
+        fig.show()
+
+        
     def restoreGridFromFile(self, gridFileName):
         """
         Read and setup the grid from the given filename. (pickle)
@@ -2270,7 +2356,6 @@ class Environment(CompartmentList):
             else:
                 cut = radius - jitter
             # for pt in freePoints[:nbFreePoints]:
-            self.log.info("find grid point with distance >= %d", cut)
             if hasattr(ingr, "allIngrPts") and self._hackFreepts:
                 allIngrPts = ingr.allIngrPts
                 self.log.warning("Running nofreepoint HACK")
@@ -2286,9 +2371,6 @@ class Environment(CompartmentList):
                     # allIngrDist.append(d)
                     ingr.allIngrPts = allIngrPts
                     ingr.cut = cut
-                    self.log.info(
-                        "getPointToDrop len(allIngrPts) = %d", len(allIngrPts)
-                    )
                 else:
                     if hasattr(ingr, "allIngrPts"):
                         allIngrPts = ingr.allIngrPts
@@ -2296,7 +2378,6 @@ class Environment(CompartmentList):
                         allIngrPts = freePoints[:nbFreePoints]
                         ingr.allIngrPts = allIngrPts
 
-        self.log.info("len (allIngrPts) = %d", len(allIngrPts))
         if len(allIngrPts) == 0:
             t = time.time()
             ingr.completion = 1.0
@@ -2593,12 +2674,11 @@ class Environment(CompartmentList):
         dump_freq = self.dump_freq  # 120.0#every minute
         dump = self.dump
         stime = time.time()
+        self.save_grid_heatmap()
         while nbFreePoints:
             self.log.info(
                 ".........At start of while loop, with vRangeStart = %d", vRangeStart
             )
-            self.log.info("Points Remaining %d %d", nbFreePoints, len(freePoints))
-            self.log.info("len(self.activeIngr) %d", len(self.activeIngr))
 
             # breakin test
             if len(self.activeIngr) == 0:
@@ -2627,7 +2707,6 @@ class Environment(CompartmentList):
 
             # pick an ingredient
             ingr = self.callFunction(self.pickIngredient, (vThreshStart,))
-            self.log.info("picked Ingr %s", ingr.name)
             if hasattr(self, "afviewer"):
                 p = (
                     (float(PlacedMols)) / float(totalNumMols)
@@ -2656,7 +2735,7 @@ class Environment(CompartmentList):
                 dpad,
             )
 
-            # find the points that can be used for this ingredients
+            # find the points that can be used for this ingredient
             ##
             res = [True, int(random() * len(freePoints))]
             if PlacedMols != 0:
@@ -2675,6 +2754,7 @@ class Environment(CompartmentList):
                         vThreshStart,
                     ],
                 )
+                self.log.info("GOT point %r", res)
             elif ingr.compNum > 0:
                 allSrfpts = list(
                     self.compartments[ingr.compNum - 1].surfacePointsNormals.keys()
@@ -2695,7 +2775,7 @@ class Environment(CompartmentList):
 
             if ingr.encapsulatingRadius > self.largestProteinSize:
                 self.largestProteinSize = ingr.encapsulatingRadius
-            # stepByStep=False, verbose=False,
+            self.log.info("attempting to place near %d: %r", ptInd, self.grid.masterGridPositions[ptInd])
             success, nbFreePoints = self.callFunction(
                 ingr.place,
                 (
@@ -2709,14 +2789,16 @@ class Environment(CompartmentList):
                 ),
             )
             self.log.info(
-                "after place attempt placed: %r, number of free points:%d",
+                "after place attempt placed: %r, number of free points:%d, length of free points=%d",
                 success,
                 nbFreePoints,
+                len(freePoints)
             )
             if success:
                 self.grid.distToClosestSurf = numpy.array(distance[:])
                 self.grid.freePoints = numpy.array(freePoints[:])
                 self.grid.nbFreePoints = len(freePoints)  # -1
+                self.save_grid_heatmap()
                 # update largest protein size
                 # problem when the encapsulatingRadius is actually wrong
                 if ingr.encapsulatingRadius > self.largestProteinSize:
@@ -2751,7 +2833,6 @@ class Environment(CompartmentList):
                     self.getSortedActiveIngredients, ([self.activeIngr])
                 )
                 if verbose > 2:
-                    print("len(self.activeIngr", len(self.activeIngr))
                     print("len(self.activeIngr0)", len(self.activeIngr0))
                     print("len(self.activeIngr12)", len(self.activeIngr12))
                 self.activeIngre_saved = self.activeIngr[:]
@@ -3955,38 +4036,37 @@ class Environment(CompartmentList):
     def moveRBnode(self, node, trans, rotMat):
         if panda3d is None:
             return
-        mat = rotMat.copy()
+        rotation_matrix = rotMat.copy()
         #        mat[:3, 3] = trans
         #        mat = mat.transpose()
-        mat = mat.transpose().reshape((16,))
-        if True in numpy.isnan(mat).flatten():
+        rotation_matrix = rotation_matrix.transpose().reshape((16,))
+        if True in numpy.isnan(rotation_matrix).flatten():
             print("problem Matrix", node)
             return
         if self.panda_solver == "bullet":
-            print("bullet")
             pMat = Mat4(
-                mat[0],
-                mat[1],
-                mat[2],
-                mat[3],
-                mat[4],
-                mat[5],
-                mat[6],
-                mat[7],
-                mat[8],
-                mat[9],
-                mat[10],
-                mat[11],
+                rotation_matrix[0],
+                rotation_matrix[1],
+                rotation_matrix[2],
+                rotation_matrix[3],
+                rotation_matrix[4],
+                rotation_matrix[5],
+                rotation_matrix[6],
+                rotation_matrix[7],
+                rotation_matrix[8],
+                rotation_matrix[9],
+                rotation_matrix[10],
+                rotation_matrix[11],
                 trans[0],
                 trans[1],
                 trans[2],
-                mat[15],
+                rotation_matrix[15],
             )
             nodenp = NodePath(node)
             nodenp.setMat(pMat)
         elif self.panda_solver == "ode":
             mat3x3 = Mat3(
-                mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10]
+                rotation_matrix[0], rotation_matrix[1], rotation_matrix[2], rotation_matrix[4], rotation_matrix[5], rotation_matrix[6], rotation_matrix[8], rotation_matrix[9], rotation_matrix[10]
             )
             body = node.get_body()
             body.setPosition(Vec3(trans[0], trans[1], trans[2]))

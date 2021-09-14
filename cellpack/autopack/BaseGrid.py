@@ -214,13 +214,14 @@ class BaseGrid:
         space = self.gridSpacing
         # Vector for lower left broken into real of only the z coord.
         i = 0
+        padding = space / 2.0
         for zi in range(nz):
             for yi in range(ny):
                 for xi in range(nx):
 
-                    x = xl + xi * space + space / 2.0
-                    y = yl + yi * space + space / 2.0
-                    z = zl + zi * space + space / 2.0
+                    x = xl + xi * space + padding
+                    y = yl + yi * space + padding
+                    z = zl + zi * space + padding
                     pointArrayRaw[i] = (x, y, z)
                     self.ijkPtIndice[i] = (xi, yi, zi)
                     i += 1
