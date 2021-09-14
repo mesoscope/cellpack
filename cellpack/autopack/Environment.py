@@ -46,9 +46,6 @@
 # TODO: fix the save/restore grid
 """
 
-from cellpack.autopack.plotly_result import PlotlyAnalysis
-from cellpack.autopack.upy.colors import create_divergent_color_map_with_scaled_values
-from cellpack.autopack.transformation import euler_from_matrix
 import os
 import time
 from random import random, uniform, seed
@@ -60,8 +57,7 @@ import json
 from json import encoder
 import logging
 from collections import OrderedDict
-import plotly.graph_objects as go
-import plotly.colors as pcolors
+
 # PANDA3D Physics engine ODE and Bullet
 import panda3d
 
@@ -84,6 +80,8 @@ from .Ingredient import GrowIngredient, ActinIngredient
 from .ray import vlen, vdiff
 from cellpack.autopack import IOutils
 from .Gradient import Gradient
+from cellpack.autopack.plotly_result import PlotlyAnalysis
+from cellpack.autopack.transformation import euler_from_matrix
 
 # backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
@@ -1340,10 +1338,10 @@ class Environment(CompartmentList):
         for i in range(len(self.grid.masterGridPositions)):
             data[i] = {
                 "position": [
-                    str(self.grid.masterGridPositions[i][0]), 
+                    str(self.grid.masterGridPositions[i][0]),
                     str(self.grid.masterGridPositions[i][1]),
-                    str(self.grid.masterGridPositions[i][2])
-                            ],
+                    str(self.grid.masterGridPositions[i][2]),
+                ],
                 "distance": str(self.grid.distToClosestSurf[i]),
             }
         # data = {
@@ -2724,7 +2722,11 @@ class Environment(CompartmentList):
 
             if ingr.encapsulatingRadius > self.largestProteinSize:
                 self.largestProteinSize = ingr.encapsulatingRadius
-            self.log.info("attempting to place near %d: %r", ptInd, self.grid.masterGridPositions[ptInd])
+            self.log.info(
+                "attempting to place near %d: %r",
+                ptInd,
+                self.grid.masterGridPositions[ptInd],
+            )
             success, nbFreePoints = self.callFunction(
                 ingr.place,
                 (
@@ -2741,7 +2743,7 @@ class Environment(CompartmentList):
                 "after place attempt placed: %r, number of free points:%d, length of free points=%d",
                 success,
                 nbFreePoints,
-                len(freePoints)
+                len(freePoints),
             )
             if success:
                 self.grid.distToClosestSurf = numpy.array(distance[:])
@@ -4014,7 +4016,15 @@ class Environment(CompartmentList):
             nodenp.setMat(pMat)
         elif self.panda_solver == "ode":
             mat3x3 = Mat3(
-                rotation_matrix[0], rotation_matrix[1], rotation_matrix[2], rotation_matrix[4], rotation_matrix[5], rotation_matrix[6], rotation_matrix[8], rotation_matrix[9], rotation_matrix[10]
+                rotation_matrix[0],
+                rotation_matrix[1],
+                rotation_matrix[2],
+                rotation_matrix[4],
+                rotation_matrix[5],
+                rotation_matrix[6],
+                rotation_matrix[8],
+                rotation_matrix[9],
+                rotation_matrix[10],
             )
             body = node.get_body()
             body.setPosition(Vec3(trans[0], trans[1], trans[2]))

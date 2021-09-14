@@ -3215,8 +3215,21 @@ class Ingredient(Agent):
         newDistPoints = {}
         for radius_of_ing_being_packed, posc in zip(radii, centT):
             x, y, z = posc
-            radius_of_area_to_check = radius_of_ing_being_packed + dpad  # extends the packing ingredient's bounding box to be large enough to include masked gridpoints of the largest possible ingrdient in the receipe
-            bb = ([x - radius_of_area_to_check, y - radius_of_area_to_check, z - radius_of_area_to_check], [x + radius_of_area_to_check, y + radius_of_area_to_check, z + radius_of_area_to_check])
+            radius_of_area_to_check = (
+                radius_of_ing_being_packed + dpad
+            )  # extends the packing ingredient's bounding box to be large enough to include masked gridpoints of the largest possible ingrdient in the receipe
+            bb = (
+                [
+                    x - radius_of_area_to_check,
+                    y - radius_of_area_to_check,
+                    z - radius_of_area_to_check,
+                ],
+                [
+                    x + radius_of_area_to_check,
+                    y + radius_of_area_to_check,
+                    z + radius_of_area_to_check,
+                ],
+            )
 
             if histoVol.runTimeDisplay:  # > 1:
                 box = self.vi.getObject("collBox")
@@ -3238,12 +3251,19 @@ class Ingredient(Agent):
             # loop over all the grid points in the cube
             # NOTE: used to filter these points to an inscribed sphere, but is expensive and didn't reduce points to check
             for pti in range(len(pointsInCube)):
-                pt = pointsInCube[pti]  # index of master grid point that is inside the sphere
-                distance_to_packing_location = distA[pti]  # is that point's distance from the center of the sphere (packing location)
-                
+                pt = pointsInCube[
+                    pti
+                ]  # index of master grid point that is inside the sphere
+                distance_to_packing_location = distA[
+                    pti
+                ]  # is that point's distance from the center of the sphere (packing location)
+
                 # distance is an array of distance of closest contact to anything currently in the grid
-                if distance_to_packing_location <= radius_of_ing_being_packed and distance[pt] < -0.0001:
-                    # if there is an object encroaching into this packing area, that is 
+                if (
+                    distance_to_packing_location <= radius_of_ing_being_packed
+                    and distance[pt] < -0.0001
+                ):
+                    # if there is an object encroaching into this packing area, that is
                     # closer to the packing location than the radius of the object
                     # we are trying to pack, probably a collision
                     if level < self.maxLevel and (level + 1) < len(self.positions):
@@ -3281,12 +3301,18 @@ class Ingredient(Agent):
                         #     # print("in collision histovol.maxColl if")
                         # return True, insidePoints, newDistPoints
                 # print("End of collision for pt = ", pt)
-                if pt in insidePoints:  # don't need to update any distances 
+                if pt in insidePoints:  # don't need to update any distances
                     continue
 
-                signed_distance_to_sphere_surface = distance_to_packing_location - radius_of_ing_being_packed
-                if signed_distance_to_sphere_surface <= 0:  # point is inside dropped sphere
-                    if histoVol.grid.gridPtId[pt] != self.compNum and self.compNum <= 0:  # did this jitter outside of it's compartment
+                signed_distance_to_sphere_surface = (
+                    distance_to_packing_location - radius_of_ing_being_packed
+                )
+                if (
+                    signed_distance_to_sphere_surface <= 0
+                ):  # point is inside dropped sphere
+                    if (
+                        histoVol.grid.gridPtId[pt] != self.compNum and self.compNum <= 0
+                    ):  # did this jitter outside of it's compartment
                         # in wrong compartment, reject this packing position
                         # NOTE: Do we want to update distances if we're not packing at this location
                         # MEGAN: I think we should return `True, {}, {}`
@@ -3297,7 +3323,9 @@ class Ingredient(Agent):
                             insidePoints[pt] = signed_distance_to_sphere_surface
                     else:
                         insidePoints[pt] = signed_distance_to_sphere_surface
-                elif signed_distance_to_sphere_surface < distance[pt]:  # point in region of influence
+                elif (
+                    signed_distance_to_sphere_surface < distance[pt]
+                ):  # point in region of influence
                     # need to update the distances of the master grid with new smaller distance
                     if pt in newDistPoints:
                         if signed_distance_to_sphere_surface < newDistPoints[pt]:
@@ -3617,9 +3645,7 @@ class Ingredient(Agent):
         if jitter2 > 0.0:
             found = False
             while not found:
-                dx = (
-                    jx * jitter * uniform(-1.0, 1.0)
-                )
+                dx = jx * jitter * uniform(-1.0, 1.0)
                 dy = jy * jitter * uniform(-1.0, 1.0)
                 dz = jz * jitter * uniform(-1.0, 1.0)
                 d2 = dx * dx + dy * dy + dz * dz
@@ -4329,11 +4355,11 @@ class Ingredient(Agent):
             self.completion = 1.0
 
     def place_general(self, env, ptInd, afvi):
-        # NOTE: rapid and panda 
+        # NOTE: rapid and panda
         compartment = self.get_compartment(env)
         gridPointsCoords = env.masterGridPositions
         periodic_pos = None
-        # compute rotation matrix 
+        # compute rotation matrix
         rot_matrix = self.get_rotation(ptInd, env, compartment)
         # jitter position loop
         jitterList = []
@@ -4348,8 +4374,19 @@ class Ingredient(Agent):
             moving = self.handle_real_time_visualization(
                 afvi, ptInd, target_point, rot_matrix
             )
-        return compartment, gridPointsCoords, periodic_pos, jitterList, rot_matrix, jitterList, collD1, collD2, target_point, moving
-    
+        return (
+            compartment,
+            gridPointsCoords,
+            periodic_pos,
+            jitterList,
+            rot_matrix,
+            jitterList,
+            collD1,
+            collD2,
+            target_point,
+            moving,
+        )
+
     def place(self, env, ptInd, freePoints, nbFreePoints, distance, dpad, usePP):
         success = False
         # print self.placeType
@@ -4357,7 +4394,13 @@ class Ingredient(Agent):
         #        if histoVol.afviewer != None:
         #            self.vi = histoVol.afviewer.vi
         self.env = env  # NOTE: do we need to store the env on the ingredient?
-        self.log.info("PLACING INGREDIENT $s using %s, index=%d, point=%r", self.name, self.placeType, ptInd, env.grid.masterGridPositions[ptInd])
+        self.log.info(
+            "PLACING INGREDIENT $s using %s, index=%d, point=%r",
+            self.name,
+            self.placeType,
+            ptInd,
+            env.grid.masterGridPositions[ptInd],
+        )
         # grow doesnt use panda.......but could use all the geom produce by the grow as rb
         if self.placeType == "jitter" or self.Type == "Grow" or self.Type == "Actine":
             success, nbFreePoints = self.jitter_place(
@@ -4433,7 +4476,18 @@ class Ingredient(Agent):
                     usePP=usePP,
                 )
             else:
-                compartment, gridPointsCoords, periodic_pos, jitterList, rot_matrix, jitterList, collD1, collD2, target_point, moving = self.place_general(env, ptInd, env.afviewer)
+                (
+                    compartment,
+                    gridPointsCoords,
+                    periodic_pos,
+                    jitterList,
+                    rot_matrix,
+                    jitterList,
+                    collD1,
+                    collD2,
+                    target_point,
+                    moving,
+                ) = self.place_general(env, ptInd, env.afviewer)
                 success, nbFreePoints = self.pandaBullet_place(
                     env,
                     ptInd,
@@ -4473,7 +4527,18 @@ class Ingredient(Agent):
                 sphColors=None,
             )
         elif self.placeType == "RAPID":
-            compartment, gridPointsCoords, periodic_pos, jitterList, rot_matrix, jitterList, collD1, collD2, target_point, moving = self.place_general(env, ptInd, env.afviewer)
+            (
+                compartment,
+                gridPointsCoords,
+                periodic_pos,
+                jitterList,
+                rot_matrix,
+                jitterList,
+                collD1,
+                collD2,
+                target_point,
+                moving,
+            ) = self.place_general(env, ptInd, env.afviewer)
 
             success, nbFreePoints = self.rapid_place(
                 env,
@@ -4579,7 +4644,7 @@ class Ingredient(Agent):
                     jitter_trans = (tx + dx, ty + dy, tz + dz)
                     found = True
                 # else:
-                    # self.log.info("JITTER REJECTED %d %d", d2, jitter_sq)
+                # self.log.info("JITTER REJECTED %d %d", d2, jitter_sq)
         else:
             jitter_trans = translation
             dx = dy = dz = 0.0
@@ -4917,13 +4982,13 @@ class Ingredient(Agent):
         collD2 = []
 
         trans = env.masterGridPositions[ptInd]  # drop point, surface points.
-        
+
         if numpy.sum(self.offset) != 0.0:
             # the geometry has an offset, ie surface protein, and the origin isn't centered
             # NOTE: Possible to remove here and apply at point of visualization
             trans = numpy.array(trans) + ApplyMatrix([self.offset], rot_mat)[0]
             self.log.info("use offset %r", self.offset)
-        
+
         target_point = trans
         moving = None
         if env.runTimeDisplay and self.mesh:
@@ -4974,7 +5039,8 @@ class Ingredient(Agent):
                     if env.runTimeDisplay and moving is not None:
                         box = self.vi.getObject("collBox")
                         self.vi.changeObjColorMat(
-                            box, [0.5, 0, 0] if True in collision_results else [0, 0.5, 0]
+                            box,
+                            [0.5, 0, 0] if True in collision_results else [0, 0.5, 0],
                         )
                         self.update_display_rt(moving, p, jitter_rot)
                     if True in collision_results:
@@ -5001,7 +5067,11 @@ class Ingredient(Agent):
                 box = self.vi.getObject("collBox")
                 self.vi.changeObjColorMat(box, [1, 0, 0] if collision else [0, 1, 0])
             if not collision:
-                self.log.info("no collision, new points %d, %d", len(insidePoints), len(newDistPoints))
+                self.log.info(
+                    "no collision, new points %d, %d",
+                    len(insidePoints),
+                    len(newDistPoints),
+                )
                 break  # break out of jitter pos loop
 
         self.log.info(
@@ -5014,8 +5084,6 @@ class Ingredient(Agent):
         if not collision and not (True in collision_results) and not test:
             # get inside points and update distance
             # use best spherical approximation
-
-            t3 = time()
             # should be replace by self.getPointInside
 
             # save dropped ingredient
@@ -5555,7 +5623,9 @@ class Ingredient(Agent):
             self.rejectionCounter = 0
 
         else:  # got rejected
-            self.log.info("rejecting: collisionComp %r collision2 %r", collisionComp, collision2)
+            self.log.info(
+                "rejecting: collisionComp %r collision2 %r", collisionComp, collision2
+            )
 
             if histoVol.runTimeDisplay and moving is not None:
                 afvi.vi.deleteObject(moving)
@@ -5598,10 +5668,6 @@ class Ingredient(Agent):
         """
         histoVol.setupPanda()
         afvi = histoVol.afviewer
-        spacing = histoVol.grid.gridSpacing  # /1.1547#  histoVol.smallestProteinSize
-        jx, jy, jz = self.jitterMax
-        jitter = spacing / 2.0  # histoVol.callFunction(self.getMaxJitter,(spacing,))
-        jitter_sq = jitter * jitter
 
         compartment = self.get_compartment(histoVol)
         runTimeDisplay = histoVol.runTimeDisplay
@@ -5804,7 +5870,7 @@ class Ingredient(Agent):
                     break  # break out of jitter pos loop
                 else:
                     collision2 = collisionComp
-        if not collision2 and not test:  
+        if not collision2 and not test:
             drop = True
             # get inside points and update distance
             ##
@@ -5932,7 +5998,6 @@ class Ingredient(Agent):
         spacing = histoVol.grid.gridSpacing  # smallestProteinSize
         jx, jy, jz = self.jitterMax
         jitter = spacing / 2.0  # histoVol.callFunction(self.getMaxJitter, (spacing,))
-        jitter2 = jitter * jitter
 
         if self.compNum == 0:
             compartment = histoVol
@@ -6427,7 +6492,7 @@ class Ingredient(Agent):
         """
         drop the ingredient on grid point ptInd
         """
- 
+
         # do we get the list of neighbours first > and give a different trans...closer to the partner
         # we should look up for an available ptID around the picked partner if any
         # getListPartner
@@ -6519,7 +6584,11 @@ class Ingredient(Agent):
                     jtrans, rotMatj, usePP=usePP
                 )
                 collisionComp = False
-            self.log.info("collision collision2=%r collision_results=%r", collision2, collision_results)
+            self.log.info(
+                "collision collision2=%r collision_results=%r",
+                collision2,
+                collision_results,
+            )
             # need to check compartment too
             if not collision2:  # and not r:  # and not collision2:
                 if self.compareCompartment:
@@ -6574,7 +6643,9 @@ class Ingredient(Agent):
                     break  # break out of jitter pos loop
                 else:
                     collision2 = collisionComp
-        if not collision2 and not (True in collision_results) and not test:  # and not collision2:
+        if (
+            not collision2 and not (True in collision_results) and not test
+        ):  # and not collision2:
             insidePoints = {}
             newDistPoints = {}
             t3 = time()
@@ -6730,13 +6801,15 @@ class Ingredient(Agent):
                 dpad,
             )
             if self.name == "in  inside":
-                env.jitterVectors.append((trans, jtrans))
+                env.jitterVectors.append((target_point, jtrans))
 
             success = True
             self.rejectionCounter = 0
 
         else:  # got rejected
-            self.log.info("rejecting: collisionComp %r collision2 %r", collisionComp, collision2)
+            self.log.info(
+                "rejecting: collisionComp %r collision2 %r", collisionComp, collision2
+            )
             if env.runTimeDisplay and moving is not None:
                 afvi.vi.deleteObject(moving)
             success = False

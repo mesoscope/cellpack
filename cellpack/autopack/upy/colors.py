@@ -410,22 +410,33 @@ def map_colors(values, colorMap, mini=None, maxi=None):
 
 def create_divergent_color_map_with_scaled_values(min_value, max_value, color_list):
     """
-        Use case: you want a divergent scale centered at 0, but with drastically different
-        negative scale and positive scale. Ie, min number is -20, and max is 2000. 
-        @param min_value: float value that is the min of the data
-        @param max_value: float value max of the data
-        @param color_list: array of color strings, either "red" or "rgb(222, 0, 0)"
-        returns: a mapping from 0 to 1 with the appropriate step size for negative and positive values
-        in the form [[0.0, 'rgb(222, 0, 0)'], ...]
+    Use case: you want a divergent scale centered at 0, but with drastically different
+    negative scale and positive scale. Ie, min number is -20, and max is 2000.
+    @param min_value: float value that is the min of the data
+    @param max_value: float value max of the data
+    @param color_list: array of color strings, either "red" or "rgb(222, 0, 0)"
+    returns: a mapping from 0 to 1 with the appropriate step size for negative and positive values
+    in the form [[0.0, 'rgb(222, 0, 0)'], ...]
     """
-    middle_index = floor(len(color_list) / 2)  # the index of the color that will be mapped to 0
+    middle_index = floor(
+        len(color_list) / 2
+    )  # the index of the color that will be mapped to 0
     # init map with all the same color
-    color_map = [[i/(len(color_list) - 1), color_list[len(color_list) - 1]] for i in range(len(color_list))]
+    color_map = [
+        [i / (len(color_list) - 1), color_list[len(color_list) - 1]]
+        for i in range(len(color_list))
+    ]
     if min_value == max_value:
         return color_map
-    zero_point = - min_value / (max_value - min_value)  # The value between 0 and 1 that maps to 0, ie the y intercept
-    inside_step = zero_point / middle_index  # the spacing between points between min and zero point
-    outside_step = (1 - zero_point) / middle_index  # the spacing between points from zero point to max
+    zero_point = -min_value / (
+        max_value - min_value
+    )  # The value between 0 and 1 that maps to 0, ie the y intercept
+    inside_step = (
+        zero_point / middle_index
+    )  # the spacing between points between min and zero point
+    outside_step = (
+        1 - zero_point
+    ) / middle_index  # the spacing between points from zero point to max
     for i in range(len(color_list)):
         if i == len(color_list) - 1:
             # last value, fix any rounding issues
