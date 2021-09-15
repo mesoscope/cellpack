@@ -6,7 +6,7 @@ import plotly.colors as pcolors
 class PlotlyAnalysis:
     def __init__(self, title):
         fig = go.Figure()
-        fig.update_layout(width=700, height=700, title=title)
+        fig.update_layout(width=800, height=800, title=title)
         fig.update_xaxes(range=[-200, 1200])
         fig.update_yaxes(range=[-200, 1200])
         self.plot = fig
@@ -54,7 +54,7 @@ class PlotlyAnalysis:
                 text=list(zip(colors, ids)),
                 mode="markers",
                 marker=go.scatter.Marker(
-                    size=10,
+                    size=8,
                     color=colors,
                     opacity=1,
                     symbol="square",
