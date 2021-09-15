@@ -3300,7 +3300,6 @@ class Ingredient(Agent):
                         #     histoVol.maxColl = d + distance[pt]
                         #     # print("in collision histovol.maxColl if")
                         # return True, insidePoints, newDistPoints
-                # print("End of collision for pt = ", pt)
                 if pt in insidePoints:  # don't need to update any distances
                     continue
 
@@ -3308,7 +3307,7 @@ class Ingredient(Agent):
                     distance_to_packing_location - radius_of_ing_being_packed
                 )
                 if (
-                    signed_distance_to_sphere_surface <= 0
+                    signed_distance_to_sphere_surface <= 0 or signed_distance_to_sphere_surface <= 12.5
                 ):  # point is inside dropped sphere
                     if (
                         histoVol.grid.gridPtId[pt] != self.compNum and self.compNum <= 0
@@ -3319,6 +3318,8 @@ class Ingredient(Agent):
                         return True, insidePoints, newDistPoints
                     if pt in insidePoints:
                         # NOTE: Don't we want the number closer to zero? Not the most negative?
+                        if signed_distance_to_sphere_surface > 0:
+                            signed_distance_to_sphere_surface = - signed_distance_to_sphere_surface
                         if signed_distance_to_sphere_surface < insidePoints[pt]:
                             insidePoints[pt] = signed_distance_to_sphere_surface
                     else:
@@ -4981,36 +4982,33 @@ class Ingredient(Agent):
         collD1 = []
         collD2 = []
 
-        trans = env.masterGridPositions[ptInd]  # drop point, surface points.
+        targeted_master_grid_point = env.masterGridPositions[ptInd]  # drop point, surface points.
 
         if numpy.sum(self.offset) != 0.0:
             # the geometry has an offset, ie surface protein, and the origin isn't centered
             # NOTE: Possible to remove here and apply at point of visualization
-            trans = numpy.array(trans) + ApplyMatrix([self.offset], rot_mat)[0]
+            targeted_master_grid_point = numpy.array(targeted_master_grid_point) + ApplyMatrix([self.offset], rot_mat)[0]
             self.log.info("use offset %r", self.offset)
 
-        target_point = trans
         moving = None
         if env.runTimeDisplay and self.mesh:
             moving = self.handle_real_time_visualization(
-                afvi, ptInd, target_point, rot_mat
+                afvi, ptInd, targeted_master_grid_point, rot_mat
             )
 
-        jitter_trans = target_point
-        # we may increase the jitter, or pick from xyz->Id free for its radius
-
+        packing_location = None
         # jitter loop
         t1 = time()  # for timing the functions
         insidePoints = {}
         newDistPoints = {}
         for attempt_number in range(self.nbJitter):
-            jitter_trans, _, _, _ = self.randomize_translation(
-                env, target_point, rot_mat
+            packing_location, _, _, _ = self.randomize_translation(
+                env, targeted_master_grid_point, rot_mat
             )
             jitter_rot = self.randomize_rotation(rot_mat, env)
             env.totnbJitter += 1
             if env.runTimeDisplay and moving is not None:
-                self.update_display_rt(moving, jitter_trans, jitter_rot)
+                self.update_display_rt(moving, packing_location, jitter_rot)
                 self.vi.update()
             # check for collisions
             #
@@ -5018,7 +5016,7 @@ class Ingredient(Agent):
             collision = False
             # periodicity check
             periodic_pos = self.env.grid.getPositionPeridocity(
-                jitter_trans,
+                packing_location,
                 getNormedVectorOnes(self.jitterMax),
                 self.encapsulatingRadius,
             )
@@ -5049,12 +5047,12 @@ class Ingredient(Agent):
             else:
                 collision_results = [False]
             self.log.info("check collision ")
-            closeS = self.checkPointSurface(jitter_trans, cutoff=self.cutoff_surface)
+            closeS = self.checkPointSurface(packing_location, cutoff=self.cutoff_surface)
             # r = closeS
-            test = self.point_is_not_available(jitter_trans)
-            if not test and not (True in collision_results) and not closeS:
+            point_is_available = not self.point_is_not_available(packing_location)
+            if point_is_available and not (True in collision_results) and not closeS:
                 collision, insidePoints, newDistPoints = self.collision_jitter(
-                    jitter_trans,
+                    packing_location,
                     jitter_rot,
                     level,
                     env.masterGridPositions,
@@ -5081,14 +5079,14 @@ class Ingredient(Agent):
             len(insidePoints),
             len(newDistPoints),
         )
-        if not collision and not (True in collision_results) and not test:
+        if not collision and not (True in collision_results) and point_is_available:
             # get inside points and update distance
             # use best spherical approximation
             # should be replace by self.getPointInside
 
             # save dropped ingredient
             if drop:
-                compartment.molecules.append([jitter_trans, jitter_rot, self, ptInd])
+                compartment.molecules.append([packing_location, jitter_rot, self, ptInd])
                 env.order[ptInd] = env.lastrank
                 env.lastrank += 1
                 env.nb_ingredient += 1
@@ -5156,7 +5154,7 @@ class Ingredient(Agent):
         if drop:
             return success, nbFreePoints
         else:
-            return success, nbFreePoints, jitter_trans, jitter_rot
+            return success, nbFreePoints, packing_location, jitter_rot
 
     def lookForNeighbours(
         self, trans, rotMat, organelle, afvi, distance, closest_indice=None

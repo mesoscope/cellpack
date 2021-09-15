@@ -803,15 +803,14 @@ class Environment(CompartmentList):
         # check the extension of the filename none, txt or json
         fileName, fileExtension = os.path.splitext(setupfile)
         if fileExtension == ".xml":
-            IOutils.load_XML(self, setupfile)
+            return IOutils.load_XML(self, setupfile)
         elif fileExtension == ".py":  # execute ?
-            IOutils.load_Python(self, setupfile)
+            return IOutils.load_Python(self, setupfile)
         elif fileExtension == ".json":
-            IOutils.load_Json(self, setupfile)
+            return IOutils.load_Json(self, setupfile)
         else:
             print("can't read or recognize " + setupfile)
             return None
-        self.plotly.update_title(self.placeMethod)
         return None
 
     def loadRecipeString(self, astring):
@@ -2621,7 +2620,9 @@ class Environment(CompartmentList):
         dump_freq = self.dump_freq  # 120.0#every minute
         dump = self.dump
         stime = time.time()
+        self.plotly.update_title(self.placeMethod)
         self.plotly.make_grid_heatmap(self)
+
         while nbFreePoints:
             self.log.info(
                 ".........At start of while loop, with vRangeStart = %d", vRangeStart
@@ -2684,25 +2685,23 @@ class Environment(CompartmentList):
 
             # find the points that can be used for this ingredient
             ##
-            res = [True, int(random() * len(freePoints))]
-            if PlacedMols != 0:
-                res = self.callFunction(
-                    self.getPointToDrop,
-                    [
-                        ingr,
-                        radius,
-                        jitter,
-                        freePoints,
-                        nbFreePoints,
-                        distance,
-                        compId,
-                        compNum,
-                        vRangeStart,
-                        vThreshStart,
-                    ],
-                )
-                self.log.info("GOT point %r", res)
-            elif ingr.compNum > 0:
+       
+            res = self.callFunction(
+                self.getPointToDrop,
+                [
+                    ingr,
+                    radius,
+                    jitter,
+                    freePoints,
+                    nbFreePoints,
+                    distance,
+                    compId,
+                    compNum,
+                    vRangeStart,
+                    vThreshStart,
+                ],
+            )
+            if ingr.compNum > 0:
                 allSrfpts = list(
                     self.compartments[ingr.compNum - 1].surfacePointsNormals.keys()
                 )
