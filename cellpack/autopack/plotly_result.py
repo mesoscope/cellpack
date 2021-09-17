@@ -1,3 +1,5 @@
+from math import floor
+import numpy
 from cellpack.autopack.upy.colors import create_divergent_color_map_with_scaled_values
 import plotly.graph_objects as go
 import plotly.colors as pcolors
@@ -14,18 +16,33 @@ class PlotlyAnalysis:
     def update_title(self, title):
         self.plot.update_layout(title=title)
 
-    def add_ingredient_positions(self, env):
-        for pos, rot, ingr, ptInd in env.molecules:
-            self.plot.add_shape(
+    @staticmethod
+    def format_color(color):
+        return "rgb{}".format((255 * color[0], 255 * color[1], 255 * color[2]))
+
+    def add_circle(self, radius, pos, color):
+        self.plot.add_shape(
                 type="circle",
                 xref="x",
                 yref="y",
-                x0=pos[0] - ingr.encapsulatingRadius,
-                y0=pos[1] - ingr.encapsulatingRadius,
-                x1=pos[0] + ingr.encapsulatingRadius,
-                y1=pos[1] + ingr.encapsulatingRadius,
-                line_color="LightSeaGreen",
-            )
+                x0=pos[0] - radius,
+                y0=pos[1] - radius,
+                x1=pos[0] + radius,
+                y1=pos[1] + radius,
+                line_color=PlotlyAnalysis.format_color(color)
+        )
+
+    def add_ingredient_positions(self, env):
+        for pos, rot, ingr, ptInd in env.molecules:
+            if len(ingr.positions):
+                for level in range(len(ingr.positions)):
+                    for i in range(len(ingr.positions[level])):
+                        position = ingr.apply_rotation(rot, ingr.positions[level][i], pos)
+                        # position = (numpy.array(ingr.positions[level][i]) + numpy.array(pos))
+                        self.add_circle(ingr.radii[level][i], [position[0], position[1]], ingr.color)
+            else:
+                self.add_circle(ingr.encapsulatingRadius, pos, ingr.color
+                )
 
     def make_grid_heatmap(self, env):
         ids = []
@@ -33,6 +50,7 @@ class PlotlyAnalysis:
         y = []
         colors = []
         color_scale = pcolors.diverging.PiYG
+
         fig = self.plot
         for i in range(len(env.grid.masterGridPositions)):
             ids.append(i)

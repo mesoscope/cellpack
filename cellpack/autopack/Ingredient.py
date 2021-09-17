@@ -54,6 +54,7 @@ from numpy import matrix
 import logging
 
 import collada
+from scipy.spatial.transform import Rotation as R
 
 # , weakref
 from math import sqrt, pi, sin, cos, asin
@@ -1121,9 +1122,10 @@ class Ingredient(Agent):
         # level 0 should be encapsulated sphere ?
         if sphereFile is not None and str(sphereFile) != "None":
             sphereFileo = autopack.retrieveFile(sphereFile, cache="collisionTrees")
-            fileExtension = os.path.splitext(sphereFile)
+            fileName, fileExtension = os.path.splitext(sphereFile)
             self.log.info("sphereTree %r", sphereFileo)
             if sphereFileo is not None and os.path.isfile(sphereFileo):
+                print(fileExtension)
                 self.sphereFile = sphereFile
                 sphereFile = sphereFileo
                 if fileExtension == ".mstr":  # BD_BOX format
@@ -1140,10 +1142,12 @@ class Ingredient(Agent):
                     radii = [radii]
                 elif fileExtension == ".sph":
                     rm, rM, positions, radii, children = self.getSpheres(sphereFileo)
+                    print("loading sphere tree")
                     if not len(radii):
                         self.minRadius = 1.0
                         self.encapsulatingRadius = 1.0
                     else:
+
                         # minRadius is used to compute grid spacing. It represents the
                         # smallest radius around the anchor point(i.e.
                         # the point where the
@@ -2067,7 +2071,7 @@ class Ingredient(Agent):
             centers.append(cl)
             radii.append(rl)
             children.append(ch)
-
+        print(rmin, rmax, centers, radii, children)
         # we ignore the hierarchy for now
         return rmin, rmax, centers, radii, children
 
@@ -2718,14 +2722,12 @@ class Ingredient(Agent):
         # distChanges = {}
         self.nbPts = len(insidePoints)
         for pt, dist in list(insidePoints.items()):
-            # Reversing is not necessary if you use the correct Swapping GJ Aug 17,2012
-            #        for pt,dist in reversed(list(insidePoints.items()) ):  # GJ notes (August 17, 2012): Critical to reverse
-            # or points that need to get masked towards the end get used incorrectly as valid points during forward swap
-            # Reversing the walk through the masked points cures this!
-            # swap reverse point at ptIndr with last free one
-            # pt is the grid point indice not the freePt indice
             try:
-                # New system replaced by Graham on Aug 18, 2012
+                # Swap the newly inside point value with the value of the last free point
+                # Point will no longer be considered "free" because it will be beyond the range of
+                # nbFreePoints. The value of the point itself is the history of it's orginal index
+                # so any future swaps will still result in the correct index being move into the range
+                # of nbFreePoints
                 nbFreePoints -= 1
                 vKill = freePoints[pt]
                 vLastFree = freePoints[nbFreePoints]
@@ -2745,7 +2747,6 @@ class Ingredient(Agent):
             self.log.debug("pt = masterGridPointValue = %d", pt)
             self.log.debug("freePoints[nbFreePoints-1] = %d", freePoints[nbFreePoints])
             self.log.debug("freePoints[pt] = %d", freePoints[pt])
-
             distance[pt] = dist
         self.log.debug("update free points loop %d", time() - t1)
         t2 = time()
@@ -2789,6 +2790,11 @@ class Ingredient(Agent):
             z = rot[2][0] * xs + rot[2][1] * ys + rot[2][2] * zs + tz
             pos.append([x, y, z])
         return numpy.array(pos)
+
+    def apply_rotation(self, rot, point, origin=[0, 0, 0]):
+        r = R.from_matrix([rot[0][:3], rot[1][:3], rot[2][:3]])
+        new_pos = r.apply(point)
+        return new_pos + numpy.array(origin)
 
     def alignRotation(self, jtrans):
         # for surface points we compute the rotation which
@@ -3244,6 +3250,7 @@ class Ingredient(Agent):
             pointsInCube = histoVol.grid.getPointsInCube(
                 bb, posc, radius_of_area_to_check, info=True
             )  # indices
+            print("got points in cube", len(pointsInCube))
             # check for collisions by looking at grid points in the sphere of radius radc
             delta = numpy.take(gridPointsCoords, pointsInCube, 0) - posc
             delta *= delta
@@ -3257,57 +3264,64 @@ class Ingredient(Agent):
                 distance_to_packing_location = distA[
                     pti
                 ]  # is that point's distance from the center of the sphere (packing location)
-
                 # distance is an array of distance of closest contact to anything currently in the grid
-                if (
-                    distance_to_packing_location <= radius_of_ing_being_packed
-                    and distance[pt] < -0.0001
-                ):
-                    # if there is an object encroaching into this packing area, that is
-                    # closer to the packing location than the radius of the object
-                    # we are trying to pack, probably a collision
+
+                if (distance[pt] + distance_to_packing_location <= radius_of_ing_being_packed):
+                    # an object is too close to the sphere at this level
                     if level < self.maxLevel and (level + 1) < len(self.positions):
-                        nxtLevelSpheres = self.positions[level + 1]
-                        nxtLevelRadii = self.radii[level + 1]
+                        # if we haven't made it all the way down the sphere tree, 
+                        # check a level down
+                        new_level = level + 1
+                        nxtLevelSpheres = self.positions[new_level]
+                        nxtLevelRadii = self.radii[new_level]
                         # get sphere that are children of this one
                         ccenters = []
                         cradii = []
                         for sphInd in self.children[level][sphNum]:
                             ccenters.append(nxtLevelSpheres[sphInd])
                             cradii.append(nxtLevelRadii[sphInd])
-                        collision = self.checkSphCollisions(
-                            ccenters,
-                            cradii,
+                        return self.checkSphCollisions(
+                            nxtLevelSpheres,
+                            nxtLevelRadii,
                             jtrans,
                             rotMat,
-                            level + 1,
-                            gridPointsCoords,
+                            new_level,
+                            pointsInCube,
                             distance,
                             histoVol,
+                            dpad,
                         )
-                        if not collision and level > 0:
-                            self.log.info("returning regular collision level")
-                            return collision, insidePoints, newDistPoints
-                        self.log.info("returning regular collision")
-                        return collision, insidePoints, newDistPoints
                     else:
                         self.log.info("grid point already occupied %d", distance[pt])
                         return True, {}, {}
-                        # FIXME DEBUG INFO
-                        # dist = distA[pti]
-                        # d = dist - radc
-                        # if d + distance[pt] < histoVol.maxColl:
-                        #     histoVol.maxColl = d + distance[pt]
-                        #     # print("in collision histovol.maxColl if")
-                        # return True, insidePoints, newDistPoints
-                if pt in insidePoints:  # don't need to update any distances
-                    continue
-
+  
+                # if pt in insidePoints:  # don't need to update any distances
+                #     print("pt already in insix")
+                #     continue
+                
+                if level < self.maxLevel and (level + 1) < len(self.positions):
+                    # we didn't find any colisions with the top level, but we still want 
+                    # the inside points to be based on the most detailed geom
+                    print("no collision, finding inside points")
+                    new_level = self.maxLevel
+                    nxtLevelSpheres = self.positions[new_level]
+                    nxtLevelRadii = self.radii[new_level]
+                    return self.checkSphCollisions(
+                        nxtLevelSpheres,
+                        nxtLevelRadii,
+                        jtrans,
+                        rotMat,
+                        new_level,
+                        gridPointsCoords,
+                        distance,
+                        histoVol,
+                        dpad,
+                )
                 signed_distance_to_sphere_surface = (
                     distance_to_packing_location - radius_of_ing_being_packed
                 )
                 if (
-                    signed_distance_to_sphere_surface <= 0 or signed_distance_to_sphere_surface <= 12.5
+                    signed_distance_to_sphere_surface <= 0
                 ):  # point is inside dropped sphere
                     if (
                         histoVol.grid.gridPtId[pt] != self.compNum and self.compNum <= 0
@@ -3318,8 +3332,6 @@ class Ingredient(Agent):
                         return True, insidePoints, newDistPoints
                     if pt in insidePoints:
                         # NOTE: Don't we want the number closer to zero? Not the most negative?
-                        if signed_distance_to_sphere_surface > 0:
-                            signed_distance_to_sphere_surface = - signed_distance_to_sphere_surface
                         if signed_distance_to_sphere_surface < insidePoints[pt]:
                             insidePoints[pt] = signed_distance_to_sphere_surface
                     else:
@@ -3333,9 +3345,6 @@ class Ingredient(Agent):
                             newDistPoints[pt] = signed_distance_to_sphere_surface
                     else:
                         newDistPoints[pt] = signed_distance_to_sphere_surface
-                        # sphNum += 1
-                else:
-                    continue
 
         return False, insidePoints, newDistPoints
 
@@ -3777,7 +3786,6 @@ class Ingredient(Agent):
                                     insidePoints[pt] = d
                             else:
                                 insidePoints[pt] = d
-                                #                print ("ok",len(pointsInCube))
         elif self.modelType == "Cube":
             insidePoints, newDistPoints = self.getDistancesCube(
                 jtrans, rotMatj, gridPointsCoords, distance, grid
@@ -4261,6 +4269,7 @@ class Ingredient(Agent):
         R = {"indices": [], "distances": []}
         numpy.zeros(histoVol.totalNbIngr).astype("i")
         nb = 0
+        self.log.info("treemode %s, len rTrans=%d", histoVol.treemode, len(histoVol.rTrans))
         if not len(histoVol.rTrans):
             return R
         else:
@@ -4284,6 +4293,7 @@ class Ingredient(Agent):
             else:
                 # request kdtree
                 nb = []
+                self.log.info("finding partners")
                 if len(histoVol.rTrans) >= 1:
                     #                    nb = histoVol.close_ingr_bhtree.query_ball_point(point,cutoff)
                     #                else :#use the general query, how many we want
@@ -4396,7 +4406,7 @@ class Ingredient(Agent):
         #            self.vi = histoVol.afviewer.vi
         self.env = env  # NOTE: do we need to store the env on the ingredient?
         self.log.info(
-            "PLACING INGREDIENT $s using %s, index=%d, point=%r",
+            "PLACING INGREDIENT $s using %s, placeType=%s, index=%d, position=%r",
             self.name,
             self.placeType,
             ptInd,
@@ -5001,11 +5011,24 @@ class Ingredient(Agent):
         t1 = time()  # for timing the functions
         insidePoints = {}
         newDistPoints = {}
+
         for attempt_number in range(self.nbJitter):
             packing_location, _, _, _ = self.randomize_translation(
                 env, targeted_master_grid_point, rot_mat
             )
             jitter_rot = self.randomize_rotation(rot_mat, env)
+
+            if env.ingrLookForNeighbours and self.packingMode == "closePartner":
+                packing_location, jitter_rot = self.close_partner_check(
+                    packing_location,
+                    jitter_rot,
+                    compartment,
+                    afvi,
+                    distance,
+                    env.runTimeDisplay,
+                    moving,
+                )
+        
             env.totnbJitter += 1
             if env.runTimeDisplay and moving is not None:
                 self.update_display_rt(moving, packing_location, jitter_rot)
@@ -5125,7 +5148,7 @@ class Ingredient(Agent):
             # add one to molecule counter for this ingredient
             self.counter += 1
             self.completion = float(self.counter) / float(self.nbMol)
-
+            self.update_data_tree(packing_location, rot_mat, ptInd)
             if attempt_number > 0:
                 env.successfullJitter.append((self, jitterList, collD1, collD2))
 
@@ -5270,7 +5293,6 @@ class Ingredient(Agent):
             # if partner:pickNewPoit like in fill3
             if runTimeDisplay and self.mesh:
                 self.update_display_rt(moving, target_point, rot_matrix)
-
             return target_point, rot_matrix
 
     def handle_real_time_visualization(self, afvi, ptInd, target_point, rot_mat):
@@ -6582,11 +6604,6 @@ class Ingredient(Agent):
                     jtrans, rotMatj, usePP=usePP
                 )
                 collisionComp = False
-            self.log.info(
-                "collision collision2=%r collision_results=%r",
-                collision2,
-                collision_results,
-            )
             # need to check compartment too
             if not collision2:  # and not r:  # and not collision2:
                 if self.compareCompartment:
