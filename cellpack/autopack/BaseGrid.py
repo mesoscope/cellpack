@@ -729,7 +729,7 @@ class BaseGrid:
         s = numpy.sum(d * d)
         return math.sqrt(s)
 
-    def getPointsInSphere(self, bb, pt, radius, addSP=True, info=False):
+    def getPointsInSphere(self, pt, radius):
         if self.tree is None:
             self.tree = spatial.cKDTree(self.masterGridPositions, leafsize=10)
         # add surface points
@@ -812,10 +812,42 @@ class BaseGrid:
 
     def getPointsInCube(self, bb, pt, radius, addSP=True, info=False):
         """
-        Return all grid points indices inside the given bounding box.
-        NOTE : need to fix with grid build with numpy arrange
+        Return all grid points indicesinside the given bounding box.
         """
-        return self.getPointsInSphere(bb, pt, radius, addSP=addSP, info=info)
+        spacing1 = 1.0 / self.gridSpacing
+        NX, NY, NZ = self.nbGridPoints
+        OX, OY, OZ = self.boundingBox[
+            0
+        ]  # origin of Pack grid-> bottom lef corner not origin
+        ox, oy, oz = bb[0]
+        ex, ey, ez = bb[1]
+
+        i0 = int(max(0, floor((ox - OX) * spacing1)))
+        i1 = int(min(NX, int((ex - OX) * spacing1) + 1))
+        j0 = int(max(0, floor((oy - OY) * spacing1)))
+        j1 = int(min(NY, int((ey - OY) * spacing1) + 1))
+        k0 = int(max(0, floor((oz - OZ) * spacing1)))
+        k1 = int(min(NZ, int((ez - OZ) * spacing1) + 1))
+
+        zPlaneLength = NX * NY
+
+        ptIndices = []
+        for z in range(int(k0), int(k1)):
+            offz = z * zPlaneLength
+            for y in range(int(j0), int(j1)):
+                off = y * NX + offz
+                for x in range(int(i0), int(i1)):
+                    ptIndices.append(x + off)
+
+        # add surface points
+        if addSP and self.nbSurfacePoints != 0:
+            result = numpy.zeros((self.nbSurfacePoints,), "i")
+            nb = self.surfPtsBht.closePoints(tuple(pt), radius, result)
+            dimx, dimy, dimz = self.nbGridPoints
+            ptIndices.extend(
+                list(map(lambda x, length=self.gridVolume: x + length, result[:nb]))
+            )
+        return ptIndices
 
     def computeGridNumberOfPoint(self, boundingBox, space):
         """

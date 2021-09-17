@@ -80,7 +80,6 @@ from .Ingredient import GrowIngredient, ActinIngredient
 from .ray import vlen, vdiff
 from cellpack.autopack import IOutils
 from .Gradient import Gradient
-from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.transformation import euler_from_matrix
 
 # backward compatibility with kevin method
@@ -283,45 +282,6 @@ class Grid(BaseGrid):
         # ptInd = k*(sizex)*(sizey)+j*(sizex)+i;#want i,j,k
         return self.ijkPtIndice[ptInd]
 
-    def getPointsInCube(self, bb, pt, radius, addSP=True, info=False):
-        """
-        Return all grid points indicesinside the given bounding box.
-        """
-        spacing1 = 1.0 / self.gridSpacing
-        NX, NY, NZ = self.nbGridPoints
-        OX, OY, OZ = self.boundingBox[
-            0
-        ]  # origin of Pack grid-> bottom lef corner not origin
-        ox, oy, oz = bb[0]
-        ex, ey, ez = bb[1]
-
-        i0 = int(max(0, floor((ox - OX) * spacing1)))
-        i1 = int(min(NX, int((ex - OX) * spacing1) + 1))
-        j0 = int(max(0, floor((oy - OY) * spacing1)))
-        j1 = int(min(NY, int((ey - OY) * spacing1) + 1))
-        k0 = int(max(0, floor((oz - OZ) * spacing1)))
-        k1 = int(min(NZ, int((ez - OZ) * spacing1) + 1))
-
-        zPlaneLength = NX * NY
-
-        ptIndices = []
-        for z in range(int(k0), int(k1)):
-            offz = z * zPlaneLength
-            for y in range(int(j0), int(j1)):
-                off = y * NX + offz
-                for x in range(int(i0), int(i1)):
-                    ptIndices.append(x + off)
-
-        # add surface points
-        if addSP and self.nbSurfacePoints != 0:
-            result = numpy.zeros((self.nbSurfacePoints,), "i")
-            nb = self.surfPtsBht.closePoints(tuple(pt), radius, result)
-            dimx, dimy, dimz = self.nbGridPoints
-            ptIndices.extend(
-                list(map(lambda x, length=self.gridVolume: x + length, result[:nb]))
-            )
-        return ptIndices
-
         # ==============================================================================
 
     # TO DO File IO
@@ -488,7 +448,6 @@ class Environment(CompartmentList):
         self.freePointsAfterFill = []
         self.nbFreePointsAfterFill = []
         self.distanceAfterFill = []
-        self.plotly = PlotlyAnalysis(self.placeMethod)
         self.OPTIONS = {
             "smallestProteinSize": {
                 "name": "smallestProteinSize",
@@ -822,9 +781,6 @@ class Environment(CompartmentList):
         # should check extension filename for type of saved file
         self.saveGridToFile(self.resultfile + "grid")
         self.saveGridLogsAsJson(self.resultfile + "_grid-data.json")
-        self.plotly.make_grid_heatmap(self)
-        self.plotly.add_ingredient_positions(self)
-        self.plotly.show()
         self.grid.result_filename = self.resultfile + "grid"
         self.collectResultPerIngredient()
         self.store()
@@ -2224,13 +2180,10 @@ class Environment(CompartmentList):
         if hasattr(ingr, "nbPts"):
             if hasattr(ingr, "firstTimeUpdate") and not ingr.firstTimeUpdate:
                 ratio = float(ingr.nbPts) / float(nbFreePoints)
-                if verbose:
-                    print(
-                        "checkIfUpdate: ratio = ",
+                self.log.info(
+                        "checkIfUpdate: ratio = %d, nbFreePoints = %d, ingr.nbPts = %d",
                         ratio,
-                        "nbFreePoints = ",
                         nbFreePoints,
-                        "ingr.nbPts = ",
                         ingr.nbPts,
                     )
                 if ratio > self.freePtsUpdateThreshold:
@@ -2266,8 +2219,9 @@ class Environment(CompartmentList):
         random, based on closest distance, based on gradients, ordered.
         This function also update the available free point except when hack is on.
         """
-        radius = ingr.encapsulatingRadius
-        if ingr.packingMode == "close":
+        radius = ingr.encapsulatingRadius  
+
+        if ingr.packingMode == "close" or ingr.packingMode == "closePartner":
             allIngrPts = []
             allIngrDist = []
             if ingr.modelType == "Cylinders" and ingr.useLength:
@@ -2275,25 +2229,19 @@ class Environment(CompartmentList):
             #            if ingr.modelType=='Cube' : #radius iactually the size
             #                cut = min(self.radii[0]/2.)-jitter
             #            elif ingr.cutoff_boundary is not None :
-            #                #this may work if we have the distance from the border
+            #                #this mueay work if we have the distance from the border
             #                cut  = radius+ingr.cutoff_boundary-jitter
             else:
                 cut = radius  # - jitter
-            alld = numpy.array(distance)[freePoints]
+            all_distances = numpy.array(distance)[freePoints]
             mask = numpy.logical_and(
-                numpy.less_equal(alld, cut), numpy.greater_equal(alld, cut * 0.5)
+                numpy.less_equal(all_distances, cut), numpy.greater_equal(all_distances, cut / 2.0)
             )
-            # mask_ind = numpy.nonzero(mask)[0]
             # mask compartments Id as well
             mask_comp = numpy.array(compId)[freePoints] == compNum
             mask_ind = numpy.nonzero(numpy.logical_and(mask, mask_comp))[0]
             allIngrPts = numpy.array(freePoints)[mask_ind].tolist()
             allIngrDist = numpy.array(distance)[mask_ind].tolist()
-            # for pt in freePoints:  # [:nbFreePoints]:
-            #    d = distance[pt]  # look up the distance
-            #    if compId[pt] == compNum and d >= cut:
-            #        allIngrPts.append(pt)
-            #        allIngrDist.append(d)
 
         else:
             allIngrPts = []
@@ -2309,12 +2257,13 @@ class Environment(CompartmentList):
                 # use periodic update according size ration grid
                 update = self.checkIfUpdate(ingr, nbFreePoints)
                 if update:
+
                     for i in range(nbFreePoints):
                         pt = freePoints[i]
                         d = distance[pt]
                         if compId[pt] == compNum and d >= cut:
                             allIngrPts.append(pt)
-                    # allIngrDist.append(d)
+         
                     ingr.allIngrPts = allIngrPts
                     ingr.cut = cut
                 else:
@@ -2389,6 +2338,7 @@ class Environment(CompartmentList):
             return False, vRangeStart
 
         if self.pickRandPt:
+            self.log.info("picking random point")
             if ingr.packingMode == "close":
                 order = numpy.argsort(allIngrDist)
                 # pick point with closest distance
@@ -2448,6 +2398,7 @@ class Environment(CompartmentList):
                 return False, vRangeStart
 
         else:
+            self.log.info("sorting index")
             allIngrPts.sort()
             ptInd = allIngrPts[0]
         return True, ptInd
@@ -2534,7 +2485,7 @@ class Environment(CompartmentList):
             self.grid.gridPtId[bb_outside] = 99999
         compId = self.grid.gridPtId
         # why a copy? --> can we split ?
-        distance = self.grid.distToClosestSurf[:]
+        distances = self.grid.distToClosestSurf[:]
         spacing = self.smallestProteinSize
 
         # DEBUG stuff, should be removed later
@@ -2620,8 +2571,6 @@ class Environment(CompartmentList):
         dump_freq = self.dump_freq  # 120.0#every minute
         dump = self.dump
         stime = time.time()
-        self.plotly.update_title(self.placeMethod)
-        self.plotly.make_grid_heatmap(self)
 
         while nbFreePoints:
             self.log.info(
@@ -2665,7 +2614,7 @@ class Environment(CompartmentList):
                         label=ingr.name + " " + str(ingr.completion),
                     )
                     if self.afviewer.renderDistance:
-                        self.afviewer.vi.displayParticleVolumeDistance(distance, self)
+                        self.afviewer.vi.displayParticleVolumeDistance(distances, self)
 
             compNum = ingr.compNum
             radius = ingr.minRadius
@@ -2694,7 +2643,7 @@ class Environment(CompartmentList):
                     jitter,
                     freePoints,
                     nbFreePoints,
-                    distance,
+                    distances,
                     compId,
                     compNum,
                     vRangeStart,
@@ -2708,7 +2657,7 @@ class Environment(CompartmentList):
                 res = [True, allSrfpts[int(random() * len(allSrfpts))]]
             if res[0]:
                 ptInd = res[1]
-                if ptInd > len(distance):
+                if ptInd > len(distances):
                     self.log.warning("problem ", ptInd)
                     continue
             else:
@@ -2733,7 +2682,7 @@ class Environment(CompartmentList):
                     ptInd,
                     freePoints,
                     nbFreePoints,
-                    distance,
+                    distances,
                     dpad,
                     usePP,
                 ),
@@ -2745,7 +2694,7 @@ class Environment(CompartmentList):
                 len(freePoints),
             )
             if success:
-                self.grid.distToClosestSurf = numpy.array(distance[:])
+                self.grid.distToClosestSurf = numpy.array(distances[:])
                 self.grid.freePoints = numpy.array(freePoints[:])
                 self.grid.nbFreePoints = len(freePoints)  # -1
                 # update largest protein size
@@ -2835,17 +2784,17 @@ class Environment(CompartmentList):
                 )
                 stime = time.time()
 
-        self.distancesAfterFill = distance[:]
+        self.distancesAfterFill = distances[:]
         self.freePointsAfterFill = freePoints[:]
         self.nbFreePointsAfterFill = nbFreePoints
-        self.distanceAfterFill = distance[:]
+        self.distanceAfterFill = distances[:]
         t2 = time.time()
         self.log.info("time to fill %d", t2 - t1)
 
         if self.saveResult:
             self.save_result(
                 freePoints,
-                distances=distance,
+                distances=distances,
                 t0=t2,
                 vAnalysis=vAnalysis,
                 vTestid=vTestid,

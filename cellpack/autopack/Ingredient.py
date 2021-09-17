@@ -3208,7 +3208,6 @@ class Ingredient(Agent):
         distance,
         histoVol,
         dpad,
-        ptsInCube=None,
     ):
         """
         Check spheres for collision
@@ -3220,6 +3219,7 @@ class Ingredient(Agent):
         # self.distances_temp = []
         insidePoints = {}
         newDistPoints = {}
+        at_max_level = level == self.maxLevel and (level + 1) == len(self.positions)
         for radius_of_ing_being_packed, posc in zip(radii, centT):
             x, y, z = posc
             radius_of_area_to_check = (
@@ -3247,22 +3247,17 @@ class Ingredient(Agent):
                 else:
                     self.vi.updateBox(box, cornerPoints=bb)
                 self.vi.update()
-            if ptsInCube is None:
-                pointsInCube = histoVol.grid.getPointsInCube(
-                    bb, posc, radius_of_area_to_check, info=True
-                )  # indices
-            else:
-                pointsInCube = ptsInCube
+
+            pointsToCheck = histoVol.grid.getPointsInSphere(
+                posc, radius_of_area_to_check
+            )  # indices
             # check for collisions by looking at grid points in the sphere of radius radc
-            delta = numpy.take(gridPointsCoords, pointsInCube, 0) - posc
+            delta = numpy.take(gridPointsCoords, pointsToCheck, 0) - posc
             delta *= delta
             distA = numpy.sqrt(delta.sum(1))
-            # loop over all the grid points in the cube
-            # NOTE: used to filter these points to an inscribed sphere, but is expensive and didn't reduce points to check
-            at_max_level = level == self.maxLevel and (level + 1) == len(self.positions)
 
-            for pti in range(len(pointsInCube)):
-                pt = pointsInCube[
+            for pti in range(len(pointsToCheck)):
+                pt = pointsToCheck[
                     pti
                 ]  # index of master grid point that is inside the sphere
                 distance_to_packing_location = distA[
@@ -3279,12 +3274,13 @@ class Ingredient(Agent):
                         new_level = level + 1
                         nxtLevelSpheres = self.positions[new_level]
                         nxtLevelRadii = self.radii[new_level]
+                        # NOTE: currently with sphere trees, no children seem present
                         # get sphere that are children of this one
-                        ccenters = []
-                        cradii = []
-                        for sphInd in self.children[level][sphNum]:
-                            ccenters.append(nxtLevelSpheres[sphInd])
-                            cradii.append(nxtLevelRadii[sphInd])
+                        # ccenters = []
+                        # cradii = []
+                        # for sphInd in self.children[level][sphNum]:
+                        #     ccenters.append(nxtLevelSpheres[sphInd])
+                        #     cradii.append(nxtLevelRadii[sphInd])
                         return self.checkSphCollisions(
                             nxtLevelSpheres,
                             nxtLevelRadii,
@@ -3295,15 +3291,22 @@ class Ingredient(Agent):
                             distance,
                             histoVol,
                             dpad,
-                            pointsInCube
                         )
                     else:
-                        self.log.info("grid point already occupied %d", distance[pt])
+                        self.log.info("grid point already occupied %f", distance[pt])
                         return True, {}, {}
-  
+                
+                if not at_max_level:
+                    # we don't want to calculate new distances if we are not
+                    # at the highest geo
+                    # but getting here means there was no collision detected
+                    # so the loop can continue
+                    continue
+
                 signed_distance_to_sphere_surface = (
                     distance_to_packing_location - radius_of_ing_being_packed
                 )
+  
                 if (
                     signed_distance_to_sphere_surface <= 0
                 ):  # point is inside dropped sphere
@@ -3314,7 +3317,7 @@ class Ingredient(Agent):
                         self.log.warning("checked pt that is not in container")
                         return True, {}, {}
                     if pt in insidePoints:
-                        if signed_distance_to_sphere_surface < insidePoints[pt]:
+                        if abs(signed_distance_to_sphere_surface) < abs(insidePoints[pt]):
                             insidePoints[pt] = signed_distance_to_sphere_surface
                     else:
                         insidePoints[pt] = signed_distance_to_sphere_surface
@@ -3323,8 +3326,7 @@ class Ingredient(Agent):
                 ):  # point in region of influence
                     # need to update the distances of the master grid with new smaller distance
                     if pt in newDistPoints:
-                        if signed_distance_to_sphere_surface > newDistPoints[pt]:
-                            newDistPoints[pt] = signed_distance_to_sphere_surface
+                        newDistPoints[pt] = min(signed_distance_to_sphere_surface, newDistPoints[pt])
                     else:
                         newDistPoints[pt] = signed_distance_to_sphere_surface
             if not at_max_level:
@@ -3343,7 +3345,6 @@ class Ingredient(Agent):
                     distance,
                     histoVol,
                     dpad,
-                    pointsInCube
                 )
         return False, insidePoints, newDistPoints
 
