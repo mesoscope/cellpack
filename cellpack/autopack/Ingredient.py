@@ -3208,6 +3208,7 @@ class Ingredient(Agent):
         distance,
         histoVol,
         dpad,
+        ptsInCube=None,
     ):
         """
         Check spheres for collision
@@ -3246,17 +3247,20 @@ class Ingredient(Agent):
                 else:
                     self.vi.updateBox(box, cornerPoints=bb)
                 self.vi.update()
-
-            pointsInCube = histoVol.grid.getPointsInCube(
-                bb, posc, radius_of_area_to_check, info=True
-            )  # indices
-            print("got points in cube", len(pointsInCube))
+            if ptsInCube is None:
+                pointsInCube = histoVol.grid.getPointsInCube(
+                    bb, posc, radius_of_area_to_check, info=True
+                )  # indices
+            else:
+                pointsInCube = ptsInCube
             # check for collisions by looking at grid points in the sphere of radius radc
             delta = numpy.take(gridPointsCoords, pointsInCube, 0) - posc
             delta *= delta
             distA = numpy.sqrt(delta.sum(1))
             # loop over all the grid points in the cube
             # NOTE: used to filter these points to an inscribed sphere, but is expensive and didn't reduce points to check
+            at_max_level = level == self.maxLevel and (level + 1) == len(self.positions)
+
             for pti in range(len(pointsInCube)):
                 pt = pointsInCube[
                     pti
@@ -3265,11 +3269,12 @@ class Ingredient(Agent):
                     pti
                 ]  # is that point's distance from the center of the sphere (packing location)
                 # distance is an array of distance of closest contact to anything currently in the grid
-
-                if (distance[pt] + distance_to_packing_location <= radius_of_ing_being_packed):
+                collision = distance[pt] + distance_to_packing_location <= radius_of_ing_being_packed
+                    
+                if collision:
                     # an object is too close to the sphere at this level
-                    if level < self.maxLevel and (level + 1) < len(self.positions):
-                        # if we haven't made it all the way down the sphere tree, 
+                    if not at_max_level:
+                        # if we haven't made it all the way down the sphere tree,
                         # check a level down
                         new_level = level + 1
                         nxtLevelSpheres = self.positions[new_level]
@@ -3286,37 +3291,16 @@ class Ingredient(Agent):
                             jtrans,
                             rotMat,
                             new_level,
-                            pointsInCube,
+                            gridPointsCoords,
                             distance,
                             histoVol,
                             dpad,
+                            pointsInCube
                         )
                     else:
                         self.log.info("grid point already occupied %d", distance[pt])
                         return True, {}, {}
   
-                # if pt in insidePoints:  # don't need to update any distances
-                #     print("pt already in insix")
-                #     continue
-                
-                if level < self.maxLevel and (level + 1) < len(self.positions):
-                    # we didn't find any colisions with the top level, but we still want 
-                    # the inside points to be based on the most detailed geom
-                    print("no collision, finding inside points")
-                    new_level = self.maxLevel
-                    nxtLevelSpheres = self.positions[new_level]
-                    nxtLevelRadii = self.radii[new_level]
-                    return self.checkSphCollisions(
-                        nxtLevelSpheres,
-                        nxtLevelRadii,
-                        jtrans,
-                        rotMat,
-                        new_level,
-                        gridPointsCoords,
-                        distance,
-                        histoVol,
-                        dpad,
-                )
                 signed_distance_to_sphere_surface = (
                     distance_to_packing_location - radius_of_ing_being_packed
                 )
@@ -3327,11 +3311,9 @@ class Ingredient(Agent):
                         histoVol.grid.gridPtId[pt] != self.compNum and self.compNum <= 0
                     ):  # did this jitter outside of it's compartment
                         # in wrong compartment, reject this packing position
-                        # NOTE: Do we want to update distances if we're not packing at this location
-                        # MEGAN: I think we should return `True, {}, {}`
-                        return True, insidePoints, newDistPoints
+                        self.log.warning("checked pt that is not in container")
+                        return True, {}, {}
                     if pt in insidePoints:
-                        # NOTE: Don't we want the number closer to zero? Not the most negative?
                         if signed_distance_to_sphere_surface < insidePoints[pt]:
                             insidePoints[pt] = signed_distance_to_sphere_surface
                     else:
@@ -3341,11 +3323,28 @@ class Ingredient(Agent):
                 ):  # point in region of influence
                     # need to update the distances of the master grid with new smaller distance
                     if pt in newDistPoints:
-                        if signed_distance_to_sphere_surface < newDistPoints[pt]:
+                        if signed_distance_to_sphere_surface > newDistPoints[pt]:
                             newDistPoints[pt] = signed_distance_to_sphere_surface
                     else:
                         newDistPoints[pt] = signed_distance_to_sphere_surface
-
+            if not at_max_level:
+                # we didn't find any colisions with the this level, but we still want 
+                # the inside points to be based on the most detailed geom
+                new_level = self.maxLevel
+                nxtLevelSpheres = self.positions[new_level]
+                nxtLevelRadii = self.radii[new_level]
+                return self.checkSphCollisions(
+                    nxtLevelSpheres,
+                    nxtLevelRadii,
+                    jtrans,
+                    rotMat,
+                    new_level,
+                    gridPointsCoords,
+                    distance,
+                    histoVol,
+                    dpad,
+                    pointsInCube
+                )
         return False, insidePoints, newDistPoints
 
     def checkSphCompart(
