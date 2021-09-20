@@ -958,7 +958,6 @@ class AnalyseAP:
         pylab.ylabel(r"radial distribution function $g(r)$")
         pylab.savefig(file_name)
 
-
     def simpleplot(self, X, Y, filenameme, w=3):
         pylab.clf()
         pylab.plot(X, Y, linewidth=w)
