@@ -1,12 +1,10 @@
-from math import floor
-import numpy
 from cellpack.autopack.upy.colors import create_divergent_color_map_with_scaled_values
 import plotly.graph_objects as go
 import plotly.colors as pcolors
 
 
 class PlotlyAnalysis:
-    def __init__(self, title):
+    def __init__(self, title=""):
         fig = go.Figure()
         fig.update_layout(width=800, height=800, title=title)
         fig.update_xaxes(range=[-200, 1200])
@@ -20,7 +18,7 @@ class PlotlyAnalysis:
     def format_color(color):
         return "rgb{}".format((255 * color[0], 255 * color[1], 255 * color[2]))
 
-    def add_circle(self, radius, pos, color):
+    def add_circle(self, radius, pos, color, opacity=1):
         self.plot.add_shape(
                 type="circle",
                 xref="x",
@@ -29,20 +27,20 @@ class PlotlyAnalysis:
                 y0=pos[1] - radius,
                 x1=pos[0] + radius,
                 y1=pos[1] + radius,
-                line_color=PlotlyAnalysis.format_color(color)
+                line_color=PlotlyAnalysis.format_color(color),
+                opacity=opacity
         )
 
     def add_ingredient_positions(self, env):
         for pos, rot, ingr, ptInd in env.molecules:
-            if len(ingr.positions):
+            if len(ingr.positions) > 1:
                 for level in range(len(ingr.positions)):
                     for i in range(len(ingr.positions[level])):
                         position = ingr.apply_rotation(rot, ingr.positions[level][i], pos)
                         # position = (numpy.array(ingr.positions[level][i]) + numpy.array(pos))
-                        self.add_circle(ingr.radii[level][i], [position[0], position[1]], ingr.color)
+                        self.add_circle(ingr.radii[level][i], [position[0], position[1]], ingr.color, level / len(ingr.positions))
             else:
-                self.add_circle(ingr.encapsulatingRadius, pos, ingr.color
-                )
+                self.add_circle(ingr.encapsulatingRadius, pos, ingr.color)
 
     def make_grid_heatmap(self, env):
         ids = []
