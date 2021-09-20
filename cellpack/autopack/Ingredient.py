@@ -55,13 +55,13 @@ import logging
 
 import collada
 from scipy.spatial.transform import Rotation as R
-
-# , weakref
 from math import sqrt, pi, sin, cos, asin
 from cellpack.mgl_tools.bhtree import bhtreelib
 from random import uniform, gauss, random
 from time import time, sleep
 import math
+import panda3d
+
 from cellpack.mgl_tools.RAPID import RAPIDlib
 from cellpack.autopack.transformation import euler_from_matrix, angle_between_vectors
 from cellpack.autopack import Recipe
@@ -78,12 +78,6 @@ helper = autopack.helper
 reporthook = None
 if helper is not None:
     reporthook = helper.reporthook
-
-try:
-    import panda3d
-
-except ImportError:
-    panda3d = None
 
 KWDS = {
     "molarity": {
@@ -1056,6 +1050,7 @@ class Ingredient(Agent):
         )
         self.log = logging.getLogger("ingredient")
         self.log.propagate = False
+
         self.molarity = molarity
         self.packingPriority = packingPriority
         self.log.info(
@@ -2519,6 +2514,104 @@ class Ingredient(Agent):
     def deleteblist(self, d, n):
         del d[n]
 
+    def get_cuttoff_value(self, jitter):
+        radius = self.encapsulatingRadius
+        if self.packingMode == "close":
+            if self.modelType == "Cylinders" and self.useLength:
+                cut = self.length  # - jitter
+            #            if ingr.modelType=='Cube' : #radius iactually the size
+            #                cut = min(self.radii[0]/2.)-jitter
+            #            elif ingr.cutoff_boundary is not None :
+            #                #this mueay work if we have the distance from the border
+            #                cut  = radius+ingr.cutoff_boundary-jitter
+            else:
+                cut = radius  # - jitter
+                if self.modelType == "Cylinders" and self.useLength:
+                    cut = self.length - jitter
+        else:
+            cut = radius - jitter
+        return cut
+
+    def checkIfUpdate(self, nbFreePoints, threshold):
+        """Check if we need to update the distance array. Part of the hack free points"""
+        if hasattr(self, "nbPts"):
+            if hasattr(self, "firstTimeUpdate") and not self.firstTimeUpdate:
+                ratio = float(self.nbPts) / float(nbFreePoints)
+                self.log.info(
+                    "checkIfUpdate: ratio = %d, nbFreePoints = %d, ingr.nbPts = %d",
+                    ratio,
+                    nbFreePoints,
+                    self.nbPts,
+                )
+                if ratio > threshold:
+                    return True
+                else:
+                    if self.haveBeenRejected and self.rejectionCounter > 5:
+                        self.haveBeenRejected = False
+                        return True
+                    # do we check to total freepts? or crowded state ?
+                    else:
+                        return False
+            else:
+                self.firstTimeUpdate = False
+                return True
+        else:
+            return True
+
+    def get_list_of_free_indices(
+        self,
+        distances,
+        free_points,
+        nbFreePoints,
+        comp_ids,
+        current_comp_id,
+        jitter,
+        threshold,
+        hackFreePoints,
+    ):
+        allIngrPts = []
+        allIngrDist = []
+        cuttoff = self.get_cuttoff_value(jitter)
+
+        if self.packingMode == "close":
+            # Get an array of free points where the distance is greater than half the cuttoff value
+            # and less than the cutoff. Ie an array where the distances are all very small.
+            # this also masks the array to only include points in the current commpartment
+            all_distances = numpy.array(distances)[free_points]
+            mask = numpy.logical_and(
+                numpy.less_equal(all_distances, cuttoff),
+                numpy.greater_equal(all_distances, cuttoff / 2.0),
+            )
+            # mask compartments Id as well
+            mask_comp = numpy.array(comp_ids)[free_points] == current_comp_id
+            mask_ind = numpy.nonzero(numpy.logical_and(mask, mask_comp))[0]
+            allIngrPts = numpy.array(free_points)[mask_ind].tolist()
+            allIngrDist = numpy.array(distances)[mask_ind].tolist()
+        else:
+            if hasattr(self, "allIngrPts") and hackFreePoints:
+                allIngrPts = self.allIngrPts
+                self.log.warning("Running nofreepoint HACK")
+            else:
+                # use periodic update according size ratio grid
+
+                update = self.checkIfUpdate(nbFreePoints, threshold)
+                if update:
+                    for i in range(nbFreePoints):
+                        pt = free_points[i]
+                        d = distances[pt]
+                        if comp_ids[pt] == current_comp_id and d >= cuttoff:
+                            allIngrPts.append(pt)
+
+                    self.allIngrPts = allIngrPts
+                    self.cut = cuttoff
+                else:
+                    if hasattr(self, "allIngrPts"):
+                        allIngrPts = self.allIngrPts
+                    else:
+                        allIngrPts = free_points[:nbFreePoints]
+                        self.allIngrPts = allIngrPts
+        return allIngrPts, allIngrDist
+
     def getDistancesCube(self, jtrans, rotMat, gridPointsCoords, distance, grid):
         radii = self.radii
         insidePoints = {}
@@ -3215,7 +3308,7 @@ class Ingredient(Agent):
         # should we also check for outside the main grid ?
         # wouldnt be faster to do sphere-sphere distance test ? than points/points from the grid
         centT = self.transformPoints(jtrans, rotMat, self.positions[level])  # centers)
-        sphNum = 0  # which sphere in the sphere tree we're checking
+        # sphNum = 0  # which sphere in the sphere tree we're checking
         # self.distances_temp = []
         insidePoints = {}
         newDistPoints = {}
@@ -3264,8 +3357,11 @@ class Ingredient(Agent):
                     pti
                 ]  # is that point's distance from the center of the sphere (packing location)
                 # distance is an array of distance of closest contact to anything currently in the grid
-                collision = distance[pt] + distance_to_packing_location <= radius_of_ing_being_packed
-                    
+                collision = (
+                    distance[pt] + distance_to_packing_location
+                    <= radius_of_ing_being_packed
+                )
+
                 if collision:
                     # an object is too close to the sphere at this level
                     if not at_max_level:
@@ -3295,7 +3391,7 @@ class Ingredient(Agent):
                     else:
                         self.log.info("grid point already occupied %f", distance[pt])
                         return True, {}, {}
-                
+
                 if not at_max_level:
                     # we don't want to calculate new distances if we are not
                     # at the highest geo
@@ -3306,7 +3402,7 @@ class Ingredient(Agent):
                 signed_distance_to_sphere_surface = (
                     distance_to_packing_location - radius_of_ing_being_packed
                 )
-  
+
                 if (
                     signed_distance_to_sphere_surface <= 0
                 ):  # point is inside dropped sphere
@@ -3317,7 +3413,9 @@ class Ingredient(Agent):
                         self.log.warning("checked pt that is not in container")
                         return True, {}, {}
                     if pt in insidePoints:
-                        if abs(signed_distance_to_sphere_surface) < abs(insidePoints[pt]):
+                        if abs(signed_distance_to_sphere_surface) < abs(
+                            insidePoints[pt]
+                        ):
                             insidePoints[pt] = signed_distance_to_sphere_surface
                     else:
                         insidePoints[pt] = signed_distance_to_sphere_surface
@@ -3326,11 +3424,13 @@ class Ingredient(Agent):
                 ):  # point in region of influence
                     # need to update the distances of the master grid with new smaller distance
                     if pt in newDistPoints:
-                        newDistPoints[pt] = min(signed_distance_to_sphere_surface, newDistPoints[pt])
+                        newDistPoints[pt] = min(
+                            signed_distance_to_sphere_surface, newDistPoints[pt]
+                        )
                     else:
                         newDistPoints[pt] = signed_distance_to_sphere_surface
             if not at_max_level:
-                # we didn't find any colisions with the this level, but we still want 
+                # we didn't find any colisions with the this level, but we still want
                 # the inside points to be based on the most detailed geom
                 new_level = self.maxLevel
                 nxtLevelSpheres = self.positions[new_level]
@@ -4269,7 +4369,9 @@ class Ingredient(Agent):
         R = {"indices": [], "distances": []}
         numpy.zeros(histoVol.totalNbIngr).astype("i")
         nb = 0
-        self.log.info("treemode %s, len rTrans=%d", histoVol.treemode, len(histoVol.rTrans))
+        self.log.info(
+            "treemode %s, len rTrans=%d", histoVol.treemode, len(histoVol.rTrans)
+        )
         if not len(histoVol.rTrans):
             return R
         else:
@@ -4992,12 +5094,17 @@ class Ingredient(Agent):
         collD1 = []
         collD2 = []
 
-        targeted_master_grid_point = env.masterGridPositions[ptInd]  # drop point, surface points.
+        targeted_master_grid_point = env.masterGridPositions[
+            ptInd
+        ]  # drop point, surface points.
 
         if numpy.sum(self.offset) != 0.0:
             # the geometry has an offset, ie surface protein, and the origin isn't centered
             # NOTE: Possible to remove here and apply at point of visualization
-            targeted_master_grid_point = numpy.array(targeted_master_grid_point) + ApplyMatrix([self.offset], rot_mat)[0]
+            targeted_master_grid_point = (
+                numpy.array(targeted_master_grid_point)
+                + ApplyMatrix([self.offset], rot_mat)[0]
+            )
             self.log.info("use offset %r", self.offset)
 
         moving = None
@@ -5028,7 +5135,7 @@ class Ingredient(Agent):
                     env.runTimeDisplay,
                     moving,
                 )
-        
+
             env.totnbJitter += 1
             if env.runTimeDisplay and moving is not None:
                 self.update_display_rt(moving, packing_location, jitter_rot)
@@ -5070,7 +5177,9 @@ class Ingredient(Agent):
             else:
                 collision_results = [False]
             self.log.info("check collision ")
-            closeS = self.checkPointSurface(packing_location, cutoff=self.cutoff_surface)
+            closeS = self.checkPointSurface(
+                packing_location, cutoff=self.cutoff_surface
+            )
             # r = closeS
             point_is_available = not self.point_is_not_available(packing_location)
             if point_is_available and not (True in collision_results) and not closeS:
@@ -5109,7 +5218,9 @@ class Ingredient(Agent):
 
             # save dropped ingredient
             if drop:
-                compartment.molecules.append([packing_location, jitter_rot, self, ptInd])
+                compartment.molecules.append(
+                    [packing_location, jitter_rot, self, ptInd]
+                )
                 env.order[ptInd] = env.lastrank
                 env.lastrank += 1
                 env.nb_ingredient += 1

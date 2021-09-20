@@ -2175,27 +2175,6 @@ class Environment(CompartmentList):
                         mr = r
         return mr
 
-    def checkIfUpdate(self, ingr, nbFreePoints):
-        """Check if we need to update the distance array. Part of the hack free points"""
-        if hasattr(ingr, "nbPts"):
-            if hasattr(ingr, "firstTimeUpdate") and not ingr.firstTimeUpdate:
-                ratio = float(ingr.nbPts) / float(nbFreePoints)
-                self.log.info("checkIfUpdate: ratio = %d, nbFreePoints = %d, ingr.nbPts = %d", ratio, nbFreePoints, ingr.nbPts)
-                if ratio > self.freePtsUpdateThreshold:
-                    return True
-                else:
-                    if ingr.haveBeenRejected and ingr.rejectionCounter > 5:
-                        ingr.haveBeenRejected = False
-                        return True
-                    # do we check to total freepts? or crowded state ?
-                    else:
-                        return False
-            else:
-                ingr.firstTimeUpdate = False
-                return True
-        else:
-            return True
-
     def getPointToDrop(
         self,
         ingr,
@@ -2214,59 +2193,16 @@ class Environment(CompartmentList):
         random, based on closest distance, based on gradients, ordered.
         This function also update the available free point except when hack is on.
         """
-        radius = ingr.encapsulatingRadius  
-
-        if ingr.packingMode == "close" or ingr.packingMode == "closePartner":
-            allIngrPts = []
-            allIngrDist = []
-            if ingr.modelType == "Cylinders" and ingr.useLength:
-                cut = ingr.length  # - jitter
-            #            if ingr.modelType=='Cube' : #radius iactually the size
-            #                cut = min(self.radii[0]/2.)-jitter
-            #            elif ingr.cutoff_boundary is not None :
-            #                #this mueay work if we have the distance from the border
-            #                cut  = radius+ingr.cutoff_boundary-jitter
-            else:
-                cut = radius  # - jitter
-            all_distances = numpy.array(distance)[freePoints]
-            mask = numpy.logical_and(
-                numpy.less_equal(all_distances, cut), numpy.greater_equal(all_distances, cut / 2.0)
-            )
-            # mask compartments Id as well
-            mask_comp = numpy.array(compId)[freePoints] == compNum
-            mask_ind = numpy.nonzero(numpy.logical_and(mask, mask_comp))[0]
-            allIngrPts = numpy.array(freePoints)[mask_ind].tolist()
-            allIngrDist = numpy.array(distance)[mask_ind].tolist()
-
-        else:
-            allIngrPts = []
-            if ingr.modelType == "Cylinders" and ingr.useLength:
-                cut = ingr.length - jitter
-            else:
-                cut = radius - jitter
-            # for pt in freePoints[:nbFreePoints]:
-            if hasattr(ingr, "allIngrPts") and self._hackFreepts:
-                allIngrPts = ingr.allIngrPts
-                self.log.warning("Running nofreepoint HACK")
-            else:
-                # use periodic update according size ration grid
-                update = self.checkIfUpdate(ingr, nbFreePoints)
-                if update:
-
-                    for i in range(nbFreePoints):
-                        pt = freePoints[i]
-                        d = distance[pt]
-                        if compId[pt] == compNum and d >= cut:
-                            allIngrPts.append(pt)
-         
-                    ingr.allIngrPts = allIngrPts
-                    ingr.cut = cut
-                else:
-                    if hasattr(ingr, "allIngrPts"):
-                        allIngrPts = ingr.allIngrPts
-                    else:
-                        allIngrPts = freePoints[:nbFreePoints]
-                        ingr.allIngrPts = allIngrPts
+        allIngrPts, allIngrDist = ingr.get_list_of_free_indices(
+            distance,
+            freePoints,
+            nbFreePoints,
+            compId,
+            compNum,
+            jitter,
+            self.freePtsUpdateThreshold,
+            self._hackFreepts,
+        )
 
         if len(allIngrPts) == 0:
             t = time.time()
@@ -2328,8 +2264,7 @@ class Environment(CompartmentList):
                 previousThresh = np + float(previousThresh)
             self.activeIngr = self.activeIngr0 + self.activeIngr12
             self.log.info("time to reject the picking %d", time.time() - t)
-            # End of massive overruling section from corrected thesis file of Sept. 25, 2011
-            # this chunk overwrites the next three lines from July version. July 5, 2012
+
             return False, vRangeStart
 
         if self.pickRandPt:
@@ -2338,18 +2273,12 @@ class Environment(CompartmentList):
                 order = numpy.argsort(allIngrDist)
                 # pick point with closest distance
                 ptInd = allIngrPts[order[0]]
-                # 5 rejection
                 if ingr.rejectionCounter < len(order):
                     ptInd = allIngrPts[order[ingr.rejectionCounter]]
                 else:
                     ptIndr = int(uniform(0.0, 1.0) * len(allIngrPts))
                     ptInd = allIngrPts[ptIndr]
-                # if (ingr.rejectionCounter % 5) == 0:
-                #      ptIndr = allIngrPts[order[1]]#int(random() * len(allIngrPts))
-                #      ptInd = allIngrPts[ptIndr]
-                # if ingr.rejectionCounter >= 50:
-                #     ptIndr = int(uniform(0.0, 1.0) * len(allIngrPts))
-                #     ptInd = allIngrPts[ptIndr]
+
             elif ingr.packingMode == "gradient" and self.use_gradient:
                 # get the most probable point using the gradient
                 # use the gradient weighted map and get mot probabl point
@@ -2398,7 +2327,6 @@ class Environment(CompartmentList):
             ptInd = allIngrPts[0]
         return True, ptInd
 
-    #    import fill4isolated # Graham cut the outdated fill4 from this document and put it in a separate file. turn on here if you want to use it.
     def removeOnePoint(self, pt, freePoints, nbFreePoints):
         try:
             # New system replaced by Graham on Aug 18, 2012
@@ -2629,7 +2557,7 @@ class Environment(CompartmentList):
 
             # find the points that can be used for this ingredient
             ##
-       
+
             res = self.callFunction(
                 self.getPointToDrop,
                 [
