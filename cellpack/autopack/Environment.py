@@ -52,7 +52,7 @@ from random import random, uniform, seed
 from scipy import spatial
 import numpy
 import pickle
-from math import floor, pi
+from math import pi
 import json
 from json import encoder
 import logging
@@ -2175,17 +2175,12 @@ class Environment(CompartmentList):
                         mr = r
         return mr
 
-    def checkIfUpdate(self, ingr, nbFreePoints, verbose=False):
+    def checkIfUpdate(self, ingr, nbFreePoints):
         """Check if we need to update the distance array. Part of the hack free points"""
         if hasattr(ingr, "nbPts"):
             if hasattr(ingr, "firstTimeUpdate") and not ingr.firstTimeUpdate:
                 ratio = float(ingr.nbPts) / float(nbFreePoints)
-                self.log.info(
-                        "checkIfUpdate: ratio = %d, nbFreePoints = %d, ingr.nbPts = %d",
-                        ratio,
-                        nbFreePoints,
-                        ingr.nbPts,
-                    )
+                self.log.info("checkIfUpdate: ratio = %d, nbFreePoints = %d, ingr.nbPts = %d", ratio, nbFreePoints, ingr.nbPts)
                 if ratio > self.freePtsUpdateThreshold:
                     return True
                 else:
