@@ -5065,7 +5065,7 @@ class Ingredient(Agent):
                 )
                 self.completion = 1.0
         return success, nbFreePoints
-    
+
     def merge_place_results(self, new_results, accum_results):
         for pt in new_results:
             if pt not in accum_results:
