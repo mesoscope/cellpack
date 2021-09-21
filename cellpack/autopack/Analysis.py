@@ -1005,7 +1005,7 @@ class AnalyseAP:
         t2 = time()
         print("time to run pack_grid", t2 - t1)
         self.plotly.make_grid_heatmap(self.env)
-        # self.plotly.add_ingredient_positions(self.env)
+        self.plotly.add_ingredient_positions(self.env)
         self.plotly.show()
 
     def calcDistanceMatrixFastEuclidean2(self, nDimPoints):
