@@ -526,7 +526,7 @@ class BaseGrid:
         px, py, pz = pt3d
         p_xyz = [0, 0, 0]
         # can I use rapid and find the collision ?
-        
+
         # distance plane X
         dist_origin_x = px - ox
         dist_edge_x = ex - px
@@ -541,7 +541,7 @@ class BaseGrid:
             pass
         else:
             p_xyz[0] = 0
-        
+
         # distance plane Y
         doy = py - oy
         dey = ey - py
@@ -556,7 +556,7 @@ class BaseGrid:
             pass
         else:
             p_xyz[1] = 0
-        
+
         # distance plane Z
         doz = pz - oz
         dez = ez - pz
