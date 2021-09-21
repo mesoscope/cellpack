@@ -5170,8 +5170,12 @@ class Ingredient(Agent):
                         env,
                         dpad,
                     )
-                    insidePoints = self.merge_place_results(new_inside_points, insidePoints)
-                    newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
+                    insidePoints = self.merge_place_results(
+                        new_inside_points, insidePoints
+                    )
+                    newDistPoints = self.merge_place_results(
+                        new_dist_points, newDistPoints
+                    )
 
                     collision_results.extend([periodic_collision])
                     if env.runTimeDisplay and moving is not None:
