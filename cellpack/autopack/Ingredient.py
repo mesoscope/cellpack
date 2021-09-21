@@ -2790,6 +2790,22 @@ class Ingredient(Agent):
             )
         return insidePoints, newDistPoints
 
+    def reorder_free_points(self, pt, freePoints, nbFreePoints):
+        # TODO: move this to env class, ing shouldn't aware of the whole grid
+        # Swap the newly inside point value with the value of the last free point
+        # Point will no longer be considered "free" because it will be beyond the range of
+        # nbFreePoints. The value of the point itself is the history of it's orginal index
+        # so any future swaps will still result in the correct index being move into the range
+        # of nbFreePoints
+        nbFreePoints -= 1
+        vKill = freePoints[pt]
+        vLastFree = freePoints[nbFreePoints]
+        freePoints[vKill] = vLastFree
+        freePoints[vLastFree] = vKill
+        # freePoints will now have all the avaible indicies between 0 and nbFreePoints in 
+        # freePoints[nbFreePoints:] won't nessicarily be the indices of inside points
+        return freePoints, nbFreePoints
+
     def updateDistances(
         self,
         insidePoints,
@@ -2801,21 +2817,14 @@ class Ingredient(Agent):
         self.log.info(
             "*************updating Distances %d %d", nbFreePoints, len(insidePoints)
         )
+        # TODO: move this to env class, ing shouldn't aware of the whole grid
+
         t1 = time()
         # distChanges = {}
         self.nbPts = len(insidePoints)
         for pt, dist in list(insidePoints.items()):
             try:
-                # Swap the newly inside point value with the value of the last free point
-                # Point will no longer be considered "free" because it will be beyond the range of
-                # nbFreePoints. The value of the point itself is the history of it's orginal index
-                # so any future swaps will still result in the correct index being move into the range
-                # of nbFreePoints
-                nbFreePoints -= 1
-                vKill = freePoints[pt]
-                vLastFree = freePoints[nbFreePoints]
-                freePoints[vKill] = vLastFree
-                freePoints[vLastFree] = vKill
+                freePoints, nbFreePoints = self.reorder_free_points(pt, freePoints, nbFreePoints)
             except Exception:
                 print(pt, "not in freeePoints********************************")
                 pass
@@ -5160,7 +5169,7 @@ class Ingredient(Agent):
             self.log.info("check collision ")
             closeS = self.checkPointSurface(
                 packing_location, cutoff=self.cutoff_surface
-            )       
+            )
             point_is_available = not self.point_is_not_available(packing_location)
             if point_is_available and not (True in collision_results) and not closeS:
                 collision, new_inside_points, new_dist_points = self.collision_jitter(
