@@ -52,7 +52,7 @@ class Args(argparse.Namespace):
 
     def __parse(self):
         p = argparse.ArgumentParser(
-            prog="run_exmaple",
+            prog="run_example",
             description="A simple example of a bin script",
         )
 
@@ -168,7 +168,7 @@ def main():
             analyse.g.Resolution = 1.0
             env.boundingBox = numpy.array(env.boundingBox)
 
-            analyse.doloop(
+            analyse.run_loop(
                 1,
                 env.boundingBox,
                 wrkDir,

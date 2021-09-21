@@ -1128,7 +1128,7 @@ class AnalyseAP:
         seeds_i = numpy.array(seeds_int[numpy.sort(indices_u)])[:n]
         return seeds_i
 
-    def doloop(
+    def run_loop(
         self,
         n,
         bbox,
@@ -1142,14 +1142,14 @@ class AnalyseAP:
         use_file=True,
         seeds_i=None,
     ):
-        # doLoop automatically produces result files, images, and documents from the recipe while adjusting parameters
-        # To run doLoop, 1) in your host's python console type:
+        # run_loop automatically produces result files, images, and documents from the recipe while adjusting parameters
+        # To run run_loop, 1) in your host's python console type:
         # execfile(pathothis recipe) # for example, on my computer:
         # " execfile("/Users/grahamold/Dev/autoFillSVN/autofillSVNversions/trunk/AutoFillClean/autoFillRecipeScripts/2DsphereFill/2DSpheres_setup_recipe.py")
         # 2) prepare your scene for the rendering->render output should be 640,480 but you can change the size in the script at then end.  Set up textures lights, and effects as you wish
         #    Results will appear in the result folder of your recipe path
         # where n is the number of loop, seed = i
-        # analyse.doloop(n)
+        # analyse.run_loop(n)
         if seeds_i is None:
             seeds_i = self.getHaltonUnique(n)
         numpy.savetxt(output + os.sep + "seeds", seeds_i, delimiter=",")
