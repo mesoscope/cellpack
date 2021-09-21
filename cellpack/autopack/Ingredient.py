@@ -2834,7 +2834,9 @@ class Ingredient(Agent):
         self.nbPts = len(insidePoints)
         for pt, dist in list(insidePoints.items()):
             try:
-                freePoints, nbFreePoints = self.reorder_free_points(pt, freePoints, nbFreePoints)
+                freePoints, nbFreePoints = self.reorder_free_points(
+                    pt, freePoints, nbFreePoints
+                )
             except Exception:
                 print(pt, "not in freeePoints********************************")
                 pass
@@ -5146,7 +5148,11 @@ class Ingredient(Agent):
 
             if periodic_pos is not None and self.packingMode != "gradient":
                 for p in periodic_pos:
-                    periodic_collision, insidePoints, newDistPoints = self.collision_jitter(
+                    (
+                        periodic_collision,
+                        insidePoints,
+                        newDistPoints,
+                    ) = self.collision_jitter(
                         p,
                         jitter_rot,
                         level,
@@ -5186,7 +5192,9 @@ class Ingredient(Agent):
                     if pt not in insidePoints:
                         insidePoints[pt] = new_inside_points[pt]
                     else:
-                        insidePoints[pt] = min(abs(new_inside_points[pt]), abs(insidePoints[pt]))
+                        insidePoints[pt] = min(
+                            abs(new_inside_points[pt]), abs(insidePoints[pt])
+                        )
                 for pt in new_dist_points:
                     if pt not in newDistPoints:
                         newDistPoints[pt] = new_dist_points[pt]
