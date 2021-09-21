@@ -2802,7 +2802,17 @@ class Ingredient(Agent):
         vLastFree = freePoints[nbFreePoints]
         freePoints[vKill] = vLastFree
         freePoints[vLastFree] = vKill
-        # freePoints will now have all the avaible indicies between 0 and nbFreePoints in 
+        # Turn on these printlines if there is a problem with incorrect points showing in display points
+        self.log.debug("*************pt = masterGridPointValue = %d", pt)
+        self.log.debug("nbFreePointAfter = %d", nbFreePoints)
+        self.log.debug("vKill = %d", vKill)
+        self.log.debug("vLastFree = %d", vLastFree)
+        self.log.debug("freePoints[vKill] = %d", freePoints[vKill])
+        self.log.debug("freePoints[vLastFree] = %d", freePoints[vLastFree])
+        self.log.debug("pt = masterGridPointValue = %d", pt)
+        self.log.debug("freePoints[nbFreePoints-1] = %d", freePoints[nbFreePoints])
+        self.log.debug("freePoints[pt] = %d", freePoints[pt])
+        # freePoints will now have all the avaible indicies between 0 and nbFreePoints in
         # freePoints[nbFreePoints:] won't nessicarily be the indices of inside points
         return freePoints, nbFreePoints
 
@@ -2828,17 +2838,6 @@ class Ingredient(Agent):
             except Exception:
                 print(pt, "not in freeePoints********************************")
                 pass
-
-            # Turn on these printlines if there is a problem with incorrect points showing in display points
-            self.log.debug("*************pt = masterGridPointValue = %d", pt)
-            self.log.debug("nbFreePointAfter = %d", nbFreePoints)
-            self.log.debug("vKill = %d", vKill)
-            self.log.debug("vLastFree = %d", vLastFree)
-            self.log.debug("freePoints[vKill] = %d", freePoints[vKill])
-            self.log.debug("freePoints[vLastFree] = %d", freePoints[vLastFree])
-            self.log.debug("pt = masterGridPointValue = %d", pt)
-            self.log.debug("freePoints[nbFreePoints-1] = %d", freePoints[nbFreePoints])
-            self.log.debug("freePoints[pt] = %d", freePoints[pt])
             distance[pt] = dist
         self.log.debug("update free points loop %d", time() - t1)
         t2 = time()
