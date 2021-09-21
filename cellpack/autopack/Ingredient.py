@@ -3737,7 +3737,7 @@ class Ingredient(Agent):
         inComp = True
         closeS = False
         inside = self.env.grid.checkPointInside(
-            newPt, dist=self.cutoff_boundary, jitter=getNormedVectorOnes([1, 1, 1])
+            newPt, dist=self.cutoff_boundary, jitter=getNormedVectorOnes(self.jitterMax)
         )
         if inside:
             inComp = self.checkPointComp(newPt)
@@ -5065,6 +5065,15 @@ class Ingredient(Agent):
                 )
                 self.completion = 1.0
         return success, nbFreePoints
+    
+    def merge_place_results(self, new_results, accum_results):
+        for pt in new_results:
+            if pt not in accum_results:
+                accum_results[pt] = new_results[pt]
+            else:
+                if abs(new_results[pt]) < abs(accum_results[pt]):
+                    accum_results[pt] = new_results[pt]
+        return accum_results
 
     def jitter_place(
         self,
@@ -5146,12 +5155,12 @@ class Ingredient(Agent):
             periodic_collision = False
             collision_results = []
 
-            if periodic_pos is not None and self.packingMode != "gradient":
+            if len(periodic_pos) > 0 and self.packingMode != "gradient":
                 for p in periodic_pos:
                     (
                         periodic_collision,
-                        insidePoints,
-                        newDistPoints,
+                        new_inside_points,
+                        new_dist_points,
                     ) = self.collision_jitter(
                         p,
                         jitter_rot,
@@ -5161,6 +5170,9 @@ class Ingredient(Agent):
                         env,
                         dpad,
                     )
+                    insidePoints = self.merge_place_results(new_inside_points, insidePoints)
+                    newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
+
                     collision_results.extend([periodic_collision])
                     if env.runTimeDisplay and moving is not None:
                         box = self.vi.getObject("collBox")
@@ -5188,19 +5200,8 @@ class Ingredient(Agent):
                 )
 
                 # merge with the already found periodic collision points
-                for pt in new_inside_points:
-                    if pt not in insidePoints:
-                        insidePoints[pt] = new_inside_points[pt]
-                    else:
-                        insidePoints[pt] = min(
-                            abs(new_inside_points[pt]), abs(insidePoints[pt])
-                        )
-                for pt in new_dist_points:
-                    if pt not in newDistPoints:
-                        newDistPoints[pt] = new_dist_points[pt]
-                    else:
-                        newDistPoints[pt] = min(newDistPoints[pt], new_dist_points[pt])
-
+                insidePoints = self.merge_place_results(new_inside_points, insidePoints)
+                newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
             self.log.info("collision_jitter %r", collision)
             if env.runTimeDisplay and moving is not None:
                 box = self.vi.getObject("collBox")
