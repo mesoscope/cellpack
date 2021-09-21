@@ -2693,27 +2693,17 @@ class Ingredient(Agent):
         newDistPoints = {}
         for radc, posc in zip(self.radii[-1], centT):
             rad = radc + dpad
-            x, y, z = posc
-            # this have already be done in the checkCollision why doing it again
-            bb = ([x - rad, y - rad, z - rad], [x + rad, y + rad, z + rad])
-            pointsInCube = self.env.callFunction(
-                self.env.grid.getPointsInCube, (bb, posc, rad)
-            )
-            #
-            delta = numpy.take(gridPointsCoords, pointsInCube, 0) - posc
+            ptsInSphere = self.env.grid.getPointsInSphere(posc, rad)
+            delta = numpy.take(gridPointsCoords, ptsInSphere, 0) - posc
             delta *= delta
             distA = numpy.sqrt(delta.sum(1))
-            ptsInSphere = numpy.nonzero(numpy.less_equal(distA, rad))[0]
-            #            ptsInSphere =self.env.grid.getPointsInSphere(self, bb, pt, radius,addSP=True,info=False)
-            for pti in ptsInSphere:
-                pt = pointsInCube[pti]
-                if pt in insidePoints:
-                    continue
+            for pti in range(len(ptsInSphere)):
+                pt = ptsInSphere[pti]
                 dist = distA[pti]
                 d = dist - radc
                 if dist < radc:  # point is inside dropped sphere
                     if pt in insidePoints:
-                        if d < insidePoints[pt]:
+                        if abs(d) < abs(insidePoints[pt]):
                             insidePoints[pt] = d
                     else:
                         insidePoints[pt] = d
@@ -4824,13 +4814,6 @@ class Ingredient(Agent):
         nbFreePoints,
         distance,
         dpad,
-        stepByStep=False,
-        sphGeom=None,
-        labDistGeom=None,
-        debugFunc=None,
-        sphCenters=None,
-        sphRadii=None,
-        sphColors=None,
     ):
         """
         drop the ingredient on grid point ptInd
@@ -5152,9 +5135,10 @@ class Ingredient(Agent):
             )
             periodic_collision = False
             collision_results = []
+
             if periodic_pos is not None and self.packingMode != "gradient":
                 for p in periodic_pos:
-                    periodic_collision = self.collision_jitter(
+                    periodic_collision, insidePoints, newDistPoints = self.collision_jitter(
                         p,
                         jitter_rot,
                         level,
@@ -5171,19 +5155,15 @@ class Ingredient(Agent):
                             [0.5, 0, 0] if True in collision_results else [0, 0.5, 0],
                         )
                         self.update_display_rt(moving, p, jitter_rot)
-                    if True in collision_results:
-                        break
-
             else:
                 collision_results = [False]
             self.log.info("check collision ")
             closeS = self.checkPointSurface(
                 packing_location, cutoff=self.cutoff_surface
-            )
-            # r = closeS
+            )       
             point_is_available = not self.point_is_not_available(packing_location)
             if point_is_available and not (True in collision_results) and not closeS:
-                collision, insidePoints, newDistPoints = self.collision_jitter(
+                collision, new_inside_points, new_dist_points = self.collision_jitter(
                     packing_location,
                     jitter_rot,
                     level,
@@ -5192,6 +5172,19 @@ class Ingredient(Agent):
                     env,
                     dpad,
                 )
+
+                # merge with the already found periodic collision points
+                for pt in new_inside_points:
+                    if pt not in insidePoints:
+                        insidePoints[pt] = new_inside_points[pt]
+                    else:
+                        insidePoints[pt] = min(abs(new_inside_points[pt]), abs(insidePoints[pt]))
+                for pt in new_dist_points:
+                    if pt not in newDistPoints:
+                        newDistPoints[pt] = new_dist_points[pt]
+                    else:
+                        newDistPoints[pt] = min(newDistPoints[pt], new_dist_points[pt])
+
             self.log.info("collision_jitter %r", collision)
             if env.runTimeDisplay and moving is not None:
                 box = self.vi.getObject("collBox")
@@ -5240,22 +5233,6 @@ class Ingredient(Agent):
                 ),
             )
             env.timeUpDistLoopTotal += time() - timeUpDistLoopStart
-            if periodic_pos is not None and self.packingMode != "gradient":
-                for p in periodic_pos:
-                    insidePoints, newDistPoints = self.getDistances(
-                        p, jitter_rot, env.masterGridPositions, distance, dpad
-                    )
-                    nbFreePoints = env.callFunction(
-                        self.updateDistances,
-                        (
-                            insidePoints,
-                            newDistPoints,
-                            freePoints,
-                            nbFreePoints,
-                            distance,
-                        ),
-                    )
-
             # add one to molecule counter for this ingredient
             self.counter += 1
             self.completion = float(self.counter) / float(self.nbMol)

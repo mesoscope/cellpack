@@ -33,7 +33,7 @@
         "_timer": false,
         "ingrLookForNeighbours": true,
         "pickRandPt": true,
-        "largestProteinSize": 200,
+        "largestProteinSize": 100,
         "resultfile": "autoPACKserver/results/NM_Analysis_FigureB1.0.apr.json",
         "use_periodicity": true,
         "EnviroOnly": false
@@ -41,8 +41,8 @@
     "cytoplasme": {
         "ingredients": {
             "Sphere_radius_100": {
-                "overwrite_nbMol_value": 60,
-                "nbJitter": 20,
+                "overwrite_nbMol_value": 80,
+                "nbJitter": 60,
                 "molarity": 0,
                 "partners_position": [],
                 "rotRange": 6.2831,
