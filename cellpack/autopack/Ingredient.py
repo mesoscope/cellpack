@@ -3307,7 +3307,8 @@ class Ingredient(Agent):
                     distance_to_packing_location - radius_of_ing_being_packed
                 )
                 if (
-                    signed_distance_to_sphere_surface <= 0 or signed_distance_to_sphere_surface <= 12.5
+                    signed_distance_to_sphere_surface <= 0
+                    or signed_distance_to_sphere_surface <= 12.5
                 ):  # point is inside dropped sphere
                     if (
                         histoVol.grid.gridPtId[pt] != self.compNum and self.compNum <= 0
@@ -3319,7 +3320,9 @@ class Ingredient(Agent):
                     if pt in insidePoints:
                         # NOTE: Don't we want the number closer to zero? Not the most negative?
                         if signed_distance_to_sphere_surface > 0:
-                            signed_distance_to_sphere_surface = - signed_distance_to_sphere_surface
+                            signed_distance_to_sphere_surface = (
+                                -signed_distance_to_sphere_surface
+                            )
                         if signed_distance_to_sphere_surface < insidePoints[pt]:
                             insidePoints[pt] = signed_distance_to_sphere_surface
                     else:
@@ -4982,12 +4985,17 @@ class Ingredient(Agent):
         collD1 = []
         collD2 = []
 
-        targeted_master_grid_point = env.masterGridPositions[ptInd]  # drop point, surface points.
+        targeted_master_grid_point = env.masterGridPositions[
+            ptInd
+        ]  # drop point, surface points.
 
         if numpy.sum(self.offset) != 0.0:
             # the geometry has an offset, ie surface protein, and the origin isn't centered
             # NOTE: Possible to remove here and apply at point of visualization
-            targeted_master_grid_point = numpy.array(targeted_master_grid_point) + ApplyMatrix([self.offset], rot_mat)[0]
+            targeted_master_grid_point = (
+                numpy.array(targeted_master_grid_point)
+                + ApplyMatrix([self.offset], rot_mat)[0]
+            )
             self.log.info("use offset %r", self.offset)
 
         moving = None
@@ -5047,7 +5055,9 @@ class Ingredient(Agent):
             else:
                 collision_results = [False]
             self.log.info("check collision ")
-            closeS = self.checkPointSurface(packing_location, cutoff=self.cutoff_surface)
+            closeS = self.checkPointSurface(
+                packing_location, cutoff=self.cutoff_surface
+            )
             # r = closeS
             point_is_available = not self.point_is_not_available(packing_location)
             if point_is_available and not (True in collision_results) and not closeS:
@@ -5086,7 +5096,9 @@ class Ingredient(Agent):
 
             # save dropped ingredient
             if drop:
-                compartment.molecules.append([packing_location, jitter_rot, self, ptInd])
+                compartment.molecules.append(
+                    [packing_location, jitter_rot, self, ptInd]
+                )
                 env.order[ptInd] = env.lastrank
                 env.lastrank += 1
                 env.nb_ingredient += 1

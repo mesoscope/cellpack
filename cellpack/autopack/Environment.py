@@ -2685,7 +2685,7 @@ class Environment(CompartmentList):
 
             # find the points that can be used for this ingredient
             ##
-       
+
             res = self.callFunction(
                 self.getPointToDrop,
                 [
