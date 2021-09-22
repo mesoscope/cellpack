@@ -174,14 +174,17 @@ class BaseGrid:
         # reset the  distToClosestSurf and the freePoints
         # boundingBox should be the same otherwise why keeping the grid
         # self.gridPtId = numpy.zeros(self.gridVolume,'i')
-        # self.distToClosestSurf = numpy.ones(self.gridVolume)*self.diag#(self.distToClosestSurf)
         self.log.info("reset Grid distance to closest surface and freePoints")
         self.distToClosestSurf = (
             numpy.array(self.distToClosestSurf[:]) * 0.0
         ) + self.diag
-        # self.distToClosestSurf[:] = self.diag  # numpy.array([self.diag]*len(self.distToClosestSurf))#surface point too?
         self.freePoints = list(range(len(self.freePoints)))
         self.nbFreePoints = len(self.freePoints)
+
+    def update(self, new_distances, new_free_points, new_nb_free_pts):
+        self.grid.distToClosestSurf = numpy.array(new_distances[:])
+        self.grid.freePoints = numpy.array(new_free_points[:])
+        self.grid.nbFreePoints = new_nb_free_pts
 
     def removeFreePoint(self, pti):
         tmp = self.freePoints[self.nbFreePoints]  # last one

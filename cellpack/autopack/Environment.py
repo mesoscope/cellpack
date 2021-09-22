@@ -244,7 +244,6 @@ class Grid(BaseGrid):
         self.distancesAfterFill = []
         self.freePointsAfterFill = []
         self.nbFreePointsAfterFill = []
-        self.distanceAfterFill = []
 
     def create3DPointLookup(self, boundingBox=None):
         """
@@ -446,7 +445,6 @@ class Environment(CompartmentList):
         self.distancesAfterFill = []
         self.freePointsAfterFill = []
         self.nbFreePointsAfterFill = []
-        self.distanceAfterFill = []
         self.OPTIONS = {
             "smallestProteinSize": {
                 "name": "smallestProteinSize",
@@ -1759,22 +1757,13 @@ class Environment(CompartmentList):
         Unused
         """
         jtrans, rotMatj, ingr, ptInd = mingrs
-        centT = ingr.transformPoints(jtrans, rotMatj, ingr.positions[-1])
         insidePoints = {}
         newDistPoints = {}
         mr = self.get_dpad(ingr.compNum)
         spacing = self.smallestProteinSize
         jitter = ingr.getMaxJitter(spacing)
         dpad = ingr.minRadius + mr + jitter
-        insidePoints, newDistPoints = ingr.getInsidePoints(
-            self.grid,
-            self.grid.masterGridPositions,
-            dpad,
-            distance,
-            centT=centT,
-            jtrans=jtrans,
-            rotMatj=rotMatj,
-        )
+        insidePoints, newDistPoints = ingr.getDistances(jtrans, rotMatj, self.grid.masterGridPositions, distance, dpad)
         # update free points
         if len(insidePoints) and self.placeMethod.find("panda") != -1:
             self.checkPtIndIngr(ingr, insidePoints, i, ptInd, marray)
@@ -1785,9 +1774,7 @@ class Environment(CompartmentList):
             # ingr.rbnode.pop(ptInd)
             marray[i][3] = -ptInd  # uniq Id ?
             # ingr.rbnode[-1] = rbnode
-        # doesnt seem to work properly...
-        nbFreePoints = ingr.updateDistances(
-            self,
+        nbFreePoints = self.updateDistances(
             insidePoints,
             newDistPoints,
             self.grid.freePoints,
@@ -2610,15 +2597,12 @@ class Environment(CompartmentList):
                 ptInd,
                 self.grid.masterGridPositions[ptInd],
             )
-            success, insidePoints, newDistPoints = self.callFunction(
-                ingr.place,
-                (
-                    self,
-                    ptInd,
-                    distances,
-                    dpad,
-                    usePP,
-                ),
+            success, insidePoints, newDistPoints = ingr.attempt_to_pack_at_grid_location(
+                self,
+                ptInd,
+                distances,
+                dpad,
+                usePP,
             )
             nbFreePoints = self.updateDistances(insidePoints, newDistPoints, freePoints, nbFreePoints, distances)
             self.log.info(
@@ -2628,9 +2612,7 @@ class Environment(CompartmentList):
                 len(freePoints),
             )
             if success:
-                self.grid.distToClosestSurf = numpy.array(distances[:])
-                self.grid.freePoints = numpy.array(freePoints[:])
-                self.grid.nbFreePoints = len(freePoints)  # -1
+                self.grid.update(distances, freePoints, nbFreePoints)
                 # update largest protein size
                 # problem when the encapsulatingRadius is actually wrong
                 if ingr.encapsulatingRadius > self.largestProteinSize:
@@ -2711,7 +2693,6 @@ class Environment(CompartmentList):
         self.distancesAfterFill = distances[:]
         self.freePointsAfterFill = freePoints[:]
         self.nbFreePointsAfterFill = nbFreePoints
-        self.distanceAfterFill = distances[:]
         t2 = time()
         self.log.info("time to fill %d", t2 - t1)
 
@@ -2837,7 +2818,6 @@ class Environment(CompartmentList):
     def restoreFreePoints(self, freePoint):
         self.freePoints = self.freePointsAfterFill = freePoint
         self.nbFreePointsAfterFill = len(freePoint)
-        self.distanceAfterFill = self.grid.distToClosestSurf
         self.distancesAfterFill = self.grid.distToClosestSurf
 
     def loadFreePoint(self, resultfilename):
@@ -3300,12 +3280,10 @@ class Environment(CompartmentList):
         self,
     ):
         if self.octree is None:
-            #            from autopack.octree import Octree
-            from cellpack.autopack import octree_exteneded as octree
-            from cellpack.autopack import Octree
+            from .octree import Octree
 
-            octree.MINIMUM_SIZE = self.smallestProteinSize
-            octree.MAX_OBJECTS_PER_NODE = 10
+            MINIMUM_SIZE = self.smallestProteinSize
+            MAX_OBJECTS_PER_NODE = 10
             self.octree = Octree(
                 self.grid.getRadius(), helper=helper
             )  # Octree((0,0,0),self.grid.getRadius())   #0,0,0 or center of grid?
@@ -3513,30 +3491,6 @@ class Environment(CompartmentList):
                 radc, length, 1
             )  # math.sqrt(s), 1)# { XUp = 0, YUp = 1, ZUp = 2 } or LVector3f const half_extents
             inodenp.node().addShape(shape, TransformState.makeMat(pMat))  #
-        return inodenp
-
-    def addMeshRBOld(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        helper = autopack.helper
-        if ingr.mesh is None:
-            return
-        faces, vertices, vnormals = helper.DecomposeMesh(
-            ingr.mesh, edit=False, copy=False, tri=True, transform=True
-        )
-        from panda3d.bullet import BulletTriangleMesh, BulletTriangleMeshShape
-
-        mesh = BulletTriangleMesh()
-        points3d = [Point3(v[0], v[1], v[2]) for v in vertices]
-        for f in faces:
-            mesh.addTriangle(points3d[f[0]], points3d[f[1]], points3d[f[2]])
-
-        shape = BulletTriangleMeshShape(mesh, dynamic=False)
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        inodenp.node().setMass(1.0)
-        inodenp.node().addShape(
-            shape, TransformState.makePos(Point3(0, 0, 0))
-        )  # , pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
         return inodenp
 
     def setGeomFaces(self, tris, face):
