@@ -1434,8 +1434,7 @@ class AnalyseAP:
         self.env.loopThroughIngr(self.axis_distribution)
         self.env.loopThroughIngr(self.occurence_distribution)
         self.axis_distribution_total(total_positions)
-        #        self.env.loopThroughIngr(self.correlation)
-        #        print ("DONE3!!!!")
+
         # plot the angle
         if len(total_angles):
             self.histo(
