@@ -45,6 +45,7 @@ requirements = [
     "scipy==1.6.2",
     "simulariumio==1.1.0",
     "pycollada==0.7.1",
+    "trimesh>=3.9.29",
 ]
 
 extra_requirements = {
