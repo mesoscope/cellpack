@@ -1976,8 +1976,6 @@ class Environment(CompartmentList):
     def reset(self):
         """Reset everything to empty and not done"""
         self.fbox_bb = None
-        self.totnbJitter = 0
-        self.jitterLength = 0.0
         r = self.exteriorRecipe
         self.resetIngrRecip(r)
         self.molecules = []
@@ -2432,14 +2430,6 @@ class Environment(CompartmentList):
         # why a copy? --> can we split ?
         distances = self.grid.distToClosestSurf[:]
         spacing = self.smallestProteinSize
-
-        # DEBUG stuff, should be removed later
-        self.jitterVectors = []
-        self.jitterLength = 0.0
-        self.totnbJitter = 0
-        self.maxColl = 0.0
-        self.successfullJitter = []
-        self.failedJitter = []
 
         # this function also depend on the ingr.completiion that can be restored ?
         self.activeIngr0, self.activeIngr12 = self.callFunction(
