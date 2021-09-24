@@ -2745,8 +2745,6 @@ class Environment(CompartmentList):
                 ingredients[ingr.name][3].append(numpy.array(mat))
         self.ingr_result = ingredients
         if self.treemode == "bhtree":
-            from bhtree import bhtreelib
-
             bhtreelib.freeBHtree(self.close_ingr_bhtree)
         #        bhtreelib.FreeRBHTree(self.close_ingr_bhtree)
         #        del self.close_ingr_bhtree
