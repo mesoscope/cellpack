@@ -40,11 +40,18 @@ import numpy
 from scipy import spatial
 import math
 from math import ceil, floor
+from time import time
 from random import randrange
 import cellpack.autopack as autopack
 from cellpack.autopack.ldSequence import cHaltonSequence3
 from cellpack.mgl_tools.RAPID import RAPIDlib
 from cellpack.mgl_tools.bhtree import bhtreelib
+
+
+###############################################################################
+grid_logger = logging.getLogger("grid")
+grid_logger.propagate = False
+###############################################################################
 
 
 # Kevin Grid point class
@@ -75,12 +82,74 @@ class BaseGrid:
     3d positions, distances, freePoints and inside/surface points from organelles.
     NOTE : thi class could be completely replace if openvdb is wrapped to python.
     """
+    @staticmethod
+    def reorder_free_points(pt, freePoints, nbFreePoints):
+        # Swap the newly inside point value with the value of the last free point
+        # Point will no longer be considered "free" because it will be beyond the range of
+        # nbFreePoints. The value of the point itself is the history of it's original index
+        # so any future swaps will still result in the correct index being move into the range
+        # of nbFreePoints
+        nbFreePoints -= 1
+        vKill = freePoints[pt]
+        vLastFree = freePoints[nbFreePoints]
+        freePoints[vKill] = vLastFree
+        freePoints[vLastFree] = vKill
+        # Turn on these debug lines if there is a problem with incorrect points showing in display points
+        grid_logger.debug("*************pt = masterGridPointValue = %d", pt)
+        grid_logger.debug("nbFreePointAfter = %d", nbFreePoints)
+        grid_logger.debug("vKill = %d", vKill)
+        grid_logger.debug("vLastFree = %d", vLastFree)
+        grid_logger.debug("freePoints[vKill] = %d", freePoints[vKill])
+        grid_logger.debug("freePoints[vLastFree] = %d", freePoints[vLastFree])
+        grid_logger.debug("pt = masterGridPointValue = %d", pt)
+        grid_logger.debug("freePoints[nbFreePoints-1] = %d", freePoints[nbFreePoints])
+        grid_logger.debug("freePoints[pt] = %d", freePoints[pt])
+        # freePoints will now have all the available indices between 0 and nbFreePoints in
+        # freePoints[nbFreePoints:] won't necessarily be the indices of inside points
+        return freePoints, nbFreePoints
+
+    @staticmethod
+    def make_point_inside(pt, free_points, nbFreePoints, distances, new_distance):
+
+        distances[pt] = new_distance
+        return BaseGrid.reorder_free_points(pt, free_points, nbFreePoints)
+
+    @staticmethod
+    def updateDistances(
+        insidePoints,
+        newDistPoints,
+        freePoints,
+        nbFreePoints,
+        distances,
+    ):
+        grid_logger.info(
+            "*************updating Distances %d %d", nbFreePoints, len(insidePoints)
+        )
+        t1 = time()
+        for pt, dist in list(insidePoints.items()):
+            try:
+                freePoints, nbFreePoints = BaseGrid.reorder_free_points(
+                    pt, freePoints, nbFreePoints
+                )
+            except Exception as e:
+                print(e)
+                # grid_logger.error("%r not in freeePoints******************************** %d", pt, len(freePoints))
+                pass
+            distances[pt] = dist
+        grid_logger.debug("update free points loop %d", time() - t1)
+        t2 = time()
+
+        for pt, dist in list(newDistPoints.items()):
+            if pt not in insidePoints:
+
+                distances[pt] = dist
+        grid_logger.debug("update distance loop %d", time() - t2)
+        return nbFreePoints
 
     def __init__(
         self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=True, lookup=0
     ):
-        self.log = logging.getLogger("grid")
-        self.log.propagate = False
+        self.log = grid_logger
 
         # a grid is attached to an environnement
         self.boundingBox = boundingBox
@@ -182,9 +251,9 @@ class BaseGrid:
         self.nbFreePoints = len(self.freePoints)
 
     def update(self, new_distances, new_free_points, new_nb_free_pts):
-        self.grid.distToClosestSurf = numpy.array(new_distances[:])
-        self.grid.freePoints = numpy.array(new_free_points[:])
-        self.grid.nbFreePoints = new_nb_free_pts
+        self.distToClosestSurf = numpy.array(new_distances[:])
+        self.freePoints = numpy.array(new_free_points[:])
+        self.nbFreePoints = new_nb_free_pts
 
     def removeFreePoint(self, pti):
         tmp = self.freePoints[self.nbFreePoints]  # last one

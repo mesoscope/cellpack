@@ -31,7 +31,50 @@ class PlotlyAnalysis:
             opacity=opacity,
         )
 
+    def plot_ingredient_grid(self, env, ingr):
+        ids = []
+        x = []
+        y = []
+        colors = []
+        color_scale = pcolors.diverging.PiYG
+
+        fig = self.plot
+        for i in range(len(env.grid.masterGridPositions)):
+            ids.append(i)
+            x.append(env.grid.masterGridPositions[i][0])
+            y.append(env.grid.masterGridPositions[i][1])
+            dist = ingr.distances[i]
+            colors.append(dist)
+
+        min_value = min(colors)
+        max_value = max(colors)
+        color_map = create_divergent_color_map_with_scaled_values(
+            min_value, max_value, color_scale
+        )
+        fig.add_trace(
+            go.Scatter(
+                name=ingr.name,
+                ids=ids,
+                x=x,
+                y=y,
+                text=list(zip(colors, ids)),
+                mode="markers",
+                marker=go.scatter.Marker(
+                    size=8,
+                    color=colors,
+                    opacity=1,
+                    symbol="square",
+                    showscale=True,
+                    # colorscale=color_map,
+                ),
+            )
+        ) 
+
     def add_ingredient_positions(self, env):
+        for ingr in env.exteriorRecipe.ingredients:
+            print(ingr.name, ingr.distances[0:5])
+            self.plot_ingredient_grid(env, ingr)
+
         for pos, rot, ingr, ptInd in env.molecules:
             if len(ingr.positions) > 1:
                 for level in range(len(ingr.positions)):

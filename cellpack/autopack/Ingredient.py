@@ -65,7 +65,7 @@ from cellpack.mgl_tools.RAPID import RAPIDlib
 from cellpack.autopack.transformation import angle_between_vectors
 from cellpack.autopack import Recipe
 from cellpack.autopack.ldSequence import SphereHalton
-
+from .BaseGrid import BaseGrid
 # RAPID require a uniq mesh. not an empty or an instance
 # need to combine the vertices and the build the rapid model
 
@@ -620,9 +620,7 @@ def rapid_checkCollision_mp(v1, f1, rot1, trans1, v2, f2, rot2, trans2):
         node2,
         RAPIDlib.cvar.RAPID_FIRST_CONTACT,
     )
-    #    print ("Num box tests: %d" % RAPIDlib.cvar.RAPID_num_box_tests)
-    #    print ("Num contact pairs: %d" % RAPIDlib.cvar.RAPID_num_contacts)
-    # data3 = RAPIDlib.RAPID_Get_All_Pairs()
+
     return RAPIDlib.cvar.RAPID_num_contacts != 0
 
 
@@ -847,26 +845,17 @@ class Agent:
         sortedListe = sorted(
             list(listeIngrInstance.items()), key=lambda elem: elem[1][0]
         )
-        # sortedListe is [ingr,(weight,(instances indices))]
-        # sort by weight/min->max
-        # wIngrList = []
-        # for i,ingr in listeP:
-        # need to sort by ingr.weight
-        #    wIngrList.append([i,ingr,ingr.weight])
-        # sortedListe = sorted(wIngrList, key=lambda elem: elem[2])   # sort by weight/min->max
-        #        print sortedListe
+
         return sortedListe
 
     def weightListByDistance(self, listePartner):
         probaArray = []
         w = 0.0
         for i, part, dist in listePartner:
-            # print ("i",part,dist,w,part.weight)
             if self.overwrite_distFunc:
                 wd = part.weight
             else:
                 wd = part.distanceFunction(dist, expression=part.distExpression)
-            # print "calc ",dist, wd
             probaArray.append(wd)
             w = w + wd
         # probaArray.append(self.proba_not_binding)
@@ -878,7 +867,6 @@ class Agent:
         final = 0.0
         for w in weightD:
             p = w / total
-            #            print "norma ",w,total,p
             final = final + p
             probaArray.append(final)
         probaArray[-1] = 1.0
@@ -906,27 +894,12 @@ class Agent:
         return None, None
 
     def pickPartner(self, mingrs, listePartner, currentPos=[0, 0, 0]):
-        # listePartner is (i,partner,d)
-        # wieght using the distance function
-        #        print "len",len(listePartner)
         targetPoint = None
         weightD, total = self.weightListByDistance(listePartner)
         self.log.info("w %r %d", weightD, total)
         i, b = self.getSubWeighted(weightD)
         if i is None:
             return None, None
-        # probaArray = self.getProbaArray(weightD,total)
-        #        print "p",probaArray
-        #        probaArray=numpy.array(probaArray)
-        #        #where is random in probaArray->index->ingr
-        #        b = random()
-        #        test = b < probaArray
-        #        i = test.tolist().index(True)
-        #        print "proba",i,test,(len(probaArray)-1)
-        #        if i == (len(probaArray)-1) :
-        #            #no binding due to proba not binding....
-        #            print ("no binding due to proba")
-        #            return None,b
 
         ing_indice = listePartner[i][0]  # i,part,dist
         ing = mingrs[2][ing_indice]  # [2]
@@ -964,8 +937,6 @@ class Agent:
         return targetPoint, b
 
     def pickPartnerInstance(self, bindingIngr, mingrs, currentPos=None):
-        # bindingIngr is ingr,(weight,(instances indices))
-        #        print "bindingIngr ",bindingIngr,bindingIngr[1]
         if currentPos is None:  # random mode
             picked_I = random() * len(bindingIngr[1][1])
             i = bindingIngr[1][1][picked_I]
@@ -1105,6 +1076,8 @@ class Ingredient(Agent):
         self.vertices = []
         self.faces = []
         self.vnormals = []
+        self.distances = None
+        self.number_free_points = None
         # self._place = self.place
         children = []
         self.sphereFile = None
@@ -1114,7 +1087,6 @@ class Ingredient(Agent):
             fileName, fileExtension = os.path.splitext(sphereFile)
             self.log.info("sphereTree %r", sphereFileo)
             if sphereFileo is not None and os.path.isfile(sphereFileo):
-                print(fileExtension)
                 self.sphereFile = sphereFile
                 sphereFile = sphereFileo
                 if fileExtension == ".mstr":  # BD_BOX format
@@ -1131,7 +1103,6 @@ class Ingredient(Agent):
                     radii = [radii]
                 elif fileExtension == ".sph":
                     rm, rM, positions, radii, children = self.getSpheres(sphereFileo)
-                    print("loading sphere tree")
                     if not len(radii):
                         self.minRadius = 1.0
                         self.encapsulatingRadius = 1.0
@@ -2123,7 +2094,6 @@ class Ingredient(Agent):
                 self.faces, self.vertices, vnormals = self.DecomposeMesh(
                     mesh, edit=True, copy=False, tri=True
                 )
-                # print ("create the triangle",len(faces))
         # encapsulating radius ?
         v = numpy.array(self.vertices, "f")
         try:
@@ -2168,9 +2138,7 @@ class Ingredient(Agent):
 
     def get_rapid_model(self):
         if self.rapid_model is None:
-            # print ("get rapid model, create it")
             self.create_rapid_model()
-            # print ("OK")
         return self.rapid_model
 
     def get_rb_model(self, alt=False):
@@ -2198,8 +2166,6 @@ class Ingredient(Agent):
         # depending the extension of the filename, can be eitherdejaVu file, fbx or wavefront
         # no extension is DejaVu
         helper = autopack.helper
-        # print('TODO: getMesh need safety check for no internet connection')
-        #        print ("helper in Ingredient is "+str(helper))
         # should wetry to see if it already exist inthescene
         if helper is not None and not helper.nogui:
             o = helper.getObject(geomname)
@@ -2225,12 +2191,9 @@ class Ingredient(Agent):
         fileName, fileExtension = os.path.splitext(filename)
         self.log.info("found fileName %s", fileName)
         if fileExtension.lower() == ".fbx":
-            #            print ("read fbx withHelper",filename,helper,autopack.helper)
             # use the host helper if any to read
             if helper is not None:  # neeed the helper
-                #                print "read "+filename
                 helper.read(filename)
-                #                print "try to get the object "+geomname
                 geom = helper.getObject(geomname)
                 self.log.info("geom %r %s %s", geom, geomname, helper.getName(geom))
                 # reparent to the fill parent
@@ -2395,13 +2358,31 @@ class Ingredient(Agent):
                 return geom
             return None
 
+    def initialize_grid(self, distances):
+        self.number_free_points = len(distances)
+        self.free_point_indicies = list(range(len(distances)))
+        self.distances = distances.copy()
+
+    def update_distances(self, new_inside_points, new_distance_values):
+        current_number_free_points = self.number_free_points
+        for pt, dist in list(new_distance_values.items()):
+            if pt not in new_inside_points and self.distances[pt] > 0:
+                self.distances[pt] = dist
+        number_free_points = BaseGrid.updateDistances(
+            new_inside_points,
+            new_distance_values,
+            self.free_point_indicies,
+            current_number_free_points,
+            self.distances
+        )
+        self.number_free_points = number_free_points
+
     def buildMesh(self, data, geomname):
         """
         Create a polygon mesh object from a dictionary verts,faces,normals
         """
         nv = len(data["verts"])
         nf = len(data["faces"])
-        print(nv, nf)
         self.vertices = numpy.array(data["verts"]).reshape((nv / 3, 3))
         self.faces = numpy.array(data["faces"]).reshape((nf / 3, 3))
         # self.normals = data.normals
@@ -2444,7 +2425,6 @@ class Ingredient(Agent):
         ]
         # from DejaVu.IndexedPolygons import IndexedPolygonsFromFile
         # seems not ok...when they came from c4d ... some transformation are not occuring.
-        #        print ("dejavu mesh", filename)
         # geom = IndexedPolygonsFromFile(filename, 'mesh_%s' % self.pdb)
         #        if helper is not None:
         #            if helper.host != "maya" :
@@ -2630,7 +2610,6 @@ class Ingredient(Agent):
         bb = [cent2T, cent1T]  # self.correctBB(p1,p2,radc)
         x, y, z = posc
         bb = ([x - radt, y - radt, z - radt], [x + radt, y + radt, z + radt])
-        #        print ("pointsInCube",bb,posc,radt)
         pointsInGridCube = grid.getPointsInCube(bb, posc, radt)
 
         # check for collisions with cylinder
@@ -2805,8 +2784,6 @@ class Ingredient(Agent):
             dz = amplitude
         elif dz < -amplitude:
             dz = -amplitude
-        # if self.name=='2bg9 ION CHANNEL/RECEPTOR':
-        #    print 'FFFFFFFFFFFFF AXIS', x+dx,y+dy,z+dz
         return (x + dx, y + dy, z + dz)
 
     def transformPoints(self, trans, rot, points):
@@ -2961,7 +2938,6 @@ class Ingredient(Agent):
 
     def checkCompartmentAlternative(self, ptsId, histoVol, nbs=None):
         compIds = numpy.take(histoVol.grid.gridPtId, ptsId, 0)
-        #        print "compId in listPtId",compIds
         if self.compNum <= 0:
             wrongPt = [cid for cid in compIds if cid != self.compNum]
             if len(wrongPt):
@@ -2971,26 +2947,21 @@ class Ingredient(Agent):
 
     def checkCompartment(self, ptsInSphere, nbs=None):
         trigger = False
-        #        print ("checkCompartment using",len(ptsInSphere))
-        #        print (ptsInSphere)
         if self.compareCompartment:
             cId = numpy.take(
                 self.env.grid.gridPtId, ptsInSphere, 0
             )  # shoud be the same ?
             if nbs is not None:
-                # print ("cId ",cId,ptsInSphere)
                 if self.compNum <= 0 and nbs != 0:
                     return trigger, True
             L = self.getListCompFromMask(cId, ptsInSphere)
 
-            # print ("liste",L)
             if len(cId) <= 1:
                 return trigger, True
             p = float(len(L)) / float(
                 len(cId)
             )  # ratio accepted compId / totalCompId-> want 1.0
             if p < self.compareCompartmentTolerance:
-                # print ("the ratio is ",p, " threshold is ",self.compareCompartmentThreshold," and tolerance is ",self.compareCompartmentTolerance)
                 trigger = True
                 return trigger, True
             # threshold
@@ -3155,9 +3126,6 @@ class Ingredient(Agent):
         """
         Check cylinders for collision
         """
-        #        print "#######################"
-        #        print jtrans
-        #        print rotMat
         cent1T = self.transformPoints(jtrans, rotMat, centers1)
         cent2T = self.transformPoints(jtrans, rotMat, centers2)
 
@@ -3190,7 +3158,6 @@ class Ingredient(Agent):
             if self.compNum <= 0:
                 wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
                 if len(wrongPt):
-                    #                        print wrongPt
                     return True
             cylNum += 1
         return False
@@ -3258,10 +3225,12 @@ class Ingredient(Agent):
                 pt = pointsToCheck[
                     pti
                 ]  # index of master grid point that is inside the sphere
+         
                 distance_to_packing_location = distA[
                     pti
                 ]  # is that point's distance from the center of the sphere (packing location)
                 # distance is an array of distance of closest contact to anything currently in the grid
+
                 collision = (
                     distance[pt] + distance_to_packing_location
                     <= radius_of_ing_being_packed
@@ -3307,23 +3276,21 @@ class Ingredient(Agent):
                 signed_distance_to_sphere_surface = (
                     distance_to_packing_location - radius_of_ing_being_packed
                 )
-
+                if (
+                    histoVol.grid.gridPtId[pt] != self.compNum and self.compNum <= 0
+                ):  # did this jitter outside of it's compartment?
+                    # in wrong compartment, reject this packing position
+                    self.log.warning("checked pt that is not in container")
+                    return True, {}, {}
                 if (
                     signed_distance_to_sphere_surface <= 0
                 ):  # point is inside dropped sphere
-                    if (
-                        histoVol.grid.gridPtId[pt] != self.compNum and self.compNum <= 0
-                    ):  # did this jitter outside of it's compartment
-                        # in wrong compartment, reject this packing position
-                        self.log.warning("checked pt that is not in container")
-                        return True, {}, {}
                     if pt in insidePoints:
-                        if abs(signed_distance_to_sphere_surface) < abs(
-                            insidePoints[pt]
-                        ):
+                        if abs(signed_distance_to_sphere_surface) < abs(insidePoints[pt]):
                             insidePoints[pt] = signed_distance_to_sphere_surface
                     else:
                         insidePoints[pt] = signed_distance_to_sphere_surface
+
                 elif (
                     signed_distance_to_sphere_surface < distance[pt]
                 ):  # point in region of influence
@@ -3368,7 +3335,6 @@ class Ingredient(Agent):
         Check spheres for collision
         TODO improve the testwhen grid stepSize is larger that size of the ingredient
         """
-        print("OK sphere compartment checking", self.compNum)
         centT = self.transformPoints(jtrans, rotMat, centers)  # this should be jtrans
 
         for radc, posc in zip(radii, centT):
@@ -3385,7 +3351,6 @@ class Ingredient(Agent):
             ptsInSphere = numpy.nonzero(numpy.less_equal(distA, radc))[0]
             ptsInSphereId = numpy.take(pointsInCube, ptsInSphere, 0)
             compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptsInSphereId, 0)
-            print(len(compIdsSphere), compIdsSphere)
             if self.compNum <= 0:
                 wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
                 if len(wrongPt):
@@ -3538,11 +3503,9 @@ class Ingredient(Agent):
         ptinside = numpy.nonzero(d)[0]
         ptinsideId = numpy.take(pointsInCube, ptinside, 0)
         compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptinsideId, 0)
-        #        print "compId",compIdsSphere
         if self.compNum <= 0:
             wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
             if len(wrongPt):
-                #                print wrongPt
                 return True
         return False
 
@@ -3550,14 +3513,8 @@ class Ingredient(Agent):
         # if grid too sparse this will not work.
         # ptID = self.env.grid.getPointFrom3D(point)
         cID = self.env.getPointCompartmentId(point)  # offset ?
-        # print ("check comp ", cID, self.compNum)
-        # dist,ptID = self.env.grid.getClosestGridPoint(point)
-        # cID = self.env.grid.gridPtId[ptID]
 
-        # print ("comp is ", organelle.name)
         if self.compNum > 0:  # surface ingredient
-            # print ("surface ingr of type ",self.Type)
-            # r=compartment.checkPointInside_rapid(point,self.env.grid.diag,ray=3)
             if self.Type == "Grow":
                 # need a list of accepted compNum
                 check = False
@@ -3572,7 +3529,6 @@ class Ingredient(Agent):
             return True
 
         if self.compNum < 0:
-            # print ("inside ingredients ?")
             inside = compartment.checkPointInside_rapid(point, self.env.grid.diag, ray=3)
             if inside:  # and cID < 0:
                 return True
@@ -4192,6 +4148,9 @@ class Ingredient(Agent):
     def remove_from_realtime_display(env, moving):
         env.afvi.vi.deleteObject(moving)
 
+    def update_distance(self, pt, new_distance):
+        self.distances[pt] = new_distance
+
     def reject(self):
         # got rejected
         self.haveBeenRejected = True
@@ -4208,7 +4167,18 @@ class Ingredient(Agent):
             self.log.info("PREMATURE ENDING of ingredient %s", self.name)
             self.completion = 1.0
 
-    def place(self, env, compartment, dropped_position, dropped_rotation, grid_point_index):
+    def place(
+        self,
+        env,
+        compartment,
+        dropped_position,
+        dropped_rotation,
+        grid_point_index,
+        new_inside_points,
+        new_dist_values,
+    ):
+
+        # self.update_distances(new_inside_points, new_dist_values)
         compartment.molecules.append([dropped_position, dropped_rotation, self, grid_point_index])
         env.order[grid_point_index] = env.lastrank
         env.lastrank += 1
@@ -4338,11 +4308,11 @@ class Ingredient(Agent):
                 usePP=usePP,
             )
         if success:
-            self.place(env, compartment, jtrans, rotMatj, ptInd)
+            self.place(env, compartment, jtrans, rotMatj, ptInd, insidePoints, newDistPoints)
         else:
             if is_realtime:
                 self.remove_from_realtime_display(moving)
-            self.reject(moving, env)
+            self.reject()
 
         return success, insidePoints, newDistPoints
 
@@ -4665,6 +4635,7 @@ class Ingredient(Agent):
                     env,
                     dpad,
                 )
+
                 collision_results.extend([collision])
                 if is_realtime:
                     box = self.vi.getObject("collBox")
@@ -4675,7 +4646,7 @@ class Ingredient(Agent):
                     self.update_display_rt(moving, pt, jitter_rot)
 
                 if not collision:
-                    # merge with the already found periodic collision points
+                    # merge with the already found collision points
                     insidePoints = self.merge_place_results(new_inside_points, insidePoints)
                     newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
                 else:
@@ -5916,14 +5887,11 @@ class Ingredient(Agent):
                         jtrans, self.env, cutoff=cutoff
                     )
                 if len(closesbody_indice) == 0:
-                    # print ("no closesbody_indice")
                     r = [False]  # closesbody_indice[0] == -1
                 else:
-                    # print ("found closesbody_indice",len(closesbody_indice))
                     liste_nodes = self.get_rapid_nodes(
                         closesbody_indice, jtrans, prevpoint=prevpoint  #
                     )
-            # print ("test against",len(liste_nodes),"nodes")
             r = []
             if usePP:
                 n = 0
@@ -5966,9 +5934,7 @@ class Ingredient(Agent):
                 self.env.pp_server.wait()
                 r.extend(self.env.grab_cb.collision[:])
             else:
-                #                    print jtrans, rotMatj
                 for node, trans, rot, ingr in liste_nodes:
-                    #                        print node,trans,rot,ingr
                     RAPIDlib.RAPID_Collide_scaled(
                         numpy.array(rotMatj[:3, :3], "f"),
                         numpy.array(jtrans, "f"),
@@ -6147,9 +6113,7 @@ class SingleSphereIngr(Ingredient):
         nbMol=0,
         **kw
     ):
-
-        Ingredient.__init__(
-            self,
+        super(SingleSphereIngr, self).__init__(
             molarity=molarity,
             radii=[[radius]],
             positions=[[position]],  # positions2=None,
@@ -6812,7 +6776,6 @@ class GrowIngredient(MultiCylindersIngr):
         # pick a random point from the sphere point distribution
         pointsmask = numpy.nonzero(self.sphere_points_mask)[0]
         if not len(pointsmask):
-            print("no sphere point available from mask")
             return None
         ptIndr = int(uniform(0.0, 1.0) * len(pointsmask))
         sp_pt_indice = pointsmask[ptIndr]
@@ -6869,7 +6832,6 @@ class GrowIngredient(MultiCylindersIngr):
     def mask_sphere_points_dihedral(self, v1, v2, marge_out, marge_diedral, v3=None):
         if v3 is None:
             v3 = []
-        print("mask_sphere_points_dihedral")
         points_mask = numpy.nonzero(self.sphere_points_mask)[0]
         if len(v3):
             #            a=angle_between_vectors(self.vi.unit_vector(v2),self.sphere_points[points_mask], axis=1)
@@ -6966,7 +6928,6 @@ class GrowIngredient(MultiCylindersIngr):
         if v3 is None:
             v3 = []
         # self.sphere_points_mask=numpy.ones(10000,'i')
-        print("mask_sphere_points ", marge_diedral, marge, len(listeclosest))
         if marge_diedral is not None:
             self.mask_sphere_points_dihedral(pv, v, marge, marge_diedral, v3)
         else:
@@ -6979,8 +6940,6 @@ class GrowIngredient(MultiCylindersIngr):
         self.mask_sphere_points_ingredients(pt, listeclosest)
         if not len(numpy.nonzero(self.sphere_points_mask)[0]):
             self.sphere_points_mask = numpy.copy(sphere_points_mask_copy)
-            # self.mask_sphere_points_boundary(pt)
-            #        print ("after mask2 ",len( numpy.nonzero(self.sphere_points_mask)[0]))
 
     def reset(self):
         self.nbCurve = 0
@@ -6992,7 +6951,6 @@ class GrowIngredient(MultiCylindersIngr):
         # update he cylinder ?
 
     def getNextPtIndCyl(self, jtrans, rotMatj, freePoints, histoVol):
-        #        print jtrans, rotMatj
         cent2T = self.transformPoints(jtrans, rotMatj, self.positions[-1])
         jx, jy, jz = self.jitterMax
         jitter = self.getMaxJitter(histoVol.smallestProteinSize)
@@ -7245,7 +7203,6 @@ class GrowIngredient(MultiCylindersIngr):
             # main loop thattryto found the next point (similar to jitter)
             if attempted >= safetycutoff:
                 return None, False  # numpy.array(pt2).flatten()+numpy.array(pt),False
-            print("length is ", self.uLength)
             pt = self.vi.randpoint_onsphere(
                 self.uLength
             )  # *numpy.array(self.jitterMax)
@@ -7339,18 +7296,13 @@ class GrowIngredient(MultiCylindersIngr):
     def addRBsegment(self, pt1, pt2, nodeid=""):
         # build a rigid body of multisphere along pt1topt2
         r, p = self.getInterpolatedSphere(pt1, pt2)
-        print("pos len", len(p), " ", len(r))
         inodenp = self.env.multiSphereRB(self.name + nodeid, p, r)
-        print("node build ", inodenp)
         inodenp.setCollideMask(self.env.BitMask32.allOn())
         inodenp.node().setAngularDamping(1.0)
         inodenp.node().setLinearDamping(1.0)
-        print("attach node to world")
         # inodenp.setMat(pmat)
         self.env.world.attachRigidBody(inodenp.node())
-        print("node attached to world")
         inodenp = inodenp.node()
-        print("add msphere ", inodenp)
         self.env.rb_panda.append(inodenp)
         return inodenp
 
@@ -7379,7 +7331,6 @@ class GrowIngredient(MultiCylindersIngr):
             closesbody_indice, pt2, prevpoint=pt1, getInfo=True
         )
         alternate, ia = self.pick_alternate()
-        print("pick alternate", alternate, ia, self.prev_alt)
         if self.prev_was_alternate:
             alternate = None
         p_alternate = None  # self.partners[alternate]#self.env.getIngrFromNameInRecipe(alternate,self.recipe )
@@ -7454,10 +7405,8 @@ class GrowIngredient(MultiCylindersIngr):
             self.vi.update()
 
         while not found:
-            print("attempt ", attempted, marge)
             # main loop thattryto found the next point (similar to jitter)
             if attempted >= safetycutoff:
-                print("break too much attempt ", attempted, safetycutoff)
                 return None, False  # numpy.array(pt2).flatten()+numpy.array(pt),False
             # pt = numpy.array(self.vi.randpoint_onsphere(self.uLength,biased=(uniform(0.,1.0)*marge)/360.0))*numpy.array([1,1,0])
             point_is_not_available = True
@@ -7468,8 +7417,8 @@ class GrowIngredient(MultiCylindersIngr):
                 elif nextPoint is not None:
                     newPt = self.prev_alt_pt
                 if newPt is None:
-                    print(
-                        "no sphere points available with prev_alt", dihedral, nextPoint
+                    self.log.info(
+                        "no sphere points available with prev_alt %d %r", dihedral, nextPoint
                     )
                     self.prev_alt = None
                     return None, False
@@ -8395,7 +8344,6 @@ class GrowIngredient(MultiCylindersIngr):
     def updateGrid(
         self,
         rg,
-        histoVol,
         dpad,
         freePoints,
         nbFreePoints,
@@ -8406,9 +8354,9 @@ class GrowIngredient(MultiCylindersIngr):
             jtrans, rotMatj = self.results[-i]
             insidePoints = {}
             newDistPoints = {}
-            insidePoints, newDistPoints = self.getDistances(jtrans, rotMatj, self.grid.masterGridPositions, distance, dpad)
+            insidePoints, newDistPoints = self.getDistances(jtrans, rotMatj, gridPointsCoords, distance, dpad)
             # update free points
-            nbFreePoints = histoVol.updateDistances(
+            nbFreePoints = BaseGrid.updateDistances(
                 insidePoints, newDistPoints, freePoints, nbFreePoints, distance
             )
             return nbFreePoints, freePoints
@@ -8600,7 +8548,6 @@ class GrowIngredient(MultiCylindersIngr):
         )
         nbFreePoints, freePoints = self.updateGrid(
             2,
-            histoVol,
             dpad,
             freePoints,
             nbFreePoints,
@@ -8625,7 +8572,6 @@ class GrowIngredient(MultiCylindersIngr):
             )
             nbFreePoints, freePoints = self.updateGrid(
                 2,
-                histoVol,
                 dpad,
                 freePoints,
                 nbFreePoints,
@@ -9339,44 +9285,44 @@ class IngredientDictionary:
                     break
         return ingr
 
-    def makeIngredients(self, MSca, listeCol, wanted):
-        rSurf1 = Recipe()
-        rCyto = Recipe()
-        rRec = {"membrane": rSurf1, "cyto": rCyto}
-        wrkDir = self.rdir
-        # excluded = ['ves34']
-        i = 0
-        for k in list(self.listename.keys()):
-            for ing_name in list(self.listename[k].keys()):
-                # print ing_name
-                if ing_name in wanted:
-                    if self.listename[k][ing_name][0] == "Single":
-                        sphereFile = None
-                        if self.listename[k][ing_name][1]:
-                            sphereFile = wrkDir + "/" + k + "/" + ing_name + ".sph"
-                        ingr = SingleSphereIngr(
-                            MSca * 0.04,
-                            color=listeCol[i],
-                            pdb=ing_name,
-                            name=ing_name,
-                            sphereFile=sphereFile,
-                            meshFile=wrkDir + "/" + k + "/" + ing_name,
-                            packingPriority=-2,
-                            jitterMax=(0.3, 0.3, 0.3),
-                            principalVector=(0, 0, 1),
-                        )
-                    else:
-                        ingr = MultiSphereIngr(
-                            MSca * 0.04,
-                            color=listeCol[i],
-                            name=ing_name,
-                            sphereFile=wrkDir + "/" + k + "/" + ing_name + ".sph",
-                            meshFile=wrkDir + "/" + k + "/" + ing_name,
-                            pdb=ing_name,
-                            packingPriority=-1,
-                            # jitterMax=(1,1,.2),
-                            principalVector=(0, 0, -1),
-                        )
-                    rRec[k].addIngredient(ingr)
-                    i = i + 1
-        return rRec
+    # def makeIngredients(self, MSca, listeCol, wanted):
+    #     rSurf1 = Recipe()
+    #     rCyto = Recipe()
+    #     rRec = {"membrane": rSurf1, "cyto": rCyto}
+    #     wrkDir = self.rdir
+    #     # excluded = ['ves34']
+    #     i = 0
+    #     for k in list(self.listename.keys()):
+    #         for ing_name in list(self.listename[k].keys()):
+    #             # print ing_name
+    #             if ing_name in wanted:
+    #                 if self.listename[k][ing_name][0] == "Single":
+    #                     sphereFile = None
+    #                     if self.listename[k][ing_name][1]:
+    #                         sphereFile = wrkDir + "/" + k + "/" + ing_name + ".sph"
+    #                     ingr = SingleSphereIngr(
+    #                         MSca * 0.04,
+    #                         color=listeCol[i],
+    #                         pdb=ing_name,
+    #                         name=ing_name,
+    #                         sphereFile=sphereFile,
+    #                         meshFile=wrkDir + "/" + k + "/" + ing_name,
+    #                         packingPriority=-2,
+    #                         jitterMax=(0.3, 0.3, 0.3),
+    #                         principalVector=(0, 0, 1),
+    #                     )
+    #                 else:
+    #                     ingr = MultiSphereIngr(
+    #                         MSca * 0.04,
+    #                         color=listeCol[i],
+    #                         name=ing_name,
+    #                         sphereFile=wrkDir + "/" + k + "/" + ing_name + ".sph",
+    #                         meshFile=wrkDir + "/" + k + "/" + ing_name,
+    #                         pdb=ing_name,
+    #                         packingPriority=-1,
+    #                         # jitterMax=(1,1,.2),
+    #                         principalVector=(0, 0, -1),
+    #                     )
+    #                 rRec[k].addIngredient(ingr)
+    #                 i = i + 1
+    #     return rRec

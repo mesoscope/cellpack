@@ -1774,7 +1774,7 @@ class Environment(CompartmentList):
             # ingr.rbnode.pop(ptInd)
             marray[i][3] = -ptInd  # uniq Id ?
             # ingr.rbnode[-1] = rbnode
-        nbFreePoints = self.updateDistances(
+        nbFreePoints = BaseGrid.updateDistances(
             insidePoints,
             newDistPoints,
             self.grid.freePoints,
@@ -2304,62 +2304,6 @@ class Environment(CompartmentList):
                 self.set_partners_ingredient(ingr)
         return totalNbIngr
 
-    def _reorder_free_points(self, pt, freePoints, nbFreePoints):
-        # Swap the newly inside point value with the value of the last free point
-        # Point will no longer be considered "free" because it will be beyond the range of
-        # nbFreePoints. The value of the point itself is the history of it's orginal index
-        # so any future swaps will still result in the correct index being move into the range
-        # of nbFreePoints
-        nbFreePoints -= 1
-        vKill = freePoints[pt]
-        vLastFree = freePoints[nbFreePoints]
-        freePoints[vKill] = vLastFree
-        freePoints[vLastFree] = vKill
-        # Turn on these debug lines if there is a problem with incorrect points showing in display points
-        self.log.debug("*************pt = masterGridPointValue = %d", pt)
-        self.log.debug("nbFreePointAfter = %d", nbFreePoints)
-        self.log.debug("vKill = %d", vKill)
-        self.log.debug("vLastFree = %d", vLastFree)
-        self.log.debug("freePoints[vKill] = %d", freePoints[vKill])
-        self.log.debug("freePoints[vLastFree] = %d", freePoints[vLastFree])
-        self.log.debug("pt = masterGridPointValue = %d", pt)
-        self.log.debug("freePoints[nbFreePoints-1] = %d", freePoints[nbFreePoints])
-        self.log.debug("freePoints[pt] = %d", freePoints[pt])
-        # freePoints will now have all the avaible indicies between 0 and nbFreePoints in
-        # freePoints[nbFreePoints:] won't nessicarily be the indices of inside points
-        return freePoints, nbFreePoints
-
-    def updateDistances(
-        self,
-        insidePoints,
-        newDistPoints,
-        freePoints,
-        nbFreePoints,
-        distances,
-    ):
-        self.log.info(
-            "*************updating Distances %d %d", nbFreePoints, len(insidePoints)
-        )
-        t1 = time()
-        self.nbPts = len(insidePoints)
-        for pt, dist in list(insidePoints.items()):
-            try:
-                freePoints, nbFreePoints = self._reorder_free_points(
-                    pt, freePoints, nbFreePoints
-                )
-            except Exception:
-                self.log.error("%r not in freeePoints********************************", pt)
-                pass
-            distances[pt] = dist
-        self.log.debug("update free points loop %d", time() - t1)
-        t2 = time()
-        for pt, dist in list(newDistPoints.items()):
-            if pt not in insidePoints:
-
-                distances[pt] = dist
-        self.log.debug("update distance loop %d", time() - t2)
-        return nbFreePoints
-
     def pack_grid(
         self,
         seedNum=14,
@@ -2404,7 +2348,7 @@ class Environment(CompartmentList):
         # create copies of the distance array as they change when molecules
         # are added, this array can be restored/saved before filling
         freePoints = self.grid.freePoints[:]
-        self.grid.nbFreePoints = nbFreePoints = len(freePoints)  # -1
+        nbFreePoints = self.grid.nbFreePoints  # -1
         if "fbox" in kw:
             self.fbox = kw["fbox"]
         if self.fbox is not None and not self.EnviroOnly:
@@ -2415,6 +2359,7 @@ class Environment(CompartmentList):
             self.grid.gridPtId[bb_outside] = 99999
         compId = self.grid.gridPtId
         # why a copy? --> can we split ?
+        initial_distances = self.grid.distToClosestSurf.copy()
         distances = self.grid.distToClosestSurf[:]
         spacing = self.smallestProteinSize
 
@@ -2526,6 +2471,8 @@ class Environment(CompartmentList):
 
             # pick an ingredient
             ingr = self.callFunction(self.pickIngredient, (vThreshStart,))
+            if ingr.distances is None:
+                ingr.initialize_grid(initial_distances)
             if hasattr(self, "afviewer"):
                 p = (
                     (float(PlacedMols)) / float(totalNumMols)
@@ -2556,7 +2503,6 @@ class Environment(CompartmentList):
 
             # find the points that can be used for this ingredient
             ##
-
             res = self.callFunction(
                 self.getPointToDrop,
                 [
@@ -2597,6 +2543,7 @@ class Environment(CompartmentList):
                 ptInd,
                 self.grid.masterGridPositions[ptInd],
             )
+
             success, insidePoints, newDistPoints = ingr.attempt_to_pack_at_grid_location(
                 self,
                 ptInd,
@@ -2604,13 +2551,14 @@ class Environment(CompartmentList):
                 dpad,
                 usePP,
             )
-            nbFreePoints = self.updateDistances(insidePoints, newDistPoints, freePoints, nbFreePoints, distances)
-            self.log.info(
+            nbFreePoints = BaseGrid.updateDistances(insidePoints, newDistPoints, freePoints, nbFreePoints, distances)
+            self.log.warning(
                 "after place attempt placed: %r, number of free points:%d, length of free points=%d",
                 success,
                 nbFreePoints,
                 len(freePoints),
             )
+
             if success:
                 self.grid.update(distances, freePoints, nbFreePoints)
                 # update largest protein size
