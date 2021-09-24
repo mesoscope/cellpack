@@ -5191,8 +5191,7 @@ class Ingredient(Agent):
                     if histoVol.runTimeDisplay and self.mesh:
                         self.update_display_rt(moving, target_point, rot_matrix)
                 else:
-                    self.reject()
-                    return False, nbFreePoints  # ,targetPoint, rotMat
+                    return False, None, None, {}, {}  # ,targetPoint, rotMat
             else:
                 self.tilling.init_seed(histoVol.seed_used)
 
@@ -5420,19 +5419,12 @@ class Ingredient(Agent):
                 "rejecting: collisionComp %r collision2 %r", collisionComp, collision2
             )
 
-            if histoVol.runTimeDisplay and moving is not None:
-                afvi.vi.deleteObject(moving)
+            if is_realtime:
+                self.remove_from_realtime_display()
             success = False
             if self.packingMode[-4:] == "tile":
                 if self.tilling.start.nvisit[self.tilling.edge_id] >= 2:
                     self.tilling.start.free_pos[self.tilling.edge_id] = 0
-
-                    #            histoVol.failedJitter.append(
-                    #                (self, jitterList, collD1, collD2) )#<??
-
-                    #            distance[ptInd] = max(0, distance[ptInd]*0.9)# ???
-            distance[ptInd] = distance[ptInd] - 1.0
-            self.reject()
 
         return success, jtrans, rotMatj, insidePoints, newDistPoints
 
@@ -5518,7 +5510,6 @@ class Ingredient(Agent):
                     if runTimeDisplay and self.mesh:
                         self.update_display_rt(moving, targetPoint, rotMat)
                 else:
-                    self.reject()
                     return False, nbFreePoints  # ,targetPoint, rotMat
             else:
                 self.tilling.init_seed(histoVol.seed_used)
@@ -5747,8 +5738,7 @@ class Ingredient(Agent):
                     #                (self, jitterList, collD1, collD2) )#<??
 
                     #            distance[ptInd] = max(0, distance[ptInd]*0.9)# ???
-            distance[ptInd] = distance[ptInd] - 1.0  # ?
-            self.reject()
+
         if drop:
             return success, nbFreePoints
         else:
@@ -6238,7 +6228,6 @@ class Ingredient(Agent):
             histoVol.failedJitter.append((self, jitterList, collD1, collD2))
 
             distance[ptInd] = max(0, distance[ptInd] * 0.9)  # ???
-            self.reject()
 
         if sphGeom is not None:
             sphGeom.Set(vertices=sphCenters, radii=sphRadii, materials=sphColors)
@@ -6601,7 +6590,6 @@ class Ingredient(Agent):
             else:
                 distance[ptInd] = max(0, distance[ptInd] * 0.9)  # ???
 
-            self.reject()
 
         if sphGeom is not None:
             sphGeom.Set(vertices=sphCenters, radii=sphRadii, materials=sphColors)
