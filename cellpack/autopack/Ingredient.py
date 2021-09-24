@@ -2790,66 +2790,6 @@ class Ingredient(Agent):
             )
         return insidePoints, newDistPoints
 
-    def reorder_free_points(self, pt, freePoints, nbFreePoints):
-        # TODO: move this to env class, ing shouldn't aware of the whole grid
-        # Swap the newly inside point value with the value of the last free point
-        # Point will no longer be considered "free" because it will be beyond the range of
-        # nbFreePoints. The value of the point itself is the history of it's orginal index
-        # so any future swaps will still result in the correct index being move into the range
-        # of nbFreePoints
-        nbFreePoints -= 1
-        vKill = freePoints[pt]
-        vLastFree = freePoints[nbFreePoints]
-        freePoints[vKill] = vLastFree
-        freePoints[vLastFree] = vKill
-        # Turn on these printlines if there is a problem with incorrect points showing in display points
-        self.log.debug("*************pt = masterGridPointValue = %d", pt)
-        self.log.debug("nbFreePointAfter = %d", nbFreePoints)
-        self.log.debug("vKill = %d", vKill)
-        self.log.debug("vLastFree = %d", vLastFree)
-        self.log.debug("freePoints[vKill] = %d", freePoints[vKill])
-        self.log.debug("freePoints[vLastFree] = %d", freePoints[vLastFree])
-        self.log.debug("pt = masterGridPointValue = %d", pt)
-        self.log.debug("freePoints[nbFreePoints-1] = %d", freePoints[nbFreePoints])
-        self.log.debug("freePoints[pt] = %d", freePoints[pt])
-        # freePoints will now have all the avaible indicies between 0 and nbFreePoints in
-        # freePoints[nbFreePoints:] won't nessicarily be the indices of inside points
-        return freePoints, nbFreePoints
-
-    def updateDistances(
-        self,
-        insidePoints,
-        newDistPoints,
-        freePoints,
-        nbFreePoints,
-        distance,
-    ):
-        self.log.info(
-            "*************updating Distances %d %d", nbFreePoints, len(insidePoints)
-        )
-        # TODO: move this to env class, ing shouldn't aware of the whole grid
-
-        t1 = time()
-        # distChanges = {}
-        self.nbPts = len(insidePoints)
-        for pt, dist in list(insidePoints.items()):
-            try:
-                freePoints, nbFreePoints = self.reorder_free_points(
-                    pt, freePoints, nbFreePoints
-                )
-            except Exception:
-                print(pt, "not in freeePoints********************************")
-                pass
-            distance[pt] = dist
-        self.log.debug("update free points loop %d", time() - t1)
-        t2 = time()
-        for pt, dist in list(newDistPoints.items()):
-            if pt not in insidePoints:
-
-                distance[pt] = dist
-        self.log.debug("update distance loop %d", time() - t2)
-        return nbFreePoints
-
     def perturbAxis(self, amplitude):
         # modify axis using gaussian distribution but clamp
         # at amplitutde
@@ -4467,45 +4407,39 @@ class Ingredient(Agent):
             self.log.info("PREMATURE ENDING of ingredient %s", self.name)
             self.completion = 1.0
 
-    def place_general(self, env, ptInd, afvi):
-        # NOTE: rapid and panda
-        compartment = self.get_compartment(env)
-        gridPointsCoords = env.masterGridPositions
-        periodic_pos = None
-        # compute rotation matrix
-        rot_matrix = self.get_rotation(ptInd, env, compartment)
-        # jitter position loop
-        jitterList = []
-        collD1 = []
-        collD2 = []
-        trans = gridPointsCoords[ptInd]  # drop point, surface points.
-        if numpy.sum(self.offset) != 0.0:
-            trans = numpy.array(trans) + ApplyMatrix([self.offset], rot_matrix)[0]
-        target_point = trans
-        moving = None
-        if env.runTimeDisplay and self.mesh:
-            moving = self.handle_real_time_visualization(
-                afvi, ptInd, target_point, rot_matrix
-            )
-        return (
-            compartment,
-            gridPointsCoords,
-            periodic_pos,
-            jitterList,
-            rot_matrix,
-            jitterList,
-            collD1,
-            collD2,
-            target_point,
-            moving,
-        )
+    def place(
+        self,
+        env,
+        compartment,
+        dropped_position,
+        dropped_rotation,
+        grid_point_index,
+        new_inside_points,
+        new_dist_values,
+    ):
 
-    def place(self, env, ptInd, freePoints, nbFreePoints, distance, dpad, usePP):
+        # self.update_distances(new_inside_points, new_dist_values)
+        compartment.molecules.append([dropped_position, dropped_rotation, self, grid_point_index])
+        env.order[grid_point_index] = env.lastrank
+        env.lastrank += 1
+        env.nb_ingredient += 1
+
+        if self.packingMode[-4:] == "tile":
+            nexthexa = self.tilling.dropTile(
+                self.tilling.idc, self.tilling.edge_id, dropped_position, dropped_rotation
+            )
+            self.log.info("drop next hexa %s", nexthexa.name)
+        # add one to molecule counter for this ingredient
+        self.counter += 1
+        self.completion = float(self.counter) / float(self.nbMol)
+        self.rejectionCounter = 0
+        self.update_data_tree(dropped_position, dropped_rotation, grid_point_index)
+
+    def attempt_to_pack_at_grid_location(self, env, ptInd, freePoints, nbFreePoints, distance, dpad, usePP):
+        insidePoints = {}
+        newDistPoints = {}
         success = False
-        # print self.placeType
         self.vi = autopack.helper
-        #        if histoVol.afviewer != None:
-        #            self.vi = histoVol.afviewer.vi
         self.env = env  # NOTE: do we need to store the env on the ingredient?
         self.log.info(
             "PLACING INGREDIENT $s using %s, placeType=%s, index=%d, position=%r",
@@ -4514,10 +4448,23 @@ class Ingredient(Agent):
             ptInd,
             env.grid.masterGridPositions[ptInd],
         )
+        compartment = self.get_compartment(env)
+        gridPointsCoords = env.masterGridPositions
+        rotation_matrix = self.get_rotation(ptInd, env, compartment)
+        target_grid_point_position = gridPointsCoords[ptInd]  # drop point, surface points.
+        if numpy.sum(self.offset) != 0.0:
+            target_grid_point_position = numpy.array(target_grid_point_position) + ApplyMatrix([self.offset], rotation_matrix)[0]
+        target_grid_point_position = gridPointsCoords[ptInd]  # drop point, surface points.
+        moving = None
+        if env.runTimeDisplay and self.mesh:
+            moving = self.handle_real_time_visualization(
+                env.afviewer, ptInd, target_grid_point_position, rotation_matrix
+            )
+        is_realtime = moving is not None
         # grow doesnt use panda.......but could use all the geom produce by the grow as rb
         if self.placeType == "jitter" or self.Type == "Grow" or self.Type == "Actine":
-            success, nbFreePoints = self.jitter_place(
-                env, ptInd, freePoints, nbFreePoints, distance, dpad, env.afviewer
+            success, jtrans, rotMatj, insidePoints, newDistPoints = self.jitter_place(
+                env, compartment, target_grid_point_position, rotation_matrix, moving, distance, dpad, env.afviewer
             )
         elif self.placeType == "spring" or self.placeType == "rigid-body":
             success, nbFreePoints = self.rigid_place(
@@ -4672,7 +4619,14 @@ class Ingredient(Agent):
                 moving,
                 usePP=usePP,
             )
-        return success, nbFreePoints
+        if success:
+            self.place(env, compartment, jtrans, rotMatj, ptInd, insidePoints, newDistPoints)
+        else:
+            if is_realtime:
+                self.remove_from_realtime_display(moving)
+            self.reject()
+
+        return success, insidePoints, newDistPoints
 
     def get_rotation(self, pt_ind, histovol, compartment):
         # compute rotation matrix rotMat
@@ -5078,9 +5032,10 @@ class Ingredient(Agent):
     def jitter_place(
         self,
         env,
-        ptInd,
-        freePoints,
-        nbFreePoints,
+        compartment,
+        targeted_master_grid_point,
+        rot_mat,
+        moving,
         distance,
         dpad,
         afvi,
@@ -5089,16 +5044,10 @@ class Ingredient(Agent):
         """
         drop the ingredient on grid point ptInd
         """
-        compartment = self.get_compartment(env)
-        rot_mat = self.get_rotation(ptInd, env, compartment)
         # jitter position loop
         jitterList = []
         collD1 = []
         collD2 = []
-
-        targeted_master_grid_point = env.masterGridPositions[
-            ptInd
-        ]  # drop point, surface points.
 
         if numpy.sum(self.offset) != 0.0:
             # the geometry has an offset, ie surface protein, and the origin isn't centered
@@ -5109,11 +5058,6 @@ class Ingredient(Agent):
             )
             self.log.info("use offset %r", self.offset)
 
-        moving = None
-        if env.runTimeDisplay and self.mesh:
-            moving = self.handle_real_time_visualization(
-                afvi, ptInd, targeted_master_grid_point, rot_mat
-            )
 
         packing_location = None
         # jitter loop
@@ -5226,51 +5170,7 @@ class Ingredient(Agent):
             len(newDistPoints),
         )
         if not collision and not (True in collision_results) and point_is_available:
-            # get inside points and update distance
-            # use best spherical approximation
-            # should be replace by self.getPointInside
-
-            # save dropped ingredient
-            if drop:
-                compartment.molecules.append(
-                    [packing_location, jitter_rot, self, ptInd]
-                )
-                env.order[ptInd] = env.lastrank
-                env.lastrank += 1
-                env.nb_ingredient += 1
-
-            # update free points
-            self.log.info("updating distances")
-            timeUpDistLoopStart = time()
-
-            nbFreePoints = env.callFunction(
-                self.updateDistances,
-                (
-                    insidePoints,
-                    newDistPoints,
-                    freePoints,
-                    nbFreePoints,
-                    distance,
-                ),
-            )
-            env.timeUpDistLoopTotal += time() - timeUpDistLoopStart
-            # add one to molecule counter for this ingredient
-            self.counter += 1
-            self.completion = float(self.counter) / float(self.nbMol)
-            self.update_data_tree(packing_location, rot_mat, ptInd)
-            if attempt_number > 0:
-                env.successfullJitter.append((self, jitterList, collD1, collD2))
-
-            self.log.info(
-                "Success nb free point :%d %d/%d dpad %.2f",
-                nbFreePoints,
-                self.counter,
-                self.nbMol,
-                dpad,
-            )
-
             success = True
-            self.rejectionCounter = 0
         else:
             # got rejected
             if env.runTimeDisplay and moving is not None:
@@ -5278,15 +5178,9 @@ class Ingredient(Agent):
             success = False
             self.log.info("jitterList %r", jitterList)
             env.failedJitter.append((self, jitterList, collD1, collD2))
-            # reduce distance at this point, less chance to pick it next
-            # should we really do that ? Commented on 6/1/2016
-            # distance[ptInd] = max(0, distance[ptInd] * 0.9)
             self.reject()
 
-        if drop:
-            return success, nbFreePoints
-        else:
-            return success, nbFreePoints, packing_location, jitter_rot
+        return success, packing_location, jitter_rot, insidePoints, newDistPoints
 
     def lookForNeighbours(
         self, trans, rotMat, organelle, afvi, distance, closest_indice=None

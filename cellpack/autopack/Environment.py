@@ -2598,18 +2598,16 @@ class Environment(CompartmentList):
                 ptInd,
                 self.grid.masterGridPositions[ptInd],
             )
-            success, nbFreePoints = self.callFunction(
-                ingr.place,
-                (
-                    self,
-                    ptInd,
-                    freePoints,
-                    nbFreePoints,
-                    distances,
-                    dpad,
-                    usePP,
-                ),
+            success, insidePoints, newDistPoints = ingr.attempt_to_pack_at_grid_location(
+                self,
+                ptInd,
+                freePoints,
+                nbFreePoints,
+                distances,
+                dpad,
+                usePP,
             )
+            nbFreePoints = BaseGrid.updateDistances(insidePoints, newDistPoints, freePoints, nbFreePoints, distances)
             self.log.info(
                 "after place attempt placed: %r, number of free points:%d, length of free points=%d",
                 success,
