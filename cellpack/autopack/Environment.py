@@ -47,7 +47,7 @@
 """
 
 import os
-import time
+from time import time
 from random import random, uniform, seed
 from scipy import spatial
 import numpy
@@ -794,7 +794,7 @@ class Environment(CompartmentList):
             result=True,
             quaternion=True,
         )  # pdb ?
-        self.log.info("time to save result file %d", time.time() - t0)
+        self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
             #    START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
             # totalVolume = self.grid.gridVolume*unitVol
@@ -967,7 +967,7 @@ class Environment(CompartmentList):
             self.log.info("histoVol.timeUpDistLoopTotal = %d", self.timeUpDistLoopTotal)
 
             #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
-        self.log.info("time to save end %d", time.time() - t0)
+        self.log.info("time to save end %d", time() - t0)
 
     def saveRecipe(
         self,
@@ -1169,7 +1169,7 @@ class Environment(CompartmentList):
         @return:  the center of mass of the coordinates
         """
 
-        t1 = time.time()
+        t1 = time()
         if len(kw):
             res = function(*args, **kw)
         else:
@@ -2205,7 +2205,7 @@ class Environment(CompartmentList):
         )
 
         if len(allIngrPts) == 0:
-            t = time.time()
+            t = time()
             ingr.completion = 1.0
             ind = self.activeIngr.index(ingr)
             # if ind == 0:
@@ -2263,7 +2263,7 @@ class Environment(CompartmentList):
                 self.thresholdPriorities.append(np + previousThresh)
                 previousThresh = np + float(previousThresh)
             self.activeIngr = self.activeIngr0 + self.activeIngr12
-            self.log.info("time to reject the picking %d", time.time() - t)
+            self.log.info("time to reject the picking %d", time() - t)
 
             return False, vRangeStart
 
@@ -2290,7 +2290,7 @@ class Environment(CompartmentList):
                 ptIndr = int(uniform(0.0, 1.0) * len(allIngrPts))
                 ptInd = allIngrPts[ptIndr]
             if ptInd is None:
-                t = time.time()
+                t = time()
                 self.log.info(
                     "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d",
                     ingr.name,
@@ -2317,7 +2317,7 @@ class Environment(CompartmentList):
                 self.thresholdPriorities.pop(ind)
                 self.normalizedPriorities.pop(ind)
                 if verbose > 1:
-                    print(("time to reject the picking", time.time() - t))
+                    print(("time to reject the picking", time() - t))
                     print(("vRangeStart", vRangeStart))
                 return False, vRangeStart
 
@@ -2371,7 +2371,7 @@ class Environment(CompartmentList):
         autopack.testPeriodicity = self.use_periodicity
         self.grid.testPeriodicity = self.use_periodicity
 
-        t1 = time.time()
+        t1 = time()
         self.timeUpDistLoopTotal = 0
         self.static = []
         if self.grid is None:
@@ -2478,7 +2478,7 @@ class Environment(CompartmentList):
                 nls += 1
 
         vRangeStart = 0.0
-        tCancelPrev = time.time()
+        tCancelPrev = time()
         ptInd = 0
 
         PlacedMols = 0
@@ -2493,7 +2493,7 @@ class Environment(CompartmentList):
         # ==============================================================================
         dump_freq = self.dump_freq  # 120.0#every minute
         dump = self.dump
-        stime = time.time()
+        stime = time()
 
         while nbFreePoints:
             self.log.info(
@@ -2512,7 +2512,7 @@ class Environment(CompartmentList):
                 self.log.info("exit packing loop because vRange and hence Done!!!****")
                 break
             if self.cancelDialog:
-                tCancel = time.time()
+                tCancel = time()
                 if tCancel - tCancelPrev > 10.0:
                     cancel = self.displayCancelDialog()
                     if cancel:
@@ -2523,7 +2523,7 @@ class Environment(CompartmentList):
                         break
                     # if OK, do nothing, i.e., continue loop
                     # (but not the function continue)
-                    tCancelPrev = time.time()
+                    tCancelPrev = time()
 
             # pick an ingredient
             ingr = self.callFunction(self.pickIngredient, (vThreshStart,))
@@ -2683,7 +2683,7 @@ class Environment(CompartmentList):
                     self.thresholdPriorities.append(np + previousThresh)
                     previousThresh = np + float(previousThresh)
                 self.activeIngr = self.activeIngr0 + self.activeIngr12
-            if dump and ((time.time() - stime) > dump_freq):
+            if dump and ((time() - stime) > dump_freq):
                 self.collectResultPerIngredient()
                 print("SAVING", self.resultfile)
                 self.saveRecipe(
@@ -2703,13 +2703,13 @@ class Environment(CompartmentList):
                     quaternion=True,
                     transpose=True,
                 )
-                stime = time.time()
+                stime = time()
 
         self.distancesAfterFill = distances[:]
         self.freePointsAfterFill = freePoints[:]
         self.nbFreePointsAfterFill = nbFreePoints
         self.distanceAfterFill = distances[:]
-        t2 = time.time()
+        t2 = time()
         self.log.info("time to fill %d", t2 - t1)
 
         if self.saveResult:
@@ -2760,10 +2760,10 @@ class Environment(CompartmentList):
     #        dialog = TimerDialog()
     #        dialog.init()
     #        dialog.Open(async=True, pluginid=25555589, width=120, height=100)
-    #        tt=time.time()
+    #        tt=time()
     # while dialog.IsOpen():
-    #    if time.time()-tt > 5.:
-    #        print "time.time()-tt = ", time.time()-tt
+    #    if time()-tt > 5.:
+    #        print "time()-tt = ", time()-tt
     #        dialog.Close()
     #        cancel = dialog._cancel
     #        cancel=c4d.gui.QuestionDialog('WannaCancel?') # Removed by Graham on July 10, 2012 because it may no longer be needed, but test it TODO
@@ -3929,7 +3929,6 @@ class Environment(CompartmentList):
                 for n in self.static
             ]
             done = not (True in r)
-            print(done, dt, "time", time() - t1)
             if runTimeDisplay:
                 # move self.moving and update
                 nodenp = NodePath(self.moving)
