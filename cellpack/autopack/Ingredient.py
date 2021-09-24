@@ -3686,35 +3686,9 @@ class Ingredient(Agent):
                 closeS = self.checkPointSurface(newPt, cutoff=self.cutoff_surface)
         return not inside or closeS or not inComp
 
-    def oneJitter(self, spacing, trans, rotMat):
-        jx, jy, jz = self.jitterMax
-        jitter = spacing / 2.0  # self.getMaxJitter(spacing)
-        jitter2 = jitter * jitter
-        compNum = self.compNum
-        tx, ty, tz = trans
-        if jitter2 > 0.0:
-            found = False
-            while not found:
-                dx = jx * jitter * uniform(-1.0, 1.0)
-                dy = jy * jitter * uniform(-1.0, 1.0)
-                dz = jz * jitter * uniform(-1.0, 1.0)
-                d2 = dx * dx + dy * dy + dz * dz
-                if d2 < jitter2:
-                    if compNum > 0:  # jitter less among normal
-                        # if self.name=='2uuh C4 SYNTHASE':
-                        #    import pdb
-                        #    pdb.set_trace()
-                        dx, dy, dz, dum = numpy.dot(rotMat, (dx, dy, dz, 0))
-                    jtrans = (tx + dx, ty + dy, tz + dz)
-                    found = True
-                else:
-                    self.log.info("JITTER REJECTED %d %d", d2, jitter2)
-        else:
-            jtrans = trans
-            dx = dy = dz = 0.0
-            # randomize rotation about axis
-        rotMatj = self.randomize_rotation(rotMat)
-
+    def oneJitter(self, env, trans, rotMat):
+        jtrans = self.randomize_translation(env, trans, rotMat)
+        rotMatj = self.randomize_rotation(rotMat, env)
         return jtrans, rotMatj
 
     def getInsidePoints(
@@ -3902,7 +3876,7 @@ class Ingredient(Agent):
     ):
         if close_indice is None:
             mingrs = self.getIngredientsInBox(histoVol, jtrans, rotMat, organelle, afvi)
-            mingrs = zip(*mingrs)
+            # mingrs = zip(*mingrs)
         else:
             mingrs = self.getIngredientsInTree(close_indice)
         listePartner = []
@@ -4394,6 +4368,9 @@ class Ingredient(Agent):
                         self.env.rTrans, leafsize=10
                     )
 
+    def remove_from_realtime_display(env, moving):
+        env.afvi.vi.deleteObject(moving)
+
     def reject(
         self,
     ):
@@ -4467,21 +4444,16 @@ class Ingredient(Agent):
                 env, compartment, target_grid_point_position, rotation_matrix, moving, distance, dpad, env.afviewer
             )
         elif self.placeType == "spring" or self.placeType == "rigid-body":
-            success, nbFreePoints = self.rigid_place(
+            success, jtrans, rotMatj, insidePoints, newDistPoints = self.rigid_place(
                 env,
                 ptInd,
-                freePoints,
+                compartment,
+                target_grid_point_position,
+                rotation_matrix,
                 nbFreePoints,
                 distance,
                 dpad,
-                stepByStep=False,
-                sphGeom=None,
-                labDistGeom=None,
-                debugFunc=None,
-                sphCenters=None,
-                sphRadii=None,
-                sphColors=None,
-                usePP=usePP,
+                moving
             )
         elif self.placeType == "pandaDev":
             success, nbFreePoints = self.pandaBullet_place_dev(
@@ -4501,121 +4473,55 @@ class Ingredient(Agent):
                 usePP=usePP,
             )
         elif self.placeType == "spheresBHT":
-            success, nbFreePoints = self.pandaBullet_placeBHT(
+            success, jtrans, rotMatj, insidePoints, newDistPoints = self.pandaBullet_placeBHT(
                 env,
+                compartment,
                 ptInd,
-                freePoints,
-                nbFreePoints,
+                target_grid_point_position,
+                rotation_matrix,
+                moving,
                 distance,
                 dpad,
-                stepByStep=False,
-                sphGeom=None,
-                labDistGeom=None,
-                debugFunc=None,
-                sphCenters=None,
-                sphRadii=None,
-                sphColors=None,
-                usePP=usePP,
             )
         elif self.placeType == "pandaBullet":
-            if panda3d is None:
-                success, nbFreePoints = self.pandaBullet_placeBHT(
-                    env,
-                    ptInd,
-                    freePoints,
-                    nbFreePoints,
-                    distance,
-                    dpad,
-                    stepByStep=False,
-                    sphGeom=None,
-                    labDistGeom=None,
-                    debugFunc=None,
-                    sphCenters=None,
-                    sphRadii=None,
-                    sphColors=None,
-                    usePP=usePP,
-                )
-            else:
-                (
-                    compartment,
-                    gridPointsCoords,
-                    periodic_pos,
-                    jitterList,
-                    rot_matrix,
-                    jitterList,
-                    collD1,
-                    collD2,
-                    target_point,
-                    moving,
-                ) = self.place_general(env, ptInd, env.afviewer)
-                success, nbFreePoints = self.pandaBullet_place(
-                    env,
-                    ptInd,
-                    freePoints,
-                    nbFreePoints,
-                    distance,
-                    dpad,
-                    env.afviewer,
-                    compartment,
-                    gridPointsCoords,
-                    periodic_pos,
-                    rot_matrix,
-                    jitterList,
-                    collD1,
-                    collD2,
-                    target_point,
-                    moving,
-                    usePP=usePP,
-                )
-        elif (
-            self.placeType == "pandaBulletRelax"
-            or self.placeType == "pandaBulletSpring"
-        ):
-            success, nbFreePoints = self.pandaBullet_relax(
+            success, jtrans, rotMatj, insidePoints, newDistPoints = self.pandaBullet_place(                    
                 env,
                 ptInd,
-                freePoints,
-                nbFreePoints,
-                distance,
-                dpad,
-                stepByStep=False,
-                sphGeom=None,
-                labDistGeom=None,
-                debugFunc=None,
-                sphCenters=None,
-                sphRadii=None,
-                sphColors=None,
-            )
-        elif self.placeType == "RAPID":
-            (
-                compartment,
-                gridPointsCoords,
-                periodic_pos,
-                jitterList,
-                rot_matrix,
-                jitterList,
-                collD1,
-                collD2,
-                target_point,
-                moving,
-            ) = self.place_general(env, ptInd, env.afviewer)
-
-            success, nbFreePoints = self.rapid_place(
-                env,
-                ptInd,
-                freePoints,
-                nbFreePoints,
                 distance,
                 dpad,
                 env.afviewer,
                 compartment,
                 gridPointsCoords,
-                periodic_pos,
-                rot_matrix,
-                jitterList,
-                collD1,
-                collD2,
-                target_point,
+                rotation_matrix,
+                target_grid_point_position,
+                moving,
+                usePP=usePP,
+            )
+        elif (
+            self.placeType == "pandaBulletRelax"
+            or self.placeType == "pandaBulletSpring"
+        ):
+            success, jtrans, rotMatj, insidePoints, newDistPoints = self.pandaBullet_relax(
+                env,
+                ptInd,
+                compartment,
+                target_grid_point_position,
+                rotation_matrix,
+                distance,
+                moving,
+                dpad, sphColors=None,
+            )
+        elif self.placeType == "RAPID":
+            success, jtrans, rotMatj, insidePoints, newDistPoints = self.rapid_place(                
+                env,
+                ptInd,
+                distance,
+                dpad,
+                env.afviewer,
+                compartment,
+                gridPointsCoords,
+                rotation_matrix,
+                target_grid_point_position,
                 moving,
                 usePP=usePP,
             )
@@ -4714,8 +4620,7 @@ class Ingredient(Agent):
                 # self.log.info("JITTER REJECTED %d %d", d2, jitter_sq)
         else:
             jitter_trans = translation
-            dx = dy = dz = 0.0
-        return jitter_trans, dx, dy, dz
+        return jitter_trans
 
     def update_display_rt(self, moving, translation, rotation):
         mat = rotation.copy()
@@ -4774,44 +4679,26 @@ class Ingredient(Agent):
         self,
         histoVol,
         ptInd,
-        freePoints,
+        compartment,
+        target_grid_point_position,
+        rotation_matrix,
         nbFreePoints,
         distance,
         dpad,
+        moving
     ):
         """
         drop the ingredient on grid point ptInd
         """
         # print "rigid",self.placeType
-        self.vi = histoVol.afviewer.vi
         afvi = histoVol.afviewer
         simulationTimes = histoVol.simulationTimes
         runTimeDisplay = histoVol.runTimeDisplay
         springOptions = histoVol.springOptions
-        self.env = histoVol
-        spacing = histoVol.smallestProteinSize
-        spacing = histoVol.grid.gridSpacing
-        jx, jy, jz = self.jitterMax
-        self.getMaxJitter(spacing)
+        is_realtime = moving is not None
 
-        if self.compNum == 0:
-            compartment = self.env
-        else:
-            compartment = self.env.compartments[abs(self.compNum) - 1]
-            # this is hisotVol for cytoplasme
-        gridPointsCoords = histoVol.grid.masterGridPositions
+        jtrans, rotMatj = self.oneJitter(histoVol, target_grid_point_position, rotation_matrix)
 
-        # compute rotation matrix rotMat
-        rotMat = self.get_rotation(ptInd, histoVol, compartment)
-        # jitter position loop
-        jitterList = []
-        collD1 = []
-        collD2 = []
-
-        trans = gridPointsCoords[ptInd]  # drop point
-        jtrans, rotMatj = self.oneJitter(spacing, trans, rotMat)
-
-        ok = False
         # here should go the simulation
         # 1- we build the ingredient if not already and place the ingredient at jtrans, rotMatj
         moving = None
@@ -4821,27 +4708,11 @@ class Ingredient(Agent):
         #        import c4d
         # c4d.documents.RunAnimation(c4d.documents.GetActiveDocument(), True)
 
-        if self.mesh:
-            if hasattr(self, "mesh_3d"):
-                # create an instance of mesh3d and place it
-                name = self.name + str(ptInd)
-                if self.mesh_3d is None:
-                    self.moving = moving = afvi.vi.Sphere(
-                        name, radius=self.radii[0][0], parent=afvi.movingMesh
-                    )[0]
-                    afvi.vi.setTranslation(moving, pos=jtrans)
-                else:
-                    # why the GetDown?
-                    self.moving = moving = afvi.vi.newInstance(
-                        name,
-                        self.mesh_3d,  # .GetDown()
-                        matrice=rotMatj,
-                        location=jtrans,
-                        parent=afvi.movingMesh,
-                    )
+        if is_realtime:
+            self.update_display_rt(moving, jtrans, rotMatj)
         # 2- get the neighboring object from ptInd
         mingrs, listePartner = self.getListePartners(
-            histoVol, jtrans, rotMat, compartment, afvi
+            histoVol, jtrans, rotation_matrix, compartment, afvi
         )
         for i, elem in enumerate(mingrs):
             ing = elem[2]
@@ -4918,8 +4789,6 @@ class Ingredient(Agent):
         # afvi.vi.animationStart(duration = simulationTimes)
         # afvi.vi.update()
         afvi.vi.frameAdvanced(duration=simulationTimes, display=runTimeDisplay)  # ,
-        # cb=self.getTransfo)
-        #        moving=afvi.vi.makeEditable(moving,copy=False)
         # 5- we get the resuling transofrmation matrix and decompose ->rTrans rRot
         # if runTimeDisplay :
         afvi.vi.update()
@@ -4935,90 +4804,48 @@ class Ingredient(Agent):
         afvi.vi.deleteObject(target)
         for o in static:
             afvi.vi.deleteObject(o)
-        ok = True
         jtrans = rTrans[:]
         rotMatj = rRot[:]
         jitterPos = 1
-        if ok:
             # get inside points and update distance
             #
             # use best sperical approcimation
             #            print(">>?",self.name,jtrans)
-            centT = self.transformPoints(jtrans, rotMatj, self.positions[-1])
+        centT = self.transformPoints(jtrans, rotMatj, self.positions[-1])
 
-            insidePoints = {}
-            newDistPoints = {}
-            insidePoints, newDistPoints = self.getInsidePoints(
-                histoVol.grid,
-                gridPointsCoords,
-                dpad,
-                distance,
-                centT=centT,
-                jtrans=jtrans,
-                rotMatj=rotMatj,
-            )
+        insidePoints = {}
+        newDistPoints = {}
+        insidePoints, newDistPoints = self.getDistances(
+            histoVol.grid,
+            histoVol.masterGridPositions,
+            dpad,
+            distance,
+            centT,
+            jtrans,
+            rotMatj,
+            dpad
+        )
 
-            # update free points
-            nbFreePoints = self.updateDistances(
-                histoVol,
-                insidePoints,
-                newDistPoints,
-                freePoints,
-                nbFreePoints,
-                distance,
-                histoVol.grid.masterGridPositions,
-            )
+        # save dropped ingredient
 
-            # save dropped ingredient
+        histoVol.rTrans.append(jtrans)
+        histoVol.result.append([jtrans, rotMatj, self, ptInd])
+        histoVol.rRot.append(rotMatj)
+        histoVol.rIngr.append(self)
 
-            compartment.molecules.append([jtrans, rotMatj, self, ptInd])
-            histoVol.order[ptInd] = histoVol.lastrank
-            histoVol.lastrank += 1
-            histoVol.nb_ingredient += 1
-            #            raw_input()
-            histoVol.rTrans.append(jtrans)
-            histoVol.result.append([jtrans, rotMatj, self, ptInd])
-            histoVol.rRot.append(rotMatj)
-            histoVol.rIngr.append(self)
-            #            histoVol.close_ingr_bhtree.InsertRBHPoint((jtrans[0],jtrans[1],jtrans[2]),radius,None,histoVol.nb_ingredient)
-            #            histoVol.close_ingr_bhtree.MoveRBHPoint(histoVol.nb_ingredient,jtrans,0)
+        self.rRot.append(rotMatj)
+        self.tTrans.append(jtrans)
 
-            self.rRot.append(rotMatj)
-            self.tTrans.append(jtrans)
-            # add one to molecule counter for this ingredient
-            self.counter += 1
-            self.completion = float(self.counter) / self.nbMol
+        self.log.info(
+            "Success nbfp:%d %d/%d dpad %.2f",
+            nbFreePoints,
+            self.counter,
+            self.nbMol,
+            dpad,
+        )
 
-            if jitterPos > 0:
-                histoVol.successfullJitter.append((self, jitterList, collD1, collD2))
-            self.log.info(
-                "Success nbfp:%d %d/%d dpad %.2f",
-                nbFreePoints,
-                self.counter,
-                self.nbMol,
-                dpad,
-            )
-            if self.name == "in  inside":
-                histoVol.jitterVectors.append((trans, jtrans))
-
-            success = True
-            self.rejectionCounter = 0
-
-        else:  # got rejected
-            success = False
-            histoVol.failedJitter.append((self, jitterList, collD1, collD2))
-
-            distance[ptInd] = max(0, distance[ptInd] * 0.9)
-            self.rejectionCounter += 1
-            self.log.info(
-                "Failed ingr:%s rejections:%d", self.name, self.rejectionCounter
-            )
-            if self.rejectionCounter >= 30:
-                self.log.info(
-                    "PREMATURE ENDING of ingredient rigid_place %s", self.name
-                )
-                self.completion = 1.0
-        return success, nbFreePoints
+        success = True
+        return success, jtrans, rotMatj, insidePoints, newDistPoints
 
     def merge_place_results(self, new_results, accum_results):
         for pt in new_results:
@@ -5066,7 +4893,7 @@ class Ingredient(Agent):
         newDistPoints = {}
 
         for attempt_number in range(self.nbJitter):
-            packing_location, _, _, _ = self.randomize_translation(
+            packing_location = self.randomize_translation(
                 env, targeted_master_grid_point, rot_mat
             )
             jitter_rot = self.randomize_rotation(rot_mat, env)
@@ -5327,28 +5154,23 @@ class Ingredient(Agent):
         self,
         histoVol,
         ptInd,
-        freePoints,
-        nbFreePoints,
         distance,
         dpad,
         afvi,
         compartment,
         gridPointsCoords,
-        periodic_pos,
         rot_matrix,
-        jitterList,
-        collD1,
-        collD2,
         target_point,
         moving,
-        drop=True,
         usePP=False,
     ):
         """
         drop the ingredient on grid point ptInd
         """
         histoVol.setupPanda()
-
+        insidePoints = {}
+        newDistPoints = {}
+        is_realtime = moving is not None
         # do we get the list of neighbours first > and give a different trans...closer to the partner
         # we should look up for an available ptID around the picked partner if any
         # getListCloseIngredient
@@ -5374,7 +5196,7 @@ class Ingredient(Agent):
             else:
                 self.tilling.init_seed(histoVol.seed_used)
 
-        tx, ty, tz = jtrans = target_point
+        jtrans = target_point
         # we may increase the jitter, or pick from xyz->Id free for its radius
         # create the rb only once and not at ever jitter
         # rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMat,),{"rtype":self.Type},)
@@ -5395,15 +5217,13 @@ class Ingredient(Agent):
                     histoVol.runTimeDisplay,
                     moving,
                 )
-                tx, ty, tz = jtrans = target_point
+                jtrans = target_point
             collision2 = False
-            jtrans, dx, dy, dz = self.randomize_translation(
+            jtrans = self.randomize_translation(
                 histoVol, target_point, rot_matrix
             )
 
             histoVol.totnbJitter += 1
-            histoVol.jitterLength += dx * dx + dy * dy + dz * dz
-            jitterList.append((dx, dy, dz))
 
             # loop over all spheres representing ingredient
             # check for collisions
@@ -5425,7 +5245,6 @@ class Ingredient(Agent):
             periodic_pos = self.env.grid.getPositionPeridocity(
                 jtrans, getNormedVectorOnes(self.jitterMax), self.encapsulatingRadius
             )
-            # self.log.info("periodic_pos %r", periodic_pos)
             histoVol.callFunction(
                 histoVol.moveRBnode,
                 (
@@ -5436,7 +5255,6 @@ class Ingredient(Agent):
             )
             perdiodic_collision = False
             if periodic_pos is not None and self.packingMode != "gradient":
-                self.log.info("OK Periodicity %d, %r", len(periodic_pos), periodic_pos)
                 for p in periodic_pos:
                     histoVol.callFunction(
                         histoVol.moveRBnode,
@@ -5570,80 +5388,32 @@ class Ingredient(Agent):
                     collision2 = collisionComp
 
         if not collision2 and not (True in collision_results) and point_is_available:
-            drop = True
 
-            # get inside points and update distance
-            #
-            # use best sperical approcimation
-
-            insidePoints = {}
-            newDistPoints = {}
             t3 = time()
             insidePoints, newDistPoints = self.getDistances(
                 jtrans, rotMatj, gridPointsCoords, distance, dpad
             )
-            # save dropped ingredient
-            self.log.info("compute distance loop %d", time() - t3)
-            nbFreePoints = histoVol.callFunction(
-                self.updateDistances,
-                (
-                    insidePoints,
-                    newDistPoints,
-                    freePoints,
-                    nbFreePoints,
-                    distance,
-                ),
-            )
+ 
             if periodic_pos is not None and self.packingMode != "gradient":
                 for p in periodic_pos:
-                    insidePoints, newDistPoints = self.getDistances(
+                    new_inside_pts, new_dist_points = self.getDistances(
                         p, rotMatj, gridPointsCoords, distance, dpad
                     )
-                    nbFreePoints = histoVol.callFunction(
-                        self.updateDistances,
-                        (
-                            insidePoints,
-                            newDistPoints,
-                            freePoints,
-                            nbFreePoints,
-                            distance,
-                        ),
-                    )
-
-            if drop:
-                # print "ok drop",organelle.name,self.name
-                compartment.molecules.append([jtrans, rotMatj, self, ptInd])
-                histoVol.order[ptInd] = histoVol.lastrank
-                histoVol.lastrank += 1
-                if self.packingMode[-4:] == "tile":
-                    nexthexa = self.tilling.dropTile(
-                        self.tilling.idc, self.tilling.edge_id, jtrans, rotMatj
-                    )
-                    print(
-                        "drop next hexa",
-                        nexthexa.name,
-                        self.tilling.idc,
-                        self.tilling.edge_id,
-                    )
-
-            # add one to molecule counter for this ingredient
-            self.counter += 1
-            self.completion = float(self.counter) / float(self.nbMol)
-            if jitterPos > 0:
-                histoVol.successfullJitter.append((self, jitterList, collD1, collD2))
-
-            self.log.info(
-                "Success nbfp:%d %d/%d dpad %.2f",
-                nbFreePoints,
-                self.counter,
-                self.nbMol,
-                dpad,
-            )
-            if self.name == "in  inside":  # <<??<<
-                histoVol.jitterVectors.append((trans, jtrans))
+                    insidePoints = self.merge_place_results(new_inside_pts, insidePoints)
+                    newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
+            self.log.info("compute distance loop %d", time() - t3)
+            if self.packingMode[-4:] == "tile":
+                nexthexa = self.tilling.dropTile(
+                    self.tilling.idc, self.tilling.edge_id, jtrans, rotMatj
+                )
+                print(
+                    "drop next hexa",
+                    nexthexa.name,
+                    self.tilling.idc,
+                    self.tilling.edge_id,
+                )
 
             success = True
-            self.rejectionCounter = 0
 
         else:  # got rejected
             self.log.info(
@@ -5663,10 +5433,8 @@ class Ingredient(Agent):
                     #            distance[ptInd] = max(0, distance[ptInd]*0.9)# ???
             distance[ptInd] = distance[ptInd] - 1.0
             self.reject()
-        if drop:
-            return success, nbFreePoints
-        else:
-            return success, nbFreePoints, jtrans, rotMatj
+
+        return success, jtrans, rotMatj, insidePoints, newDistPoints
 
     def pandaBullet_placeBHT(
         self,
@@ -5776,13 +5544,11 @@ class Ingredient(Agent):
                 jtrans = targetPoint
             collision2 = False
             # jitter points location
-            jtrans, dx, dy, dz = self.randomize_translation(
+            jtrans = self.randomize_translation(
                 histoVol, targetPoint, rotMat
             )
 
             histoVol.totnbJitter += 1
-            histoVol.jitterLength += dx * dx + dy * dy + dz * dz
-            jitterList.append((dx, dy, dz))
 
             # loop over all spheres representing ingredient
             # check for collisions
@@ -6124,13 +5890,11 @@ class Ingredient(Agent):
             self.nbJitter
         ):  # This expensive Gauusian rejection system should not be the default should it?
             # jitter points location
-            jtrans, dx, dy, dz = self.randomize_translation(
+            jtrans= self.randomize_translation(
                 histoVol, targetPoint, rotMat
             )
 
             histoVol.totnbJitter += 1
-            histoVol.jitterLength += dx * dx + dy * dy + dz * dz
-            jitterList.append((dx, dy, dz))
             # loop over all spheres representing ingredient
             if sphGeom is not None:
                 modCent = []
@@ -6541,13 +6305,11 @@ class Ingredient(Agent):
         ):  # This expensive Gauusian rejection system should not be the default should it?
             collision2 = False
             # jitter points location
-            jtrans, dx, dy, dz = self.randomize_translation(
+            jtrans = self.randomize_translation(
                 env, target_point, rot_matrix
             )
 
             env.totnbJitter += 1
-            env.jitterLength += dx * dx + dy * dy + dz * dz
-            jitterList.append((dx, dy, dz))
 
             # loop over all spheres representing ingredient
             if sphGeom is not None:
