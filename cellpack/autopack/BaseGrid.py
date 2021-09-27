@@ -39,7 +39,6 @@ import logging
 import numpy
 from scipy import spatial
 import math
-from time import time
 from math import ceil, floor
 from random import randrange
 import cellpack.autopack as autopack
@@ -81,7 +80,7 @@ class BaseGrid:
         # TODO: move this to env class, ing shouldn't aware of the whole grid
         # Swap the newly inside point value with the value of the last free point
         # Point will no longer be considered "free" because it will be beyond the range of
-        # nbFreePoints. The value of the point itself is the history of it's orginal index
+        # nbFreePoints. The value of the point itself is the history of it's original index
         # so any future swaps will still result in the correct index being move into the range
         # of nbFreePoints
         nbFreePoints -= 1
@@ -99,8 +98,8 @@ class BaseGrid:
         # self.log.debug("pt = masterGridPointValue = %d", pt)
         # self.log.debug("freePoints[nbFreePoints-1] = %d", freePoints[nbFreePoints])
         # self.log.debug("freePoints[pt] = %d", freePoints[pt])
-        # freePoints will now have all the avaible indicies between 0 and nbFreePoints in
-        # freePoints[nbFreePoints:] won't nessicarily be the indices of inside points
+        # freePoints will now have all the available indices between 0 and nbFreePoints in
+        # freePoints[nbFreePoints:] won't necessarily be the indices of inside points
         return freePoints, nbFreePoints
 
     @staticmethod
@@ -116,9 +115,8 @@ class BaseGrid:
         # )
         # TODO: move this to env class, ing shouldn't aware of the whole grid
 
-        t1 = time()
+        # t1 = time()
         # distChanges = {}
-        # self.nbPts = len(insidePoints)
         for pt, dist in list(insidePoints.items()):
             try:
                 freePoints, nbFreePoints = BaseGrid.reorder_free_points(
@@ -129,7 +127,7 @@ class BaseGrid:
                 pass
             distance[pt] = dist
         # self.log.debug("update free points loop %d", time() - t1)
-        t2 = time()
+        # t2 = time()
         for pt, dist in list(newDistPoints.items()):
             if pt not in insidePoints:
 

@@ -76,7 +76,7 @@ from cellpack.mgl_tools.bhtree import bhtreelib
 import cellpack.autopack as autopack
 from .Compartment import CompartmentList
 from .Recipe import Recipe
-from .Ingredient import GrowIngredient, ActinIngredient
+from .Ingredient.grow import GrowIngredient, ActinIngredient
 from .ray import vlen, vdiff
 from cellpack.autopack import IOutils
 from .Gradient import Gradient
