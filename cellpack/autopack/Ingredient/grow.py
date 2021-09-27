@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cellpack.autopack.BaseIngredient import rotVectToVect
+from cellpack.autopack.Ingredient import rotVectToVect
 import numpy
 from scipy import spatial
 from numpy import matrix

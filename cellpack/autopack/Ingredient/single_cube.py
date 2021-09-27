@@ -1,6 +1,6 @@
 from math import sqrt
 import numpy
-from cellpack.autopack.BaseIngredient import ApplyMatrix, Ingredient
+from cellpack.autopack.Ingredient import ApplyMatrix, Ingredient
 import cellpack.autopack as autopack
 helper = autopack.helper
 

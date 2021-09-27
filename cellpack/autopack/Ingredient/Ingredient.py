@@ -1180,8 +1180,8 @@ class Ingredient(Agent):
         #            self.overwrite_nbMol = True
         #            self.overwrite_nbMol_value = nMol
         #            self.nbMol = nMol
-        
-        ## Packing tracking values
+
+        # Packing tracking values
         self.nbJitter = nbJitter  # number of jitter attempts for translation
         self.nbPts = 0
         self.counter = 0  # target number of molecules for a fill
