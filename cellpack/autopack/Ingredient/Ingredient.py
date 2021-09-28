@@ -3323,9 +3323,6 @@ class Ingredient(Agent):
         drop the ingredient on grid point ptInd
         """
         # jitter position loop
-        jitterList = []
-        collD1 = []
-        collD2 = []
 
         if numpy.sum(self.offset) != 0.0:
             # the geometry has an offset, ie surface protein, and the origin isn't centered
@@ -3337,6 +3334,9 @@ class Ingredient(Agent):
             self.log.info("use offset %r", self.offset)
 
         packing_location = None
+        is_realtime = moving is not None
+        level = self.collisionLevel
+
         # jitter loop
         t1 = time()  # for timing the functions
         insidePoints = {}
@@ -3360,12 +3360,13 @@ class Ingredient(Agent):
                 )
 
             env.totnbJitter += 1
-            if env.runTimeDisplay and moving is not None:
+            if is_realtime:
                 self.update_display_rt(moving, packing_location, jitter_rot)
                 self.vi.update()
             # check for collisions
-            #
-            level = self.collisionLevel
+            if self.point_is_not_available(packing_location):
+                # jittered out of container or too close to boundary
+                continue
             collision = False
             # periodicity check
             periodic_pos = self.env.grid.getPositionPeridocity(
@@ -3412,8 +3413,7 @@ class Ingredient(Agent):
             closeS = self.checkPointSurface(
                 packing_location, cutoff=self.cutoff_surface
             )
-            point_is_available = not self.point_is_not_available(packing_location)
-            if point_is_available and not (True in collision_results) and not closeS:
+            if not (True in collision_results) and not closeS:
                 collision, new_inside_points, new_dist_points = self.collision_jitter(
                     packing_location,
                     jitter_rot,
@@ -3446,15 +3446,12 @@ class Ingredient(Agent):
             len(insidePoints),
             len(newDistPoints),
         )
-        if not collision and not (True in collision_results) and point_is_available:
+        if not collision and not (True in collision_results):
             success = True
         else:
             # got rejected
-            if env.runTimeDisplay and moving is not None:
-                afvi.vi.deleteObject(moving)
             success = False
-            self.log.info("jitterList %r", jitterList)
-            env.failedJitter.append((self, jitterList, collD1, collD2))
+
 
         return success, packing_location, jitter_rot, insidePoints, newDistPoints
 
