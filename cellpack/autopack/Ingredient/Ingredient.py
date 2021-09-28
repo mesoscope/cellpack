@@ -3320,10 +3320,9 @@ class Ingredient(Agent):
         drop=True,
     ):
         """
-        drop the ingredient on grid point ptInd
+        Check if the given grid point is available for packing using the jitter collision detection
+        method. Returns packing location and new grid point values if packing is successful. 
         """
-        # jitter position loop
-
         if numpy.sum(self.offset) != 0.0:
             # the geometry has an offset, ie surface protein, and the origin isn't centered
             # NOTE: Possible to remove here and apply at point of visualization
@@ -3336,86 +3335,55 @@ class Ingredient(Agent):
         packing_location = None
         is_realtime = moving is not None
         level = self.collisionLevel
+        if env.ingrLookForNeighbours and self.packingMode == "closePartner":
+            packing_location, rot_mat = self.close_partner_check(
+                packing_location,
+                rot_mat,
+                compartment,
+                afvi,
+                distance,
+                env.runTimeDisplay,
+                moving,
+            )
 
         # jitter loop
-        t1 = time()  # for timing the functions
         insidePoints = {}
         newDistPoints = {}
 
         for attempt_number in range(self.nbJitter):
+            env.totnbJitter += 1
             packing_location = self.randomize_translation(
                 env, targeted_master_grid_point, rot_mat
             )
             jitter_rot = self.randomize_rotation(rot_mat, env)
 
-            if env.ingrLookForNeighbours and self.packingMode == "closePartner":
-                packing_location, jitter_rot = self.close_partner_check(
-                    packing_location,
-                    jitter_rot,
-                    compartment,
-                    afvi,
-                    distance,
-                    env.runTimeDisplay,
-                    moving,
-                )
-
-            env.totnbJitter += 1
             if is_realtime:
                 self.update_display_rt(moving, packing_location, jitter_rot)
                 self.vi.update()
-            # check for collisions
+            
             if self.point_is_not_available(packing_location):
                 # jittered out of container or too close to boundary
+                # check next random jitter
                 continue
-            collision = False
+            
+            collision_results = []
+            points_to_check = [packing_location]
             # periodicity check
             periodic_pos = self.env.grid.getPositionPeridocity(
                 packing_location,
                 getNormedVectorOnes(self.jitterMax),
                 self.encapsulatingRadius,
             )
-            periodic_collision = False
-            collision_results = []
+            if self.packingMode != "graident":
+                points_to_check.extend(periodic_pos)
 
-            if len(periodic_pos) > 0 and self.packingMode != "gradient":
-                for p in periodic_pos:
-                    (
-                        periodic_collision,
-                        new_inside_points,
-                        new_dist_points,
-                    ) = self.collision_jitter(
-                        p,
-                        jitter_rot,
-                        level,
-                        env.masterGridPositions,
-                        distance,
-                        env,
-                        dpad,
-                    )
-                    insidePoints = self.merge_place_results(
-                        new_inside_points, insidePoints
-                    )
-                    newDistPoints = self.merge_place_results(
-                        new_dist_points, newDistPoints
-                    )
-
-                    collision_results.extend([periodic_collision])
-                    if env.runTimeDisplay and moving is not None:
-                        box = self.vi.getObject("collBox")
-                        self.vi.changeObjColorMat(
-                            box,
-                            [0.5, 0, 0] if True in collision_results else [0, 0.5, 0],
-                        )
-                        self.update_display_rt(moving, p, jitter_rot)
-            else:
-                collision_results = [False]
-            self.log.info("check collision ")
-            closeS = self.checkPointSurface(
-                packing_location, cutoff=self.cutoff_surface
-            )
-            if not (True in collision_results) and not closeS:
-                collision, new_inside_points, new_dist_points = self.collision_jitter(
-                    packing_location,
+            for pt in points_to_check:
+                (
+                    collision,
+                    new_inside_points,
+                    new_dist_points,
+                ) = self.collision_jitter(
+                    pt,
                     jitter_rot,
                     level,
                     env.masterGridPositions,
@@ -3423,37 +3391,40 @@ class Ingredient(Agent):
                     env,
                     dpad,
                 )
+                collision_results.extend([collision])
+                if is_realtime:
+                    box = self.vi.getObject("collBox")
+                    self.vi.changeObjColorMat(
+                        box,
+                        [0.5, 0, 0] if True in collision_results else [0, 0.5, 0],
+                    )
+                    self.update_display_rt(moving, pt, jitter_rot)
+                if collision:
+                    # found a collision, break this loop
+                    break
+                else:
+                    insidePoints = self.merge_place_results(
+                        new_inside_points, insidePoints
+                    )
+                    newDistPoints = self.merge_place_results(
+                        new_dist_points, newDistPoints
+                    )
 
-                # merge with the already found periodic collision points
-                insidePoints = self.merge_place_results(new_inside_points, insidePoints)
-                newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
-            self.log.info("collision_jitter %r", collision)
-            if env.runTimeDisplay and moving is not None:
+            if is_realtime:
                 box = self.vi.getObject("collBox")
                 self.vi.changeObjColorMat(box, [1, 0, 0] if collision else [0, 1, 0])
-            if not collision:
+            if True not in collision_results:
                 self.log.info(
                     "no collision, new points %d, %d",
                     len(insidePoints),
                     len(newDistPoints),
                 )
-                break  # break out of jitter pos loop
+                return True, packing_location, jitter_rot, insidePoints, newDistPoints
+            # NOTE: if you want a faster method, break on the else statement here.
+            # Ie, any collision will fail this grid point position, even if another
+            # jitter attempt would have found a packing location
 
-        self.log.info(
-            "end jitter loop time=%d, collision=%r, num inside points=%d, num dist points=%d",
-            time() - t1,
-            collision,
-            len(insidePoints),
-            len(newDistPoints),
-        )
-        if not collision and not (True in collision_results):
-            success = True
-        else:
-            # got rejected
-            success = False
-
-
-        return success, packing_location, jitter_rot, insidePoints, newDistPoints
+        return False, packing_location, jitter_rot, {}, {}
 
     def lookForNeighbours(
         self, trans, rotMat, organelle, afvi, distance, closest_indice=None
