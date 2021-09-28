@@ -1,5 +1,5 @@
 
-from cellpack.autopack.Ingredient import Ingredient
+from .Ingredient import Ingredient
 import cellpack.autopack as autopack
 helper = autopack.helper
 

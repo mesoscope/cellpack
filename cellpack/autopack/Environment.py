@@ -52,6 +52,7 @@ from random import random, uniform, seed
 from scipy import spatial
 import numpy
 import pickle
+import math
 from math import pi
 import json
 from json import encoder
@@ -79,9 +80,13 @@ from .Recipe import Recipe
 from .Ingredient.grow import GrowIngredient, ActinIngredient
 from .ray import vlen, vdiff
 from cellpack.autopack import IOutils
+from .octree import Octree
 from .Gradient import Gradient
-from cellpack.autopack.transformation import euler_from_matrix
-
+from .transformation import euler_from_matrix
+from .Ingredient.multi_sphere import MultiSphereIngr
+from .Ingredient.multi_cylinder import MultiCylindersIngr
+from .Ingredient.single_sphere import SingleSphereIngr
+from .Ingredient.single_cube import SingleCubeIngr
 # backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
 
@@ -671,13 +676,6 @@ class Environment(CompartmentList):
         """
         Helper function to make an ingredient, pass all arguments as keywords.
         """
-        from autopack.Ingredient import (
-            SingleSphereIngr,
-            MultiSphereIngr,
-            SingleCubeIngr,
-        )
-        from autopack.Ingredient import MultiCylindersIngr, GrowIngredient
-
         ingr = None
 
         if kw["Type"] == "SingleSphere":
@@ -872,7 +870,6 @@ class Environment(CompartmentList):
                     if hasattr(self, "afviewer"):
                         mat = rot.copy()
                         mat[:3, 3] = pos
-                        import math
 
                         # r = R.from_matrix(mat).as_euler("xyz", degrees=False)
                         r = euler_from_matrix(mat, "rxyz")
@@ -1013,15 +1010,13 @@ class Environment(CompartmentList):
             )
 
     def saveNewRecipe(self, filename):
-        from autopack.IOutils import serializedRecipe, saveResultBinary
-
-        djson, all_pos, all_rot = serializedRecipe(
+        djson, all_pos, all_rot = IOutils.serializedRecipe(
             self, False, True
         )  # transpose, use_quaternion, result=False, lefthand=False
         with open(filename + "_serialized.json", "w") as f:
             f.write(djson)
-        saveResultBinary(self, filename + "_serialized.bin", False, True, lefthand=True)
-        saveResultBinary(
+        IOutils.saveResultBinary(self, filename + "_serialized.bin", False, True, lefthand=True)
+        IOutils.saveResultBinary(
             self, filename + "_serialized_tr.bin", True, True, lefthand=True
         )  # transpose, quaternio, left hand
 
@@ -1312,9 +1307,6 @@ class Environment(CompartmentList):
         """
         Read and setup the grid from the given filename. (pickle)
         """
-        #        from bhtree import bhtreelib
-        from scipy import spatial
-
         aInteriorGrids = []
         aSurfaceGrids = []
         f = open(gridFileName, "rb")
@@ -2993,7 +2985,6 @@ class Environment(CompartmentList):
                     ingr.results.append([pos, rot])
 
     def load_asJson(self, resultfilename=None):
-        #        from upy.hostHelper import Helper as helper
         if resultfilename is None:
             resultfilename = self.resultfile
         with open(resultfilename, "r") as fp:  # doesnt work with symbol link ?
@@ -3404,12 +3395,6 @@ class Environment(CompartmentList):
         self,
     ):
         if self.octree is None:
-            #            from autopack.octree import Octree
-            from autopack import octree_exteneded as octree
-            from autopack import Octree
-
-            octree.MINIMUM_SIZE = self.smallestProteinSize
-            octree.MAX_OBJECTS_PER_NODE = 10
             self.octree = Octree(
                 self.grid.getRadius(), helper=helper
             )  # Octree((0,0,0),self.grid.getRadius())   #0,0,0 or center of grid?

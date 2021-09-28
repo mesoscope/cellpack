@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from cellpack.autopack.Ingredient import rotVectToVect
 import numpy
 from scipy import spatial
 from numpy import matrix
@@ -12,6 +11,7 @@ import math
 
 from cellpack.autopack.transformation import angle_between_vectors
 from cellpack.autopack.ldSequence import SphereHalton
+from .utils import rotVectToVect
 
 import cellpack.autopack as autopack
 
