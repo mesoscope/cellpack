@@ -77,16 +77,13 @@ from cellpack.mgl_tools.bhtree import bhtreelib
 import cellpack.autopack as autopack
 from .Compartment import CompartmentList
 from .Recipe import Recipe
-from .Ingredient.grow import GrowIngredient, ActinIngredient
+from .ingredient import GrowIngredient, ActinIngredient
 from .ray import vlen, vdiff
 from cellpack.autopack import IOutils
 from .octree import Octree
 from .Gradient import Gradient
 from .transformation import euler_from_matrix
-from .Ingredient.multi_sphere import MultiSphereIngr
-from .Ingredient.multi_cylinder import MultiCylindersIngr
-from .Ingredient.single_sphere import SingleSphereIngr
-from .Ingredient.single_cube import SingleCubeIngr
+from .ingredient import MultiSphereIngr, MultiCylindersIngr, SingleSphereIngr, SingleCubeIngr
 # backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
 
@@ -2593,8 +2590,6 @@ class Environment(CompartmentList):
             success, insidePoints, newDistPoints = ingr.attempt_to_pack_at_grid_location(
                 self,
                 ptInd,
-                freePoints,
-                nbFreePoints,
                 distances,
                 dpad,
                 usePP,

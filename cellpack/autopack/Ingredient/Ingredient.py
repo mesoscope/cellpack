@@ -44,7 +44,6 @@
 
 # TODO: Describe Ingredient class here at high level
 import os
-
 from scipy import spatial
 
 import numpy
@@ -59,10 +58,17 @@ from time import time
 import math
 
 from cellpack.mgl_tools.RAPID import RAPIDlib
+
 # RAPID require a uniq mesh. not an empty or an instance
 # need to combine the vertices and the build the rapid model
 
-from .Ingredient.utils import ApplyMatrix, getNormedVectorOnes, rapid_checkCollision_rmp, rotVectToVect, rotax
+from .utils import (
+    ApplyMatrix,
+    getNormedVectorOnes,
+    rapid_checkCollision_rmp,
+    rotVectToVect,
+    rotax,
+)
 
 import cellpack.autopack as autopack
 
@@ -1161,8 +1167,8 @@ class Ingredient(Agent):
                     self.minRadius = rM
                     self.encapsulatingRadius = rM
             # if radii is not None and positions is not None:
-                # for r, c in zip(radii, positions):
-                #     assert len(r) == len(c)
+            # for r, c in zip(radii, positions):
+            #     assert len(r) == len(c)
 
             if radii is not None:
                 self.maxLevel = len(radii) - 1
@@ -1953,8 +1959,10 @@ class Ingredient(Agent):
     def compareCompartmentPrimitive(
         self, level, jtrans, rotMatj, gridPointsCoords, distance
     ):
-        collisionComp = self.collides_with_compartment(jtrans, rotMatj, level, gridPointsCoords, distance, self.env)
-        
+        collisionComp = self.collides_with_compartment(
+            jtrans, rotMatj, level, gridPointsCoords, distance, self.env
+        )
+
         return collisionComp
 
     def checkCompartmentAlternative(self, ptsId, histoVol, nbs=None):
@@ -2256,6 +2264,16 @@ class Ingredient(Agent):
         rotMatj = self.randomize_rotation(rotMat, env)
         return jtrans, rotMatj
 
+    def get_new_jitter_location_and_rotation(
+        self, env, starting_pos, starting_rotation
+    ):
+        if self.packingMode[-4:] == "tile":
+            packing_location = starting_pos
+            packing_rotation = starting_rotation[:]
+            return packing_location, packing_rotation
+
+        return self.oneJitter(env, starting_pos, starting_rotation)
+
     def getInsidePoints(
         self,
         grid,
@@ -2267,14 +2285,7 @@ class Ingredient(Agent):
         rotMatj=None,
     ):
         return self.get_new_distance_values(
-            grid,
-            gridPointsCoords,
-            dpad,
-            distance,
-            centT,
-            jtrans,
-            rotMatj,
-            dpad
+            grid, gridPointsCoords, dpad, distance, centT, jtrans, rotMatj, dpad
         )
 
     def getIngredientsInBox(self, histoVol, jtrans, rotMat, compartment, afvi):
@@ -2867,14 +2878,19 @@ class Ingredient(Agent):
     ):
         self.nbPts = self.nbPts + len(new_inside_points)
         # self.update_distances(new_inside_points, new_dist_values)
-        compartment.molecules.append([dropped_position, dropped_rotation, self, grid_point_index])
+        compartment.molecules.append(
+            [dropped_position, dropped_rotation, self, grid_point_index]
+        )
         env.order[grid_point_index] = env.lastrank
         env.lastrank += 1
         env.nb_ingredient += 1
 
         if self.packingMode[-4:] == "tile":
             nexthexa = self.tilling.dropTile(
-                self.tilling.idc, self.tilling.edge_id, dropped_position, dropped_rotation
+                self.tilling.idc,
+                self.tilling.edge_id,
+                dropped_position,
+                dropped_rotation,
             )
             self.log.info("drop next hexa %s", nexthexa.name)
         # add one to molecule counter for this ingredient
@@ -2883,7 +2899,7 @@ class Ingredient(Agent):
         self.rejectionCounter = 0
         self.update_data_tree(dropped_position, dropped_rotation, grid_point_index)
 
-    def attempt_to_pack_at_grid_location(self, env, ptInd, freePoints, nbFreePoints, distance, dpad, usePP):
+    def attempt_to_pack_at_grid_location(self, env, ptInd, distance, dpad, usePP):
         insidePoints = {}
         newDistPoints = {}
         success = False
@@ -2899,24 +2915,58 @@ class Ingredient(Agent):
         compartment = self.get_compartment(env)
         gridPointsCoords = env.masterGridPositions
         rotation_matrix = self.get_rotation(ptInd, env, compartment)
-        target_grid_point_position = gridPointsCoords[ptInd]  # drop point, surface points.
+        target_grid_point_position = gridPointsCoords[
+            ptInd
+        ]  # drop point, surface points.
         if numpy.sum(self.offset) != 0.0:
-            target_grid_point_position = numpy.array(target_grid_point_position) + ApplyMatrix([self.offset], rotation_matrix)[0]
-        target_grid_point_position = gridPointsCoords[ptInd]  # drop point, surface points.
+            target_grid_point_position = (
+                numpy.array(target_grid_point_position)
+                + ApplyMatrix([self.offset], rotation_matrix)[0]
+            )
+        target_grid_point_position = gridPointsCoords[
+            ptInd
+        ]  # drop point, surface points.
+
         moving = None
         if env.runTimeDisplay and self.mesh:
             moving = self.handle_real_time_visualization(
                 env.afviewer, ptInd, target_grid_point_position, rotation_matrix
             )
         is_realtime = moving is not None
+
+        # NOTE: move the target point for close partner check.
+        # I think this should be done ealier, when we're getting the point indice
+        if env.ingrLookForNeighbours and self.packingMode == "closePartner":
+            target_grid_point_position, rotation_matrix = self.close_partner_check(
+                target_grid_point_position,
+                rotation_matrix,
+                compartment,
+                env.afviewer,
+                distance,
+                moving,
+            )
+
         # grow doesnt use panda.......but could use all the geom produce by the grow as rb
         if self.placeType == "jitter" or self.Type == "Grow" or self.Type == "Actine":
             success, jtrans, rotMatj, insidePoints, newDistPoints = self.jitter_place(
-                env, compartment, target_grid_point_position, rotation_matrix, moving, distance, dpad, env.afviewer
+                env,
+                compartment,
+                target_grid_point_position,
+                rotation_matrix,
+                moving,
+                distance,
+                dpad,
+                env.afviewer,
             )
 
         elif self.placeType == "spheresBHT":
-            success, jtrans, rotMatj, insidePoints, newDistPoints = self.pandaBullet_placeBHT(
+            (
+                success,
+                jtrans,
+                rotMatj,
+                insidePoints,
+                newDistPoints,
+            ) = self.pandaBullet_placeBHT(
                 env,
                 compartment,
                 ptInd,
@@ -2927,7 +2977,13 @@ class Ingredient(Agent):
                 dpad,
             )
         elif self.placeType == "pandaBullet":
-            success, jtrans, rotMatj, insidePoints, newDistPoints = self.pandaBullet_place(                    
+            (
+                success,
+                jtrans,
+                rotMatj,
+                insidePoints,
+                newDistPoints,
+            ) = self.pandaBullet_place(
                 env,
                 ptInd,
                 distance,
@@ -2944,7 +3000,13 @@ class Ingredient(Agent):
             self.placeType == "pandaBulletRelax"
             or self.placeType == "pandaBulletSpring"
         ):
-            success, jtrans, rotMatj, insidePoints, newDistPoints = self.pandaBullet_relax(
+            (
+                success,
+                jtrans,
+                rotMatj,
+                insidePoints,
+                newDistPoints,
+            ) = self.pandaBullet_relax(
                 env,
                 ptInd,
                 compartment,
@@ -2956,7 +3018,7 @@ class Ingredient(Agent):
                 dpad,
             )
         elif self.placeType == "RAPID":
-            success, jtrans, rotMatj, insidePoints, newDistPoints = self.rapid_place(                
+            success, jtrans, rotMatj, insidePoints, newDistPoints = self.rapid_place(
                 env,
                 ptInd,
                 distance,
@@ -2974,7 +3036,9 @@ class Ingredient(Agent):
             self.reject()
             return False, {}, {}
         if success:
-            self.place(env, compartment, jtrans, rotMatj, ptInd, insidePoints, newDistPoints)
+            self.place(
+                env, compartment, jtrans, rotMatj, ptInd, insidePoints, newDistPoints
+            )
         else:
             if is_realtime:
                 self.remove_from_realtime_display(moving)
@@ -3086,7 +3150,7 @@ class Ingredient(Agent):
         nbFreePoints,
         distance,
         dpad,
-        moving
+        moving,
     ):
         """
         drop the ingredient on grid point ptInd
@@ -3098,7 +3162,9 @@ class Ingredient(Agent):
         springOptions = histoVol.springOptions
         is_realtime = moving is not None
 
-        jtrans, rotMatj = self.oneJitter(histoVol, target_grid_point_position, rotation_matrix)
+        jtrans, rotMatj = self.oneJitter(
+            histoVol, target_grid_point_position, rotation_matrix
+        )
 
         # here should go the simulation
         # 1- we build the ingredient if not already and place the ingredient at jtrans, rotMatj
@@ -3219,7 +3285,7 @@ class Ingredient(Agent):
             centT,
             jtrans,
             rotMatj,
-            dpad
+            dpad,
         )
 
         # save dropped ingredient
@@ -3257,18 +3323,26 @@ class Ingredient(Agent):
                         accum_results[pt] = new_results[pt]
                 else:
                     accum_results[pt] = min(accum_results[pt], new_results[pt])
-                    
+
         return accum_results
 
     def get_all_positions_to_check(self, packing_location):
+        """Takes a starting position in the packing space, and returns all the points that
+        need to be tested for a collision as an array.
+
+            If the point isn't close to an edge, will return just the staring point.
+            If the point is close to the side of the bounding box, will return an array of 2.
+            If the point is close to an edge of the bb (which is a "corner" in 2D), will return an array of 3.
+            If the point is close to a corner in 3D will return an array of 8.
+        """
         points_to_check = [packing_location]
         # periodicity check
-        periodic_pos = self.env.grid.getPositionPeridocity(
-            packing_location,
-            getNormedVectorOnes(self.jitterMax),
-            self.encapsulatingRadius,
-        )
         if self.packingMode != "graident":
+            periodic_pos = self.env.grid.getPositionPeridocity(
+                packing_location,
+                getNormedVectorOnes(self.jitterMax),
+                self.encapsulatingRadius,
+            )
             points_to_check.extend(periodic_pos)
         return points_to_check
 
@@ -3282,55 +3356,36 @@ class Ingredient(Agent):
         distance,
         dpad,
         afvi,
-        drop=True,
     ):
         """
         Check if the given grid point is available for packing using the jitter collision detection
-        method. Returns packing location and new grid point values if packing is successful. 
+        method. Returns packing location and new grid point values if packing is successful.
         """
-        if numpy.sum(self.offset) != 0.0:
-            # the geometry has an offset, ie surface protein, and the origin isn't centered
-            # NOTE: Possible to remove here and apply at point of visualization
-            targeted_master_grid_point = (
-                numpy.array(targeted_master_grid_point)
-                + ApplyMatrix([self.offset], rot_mat)[0]
-            )
-            self.log.info("use offset %r", self.offset)
 
         packing_location = None
         is_realtime = moving is not None
         level = self.collisionLevel
-   
+
         # jitter loop
         insidePoints = {}
         newDistPoints = {}
 
         for attempt_number in range(self.nbJitter):
-            if env.ingrLookForNeighbours and self.packingMode == "closePartner":
-                targeted_master_grid_point, rot_mat = self.close_partner_check(
-                    targeted_master_grid_point,
-                    rot_mat,
-                    compartment,
-                    afvi,
-                    distance,
-                    env.runTimeDisplay,
-                    moving,
-                )
-            env.totnbJitter += 1
-            packing_location = self.randomize_translation(
+            (
+                packing_location,
+                packing_rotation,
+            ) = self.get_new_jitter_location_and_rotation(
                 env, targeted_master_grid_point, rot_mat
             )
-            jitter_rot = self.randomize_rotation(rot_mat, env)
-
             if is_realtime:
-                self.update_display_rt(moving, packing_location, jitter_rot)
+                self.update_display_rt(moving, packing_location, packing_rotation)
                 self.vi.update()
-            
+
             if self.point_is_not_available(packing_location):
                 # jittered out of container or too close to boundary
                 # check next random jitter
                 continue
-            
+
             collision_results = []
             points_to_check = self.get_all_positions_to_check(packing_location)
 
@@ -3341,7 +3396,7 @@ class Ingredient(Agent):
                     new_dist_points,
                 ) = self.collision_jitter(
                     pt,
-                    jitter_rot,
+                    packing_rotation,
                     level,
                     env.masterGridPositions,
                     distance,
@@ -3355,7 +3410,7 @@ class Ingredient(Agent):
                         box,
                         [0.5, 0, 0] if True in collision_results else [0, 0.5, 0],
                     )
-                    self.update_display_rt(moving, pt, jitter_rot)
+                    self.update_display_rt(moving, pt, packing_rotation)
                 if collision:
                     # found a collision, break this loop
                     break
@@ -3376,13 +3431,17 @@ class Ingredient(Agent):
                     len(insidePoints),
                     len(newDistPoints),
                 )
-                return True, packing_location, jitter_rot, insidePoints, newDistPoints
+                return (
+                    True,
+                    packing_location,
+                    packing_rotation,
+                    insidePoints,
+                    newDistPoints,
+                )
 
-        return False, packing_location, jitter_rot, {}, {}
+        return False, packing_location, packing_rotation, {}, {}
 
-    def lookForNeighbours(
-        self, trans, rotMat, organelle, afvi, distance, closest_indice=None
-    ):
+    def lookForNeighbours(self, trans, rotMat, organelle, afvi, closest_indice=None):
         mingrs, listePartner = self.getListePartners(
             self.env, trans, rotMat, organelle, afvi, close_indice=closest_indice
         )
@@ -3459,9 +3518,7 @@ class Ingredient(Agent):
         else:
             return env.compartments[abs(self.compNum) - 1]
 
-    def close_partner_check(
-        self, translation, rotation, compartment, afvi, distance, runTimeDisplay, moving
-    ):
+    def close_partner_check(self, translation, rotation, compartment, afvi, moving):
         bind = True
         self.log.info("look for ingredient %r", translation)
         # roll a dice about proba_not_binding
@@ -3473,13 +3530,11 @@ class Ingredient(Agent):
             closesbody_indice = self.getClosestIngredient(
                 translation, self.env, cutoff=self.env.grid.diag
             )  # vself.radii[0][0]*2.0
-            # return R[indice] and distance R["distances"]
             target_point, rot_matrix, found = self.lookForNeighbours(
                 translation,
                 rotation,
                 compartment,
                 afvi,
-                distance,
                 closest_indice=closesbody_indice,
             )
             if not found and self.counter != 0:
@@ -3487,7 +3542,7 @@ class Ingredient(Agent):
                 return translation, rotation
 
             # if partner:pickNewPoit like in fill3
-            if runTimeDisplay and self.mesh:
+            if moving is not None:
                 self.update_display_rt(moving, target_point, rot_matrix)
             return target_point, rot_matrix
 
@@ -3561,24 +3616,15 @@ class Ingredient(Agent):
         for jitter_attempt in range(self.nbJitter):
             histoVol.totnbJitter += 1
 
-            if histoVol.ingrLookForNeighbours and self.packingMode == "closePartner":
-                target_point, rot_matrix = self.close_partner_check(
-                    target_point,
-                    rot_matrix,
-                    compartment,
-                    afvi,
-                    distance,
-                    histoVol.runTimeDisplay,
-                    moving,
-                )
-            packing_location = self.randomize_translation(
-                histoVol, target_point, rot_matrix
+            (
+                packing_location,
+                packing_rotation,
+            ) = self.get_new_jitter_location_and_rotation(
+                histoVol,
+                target_point,
+                rot_matrix,
             )
-            packing_rotation = self.randomize_rotation(rot_matrix, histoVol)
-            if self.packingMode[-4:] == "tile":
-                packing_location = target_point
-                packing_rotation = rot_matrix[:]  # self.tilling.getNextHexaPosRot()
-            
+
             if is_realtime:
                 self.update_display_rt(moving, target_point, rot_matrix)
 
@@ -3590,7 +3636,9 @@ class Ingredient(Agent):
             collision_results = []
             rbnode = self.get_rb_model()
 
-            points_to_check = self.get_all_positions_to_check(packing_location)  # includes periodic points, if appropriate
+            points_to_check = self.get_all_positions_to_check(
+                packing_location
+            )  # includes periodic points, if appropriate
             for pt in points_to_check:
                 histoVol.callFunction(
                     histoVol.moveRBnode,
@@ -3616,10 +3664,14 @@ class Ingredient(Agent):
             if self.compareCompartment:
 
                 collisionComp = self.compareCompartmentPrimitive(
-                    level, packing_location, packing_rotation, gridPointsCoords, distance
+                    level,
+                    packing_location,
+                    packing_rotation,
+                    gridPointsCoords,
+                    distance,
                 )
                 collision_results.extend([collisionComp])
-            
+
             # got all the way through the checks with no collision
             if True not in collision_results:
                 insidePoints = {}
@@ -3637,10 +3689,19 @@ class Ingredient(Agent):
                     self.env.result.append([pt, packing_rotation, self, ptInd])
 
                     new_inside_pts, new_dist_points = self.get_new_distance_values(
-                        pt, packing_rotation, gridPointsCoords, distance, dpad, self.maxLevel
+                        pt,
+                        packing_rotation,
+                        gridPointsCoords,
+                        distance,
+                        dpad,
+                        self.maxLevel,
                     )
-                    insidePoints = self.merge_place_results(new_inside_pts, insidePoints)
-                    newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
+                    insidePoints = self.merge_place_results(
+                        new_inside_pts, insidePoints
+                    )
+                    newDistPoints = self.merge_place_results(
+                        new_dist_points, newDistPoints
+                    )
                 self.log.info("compute distance loop %d", time() - t3)
                 if self.env.treemode == "bhtree":  # "cKDTree"
                     if len(self.env.rTrans) >= 1:
@@ -3655,14 +3716,22 @@ class Ingredient(Agent):
                         self.env.close_ingr_bhtree = spatial.cKDTree(
                             self.env.rTrans, leafsize=10
                         )
-       
                 if self.packingMode[-4:] == "tile":
                     self.tilling.dropTile(
-                        self.tilling.idc, self.tilling.edge_id, packing_location, packing_rotation
+                        self.tilling.idc,
+                        self.tilling.edge_id,
+                        packing_location,
+                        packing_rotation,
                     )
 
                 success = True
-                return success, packing_location, packing_rotation, insidePoints, newDistPoints
+                return (
+                    success,
+                    packing_location,
+                    packing_rotation,
+                    insidePoints,
+                    newDistPoints,
+                )
 
         # never found a place to pack
         success = False
@@ -3687,16 +3756,13 @@ class Ingredient(Agent):
         drop the ingredient on grid point ptInd
         """
         histoVol.setupPanda()
-        afvi = histoVol.afviewer
         is_realtime = moving is not None
         insidePoints = {}
         newDistPoints = {}
         gridPointsCoords = histoVol.masterGridPositions
 
         targetPoint = target_grid_point_position
-        if numpy.sum(self.offset) != 0.0:
-            targetPoint = numpy.array(target_grid_point_position) + ApplyMatrix([self.offset], rotation_matrix)[0]
-        moving = None
+
         if is_realtime:
             self.update_display_rt(moving, targetPoint, rotation_matrix)
 
@@ -3713,14 +3779,13 @@ class Ingredient(Agent):
                 # pick the next Hexa pos/rot.
                 t, collision_results = self.tilling.getNextHexaPosRot()
                 if len(t):
-                    trans = t
                     rotation_matrix = collision_results
-                    targetPoint = trans
+                    targetPoint = t
                     if is_realtime:
                         self.update_display_rt(moving, targetPoint, rotation_matrix)
                 else:
 
-                    return False, None, None, {}, {}  
+                    return False, None, None, {}, {}
             else:
                 self.tilling.init_seed(histoVol.seed_used)
         # we may increase the jitter, or pick from xyz->Id free for its radius
@@ -3732,26 +3797,14 @@ class Ingredient(Agent):
         for jitterPos in range(self.nbJitter):
             histoVol.totnbJitter += 1
 
-            if histoVol.ingrLookForNeighbours and self.packingMode == "closePartner":
-                targetPoint, rotMat = self.close_partner_check(
-                    targetPoint,
-                    rotation_matrix,
-                    compartment,
-                    afvi,
-                    distance,
-                    histoVol.runTimeDisplay,
-                    moving,
-                )
-
-            # jitter points location
-            packing_location = self.randomize_translation(
-                histoVol, targetPoint, rotation_matrix
+            (
+                packing_location,
+                packing_rotation,
+            ) = self.get_new_jitter_location_and_rotation(
+                histoVol,
+                targetPoint,
+                rotation_matrix,
             )
-            packing_rotation = self.randomize_rotation(rotation_matrix, histoVol)
-
-            if self.packingMode[-4:] == "tile":
-                packing_location = targetPoint
-                packing_rotation = rotMat[:]  # self.tilling.getNextHexaPosRot()
             if is_realtime:
                 self.update_display_rt(moving, packing_location, packing_rotation)
 
@@ -3766,7 +3819,9 @@ class Ingredient(Agent):
                 if numpy.array_equal(numpy.array(pt), numpy.array(packing_location)):
                     # don't need to check point against itself
                     continue
-                col = self.bht_check_pair(self, pt, packing_rotation, self, packing_location, packing_rotation)
+                col = self.bht_check_pair(
+                    self, pt, packing_rotation, self, packing_location, packing_rotation
+                )
                 collision_results.extend([col])
                 if is_realtime:
                     self.update_display_rt(moving, packing_location, packing_rotation)
@@ -3782,7 +3837,11 @@ class Ingredient(Agent):
             self.log.info("no collision")
             if self.compareCompartment:
                 collision = self.compareCompartmentPrimitive(
-                    level, packing_location, packing_rotation, gridPointsCoords, distance
+                    level,
+                    packing_location,
+                    packing_rotation,
+                    gridPointsCoords,
+                    distance,
                 )
                 collision_results.extend([collision])
             if True not in collision_results:
@@ -3796,10 +3855,19 @@ class Ingredient(Agent):
                     self.env.rIngr.append(self)
                     self.env.result.append([pt, packing_rotation, self, ptInd])
                     new_inside_pts, new_dist_points = self.get_new_distance_values(
-                        pt, packing_rotation, gridPointsCoords, distance, dpad, self.maxLevel
+                        pt,
+                        packing_rotation,
+                        gridPointsCoords,
+                        distance,
+                        dpad,
+                        self.maxLevel,
                     )
-                    insidePoints = self.merge_place_results(new_inside_pts, insidePoints)
-                    newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
+                    insidePoints = self.merge_place_results(
+                        new_inside_pts, insidePoints
+                    )
+                    newDistPoints = self.merge_place_results(
+                        new_dist_points, newDistPoints
+                    )
                 if self.env.treemode == "bhtree":  # "cKDTree"
                     # if len(self.env.rTrans) >= 1 : bhtreelib.freeBHtree(self.env.close_ingr_bhtree)
                     if len(self.env.rTrans):
@@ -3817,7 +3885,13 @@ class Ingredient(Agent):
                         )
 
                 success = True
-                return success, packing_location, packing_rotation, insidePoints, newDistPoints
+                return (
+                    success,
+                    packing_location,
+                    packing_rotation,
+                    insidePoints,
+                    newDistPoints,
+                )
 
         success = False
         return success, packing_location, packing_rotation, insidePoints, newDistPoints
@@ -3846,30 +3920,18 @@ class Ingredient(Agent):
         insidePoints = {}
         newDistPoints = {}
         is_realtime = moving is not None
-        if env.ingrLookForNeighbours and self.packingMode == "closePartner":
-            target_point, rot_matrix = self.close_partner_check(
-                target_point,
-                rot_matrix,
-                compartment,
-                afvi,
-                distance,
-                env.runTimeDisplay,
-                moving,
-            )
 
-        for packing_attempt in range(
-            self.nbJitter
-        ):
+        for packing_attempt in range(self.nbJitter):
             env.totnbJitter += 1
             collision_results = []
-            # jitter points location
-            packing_location = self.randomize_translation(
-                env, target_point, rot_matrix
+            (
+                packing_location,
+                packing_rotation,
+            ) = self.get_new_jitter_location_and_rotation(
+                env,
+                target_point,
+                rot_matrix,
             )
-
-            # randomize rotation about axis
-            rotMatj = self.randomize_rotation(rot_matrix, env)
-
             # loop over all spheres representing ingredient
             if sphGeom is not None:
                 modCent = []
@@ -3879,13 +3941,13 @@ class Ingredient(Agent):
             level = self.collisionLevel
 
             if is_realtime:
-                self.update_display_rt(moving, packing_location, rotMatj)
+                self.update_display_rt(moving, packing_location, packing_rotation)
 
             pts_to_check = self.get_all_positions_to_check(packing_location)
-         
+
             for pt in pts_to_check:
                 collision, liste_nodes = self.collision_rapid(
-                    pt, rotMatj, usePP=usePP
+                    pt, packing_rotation, usePP=usePP
                 )
                 collision_results.extend([collision])
                 if True in collision_results:
@@ -3895,11 +3957,11 @@ class Ingredient(Agent):
                     continue
                 rbnode = self.get_rapid_model()
                 RAPIDlib.RAPID_Collide_scaled(
-                    numpy.array(rotMatj[:3, :3], "f"),
+                    numpy.array(packing_rotation[:3, :3], "f"),
                     numpy.array(pt, "f"),
                     1.0,
                     rbnode,
-                    numpy.array(rotMatj[:3, :3], "f"),
+                    numpy.array(packing_rotation[:3, :3], "f"),
                     numpy.array(packing_location, "f"),
                     1.0,
                     rbnode,
@@ -3908,7 +3970,7 @@ class Ingredient(Agent):
                 col = RAPIDlib.cvar.RAPID_num_contacts != 0
                 collision_results.extend([col])  # = True in perdiodic_collision
                 if env.runTimeDisplay and moving is not None:
-                    self.update_display_rt(moving, packing_location, rotMatj)
+                    self.update_display_rt(moving, packing_location, packing_rotation)
 
                 if True in collision_results:
                     break
@@ -3918,19 +3980,35 @@ class Ingredient(Agent):
 
             # need to check compartment too
             if self.compareCompartment:
-                collision = self.collides_with_compartment(packing_location, rotMatj, level, gridPointsCoords, distance, env)
+                collision = self.collides_with_compartment(
+                    packing_location,
+                    packing_rotation,
+                    level,
+                    gridPointsCoords,
+                    distance,
+                    env,
+                )
                 collision_results.extend([collision])
-            
+
             if True not in collision_results:
                 # update_data_tree
-                self.update_data_tree(packing_location, rotMatj, ptInd=ptInd)
+                self.update_data_tree(packing_location, packing_rotation, ptInd=ptInd)
                 t3 = time()
                 for pt in pts_to_check:
                     new_inside_pts, new_dist_points = self.get_new_distance_values(
-                        pt, rotMatj, gridPointsCoords, distance, dpad, self.maxLevel
+                        pt,
+                        packing_rotation,
+                        gridPointsCoords,
+                        distance,
+                        dpad,
+                        self.maxLevel,
                     )
-                    insidePoints = self.merge_place_results(new_inside_pts, insidePoints)
-                    newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
+                    insidePoints = self.merge_place_results(
+                        new_inside_pts, insidePoints
+                    )
+                    newDistPoints = self.merge_place_results(
+                        new_dist_points, newDistPoints
+                    )
 
                 self.log.info("compute distance loop %d", time() - t3)
 
@@ -3941,7 +4019,13 @@ class Ingredient(Agent):
                         sphColors.append(self.color)
 
                 success = True
-                return success, packing_location, rotMatj, insidePoints, newDistPoints
+                return (
+                    success,
+                    packing_location,
+                    packing_rotation,
+                    insidePoints,
+                    newDistPoints,
+                )
 
         success = False
 
@@ -3950,7 +4034,7 @@ class Ingredient(Agent):
             sphGeom.viewer.OneRedraw()
             sphGeom.viewer.update()
 
-        return success, packing_location, rotMatj, insidePoints, newDistPoints
+        return success, packing_location, packing_rotation, {}, {}
 
     def collision_rapid(
         self,
@@ -4078,7 +4162,9 @@ class Ingredient(Agent):
         gridPointsCoords = histoVol.grid.masterGridPositions
         insidePoints = {}
         newDistPoints = {}
-        jtrans, rotMatj = self.oneJitter(histoVol, target_grid_point_position, rotation_matrix)
+        jtrans, rotMatj = self.oneJitter(
+            histoVol, target_grid_point_position, rotation_matrix
+        )
         # here should go the simulation
         # 1- we build the ingredient if not already and place the ingredient at jtrans, rotMatj
         targetPoint = jtrans
@@ -4181,8 +4267,9 @@ class Ingredient(Agent):
 
         jtrans = rTrans[:]
         rotMatj = rRot[:]
-     
-        insidePoints, newDistPoints = self.get_new_distance_values(jtrans, rotMatj, gridPointsCoords, distance, dpad)
+        insidePoints, newDistPoints = self.get_new_distance_values(
+            jtrans, rotMatj, gridPointsCoords, distance, dpad
+        )
         self.rRot.append(rotMatj)
         self.tTrans.append(jtrans)
         success = True

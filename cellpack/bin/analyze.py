@@ -35,17 +35,17 @@ class Args(argparse.Namespace):
 
     DEFAULT_DIM = 2
     DEFAULT_ANALYSIS = True
-    DEFAULT_RECIPE_FILE = "cellpack/test-recipes/NM_Analysis_FigureA1.0.xml"
-    DEFAULT_OUTPUT_FILE = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_A2_2/"
-    DEFAULT_PLACE_METHOD = "RAPID"
+    DEFAULT_RECIPE_FILE = "cellpack/test-recipes/NM_Analysis_FigureB1.0.json"
+    DEFAULT_OUTPUT_FOLDER = "/Users/meganriel-mehan/Dropbox/cellPack/"
+    DEFAULT_PLACE_METHODS = ["jitter", "RAPID", "pandaBulletRelax", "pandaBullet", "spheresBHT"]
 
     def __init__(self):
         # Arguments that could be passed in through the command line
         self.dim = self.DEFAULT_DIM
         self.analysis = self.DEFAULT_ANALYSIS
         self.recipe = self.DEFAULT_RECIPE_FILE
-        self.output = self.DEFAULT_OUTPUT_FILE
-        self.place_method = self.DEFAULT_PLACE_METHOD
+        self.output = self.DEFAULT_OUTPUT_FOLDER
+        self.place_methods = self.DEFAULT_PLACE_METHODS
         self.debug = True
         #
         self.__parse()
@@ -78,7 +78,7 @@ class Args(argparse.Namespace):
             dest="output",
             type=str,
             default=self.output,
-            help="Full path for where to store the results file",
+            help="Full path to the folder where to store the results file",
         )
         p.add_argument(
             "-d",
@@ -100,12 +100,12 @@ class Args(argparse.Namespace):
         )
         p.add_argument(
             "-p",
-            "--place-method",
+            "--place-methods",
             action="store",
-            dest="place_method",
-            type=str,
-            default=self.place_method,
-            help="The place method",
+            dest="place_methods",
+            nargs="+",
+            default=self.place_methods,
+            help="The place methods",
         )
         p.add_argument(
             "--debug",
@@ -129,9 +129,8 @@ def main():
         if os.path.isdir(output) is False:
             os.mkdir(output)
         dim = args.dim
-        place_method = args.place_method
         log.info("Recipe : {}\n".format(args.recipe))
-        localdir = wrkDir = autopack.__path__[0]
+        localdir = autopack.__path__[0]
         helperClass = upy.getHelperClass()
         helper = helperClass(vi="nogui")
         log.info("HELPER %r", helper)
@@ -160,42 +159,50 @@ def main():
         env.loopThroughIngr(setCompartment)
 
         if do_analysis:
-            log.info("DOING ANALYSIS %r", do_analysis)
-
-            env.placeMethod = place_method
-            env.encapsulatingGrid = 0
-            analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
-            analyse.g.Resolution = 1.0
-            env.boundingBox = numpy.array(env.boundingBox)
-
-            analyse.doloop(
-                1,
-                env.boundingBox,
-                wrkDir,
-                output,
-                rdf=True,
-                render=False,
-                twod=(dim == 2),
-                use_file=True,
-            )  # ,fbox_bb=fbox_bb)
+            for place_method in args.place_methods:
+                log.info(f"starting {place_method}")
+                env.placeMethod = place_method
+                env.encapsulatingGrid = 0
+                analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
+                analyse.g.Resolution = 1.0
+                env.boundingBox = numpy.array(env.boundingBox)
+                output_folder = os.path.join(args.output, env.name)
+                if os.path.isdir(output_folder) is False:
+                    os.mkdir(output_folder)
+                output = os.path.join(output_folder, place_method)
+                if os.path.isdir(output) is False:
+                    os.mkdir(output)
+                print(output)
+                analyse.doloop(
+                    1,
+                    env.boundingBox,
+                    None,
+                    output,
+                    rdf=True,
+                    render=False,
+                    twod=(dim == 2),
+                    use_file=True,
+                )  # ,fbox_bb=fbox_bb)
         else:
-            gridfile = (
-                localdir
-                + os.sep
-                + "autoFillRecipeScripts/Mycoplasma/results/grid_store"
-            )
-            env.placeMethod = "RAPID"
-            env.saveResult = True
-            env.innerGridMethod = "jordan"  # jordan pure python ? sdf ?
-            env.boundingBox = [[-2482, -2389.0, 100.0], [2495, 2466, 2181.0]]
-            env.buildGrid(
-                boundingBox=env.boundingBox,
-                gridFileIn=gridfile,
-                rebuild=True,
-                gridFileOut=None,
-                previousFill=False,
-            )
-            env.pack_grid(verbose=0, usePP=False)
+            for place_method in args.place_methods:
+
+                gridfile = (
+                    localdir
+                    + os.sep
+                    + "autoFillRecipeScripts/Mycoplasma/results/grid_store"
+                )
+                env.placeMethod = place_method
+                env.saveResult = True
+                env.innerGridMethod = "jordan"  # jordan pure python ? sdf ?
+                env.boundingBox = [[-2482, -2389.0, 100.0], [2495, 2466, 2181.0]]
+                env.buildGrid(
+                    boundingBox=env.boundingBox,
+                    gridFileIn=gridfile,
+                    rebuild=True,
+                    gridFileOut=None,
+                    previousFill=False,
+                )
+                env.pack_grid(verbose=0, usePP=False)
 
     except Exception as e:
         log.error("=============================================")
