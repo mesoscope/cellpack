@@ -62,7 +62,7 @@ from cellpack.mgl_tools.RAPID import RAPIDlib
 # RAPID require a uniq mesh. not an empty or an instance
 # need to combine the vertices and the build the rapid model
 
-from .utils import ApplyMatrix, bullet_checkCollision_mp, getNormedVectorOnes, rapid_checkCollision_rmp, rotVectToVect, rotax
+from .Ingredient.utils import ApplyMatrix, getNormedVectorOnes, rapid_checkCollision_rmp, rotVectToVect, rotax
 
 import cellpack.autopack as autopack
 
