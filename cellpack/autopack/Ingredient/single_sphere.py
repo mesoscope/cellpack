@@ -123,25 +123,11 @@ class SingleSphereIngr(Ingredient):
         centers = self.positions[level]
         radii = self.radii[level],
         centT = self.transformPoints(jtrans, rotMat, centers)  # this should be jtrans
-        #        print "sphCollision",centT,radii
-        #        self.distances_temp=[]
-        #        if self.compareCompartment:
-        #            listeCpmNum=[]
         for radc, posc in zip(radii, centT):
-            #            r=[]
-            x, y, z = posc
-            bb = ([x - radc, y - radc, z - radc], [x + radc, y + radc, z + radc])
-            pointsInCube = histoVol.grid.getPointsInCube(
-                bb, posc, radc, info=True
+            ptsInSphere = histoVol.grid.getPointsInSphere(
+                posc, radc[0]
             )  # indices
-
-            delta = numpy.take(gridPointsCoords, pointsInCube, 0) - posc
-            delta *= delta
-            distA = numpy.sqrt(delta.sum(1))
-            ptsInSphere = numpy.nonzero(numpy.less_equal(distA, radc))[0]
-            ptsInSphereId = numpy.take(pointsInCube, ptsInSphere, 0)
-            compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptsInSphereId, 0)
-            print(len(compIdsSphere), compIdsSphere)
+            compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptsInSphere, 0)
             if self.compNum <= 0:
                 wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
                 if len(wrongPt):
