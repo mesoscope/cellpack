@@ -1,0 +1,37 @@
+cellpack.autopack.upy package
+=============================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   cellpack.autopack.upy.dejavuTk
+
+Submodules
+----------
+
+cellpack.autopack.upy.colors module
+-----------------------------------
+
+.. automodule:: cellpack.autopack.upy.colors
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.upy.hostHelper module
+---------------------------------------
+
+.. automodule:: cellpack.autopack.upy.hostHelper
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.autopack.upy
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,21 @@
+cellpack.autopack.upy.dejavuTk package
+======================================
+
+Submodules
+----------
+
+cellpack.autopack.upy.dejavuTk.dejavuHelper module
+--------------------------------------------------
+
+.. automodule:: cellpack.autopack.upy.dejavuTk.dejavuHelper
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.autopack.upy.dejavuTk
+   :members:
+   :undoc-members:
+   :show-inheritance:

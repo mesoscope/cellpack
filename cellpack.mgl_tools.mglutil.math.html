@@ -1,77 +1,37 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>cellpack.mgl_tools.mglutil.math package &mdash; cellPack 0.1.1 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="cellpack.mgl_tools.mglutil.math.Tests package" href="cellpack.mgl_tools.mglutil.math.Tests.html" />
     <link rel="prev" title="cellpack.mgl_tools.mglutil.gui.Spline package" href="cellpack.mgl_tools.mglutil.gui.Spline.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html" class="icon icon-home"> cellPack
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 0.1.1
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,18 +39,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">Overview</a></li>
@@ -114,6 +63,94 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="recipe-schema.html">Cellpack Recipe Schema 1.0</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#recipe-definition-properties">Recipe definition properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#name">name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#version">version</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="recipe-schema.html#example">example:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#options-properties">Options properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#saveresult">saveResult</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#resultfile">resultfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#enviroonly">EnviroOnly</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#canceldialog">cancelDialog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pickrandpt">pickRandPt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#ingrlookforneighbours">ingrLookForNeighbours</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#overwriteplacemethod">overwritePlaceMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#boundingbox">boundingBox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#smallestproteinsize">smallestProteinSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#largestproteinsize">largestProteinSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#computegridparams">computeGridParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#windowssize">windowsSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#placemethod">placeMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-gradient">use_gradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradients">gradients</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#innergridmethod">innerGridMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#freeptsupdatethreshold">freePtsUpdateThreshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-periodicity">use_periodicity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#timer">_timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#hackfreepts">_hackFreepts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="recipe-schema.html#example-options">example <code class="docutils literal notranslate"><span class="pre">Options</span></code>:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbmol">nbMol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#radii">radii</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions">positions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions2">positions2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#spherefile">sphereFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pdb">pdb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#color">color</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshfile">meshFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshname">meshName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#coordsystem">coordsystem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principalvector">principalVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#offset">offset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jittermax">jitterMax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbjitter">nbJitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#userotaxis">useRotAxis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotaxis">rotAxis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotrange">rotRange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#placetype">placeType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-binding">proba_binding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#weight">weight</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-name">partners_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-position">partners_position</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-weight">partners_weight</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#properties">properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#score">score</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#organism">organism</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#example-ingredient">example ingredient</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
 <li class="toctree-l2"><a class="reference internal" href="contributing.html#deploying">Deploying</a></li>
@@ -121,92 +158,41 @@
 </li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">cellPack</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="modules.html">cellpack</a> &raquo;</li>
-        
           <li><a href="cellpack.html">cellpack package</a> &raquo;</li>
-        
           <li><a href="cellpack.mgl_tools.html">cellpack.mgl_tools package</a> &raquo;</li>
-        
           <li><a href="cellpack.mgl_tools.mglutil.html">cellpack.mgl_tools.mglutil package</a> &raquo;</li>
-        
       <li>cellpack.mgl_tools.mglutil.math package</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/cellpack.mgl_tools.mglutil.math.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
-  </ul>
-
-  
-  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
-      
-        <a href="cellpack.mgl_tools.mglutil.math.Tests.html" class="btn btn-neutral float-right" title="cellpack.mgl_tools.mglutil.math.Tests package" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-      
-      
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
         <a href="cellpack.mgl_tools.mglutil.gui.Spline.html" class="btn btn-neutral float-left" title="cellpack.mgl_tools.mglutil.gui.Spline package" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-      
+        <a href="cellpack.mgl_tools.mglutil.math.Tests.html" class="btn btn-neutral float-right" title="cellpack.mgl_tools.mglutil.math.Tests package" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
   </div>
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="cellpack-mgl-tools-mglutil-math-package">
-<h1>cellpack.mgl_tools.mglutil.math package<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+             
+  <section id="cellpack-mgl-tools-mglutil-math-package">
+<h1>cellpack.mgl_tools.mglutil.math package<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-package" title="Permalink to this headline"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cellpack.mgl_tools.mglutil.math.Tests.html">cellpack.mgl_tools.mglutil.math.Tests package</a><ul>
@@ -219,85 +205,85 @@
 </li>
 </ul>
 </div>
-</div>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-tensormodule-module">
-<h2>cellpack.mgl_tools.mglutil.math.TensorModule module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-tensormodule-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-vectormodule-module">
-<h2>cellpack.mgl_tools.mglutil.math.VectorModule module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-vectormodule-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-crystal-module">
-<h2>cellpack.mgl_tools.mglutil.math.crystal module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-crystal-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-griddescriptor-module">
-<h2>cellpack.mgl_tools.mglutil.math.gridDescriptor module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-griddescriptor-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-kinematics-module">
-<h2>cellpack.mgl_tools.mglutil.math.kinematics module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-kinematics-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-kinematicstest-module">
-<h2>cellpack.mgl_tools.mglutil.math.kinematicstest module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-kinematicstest-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-cellpack.mgl_tools.mglutil.math.kmeansClustering">
-<span id="cellpack-mgl-tools-mglutil-math-kmeansclustering-module"></span><h2>cellpack.mgl_tools.mglutil.math.kmeansClustering module<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.math.kmeansClustering" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-tensormodule-module">
+<h2>cellpack.mgl_tools.mglutil.math.TensorModule module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-tensormodule-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-vectormodule-module">
+<h2>cellpack.mgl_tools.mglutil.math.VectorModule module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-vectormodule-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-crystal-module">
+<h2>cellpack.mgl_tools.mglutil.math.crystal module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-crystal-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-griddescriptor-module">
+<h2>cellpack.mgl_tools.mglutil.math.gridDescriptor module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-griddescriptor-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-kinematics-module">
+<h2>cellpack.mgl_tools.mglutil.math.kinematics module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-kinematics-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-kinematicstest-module">
+<h2>cellpack.mgl_tools.mglutil.math.kinematicstest module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-kinematicstest-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-cellpack.mgl_tools.mglutil.math.kmeansClustering">
+<span id="cellpack-mgl-tools-mglutil-math-kmeansclustering-module"></span><h2>cellpack.mgl_tools.mglutil.math.kmeansClustering module<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.math.kmeansClustering" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.kmeansClustering.</span></span><span class="sig-name descname"><span class="pre">Cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/kmeansClustering.html#Cluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.kmeansClustering.</span></span><span class="sig-name descname"><span class="pre">Cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/kmeansClustering.html#Cluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster.calculateCentroid">
-<span class="sig-name descname"><span class="pre">calculateCentroid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/kmeansClustering.html#Cluster.calculateCentroid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster.calculateCentroid" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">calculateCentroid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/kmeansClustering.html#Cluster.calculateCentroid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster.calculateCentroid" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster.encapsualtingRadius">
-<span class="sig-name descname"><span class="pre">encapsualtingRadius</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/kmeansClustering.html#Cluster.encapsualtingRadius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster.encapsualtingRadius" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">encapsualtingRadius</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/kmeansClustering.html#Cluster.encapsualtingRadius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster.encapsualtingRadius" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster.radiusOfGyration">
-<span class="sig-name descname"><span class="pre">radiusOfGyration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/kmeansClustering.html#Cluster.radiusOfGyration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster.radiusOfGyration" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">radiusOfGyration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/kmeansClustering.html#Cluster.radiusOfGyration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster.radiusOfGyration" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/kmeansClustering.html#Cluster.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster.update" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/kmeansClustering.html#Cluster.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.kmeansClustering.Cluster.update" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.kmeansClustering.Point">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.kmeansClustering.</span></span><span class="sig-name descname"><span class="pre">Point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/kmeansClustering.html#Point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.kmeansClustering.Point" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.kmeansClustering.</span></span><span class="sig-name descname"><span class="pre">Point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/kmeansClustering.html#Point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.kmeansClustering.Point" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.kmeansClustering.kmeans">
-<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.kmeansClustering.</span></span><span class="sig-name descname"><span class="pre">kmeans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/kmeansClustering.html#kmeans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.kmeansClustering.kmeans" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.kmeansClustering.</span></span><span class="sig-name descname"><span class="pre">kmeans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/kmeansClustering.html#kmeans"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.kmeansClustering.kmeans" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-ncoords-module">
-<h2>cellpack.mgl_tools.mglutil.math.ncoords module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-ncoords-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-ncoordstest-module">
-<h2>cellpack.mgl_tools.mglutil.math.ncoordstest module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-ncoordstest-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-rigidfit-module">
-<h2>cellpack.mgl_tools.mglutil.math.rigidFit module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-rigidfit-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-rmsd-module">
-<h2>cellpack.mgl_tools.mglutil.math.rmsd module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-rmsd-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-rmsdtest-module">
-<h2>cellpack.mgl_tools.mglutil.math.rmsdtest module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-rmsdtest-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-cellpack.mgl_tools.mglutil.math.rotax">
-<span id="cellpack-mgl-tools-mglutil-math-rotax-module"></span><h2>cellpack.mgl_tools.mglutil.math.rotax module<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.math.rotax" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-ncoords-module">
+<h2>cellpack.mgl_tools.mglutil.math.ncoords module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-ncoords-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-ncoordstest-module">
+<h2>cellpack.mgl_tools.mglutil.math.ncoordstest module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-ncoordstest-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-rigidfit-module">
+<h2>cellpack.mgl_tools.mglutil.math.rigidFit module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-rigidfit-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-rmsd-module">
+<h2>cellpack.mgl_tools.mglutil.math.rmsd module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-rmsd-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-rmsdtest-module">
+<h2>cellpack.mgl_tools.mglutil.math.rmsdtest module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-rmsdtest-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-cellpack.mgl_tools.mglutil.math.rotax">
+<span id="cellpack-mgl-tools-mglutil-math-rotax-module"></span><h2>cellpack.mgl_tools.mglutil.math.rotax module<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.math.rotax" title="Permalink to this headline"></a></h2>
 <p>This file contains the following functions,
 rotax
 mat_to_quat
@@ -307,7 +293,7 @@ rotVectToVect
 interpolate3DTransform</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.rotax.interpolate3DTransform">
-<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.rotax.</span></span><span class="sig-name descname"><span class="pre">interpolate3DTransform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrixList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/rotax.html#interpolate3DTransform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.rotax.interpolate3DTransform" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.rotax.</span></span><span class="sig-name descname"><span class="pre">interpolate3DTransform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrixList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/rotax.html#interpolate3DTransform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.rotax.interpolate3DTransform" title="Permalink to this definition"></a></dt>
 <dd><p>This function gets input of two list and a percent value.
 Return value is a 4x4 matrix corresponding to percent% of the transformation.</p>
 <p>matrixList: a list of 4x4 transformation matrix
@@ -337,12 +323,12 @@ M2 x M’ = M3
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.rotax.interpolate3DTransform1">
-<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.rotax.</span></span><span class="sig-name descname"><span class="pre">interpolate3DTransform1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrixList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/rotax.html#interpolate3DTransform1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.rotax.interpolate3DTransform1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.rotax.</span></span><span class="sig-name descname"><span class="pre">interpolate3DTransform1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrixList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/rotax.html#interpolate3DTransform1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.rotax.interpolate3DTransform1" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.rotax.inverse4X4">
-<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.rotax.</span></span><span class="sig-name descname"><span class="pre">inverse4X4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/rotax.html#inverse4X4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.rotax.inverse4X4" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.rotax.</span></span><span class="sig-name descname"><span class="pre">inverse4X4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/rotax.html#inverse4X4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.rotax.inverse4X4" title="Permalink to this definition"></a></dt>
 <dd><p>returns the inverse of the given 4x4 transformation matrix
 t_1: the negetive of Translation vector
 r_1: the inverse of rotation matrix</p>
@@ -354,7 +340,7 @@ r_1: the inverse of rotation matrix</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.rotax.mat_to_axis_angle">
-<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.rotax.</span></span><span class="sig-name descname"><span class="pre">mat_to_axis_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/rotax.html#mat_to_axis_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.rotax.mat_to_axis_angle" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.rotax.</span></span><span class="sig-name descname"><span class="pre">mat_to_axis_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/rotax.html#mat_to_axis_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.rotax.mat_to_axis_angle" title="Permalink to this definition"></a></dt>
 <dd><blockquote>
 <div><p>NOTE: This function is added by Yong 2/01/04: given a 4x4 transformation</p>
 </div></blockquote>
@@ -365,7 +351,7 @@ function will complain and return none</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.rotax.mat_to_quat">
-<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.rotax.</span></span><span class="sig-name descname"><span class="pre">mat_to_quat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/rotax.html#mat_to_quat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.rotax.mat_to_quat" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.rotax.</span></span><span class="sig-name descname"><span class="pre">mat_to_quat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/rotax.html#mat_to_quat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.rotax.mat_to_quat" title="Permalink to this definition"></a></dt>
 <dd><p>takes a four by four matrix (optionally with shape (16,) and
 converts it into the axis of rotation and angle to rotate by
 (x,y,z,theta). It does not expect an OpenGL style, transposed
@@ -374,14 +360,14 @@ matrix, so is consistent with rotax</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.rotax.rotVectToVect">
-<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.rotax.</span></span><span class="sig-name descname"><span class="pre">rotVectToVect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vect1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vect2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/rotax.html#rotVectToVect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.rotax.rotVectToVect" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.rotax.</span></span><span class="sig-name descname"><span class="pre">rotVectToVect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vect1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vect2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/rotax.html#rotVectToVect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.rotax.rotVectToVect" title="Permalink to this definition"></a></dt>
 <dd><p>returns a 4x4 transformation that will align vect1 with vect2
 vect1 and vect2 can be any vector (non-normalized)</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.rotax.rotax">
-<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.rotax.</span></span><span class="sig-name descname"><span class="pre">rotax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/rotax.html#rotax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.rotax.rotax" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.rotax.</span></span><span class="sig-name descname"><span class="pre">rotax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/rotax.html#rotax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.rotax.rotax" title="Permalink to this definition"></a></dt>
 <dd><p>Build 4x4 matrix of clockwise rotation about axis a–&gt;b
 by angle tau (radians).
 a and b are sequences of 3 floats each
@@ -395,27 +381,27 @@ i.e. to be used is the following way Mx (opposite of OpenGL style which
 is using the FORTRAN style)</p>
 </dd></dl>
 
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-statetocoords-module">
-<h2>cellpack.mgl_tools.mglutil.math.statetocoords module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-statetocoords-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-statetocoordstest-module">
-<h2>cellpack.mgl_tools.mglutil.math.statetocoordstest module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-statetocoordstest-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-cellpack.mgl_tools.mglutil.math.stats">
-<span id="cellpack-mgl-tools-mglutil-math-stats-module"></span><h2>cellpack.mgl_tools.mglutil.math.stats module<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.math.stats" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-statetocoords-module">
+<h2>cellpack.mgl_tools.mglutil.math.statetocoords module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-statetocoords-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-statetocoordstest-module">
+<h2>cellpack.mgl_tools.mglutil.math.statetocoordstest module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-statetocoordstest-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-cellpack.mgl_tools.mglutil.math.stats">
+<span id="cellpack-mgl-tools-mglutil-math-stats-module"></span><h2>cellpack.mgl_tools.mglutil.math.stats module<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.math.stats" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.stats.stats">
-<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.stats.</span></span><span class="sig-name descname"><span class="pre">stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/stats.html#stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.stats.stats" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.stats.</span></span><span class="sig-name descname"><span class="pre">stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/stats.html#stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.stats.stats" title="Permalink to this definition"></a></dt>
 <dd><p>returns the mimn, max, mean and standard deviation of a list of values</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-cellpack.mgl_tools.mglutil.math.torsion">
-<span id="cellpack-mgl-tools-mglutil-math-torsion-module"></span><h2>cellpack.mgl_tools.mglutil.math.torsion module<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.math.torsion" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-cellpack.mgl_tools.mglutil.math.torsion">
+<span id="cellpack-mgl-tools-mglutil-math-torsion-module"></span><h2>cellpack.mgl_tools.mglutil.math.torsion module<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.math.torsion" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.torsion.torsion">
-<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.torsion.</span></span><span class="sig-name descname"><span class="pre">torsion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/torsion.html#torsion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.torsion.torsion" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.torsion.</span></span><span class="sig-name descname"><span class="pre">torsion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/torsion.html#torsion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.torsion.torsion" title="Permalink to this definition"></a></dt>
 <dd><p>Compute the torsion angle between x1, x2, x3, x4.
 All coordinates are cartesian; result is in degrees.
 Raises a ValueError if angle is not defined.</p>
@@ -423,16 +409,16 @@ Raises a ValueError if angle is not defined.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.torsion.vvmult">
-<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.torsion.</span></span><span class="sig-name descname"><span class="pre">vvmult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/torsion.html#vvmult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.torsion.vvmult" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.torsion.</span></span><span class="sig-name descname"><span class="pre">vvmult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/torsion.html#vvmult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.torsion.vvmult" title="Permalink to this definition"></a></dt>
 <dd><p>Compute a vector product for 3D vectors</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-cellpack.mgl_tools.mglutil.math.transformation">
-<span id="cellpack-mgl-tools-mglutil-math-transformation-module"></span><h2>cellpack.mgl_tools.mglutil.math.transformation module<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.math.transformation" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-cellpack.mgl_tools.mglutil.math.transformation">
+<span id="cellpack-mgl-tools-mglutil-math-transformation-module"></span><h2>cellpack.mgl_tools.mglutil.math.transformation module<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.math.transformation" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Quaternion">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.transformation.</span></span><span class="sig-name descname"><span class="pre">Quaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1.0,</span> <span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">dtype=float32))</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Quaternion" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.transformation.</span></span><span class="sig-name descname"><span class="pre">Quaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1.0,</span> <span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">dtype=float32))</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Quaternion" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base Quaternion class</p>
 <p>data is in the form ( c, (x y, z)), where c is the
@@ -440,7 +426,7 @@ real part (float) and (x,y,z) is the pure part (Numeric
 array of floats)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Quaternion.conjugate">
-<span class="sig-name descname"><span class="pre">conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Quaternion.conjugate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Quaternion.conjugate" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Quaternion.conjugate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Quaternion.conjugate" title="Permalink to this definition"></a></dt>
 <dd><p>The conjugate of quaternion (c,(x,y,z)) is (c,(-x,-y,-z))
 So the product of a quaternion and its conjugate is its
 magnitude</p>
@@ -448,19 +434,19 @@ magnitude</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Quaternion.inverse">
-<span class="sig-name descname"><span class="pre">inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Quaternion.inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Quaternion.inverse" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Quaternion.inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Quaternion.inverse" title="Permalink to this definition"></a></dt>
 <dd><p>Get the multiplicative inverse of a quaternion</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Quaternion.magnitude">
-<span class="sig-name descname"><span class="pre">magnitude</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Quaternion.magnitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Quaternion.magnitude" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">magnitude</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Quaternion.magnitude"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Quaternion.magnitude" title="Permalink to this definition"></a></dt>
 <dd><p>Quicker than multiplying conjugates</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Quaternion.normal">
-<span class="sig-name descname"><span class="pre">normal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Quaternion.normal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Quaternion.normal" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">normal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Quaternion.normal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Quaternion.normal" title="Permalink to this definition"></a></dt>
 <dd><p>Normalise a quaternion by dividing throughout by the
 magnitude</p>
 </dd></dl>
@@ -469,35 +455,35 @@ magnitude</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Transformation">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.transformation.</span></span><span class="sig-name descname"><span class="pre">Transformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trans</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">1.],</span> <span class="pre">dtype=float32)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quaternion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">dtype=float32)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([1.,</span> <span class="pre">1.,</span> <span class="pre">1.,</span> <span class="pre">1.],</span> <span class="pre">dtype=float32)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.transformation.</span></span><span class="sig-name descname"><span class="pre">Transformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trans</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">1.],</span> <span class="pre">dtype=float32)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quaternion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">dtype=float32)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([1.,</span> <span class="pre">1.,</span> <span class="pre">1.,</span> <span class="pre">1.],</span> <span class="pre">dtype=float32)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion" title="cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion</span></code></a></p>
 <p>Base class for manipulating transformations.</p>
 <p>(real,(pure x,pure y,pure z)) or (x,y,z,theta) (theta in degrees)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Transformation.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.apply" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.apply" title="Permalink to this definition"></a></dt>
 <dd><p>Apply the entire transformation to a list of points</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Transformation.getDejaVuMatrix">
-<span class="sig-name descname"><span class="pre">getDejaVuMatrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.getDejaVuMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getDejaVuMatrix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getDejaVuMatrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.getDejaVuMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getDejaVuMatrix" title="Permalink to this definition"></a></dt>
 <dd><p>returns a 4x matrix usable as an instance matrix</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Transformation.getMatrix">
-<span class="sig-name descname"><span class="pre">getMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(4,</span> <span class="pre">4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.getMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getMatrix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(4,</span> <span class="pre">4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.getMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getMatrix" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Transformation.getQuaternion">
-<span class="sig-name descname"><span class="pre">getQuaternion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.getQuaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getQuaternion" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getQuaternion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.getQuaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getQuaternion" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Transformation.getScrewAxis">
-<span class="sig-name descname"><span class="pre">getScrewAxis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linelength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.getScrewAxis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getScrewAxis" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getScrewAxis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linelength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.getScrewAxis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getScrewAxis" title="Permalink to this definition"></a></dt>
 <dd><p>Get the representation of a transformation in screw
 format. Returns two points on the axis and the translation
 component along the axis.
@@ -509,33 +495,33 @@ two points returned. The default is the translation component.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Transformation.getTranslation">
-<span class="sig-name descname"><span class="pre">getTranslation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(4,)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.getTranslation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getTranslation" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getTranslation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(4,)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.getTranslation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.getTranslation" title="Permalink to this definition"></a></dt>
 <dd><p>get the translation vector with shape = (3,) or (4,)
 (default is (4,))</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Transformation.inverse">
-<span class="sig-name descname"><span class="pre">inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.inverse" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.inverse" title="Permalink to this definition"></a></dt>
 <dd><p>Get the multiplicative inverse of a quaternion</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Transformation.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.output" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.output" title="Permalink to this definition"></a></dt>
 <dd><p>As __repr__ but without the explanation. For getting the numbers only</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.Transformation.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.reset" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#Transformation.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.Transformation.reset" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.transformation.</span></span><span class="sig-name descname"><span class="pre">UnitQuaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1.0,</span> <span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">dtype=float32))</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#UnitQuaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.transformation.</span></span><span class="sig-name descname"><span class="pre">UnitQuaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1.0,</span> <span class="pre">array([0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span> <span class="pre">dtype=float32))</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#UnitQuaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cellpack.mgl_tools.mglutil.math.transformation.Quaternion" title="cellpack.mgl_tools.mglutil.math.transformation.Quaternion"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.mgl_tools.mglutil.math.transformation.Quaternion</span></code></a></p>
 <p>Special subclass of Quaternions with magnitude 1.0
 Can be used to represent rotations, in which case real =
@@ -546,12 +532,12 @@ rotation angle in degrees.</p>
 <p>(real,(pure x,pure y,pure z)) or (x,y,z,theta) (theta in degrees)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.apply">
-<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#UnitQuaternion.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.apply" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#UnitQuaternion.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.apply" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.conjugate">
-<span class="sig-name descname"><span class="pre">conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#UnitQuaternion.conjugate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.conjugate" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">conjugate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#UnitQuaternion.conjugate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.conjugate" title="Permalink to this definition"></a></dt>
 <dd><p>The conjugate of quaternion (c,(x,y,z)) is (c,(-x,-y,-z))
 So the product of a quaternion and its conjugate is its
 magnitude</p>
@@ -559,104 +545,88 @@ magnitude</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.getAxisAndAngleDegres">
-<span class="sig-name descname"><span class="pre">getAxisAndAngleDegres</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#UnitQuaternion.getAxisAndAngleDegres"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.getAxisAndAngleDegres" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getAxisAndAngleDegres</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#UnitQuaternion.getAxisAndAngleDegres"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.getAxisAndAngleDegres" title="Permalink to this definition"></a></dt>
 <dd><p>Given a quaternion, compute axis and angle.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.getRotMatrix">
-<span class="sig-name descname"><span class="pre">getRotMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(4,</span> <span class="pre">4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#UnitQuaternion.getRotMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.getRotMatrix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getRotMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(4,</span> <span class="pre">4)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#UnitQuaternion.getRotMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.getRotMatrix" title="Permalink to this definition"></a></dt>
 <dd><p>return the rotation matrix as a Numeric array of shape shape.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.inverse">
-<span class="sig-name descname"><span class="pre">inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#UnitQuaternion.inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.inverse" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">inverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#UnitQuaternion.inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.inverse" title="Permalink to this definition"></a></dt>
 <dd><p>Get the multiplicative inverse of a quaternion</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.normal">
-<span class="sig-name descname"><span class="pre">normal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#UnitQuaternion.normal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.normal" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">normal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math/transformation.html#UnitQuaternion.normal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.transformation.UnitQuaternion.normal" title="Permalink to this definition"></a></dt>
 <dd><p>Normalise a quaternion by dividing throughout by the
 magnitude</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-transformationtest-module">
-<h2>cellpack.mgl_tools.mglutil.math.transformationtest module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-transformationtest-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="cellpack-mgl-tools-mglutil-math-usr-module">
-<h2>cellpack.mgl_tools.mglutil.math.usr module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-usr-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-cellpack.mgl_tools.mglutil.math">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.math" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-transformationtest-module">
+<h2>cellpack.mgl_tools.mglutil.math.transformationtest module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-transformationtest-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="cellpack-mgl-tools-mglutil-math-usr-module">
+<h2>cellpack.mgl_tools.mglutil.math.usr module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-math-usr-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-cellpack.mgl_tools.mglutil.math">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.math" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.crossProduct">
-<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.</span></span><span class="sig-name descname"><span class="pre">crossProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math.html#crossProduct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.crossProduct" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.</span></span><span class="sig-name descname"><span class="pre">crossProduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math.html#crossProduct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.crossProduct" title="Permalink to this definition"></a></dt>
 <dd><p>Return cross product of two vectors A and B
 normal: return normalized vector</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.getCenter">
-<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.</span></span><span class="sig-name descname"><span class="pre">getCenter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math.html#getCenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.getCenter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.</span></span><span class="sig-name descname"><span class="pre">getCenter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math.html#getCenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.getCenter" title="Permalink to this definition"></a></dt>
 <dd><p>get center of all the coords</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.math.norm">
-<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.</span></span><span class="sig-name descname"><span class="pre">norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math.html#norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.norm" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.math.</span></span><span class="sig-name descname"><span class="pre">norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/math.html#norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.math.norm" title="Permalink to this definition"></a></dt>
 <dd><p>Return normalized vector A.</p>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Megan Riel-Mehan.
-
-    </p>
+    <p>&#169; Copyright 2021, Megan Riel-Mehan.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

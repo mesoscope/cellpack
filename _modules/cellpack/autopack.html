@@ -1,75 +1,34 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>cellpack.autopack &mdash; cellPack 0.1.1 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> cellPack
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 0.1.1
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +36,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Overview</a></li>
@@ -112,6 +60,94 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../recipe-schema.html">Cellpack Recipe Schema 1.0</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../recipe-schema.html#recipe-definition-properties">Recipe definition properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#name">name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#version">version</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../recipe-schema.html#example">example:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../recipe-schema.html#options-properties">Options properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#saveresult">saveResult</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#resultfile">resultfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#enviroonly">EnviroOnly</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#canceldialog">cancelDialog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#pickrandpt">pickRandPt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#ingrlookforneighbours">ingrLookForNeighbours</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#overwriteplacemethod">overwritePlaceMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#boundingbox">boundingBox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#smallestproteinsize">smallestProteinSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#largestproteinsize">largestProteinSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#computegridparams">computeGridParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#windowssize">windowsSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#placemethod">placeMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#use-gradient">use_gradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#gradients">gradients</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#innergridmethod">innerGridMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#freeptsupdatethreshold">freePtsUpdateThreshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#use-periodicity">use_periodicity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#timer">_timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#hackfreepts">_hackFreepts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../recipe-schema.html#example-options">example <code class="docutils literal notranslate"><span class="pre">Options</span></code>:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#id81">name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#molarity">molarity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#nbmol">nbMol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#radii">radii</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#positions">positions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#positions2">positions2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#spherefile">sphereFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#pdb">pdb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#color">color</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#meshfile">meshFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#meshname">meshName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#coordsystem">coordsystem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#principalvector">principalVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#offset">offset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#jittermax">jitterMax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#nbjitter">nbJitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#userotaxis">useRotAxis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#rotaxis">rotAxis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#rotrange">rotRange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#placetype">placeType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#gradient">gradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#proba-binding">proba_binding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#weight">weight</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#partners-name">partners_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#partners-position">partners_position</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#partners-weight">partners_weight</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#properties">properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#score">score</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#organism">organism</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../recipe-schema.html#example-ingredient">example ingredient</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../contributing.html#get-started">Get Started!</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../contributing.html#deploying">Deploying</a></li>
@@ -119,71 +155,31 @@
 </li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">cellPack</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../index.html">Module code</a> &raquo;</li>
-        
           <li><a href="../cellpack.html">cellpack</a> &raquo;</li>
-        
       <li>cellpack.autopack</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <h1>Source code for cellpack.autopack</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -222,6 +218,7 @@
 <span class="sd">@author: Ludovic Autin with editing by Graham Johnson</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
@@ -229,14 +226,7 @@
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span><span class="p">,</span> <span class="n">environ</span>
 
 <span class="kn">import</span> <span class="nn">ssl</span>
-
-<span class="c1"># in case simplejson not there</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">simplejson</span> <span class="k">as</span> <span class="nn">json</span>
-
-    <span class="c1"># we can use the hookup at loading</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">json</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
@@ -258,6 +248,7 @@
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># the dir will have all the recipe + cache.</span>
 <span class="n">APPNAME</span> <span class="o">=</span> <span class="s2">&quot;autoPACK&quot;</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;autopack&quot;</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span><span class="p">:</span>
     <span class="c1"># from AppKit import NSSearchPathForDirectoriesInDomains</span>
     <span class="c1"># http://developer.apple.com/DOCUMENTATION/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Functions/Reference/reference.html#//apple_ref/c/func/NSSearchPathForDirectoriesInDomains</span>
@@ -272,7 +263,7 @@
     <span class="n">appdata</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">APPNAME</span><span class="p">))</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">appdata</span><span class="p">):</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">appdata</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;autoPACK data dir created&quot;</span><span class="p">,</span> <span class="n">appdata</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;autoPACK data dir created&quot;</span><span class="p">,</span> <span class="n">appdata</span><span class="p">)</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># setup Panda directory</span>
@@ -307,7 +298,7 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">URL</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error in checkURL &quot;</span><span class="p">,</span> <span class="n">URL</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error in checkURL &quot;</span><span class="p">,</span> <span class="n">URL</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">404</span></div>
 
@@ -398,12 +389,12 @@
         <span class="k">if</span> <span class="n">checkURL</span><span class="p">(</span><span class="n">fileName</span><span class="p">):</span>
             <span class="n">urllib</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">autopack_path_pref_file</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;problem accessing path &quot;</span> <span class="o">+</span> <span class="n">fileName</span><span class="p">)</span></div>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;problem accessing path </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fileName</span><span class="p">)</span></div>
 
 
 <span class="c1"># get user / default value</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">autopack_path_pref_file</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">autopack_path_pref_file</span> <span class="o">+</span> <span class="s2">&quot; file is not found&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">autopack_path_pref_file</span> <span class="o">+</span> <span class="s2">&quot; file is not found&quot;</span><span class="p">)</span>
     <span class="n">checkPath</span><span class="p">()</span>
 
 <span class="n">doit</span> <span class="o">=</span> <span class="kc">False</span>
@@ -414,12 +405,11 @@
     <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">autopack_path_pref_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
     <span class="n">doit</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">if</span> <span class="n">doit</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;autopack_path_pref_file &quot;</span><span class="p">,</span> <span class="n">autopack_path_pref_file</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;autopack_path_pref_file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">autopack_path_pref_file</span><span class="p">)</span>
     <span class="n">pref_path</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="k">if</span> <span class="s2">&quot;autoPACKserver&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pref_path</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;problem with autopack_path_pref_file &quot;</span><span class="p">,</span> <span class="n">autopack_path_pref_file</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;reset to default&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;problem with autopack_path_pref_file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">autopack_path_pref_file</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">autoPACKserver</span> <span class="o">=</span> <span class="n">pref_path</span><span class="p">[</span><span class="s2">&quot;autoPACKserver&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="s2">&quot;filespath&quot;</span> <span class="ow">in</span> <span class="n">pref_path</span><span class="p">:</span>
@@ -516,7 +506,7 @@
         <span class="n">force</span> <span class="o">=</span> <span class="n">forceFetch</span>
     <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">filename</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;ftp&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="n">fixOnePath</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;autopack retrieve file &quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;autopack retrieve file </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">filename</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;ftp&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
         <span class="c1"># check if using autoPACKserver</span>
         <span class="n">useAPServer</span> <span class="o">=</span> <span class="kc">False</span>
@@ -535,9 +525,9 @@
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">urllib</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">tmpFileName</span><span class="p">,</span> <span class="n">reporthook</span><span class="o">=</span><span class="n">reporthook</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error fetching file &quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;error fetching file </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">useAPServer</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;try alternate server&quot;</span><span class="p">)</span>
+                        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;try alternate server&quot;</span><span class="p">)</span>
                         <span class="n">urllib</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span>
                             <span class="n">autoPACKserver_alt</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">cache</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span>
                             <span class="n">tmpFileName</span><span class="p">,</span>
@@ -545,13 +535,13 @@
                         <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">tmpFileName</span><span class="p">):</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;not isfile &quot;</span><span class="p">,</span> <span class="n">tmpFileName</span><span class="p">)</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;not isfile </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tmpFileName</span><span class="p">)</span>
                     <span class="k">return</span> <span class="kc">None</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="n">tmpFileName</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;autopack return grabbed &quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;autopack return grabbed </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="c1"># check the file is not an error</span>
         <span class="k">return</span> <span class="n">filename</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;autopack search &quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;autopack search </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
     <span class="c1"># if no folder provided, use the current_recipe_folder</span>
 
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">[</span><span class="n">cache</span><span class="p">]</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">filename</span><span class="p">):</span>
@@ -572,7 +562,6 @@
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">tmpFileName</span>
         <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;try alternate server&quot;</span><span class="p">)</span>
             <span class="n">urllib</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span>
                 <span class="n">autoPACKserver_alt</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">cache</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">,</span>
                 <span class="n">tmpFileName</span><span class="p">,</span>
@@ -593,11 +582,10 @@
                 <span class="n">reporthook</span><span class="o">=</span><span class="n">reporthook</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;not on alternate server&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="c1"># check the file is not an error</span>
         <span class="k">return</span> <span class="n">tmpFileName</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot; not found &quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;not found </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">filename</span></div>
 
 
@@ -610,17 +598,9 @@
             <span class="n">adict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">fixOnePath</span><span class="p">(</span><span class="n">adict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span></div>
 
 
-<span class="c1"># if type(v) is list or type(v) is tuple:</span>
-<span class="c1">#                adict[key]=adict[key].replace(v[0],v[1])</span>
-<span class="c1">#            else :</span>
-<span class="c1">#                adict[key] = v</span>
-<span class="c1">#        elif type(adict[key]) is dict:</span>
-<span class="c1">#            fixPath(adict[key], k, v)</span>
-
-
 <div class="viewcode-block" id="updatePathJSON"><a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.updatePathJSON">[docs]</a><span class="k">def</span> <span class="nf">updatePathJSON</span><span class="p">():</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">autopack_path_pref_file</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">autopack_path_pref_file</span> <span class="o">+</span> <span class="s2">&quot; file is not found&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">autopack_path_pref_file</span> <span class="o">+</span> <span class="s2">&quot; file is not found&quot;</span><span class="p">)</span>
         <span class="k">return</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">autopack_user_path_pref_file</span><span class="p">):</span>
         <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">autopack_user_path_pref_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
@@ -677,7 +657,7 @@
         <span class="n">recipes</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">RECIPES</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">recipes</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;recipes updated &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">RECIPES</span><span class="p">)))</span></div>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;recipes updated </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">RECIPES</span><span class="p">)))</span></div>
 
 
 <div class="viewcode-block" id="updateRecipAvailableXML"><a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.updateRecipAvailableXML">[docs]</a><span class="k">def</span> <span class="nf">updateRecipAvailableXML</span><span class="p">(</span><span class="n">recipesfile</span><span class="p">):</span>
@@ -727,7 +707,7 @@
                 <span class="k">if</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;/&quot;</span> <span class="ow">and</span> <span class="n">text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
                     <span class="n">text</span> <span class="o">=</span> <span class="n">afdir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">text</span>
                 <span class="n">RECIPES</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">version</span><span class="p">][</span><span class="n">info</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;recipes updated &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">RECIPES</span><span class="p">)))</span></div>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;recipes updated </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">RECIPES</span><span class="p">)))</span></div>
 
 
 <div class="viewcode-block" id="updateRecipAvailable"><a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.updateRecipAvailable">[docs]</a><span class="k">def</span> <span class="nf">updateRecipAvailable</span><span class="p">(</span><span class="n">recipesfile</span><span class="p">):</span>
@@ -742,7 +722,7 @@
     <span class="n">fixPath</span><span class="p">(</span><span class="n">RECIPES</span><span class="p">)</span>
     <span class="c1">#    fixPath(RECIPES,&quot;wrkdir&quot;)#or autopackdata</span>
     <span class="c1">#    fixPath(RECIPES,&quot;resultfile&quot;)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;recipes updated and path fixed &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">RECIPES</span><span class="p">)))</span></div>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;recipes updated and path fixed </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">RECIPES</span><span class="p">)))</span></div>
 
 
 <div class="viewcode-block" id="saveRecipeAvailable"><a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.saveRecipeAvailable">[docs]</a><span class="k">def</span> <span class="nf">saveRecipeAvailable</span><span class="p">(</span><span class="n">recipe_dictionary</span><span class="p">,</span> <span class="n">recipefile</span><span class="p">):</span>
@@ -791,7 +771,7 @@
 <span class="k">if</span> <span class="n">checkAtstartup</span><span class="p">:</span>
     <span class="n">checkPath</span><span class="p">()</span>
     <span class="n">updatePathJSON</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;path are updated &quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;path are updated &quot;</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">checkAtstartup</span><span class="p">:</span>
     <span class="c1"># get from server the list of recipe</span>
@@ -801,7 +781,7 @@
     <span class="n">updateRecipAvailable</span><span class="p">(</span><span class="n">recipe_user_pref_file</span><span class="p">)</span>
     <span class="n">updateRecipAvailable</span><span class="p">(</span><span class="n">recipe_dev_pref_file</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;currently nb recipes is &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">RECIPES</span><span class="p">)))</span>
+<span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;currently nb recipes is </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">RECIPES</span><span class="p">)))</span>
 <span class="c1"># check cache directory create if doesnt exit.abs//should be in user pref?</span>
 <span class="c1"># ?</span>
 <span class="c1"># need a distinction between autopackdir and cachdir</span>
@@ -813,46 +793,30 @@
 </pre></div>
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Megan Riel-Mehan.
-
-    </p>
+    <p>&#169; Copyright 2021, Megan Riel-Mehan.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

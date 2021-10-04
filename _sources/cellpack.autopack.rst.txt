@@ -1,6 +1,14 @@
 cellpack.autopack package
 =========================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   cellpack.autopack.upy
+
 Submodules
 ----------
 
@@ -8,6 +16,14 @@ cellpack.autopack.Analysis module
 ---------------------------------
 
 .. automodule:: cellpack.autopack.Analysis
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.BaseGrid module
+---------------------------------
+
+.. automodule:: cellpack.autopack.BaseGrid
    :members:
    :undoc-members:
    :show-inheritance:
@@ -36,18 +52,18 @@ cellpack.autopack.GeometryTools module
    :undoc-members:
    :show-inheritance:
 
-cellpack.autopack.Graphics module
+cellpack.autopack.Gradient module
 ---------------------------------
 
-.. automodule:: cellpack.autopack.Graphics
+.. automodule:: cellpack.autopack.Gradient
    :members:
    :undoc-members:
    :show-inheritance:
 
-cellpack.autopack.Grid module
------------------------------
+cellpack.autopack.Graphics module
+---------------------------------
 
-.. automodule:: cellpack.autopack.Grid
+.. automodule:: cellpack.autopack.Graphics
    :members:
    :undoc-members:
    :show-inheritance:
@@ -104,6 +120,14 @@ cellpack.autopack.ldSequence module
 -----------------------------------
 
 .. automodule:: cellpack.autopack.ldSequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.plotly\_result module
+---------------------------------------
+
+.. automodule:: cellpack.autopack.plotly_result
    :members:
    :undoc-members:
    :show-inheritance:
