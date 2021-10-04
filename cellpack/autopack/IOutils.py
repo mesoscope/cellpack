@@ -9,9 +9,14 @@ import pickle
 
 import numpy
 from xml.dom.minidom import getDOMImplementation
+import json
+from json import encoder
+from collections import OrderedDict
 
-from cellpack.mgl_tools.upy import transformation as tr
+from numpy.core.arrayprint import printoptions
+
 import cellpack.autopack as autopack
+import cellpack.autopack.transformation as tr
 from cellpack.autopack.Ingredient import GrowIngredient, ActinIngredient, KWDS
 from cellpack.autopack.Serializable import (
     sCompartment,
@@ -22,23 +27,7 @@ from cellpack.autopack.Serializable import (
 from cellpack.autopack.Recipe import Recipe
 from cellpack.autopack.Compartment import Compartment
 
-
-try:
-    import simplejson as json
-    from simplejson import encoder
-except ImportError:
-    import json
-    from json import encoder
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
-try:
-    from collections import OrderedDict
-except ImportError:
-    from ordereddict import OrderedDict
-
-
-# if python 2.6 need to convert keyword from unicode to string
-def flatten_unicode_keys(d):
-    return d
 
 
 def getValueToXMLNode(vtype, node, attrname):
@@ -246,7 +235,6 @@ class IOingredientTool(object):
             f.close()
 
     def makeIngredientFromXml(self, inode=None, filename=None, recipe="Generic"):
-        print("makeIngredientFromXml", inode, filename, recipe)
         if filename is None and inode is not None:
             f = str(inode.getAttribute("include"))
             if f != "":
@@ -283,17 +271,8 @@ class IOingredientTool(object):
         kw = {}
         for k in KWDS:
             v = getValueToXMLNode(KWDS[k]["type"], ingrnode, k)
-            # example of debugging...
-            #            if k=="sphereFile":
-            #                print (k,v)
-            #            if k == "rejectionThreshold" :
-            #                print "rejectionThreshold",KWDS[k]["type"],v,v is not None
-            #                print "rejectionThreshold",ingrnode.getAttribute(k)
             if v is not None:
                 kw[k] = v
-                # create the ingredient according the type
-            #        ingre = self1.makeIngredient(**kw)
-            #        kw.update({"name":name})
         return kw
 
     def ingrXmlNode(self, ingr, xmldoc=None):
@@ -341,7 +320,6 @@ class IOingredientTool(object):
         # check for overwritten parameter
         if len(overwrite_dic):
             kw.update(overwrite_dic)
-        kw = flatten_unicode_keys(kw)
         ingre = self.makeIngredient(**kw)
         return ingre
 
@@ -930,7 +908,7 @@ def save_Mixed_asJson(
             json.dump(
                 env.jsondic, fp, separators=(",", ":")
             )  # ,indent=4, separators=(',', ': ')
-    print("Mixed recipe saved to ", setupfile)
+    printoptions("Mixed recipe saved to ", setupfile)
 
 
 def save_asXML(env, setupfile, useXref=True):
@@ -942,7 +920,6 @@ def save_asXML(env, setupfile, useXref=True):
     #        env.setupfile = setupfile+".xml"
     pathout = os.path.dirname(os.path.abspath(env.setupfile))
     # export all information as xml
-    # histovol is a tag, option are attribute of the tag
     from xml.dom.minidom import getDOMImplementation
 
     impl = getDOMImplementation()
@@ -1252,8 +1229,6 @@ def gatherResult(ingr_result, transpose, use_quaternion, type=0.0, lefthand=Fals
         # transpose ?
         if lefthand:
             all_pos.append([-r[0][0], r[0][1], r[0][2], type])  # ing type?
-            #            e=tr.euler_from_matrix(R)
-            #            q =tr.quaternion_from_euler(e[0],-e[1],-e[2],axes='szxy')
             R = tr.quaternion_from_matrix(R).tolist()
             all_rot.append([R[1], -R[2], -R[3], R[0]])
         else:
@@ -1696,8 +1671,6 @@ def saveResultBinaryDic(env, filename, transpose, use_quaternion, lefthand=False
     # write allpos
     fptr.write(numpy.array(all_pos, "f").flatten().tobytes())
     fptr.write(numpy.array(all_rot, "f").flatten().tobytes())
-    # numpy.array(all_pos, 'f').flatten().tofile(fptr)  # 4float position
-    # numpy.array(all_rot, 'f').flatten().tofile(fptr)  # 4flaot quaternion
     fptr.close()
     return all_pos, all_rot
 
@@ -1706,8 +1679,6 @@ def toBinary(all_pos, all_rot, filename):
     fptr = open(filename, "wb")
     fptr.write(numpy.array(all_pos, "f").flatten().tobytes())
     fptr.write(numpy.array(all_rot, "f").flatten().tobytes())
-    #    numpy.array(all_pos, 'f').flatten().tofile(fptr)  # 4float position
-    #    numpy.array(all_rot, 'f').flatten().tofile(fptr)  # 4flaot quaternion
     fptr.close()
 
 
@@ -1998,7 +1969,8 @@ def setupFromJsonDic(
         for k in env.OPTIONS:
             if k == "gradients":
                 continue
-            setattr(env, k, options[k])
+            if k in options:
+                setattr(env, k, options[k])
         env.boundingBox = options["boundingBox"]
     if "gradients" in env.jsondic:
         env.gradients = {}
@@ -2028,7 +2000,6 @@ def setupFromJsonDic(
         ingrs_dic = env.jsondic["cytoplasme"]["ingredients"]
         if len(ingrs_dic):
             rCyto = Recipe()
-            # sorted(numbers, key=str.lower)
             for ing_name in sorted(ingrs_dic, key=sortkey):  # ingrs_dic:
                 # either xref or defined
                 ing_dic = ingrs_dic[ing_name]
@@ -2089,8 +2060,6 @@ def setupFromJsonDic(
                 else:
                     rep = None
                     rep_file = None
-                    print("NONENE")
-                print("add compartment ", name, geom, gname, rep, rep_file)
                 o = Compartment(
                     name,
                     None,

@@ -115,7 +115,10 @@ class ConvertToSimularium(argparse.Namespace):
         if version == 0:
             ingredient_name = ingredient
             ingredients = main_container["ingredients"]
-            data = ingredients[ingredient]
+            try:
+                data = ingredients[ingredient]
+            except Exception:
+                pass
         elif version == 1:
             ingredient_name = ingredient["name"]
             compartment = main_container[ingredient["compartment"]]

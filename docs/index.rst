@@ -9,6 +9,7 @@ Welcome to cellPack's documentation!
    Overview <self>
    installation
    Package modules <modules>
+   recipe-schema
    contributing
    math
 

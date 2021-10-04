@@ -1080,7 +1080,6 @@ updateOwnGui=True : allow to update owngui at the end this func
         if smode is not None:
 
             redoFlags |= self._redoFlags["redoDisplayListFlag"]
-            print("SMODE", smode, viewerConst.SHADINGS)
             if type(smode) == bytes:
                 smode = viewerConst.SHADINGS[smode]
             # assert smode in list(viewerConst.SHADINGS.values())

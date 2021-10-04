@@ -49,11 +49,14 @@
 import os
 import time
 from random import random, uniform, seed
-import bisect
 from scipy import spatial
 import numpy
 import pickle
-from math import floor, exp, cos, sqrt, pow as mathPow, pi
+from math import floor, pi
+import json
+from json import encoder
+import logging
+from collections import OrderedDict
 
 # PANDA3D Physics engine ODE and Bullet
 import panda3d
@@ -69,7 +72,6 @@ from panda3d.ode import OdeSphereGeom
 from panda3d.core import NodePath
 
 from cellpack.mgl_tools.bhtree import bhtreelib
-from cellpack.mgl_tools.upy.hostHelper import vdistance
 
 import cellpack.autopack as autopack
 from .Compartment import CompartmentList
@@ -77,15 +79,13 @@ from .Recipe import Recipe
 from .Ingredient import GrowIngredient, ActinIngredient
 from .ray import vlen, vdiff
 from cellpack.autopack import IOutils
-from cellpack.autopack.transformation import angle_between_vectors
+from .Gradient import Gradient
+from cellpack.autopack.plotly_result import PlotlyAnalysis
+from cellpack.autopack.transformation import euler_from_matrix
 
 # backward compatibility with kevin method
-from cellpack.autopack.Grid import Grid as G
+from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
 
-try:
-    from collections import OrderedDict
-except ImportError:
-    from ordereddict import OrderedDict
 
 from .randomRot import RandomRot
 
@@ -93,15 +93,8 @@ try:
     helper = autopack.helper
 except ImportError:
     helper = None
-print("Environment helper is " + str(helper))
 
-# could replace by a faster json python library
-try:
-    import simplejson as json
-    from simplejson import encoder
-except ImportError:
-    import json
-    from json import encoder
+
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
 LISTPLACEMETHOD = autopack.LISTPLACEMETHOD
@@ -221,473 +214,7 @@ def cmp_to_key(mycmp):
     return K
 
 
-class Gradient:
-    """
-    The Gradient class
-    ==========================
-    This class handle the use of gradient to control the packing.
-    The class define different and setup type of gradient,
-    as well as the sampling function
-    """
-
-    def __init__(self, name, mode="X", description="", direction=None, bb=None, **kw):
-        self.name = name
-        self.description = description
-        self.start = []
-        self.end = []
-        self.bb = [[], []]
-        if bb is not None:
-            self.computeStartEnd()
-        self.function = self.defaultFunction  # lambda ?
-        self.weight = None
-        self.liste_mode = ["X", "Y", "Z", "-X", "-Y", "-Z", "direction", "radial"]
-        self.mode = mode  # can X,Y,Z,-X,-Y,-Z,"direction" custom vector
-        self.weight_mode = (
-            "gauss"  # "linear" #linear mode for weight generation linearpos linearneg
-        )
-        if "weight_mode" in kw:
-            self.weight_mode = kw["weight_mode"]
-        self.pick_mode = "rnd"
-        if "pick_mode" in kw:
-            self.pick_mode = kw["pick_mode"]
-        self.axes = {"X": 0, "-X": 0, "Y": 1, "-Y": 1, "Z": 2, "-Z": 2}
-        self.directions = {
-            "X": [1, 0, 0],
-            "-X": [-1, 0, 0],
-            "Y": [0, 1, 0],
-            "-Y": [0, -1, 0],
-            "Z": [0, 0, 1],
-            "-Z": [0, 0, -1],
-        }
-        self.radius = 10.0
-        if "radius" in kw:
-            self.radius = kw["radius"]
-        self.weight_threshold = 0.0
-        if direction is None:
-            self.direction = self.directions[self.mode]
-        else:
-            self.direction = direction  # from direction get start and end point
-        self.distance = 0.0
-        self.gblob = 4.0
-        # Note : theses functions could also be used to pick an ingredient
-        self.pick_functions = {
-            "max": self.getMaxWeight,
-            "min": self.getMinWeight,
-            "rnd": self.getRndWeighted,
-            "linear": self.getLinearWeighted,
-            "binary": self.getBinaryWeighted,
-            "sub": self.getSubWeighted,
-            "reg": self.getForwWeight,
-        }
-        self.liste_weigth_mode = self.pick_functions.keys()
-        self.liste_options = [
-            "mode",
-            "weight_mode",
-            "pick_mode",
-            "direction",
-            "radius",
-            "gblob",
-        ]
-        self.OPTIONS = {
-            "mode": {
-                "name": "mode",
-                "values": self.liste_mode,
-                "default": "X",
-                "type": "liste",
-                "description": "gradient direction",
-                "min": 0,
-                "max": 0,
-            },
-            "weight_mode": {
-                "name": "weight_mode",
-                "values": ["linear", "square", "cube", "gauss", "half-gauss"],
-                "default": "linear",
-                "type": "liste",
-                "description": "calcul of the weight method",
-                "min": 0,
-                "max": 0,
-            },
-            "pick_mode": {
-                "name": "weight_mode",
-                "values": self.liste_weigth_mode,
-                "default": "linear",
-                "type": "liste",
-                "description": "picking random weighted method",
-                "min": 0,
-                "max": 0,
-            },
-            "direction": {
-                "name": "direction",
-                "value": [0.5, 0.5, 0.5],
-                "default": [0.5, 0.5, 0.5],
-                "type": "vector",
-                "description": "gradient custom direction",
-                "min": -2000.0,
-                "max": 2000.0,
-            },
-            "description": {
-                "name": "description",
-                "value": self.description,
-                "default": "a gradient",
-                "type": "label",
-                "description": None,
-                "min": 0,
-                "max": 0,
-            },
-            "radius": {
-                "name": "radius",
-                "value": self.radius,
-                "default": 100.0,
-                "type": "float",
-                "description": "radius for the radial mode",
-                "min": 0,
-                "max": 2000.0,
-            },
-            "gblob": {
-                "name": "gblob",
-                "value": self.gblob,
-                "default": 4.0,
-                "type": "float",
-                "description": "bobliness the gaussian mode",
-                "min": 0.1,
-                "max": 2000.0,
-            },
-        }
-
-    def getCenter(self):
-        """get the center of the gradient grid"""
-        center = [0.0, 0.0, 0.0]
-        for i in range(3):
-            center[i] = (self.bb[0][i] + self.bb[1][i]) / 2.0
-        return center
-
-    def computeStartEnd(self):
-        """get the overal direction of the gradient"""
-        # using bb and direction
-        self.start = numpy.array(self.bb[0])
-        self.end = numpy.array(self.bb[1]) * numpy.array(self.direction)
-        self.vgradient = self.end - self.start
-        # self.distance = math.sqrt(numpy.sum(d*d))
-
-    def defaultFunction(self, xyz):
-        """
-        #linear function 0->0.1
-        #project xyz on direction
-        """
-        x = numpy.dot(xyz, self.direction)
-        v = (x * 1.0) / (self.distance)
-        return v
-
-    def pickPoint(self, listPts):
-        """
-        pick next random point according to the choosen function
-        """
-        return self.pick_functions[self.pick_mode](listPts)
-
-    def buildWeigthMap(self, bb, MasterPosition):
-        """
-        build the actual gradient value according the gradint mode
-        """
-        print("gradient ", self.name, self.mode)
-        if self.mode in self.axes:
-            self.buildWeigthMapAxe(bb, MasterPosition)
-        elif self.mode == "direction":
-            self.buildWeigthMapDirection(bb, MasterPosition)
-        elif self.mode == "radial":
-            self.buildWeigthMapRadial(bb, MasterPosition)
-
-    def get_gauss_weights(self, N, degree=5):
-        """
-        given a number of point compute the gaussian weight for each
-        """
-        degree = N / 2
-        window = N  # degree*2#-1
-        weight = numpy.array([1.0]) * window
-        weightGauss = []
-        for i in range(int(window)):
-            i = i - degree + 1
-            frac = i / float(window)
-            gauss = 1 / (numpy.exp((self.gblob * (frac)) ** 2))
-            weightGauss.append(gauss)
-        return numpy.array(weightGauss) * weight
-
-    def get_gauss_weights1(self, N):
-        """
-        given a number of point compute the gaussian weight for each
-        (alternative function)
-        """
-        support_points = [(float(3 * i) / float(N)) ** 2.0 for i in range(-N, N + 1)]
-        gii_factors = [exp(-(i / 2.0)) for i in support_points]
-        ki = float(sum(gii_factors))
-        return [giin / ki for giin in gii_factors]
-
-    def getDirectionLength(self, bb=None, direction=None):
-        if direction is None:
-            direction = self.direction
-        if bb is None:
-            bb = self.bb
-        # assume grid orthogonal
-        maxinmini = []
-        a = []
-        axes = ["X", "Y", "Z"]
-        for i, ax in enumerate(axes):
-            angle = angle_between_vectors(self.directions[ax], direction)
-            a.append(angle)
-            maxi = max(bb[1][i], bb[0][i])
-            mini = min(bb[1][i], bb[0][i])
-            maxinmini.append([mini, maxi])
-        m = min(a)
-        axi = a.index(m)
-        L = maxinmini[axi][1] - maxinmini[axi][0]
-        vdot = numpy.dot(
-            numpy.array(self.directions[axes[axi]]), numpy.array(direction)
-        )  # cos a * |A|*|B|
-        Ld = (1.0 / vdot) * (cos(m) * L)
-        return Ld, maxinmini
-
-    def buildWeigthMapRadial(self, bb, MasterPosition):
-        """
-        from a given point (self.direction) build a radial weight
-        according the chosen mode
-        (linear, gauss, etc...)
-        """
-        N = len(MasterPosition)
-        self.bb = bb
-        radial_point = self.direction
-        NW = N / 3
-        self.weight = []
-        xl, yl, zl = bb[0]
-        xr, yr, zr = bb[1]
-
-        if self.weight_mode == "gauss":  # 0-1-0
-            d = self.get_gauss_weights(
-                NW
-            )  # numpy.random.normal(0.5, 0.1, NW) #one dimension
-        elif self.weight_mode == "half-gauss":  # 0-1
-            d = self.get_gauss_weights(NW * 2)[NW:]
-        for ptid in range(N):
-            dist = vdistance(MasterPosition[ptid], radial_point)
-            if self.weight_mode == "linear":
-                w = (
-                    (1.0 - (abs(dist) / self.radius))
-                    if abs(dist) < self.radius
-                    else 0.0
-                )
-                self.weight.append(w)  #
-            elif self.weight_mode == "square":
-                w = (
-                    mathPow((1.0 - (abs(dist) / self.radius)), 2)
-                    if abs(dist) < self.radius
-                    else 0.0
-                )
-                self.weight.append(w)  #
-            elif self.weight_mode == "cube":
-                w = (
-                    mathPow((1.0 - (abs(dist) / self.radius)), 3)
-                    if abs(dist) < self.radius
-                    else 0.0
-                )
-                self.weight.append(w)  #
-            elif self.weight_mode == "gauss":
-                w = abs(dist) / self.radius if abs(dist) < self.radius else 1.0
-                i = int(w * N / 3) if int(w * N / 3) < len(d) else len(d) - 1
-                self.weight.append(d[i])
-            elif self.weight_mode == "half-gauss":
-                w = abs(dist) / self.radius if abs(dist) < self.radius else 1.0
-                i = int(w * N / 3) if int(w * N / 3) < len(d) else len(d) - 1
-                self.weight.append(d[i])
-
-    def buildWeigthMapDirection(self, bb, MasterPosition):
-        """
-        from a given direction build a linear weigth according the choosen mode
-        (linear, gauss, etc...)
-        """
-        N = len(MasterPosition)
-        self.bb = bb
-        axe = self.direction
-        NW = N / 3
-        self.weight = []
-        center = self.getCenter()
-        L, maxinmini = self.getDirectionLength(bb)
-        if self.weight_mode == "gauss":
-            d = self.get_gauss_weights(
-                NW
-            )  # numpy.random.normal(0.5, 0.1, NW) #one dimension
-        elif self.weight_mode == "half-gauss":  # 0-1
-            d = self.get_gauss_weights(NW * 2)[NW:]
-        for ptid in range(N):
-            pt = numpy.array(MasterPosition[ptid]) - numpy.array(
-                center
-            )  # [maxinmini[0][0],maxinmini[1][0],maxinmini[2][0]])
-            vdot = numpy.dot(pt, numpy.array(axe))
-            p = ((L / 2.0) + vdot) / L
-            if self.weight_mode == "linear":
-                self.weight.append(p)  # -0.5->0.5 axe value normalized?
-            elif self.weight_mode == "square":
-                self.weight.append(mathPow(p, 2))  #
-            elif self.weight_mode == "cube":
-                self.weight.append(mathPow(p, 3))  #
-            elif self.weight_mode == "gauss":
-                #                p goes from 0.0 to 1.0
-                if p < 0.1:
-                    p = 0.0
-                i = int(p * NW) if int(p * NW) < len(d) else len(d) - 1
-                # w = d[i] if d[i] > 0.9 else 0.0
-                self.weight.append(d[i])
-
-    def buildWeigthMapAxe(self, bb, MasterPosition, Axe="X"):
-        """
-        from a given axe (X,Y,Z) build a linear weight according the chosen mode
-        (linear, gauss, etc...)
-        """
-        N = len(MasterPosition)
-        NW = N / 3
-        self.bb = bb
-        ind = self.axes[self.mode]
-        maxi = max(bb[1][ind], bb[0][ind])
-        mini = min(bb[1][ind], bb[0][ind])
-        self.weight = []
-        if self.weight_mode == "gauss":
-            d = self.get_gauss_weights(
-                N / 3
-            )  # d = numpy.random.normal(0.5, 0.1, N/3) #one dimension
-        elif self.weight_mode == "half-gauss":  # 0-1
-            d = self.get_gauss_weights(NW * 2)[NW:]  # TODO: fix error here
-        for ptid in range(N):
-            p = (MasterPosition[ptid][ind] - mini) / (maxi - mini)
-            if self.weight_mode == "linear":
-                self.weight.append(p)  # -0.5->0.5 axe value normalized?
-            elif self.weight_mode == "square":
-                self.weight.append(mathPow(p, 2))  #
-            elif self.weight_mode == "cube":
-                self.weight.append(mathPow(p, 3))  #
-            elif self.weight_mode == "gauss":
-                vax = p  # (MasterPosition[ptid][ind]-mini)/(maxi-mini) #0-1 on the axes
-                i = int(vax * N / 3) if int(vax * N / 3) < len(d) else len(d) - 1
-                self.weight.append(d[i])
-            elif self.weight_mode == "half-gauss":
-                i = int(p * N / 3) if int(p * N / 3) < len(d) else len(d) - 1
-                self.weight.append(d[i])
-
-    def getMaxWeight(self, listPts):
-        """
-        from the given list of grid point indice, get the point with the maximum weight
-        """
-        ptInd = listPts[0]
-        m = 0.0
-        for pointIndex in listPts:
-            if self.weight[pointIndex] > m:
-                m = self.weight[pointIndex]
-                ptInd = pointIndex
-        if self.weight[ptInd] < self.weight_threshold:
-            ptInd = None
-        return ptInd
-
-    def getMinWeight(self, listPts):
-        """
-        from the given list of grid point indice, get the point with the minimum weight
-        """
-        ptInd = listPts[0]
-        m = 1.1
-        for pointIndex in listPts:
-            if self.weight[pointIndex] < m and self.weight[pointIndex] != 0:
-                m = self.weight[pointIndex]
-                ptInd = pointIndex
-        if self.weight[ptInd] < self.weight_threshold:
-            return None
-        return ptInd
-
-    def getRndWeighted(self, listPts):
-        """
-        From http://glowingpython.blogspot.com/2012/09/weighted-random-choice.html
-        Weighted random selection
-        returns n_picks random indexes.
-        the chance to pick the index i
-        is give by the weight weights[i].
-        """
-        weight = numpy.take(self.weight, listPts)
-        t = numpy.cumsum(weight)
-        s = numpy.sum(weight)
-        i = numpy.searchsorted(t, numpy.random.rand(1) * s)[0]
-        return listPts[i]
-
-    def getLinearWeighted(self, listPts):
-        """
-        From:
-        http://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/
-        The following is a simple function to implement weighted random selection in
-        Python.
-        Given a list of weights, it returns an index randomly,
-        according to these weights [2].
-        For example, given [2, 3, 5] it returns 0 (the index of the first element)
-        with probability 0.2,
-        1 with probability 0.3 and 2 with probability 0.5.
-        The weights need not sum up to anything in particular,
-        and can actually be arbitrary Python floating point numbers.
-        """
-        totals = []
-        running_total = 0
-        weights = numpy.take(self.weight, listPts)
-        for w in weights:
-            running_total += w
-            totals.append(running_total)
-
-        rnd = random() * running_total
-        for i, total in enumerate(totals):
-            if rnd < total:
-                return listPts[i]
-
-    def getBinaryWeighted(self, listPts):
-        """
-        From
-        http://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/
-        Note that the loop in the end of the function is simply looking
-        for a place to insert rnd in a sorted list. Therefore, it can be
-        speed up by employing binary search. Python comes with one built-in,
-        just use the bisect module.
-        """
-        totals = []
-        running_total = 0
-
-        weights = numpy.take(self.weight, listPts)
-        for w in weights:
-            running_total += w
-            totals.append(running_total)
-
-        rnd = random() * running_total
-        i = bisect.bisect_right(totals, rnd)
-        return listPts[i]
-
-    def getForwWeight(self, listPts):
-        dice = random()
-        # sorted ?
-        for i in listPts:
-            if self.weight[i] > dice and self.weight[i] != 0:
-                return i
-
-    def getSubWeighted(self, listPts):
-        """
-        From
-        http://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/
-        This method is about twice as fast as the binary-search technique,
-        although it has the same complexity overall. Building the temporary
-        list of totals turns out to be a major part of the functions runtime.
-        This approach has another interesting property. If we manage to sort
-        the weights in descending order before passing them to
-        weighted_choice_sub, it will run even faster since the random
-        call returns a uniformly distributed value and larger chunks of
-        the total weight will be skipped in the beginning.
-        """
-
-        weights = numpy.take(self.weight, listPts)
-        rnd = random() * sum(weights)
-        for i, w in enumerate(weights):
-            rnd -= w
-            if rnd < 0:
-                return listPts[i]
-
-
-class Grid(G):
+class Grid(BaseGrid):
     """
     The Grid class
     ==========================
@@ -698,55 +225,14 @@ class Grid(G):
 
     def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=10.0):
         # a grid is attached to an environement
-        G.__init__(self, boundingBox=boundingBox, space=space, setup=False)
-        self.boundingBox = boundingBox
-        # this list provides the id of the component this grid points belongs
-        # to. The id is an integer where 0 is the Histological Volume, and +i is
-        # the surface of compartment i and -i is the interior of compartment i
-        # in the list self. compartments
-        self.gridPtId = []
-        # will be a list of indices into 3D of Environment
-        # of points that have not yet been used by the packing algorithm
-        # entries are removed from this list as grid points are used up
-        # during packing. This list is used to pick points randomly during
-        # the packing
-        self.freePoints = []
-        self.nbFreePoints = 0
-        # this list evolves in parallel with self.freePoints and provides
-        # the distance to the closest surface (either an already placed
-        # object (or an compartment surface NOT IMPLEMENTED)
-        self.distToClosestSurf = []
-        self.distToClosestSurf_store = []
+        BaseGrid.__init__(self, boundingBox=boundingBox, space=space, setup=False)
 
-        self.diag = self.getDiagonal()
         self.gridSpacing = space * 1.1547
-        self.nbGridPoints = None
-        self.nbSurfacePoints = 0
-        self.gridVolume = 0  # will be the toatl number of grid points
-        # list of (x,y,z) for each grid point (x index moving fastest)
-        self.masterGridPositions = []
-
-        # this are specific for each compartment
-        self.aInteriorGrids = []
-        self.aSurfaceGrids = []
-        # bhtree
-        self.surfPtsBht = None
-        self.ijkPtIndice = []
-        self.filename = None  # used for storing before pack so no need rebuild
-        self.result_filename = None  # used after pack to store result
-
         self.encapsulatingGrid = 1
         self.gridVolume, self.nbGridPoints = self.computeGridNumberOfPoint(
             boundingBox, space
         )
         self.create3DPointLookup()
-        self.getDiagonal()
-        self.nbSurfacePoints = 0
-        self.gridPtId = numpy.zeros(self.gridVolume, "i")  # [0]*nbPoints
-        # self.distToClosestSurf = [self.diag]*self.gridVolume#surface point too?
-        self.distToClosestSurf = (
-            numpy.ones(self.gridVolume) * self.diag
-        )  # (self.distToClosestSurf)
         self.freePoints = list(range(self.gridVolume))
         self.nbFreePoints = len(self.freePoints)
 
@@ -761,35 +247,6 @@ class Grid(G):
         self.freePointsAfterFill = []
         self.nbFreePointsAfterFill = []
         self.distanceAfterFill = []
-
-    def removeFreePoint(self, pti):
-        tmp = self.freePoints[self.nbFreePoints]  # last one
-        self.freePoints[self.nbFreePoints] = pti
-        self.freePoints[pti] = tmp
-        self.nbFreePoints -= 1
-
-    # Very dangerous to manipulate the grids... lets solve this problem much earlier
-    # in the setup with the new PseudoCode
-    #    def updateDistances(self, histoVol ,insidePoints, freePoints,
-    #                        nbFreePoints ):
-    #        verbose = histoVol.verbose
-    #        nbPts = len(insidePoints)
-    #        for pt in insidePoints:  #Reversing is not necessary if you use the
-    # correct Swapping GJ Aug 17,2012
-    #            try :
-    #                # New system replaced by Graham on Aug 18, 2012
-    #                nbFreePoints -= 1
-    #                vKill = freePoints[pt]
-    #                vLastFree = freePoints[nbFreePoints]
-    #                freePoints[vKill] = vLastFree
-    #                freePoints[vLastFree] = vKill
-    #            except :
-    #                pass
-    #
-    #        return nbFreePoints,freePoints
-    #
-    #    def removeFreePointdeque(self,pti):
-    #        self.freePoints.remove(pti)
 
     def create3DPointLookup(self, boundingBox=None):
         """
@@ -819,28 +276,6 @@ class Grid(G):
                     i += 1
         self.masterGridPositions = pointArrayRaw
 
-    def getPointFrom3D(self, pt3d):
-        """
-        get point number from 3d coordinates
-        """
-        x, y, z = pt3d  # Continuous 3D point to be discretized
-        spacing1 = (
-            1.0 / self.gridSpacing
-        )  # Grid spacing = diagonal of the voxel determined by smalled packing radius
-        (
-            NX,
-            NY,
-            NZ,
-        ) = (
-            self.nbGridPoints
-        )  # vector = [length, height, depth] of grid, units = gridPoints
-        OX, OY, OZ = self.boundingBox[0]  # origin of Pack grid
-        # Algebra gives nearest gridPoint ID to pt3D
-        i = min(NX - 1, max(0, round((x - OX) * spacing1)))
-        j = min(NY - 1, max(0, round((y - OY) * spacing1)))
-        k = min(NZ - 1, max(0, round((z - OZ) * spacing1)))
-        return int(k * NX * NY + j * NX + i)
-
     def getIJK(self, ptInd):
         """
         get i,j,k (3d) indices from u (1d)
@@ -848,51 +283,9 @@ class Grid(G):
         # ptInd = k*(sizex)*(sizey)+j*(sizex)+i;#want i,j,k
         return self.ijkPtIndice[ptInd]
 
-    def checkPointInside(self, pt3d, dist=None, jitter=[1, 1, 1]):
-        """
-        Check if the given 3d points is inside the grid
-        """
-        origin = numpy.array(self.boundingBox[0])
-        E = numpy.array(self.boundingBox[1])
-        P = numpy.array(pt3d)
-        test1 = P < origin
-        test2 = P > E
-        if True in test1 or True in test2:
-            # outside
-            return False
-        else:
-            if dist is not None:
-                # distance to closest wall
-                d1 = P - origin
-                s1 = min(x for x in (d1 * jitter) if x != 0)
-                # s1 = numpy.sum(d1*d1)
-                d2 = E - P
-                s2 = min(x for x in (d2 * jitter) if x != 0)
-                # s2 = numpy.sum(d2*d2)
-                if s1 <= dist or s2 <= dist:
-                    return False
-            return True
-
-    def getCenter(self):
-        """
-        Get the center of the grid
-        """
-        center = [0.0, 0.0, 0.0]
-        for i in range(3):
-            center[i] = (self.boundingBox[0][i] + self.boundingBox[1][i]) / 2.0
-        return center
-
-    def getRadius(self):
-        """
-        Get the radius the grid
-        """
-        d = numpy.array(self.boundingBox[0]) - numpy.array(self.boundingBox[1])
-        s = numpy.sum(d * d)
-        return sqrt(s)
-
     def getPointsInCube(self, bb, pt, radius, addSP=True, info=False):
         """
-        Return all grid points indicesinside the given bouding box.
+        Return all grid points indicesinside the given bounding box.
         """
         spacing1 = 1.0 / self.gridSpacing
         NX, NY, NZ = self.nbGridPoints
@@ -929,24 +322,6 @@ class Grid(G):
             )
         return ptIndices
 
-    def computeGridNumberOfPoint(self, boundingBox, space):
-        """
-        Return the grid size : total number of point and number of point per axes
-        """
-        xl, yl, zl = boundingBox[0]
-        xr, yr, zr = boundingBox[1]
-
-        # Graham Added on Oct17 to allow for truly 2D grid for test packs,
-        # may break everything!
-        encapsulatingGrid = self.encapsulatingGrid
-
-        from math import ceil
-
-        nx = int(ceil((xr - xl) / space)) + encapsulatingGrid
-        ny = int(ceil((yr - yl) / space)) + encapsulatingGrid
-        nz = int(ceil((zr - zl) / space)) + encapsulatingGrid
-        return nx * ny * nz, (nx, ny, nz)
-
         # ==============================================================================
 
     # TO DO File IO
@@ -973,7 +348,9 @@ class Environment(CompartmentList):
 
     def __init__(self, name="H"):
         CompartmentList.__init__(self)
-        self.verbose = verbose  # "global variable Verbose"
+
+        self.log = logging.getLogger("env")
+        self.log.propagate = False
         self.timeUpDistLoopTotal = 0
         self.name = name
         self.exteriorRecipe = None
@@ -1111,7 +488,7 @@ class Environment(CompartmentList):
         self.freePointsAfterFill = []
         self.nbFreePointsAfterFill = []
         self.distanceAfterFill = []
-
+        self.plotly = PlotlyAnalysis(self.placeMethod)
         self.OPTIONS = {
             "smallestProteinSize": {
                 "name": "smallestProteinSize",
@@ -1396,7 +773,7 @@ class Environment(CompartmentList):
         if ingr.excluded_partners_name:
             for iname in ingr.excluded_partners_name:
                 ingr.addExcludedPartner(iname)
-        ingr.histoVol = self
+        ingr.env = self
 
     def set_recipe_ingredient(self, xmlnode, recipe, io_ingr):
         # get the defined ingredient
@@ -1438,6 +815,203 @@ class Environment(CompartmentList):
 
     def loadRecipeString(self, astring):
         return IOutils.load_JsonString(self, astring)
+
+    def save_result(self, freePoints, distances, t0, vAnalysis, vTestid, seedNum):
+        self.grid.freePoints = freePoints[:]
+        self.grid.distToClosestSurf = distances[:]
+        # should check extension filename for type of saved file
+        self.saveGridToFile(self.resultfile + "grid")
+        self.saveGridLogsAsJson(self.resultfile + "_grid-data.json")
+        self.plotly.make_grid_heatmap(self)
+        self.plotly.add_ingredient_positions(self)
+        self.plotly.show()
+        self.grid.result_filename = self.resultfile + "grid"
+        self.collectResultPerIngredient()
+        self.store()
+        self.store_asTxt()
+        #            self.store_asJson(resultfilename=self.resultfile+".json")
+        self.saveRecipe(
+            self.resultfile + ".json",
+            useXref=False,
+            mixed=True,
+            kwds=["compNum"],
+            result=True,
+            quaternion=True,
+        )  # pdb ?
+        self.log.info("time to save result file %d", time.time() - t0)
+        if vAnalysis == 1:
+            #    START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
+            # totalVolume = self.grid.gridVolume*unitVol
+            unitVol = self.grid.gridSpacing ** 3
+            wrkDirRes = self.resultfile + "_analyze_"
+            for o in self.compartments:  # only for compartment ?
+                # totalVolume -= o.surfaceVolume
+                # totalVolume -= o.interiorVolume
+                innerPointNum = len(o.insidePoints) - 1
+                self.log.info("  .  .  .  . ")
+                self.log.info("for compartment o = %s", o.name)
+                self.log.info("inner Point Count = %d", innerPointNum)
+                self.log.info("inner Volume = %s", o.interiorVolume)
+                self.log.info("innerVolume temp Confirm = %d", innerPointNum * unitVol)
+                usedPts = 0
+                unUsedPts = 0
+                vDistanceString = ""
+                insidepointindce = numpy.nonzero(
+                    numpy.equal(self.grid.gridPtId, -o.number)
+                )[0]
+                for i in insidepointindce:  # xrange(innerPointNum):
+                    #                        pt = o.insidePoints[i] #fpts[i]
+                    #                        print (pt,type(pt))
+                    # for pt in self.histo.freePointsAfterFill:#[:self.histo.nbFreePointsAfterFill]:
+                    d = self.distancesAfterFill[i]
+                    vDistanceString += str(d) + "\n"
+                    if d <= 0:  # >self.smallestProteinSize-0.001:
+                        usedPts += 1
+                    else:
+                        unUsedPts += 1
+                filename = (
+                    wrkDirRes
+                    + "vResultMatrix1"
+                    + o.name
+                    + "_Testid"
+                    + str(vTestid)
+                    + "_Seed"
+                    + str(seedNum)
+                    + "_dists.txt"
+                )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
+                #            filename = wrkDirRes+"/vDistances1.txt"
+                f = open(filename, "w")
+                f.write(vDistanceString)
+                f.close()
+
+                # result is [pos,rot,ingr.name,ingr.compNum,ptInd]
+                # if resultfilename == None:
+                # resultfilename = self.resultfile
+                resultfilenameT = (
+                    wrkDirRes
+                    + "vResultMatrix1"
+                    + o.name
+                    + "_Testid"
+                    + str(vTestid)
+                    + "_Seed"
+                    + str(seedNum)
+                    + "_Trans.txt"
+                )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
+                resultfilenameR = (
+                    wrkDirRes
+                    + "vResultMatrix1"
+                    + o.name
+                    + "_Testid"
+                    + str(vTestid)
+                    + "_Seed"
+                    + str(seedNum)
+                    + "_Rot.txt"
+                )
+                vTranslationString = ""
+                vRotationString = ""
+                result = []
+                matCount = 0
+                for pos, rot, ingr, ptInd in o.molecules:
+                    # BEGIN: newer code from Theis version added July 5, 2012
+                    if hasattr(self, "afviewer"):
+                        mat = rot.copy()
+                        mat[:3, 3] = pos
+                        import math
+
+                        # r = R.from_matrix(mat).as_euler("xyz", degrees=False)
+                        r = euler_from_matrix(mat, "rxyz")
+                        h1 = math.degrees(math.pi + r[0])
+                        p1 = math.degrees(r[1])
+                        b1 = math.degrees(-math.pi + r[2])
+                        self.log.info("rot from matrix = %r %r %r %r", r, h1, p1, b1)
+                        # END: newer code from Theis version added July 5, 2012
+                    result.append([pos, rot])
+                    pt3d = result[matCount][0]
+                    (
+                        x,
+                        y,
+                        z,
+                    ) = pt3d
+
+                    vTranslationString += (
+                        str(x) + ",\t" + str(y) + ",\t" + str(z) + "\n"
+                    )
+                    # vRotationString += str(rot3d) #str(h)+ ",\t" + str(p) + ",\t" + str(b) + "\n"
+                    vRotationString += (
+                        str(h1)
+                        + ",\t"
+                        + str(p1)
+                        + ",\t"
+                        + str(b1)
+                        + ",\t"
+                        + ingr.name
+                        + "\n"
+                    )
+                    matCount += 1
+
+                rfile = open(resultfilenameT, "w")
+                rfile.write(vTranslationString)
+                rfile.close()
+
+                rfile = open(resultfilenameR, "w")
+                rfile.write(vRotationString)
+                rfile.close()
+                self.log.info("len(result) = %d", len(result))
+                self.log.info("len(self.molecules) = %d", len(self.molecules))
+                # Graham Note:  There is overused disk space- the rotation matrix is 4x4 with an offset of 0,0,0
+                # and we have a separate translation vector in the results and molecules arrays.
+                #  Get rid of the translation vector and move it to the rotation matrix to save space...
+                # will that slow the time it takes to extract the vector from the matrix when we need to call it?
+                self.log.info(
+                    "*************************************************** vDistance String Should be on"
+                )
+                self.log.info("unitVolume2 = %d", unitVol)
+                self.log.info("Number of Points Unused = %d", unUsedPts)
+                self.log.info("Number of Points Used   = %d", usedPts)
+                self.log.info("Volume Used   = %d", usedPts * unitVol)
+                self.log.info("Volume Unused = %d", unUsedPts * unitVol)
+                self.log.info("vTestid = %d", vTestid)
+                self.log.info("self.nbGridPoints = %r", self.nbGridPoints)
+                self.log.info("self.gridVolume = %d", self.gridVolume)
+                #        self.exteriorVolume = totalVolume
+
+        self.log.info("self.compartments In Environment = %d", len(self.compartments))
+        if self.compartments == []:
+            unitVol = self.grid.gridSpacing ** 3
+            innerPointNum = len(freePoints)
+            self.log.info("  .  .  .  . ")
+            self.log.info("inner Point Count = %d", innerPointNum)
+            self.log.info("innerVolume temp Confirm = %d", innerPointNum * unitVol)
+            usedPts = 0
+            unUsedPts = 0
+            # fpts = self.freePointsAfterFill
+            vDistanceString = ""
+            for i in range(innerPointNum):
+                pt = freePoints[i]  # fpts[i]
+                # for pt in self.histo.freePointsAfterFill:#[:self.histo.nbFreePointsAfterFill]:
+                d = self.distancesAfterFill[pt]
+                vDistanceString += str(d) + "\n"
+                if d <= 0:  # >self.smallestProteinSize-0.001:
+                    usedPts += 1
+                else:
+                    unUsedPts += 1
+            # Graham Note:  There is overused disk space- the rotation matrix is 4x4 with an offset of 0,0,0
+            # and we have a separate translation vector in the results and molecules arrays.
+            # Get rid of the translation vector and move it to the rotation matrix to save space...
+            # will that slow the time it takes to extract the vector from the matrix when we need to call it?
+
+            self.log.info("unitVolume2 = %d", unitVol)
+            self.log.info("Number of Points Unused = %d", unUsedPts)
+            self.log.info("Number of Points Used   = %d", usedPts)
+            self.log.info("Volume Used   = %d", usedPts * unitVol)
+            self.log.info("Volume Unused = %d", unUsedPts * unitVol)
+            self.log.info("vTestid = %s", vTestid)
+            self.log.info("self.nbGridPoints = %r", self.nbGridPoints)
+            self.log.info("self.gridVolume = %d", self.gridVolume)
+            self.log.info("histoVol.timeUpDistLoopTotal = %d", self.timeUpDistLoopTotal)
+
+            #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
+        self.log.info("time to save end %d", time.time() - t0)
 
     def saveRecipe(
         self,
@@ -1752,6 +1326,32 @@ class Environment(CompartmentList):
             compartment.saveGridToFile(f)
         f.close()
 
+    def saveGridLogsAsJson(self, gridFileOut):
+        """
+        Save the current grid and the compartment grid information in a file. (pickle)
+        """
+        d = os.path.dirname(gridFileOut)
+        if not os.path.exists(d):
+            print("gridfilename path problem", gridFileOut)
+        data = {}
+        for i in range(len(self.grid.masterGridPositions)):
+            data[i] = {
+                "position": [
+                    str(self.grid.masterGridPositions[i][0]),
+                    str(self.grid.masterGridPositions[i][1]),
+                    str(self.grid.masterGridPositions[i][2]),
+                ],
+                "distance": str(self.grid.distToClosestSurf[i]),
+            }
+        # data = {
+        #     # "gridPositions": json.loads(self.grid.masterGridPositions),
+        #     "distances": json.loads(self.grid.distToClosestSurf)
+        # }
+
+        with open(gridFileOut, "w") as f:
+            json.dump(data, fp=f)
+        f.close()
+
     def restoreGridFromFile(self, gridFileName):
         """
         Read and setup the grid from the given filename. (pickle)
@@ -1893,22 +1493,6 @@ class Environment(CompartmentList):
         d, pid = self.grid.getClosestGridPoint(point)
         cid = self.grid.gridPtId[pid]
         return cid
-        ncomp = len(self.compartments)
-        if ncomp:
-            comp = ncomp
-            for i in range(ncomp):
-                inside = self.compartments[comp - 1].checkPointInside_rapid(
-                    point, self.grid.diag, ray=ray
-                )
-                if inside:
-                    return -(comp)
-                comp = comp - 1
-            # the point is not inside , is it on the surface ? ie distance to surface < X?
-            for i in range(ncomp):
-                distance, nb = self.compartments[i].OGsrfPtsBht.query(point)
-                if distance < 1.0:
-                    return i + 1
-        return 0
 
     def longestIngrdientName(self):
         """
@@ -2039,20 +1623,20 @@ class Environment(CompartmentList):
         aSurfaceGrids = []
         # thread ?
         for compartment in self.compartments:
-            if autopack.verbose:
-                print(
-                    "in Environment, compartment.isOrthogonalBoundingBox =",
-                    compartment.isOrthogonalBoundingBox,
-                )
+            self.log.info(
+                "in Environment, compartment.isOrthogonalBoundingBox =",
+                compartment.isOrthogonalBoundingBox,
+            )
             a, b = compartment.BuildGrid(self)  # return inside and surface point
             aInteriorGrids.append(a)
             aSurfaceGrids.append(b)
 
         self.grid.aInteriorGrids = aInteriorGrids
         self.grid.aSurfaceGrids = aSurfaceGrids
-        if autopack.verbose:
-            print("I'm out of the loop and have build my grid with inside points")
-            print("build Grids", self.innerGridMethod, len(self.grid.aSurfaceGrids))
+        self.log.info("I'm out of the loop and have build my grid with inside points")
+        self.log.info(
+            "build Grids %r %d", self.innerGridMethod, len(self.grid.aSurfaceGrids)
+        )
 
     def buildGrid(
         self,
@@ -2070,11 +1654,11 @@ class Environment(CompartmentList):
         or restored using given file.
         """
         if self.use_halton:
-            from cellpack.autopack.Grid import HaltonGrid as Grid
+            from cellpack.autopack.BaseGrid import HaltonGrid as Grid
         elif self.innerGridMethod == "floodfill":
             from cellpack.autopack.Environment import Grid
         else:
-            from cellpack.autopack.Grid import Grid
+            from cellpack.autopack.BaseGrid import BaseGrid as Grid
         # check viewer, and setup the progress bar
         self.reportprogress(label="Building the Master Grid")
         if self.smallestProteinSize == 0:
@@ -2096,43 +1680,34 @@ class Environment(CompartmentList):
             rebuild = True
         if rebuild or gridFileIn is not None or self.grid is None or self.nFill == 0:
             # save bb for current fill
-            print("####BUILD GRID - step ", self.smallestProteinSize)
+            self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
             self.grid = Grid(
                 boundingBox=boundingBox, space=self.smallestProteinSize, lookup=lookup
             )
             nbPoints = self.grid.gridVolume
-            if autopack.verbose:
-                print("new Grid with  ", boundingBox, self.grid.gridVolume)
+            self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
             if rebuild:
                 self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
                 nbPoints = self.grid.gridVolume
         else:
-            if autopack.verbose:
-                print("$$$$$$$$  reset the grid")
+            self.log.info("$$$$$$$$  reset the grid")
             self.grid.reset()
             nbPoints = len(self.grid.freePoints)
-            if autopack.verbose:
-                print("$$$$$$$$  reset the grid")
-        if autopack.verbose:
-            print(
-                "$$$$$$$$  gridVolume = nbPoints = ",
-                nbPoints,
-                " grid.nbGridPoints = ",
-                self.grid.nbGridPoints,
-            )
+            self.log.info("$$$$$$$$  reset the grid")
+        self.log.info(
+            "nbPoints = %d, grid.nbGridPoints = %d", nbPoints, self.grid.nbGridPoints
+        )
 
         if gridFileIn is not None:  # and not rebuild:
-            if autopack.verbose:
-                print("file in for building grid but it doesnt work well")
+            self.log.warning("file in for building grid but it doesnt work well")
             self.grid.filename = gridFileIn
             if self.nFill == 0:  # first fill, after we can just reset
-                print("restore from file")
+                self.log.info("restore from file")
                 self.restoreGridFromFile(gridFileIn)
         elif (gridFileIn is None and rebuild) or self.nFill == 0:
             # assign ids to grid points
-            if autopack.verbose:
-                print("file is None thus re/building grid distance")
+            self.log.info("file is None thus re/building grid distance")
             self.BuildCompartmentsGrids()
             self.exteriorVolume = self.grid.computeExteriorVolume(
                 compartments=self.compartments,
@@ -2140,7 +1715,7 @@ class Environment(CompartmentList):
                 fbox_bb=self.fbox_bb,
             )
         else:
-            print("file is not rebuild nor restore from file")
+            self.log.info("file is not rebuild nor restore from file")
         if len(self.compartments):
             verts = numpy.array(self.compartments[0].surfacePointsCoords)
             for i in range(1, len(self.compartments)):
@@ -2160,7 +1735,6 @@ class Environment(CompartmentList):
                 c.setCount()
         else:
             self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
-        print("file is not rebuild nor restore from file")
         if self.use_gradient and len(self.gradients) and rebuild:
             for g in self.gradients:
                 self.gradients[g].buildWeigthMap(
@@ -2231,258 +1805,16 @@ class Environment(CompartmentList):
                 )
                 compartment.computeVolumeAndSetNbMol(self, b, a, areas=vSurfaceArea)
                 print("The size of the grid I build = ", len(a))
-
-            if (
-                self.innerGridMethod == "sdf"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # A fillSelection can now be a mesh too... it can use either of these methods
-                a, b = compartment.BuildGrid_utsdf(
-                    self
-                )  # to make the outer most selection from the master and then the compartment
-            elif (
-                self.innerGridMethod == "bhtree"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
+            else:
                 a, b = compartment.BuildGrid(self)
-            elif (
-                self.innerGridMethod == "jordan"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
-                a, b = compartment.BuildGrid_jordan(self)
-            elif (
-                self.innerGridMethod == "jordan3"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
-                a, b = compartment.BuildGrid_jordan(self, ray=3)
-            elif (
-                self.innerGridMethod == "pyray"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
-                a, b = compartment.BuildGrid_pyray(self)
-            elif (
-                self.innerGridMethod == "floodfill"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
-                a, b = compartment.BuildGrid_kevin(self)
-            elif (
-                self.innerGridMethod == "binvox"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
-                a, b = compartment.BuildGrid_binvox(self)
-            elif (
-                self.innerGridMethod == "trimesh"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
-                a, b = compartment.BuildGrid_trimesh(self)
-            elif (
-                self.innerGridMethod == "scanline"
-                and compartment.isOrthogonalBoundingBox != 1
-            ):  # surfaces and interiors will be subtracted from it as normal!
-                a, b = compartment.BuildGrid_scanline(self)
 
             aInteriorGrids.append(a)
-            print("I'm ruther in the loop")
             aSurfaceGrids.append(b)
 
         self.grid.aInteriorGrids = aInteriorGrids
         print("I'm out of the loop and have build my grid with inside points")
         self.grid.aSurfaceGrids = aSurfaceGrids
         print("build Grids", self.innerGridMethod, len(self.grid.aSurfaceGrids))
-
-    def buildGridOld(
-        self,
-        boundingBox=None,
-        gridFileIn=None,
-        rebuild=True,
-        gridFileOut=None,
-        previousFill=False,
-        previousfreePoint=None,
-    ):
-        """
-        The main build grid function. Setup the main grid and merge the
-        compartment grid. The setup is de novo or using previously builded grid
-        or restored using given file. This funcion should be
-        split in smaller function for clarity.
-        """
-        if self.afviewer is not None and hasattr(self.afviewer, "vi"):
-            self.afviewer.vi.progressBar(label="Building the Master Grid")
-        if boundingBox is None:
-            boundingBox = self.boundingBox
-        else:
-            assert len(boundingBox) == 2
-            assert len(boundingBox[0]) == 3
-            assert len(boundingBox[1]) == 3
-        # make sure all recipes are sorted from large to small radius
-        if self.exteriorRecipe:
-            self.exteriorRecipe.sort()
-
-        for o in self.compartments:
-            o.molecules = []
-            if rebuild:
-                o.reset()
-            if o.innerRecipe:
-                o.innerRecipe.sort()
-            if o.surfaceRecipe:
-                o.surfaceRecipe.sort()
-
-        if self.afviewer is not None and hasattr(self.afviewer, "vi"):
-            self.afviewer.vi.progressBar(label="Computing the number of grid points")
-        if rebuild or gridFileIn is not None:
-            # save bb for current fill
-            self.fillBB = boundingBox
-            grid = Grid()
-            self.grid = grid
-            grid.boundingBox = boundingBox
-            # compute grid spacing
-            grid.gridSpacing = space = self.smallestProteinSize * 1.1547  # 2/sqrt(3)
-            print("$$$$$$$$  ", boundingBox, space, self.smallestProteinSize)
-            grid.gridVolume, grid.nbGridPoints = self.callFunction(
-                grid.computeGridNumberOfPoint, (boundingBox, space)
-            )
-        grid = self.grid
-        nbPoints = self.grid.gridVolume
-        print(
-            "$$$$$$$$  gridVolume = nbPoints = ",
-            nbPoints,
-            " grid.nbGridPoints = ",
-            self.grid.nbGridPoints,
-        )
-        # compute 3D point coordiantes for all grid points
-        if rebuild or gridFileIn is not None:
-            self.callFunction(
-                grid.create3DPointLookup
-            )  # generate grid.masterGridPositions
-            grid.nbSurfacePoints = 0
-            # self.isFree = numpy.ones( (nbPoints,), 'i') # Will never shrink
-            # Id is set set to None initially
-            grid.gridPtId = numpy.zeros(nbPoints)  # [0]*nbPoints
-
-        xl, yl, zl = boundingBox[0]
-        xr, yr, zr = boundingBox[1]
-        # distToClosestSurf is set to self.diag initially
-        self.grid.diag = diag = vlen(vdiff((xr, yr, zr), (xl, yl, zl)))
-        if rebuild or gridFileIn is not None:
-            self.grid.distToClosestSurf = [diag] * nbPoints  # surface point too?
-            self.grid.distToClosestSurf = numpy.array(self.grid.distToClosestSurf)
-            self.grid.freePoints = list(range(nbPoints))
-        else:
-            # just reset
-            self.grid.distToClosestSurf = [diag] * len(
-                self.grid.distToClosestSurf
-            )  # surface point too?
-            self.grid.distToClosestSurf = numpy.array(self.grid.distToClosestSurf)
-            self.grid.freePoints = list(range(len(self.grid.freePoints)))
-            nbPoints = len(self.grid.freePoints)
-        #        print 'DIAG', diag,self.grid.distToClosestSurf
-        self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
-        #        if gridFileIn is None :
-        #            gridFileIn = self.grid_filename
-        #        if gridFileOut is None :
-        #            gridFileOut= self.grid_filename
-        #        if self.grid_filename is not None and not os.path.isfile(self.grid_filename):
-        #            gridFileIn = None
-
-        #        if rebuild :
-        # this restore/store the grid information of the organelle.
-        if gridFileIn is not None:  # and not rebuild:
-            print("file in for building grid but it doesnt work well")
-            self.grid.filename = gridFileIn
-            if self.nFill == 0:  # ?:
-                print("restore from file")
-                self.restoreGridFromFile(gridFileIn)
-        elif gridFileIn is None and rebuild:
-            # assign ids to grid points
-            print("file is None for building grid")
-            self.BuildGrids()
-        else:
-            print("file is not rebuild")
-        if gridFileOut is not None:
-            self.saveGridToFile(gridFileOut)
-            self.grid.filename = gridFileOut
-            # get new set of freePoints which includes surface points
-            #       nbPoints = nbPoints-1            #Graham Turned off this redundant nbPoints-1 call on 8/27/11
-            #       nbPoints = nbPoints-1          #Graham Turned this one off on 5/16/12 to match August repair in Hybrid
-        grid.nbFreePoints = nbPoints  # -1
-        grdPts = grid.masterGridPositions
-        grid.nbFreePoints = len(grdPts)
-        # build BHTree for surface points (off grid)
-        if rebuild:
-            verts = []
-            for orga in self.compartments:
-                if orga.surfacePointsCoords:
-                    for pt3d in orga.surfacePointsCoords:
-                        verts.append(pt3d)
-
-            from bhtree import bhtreelib
-
-            grid.surfPtsBht = None
-            if verts:
-                grid.surfPtsBht = bhtreelib.BHtree(verts, None, 10)
-
-        # build list of compartments without a recipe#????
-        noRecipe = []
-        if self.exteriorRecipe is None:
-            noRecipe.append(0)
-        for o in self.compartments:
-            if o.surfaceRecipe is None:
-                noRecipe.append(o.number)
-            if o.innerRecipe is None:
-                noRecipe.append(-o.number)
-
-        # compute exterior volume
-        unitVol = grid.gridSpacing ** 3
-        totalVolume = grid.gridVolume * unitVol
-        if self.fbox_bb is not None:
-            V, nbG = self.callFunction(
-                grid.computeGridNumberOfPoint, (self.fbox_bb, space)
-            )
-            totalVolume = V * unitVol
-        for o in self.compartments:
-            # totalVolume -= o.surfaceVolume
-            totalVolume -= o.interiorVolume
-        self.exteriorVolume = totalVolume
-
-        r = self.exteriorRecipe
-        if r:
-            r.setCount(totalVolume)  # should actually use the fillBB
-
-        if self.use_gradient and len(self.gradients) and rebuild:
-            for g in self.gradients:
-                self.gradients[g].buildWeigthMap(boundingBox, grid.masterGridPositions)
-        if not rebuild:
-            self.grid.distToClosestSurf = self.grid.distToClosestSurf_store[:]
-        else:
-            self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
-
-            # we should be able here to update the number of free point using a
-            # previous grid overlap
-        if previousFill:  # actually if there is a previous fill
-            # get the intersecting point and update freePoints from this one if they
-            # are not free previousfreePoint
-            # compute the intersection bounding box and get ptindice for both grid
-            # by getPointsInCube
-            # check which one are in freePoints from previous,
-            # and update the current one
-            # update the curentpass
-            #            #how to update the distance for each prest ingr ?
-            distance = self.grid.distToClosestSurf  # [:]
-            nbFreePoints = nbPoints
-            for i, mingrs in enumerate(
-                self.molecules
-            ):  # ( jtrans, rotMatj, self, ptInd )
-                nbFreePoints = self.onePrevIngredient(
-                    i, mingrs, distance, nbFreePoints, self.molecules
-                )
-            for organelle in self.compartments:
-                for i, mingrs in enumerate(
-                    organelle.molecules
-                ):  # ( jtrans, rotMatj, self, ptInd )
-                    nbFreePoints = self.onePrevIngredient(
-                        i, mingrs, distance, nbFreePoints, organelle.molecules
-                    )
-
-            self.grid.nbFreePoints = nbFreePoints
-        self.setCompatibility()
 
     def onePrevIngredient(self, i, mingrs, distance, nbFreePoints, marray):
         """
@@ -2517,8 +1849,6 @@ class Environment(CompartmentList):
             # ingr.rbnode.pop(ptInd)
             marray[i][3] = -ptInd  # uniq Id ?
             # ingr.rbnode[-1] = rbnode
-        # (self, histoVol,insidePoints, newDistPoints, freePoints,
-        #        nbFreePoints, distance, masterGridPositions, verbose)
         # doesnt seem to work properly...
         nbFreePoints = ingr.updateDistances(
             self,
@@ -2593,7 +1923,7 @@ class Environment(CompartmentList):
         self.surfPtsBht = self.grid.surfPtsBht
         self.gridPtId = self.grid.gridPtId = numpy.array(self.grid.gridPtId, int)
 
-    def getSortedActiveIngredients(self, allIngredients, verbose=0):
+    def getSortedActiveIngredients(self, allIngredients):
         """
         Sort the active ingredient according their pirority and radius.
         # first get the ones with a packing priority
@@ -2656,8 +1986,7 @@ class Environment(CompartmentList):
             self.lowestPriority = lowestIng.packingPriority
         else:
             self.lowestPriority = 1.0
-        if verbose:
-            print("self.lowestPriority for Ing1 = ", self.lowestPriority)
+        self.log.info("self.lowestPriority for Ing1 = %d", self.lowestPriority)
         self.totalRadii = 0
         for radii in ingr2:
             if radii.modelType == "Cylinders":
@@ -2667,8 +1996,7 @@ class Environment(CompartmentList):
             elif radii.modelType == "Cube":
                 r = radii.minRadius
             self.totalRadii = self.totalRadii + r
-            if verbose:
-                print("self.totalRadii += ", r, "=", self.totalRadii)
+            self.log.info("self.totalRadii += %d = %d", r, self.totalRadii)
             if r == 0:
                 # safety
                 self.totalRadii = self.totalRadii + 1.0
@@ -2682,21 +2010,14 @@ class Environment(CompartmentList):
             np = float(r) / float(self.totalRadii) * self.lowestPriority
             self.normalizedPriorities0.append(np)
             priors2.packingPriority = np
-            if verbose:
-                print("self.normalizedPriorities0 = ", self.normalizedPriorities0)
+            self.log.info("self.normalizedPriorities0 = %r", self.normalizedPriorities0)
         activeIngr0 = ingr0  # +ingr1+ingr2  #cropped to 0 on 7/20/10
 
-        if verbose:
-            print("len(activeIngr0)", len(activeIngr0))
+        self.log.info("len(activeIngr0) %d", len(activeIngr0))
         activeIngr12 = ingr1 + ingr2
-        if verbose:
-            print("len(activeIngr12)", len(activeIngr12))
+        self.log.info("len(activeIngr12) %d", len(activeIngr12))
         packingPriorities = priorities0 + priorities1 + priorities2
-        if verbose:
-            print("priorities0 is ", priorities0)
-            print("priorities1 is ", priorities1)
-            print("priorities2 is ", priorities2)
-            print("packingPriorities", packingPriorities)
+        self.log.info("packingPriorities %r", packingPriorities)
 
         return activeIngr0, activeIngr12
 
@@ -2874,8 +2195,6 @@ class Environment(CompartmentList):
                 if verbose:
                     print("weighted", prob, vThreshStart, ingrInd, ingr.name)
         else:
-            # if verbose:
-            #    print "random in activeIngr"
             r = random()  # randint(0, len(self.activeIngr)-1)#random()
             # n=int(r*(len(self.activeIngr)-1))
             n = int(r * len(self.activeIngr))
@@ -2941,14 +2260,12 @@ class Environment(CompartmentList):
         compNum,
         vRangeStart,
         vThreshStart,
-        verbose=False,
     ):
         """
         Decide next point to use for dropping a given ingredent. The picking can be
         random, based on closest distance, based on gradients, ordered.
         This function also update the available free point except when hack is on.
         """
-        verbose = autopack.verbose
         radius = ingr.encapsulatingRadius
         if ingr.packingMode == "close":
             allIngrPts = []
@@ -2977,8 +2294,7 @@ class Environment(CompartmentList):
             #    if compId[pt] == compNum and d >= cut:
             #        allIngrPts.append(pt)
             #        allIngrDist.append(d)
-            # if verbose > 1:
-            #    print("time to filter using for loop ", time() - t1)
+
         else:
             allIngrPts = []
             if ingr.modelType == "Cylinders" and ingr.useLength:
@@ -2986,18 +2302,13 @@ class Environment(CompartmentList):
             else:
                 cut = radius - jitter
             # for pt in freePoints[:nbFreePoints]:
-            if verbose > 1:
-                print("find grid point with distance >= ", cut)
             if hasattr(ingr, "allIngrPts") and self._hackFreepts:
                 allIngrPts = ingr.allIngrPts
-                if verbose > 1:
-                    print("Running nofreepoint HACK")
+                self.log.warning("Running nofreepoint HACK")
             else:
                 # use periodic update according size ration grid
                 update = self.checkIfUpdate(ingr, nbFreePoints)
                 if update:
-                    if verbose > 1:
-                        print("in update loop")
                     for i in range(nbFreePoints):
                         pt = freePoints[i]
                         d = distance[pt]
@@ -3006,8 +2317,6 @@ class Environment(CompartmentList):
                     # allIngrDist.append(d)
                     ingr.allIngrPts = allIngrPts
                     ingr.cut = cut
-                    if verbose:
-                        print("getPointToDrop len(allIngrPts) = ", len(allIngrPts))
                 else:
                     if hasattr(ingr, "allIngrPts"):
                         allIngrPts = ingr.allIngrPts
@@ -3015,8 +2324,6 @@ class Environment(CompartmentList):
                         allIngrPts = freePoints[:nbFreePoints]
                         ingr.allIngrPts = allIngrPts
 
-        if verbose > 1:
-            print("len (allIngrPts) = ", len(allIngrPts))
         if len(allIngrPts) == 0:
             t = time.time()
             ingr.completion = 1.0
@@ -3033,24 +2340,26 @@ class Environment(CompartmentList):
             # Start of massive overruling section from corrected thesis file of Sept. 25, 2012
             # this function also depend on the ingr.completiion that can be restored ?
             self.activeIngr0, self.activeIngr12 = self.callFunction(
-                self.getSortedActiveIngredients, (self.activeIngr, False)
+                self.getSortedActiveIngredients, ([self.activeIngr])
             )
-            if verbose > 1:
-                print(
-                    "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d"
-                    % (ingr.name, ingr.molarity, radius, jitter, compNum)
-                )
-                print("len(allIngredients", len(self.activeIngr))
-                print("len(self.activeIngr0)", len(self.activeIngr0))
-                print("len(self.activeIngr12)", len(self.activeIngr12))
+            self.log.info(
+                "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d",
+                ingr.name,
+                ingr.molarity,
+                radius,
+                jitter,
+                compNum,
+            )
+            self.log.info("len(allIngredients %d", len(self.activeIngr))
+            self.log.info("len(self.activeIngr0) %d", len(self.activeIngr0))
+            self.log.info("len(self.activeIngr12) %d", len(self.activeIngr12))
+
             self.activeIngre_saved = self.activeIngr[:]
 
             self.totalPriorities = 0  # 0.00001
             for priors in self.activeIngr12:
                 pp = priors.packingPriority
                 self.totalPriorities = self.totalPriorities + pp
-                if verbose > 1:
-                    print("totalPriorities = ", self.totalPriorities)
             previousThresh = 0
             self.normalizedPriorities = []
             self.thresholdPriorities = []
@@ -3074,31 +2383,9 @@ class Environment(CompartmentList):
                 self.thresholdPriorities.append(np + previousThresh)
                 previousThresh = np + float(previousThresh)
             self.activeIngr = self.activeIngr0 + self.activeIngr12
-
-            #            nls=0
-            #            totalNumMols = 0
-            #            for threshProb in self.thresholdPriorities:
-            #                nameMe = self.activeIngr[nls]
-            #                if verbose:
-            #                    print ('threshprop Get Point is %f for ingredient: %s %s %d'%(threshProb, nameMe,nameMe.name,nameMe.nbMol))
-            #                totalNumMols += nameMe.nbMol
-            #                if verbose:
-            #                    print ('totalNumMols Get Point= ', totalNumMols)
-            #                nls+=1
-
-            # print 'vThreshStart before = ', vThreshStart
-            # vThreshStart = self.thresholdPriorities[0]
-            # print 'vThreshStart after = ', vThreshStart
-            # print 'because vself.thresholdPriorities[0] = ', self.thresholdPriorities[0]
-
-            # self.thresholdPriorities.pop(ind)
-            # self.normalizedPriorities.pop(ind)
-            if verbose > 1:
-                print("time to reject the picking", time.time() - t)
+            self.log.info("time to reject the picking %d", time.time() - t)
             # End of massive overruling section from corrected thesis file of Sept. 25, 2011
             # this chunk overwrites the next three lines from July version. July 5, 2012
-            #            self.thresholdPriorities.pop(ind)
-            #            self.normalizedPriorities.pop(ind)
             return False, vRangeStart
 
         if self.pickRandPt:
@@ -3121,8 +2408,7 @@ class Environment(CompartmentList):
             elif ingr.packingMode == "gradient" and self.use_gradient:
                 # get the most probable point using the gradient
                 # use the gradient weighted map and get mot probabl point
-                if verbose > 1:
-                    print("pick point from gradients", (len(allIngrPts)))
+                self.log.info("pick point from gradients %d", (len(allIngrPts)))
                 ptInd = self.gradients[ingr.gradient].pickPoint(allIngrPts)
             else:
                 # pick a point randomly among free points
@@ -3131,11 +2417,14 @@ class Environment(CompartmentList):
                 ptInd = allIngrPts[ptIndr]
             if ptInd is None:
                 t = time.time()
-                if verbose > 1:
-                    print(
-                        "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d"
-                        % (ingr.name, ingr.molarity, radius, jitter, compNum)
-                    )
+                self.log.info(
+                    "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d",
+                    ingr.name,
+                    ingr.molarity,
+                    radius,
+                    jitter,
+                    compNum,
+                )
                 ingr.completion = 1.0
                 ind = self.activeIngr.index(ingr)
                 # if ind == 0:
@@ -3159,7 +2448,6 @@ class Environment(CompartmentList):
                 return False, vRangeStart
 
         else:
-            #            t3=time()
             allIngrPts.sort()
             ptInd = allIngrPts[0]
         return True, ptInd
@@ -3193,9 +2481,6 @@ class Environment(CompartmentList):
         self,
         seedNum=14,
         stepByStep=False,
-        verbose=False,
-        sphGeom=None,
-        labDistGeom=None,
         debugFunc=None,
         name=None,
         vTestid=3,
@@ -3209,16 +2494,14 @@ class Environment(CompartmentList):
         ## find a suitable point using the ingredient's placer object
         """
         # set periodicity
-        autopack.verbose = verbose
         autopack.testPeriodicity = self.use_periodicity
         self.grid.testPeriodicity = self.use_periodicity
 
         t1 = time.time()
-        self.timeUpDistLoopTotal = 0  # Graham added to try to make universal "global variable Verbose" on Aug 28
+        self.timeUpDistLoopTotal = 0
         self.static = []
         if self.grid is None:
-            if verbose > 1:
-                print("no grid setup")
+            self.log.error("no grid setup")
             return
         # create a list of active ingredients indices in all recipes to allow
         # removing inactive ingredients when molarity is reached
@@ -3228,7 +2511,9 @@ class Environment(CompartmentList):
         usePP = False
         if "usePP" in kw:
             usePP = kw["usePP"]
+
         self.cFill = self.nFill
+
         if name is None:
             name = "F" + str(self.nFill)
         self.FillName.append(name)
@@ -3236,7 +2521,7 @@ class Environment(CompartmentList):
         # seed random number generator
         self.setSeed(seedNum)
         # create copies of the distance array as they change when molecules
-        # are added, theses array can be restored/saved before feeling
+        # are added, this array can be restored/saved before filling
         freePoints = self.grid.freePoints[:]
         self.grid.nbFreePoints = nbFreePoints = len(freePoints)  # -1
         if "fbox" in kw:
@@ -3250,7 +2535,6 @@ class Environment(CompartmentList):
         compId = self.grid.gridPtId
         # why a copy? --> can we split ?
         distance = self.grid.distToClosestSurf[:]
-
         spacing = self.smallestProteinSize
 
         # DEBUG stuff, should be removed later
@@ -3263,21 +2547,19 @@ class Environment(CompartmentList):
 
         # this function also depend on the ingr.completiion that can be restored ?
         self.activeIngr0, self.activeIngr12 = self.callFunction(
-            self.getSortedActiveIngredients, (allIngredients, verbose)
+            self.getSortedActiveIngredients, ([allIngredients])
         )
 
-        if verbose > 1:
-            print("len(allIngredients", len(allIngredients))
-            print("len(self.activeIngr0)", len(self.activeIngr0))
-            print("len(self.activeIngr12)", len(self.activeIngr12))
+        self.log.info("len(allIngredients %d", len(allIngredients))
+        self.log.info("len(self.activeIngr0) %d", len(self.activeIngr0))
+        self.log.info("len(self.activeIngr12) %d", len(self.activeIngr12))
         self.activeIngre_saved = self.activeIngr[:]
 
         self.totalPriorities = 0  # 0.00001
         for priors in self.activeIngr12:
             pp = priors.packingPriority
             self.totalPriorities = self.totalPriorities + pp
-            if verbose > 1:
-                print("totalPriorities = ", self.totalPriorities)
+            self.log.info("totalPriorities = %d", self.totalPriorities)
         previousThresh = 0
         self.normalizedPriorities = []
         self.thresholdPriorities = []
@@ -3296,8 +2578,6 @@ class Environment(CompartmentList):
             else:
                 np = 0.0
             self.normalizedPriorities.append(np)
-            if verbose > 1:
-                print("np is ", np, " pp is ", pp, " tp is ", np + previousThresh)
             self.thresholdPriorities.append(np + previousThresh)
             previousThresh = np + float(previousThresh)
         self.activeIngr = self.activeIngr0 + self.activeIngr12
@@ -3308,18 +2588,19 @@ class Environment(CompartmentList):
         if len(self.thresholdPriorities) == 0:
             for ingr in allIngredients:
                 totalNumMols += ingr.nbMol
-            if verbose > 1:
-                print("totalNumMols pack_grid if = ", totalNumMols)
+            self.log.info("totalNumMols pack_grid if = %d", totalNumMols)
         else:
             for threshProb in self.thresholdPriorities:
                 nameMe = self.activeIngr[nls]
                 totalNumMols += nameMe.nbMol
-                if verbose > 1:
-                    print(
-                        "threshprop pack_grid else is %f for ingredient: %s %s %d"
-                        % (threshProb, nameMe, nameMe.name, nameMe.nbMol)
-                    )
-                    print("totalNumMols pack_grid else = ", totalNumMols)
+                self.log.info(
+                    "threshprop pack_grid else is %f for ingredient: %s %s %d",
+                    threshProb,
+                    nameMe,
+                    nameMe.name,
+                    nameMe.nbMol,
+                )
+                self.log.info("totalNumMols pack_grid else = %d", totalNumMols)
                 nls += 1
 
         vRangeStart = 0.0
@@ -3333,78 +2614,58 @@ class Environment(CompartmentList):
         if self.placeMethod == "pandaBullet":
             self.setupPanda()
 
-        # if usePP:
-        #     # deprecated in python 3
-        #     import pp
-        #     self.grab_cb = IOutils.GrabResult()
-        #     self.pp_server = pp.Server(ncpus=autopack.ncpus)
         # ==============================================================================
         #         #the big loop
         # ==============================================================================
         dump_freq = self.dump_freq  # 120.0#every minute
         dump = self.dump
         stime = time.time()
+        self.plotly.update_title(self.placeMethod)
+        self.plotly.make_grid_heatmap(self)
+
         while nbFreePoints:
-            if verbose > 1:
-                print(
-                    ".........At start of while loop, with vRangeStart = ", vRangeStart
-                )
-                print("Points Remaining", nbFreePoints, len(freePoints))
-                print("len(self.activeIngr)", len(self.activeIngr))
+            self.log.info(
+                ".........At start of while loop, with vRangeStart = %d", vRangeStart
+            )
 
             # breakin test
             if len(self.activeIngr) == 0:
-                print("exit packing loop because of len****")
+                self.log.warn("exit packing loop because of len****")
                 if hasattr(self, "afviewer"):
                     if self.afviewer is not None and hasattr(self.afviewer, "vi"):
                         self.afviewer.vi.resetProgressBar()
                         self.afviewer.vi.progressBar(label="Filling Complete")
                 break
             if vRangeStart > 1:
-                print("exit packing loop because vRange and hence Done!!!****")
+                self.log.info("exit packing loop because vRange and hence Done!!!****")
                 break
             if self.cancelDialog:
                 tCancel = time.time()
                 if tCancel - tCancelPrev > 10.0:
                     cancel = self.displayCancelDialog()
                     if cancel:
-                        print(
-                            "canceled by user: we'll fill with current objects up to time",  # noqa: E510
+                        self.log.info(
+                            "canceled by user: we'll fill with current objects up to time %d",  # noqa: E510
                             tCancel,
                         )
                         break
                     # if OK, do nothing, i.e., continue loop
                     # (but not the function continue)
                     tCancelPrev = time.time()
+
             # pick an ingredient
-
             ingr = self.callFunction(self.pickIngredient, (vThreshStart,))
-            if verbose > 1:
-                print("picked Ingr ", ingr.name)
             if hasattr(self, "afviewer"):
-                # C4D safety check added by Graham on July 10, 2012 until we can fix
-                # the uPy status bar for C4D
-                # if self.host == 'c4d':
-                try:
-                    import c4d
-
-                    p = float(PlacedMols) / float(totalNumMols) * 100.0
-                    c4d.StatusSetBar(int(p))
-                    c4d.StatusSetText(ingr.name + " " + str(ingr.completion))
-
-                except ImportError:
-                    p = (
-                        (float(PlacedMols)) / float(totalNumMols)
-                    ) * 100.0  # This code shows 100% of ingredients all the time
-                    if self.afviewer is not None and hasattr(self.afviewer, "vi"):
-                        self.afviewer.vi.progressBar(
-                            progress=int(p),
-                            label=ingr.name + " " + str(ingr.completion),
-                        )
-                        if self.afviewer.renderDistance:
-                            self.afviewer.vi.displayParticleVolumeDistance(
-                                distance, self
-                            )
+                p = (
+                    (float(PlacedMols)) / float(totalNumMols)
+                ) * 100.0  # This code shows 100% of ingredients all the time
+                if self.afviewer is not None and hasattr(self.afviewer, "vi"):
+                    self.afviewer.vi.progressBar(
+                        progress=int(p),
+                        label=ingr.name + " " + str(ingr.completion),
+                    )
+                    if self.afviewer.renderDistance:
+                        self.afviewer.vi.displayParticleVolumeDistance(distance, self)
 
             compNum = ingr.compNum
             radius = ingr.minRadius
@@ -3415,57 +2676,56 @@ class Environment(CompartmentList):
             mr = self.get_dpad(compNum)
             dpad = ingr.minRadius + mr + jitter
 
-            if verbose > 2:
-                print("picked Ingr radius compNum dpad", radius, compNum, dpad)
+            self.log.info(
+                "picked Ingr radius compNum dpad %d %s %d",
+                ingr.minRadius,
+                compNum,
+                dpad,
+            )
 
-            # find the points that can be used for this ingredients
+            # find the points that can be used for this ingredient
             ##
-            res = [True, int(random() * len(freePoints))]
-            if PlacedMols != 0:
-                res = self.callFunction(
-                    self.getPointToDrop,
-                    [
-                        ingr,
-                        radius,
-                        jitter,
-                        freePoints,
-                        nbFreePoints,
-                        distance,
-                        compId,
-                        compNum,
-                        vRangeStart,
-                        vThreshStart,
-                    ],
-                )
-            elif ingr.compNum > 0:
+
+            res = self.callFunction(
+                self.getPointToDrop,
+                [
+                    ingr,
+                    radius,
+                    jitter,
+                    freePoints,
+                    nbFreePoints,
+                    distance,
+                    compId,
+                    compNum,
+                    vRangeStart,
+                    vThreshStart,
+                ],
+            )
+            if ingr.compNum > 0:
                 allSrfpts = list(
                     self.compartments[ingr.compNum - 1].surfacePointsNormals.keys()
                 )
                 res = [True, allSrfpts[int(random() * len(allSrfpts))]]
-            #  Replaced this with Sept 25, 2011 thesis version on July 5, 2012
-            if verbose > 1:
-                print("get drop point res", res)
             if res[0]:
                 ptInd = res[1]
                 if ptInd > len(distance):
-                    print("problem ", ptInd)
+                    self.log.warning("problem ", ptInd)
                     continue
             else:
-                if verbose > 1:
-                    print("vRangeStart coninue ", res)
+                self.log.info("vRangeStart coninue ", res)
                 vRangeStart = res[1]
                 continue
-                print("picked ", ptInd, distance[ptInd])
             # place the ingredient
             if self.overwritePlaceMethod:
                 ingr.placeType = self.placeMethod
-            # if self.rejectionThreshold is not None:
-            #    ingr.rejectionThreshold = self.rejectionThreshold
-            # check the largestProteinSize
+
             if ingr.encapsulatingRadius > self.largestProteinSize:
                 self.largestProteinSize = ingr.encapsulatingRadius
-                # histoVol, ptInd, freePoints, nbFreePoints, distance, dpad,usePP,
-            # stepByStep=False, verbose=False,
+            self.log.info(
+                "attempting to place near %d: %r",
+                ptInd,
+                self.grid.masterGridPositions[ptInd],
+            )
             success, nbFreePoints = self.callFunction(
                 ingr.place,
                 (
@@ -3476,26 +2736,25 @@ class Environment(CompartmentList):
                     distance,
                     dpad,
                     usePP,
-                    stepByStep,
-                    verbose,
                 ),
-                {"debugFunc": debugFunc},
+            )
+            self.log.info(
+                "after place attempt placed: %r, number of free points:%d, length of free points=%d",
+                success,
+                nbFreePoints,
+                len(freePoints),
             )
             if success:
                 self.grid.distToClosestSurf = numpy.array(distance[:])
                 self.grid.freePoints = numpy.array(freePoints[:])
                 self.grid.nbFreePoints = len(freePoints)  # -1
-                if verbose > 1:
-                    print("success", ingr.completion)
                 # update largest protein size
                 # problem when the encapsulatingRadius is actually wrong
                 if ingr.encapsulatingRadius > self.largestProteinSize:
                     self.largestProteinSize = ingr.encapsulatingRadius
                 PlacedMols += 1
             else:
-                if verbose > 1:
-                    print("rejected", ingr.rejectionCounter)
-                    print("picked reduced ?", ptInd, distance[ptInd])
+                self.log.info("rejected %r", ingr.rejectionCounter)
 
             if ingr.completion >= 1.0:
                 ind = self.activeIngr.index(ingr)
@@ -3520,10 +2779,9 @@ class Environment(CompartmentList):
                         )
                 self.activeIngr.pop(ind)
                 self.activeIngr0, self.activeIngr12 = self.callFunction(
-                    self.getSortedActiveIngredients, (self.activeIngr, verbose)
+                    self.getSortedActiveIngredients, ([self.activeIngr])
                 )
                 if verbose > 2:
-                    print("len(self.activeIngr", len(self.activeIngr))
                     print("len(self.activeIngr0)", len(self.activeIngr0))
                     print("len(self.activeIngr12)", len(self.activeIngr12))
                 self.activeIngre_saved = self.activeIngr[:]
@@ -3564,21 +2822,14 @@ class Environment(CompartmentList):
                     mixed=True,
                     kwds=["source", "name", "positions", "radii"],
                     result=True,
-                    grid=False,
-                    packing_options=False,
-                    indent=False,
                     quaternion=True,
-                    transpose=False,
                 )
                 self.saveRecipe(
-                    self.resultfile + "_temporaray_tr.json",
+                    self.resultfile + "_temporaray_transpose.json",
                     useXref=True,
                     mixed=True,
                     kwds=["source", "name", "positions", "radii"],
                     result=True,
-                    grid=False,
-                    packing_options=False,
-                    indent=False,
                     quaternion=True,
                     transpose=True,
                 )
@@ -3588,312 +2839,19 @@ class Environment(CompartmentList):
         self.freePointsAfterFill = freePoints[:]
         self.nbFreePointsAfterFill = nbFreePoints
         self.distanceAfterFill = distance[:]
-        # self.rejectionCount = rejectionCount
-        #        c4d.documents.RunAnimation(doc, True)
         t2 = time.time()
-        print("time to fill", t2 - t1)
+        self.log.info("time to fill %d", t2 - t1)
 
         if self.saveResult:
-            self.grid.freePoints = freePoints[:]
-            self.grid.distToClosestSurf = distance[:]
-            # shoul check extension filename for type of saved file
-            self.saveGridToFile(self.resultfile + "grid")
-            self.grid.result_filename = self.resultfile + "grid"
-            self.collectResultPerIngredient()
-            self.store()
-            self.store_asTxt()
-            #            self.store_asJson(resultfilename=self.resultfile+".json")
-            self.saveRecipe(
-                self.resultfile + ".json",
-                useXref=False,
-                mixed=True,
-                kwds=["compNum"],
-                result=True,
-                quaternion=True,
-                grid=False,
-                packing_options=False,
-                indent=False,
-            )  # pdb ?
-            # self.saveGridToFile_asTxt(self.resultfile+"grid")freePointsAfterFill
-            # should we save to text as well
-            print("time to save in fil5", time.time() - t2)
-            #            vAnalysis = 0
-            if vAnalysis == 1:
-                #    START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
-                unitVol = self.grid.gridSpacing ** 3
-                # totalVolume = self.grid.gridVolume*unitVol
-                wrkDirRes = self.resultfile + "_analyze_"
-                print("self.compartments = ", self.compartments)
-                for o in self.compartments:  # only for compartment ?
-                    # totalVolume -= o.surfaceVolume
-                    # totalVolume -= o.interiorVolume
-                    innerPointNum = len(o.insidePoints) - 1
-                    print("  .  .  .  . ")
-                    print("for compartment o = ", o.name)
-                    print("inner Point Count = ", innerPointNum)
-                    print("inner Volume = ", o.interiorVolume)
-                    print("innerVolume temp Confirm = ", innerPointNum * unitVol)
-                    usedPts = 0
-                    unUsedPts = 0
-                    # fpts = self.freePointsAfterFill
-                    vDistanceString = ""
-                    insidepointindce = numpy.nonzero(
-                        numpy.equal(self.grid.gridPtId, -o.number)
-                    )[0]
-                    for i in insidepointindce:  # xrange(innerPointNum):
-                        #                        pt = o.insidePoints[i] #fpts[i]
-                        #                        print (pt,type(pt))
-                        # for pt in self.histo.freePointsAfterFill:#[:self.histo.nbFreePointsAfterFill]:
-                        d = self.distancesAfterFill[i]
-                        vDistanceString += str(d) + "\n"
-                        if d <= 0:  # >self.smallestProteinSize-0.001:
-                            usedPts += 1
-                        else:
-                            unUsedPts += 1
-                    filename = (
-                        wrkDirRes
-                        + "vResultMatrix1"
-                        + o.name
-                        + "_Testid"
-                        + str(vTestid)
-                        + "_Seed"
-                        + str(seedNum)
-                        + "_dists.txt"
-                    )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                    #            filename = wrkDirRes+"/vDistances1.txt"
-                    f = open(filename, "w")
-                    f.write(vDistanceString)
-                    f.close()
+            self.save_result(
+                freePoints,
+                distances=distance,
+                t0=t2,
+                vAnalysis=vAnalysis,
+                vTestid=vTestid,
+                seedNum=seedNum,
+            )
 
-                    # result is [pos,rot,ingr.name,ingr.compNum,ptInd]
-                    # if resultfilename == None:
-                    # resultfilename = self.resultfile
-                    resultfilenameT = (
-                        wrkDirRes
-                        + "vResultMatrix1"
-                        + o.name
-                        + "_Testid"
-                        + str(vTestid)
-                        + "_Seed"
-                        + str(seedNum)
-                        + "_Trans.txt"
-                    )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                    resultfilenameR = (
-                        wrkDirRes
-                        + "vResultMatrix1"
-                        + o.name
-                        + "_Testid"
-                        + str(vTestid)
-                        + "_Seed"
-                        + str(seedNum)
-                        + "_Rot.txt"
-                    )  # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                    #            resultfilenameT = wrkDirRes+"/vResultMatrix1" + o.name + "_Trans.txt"
-                    #            resultfilenameR = wrkDirRes+"/vResultMatrix1" + o.name + "_Rot.txt"
-                    # pickle.dump(self.molecules, rfile)
-                    # OR
-                    vTranslationString = ""
-                    vRotationString = ""
-                    result = []
-                    matCount = 0
-                    # Add safety check for C4D until we can get uPy working for this matrix to hbp rotation function?
-                    #            from c4d import utils   # Removed by Graham on July 10, 2012 because replaced with more recent Thesis code on July 5, 2012 below
-                    # what do you save everthing inleft hand ? and you actually dont use it ??
-                    # Note July 4, 2012: the results are saved as right handed (see 2, 1, 0 for h, p, b) and used for analysis tools
-                    # Note July 5, 2012: I found the better version we made and added it below to override the C4D version!
-                    for pos, rot, ingr, ptInd in o.molecules:
-                        # vMatrixString += str(result([pos]))+"\n"
-                        # BEGIN: newer code from Theis version added July 5, 2012
-                        if hasattr(self, "afviewer"):
-                            mat = rot.copy()
-                            mat[:3, 3] = pos
-                            import math
-                            from ePMV import comput_util as c
-
-                            r = c.matrixToEuler(mat)
-                            h1 = math.degrees(math.pi + r[0])
-                            p1 = math.degrees(r[1])
-                            b1 = math.degrees(-math.pi + r[2])
-                            # angles[0] = 180.0+angles[0]
-                            # angles[2] = 180.0-angles[2]
-                            # hmat = self.afviewer.vi.FromMat(mat,transpose=True)
-                            # rot = utils.MatrixToHPB(hmat)
-                            print("rot from matrix = ", r, h1, p1, b1)
-                            # END: newer code from Theis version added July 5, 2012
-                        result.append([pos, rot])
-                        pt3d = result[matCount][0]
-                        (
-                            x,
-                            y,
-                            z,
-                        ) = pt3d  # ADDDED this line back from newer code from Theis version added July 5, 2012
-                        # BEGIN: retired SVN version, retired July 5, 2012
-                        #                x, y, z = pt3d
-                        #                rot3d = result[matCount][1][2]
-                        #                h1 = rot3d[2]
-                        #                p1 = rot3d[1]
-                        #                b1 = rot3d[0]
-                        #                rot3d = result[matCount][1][1]
-                        #                h2 = rot3d[2]
-                        #                p2 = rot3d[1]
-                        #                b2 = rot3d[0]
-                        #                rot3d = result[matCount][1][0]
-                        #                h3 = rot3d[2]
-                        #                p3 = rot3d[1]
-                        #                b3 = rot3d[0]
-                        # can we test for C4D for these last 6 lines until we can get same functionality from uPy?
-                        #                off = c4d.Vector(0)
-                        #                vec = c4d.Matrix(off, c4d.Vector(h1, p1, b1), c4d.Vector(h2,p2,b2), c4d.Vector(h3,p3,b3) )
-                        #                print vec
-                        #                #m = rot3d #obj.GetMg()
-                        #                rot = utils.MatrixToHPB(vec)
-                        #                print 'rot from matrix = ', rot
-                        # END: retired SVN version, retired July 5, 2012
-                        vTranslationString += (
-                            str(x) + ",\t" + str(y) + ",\t" + str(z) + "\n"
-                        )
-                        # vRotationString += str(rot3d) #str(h)+ ",\t" + str(p) + ",\t" + str(b) + "\n"
-                        vRotationString += (
-                            str(h1)
-                            + ",\t"
-                            + str(p1)
-                            + ",\t"
-                            + str(b1)
-                            + ",\t"
-                            + ingr.name
-                            + "\n"
-                        )  # ADDDED this line back from newer code from Theis version added July 5, 2012 to replace next line from SVN
-                        #                vRotationString += str(h1)+ ",\t" + str(p1) + ",\t" + str(b1) + ingr.name +"\n"
-                        # vRotationString += str( (result[matCount][1]).x )+"\n"
-                        matCount += 1
-
-                    # result.append([pos,rot,ingr.name,ingr.compNum,ptInd])
-                    # d = self.distancesAfterFill[pt]
-                    # vDistanceString += str(d)+"\n"
-                    # pickle.dump(result, rfile)
-                    rfile = open(resultfilenameT, "w")
-                    rfile.write(vTranslationString)
-                    rfile.close()
-
-                    rfile = open(resultfilenameR, "w")
-                    rfile.write(vRotationString)
-                    rfile.close()
-                    print("len(result) = ", len(result))
-                    print("len(self.molecules) = ", len(self.molecules))
-                    # Graham Note:  There is overused disk space- the rotation matrix is 4x4 with an offset of 0,0,0
-                    # and we have a separate translation vector in the results and molecules arrays.
-                    #  Get rid of the translation vector and move it to the rotation matrix to save space...
-                    # will that slow the time it takes to extract the vector from the matrix when we need to call it?
-                    print(
-                        "*************************************************** vDistance String Should be on"
-                    )
-                    print("unitVolume2 = ", unitVol)
-                    print("Number of Points Unused = ", unUsedPts)
-                    print("Number of Points Used   = ", usedPts)
-                    print("Volume Used   = ", usedPts * unitVol)
-                    print("Volume Unused = ", unUsedPts * unitVol)
-                    print("vTestid = ", vTestid)
-                    print("self.nbGridPoints = ", self.nbGridPoints)
-                    print("self.gridVolume = ", self.gridVolume)
-                    #        self.exteriorVolume = totalVolume
-
-            print("self.compartments In Environment = ", len(self.compartments))
-            if self.compartments == []:
-                # o = self.histoVol
-                #                o = self.exteriorRecipe
-                unitVol = self.grid.gridSpacing ** 3
-                innerPointNum = len(freePoints)
-                print("  .  .  .  . ")
-                print("inner Point Count = ", innerPointNum)
-                print("innerVolume temp Confirm = ", innerPointNum * unitVol)
-                usedPts = 0
-                unUsedPts = 0
-                # fpts = self.freePointsAfterFill
-                vDistanceString = ""
-                for i in range(innerPointNum):
-                    pt = freePoints[i]  # fpts[i]
-                    # for pt in self.histo.freePointsAfterFill:#[:self.histo.nbFreePointsAfterFill]:
-                    d = self.distancesAfterFill[pt]
-                    vDistanceString += str(d) + "\n"
-                    if d <= 0:  # >self.smallestProteinSize-0.001:
-                        usedPts += 1
-                    else:
-                        unUsedPts += 1
-                    #                filename = wrkDirRes+"/vResultMatrix1" + o.name + "_Testid" + str(vTestid) + "_Seed" + str(seedNum) + "_dists.txt" # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                    #                #            filename = wrkDirRes+"/vDistances1.txt"
-                    #                f = open(filename,"w")
-                    #                vMyString = "I am on" + "\nThis is a new line."
-                    #                f.write(vDistanceString)
-                    #                f.close()
-                    #                resultfilenameT = wrkDirRes+"/vResultMatrix1" + o.name + "_Testid" + str(vTestid) + "_Seed" + str(seedNum) + "_Trans.txt" # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                    #                resultfilenameR = wrkDirRes+"/vResultMatrix1" + o.name + "_Testid" + str(vTestid) + "_Seed" + str(seedNum) + "_Rot.txt" # Used this from thesis to overwrite less informative SVN version on next line on July 5, 2012
-                    #                vTranslationString = ""
-                    #                vRotationString = ""
-                    #                result=[]
-                    #                matCount = 0
-                    #                # Add safety check for C4D until we can get uPy working for this matrix to hbp rotation function?
-                    #                #            from c4d import utils   # Removed by Graham on July 10, 2012 because replaced with more recent Thesis code on July 5, 2012 below
-                    #                #what do you save everthing in left hand ? and you actually dont use it ??
-                    #                # Note July 4, 2012: the results are saved as right handed (see 2, 1, 0 for h, p, b) and used for analysis tools
-                    #                # Note July 5, 2012: I found the better version we made and added it below to override the C4D version!
-                    #                for pos, rot, ingr, ptInd in o.molecules:
-                    #                    #vMatrixString += str(result([pos]))+"\n"
-                    #                    # BEGIN: newer code from Theis version added July 5, 2012
-                    #                    if hasattr(self,"afviewer"):
-                    #                        mat = rot.copy()
-                    #                        mat[:3, 3] = pos
-                    #                        import math
-                    #                        from ePMV import comput_util as c
-                    #                        r  = c.matrixToEuler(mat)
-                    #                        h1 = math.degrees(math.pi + r[0])
-                    #                        p1 = math.degrees(r[1])
-                    #                        b1 = math.degrees(-math.pi + r[2])
-                    #                        #angles[0] = 180.0+angles[0]
-                    #                        #angles[2] = 180.0-angles[2]
-                    #                        #hmat = self.afviewer.vi.FromMat(mat,transpose=True)
-                    #                        #rot = utils.MatrixToHPB(hmat)
-                    #                        print 'rot from matrix = ', r,h1,p1,b1
-                    #                    # END: newer code from Theis version added July 5, 2012
-                    #                    result.append([pos,rot])
-                    #                    pt3d = result[matCount][0]
-                    #                    x, y, z = pt3d #  ADDDED this line back from newer code from Theis version added July 5, 2012
-                    #                    vTranslationString += str(x)+ ",\t" + str(y) + ",\t" + str(z) + "\n"
-                    #                    vRotationString += str(h1)+ ",\t" + str(p1) + ",\t" + str(b1) + ",\t" + ingr.name +"\n"  #  ADDDED this line back from newer code from Theis version
-                    #                    matCount += 1
-                    #                rfile = open(resultfilenameT, 'w')
-                    #                rfile.write( vTranslationString )
-                    #                rfile.close()
-                    #
-                    #                rfile = open(resultfilenameR, 'w')
-                    #                rfile.write( vRotationString )
-                    #                rfile.close()
-                    #                print ('len(result) = ', len(result))
-                    #                print ('len(self.molecules) = ', len(self.molecules))
-                # Graham Note:  There is overused disk space- the rotation matrix is 4x4 with an offset of 0,0,0
-                # and we have a separate translation vector in the results and molecules arrays.
-                # Get rid of the translation vector and move it to the rotation matrix to save space...
-                # will that slow the time it takes to extract the vector from the matrix when we need to call it?
-                print(
-                    "*************************************************** vDistance String Should be on"
-                )
-                print("unitVolume2 = ", unitVol)
-                print("Number of Points Unused = ", unUsedPts)
-                print("Number of Points Used   = ", usedPts)
-                print("Volume Used   = ", usedPts * unitVol)
-                print("Volume Unused = ", unUsedPts * unitVol)
-                print("vTestid = ", vTestid)
-                print("self.nbGridPoints = ", self.nbGridPoints)
-                print("self.gridVolume = ", self.gridVolume)
-                print("histoVol.timeUpDistLoopTotal = ", self.timeUpDistLoopTotal)
-
-                # totalVolume = self.grid.gridVolume*unitVol
-                # fpts = self.nbFreePointsAfterFill
-                #        print 'self.freePointsAfterFill = ', self.freePointsAfterFill
-                # print 'nnbFreePointsAfterFill = ', self.nbFreePointsAfterFill
-                # print 'Total Points = ', self.grid.gridVolume
-                # print 'Total Volume = ', totalVolume
-                #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
-        print("time to save end", time.time() - t2)
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):
             self.afviewer.vi.progressBar(label="Filling Complete")
             self.afviewer.vi.resetProgressBar()
@@ -4580,7 +3538,7 @@ class Environment(CompartmentList):
         if self.octree is None:
             #            from autopack.octree import Octree
             from autopack import octree_exteneded as octree
-            from autopack.octree_exteneded import Octree
+            from autopack import Octree
 
             octree.MINIMUM_SIZE = self.smallestProteinSize
             octree.MAX_OBJECTS_PER_NODE = 10
@@ -5027,37 +3985,45 @@ class Environment(CompartmentList):
     def moveRBnode(self, node, trans, rotMat):
         if panda3d is None:
             return
-        mat = rotMat.copy()
+        rotation_matrix = rotMat.copy()
         #        mat[:3, 3] = trans
         #        mat = mat.transpose()
-        mat = mat.transpose().reshape((16,))
-        if True in numpy.isnan(mat).flatten():
+        rotation_matrix = rotation_matrix.transpose().reshape((16,))
+        if True in numpy.isnan(rotation_matrix).flatten():
             print("problem Matrix", node)
             return
         if self.panda_solver == "bullet":
             pMat = Mat4(
-                mat[0],
-                mat[1],
-                mat[2],
-                mat[3],
-                mat[4],
-                mat[5],
-                mat[6],
-                mat[7],
-                mat[8],
-                mat[9],
-                mat[10],
-                mat[11],
+                rotation_matrix[0],
+                rotation_matrix[1],
+                rotation_matrix[2],
+                rotation_matrix[3],
+                rotation_matrix[4],
+                rotation_matrix[5],
+                rotation_matrix[6],
+                rotation_matrix[7],
+                rotation_matrix[8],
+                rotation_matrix[9],
+                rotation_matrix[10],
+                rotation_matrix[11],
                 trans[0],
                 trans[1],
                 trans[2],
-                mat[15],
+                rotation_matrix[15],
             )
             nodenp = NodePath(node)
             nodenp.setMat(pMat)
         elif self.panda_solver == "ode":
             mat3x3 = Mat3(
-                mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10]
+                rotation_matrix[0],
+                rotation_matrix[1],
+                rotation_matrix[2],
+                rotation_matrix[4],
+                rotation_matrix[5],
+                rotation_matrix[6],
+                rotation_matrix[8],
+                rotation_matrix[9],
+                rotation_matrix[10],
             )
             body = node.get_body()
             body.setPosition(Vec3(trans[0], trans[1], trans[2]))

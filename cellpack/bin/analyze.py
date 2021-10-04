@@ -8,7 +8,9 @@ Run autopack from recipe file
 # Standard library
 import sys
 import os
+from os import path
 import logging
+import logging.config
 import traceback
 
 # Third party
@@ -16,19 +18,16 @@ import numpy
 import argparse
 
 # Relative
-import cellpack.mgl_tools.upy as upy
+import cellpack.autopack.upy as upy
 from cellpack import autopack, get_module_version
 from cellpack.autopack.Environment import Environment
 from cellpack.autopack.Analysis import AnalyseAP
-from cellpack.autopack.Graphics import AutopackViewer as AFViewer
 
 ###############################################################################
 
+log_file_path = path.join(path.dirname(path.abspath(__file__)), "../../logging.conf")
+logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
 log = logging.getLogger()
-logging.basicConfig(
-    level=logging.INFO, format="[%(levelname)4s:%(lineno)4s %(asctime)s] %(message)s"
-)
-
 ###############################################################################
 
 
@@ -38,7 +37,6 @@ class Args(argparse.Namespace):
     DEFAULT_ANALYSIS = True
     DEFAULT_RECIPE_FILE = "cellpack/test-recipes/NM_Analysis_FigureA1.0.xml"
     DEFAULT_OUTPUT_FILE = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_A2_2/"
-    DEFAULT_USE_GUI = False
     DEFAULT_PLACE_METHOD = "RAPID"
 
     def __init__(self):
@@ -47,7 +45,6 @@ class Args(argparse.Namespace):
         self.analysis = self.DEFAULT_ANALYSIS
         self.recipe = self.DEFAULT_RECIPE_FILE
         self.output = self.DEFAULT_OUTPUT_FILE
-        self.use_gui = self.DEFAULT_USE_GUI
         self.place_method = self.DEFAULT_PLACE_METHOD
         self.debug = True
         #
@@ -93,15 +90,6 @@ class Args(argparse.Namespace):
             help="The dimensions of the packing",
         )
         p.add_argument(
-            "-g",
-            "--use-gui",
-            action="store",
-            dest="use_gui",
-            type=bool,
-            default=self.use_gui,
-            help="Whether to use a GUI",
-        )
-        p.add_argument(
             "-a",
             "--analysis",
             action="store",
@@ -142,16 +130,11 @@ def main():
             os.mkdir(output)
         dim = args.dim
         place_method = args.place_method
-        use_gui = args.use_gui
-        print("Recipe : {}\n".format(args.recipe))
+        log.info("Recipe : {}\n".format(args.recipe))
         localdir = wrkDir = autopack.__path__[0]
         helperClass = upy.getHelperClass()
-        if use_gui:
-            print("USE GUI", helperClass)
-            helper = helperClass()
-        else:
-            helper = helperClass(vi="nogui")
-        print("HELPER", helper)
+        helper = helperClass(vi="nogui")
+        log.info("HELPER %r", helper)
 
         autopack.helper = helper
 
@@ -163,13 +146,6 @@ def main():
         afviewer = None
 
         env.saveResult = False
-
-        if use_gui:
-            setattr(env, "helper", helper)
-            afviewer = AFViewer(ViewerType=env.helper.host, helper=env.helper)
-            afviewer.SetHistoVol(env, 20.0, display=False)
-            env.host = env.helper.host
-            afviewer.displayPreFill()
 
         def setCompartment(ingr):
             # ingr.rejectionThreshold = 60  # [1,1,0]#
@@ -184,44 +160,25 @@ def main():
         env.loopThroughIngr(setCompartment)
 
         if do_analysis:
-            if place_method == "RAPID":
-                env.placeMethod = "RAPID"
-                env.encapsulatingGrid = 0
-                autopack.testPeriodicity = False
-                analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
-                analyse.g.Resolution = 1.0
-                env.boundingBox = numpy.array(env.boundingBox)
-                analyse.doloop(
-                    2,
-                    env.boundingBox,
-                    wrkDir,
-                    output,
-                    rdf=True,
-                    render=False,
-                    twod=(dim == 2),
-                    use_file=True,
-                )  # ,fbox_bb=fbox_bb)
-            elif place_method == "pandaBullet":
-                env.placeMethod = "pandaBullet"
-                env.encapsulatingGrid = 0
-                env.use_periodicity = True
-                autopack.testPeriodicity = True
-                autopack.biasedPeriodicity = [1, 1, 1]
-                analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
-                env.analyse = analyse
-                analyse.g.Resolution = 1.0
-                env.smallestProteinSize = 30.0  # get it faster? same result ?
-                env.boundingBox = numpy.array(env.boundingBox)
-                analyse.doloop(
-                    2,
-                    env.boundingBox,
-                    wrkDir,
-                    output,
-                    rdf=True,
-                    render=False,
-                    twod=(dim == 2),
-                    use_file=True,
-                )  # ,fbox_bb=fbox_bb)
+            log.info("DOING ANALYSIS %r", do_analysis)
+
+            env.placeMethod = place_method
+            env.encapsulatingGrid = 0
+            autopack.testPeriodicity = False
+            analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
+            analyse.g.Resolution = 1.0
+            env.boundingBox = numpy.array(env.boundingBox)
+
+            analyse.doloop(
+                1,
+                env.boundingBox,
+                wrkDir,
+                output,
+                rdf=True,
+                render=False,
+                twod=(dim == 2),
+                use_file=True,
+            )  # ,fbox_bb=fbox_bb)
         else:
             gridfile = (
                 localdir
@@ -230,7 +187,7 @@ def main():
             )
             env.placeMethod = "RAPID"
             env.saveResult = True
-            env.innerGridMethod = "bhtree"  # jordan pure python ? sdf ?
+            env.innerGridMethod = "jordan"  # jordan pure python ? sdf ?
             env.boundingBox = [[-2482, -2389.0, 100.0], [2495, 2466, 2181.0]]
             env.buildGrid(
                 boundingBox=env.boundingBox,

@@ -20,12 +20,13 @@ from matplotlib import pyplot
 from matplotlib.patches import Circle
 from matplotlib import pyplot as plt
 
-from cellpack.mgl_tools.upy import colors as col
+from cellpack.autopack.upy import colors as col
 import cellpack.autopack as autopack
 from cellpack.autopack.transformation import signed_angle_between_vectors
 from cellpack.autopack.ldSequence import halton
 
 from cellpack.autopack.GeometryTools import GeometryTools, Rectangle
+from cellpack.autopack.upy.colors import map_colors
 
 
 def autolabel(rects, ax):
@@ -219,9 +220,6 @@ class AnalyseAP:
             elif parents is not None and self.result_file is None:
                 listeParent = parents
             listCenters = self.getPositionsFromObject(listeParent)
-        else:
-            # use data from file
-            listCenters = self.getPositionsFromResFile(listeParent)
 
         delta = numpy.array(listCenters) - numpy.array(targetPos)
         delta *= delta
@@ -240,7 +238,9 @@ class AnalyseAP:
             listeCenters = self.getPositionsFromObject(listeParent)
         else:
             # use data from file
-            listeCenters = self.getPositionsFromResFile(listeParent)
+            # TODO: currently getPositionsFromResFile returns an empty list
+            # listeCenters = self.getPositionsFromResFile(listeParent)
+            listeCenters = []
         # is the distance in the result array ?
         listeDistance = numpy.zeros(len(listeCenters)) + 99999
         for i in range(len(listeCenters)):
@@ -313,8 +313,6 @@ class AnalyseAP:
         # which axis ?
         distances = numpy.array(self.env.grid.distToClosestSurf[:])
 
-        from DejaVu.colorTool import Map
-
         ramp = col.getRamp([ramp_color1, ramp_color2], size=255)  # color
         mask = distances > cutoff
         ind = numpy.nonzero(mask)[0]
@@ -323,7 +321,7 @@ class AnalyseAP:
         ind = numpy.nonzero(mask)[0]
         distances[ind] = 0  # cutoff
         newd = numpy.append(distances, cutoff)
-        colors = Map(newd, ramp)[:-1]  # 1D array of the grid x,y,1
+        colors = map_colors(newd, ramp)[:-1]  # 1D array of the grid x,y,1
         autopack._colors = colors
         p = self.helper.getObject(self.env.name + "distances")
         if p is not None:
@@ -947,7 +945,7 @@ class AnalyseAP:
 
     #        pylab.close()     # closes the current figure
 
-    def plot(self, rdf, radii, filname):
+    def plot(self, rdf, radii, file_name):
         pylab.clf()
         matplotlib.rc("font", size=14)
         matplotlib.rc("figure", figsize=(5, 4))
@@ -955,14 +953,14 @@ class AnalyseAP:
         pylab.plot(radii, rdf, linewidth=3)
         pylab.xlabel(r"distance $r$ in $\AA$")
         pylab.ylabel(r"radial distribution function $g(r)$")
-        pylab.savefig(filname)
+        pylab.savefig(file_name)
 
     #        pylab.close()     # closes the current figure
 
-    def simpleplot(self, X, Y, filname, w=3):
+    def simpleplot(self, X, Y, filenameme, w=3):
         pylab.clf()
         pylab.plot(X, Y, linewidth=w)
-        pylab.savefig(filname)
+        pylab.savefig(filenameme)
 
     #        pylab.close()     # closes the current figure
 
@@ -1005,12 +1003,12 @@ class AnalyseAP:
 
     def pack(self, seed=20, forceBuild=True, vTestid=3, vAnalysis=0, fbox_bb=None):
         t1 = time()
-        print("seed is ", seed, fbox_bb)
+        # self.log.info("seed is %d %r", seed, fbox_bb)
         self.env.pack_grid(
-            seedNum=seed, verbose=0, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb
+            seedNum=seed, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb
         )
         t2 = time()
-        print("time to run Fill5", t2 - t1)
+        print("time to run pack_grid", t2 - t1)
 
     def calcDistanceMatrixFastEuclidean2(self, nDimPoints):
         nDimPoints = numpy.array(nDimPoints)
@@ -1336,7 +1334,7 @@ class AnalyseAP:
                                 f_handle = open(distance_file, "a")
                                 numpy.savetxt(f_handle, d, delimiter=",")
                                 f_handle.close()
-                                distances[ingr.name] = d.tolist()
+                                distances[ingr.name] = d
                                 ingrpositions[ingr.name] = ingrpos.tolist()
                             else:
                                 distances[ingr.name].extend(d)
@@ -1371,7 +1369,7 @@ class AnalyseAP:
                                 f_handle = open(distance_file, "a")
                                 numpy.savetxt(f_handle, d, delimiter=",")
                                 f_handle.close()
-                                distances[ingr.name] = d.tolist()
+                                distances[ingr.name] = d
                                 ingrpositions[ingr.name] = ingrpos.tolist()
                             else:
                                 distances[ingr.name].extend(d)

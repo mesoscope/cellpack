@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
     Copyright (C) <2010>  Autin L. TSRI
-    
     This file git_upy/hostHelper.py is part of upy.
 
     upy is free software: you can redistribute it and/or modify
@@ -24,6 +23,7 @@ from math import cos, sin, sqrt
 import random
 import numpy
 import PIL as Image
+from pymunk.util import is_clockwise, calc_area
 
 
 from cellpack.mgl_tools.upy import colors
@@ -320,7 +320,7 @@ class Helper:
                 mat = matrice.transpose().tolist()
                 return mat
             else:
-                return matrice 
+                return matrice
         return matrice
 
     def rotatePoint(self, pt, m, ax):
@@ -747,10 +747,7 @@ class Helper:
         @param listeObjects: type of modification: new,add,...
 
         """
-        #        dic={"add":c4d.SELECTION_ADD,"new":c4d.SELECTION_NEW}
-        sc = self.getCurrentScene()
-        # Put here the code to add/set an object to the current slection
-        # [sc.SetSelection(x,dic[typeSel]) for x in listeObjects]
+        # Put here the code to add/set an object to the current selection
 
     def JoinsObjects(self, listeObjects):
         """
@@ -761,7 +758,6 @@ class Helper:
         @type  listeObjects: list
         @param listeObjects: list of object to joins
         """
-        sc = self.getCurrentScene()
 
     def addCameraToScene(self, name, Type, focal, center, scene, **kw):
         """
@@ -786,9 +782,6 @@ class Helper:
         #we  add a **kw for futur arguments
         """
         pass
-
-    #        cam = None
-    #        self.addObjectToScene(scene,cam)
 
     def addLampToScene(
         self,
@@ -832,7 +825,6 @@ class Helper:
         @param scene: the scene
         #we  add a **kw for futur arguments
         """
-        dicType = {"Area": 0, "Sun": 3}
         lamp = None  # c4d.BaseObject(LIGHT)
         # lamp name (name)
         # lamp position (center)
@@ -1325,7 +1317,6 @@ class Helper:
         """
         if color is None:
             return None
-        doc = self.getCurrentScene()
         mat = self.getMaterial(color)
         print(mat, color, type(mat))
         if mat is not None and type(mat) != list and type(mat) != tuple:
@@ -1485,12 +1476,6 @@ class Helper:
             useMaterial : crete a materal with the given color and assign it to the object
             useObjectColors : change the color propertie of the object (Viewport)
         """
-        useMaterial = False
-        useObjectColors = False
-        if options.has_key("useMaterial"):
-            useMaterial = options["useMaterial"]
-        if options.has_key("useObjectColors"):
-            useObjectColors = options["useObjectColors"]
 
     def changeColor(
         self,
@@ -1804,8 +1789,6 @@ class Helper:
         @rtype:   hostObject,hostMesh
         @return:  the created sphere object and mesh
         """
-
-        QualitySph = {"0": 6, "1": 4, "2": 5, "3": 6, "4": 8, "5": 16}
         return None, None
 
     def getBoxSize(self, name, **kw):
@@ -1859,7 +1842,6 @@ class Helper:
         if cornerPoints is not None:
             for i in range(3):
                 size[i] = cornerPoints[1][i] - cornerPoints[0][i]
-            center = (numpy.array(cornerPoints[0]) + numpy.array(cornerPoints[1])) / 2.0
         # position the cube to center
         # set the dimension to size
         # return the box
@@ -1894,13 +1876,11 @@ class Helper:
         @param kw: additional keywords options
         """
         # put your code
-        box = None
         # set the name 'name'
         # if corner is provided compute the cube dimension in x,y,z, and the center
         if cornerPoints is not None:
             for i in range(3):
                 size[i] = cornerPoints[1][i] - cornerPoints[0][i]
-            center = (numpy.array(cornerPoints[0]) + numpy.array(cornerPoints[1])) / 2.0
         # position the cube to center
         # set the dimension to size
 
@@ -2011,7 +1991,6 @@ class Helper:
         if cornerPoints is not None:
             for i in range(3):
                 size[i] = cornerPoints[1][i] - cornerPoints[0][i]
-            center = (numpy.array(cornerPoints[0]) + numpy.array(cornerPoints[1])) / 2.0
         # position the cube to center
         # set the dimension to size
         # return the box
@@ -2150,7 +2129,6 @@ class Helper:
             (3, 0, 4),
             (4, 7, 3),  # left
         )
-        a = 1.0
         faceNormals = None
         depth = radius * sin(math.radians(45.0))
         _corners = (
@@ -3510,7 +3488,7 @@ class Helper:
         return newnormals
 
     def normalize_v3(self, arr):
-        """ Normalize a numpy array of 3 component vectors shape=(n,3) """
+        """Normalize a numpy array of 3 component vectors shape=(n,3)"""
         #        return self.unit_vector(arr,axis=1)
         #        lens = numpy.linalg.norm(arr,axis=1)
         lens = numpy.sqrt(arr[:, 0] ** 2 + arr[:, 1] ** 2 + arr[:, 2] ** 2)
@@ -3551,7 +3529,7 @@ class Helper:
         pass
 
     def toggle(self, variable, value):
-        variable = value
+        pass
 
     # Quad
     #    0   1
@@ -3563,6 +3541,7 @@ class Helper:
     #   Quad A B C D
     #   Triangles A B C / A C D
     #   Triangles A B D / D B C (compare A-C B-D)
+
     def triangulateFace(self, f, vertices):
         A = vertices[f[0]]
         B = vertices[f[1]]
@@ -3589,7 +3568,6 @@ class Helper:
         return trifaces
 
     #    from pymunk.vec2d import Vec2d
-    #    from pymunk.util import is_clockwise, calc_area, is_convex
 
     # "hidden" functions
 
@@ -3628,13 +3606,13 @@ class Helper:
             b = poly[ib]
             c = poly[ic]
             # is point b an outer corner?
-            if _is_corner(a, b, c):
+            if self._is_corner(a, b, c):
                 # are there any other points inside triangle abc?
                 valid = True
                 for j in range(count):
                     if not (j in (ia, ib, ic)):
                         p = poly[j]
-                        if _point_in_triangle(p, a, b, c):
+                        if self._point_in_triangle(p, a, b, c):
                             valid = False
                 # if no such point found, abc must be an "ear"
                 if valid:
@@ -3648,7 +3626,7 @@ class Helper:
         # no ear was found, so something is wrong with the given poly (not anticlockwise? self-intersects?)
         return [], []
 
-    ### major functions
+    # major functions
 
     def _triangulate(self, poly):
         """
@@ -3663,7 +3641,7 @@ class Helper:
             # this stops the starting point from getting stale which sometimes a "fan" of polys, which often leads to poor convexisation
             remaining = remaining[1:] + remaining[:1]
             # clip the ear, store it
-            ear, remaining = _get_ear(remaining)
+            ear, remaining = self._get_ear(remaining)
             if ear != []:
                 triangles.append(ear)
         # return stored triangles
@@ -3797,19 +3775,6 @@ class Helper:
     # ===============================================================================
     # Advanced Function
     # ===============================================================================
-
-    def setRigidBody(self, *args, **kw):
-        """
-        Should set the given object as a rigid body according given options.
-        TO DO.
-
-        * overwrited by children class for each host
-
-        @type  args: list
-        @param args: list of arguments options
-        @type  kw: dictionary
-        @param kw: dictionary of arguments options
-        """
 
     def pathDeform(self, *args, **kw):
         """
@@ -4533,10 +4498,7 @@ class Helper:
 
         invert = False
         img = self.getImage(img, draw, sizex, sizey)
-        if draw:
-            import ImageDraw
 
-            imdraw = ImageDraw.Draw(img)
         # object handling
         if faces is None:
             faces = self.getFaces(object)
@@ -4551,15 +4513,11 @@ class Helper:
         self.resetProgressBar(0)
         for i, f in enumerate(faces):
             xys = [(x, y), (x + s, y + s), (x + s, y)]
-            box = [(x, y), (x + s, y + s)]
             c1 = numpy.array(self.convertColor(colors[f[order[0]]]))
             c2 = numpy.array(self.convertColor(colors[f[order[1]]]))
             c3 = numpy.array(self.convertColor(colors[f[order[2]]]))
-            if draw:
-                self.drawGradientLine(imdraw, c1, c2, c3, xys)
-                # self.drawPtCol(imdraw,numpy.array([c1,c2,c3]),xys,debug=0)
-            else:
-                img = self.fillTriangleColor(img, c1, c2, c3, xys)
+
+            img = self.fillTriangleColor(img, c1, c2, c3, xys)
             if invert:
                 uv = [
                     [(x + 2) / sizex, 1 - ((y + 2) / sizey), 0],
@@ -4601,118 +4559,6 @@ class Helper:
         self.resetProgressBar(0)
         return img
 
-    def makeTextureM(
-        self,
-        object,
-        filename=None,
-        img=None,
-        colors=None,
-        sizex=0,
-        sizey=0,
-        s=20,
-        draw=True,
-        faces=None,
-        invert=False,
-    ):
-        """
-        Experiment for baking object colors using a PIL image
-
-        """
-        img = self.getImage(img, draw, sizex, sizey)
-
-        if draw:
-            import ImageDraw
-
-            imdraw = ImageDraw.Draw(img)
-        else:
-            return None
-        # object handling
-        if faces == None:
-            faces = self.getFaces(object)
-        x = 0
-        y = 0
-        s = s
-        self.resetProgressBar(0)
-        uv = {}
-        for i, f in enumerate(faces):
-            xys = [(x, y), (x + s, y + s), (x + s, y)]
-            box = [(x, y), (x + s, y + s)]
-            c1 = numpy.array(self.convertColor(colors[f[0]]))
-            c2 = numpy.array(self.convertColor(colors[f[1]]))
-            c3 = numpy.array(self.convertColor(colors[f[2]]))
-            if draw:
-                self.drawGradientLine(imdraw, c1, c2, c3, xys)
-                # self.drawPtCol(imdraw,numpy.array([c1,c2,c3]),xys,debug=0)
-            if invert:
-                uv[i] = [
-                    [(x + 2) / sizex, 1 - ((y + 2) / sizey), 0],
-                    [(x + s - 2) / sizex, 1 - ((y + s - 2) / sizey), 0],
-                    [(x + s - 2) / sizex, 1 - ((y + 2) / sizey), 0],
-                    [(x + s - 2) / sizex, 1 - ((y + 2) / sizey), 0],
-                ]
-            else:
-                uv[i] = [
-                    [(x + 2) / sizex, (y + 2) / sizey, 0],
-                    [(x + s - 2) / sizex, (y + s - 2) / sizey, 0],
-                    [(x + s - 2) / sizex, (y + 2) / sizey, 0],
-                    [(x + s - 2) / sizex, (y + 2) / sizey, 0],
-                ]
-            self.progressBar(i / len(faces), " draw faces " + str(i) + " done")
-            x = x + s
-            if x >= sizex or x + s >= sizex:
-                x = 0
-                y = y + s
-        self.setUVs(object, uv)
-        img.save(filename)
-        self.resetProgressBar(0)
-
-    def makeTextureFromUVs(
-        self,
-        object,
-        filename=None,
-        img=None,
-        colors=None,
-        sizex=0,
-        sizey=0,
-        s=20,
-        draw=True,
-        invert=False,
-    ):
-        """
-        Experiment for baking object colors using UV coordinate and PIL image
-
-        """
-        img = self.getImage(img, draw, sizex, sizey)
-
-        if draw:
-            import ImageDraw
-
-            imdraw = ImageDraw.Draw(img)
-        uvs = []
-        if self.host == "maya":
-            invert = True
-        faces = self.getFaces(object)
-        self.resetProgressBar(0)
-        for faceindex, f in enumerate(faces):
-            uv = self.getUV(object, faceindex, 0, perVertice=False)
-            #            print "uv ",faceindex,uv,f
-            uvs = []
-            color = []
-            for i in range(len(f)):  # 3 vertex
-                # print "vi",itPoly.vertexIndex(i)
-                vertexindex = f[i]
-                color.append(self.convertColor(colors[vertexindex]))
-                if invert:
-                    uvs.append([uv[i][0] * sizex, (1 - (uv[i][1])) * sizex])  # order?
-                else:
-                    uvs.append([uv[i][0] * sizex, uv[i][1] * sizex])  # order?
-            self.drawPtCol(imdraw, numpy.array(color), numpy.array(uvs), debug=0)
-            self.progressBar(
-                (float(faceindex) / len(faces)), "faces " + str(faceindex) + " done"
-            )
-        img.save(filename)
-        self.resetProgressBar(0)
-
     def fillTriangleColor(self, array, col1, col2, col3, xys):
         """
         Draw and color a Triangle according a color per corner.
@@ -4724,11 +4570,9 @@ class Helper:
             a = i / 20.0
             for j in range(20):
                 b = j / 20.0
-                xy = (xys[0][0] + j, xys[0][1] + i)
                 xcol = col1 + b * (col3 - col1)
                 ycol = xcol + a * (col2 - xcol)
                 array[xys[0][0] + j][xys[0][1] + i][:] = [ycol[0], ycol[1], ycol[2]]
-                # imdraw.point((xys[0][0]+j,xys[0][1]+i),fill=(ycol[0],ycol[1],ycol[2]))
         return array
 
     def drawGradientLine(self, imdraw, col1, col2, col3, xys):
@@ -4743,7 +4587,6 @@ class Helper:
                 a = i / 20.0
                 for j in range(20):
                     b = j / 20.0
-                    xy = (xys[0][0] + j, xys[0][1] + i)
                     xcol = col1 + b * (col3 - col1)
                     ycol = xcol + a * (col2 - xcol)
                     imdraw.point(
@@ -4764,7 +4607,6 @@ class Helper:
         uv = numpy.array(uv)
         u = uv[0][0]
         v = uv[0][1]
-        a = [0, 0, 0]
         # color = [c0,c1,c2]
         distu = [[0.0, 0, 0], [0, 0.0, 0], [-0, -0, 0.0]]
         distv = [[0.0, 0, 0], [0, 0.0, 0], [-0, -0, 0.0]]
@@ -4849,7 +4691,6 @@ class Helper:
             #    rg = range(vb,va+1)
             if len(rg) == 0:
                 rg = list(range(vb, va))
-            n = len(rg)
             if debug:
                 print("range V ", u, va, vb, rg)
             xcola = x / len(rgu)  # * ab[2][0] + ab[2][1] #
@@ -4905,9 +4746,7 @@ class Helper:
         order = [0, 1, 2]
         u, v = uv.transpose()
         imaxu = numpy.nonzero(u == u.max())[0]  # [0]
-        imaxv = numpy.nonzero(v == v.max())[0]  # [0]
         iminu = numpy.nonzero(u == u.min())[0]  # [0]
-        iminv = numpy.nonzero(v == v.min())[0]  # [0]
         # order0 should be left/top
         if len(iminu) == 1:  #
             order[0] = iminu[0]
@@ -4987,13 +4826,13 @@ class Helper:
         self, parent_object, collada_xml=None, instance_node=True, **kw
     ):
         try:
-            from upy.transformation import decompose_matrix
+            from cellpack.autopack.transformation import decompose_matrix
             from collada import Collada
             from collada import material
             from collada import source
             from collada import geometry
             from collada import scene
-        except:
+        except Exception:
             return
         inst_parent = parent_object  # self.getCurrentSelection()[0]
         ch = self.getChilds(inst_parent)
@@ -5162,7 +5001,7 @@ class Helper:
         filename = os.path.splitext(filename)[0]
         f = open(filename + ".indpolvert")
         lines = f.readlines()
-        data = [l.split() for l in lines]
+        data = [line.split() for line in lines]
         f.close()
 
         verts = [(float(x[0]), float(x[1]), float(x[2])) for x in data]
@@ -5170,7 +5009,7 @@ class Helper:
 
         f = open(filename + ".indpolface")
         lines = f.readlines()
-        data = [l.split() for l in lines]
+        data = [line.split() for line in lines]
         f.close()
 
         faces = []
