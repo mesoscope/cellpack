@@ -64,7 +64,6 @@ class SingleSphereIngr(Ingredient):
             name = "%5.2f_%f" % (radius, molarity)
         self.name = name
         self.singleSphere = True
-        self.minRadius = self.radii[0][0]
         self.encapsulatingRadius = radius
         # make a sphere ?->rapid ?
         if self.mesh is None and autopack.helper is not None:
