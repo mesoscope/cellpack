@@ -768,7 +768,7 @@ class Ingredient(Agent):
         - a generic density value
         - a unit associated with the density value
         - a jitter amplitude vector specifying by how much the jittering
-        algorithm can move fro the grid position.
+        algorithm can move from the grid position.
         - a number of jitter attempts
         - an optional color used to draw the ingredient default (white)
         - an optional name
@@ -781,7 +781,7 @@ class Ingredient(Agent):
         of the (+) values
         - an optional principal vector used to align the ingredient
         - recipe will be a weakref to the Recipe this Ingredient belongs to
-        - compNum is th compartment number (0 for cytoplasm, positive for compartment
+        - compNum is the compartment number (0 for cytoplasm, positive for compartment
         surface and negative compartment interior
         - Attributes used by the filling algorithm:
         - nbMol counts the number of placed ingredients during a fill
@@ -878,6 +878,7 @@ class Ingredient(Agent):
         self.limit_nb_nodes = 50
         self.vi = autopack.helper
         self.minRadius = 0
+        self.min_distance = 0
         self.encapsulatingRadius = 0
         self.maxLevel = 1
         self.is_previous = False
@@ -908,17 +909,17 @@ class Ingredient(Agent):
                     positions = [positions]
                     radii = [radii]
                 elif fileExtension == ".sph":
-                    rm, rM, positions, radii, children = self.getSpheres(sphereFileo)
+                    min_radius, rM, positions, radii, children = self.getSpheres(sphereFileo)
+                    # if a user didn't set this properly before
                     if not len(radii):
                         self.minRadius = 1.0
                         self.encapsulatingRadius = 1.0
                     else:
-
                         # minRadius is used to compute grid spacing. It represents the
                         # smallest radius around the anchor point(i.e.
                         # the point where the
                         # ingredient is dropped that needs to be free
-                        self.minRadius = rm
+                        self.minRadius = min_radius
                         # encapsulatingRadius is the radius of the sphere
                         # centered at 0,0,0
                         # and encapsulate the ingredient
@@ -927,7 +928,7 @@ class Ingredient(Agent):
                     self.log.info(
                         "sphere file extension not recognized %r", fileExtension
                     )
-        self.getSpheresPositions(positions, radii)
+        self.set_sphere_positions(positions, radii)
 
         self.positions2 = positions2
         self.children = children
@@ -962,6 +963,7 @@ class Ingredient(Agent):
         # Packing tracking values
         self.nbJitter = nbJitter  # number of jitter attempts for translation
         self.nbPts = 0
+        self.allIngrPts = []  # the list of available grid points for this ingredient to pack
         self.counter = 0  # target number of molecules for a fill
         self.completion = 0.0  # ratio of counter/nbMol
         self.rejectionCounter = 0
@@ -1085,9 +1087,6 @@ class Ingredient(Agent):
 
         self.distances_temp = []
         self.centT = None  # transformed position
-
-        self.minRadius = self.encapsulatingRadius
-
         self.results = []
         #        if self.mesh is not None :
         #            self.getData()
@@ -1133,7 +1132,7 @@ class Ingredient(Agent):
             },
         }
 
-    def getSpheresPositions(self, positions, radii):
+    def set_sphere_positions(self, positions, radii):
         # positions and radii are passed to the constructor
         # check the format old nested array, new array of dictionary
         nLOD = 0
@@ -1157,25 +1156,27 @@ class Ingredient(Agent):
                 positions is None or positions[0] is None or positions[0][0] is None
             ):  # [0][0]
                 positions = [[[0, 0, 0]]]
-                if radii is not None:
-                    self.minRadius = [radii[0]]
-                    self.encapsulatingRadius = max(radii[0])
+
             else:
                 if radii is not None:
                     delta = numpy.array(positions[0])
                     rM = sqrt(max(numpy.sum(delta * delta, 1)))
-                    self.minRadius = rM
-                    self.encapsulatingRadius = rM
+                    self.encapsulatingRadius = max(rM, self.encapsulatingRadius)
             # if radii is not None and positions is not None:
             # for r, c in zip(radii, positions):
             #     assert len(r) == len(c)
-
             if radii is not None:
                 self.maxLevel = len(radii) - 1
             if radii is None:
                 radii = [[0]]
             self.radii = radii
             self.positions = positions
+    
+    def reset(self):
+        """reset the states of an ingredient"""
+        self.counter = 0
+        self.nbMol = 0
+        self.completion = 0.0
 
     def setTilling(self, comp):
         if self.packingMode == "hexatile":
@@ -1317,7 +1318,6 @@ class Ingredient(Agent):
                 self.faces, self.vertices, vnormals = self.DecomposeMesh(
                     mesh, edit=True, copy=False, tri=True
                 )
-                # print ("create the triangle",len(faces))
         # encapsulating radius ?
         v = numpy.array(self.vertices, "f")
         try:
@@ -1362,9 +1362,7 @@ class Ingredient(Agent):
 
     def get_rapid_model(self):
         if self.rapid_model is None:
-            # print ("get rapid model, create it")
             self.create_rapid_model()
-            # print ("OK")
         return self.rapid_model
 
     def get_rb_model(self, alt=False):
@@ -1392,9 +1390,7 @@ class Ingredient(Agent):
         # depending the extension of the filename, can be eitherdejaVu file, fbx or wavefront
         # no extension is DejaVu
         helper = autopack.helper
-        # print('TODO: getMesh need safety check for no internet connection')
-        #        print ("helper in Ingredient is "+str(helper))
-        # should wetry to see if it already exist inthescene
+        # should we try to see if it already exist in the scene
         if helper is not None and not helper.nogui:
             o = helper.getObject(geomname)
             self.log.info("retrieve %s %r", geomname, o)
@@ -1419,12 +1415,9 @@ class Ingredient(Agent):
         fileName, fileExtension = os.path.splitext(filename)
         self.log.info("found fileName %s", fileName)
         if fileExtension.lower() == ".fbx":
-            #            print ("read fbx withHelper",filename,helper,autopack.helper)
             # use the host helper if any to read
             if helper is not None:  # neeed the helper
-                #                print "read "+filename
                 helper.read(filename)
-                #                print "try to get the object "+geomname
                 geom = helper.getObject(geomname)
                 self.log.info("geom %r %s %s", geom, geomname, helper.getName(geom))
                 # reparent to the fill parent
@@ -1518,15 +1511,12 @@ class Ingredient(Agent):
                 helper.read(filename)
                 #                helper.update()
                 geom = helper.getObject(geomname)
-                print("should have read...", geomname, geom, self.pdb)
                 # if geom is None, the name was probably wring lets try to use the default name which is
                 # pdbNAme+_cms
                 if geom is None:
                     geom = helper.getObject(self.pdb.split(".")[0])
-                    print("fix read...", geomname, geom, self.pdb.split(".")[0])
                     # rename it
                     if geom is None:
-                        print("whats the problem")
                         return None
                 # rotate ?
                 if helper.host == "3dsmax":  # or helper.host.find("blender") != -1:
@@ -1579,7 +1569,6 @@ class Ingredient(Agent):
                     filename
                 )  # doesnt get the regular file ? conver state to object
                 geom = helper.getObject(geomname)
-                print("should have read...", geomname, geom)
                 p = helper.getObject("autopackHider")
                 if p is None:
                     p = helper.newEmpty("autopackHider")
@@ -1595,7 +1584,6 @@ class Ingredient(Agent):
         """
         nv = len(data["verts"])
         nf = len(data["faces"])
-        print(nv, nf)
         self.vertices = numpy.array(data["verts"]).reshape((nv / 3, 3))
         self.faces = numpy.array(data["faces"]).reshape((nf / 3, 3))
         # self.normals = data.normals
@@ -1638,7 +1626,6 @@ class Ingredient(Agent):
         ]
         # from DejaVu.IndexedPolygons import IndexedPolygonsFromFile
         # seems not ok...when they came from c4d ... some transformation are not occuring.
-        #        print ("dejavu mesh", filename)
         # geom = IndexedPolygonsFromFile(filename, 'mesh_%s' % self.pdb)
         #        if helper is not None:
         #            if helper.host != "maya" :
@@ -1672,8 +1659,8 @@ class Ingredient(Agent):
             v2 = normal
             try:
                 rotMat = numpy.array(rotVectToVect(v1, v2), "f")
-            except Exception:
-                print("PROBLEM ", self.name)
+            except Exception as e:
+                self.log.error(e)
                 rotMat = numpy.identity(4)
 
         jx, jy, jz = self.jitterMax
@@ -1702,35 +1689,39 @@ class Ingredient(Agent):
     def deleteblist(self, d, n):
         del d[n]
 
-    def get_cuttoff_value(self, jitter):
-        radius = self.encapsulatingRadius
+    def get_cuttoff_value(self, spacing):
+        """Returns the min value a grid point needs to be away from a surfance
+        in order for this ingredient to pack. Only needs to be calculated once
+        per ingredient once the jitter is set."""
+        if self.min_distance > 0:
+            return self.min_distance
+        radius = self.minRadius
+        jitter = self.getMaxJitter(spacing)
+
         if self.packingMode == "close":
             if self.modelType == "Cylinders" and self.useLength:
-                cut = self.length  # - jitter
+                cut = self.length - jitter
             #            if ingr.modelType=='Cube' : #radius iactually the size
             #                cut = min(self.radii[0]/2.)-jitter
             #            elif ingr.cutoff_boundary is not None :
             #                #this mueay work if we have the distance from the border
             #                cut  = radius+ingr.cutoff_boundary-jitter
             else:
-                cut = radius  # - jitter
-                if self.modelType == "Cylinders" and self.useLength:
-                    cut = self.length - jitter
+                cut = radius - jitter
         else:
             cut = radius - jitter
+        self.min_distance = cut
         return cut
 
     def checkIfUpdate(self, nbFreePoints, threshold):
         """Check if we need to update the distance array. Part of the hack free points"""
         if hasattr(self, "nbPts"):
             if hasattr(self, "firstTimeUpdate") and not self.firstTimeUpdate:
+                # if it has been updated before
+                # check the number of inside points for this ingredient over the total
+                # number of free points left
                 ratio = float(self.nbPts) / float(nbFreePoints)
-                self.log.info(
-                    "checkIfUpdate: ratio = %d, nbFreePoints = %d, ingr.nbPts = %d",
-                    ratio,
-                    nbFreePoints,
-                    self.nbPts,
-                )
+                # threshold defaults to zero. It's set by the env, `freePtsUpdateThreshold`
                 if ratio > threshold:
                     return True
                 else:
@@ -1751,16 +1742,15 @@ class Ingredient(Agent):
         distances,
         free_points,
         nbFreePoints,
+        spacing,
         comp_ids,
-        current_comp_id,
-        jitter,
         threshold,
-        hackFreePoints,
     ):
         allIngrPts = []
         allIngrDist = []
-        cuttoff = self.get_cuttoff_value(jitter)
-
+        current_comp_id = self.compNum
+        # gets min distance an object has to be away to allow packing for this object
+        cuttoff = self.get_cuttoff_value(spacing)
         if self.packingMode == "close":
             # Get an array of free points where the distance is greater than half the cuttoff value
             # and less than the cutoff. Ie an array where the distances are all very small.
@@ -1776,28 +1766,34 @@ class Ingredient(Agent):
             allIngrPts = numpy.array(free_points)[mask_ind].tolist()
             allIngrDist = numpy.array(distances)[mask_ind].tolist()
         else:
-            if hasattr(self, "allIngrPts") and hackFreePoints:
-                allIngrPts = self.allIngrPts
-                self.log.warning("Running nofreepoint HACK")
+            starting_array = free_points
+            array_length = nbFreePoints
+            # if this ingredient has a grid point array already from a previous pass, and it's shorter
+            # than the total number of free points, start there for picking points, because it means
+            # we've already filtered out some points that are too close to surfaces for this ingredient to
+            # pack and we don't want to have to filter them out again.
+            if len(self.allIngrPts) > 0 and len(self.allIngrPts) < nbFreePoints:
+                starting_array = self.allIngrPts
+                array_length = len(self.allIngrPts)
+
+            # use periodic update according size ratio grid
+            update = self.checkIfUpdate(nbFreePoints, threshold)
+            if update:
+                # Only return points that aren't so close to a surface that we know the
+                # ingredient won't fit
+                for i in range(array_length):
+                    pt = starting_array[i]
+                    d = distances[pt]
+                    if comp_ids[pt] == current_comp_id and d >= cuttoff:
+                        allIngrPts.append(pt)
+
+                self.allIngrPts = allIngrPts
             else:
-                # use periodic update according size ratio grid
-
-                update = self.checkIfUpdate(nbFreePoints, threshold)
-                if update:
-                    for i in range(nbFreePoints):
-                        pt = free_points[i]
-                        d = distances[pt]
-                        if comp_ids[pt] == current_comp_id and d >= cuttoff:
-                            allIngrPts.append(pt)
-
-                    self.allIngrPts = allIngrPts
-                    self.cut = cuttoff
+                if len(self.allIngrPts) > 0:
+                    allIngrPts = self.allIngrPts
                 else:
-                    if hasattr(self, "allIngrPts"):
-                        allIngrPts = self.allIngrPts
-                    else:
-                        allIngrPts = free_points[:nbFreePoints]
-                        self.allIngrPts = allIngrPts
+                    allIngrPts = free_points[:nbFreePoints]
+                    self.allIngrPts = allIngrPts
         return allIngrPts, allIngrDist
 
     def perturbAxis(self, amplitude):
@@ -1821,7 +1817,6 @@ class Ingredient(Agent):
         elif dz < -amplitude:
             dz = -amplitude
         # if self.name=='2bg9 ION CHANNEL/RECEPTOR':
-        #    print 'FFFFFFFFFFFFF AXIS', x+dx,y+dy,z+dz
         return (x + dx, y + dy, z + dz)
 
     def transformPoints(self, trans, rot, points):
@@ -1849,7 +1844,7 @@ class Ingredient(Agent):
         try:
             rotMat = numpy.array(rotVectToVect(v1, v2), "f")
         except Exception as e:
-            print("PROBLEM ", self.name, e)
+            self.log.error(f"{self.name}, {e}")
             rotMat = numpy.identity(4)
         return rotMat
 
@@ -1904,13 +1899,11 @@ class Ingredient(Agent):
         else:
             compartment = self.env.compartments[abs(self.compNum) - 1]
         compNum = self.compNum
-        #        print "compNum ",compNum
         if compNum < 0:
             sfpts = compartment.surfacePointsCoords
             delta = numpy.array(sfpts) - numpy.array(point)
             delta *= delta
             distA = numpy.sqrt(delta.sum(1))
-            #            print len(distA)
             test = distA < cutoff
             if True in test:
                 return True
@@ -1920,7 +1913,6 @@ class Ingredient(Agent):
                 delta = numpy.array(sfpts) - numpy.array(point)
                 delta *= delta
                 distA = numpy.sqrt(delta.sum(1))
-                #                print len(distA)
                 test = distA < cutoff
                 if True in test:
                     return True
@@ -1965,38 +1957,23 @@ class Ingredient(Agent):
 
         return collisionComp
 
-    def checkCompartmentAlternative(self, ptsId, histoVol, nbs=None):
-        compIds = numpy.take(histoVol.grid.gridPtId, ptsId, 0)
-        #        print "compId in listPtId",compIds
-        if self.compNum <= 0:
-            wrongPt = [cid for cid in compIds if cid != self.compNum]
-            if len(wrongPt):
-                #                print wrongPt
-                return True
-        return False
-
     def checkCompartment(self, ptsInSphere, nbs=None):
         trigger = False
-        #        print ("checkCompartment using",len(ptsInSphere))
-        #        print (ptsInSphere)
         if self.compareCompartment:
             cId = numpy.take(
                 self.env.grid.gridPtId, ptsInSphere, 0
             )  # shoud be the same ?
             if nbs is not None:
-                # print ("cId ",cId,ptsInSphere)
                 if self.compNum <= 0 and nbs != 0:
                     return trigger, True
             L = self.getListCompFromMask(cId, ptsInSphere)
 
-            # print ("liste",L)
             if len(cId) <= 1:
                 return trigger, True
             p = float(len(L)) / float(
                 len(cId)
             )  # ratio accepted compId / totalCompId-> want 1.0
             if p < self.compareCompartmentTolerance:
-                # print ("the ratio is ",p, " threshold is ",self.compareCompartmentThreshold," and tolerance is ",self.compareCompartmentTolerance)
                 trigger = True
                 return trigger, True
             # threshold
@@ -2105,7 +2082,6 @@ class Ingredient(Agent):
                     else:
                         self.log.info("grid point already occupied %f", distance[pt])
                         return True, {}, {}
-
                 if not at_max_level:
                     # we don't want to calculate new distances if we are not
                     # at the highest geo
@@ -2162,14 +2138,12 @@ class Ingredient(Agent):
         # if grid too sparse this will not work.
         # ptID = self.env.grid.getPointFrom3D(point)
         cID = self.env.getPointCompartmentId(point)  # offset ?
-        # print ("check comp ", cID, self.compNum)
         # dist,ptID = self.env.grid.getClosestGridPoint(point)
         # cID = self.env.grid.gridPtId[ptID]
         if self.compNum == 0:
             organelle = self.env
         else:
             organelle = self.env.compartments[abs(self.compNum) - 1]
-        # print ("comp is ", organelle.name)
         if self.compNum > 0:  # surface ingredient
             # print ("surface ingr of type ",self.Type)
             # r=compartment.checkPointInside_rapid(point,self.env.grid.diag,ray=3)
@@ -2196,7 +2170,6 @@ class Ingredient(Agent):
         #        else :
         #            return True
         if self.compNum < 0:
-            # print ("inside ingredients ?")
             inside = organelle.checkPointInside_rapid(point, self.env.grid.diag, ray=3)
             if inside:  # and cID < 0:
                 return True
@@ -2371,7 +2344,6 @@ class Ingredient(Agent):
         for i in range(len(mingrs[2])):
             ing = mingrs[2][i]
             t = mingrs[0][i]
-            #            print ("test "+ing.name,ing.o_name,ing.isAttractor,self.partners_name)
             if self.packingMode == "closePartner":
                 if ing.o_name in self.partners_name or ing.name in self.partners_name:
                     #                    print ("is a partner of"+self.name)
@@ -2405,9 +2377,7 @@ class Ingredient(Agent):
         self.htrans.append(tTrans)
         avg = numpy.average(numpy.array(self.htrans))
         d = self.vi.measure_distance(tTrans, avg)
-        # print "during",d,tTrans
         if d < 5.0:
-            #            print("during",d,tTrans)#,rRot
             return True
         else:
             return False
@@ -2899,14 +2869,14 @@ class Ingredient(Agent):
         self.rejectionCounter = 0
         self.update_data_tree(dropped_position, dropped_rotation, grid_point_index)
 
-    def attempt_to_pack_at_grid_location(self, env, ptInd, distance, dpad, usePP):
-        insidePoints = {}
-        newDistPoints = {}
+    def attempt_to_pack_at_grid_location(self, env, ptInd, distance, max_radius, spacing, usePP):
         success = False
+        jitter = self.getMaxJitter(spacing)
+        dpad = self.minRadius + max_radius + jitter
         self.vi = autopack.helper
         self.env = env  # NOTE: do we need to store the env on the ingredient?
         self.log.info(
-            "PLACING INGREDIENT $s using %s, placeType=%s, index=%d, position=%r",
+            "PLACING INGREDIENT %s, placeType=%s, index=%d, position=%r",
             self.name,
             self.placeType,
             ptInd,
@@ -3264,8 +3234,6 @@ class Ingredient(Agent):
         #        M=moving.GetMg()
         # print afvi.vi.ToVec(moving.GetAllPoints()[0])
 
-        #        print("OK AFTER",rTrans)#,rRot
-        #        print("save",self.tTrans)#,self.rRot
         # 6- clean and delete everything except the spring
         afvi.vi.deleteObject(moving)
         afvi.vi.deleteObject(target)
@@ -3365,18 +3333,19 @@ class Ingredient(Agent):
         packing_location = None
         is_realtime = moving is not None
         level = self.collisionLevel
-
-        # jitter loop
-        insidePoints = {}
-        newDistPoints = {}
-
         for attempt_number in range(self.nbJitter):
+            insidePoints = {}
+            newDistPoints = {}
+
             (
                 packing_location,
                 packing_rotation,
             ) = self.get_new_jitter_location_and_rotation(
                 env, targeted_master_grid_point, rot_mat
             )
+
+            self.log.info(f"Jitter attempt {attempt_number} for {self.name} at {packing_location}")
+
             if is_realtime:
                 self.update_display_rt(moving, packing_location, packing_rotation)
                 self.vi.update()
@@ -3438,7 +3407,6 @@ class Ingredient(Agent):
                     insidePoints,
                     newDistPoints,
                 )
-
         return False, packing_location, packing_rotation, {}, {}
 
     def lookForNeighbours(self, trans, rotMat, organelle, afvi, closest_indice=None):
@@ -3757,8 +3725,7 @@ class Ingredient(Agent):
         """
         histoVol.setupPanda()
         is_realtime = moving is not None
-        insidePoints = {}
-        newDistPoints = {}
+
         gridPointsCoords = histoVol.masterGridPositions
 
         targetPoint = target_grid_point_position
@@ -3795,6 +3762,8 @@ class Ingredient(Agent):
         level = self.collisionLevel
 
         for jitterPos in range(self.nbJitter):
+            insidePoints = {}
+            newDistPoints = {}
             histoVol.totnbJitter += 1
 
             (
@@ -3917,11 +3886,12 @@ class Ingredient(Agent):
         """
         drop the ingredient on grid point ptInd
         """
-        insidePoints = {}
-        newDistPoints = {}
+
         is_realtime = moving is not None
 
         for packing_attempt in range(self.nbJitter):
+            insidePoints = {}
+            newDistPoints = {}
             env.totnbJitter += 1
             collision_results = []
             (
@@ -4046,17 +4016,13 @@ class Ingredient(Agent):
         prevpoint=None,
         liste_nodes=None,
     ):
-        r = [False]
         usePP = False
-        # liste_nodes=[]
+        r = []
+
         if cutoff is None:
             cutoff = self.env.largestProteinSize + self.encapsulatingRadius * 2.0
         rbnode = self.get_rapid_model()
-        # liste_nodes=None
-        if len(self.env.rTrans) == 0:
-            self.log.info("no history rTrans")
-            r = [False]
-        else:
+        if len(self.env.rTrans) != 0:
             if liste_nodes is None:
                 if point is not None:
                     closesbody_indice = self.getClosestIngredient(
@@ -4066,16 +4032,10 @@ class Ingredient(Agent):
                     closesbody_indice = self.getClosestIngredient(
                         jtrans, self.env, cutoff=cutoff
                     )
-                if len(closesbody_indice) == 0:
-                    # print ("no closesbody_indice")
-                    r = [False]  # closesbody_indice[0] == -1
-                else:
-                    # print ("found closesbody_indice",len(closesbody_indice))
+                if len(closesbody_indice) != 0:  # closesbody_indice[0] == -1
                     liste_nodes = self.get_rapid_nodes(
                         closesbody_indice, jtrans, prevpoint=prevpoint  #
                     )
-            # print ("test against",len(liste_nodes),"nodes")
-            r = []
             if usePP:
                 n = 0
                 self.env.grab_cb.reset()
@@ -4156,8 +4116,6 @@ class Ingredient(Agent):
         afvi = histoVol.afviewer
         simulationTimes = histoVol.simulationTimes
         runTimeDisplay = histoVol.runTimeDisplay
-        spacing = histoVol.smallestProteinSize
-        self.getMaxJitter(spacing)
         is_realtime = moving is not None
         gridPointsCoords = histoVol.grid.masterGridPositions
         insidePoints = {}
