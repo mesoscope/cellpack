@@ -78,7 +78,6 @@ import cellpack.autopack as autopack
 from .Compartment import CompartmentList
 from .Recipe import Recipe
 from .ingredient import GrowIngredient, ActinIngredient
-from .ray import vlen, vdiff
 from cellpack.autopack import IOutils
 from .octree import Octree
 from .Gradient import Gradient
@@ -1966,14 +1965,6 @@ class Environment(CompartmentList):
 
         return activeIngr0, activeIngr12
 
-    #    import fill3isolated # Graham cut the outdated fill3 from this document and put it in a separate file. turn on here if you want to use it.
-
-    def updateIngr(self, ingr, completion=0.0, nbMol=0, counter=0):
-        """helper function for updating the ingredient completion, nbmol and counter"""
-        ingr.counter = counter
-        ingr.nbMol = nbMol
-        ingr.completion = completion
-
     def clearRBingredient(self, ingr):
         if ingr.bullet_nodes[0] is not None:
             self.delRB(ingr.bullet_nodes[0])
@@ -2029,50 +2020,28 @@ class Environment(CompartmentList):
                 ingr.completion = 0.0
                 ingr.prev_alt = None
                 ingr.start_positions = []
-                if hasattr(
-                    ingr, "allIngrPts"
-                ):  # Graham here on 5/16/12 are these two lines safe?
-                    del (
-                        ingr.allIngrPts
-                    )  # Graham here on 5/16/12 are these two lines safe?
+                if len(ingr.allIngrPts) > 0:
+                    ingr.allIngrPts = []
                 if hasattr(ingr, "isph"):
                     ingr.isph = None
                 if hasattr(ingr, "icyl"):
                     ingr.icyl = None
-                if hasattr(ingr, "allIngrPts"):
-                    delattr(ingr, "allIngrPts")
-                #                if hasattr(ingr,"rb_nodes"):
-                #                    for node in ingr.rb_nodes:
-                #                        self.delRB(node)
-                #                    ingr.rb_nodes=[]
+
             for ingr in recip.exclude:
-                ingr.start_positions = []
-                ingr.prev_alt = None
-                ingr.results = []
                 ingr.firstTimeUpdate = True
                 ingr.counter = 0
                 ingr.rejectionCounter = 0
                 ingr.completion = 0.0
-                if hasattr(
-                    ingr, "allIngrPts"
-                ):  # Graham here on 5/16/12 are these two lines safe?
-                    del ingr.allIngrPts
+                ingr.prev_alt = None
+                ingr.results = []
+                ingr.start_positions = []
+   
                 if hasattr(ingr, "isph"):
                     ingr.isph = None
                 if hasattr(ingr, "icyl"):
                     ingr.icyl = None
-                if hasattr(ingr, "allIngrPts"):
-                    delattr(ingr, "allIngrPts")
-                #                if hasattr(ingr,"rb_nodes"):
-                #                    for node in ingr.rb_nodes:
-                #                        self.delRB(node)
-                #                    ingr.rb_nodes=[]
-
-    def resetIngr(self, ingr):
-        """Reset the given ingredient (count, completion, nmol)"""
-        ingr.counter = 0
-        ingr.nbMol = 0
-        ingr.completion = 0.0
+                if len(ingr.allIngrPts) > 0:
+                    ingr.allIngrPts = []
 
     def getActiveIng(self):
         """Return all remaining active ingredients"""
@@ -2167,13 +2136,11 @@ class Environment(CompartmentList):
     def getPointToDrop(
         self,
         ingr,
-        radius,
-        jitter,
         freePoints,
         nbFreePoints,
         distance,
+        spacing,
         compId,
-        compNum,
         vRangeStart,
         vThreshStart,
     ):
@@ -2186,11 +2153,9 @@ class Environment(CompartmentList):
             distance,
             freePoints,
             nbFreePoints,
+            spacing,
             compId,
-            compNum,
-            jitter,
             self.freePtsUpdateThreshold,
-            self._hackFreepts,
         )
 
         if len(allIngrPts) == 0:
@@ -2211,14 +2176,7 @@ class Environment(CompartmentList):
             self.activeIngr0, self.activeIngr12 = self.callFunction(
                 self.getSortedActiveIngredients, ([self.activeIngr])
             )
-            self.log.info(
-                "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d",
-                ingr.name,
-                ingr.molarity,
-                radius,
-                jitter,
-                compNum,
-            )
+            self.log.info(f"No point left for ingredient {ingr.name}")
             self.log.info("len(allIngredients %d", len(self.activeIngr))
             self.log.info("len(self.activeIngr0) %d", len(self.activeIngr0))
             self.log.info("len(self.activeIngr12) %d", len(self.activeIngr12))
@@ -2280,14 +2238,7 @@ class Environment(CompartmentList):
                 ptInd = allIngrPts[ptIndr]
             if ptInd is None:
                 t = time()
-                self.log.info(
-                    "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d",
-                    ingr.name,
-                    ingr.molarity,
-                    radius,
-                    jitter,
-                    compNum,
-                )
+                self.log.info(f"No point left for ingredient {ingr.name}")
                 ingr.completion = 1.0
                 ind = self.activeIngr.index(ingr)
                 # if ind == 0:
@@ -2351,8 +2302,6 @@ class Environment(CompartmentList):
         **kw
     ):
         """
-        the latest packing loop
-        ## this packing should be able to continue from a previous one
         ## Fill the grid by picking an ingredient first and then
         ## find a suitable point using the ingredient's placer object
         """
@@ -2395,7 +2344,7 @@ class Environment(CompartmentList):
             self.freePointMask[bb_insidepoint] = 0
             bb_outside = numpy.nonzero(self.freePointMask)
             self.grid.gridPtId[bb_outside] = 99999
-        compId = self.grid.gridPtId
+        component_ids = self.grid.gridPtId
         # why a copy? --> can we split ?
         distances = self.grid.distToClosestSurf[:]
         spacing = self.smallestProteinSize
@@ -2515,7 +2464,7 @@ class Environment(CompartmentList):
                     tCancelPrev = time()
 
             # pick an ingredient
-            ingr = self.callFunction(self.pickIngredient, (vThreshStart,))
+            ingr = self.pickIngredient(vThreshStart)
             if hasattr(self, "afviewer"):
                 p = (
                     (float(PlacedMols)) / float(totalNumMols)
@@ -2529,38 +2478,28 @@ class Environment(CompartmentList):
                         self.afviewer.vi.displayParticleVolumeDistance(distances, self)
 
             compNum = ingr.compNum
-            radius = ingr.minRadius
-            jitter = self.callFunction(ingr.getMaxJitter, (spacing,))
-
             # compute dpad which is the distance at which we need to update
             # distances after the drop is successfull
-            mr = self.get_dpad(compNum)
-            dpad = ingr.minRadius + mr + jitter
+            max_radius = self.get_dpad(compNum)
 
             self.log.info(
                 "picked Ingr radius compNum dpad %d %s %d",
                 ingr.minRadius,
                 compNum,
-                dpad,
             )
 
             # find the points that can be used for this ingredient
             ##
 
-            res = self.callFunction(
-                self.getPointToDrop,
-                [
-                    ingr,
-                    radius,
-                    jitter,
-                    freePoints,
-                    nbFreePoints,
-                    distances,
-                    compId,
-                    compNum,
-                    vRangeStart,
-                    vThreshStart,
-                ],
+            res = self.getPointToDrop(
+                ingr,
+                freePoints,
+                nbFreePoints,
+                distances,
+                spacing,
+                component_ids,
+                vRangeStart,
+                vThreshStart,
             )
             if ingr.compNum > 0:
                 allSrfpts = list(
@@ -2591,17 +2530,18 @@ class Environment(CompartmentList):
                 self,
                 ptInd,
                 distances,
-                dpad,
+                max_radius,
+                spacing,
                 usePP,
             )
-            nbFreePoints = BaseGrid.updateDistances(insidePoints, newDistPoints, freePoints, nbFreePoints, distances)
             self.log.info(
-                "after place attempt placed: %r, number of free points:%d, length of free points=%d",
+                "after place attempt, placed: %r, number of free points:%d, length of free points=%d",
                 success,
                 nbFreePoints,
                 len(freePoints),
             )
             if success:
+                nbFreePoints = BaseGrid.updateDistances(insidePoints, newDistPoints, freePoints, nbFreePoints, distances)
                 self.grid.distToClosestSurf = numpy.array(distances[:])
                 self.grid.freePoints = numpy.array(freePoints[:])
                 self.grid.nbFreePoints = len(freePoints)  # -1
@@ -2615,15 +2555,11 @@ class Environment(CompartmentList):
 
             if ingr.completion >= 1.0:
                 ind = self.activeIngr.index(ingr)
-                if verbose > 1:
-                    print("completed***************", ingr.name)
-                    print("PlacedMols = ", PlacedMols)
-                    print("activeIngr index of ", ingr.name, ind)
-                    print(
-                        "threshold p len ",
-                        len(self.thresholdPriorities),
-                        len(self.normalizedPriorities),
-                    )
+                
+                self.log.info(f"completed*************** {ingr.name}")
+                self.log.info(f"PlacedMols = {PlacedMols}")
+                self.log.info(f"activeIngr index of {ingr.name}, {ind}")
+                self.log.info(f"threshold p len {len(self.thresholdPriorities)}, {len(self.normalizedPriorities)}")
                 if ind > 0:
                     # j = 0
                     for j in range(ind):
@@ -2638,9 +2574,8 @@ class Environment(CompartmentList):
                 self.activeIngr0, self.activeIngr12 = self.callFunction(
                     self.getSortedActiveIngredients, ([self.activeIngr])
                 )
-                if verbose > 2:
-                    print("len(self.activeIngr0)", len(self.activeIngr0))
-                    print("len(self.activeIngr12)", len(self.activeIngr12))
+                self.log.info(f"len(self.activeIngr0) {len(self.activeIngr0)}")
+                self.log.info(f"len(self.activeIngr12) {len(self.activeIngr12)}")
                 self.activeIngre_saved = self.activeIngr[:]
 
                 self.totalPriorities = 0  # 0.00001
@@ -3306,85 +3241,12 @@ class Environment(CompartmentList):
                 realTotalVol = o.interiorVolume
                 ri.setCount(realTotalVol, reset=False)
 
-    def estimateVolume_old(self, boundingBox, spacing):
-        # need to box N point and coordinaePoint
-        pad = 10.0
-        grid = Grid()
-        grid.boundingBox = boundingBox
-        grid.gridSpacing = spacing  # = self.smallestProteinSize*1.1547  # 2/sqrt(3)????
-        grid.gridVolume, grid.nbGridPoints = self.callFunction(
-            grid.computeGridNumberOfPoint, (boundingBox, spacing)
-        )
-        nbPoints = grid.gridVolume
-        # compute 3D point coordiantes for all grid points
-        self.callFunction(grid.create3DPointLookup)
-        grid.gridPtId = [0] * nbPoints
-        xl, yl, zl = boundingBox[0]
-        xr, yr, zr = boundingBox[1]
-        realTotalVol = (xr - xl) * (yr - yl) * (zr - zl)
-        print("totalVolume %f for %d points" % (realTotalVol, nbPoints))
-        # distToClosestSurf is set to self.diag initially
-        grid.diag = diag = vlen(vdiff((xr, yr, zr), (xl, yl, zl)))
-        distance = grid.distToClosestSurf = [diag] * nbPoints
-        # foreach ingredient get estimation of insidepoint and report the percantage of total point in Volume
-        r = self.exteriorRecipe
-        if r:
-            for ingr in r.ingredients:
-                insidePoints, newDistPoints = ingr.getInsidePoints(
-                    grid,
-                    grid.masterGridPositions,
-                    pad,
-                    distance,
-                    centT=ingr.positions[-1],
-                    jtrans=[0.0, 0.0, 0.0],
-                    rotMatj=numpy.identity(4),
-                )
-                ingr.nbPts = len(insidePoints)
-                onemol = (realTotalVol * float(ingr.nbPts)) / float(nbPoints)
-                ingr.vol_nbmol = int(ingr.molarity * onemol)
-                print(
-                    "ingr %s has %d points representing %f for one mol thus %d mol"
-                    % (ingr.name, ingr.nbPts, onemol, ingr.vol_nbmol)
-                )
-            #                ingr.vol_nbmol = ?
-        for o in self.compartments:
-            rs = o.surfaceRecipe
-            if rs:
-                for ingr in rs.ingredients:
-                    insidePoints, newDistPoints = ingr.getInsidePoints(
-                        grid,
-                        grid.masterGridPositions,
-                        pad,
-                        distance,
-                        centT=ingr.positions[-1],
-                        jtrans=[0.0, 0.0, 0.0],
-                        rotMatj=numpy.identity(4),
-                    )
-                    ingr.nbPts = len(insidePoints)
-                    onemol = (realTotalVol * float(ingr.nbPts)) / float(nbPoints)
-                    ingr.vol_nbmol = int(ingr.molarity * onemol)
-            ri = o.innerRecipe
-            if ri:
-                for ingr in ri.ingredients:
-                    insidePoints, newDistPoints = ingr.getInsidePoints(
-                        grid,
-                        grid.masterGridPositions,
-                        pad,
-                        distance,
-                        centT=ingr.positions[-1],
-                        jtrans=[0.0, 0.0, 0.0],
-                        rotMatj=numpy.identity(4),
-                    )
-                    ingr.nbPts = len(insidePoints)
-                    onemol = (realTotalVol * float(ingr.nbPts)) / float(nbPoints)
-                    ingr.vol_nbmol = int(ingr.molarity * onemol)
-
-                    # ==============================================================================
-                # AFter this point, features development around physics engine and algo
-                # octree
-                # panda bullet
-                # panda ode
-                # ==============================================================================
+# ==============================================================================
+# AFter this point, features development around physics engine and algo
+# octree
+# panda bullet
+# panda ode
+# ==============================================================================
 
     def setupOctree(
         self,
@@ -3529,10 +3391,10 @@ class Environment(CompartmentList):
             return
         inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
         inodenp.node().setMass(1.0)
-        centT = ingr.positions[
-            0
-        ]  # ingr.transformPoints(jtrans, rotMat, ingr.positions[0])
-        for radc, posc in zip(ingr.radii[0], centT):
+        level = ingr.maxLevel
+        centers = ingr.positions[level]
+        radii = ingr.radii[level]
+        for radc, posc in zip(radii, centers):
             shape = BulletSphereShape(radc)
             inodenp.node().addShape(
                 shape, TransformState.makePos(Point3(posc[0], posc[1], posc[2]))
