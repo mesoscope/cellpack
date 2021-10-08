@@ -84,7 +84,7 @@
                 "name": "Sphere_radius_25",
                 "orientBiasRotRangeMax": -3.1415927,
                 "packingMode": "random",
-                "Type": "SingleSphere",
+                "Type": "MultiSphere",
                 "excluded_partners_name": [],
                 "rejectionThreshold": 100,
                 "placeType": "jitter",
