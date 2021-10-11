@@ -4,11 +4,13 @@ import numpy
 from scipy import spatial
 from numpy import matrix
 from math import sqrt
-from cellpack.mgl_tools.bhtree import bhtreelib
+from panda3d.core import Point3, TransformState
+from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
 from random import uniform, gauss, random
 from time import time
 import math
 
+from cellpack.mgl_tools.bhtree import bhtreelib
 from cellpack.autopack.transformation import angle_between_vectors
 from cellpack.autopack.ldSequence import SphereHalton
 from .utils import rotVectToVect
@@ -912,7 +914,7 @@ class GrowIngredient(MultiCylindersIngr):
         # build a rigid body of multisphere along pt1topt2
         r, p = self.getInterpolatedSphere(pt1, pt2)
         print("pos len", len(p), " ", len(r))
-        inodenp = self.env.multiSphereRB(self.name + nodeid, p, r)
+        inodenp = self.add_rb_multi_sphere()
         print("node build ", inodenp)
         inodenp.setCollideMask(self.env.BitMask32.allOn())
         inodenp.node().setAngularDamping(1.0)
@@ -2555,8 +2557,20 @@ class GrowIngredient(MultiCylindersIngr):
                 )
                 self.vi.update()
         return secondPoint
+    
+    def add_rb_multi_sphere(self):
+        inodenp = self.env.worldNP.attachNewNode(BulletRigidBodyNode(self.name))
+        inodenp.node().setMass(1.0)
+        level = self.maxLevel
+        centers = self.positions[level]
+        radii = self.radii[level]
+        for radc, posc in zip(radii, centers):
+            shape = BulletSphereShape(radc)
+            inodenp.node().addShape(
+                shape, TransformState.makePos(Point3(posc[0], posc[1], posc[2]))
+            )  #
+        return inodenp
 
-    # are there two jitter_place functions?  What is this one?
     def jitter_place(
         self,
         histoVol,

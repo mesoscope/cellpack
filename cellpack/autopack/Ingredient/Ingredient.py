@@ -45,10 +45,9 @@
 # TODO: Describe Ingredient class here at high level
 import os
 from scipy import spatial
-
+from panda3d.bullet import BulletRigidBodyNode
 import numpy
 import logging
-
 import collada
 from scipy.spatial.transform import Rotation as R
 from math import sqrt, pi
@@ -1275,6 +1274,55 @@ class Ingredient(Agent):
     def addRBsegment(self, pt1, pt2):
         # ovewrite by grow ingredient
         pass
+
+    def add_rb_mesh(self, worldNP):
+        inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
+        inodenp.node().setMass(1.0)
+        if self.mesh is None:
+            return
+        self.getData()
+        if not len(self.vertices):
+            return inodenp
+        from panda3d.core import (
+            GeomVertexFormat,
+            GeomVertexWriter,
+            GeomVertexData,
+            Geom,
+            GeomTriangles,
+        )
+        from panda3d.bullet import (
+            BulletTriangleMesh,
+            BulletTriangleMeshShape,
+        )
+
+        # step 1) create GeomVertexData and add vertex information
+        format = GeomVertexFormat.getV3()
+        vdata = GeomVertexData("vertices", format, Geom.UHStatic)
+        vertexWriter = GeomVertexWriter(vdata, "vertex")
+        [vertexWriter.addData3f(v[0], v[1], v[2]) for v in self.vertices]
+
+        # step 2) make primitives and assign vertices to them
+        tris = GeomTriangles(Geom.UHStatic)
+        [self.setGeomFaces(tris, face) for face in self.faces]
+
+        # step 3) make a Geom object to hold the primitives
+        geom = Geom(vdata)
+        geom.addPrimitive(tris)
+        # step 4) create the bullet mesh and node
+        #        if ingr.convex_hull:
+        #            shape = BulletConvexHullShape()
+        #            shape.add_geom(geom)
+        #        else :
+        mesh = BulletTriangleMesh()
+        mesh.addGeom(geom)
+        shape = BulletTriangleMeshShape(mesh, dynamic=False)  # BulletConvexHullShape
+        print("shape ok", shape)
+        # inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
+        # inodenp.node().setMass(1.0)
+        inodenp.node().addShape(
+            shape
+        )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
+        return inodenp
 
     def SetKw(self, **kw):
         for k in kw:
@@ -3557,7 +3605,6 @@ class Ingredient(Agent):
         drop the ingredient on grid point ptInd
         """
         histoVol.setupPanda()
-
         is_realtime = moving is not None
         # we need to change here in case tilling, the pos,rot ade deduced fromte tilling.
         if self.packingMode[-4:] == "tile":

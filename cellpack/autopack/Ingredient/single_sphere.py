@@ -1,6 +1,10 @@
 
 
 import numpy
+from panda3d.core import Point3, TransformState, Vec3
+from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
+from panda3d.ode import OdeBody, OdeMass, OdeSphereGeom
+
 from .Ingredient import Ingredient
 import cellpack.autopack as autopack
 helper = autopack.helper
@@ -168,3 +172,26 @@ class SingleSphereIngr(Ingredient):
                     else:
                         newDistPoints[pt] = d
         return insidePoints, newDistPoints
+
+    def add_rb_node(self, worldNP):
+        shape = BulletSphereShape(self.encapsulatingRadius)
+        inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
+        inodenp.node().setMass(1.0)
+        #        inodenp.node().addShape(shape)
+        inodenp.node().addShape(
+            shape, TransformState.makePos(Point3(0, 0, 0))
+        )  # rotation ?
+        #        spherenp.setPos(-2, 0, 4)
+        return inodenp
+
+    def add_rb_node_ode(self, world, jtrans, pMat):
+        body = OdeBody(world)
+        M = OdeMass()
+        M.setSphereTotal(1.0, self.encapsulatingRadius)
+        body.setMass(M)
+        body.setPosition(Vec3(jtrans[0], jtrans[1], jtrans[2]))
+        body.setRotation(pMat)
+        # the geometry for the collision ?
+        geom = OdeSphereGeom(self.ode_space, self.encapsulatingRadius)
+        geom.setBody(body)
+        return geom

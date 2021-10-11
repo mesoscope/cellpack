@@ -1,5 +1,8 @@
 from math import sqrt
 import numpy
+from panda3d.core import Point3, TransformState, Vec3
+from panda3d.bullet import BulletBoxShape, BulletRigidBodyNode
+
 from .Ingredient import Ingredient
 from .utils import ApplyMatrix
 import cellpack.autopack as autopack
@@ -312,3 +315,17 @@ class SingleCubeIngr(Ingredient):
                 else:
                     newDistPoints[pt] = d
         return insidePoints, newDistPoints
+
+    def add_rb_node(self, worldNP):
+        halfextents = self.bb[1]
+        shape = BulletBoxShape(
+            Vec3(halfextents[0], halfextents[1], halfextents[2])
+        )  # halfExtents
+        inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
+        inodenp.node().setMass(1.0)
+        #        inodenp.node().addShape(shape)
+        inodenp.node().addShape(
+            shape, TransformState.makePos(Point3(0, 0, 0))
+        )  # , pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
+        #        spherenp.setPos(-2, 0, 4)
+        return inodenp

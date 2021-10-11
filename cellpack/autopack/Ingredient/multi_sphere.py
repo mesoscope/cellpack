@@ -1,10 +1,14 @@
 
+from panda3d.core import Point3, TransformState
+from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
+
+from cellpack.autopack.ingredient.single_sphere import SingleSphereIngr
 from .Ingredient import Ingredient
 import cellpack.autopack as autopack
 helper = autopack.helper
 
 
-class MultiSphereIngr(Ingredient):
+class MultiSphereIngr(SingleSphereIngr):
     """
     This Ingredient is represented by a collection of spheres specified by radii
     and positions. The principal Vector will be used to align the ingredient
@@ -59,3 +63,16 @@ class MultiSphereIngr(Ingredient):
             name = "%s_%f" % (str(radii), molarity)
         self.name = name
         self.singleSphere = False
+
+    def add_rb_node(self, worldNP):
+        inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
+        inodenp.node().setMass(1.0)
+        level = self.maxLevel
+        centers = self.positions[level]
+        radii = self.radii[level]
+        for radc, posc in zip(radii, centers):
+            shape = BulletSphereShape(radc)
+            inodenp.node().addShape(
+                shape, TransformState.makePos(Point3(posc[0], posc[1], posc[2]))
+            )  #
+        return inodenp

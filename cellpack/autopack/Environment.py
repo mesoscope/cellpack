@@ -62,15 +62,8 @@ from collections import OrderedDict
 # PANDA3D Physics engine ODE and Bullet
 import panda3d
 
-from panda3d.core import Mat3, Mat4, Vec3, Point3
-from panda3d.core import TransformState
-from panda3d.core import BitMask32
-from panda3d.bullet import BulletSphereShape, BulletBoxShape, BulletCylinderShape
-
+from panda3d.core import Mat3, Mat4, Vec3, BitMask32, NodePath
 from panda3d.bullet import BulletRigidBodyNode
-from panda3d.ode import OdeBody, OdeMass
-from panda3d.ode import OdeSphereGeom
-from panda3d.core import NodePath
 
 from cellpack.mgl_tools.bhtree import bhtreelib
 
@@ -2555,7 +2548,7 @@ class Environment(CompartmentList):
 
             if ingr.completion >= 1.0:
                 ind = self.activeIngr.index(ingr)
-                
+
                 self.log.info(f"completed*************** {ingr.name}")
                 self.log.info(f"PlacedMols = {PlacedMols}")
                 self.log.info(f"activeIngr index of {ingr.name}, {ind}")
@@ -3261,17 +3254,6 @@ class Environment(CompartmentList):
             import panda3d
         except Exception:
             return
-        self.rb_func_dic = {
-            "bullet": {
-                "SingleSphere": self.addSingleSphereRB,
-                "SingleCube": self.addSingleCubeRB,
-                "MultiSphere": self.addMultiSphereRB,
-                "MultiCylinder": self.addMultiCylinderRB,
-                "Grow": self.addMultiCylinderRB,
-                "Mesh": self.addMeshRB,
-            },
-            "ode": {"SingleSphere": self.addSingleSphereRBODE},
-        }
         from panda3d.core import loadPrcFileData
 
         if self.grid is not None:
@@ -3341,6 +3323,14 @@ class Environment(CompartmentList):
             if o.rbnode is None:
                 o.rbnode = o.addShapeRB()  # addMeshRBOrganelle(o)
 
+    def add_rb_node(self, ingr, trans, mat):
+        if ingr.Type == "Mesh":
+            return ingr.add_rb_mesh(self.worldNP)
+        elif self.panda_solver == "ode" and ingr.Type == "Sphere":
+            mat3x3 = Mat3(mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10])
+            return ingr.add_rb_node_ode(self.world, trans, mat3x3)
+        return ingr.add_rb_node(self.worldNP)
+
     def delRB(self, node):
         if panda3d is None:
             return
@@ -3359,132 +3349,6 @@ class Environment(CompartmentList):
         if node == self.moving:
             self.moving = None
 
-    def addSingleSphereRBODE(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        body = OdeBody(self.world)
-        M = OdeMass()
-        M.setSphereTotal(1.0, ingr.encapsulatingRadius)
-        body.setMass(M)
-        body.setPosition(Vec3(jtrans[0], jtrans[1], jtrans[2]))
-        body.setRotation(pMat)
-        # the geometry for the collision ?
-        geom = OdeSphereGeom(self.ode_space, ingr.encapsulatingRadius)
-        geom.setBody(body)
-        return geom
-
-    def addSingleSphereRB(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        shape = BulletSphereShape(ingr.encapsulatingRadius)
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        inodenp.node().setMass(1.0)
-        #        inodenp.node().addShape(shape)
-        inodenp.node().addShape(
-            shape, TransformState.makePos(Point3(0, 0, 0))
-        )  # rotation ?
-        #        spherenp.setPos(-2, 0, 4)
-        return inodenp
-
-    def addMultiSphereRB(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        inodenp.node().setMass(1.0)
-        level = ingr.maxLevel
-        centers = ingr.positions[level]
-        radii = ingr.radii[level]
-        for radc, posc in zip(radii, centers):
-            shape = BulletSphereShape(radc)
-            inodenp.node().addShape(
-                shape, TransformState.makePos(Point3(posc[0], posc[1], posc[2]))
-            )  #
-        return inodenp
-
-    def multiSphereRB(self, name, pos, rad):
-        if panda3d is None:
-            return
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(name))
-        inodenp.node().setMass(1.0)
-        # centT = ingr.positions[0]#ingr.transformPoints(jtrans, rotMat, ingr.positions[0])
-        #        for i in range(len(pos)):#
-        #            posc = pos[i]
-        #            radc = rad[i]
-        for radc, posc in zip(rad, pos):
-            shape = BulletSphereShape(radc)
-            inodenp.node().addShape(
-                shape, TransformState.makePos(Point3(posc[0], posc[1], posc[2]))
-            )  #
-        return inodenp
-
-    def addSingleCubeRB(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        halfextents = ingr.bb[1]
-        shape = BulletBoxShape(
-            Vec3(halfextents[0], halfextents[1], halfextents[2])
-        )  # halfExtents
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        inodenp.node().setMass(1.0)
-        #        inodenp.node().addShape(shape)
-        inodenp.node().addShape(
-            shape, TransformState.makePos(Point3(0, 0, 0))
-        )  # , pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
-        #        spherenp.setPos(-2, 0, 4)
-        return inodenp
-
-    def addMultiCylinderRB(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        helper = autopack.helper
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        inodenp.node().setMass(1.0)
-        centT1 = ingr.positions[
-            0
-        ]  # ingr.transformPoints(jtrans, rotMat, ingr.positions[0])
-        centT2 = ingr.positions2[
-            0
-        ]  # ingr.transformPoints(jtrans, rotMat, ingr.positions2[0])
-        for radc, p1, p2 in zip(ingr.radii[0], centT1, centT2):
-            length, mat = helper.getTubePropertiesMatrix(p1, p2)
-            pMat = self.pandaMatrice(mat)
-            #            d = numpy.array(p1) - numpy.array(p2)
-            #            s = numpy.sum(d*d)
-            Point3(
-                ingr.principalVector[0],
-                ingr.principalVector[1],
-                ingr.principalVector[2],
-            )
-            shape = BulletCylinderShape(
-                radc, length, 1
-            )  # math.sqrt(s), 1)# { XUp = 0, YUp = 1, ZUp = 2 } or LVector3f const half_extents
-            inodenp.node().addShape(shape, TransformState.makeMat(pMat))  #
-        return inodenp
-
-    def addMeshRBOld(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        helper = autopack.helper
-        if ingr.mesh is None:
-            return
-        faces, vertices, vnormals = helper.DecomposeMesh(
-            ingr.mesh, edit=False, copy=False, tri=True, transform=True
-        )
-        from panda3d.bullet import BulletTriangleMesh, BulletTriangleMeshShape
-
-        mesh = BulletTriangleMesh()
-        points3d = [Point3(v[0], v[1], v[2]) for v in vertices]
-        for f in faces:
-            mesh.addTriangle(points3d[f[0]], points3d[f[1]], points3d[f[2]])
-
-        shape = BulletTriangleMeshShape(mesh, dynamic=False)
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        inodenp.node().setMass(1.0)
-        inodenp.node().addShape(
-            shape, TransformState.makePos(Point3(0, 0, 0))
-        )  # , pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
-        return inodenp
-
     def setGeomFaces(self, tris, face):
         if panda3d is None:
             return
@@ -3494,57 +3358,6 @@ class Environment(CompartmentList):
         for i in face:
             tris.addVertex(i)
         tris.closePrimitive()
-
-    def addMeshRB(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        inodenp.node().setMass(1.0)
-        if ingr.mesh is None:
-            return
-        ingr.getData()
-        if not len(ingr.vertices):
-            return inodenp
-        from panda3d.core import (
-            GeomVertexFormat,
-            GeomVertexWriter,
-            GeomVertexData,
-            Geom,
-            GeomTriangles,
-        )
-        from panda3d.bullet import (
-            BulletTriangleMesh,
-            BulletTriangleMeshShape,
-        )
-
-        # step 1) create GeomVertexData and add vertex information
-        format = GeomVertexFormat.getV3()
-        vdata = GeomVertexData("vertices", format, Geom.UHStatic)
-        vertexWriter = GeomVertexWriter(vdata, "vertex")
-        [vertexWriter.addData3f(v[0], v[1], v[2]) for v in ingr.vertices]
-
-        # step 2) make primitives and assign vertices to them
-        tris = GeomTriangles(Geom.UHStatic)
-        [self.setGeomFaces(tris, face) for face in ingr.faces]
-
-        # step 3) make a Geom object to hold the primitives
-        geom = Geom(vdata)
-        geom.addPrimitive(tris)
-        # step 4) create the bullet mesh and node
-        #        if ingr.convex_hull:
-        #            shape = BulletConvexHullShape()
-        #            shape.add_geom(geom)
-        #        else :
-        mesh = BulletTriangleMesh()
-        mesh.addGeom(geom)
-        shape = BulletTriangleMeshShape(mesh, dynamic=False)  # BulletConvexHullShape
-        print("shape ok", shape)
-        # inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        # inodenp.node().setMass(1.0)
-        inodenp.node().addShape(
-            shape
-        )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
-        return inodenp
 
     def addMeshRBOrganelle(self, o):
         if panda3d is None:
@@ -3596,7 +3409,6 @@ class Environment(CompartmentList):
         # or
         # shape = BulletConvexHullShape()
         # shape.add_geom(geom)
-        print("shape ok", shape)
         # inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
         # inodenp.node().setMass(1.0)
         inodenp.node().addShape(
@@ -3647,9 +3459,7 @@ class Environment(CompartmentList):
         #        mat[:3, 3] = trans
         #        mat = mat.transpose()
         mat = mat.transpose().reshape((16,))
-        mat3x3 = Mat3(
-            mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10]
-        )
+
         pmat = Mat4(
             mat[0],
             mat[1],
@@ -3668,15 +3478,8 @@ class Environment(CompartmentList):
             trans[2],
             mat[15],
         )
-        pMat = TransformState.makeMat(pmat)
-        if self.panda_solver == "ode":
-            pMat = mat3x3
         inodenp = None
-        #        print (pMat)
-        if ingr.use_mesh_rb:
-            rtype = "Mesh"
-            # print ("#######RBNode Mesh ####", ingr.name, ingr.rbnode,self.rb_func_dic[rtype])
-        inodenp = self.rb_func_dic[self.panda_solver][rtype](ingr, pMat, trans, rotMat)
+        inodenp = self.add_rb_node(ingr, trans, mat)
         if self.panda_solver == "bullet":
             inodenp.setCollideMask(BitMask32.allOn())
             inodenp.node().setAngularDamping(1.0)
