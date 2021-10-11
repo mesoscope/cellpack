@@ -5,6 +5,7 @@ from panda3d.bullet import BulletCylinderShape, BulletRigidBodyNode
 
 from .Ingredient import Ingredient
 import cellpack.autopack as autopack
+
 helper = autopack.helper
 
 
@@ -154,9 +155,9 @@ class MultiCylindersIngr(Ingredient):
         """
         Check cylinders for collision
         """
-        centers1 = self.positions[level],
-        centers2 = self.positions2[level],
-        radii = self.radii[level],
+        centers1 = (self.positions[level],)
+        centers2 = (self.positions2[level],)
+        radii = (self.radii[level],)
         cent1T = self.transformPoints(jtrans, rotMat, centers1)
         cent2T = self.transformPoints(jtrans, rotMat, centers2)
 

@@ -1,5 +1,3 @@
-
-
 import numpy
 from panda3d.core import Point3, TransformState, Vec3
 from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
@@ -7,6 +5,7 @@ from panda3d.ode import OdeBody, OdeMass, OdeSphereGeom
 
 from .Ingredient import Ingredient
 import cellpack.autopack as autopack
+
 helper = autopack.helper
 
 
@@ -125,12 +124,10 @@ class SingleSphereIngr(Ingredient):
         TODO improve the testwhen grid stepSize is larger that size of the ingredient
         """
         centers = self.positions[level]
-        radii = self.radii[level],
+        radii = (self.radii[level],)
         centT = self.transformPoints(jtrans, rotMat, centers)  # this should be jtrans
         for radc, posc in zip(radii, centT):
-            ptsInSphere = histoVol.grid.getPointsInSphere(
-                posc, radc[0]
-            )  # indices
+            ptsInSphere = histoVol.grid.getPointsInSphere(posc, radc[0])  # indices
             compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptsInSphere, 0)
             if self.compNum <= 0:
                 wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]

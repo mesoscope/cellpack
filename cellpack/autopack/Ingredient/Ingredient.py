@@ -813,7 +813,7 @@ class Ingredient(Agent):
         meshObject=None,
         nbMol=0,
         Type="MultiSphere",
-        **kw
+        **kw,
     ):
         Agent.__init__(
             self, name, molarity, packingMode=packingMode, placeType=placeType, **kw
@@ -908,7 +908,9 @@ class Ingredient(Agent):
                     positions = [positions]
                     radii = [radii]
                 elif fileExtension == ".sph":
-                    min_radius, rM, positions, radii, children = self.getSpheres(sphereFileo)
+                    min_radius, rM, positions, radii, children = self.getSpheres(
+                        sphereFileo
+                    )
                     # if a user didn't set this properly before
                     if not len(radii):
                         self.minRadius = 1.0
@@ -962,7 +964,9 @@ class Ingredient(Agent):
         # Packing tracking values
         self.nbJitter = nbJitter  # number of jitter attempts for translation
         self.nbPts = 0
-        self.allIngrPts = []  # the list of available grid points for this ingredient to pack
+        self.allIngrPts = (
+            []
+        )  # the list of available grid points for this ingredient to pack
         self.counter = 0  # target number of molecules for a fill
         self.completion = 0.0  # ratio of counter/nbMol
         self.rejectionCounter = 0
@@ -2917,7 +2921,9 @@ class Ingredient(Agent):
         self.rejectionCounter = 0
         self.update_data_tree(dropped_position, dropped_rotation, grid_point_index)
 
-    def attempt_to_pack_at_grid_location(self, env, ptInd, distance, max_radius, spacing, usePP):
+    def attempt_to_pack_at_grid_location(
+        self, env, ptInd, distance, max_radius, spacing, usePP
+    ):
         success = False
         jitter = self.getMaxJitter(spacing)
         dpad = self.minRadius + max_radius + jitter
@@ -3392,7 +3398,9 @@ class Ingredient(Agent):
                 env, targeted_master_grid_point, rot_mat
             )
 
-            self.log.info(f"Jitter attempt {attempt_number} for {self.name} at {packing_location}")
+            self.log.info(
+                f"Jitter attempt {attempt_number} for {self.name} at {packing_location}"
+            )
 
             if is_realtime:
                 self.update_display_rt(moving, packing_location, packing_rotation)

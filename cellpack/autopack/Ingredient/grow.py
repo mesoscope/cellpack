@@ -18,6 +18,7 @@ from .utils import rotVectToVect
 import cellpack.autopack as autopack
 
 from .multi_cylinder import MultiCylindersIngr
+
 helper = autopack.helper
 
 
@@ -322,7 +323,9 @@ class GrowIngredient(MultiCylindersIngr):
             "description": "use sphere instead of cylinder wih bullet",
         }
 
-    def get_new_distance_values(self, jtrans, rotMatj, gridPointsCoords, distance, dpad):
+    def get_new_distance_values(
+        self, jtrans, rotMatj, gridPointsCoords, distance, dpad
+    ):
         insidePoints = {}
         newDistPoints = {}
         cent1T = self.transformPoints(jtrans, rotMatj, self.positions[-1])

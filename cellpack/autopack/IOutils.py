@@ -34,6 +34,7 @@ from .ingredient import (
     MultiCylindersIngr,
     GrowIngredient,
 )
+
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
 

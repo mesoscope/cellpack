@@ -37,7 +37,13 @@ class Args(argparse.Namespace):
     DEFAULT_ANALYSIS = True
     DEFAULT_RECIPE_FILE = "cellpack/test-recipes/NM_Analysis_FigureB1.0.json"
     DEFAULT_OUTPUT_FOLDER = "/Users/meganriel-mehan/Dropbox/cellPack/"
-    DEFAULT_PLACE_METHODS = ["jitter", "RAPID", "pandaBulletRelax", "pandaBullet", "spheresBHT"]
+    DEFAULT_PLACE_METHODS = [
+        "jitter",
+        "RAPID",
+        "pandaBulletRelax",
+        "pandaBullet",
+        "spheresBHT",
+    ]
 
     def __init__(self):
         # Arguments that could be passed in through the command line

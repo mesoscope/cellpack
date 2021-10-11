@@ -75,7 +75,13 @@ from cellpack.autopack import IOutils
 from .octree import Octree
 from .Gradient import Gradient
 from .transformation import euler_from_matrix
-from .ingredient import MultiSphereIngr, MultiCylindersIngr, SingleSphereIngr, SingleCubeIngr
+from .ingredient import (
+    MultiSphereIngr,
+    MultiCylindersIngr,
+    SingleSphereIngr,
+    SingleCubeIngr,
+)
+
 # backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
 from .trajectory import dcdTrajectory, molbTrajectory
@@ -1003,7 +1009,9 @@ class Environment(CompartmentList):
         )  # transpose, use_quaternion, result=False, lefthand=False
         with open(filename + "_serialized.json", "w") as f:
             f.write(djson)
-        IOutils.saveResultBinary(self, filename + "_serialized.bin", False, True, lefthand=True)
+        IOutils.saveResultBinary(
+            self, filename + "_serialized.bin", False, True, lefthand=True
+        )
         IOutils.saveResultBinary(
             self, filename + "_serialized_tr.bin", True, True, lefthand=True
         )  # transpose, quaternio, left hand
@@ -2291,7 +2299,7 @@ class Environment(CompartmentList):
         name=None,
         vTestid=3,
         vAnalysis=0,
-        **kw
+        **kw,
     ):
         """
         ## Fill the grid by picking an ingredient first and then
@@ -2518,7 +2526,11 @@ class Environment(CompartmentList):
                 ptInd,
                 self.grid.masterGridPositions[ptInd],
             )
-            success, insidePoints, newDistPoints = ingr.attempt_to_pack_at_grid_location(
+            (
+                success,
+                insidePoints,
+                newDistPoints,
+            ) = ingr.attempt_to_pack_at_grid_location(
                 self,
                 ptInd,
                 distances,
@@ -2533,7 +2545,9 @@ class Environment(CompartmentList):
                 len(freePoints),
             )
             if success:
-                nbFreePoints = BaseGrid.updateDistances(insidePoints, newDistPoints, freePoints, nbFreePoints, distances)
+                nbFreePoints = BaseGrid.updateDistances(
+                    insidePoints, newDistPoints, freePoints, nbFreePoints, distances
+                )
                 self.grid.distToClosestSurf = numpy.array(distances[:])
                 self.grid.freePoints = numpy.array(freePoints[:])
                 self.grid.nbFreePoints = len(freePoints)  # -1
@@ -2551,7 +2565,9 @@ class Environment(CompartmentList):
                 self.log.info(f"completed*************** {ingr.name}")
                 self.log.info(f"PlacedMols = {PlacedMols}")
                 self.log.info(f"activeIngr index of {ingr.name}, {ind}")
-                self.log.info(f"threshold p len {len(self.thresholdPriorities)}, {len(self.normalizedPriorities)}")
+                self.log.info(
+                    f"threshold p len {len(self.thresholdPriorities)}, {len(self.normalizedPriorities)}"
+                )
                 if ind > 0:
                     # j = 0
                     for j in range(ind):
@@ -3233,12 +3249,12 @@ class Environment(CompartmentList):
                 realTotalVol = o.interiorVolume
                 ri.setCount(realTotalVol, reset=False)
 
-# ==============================================================================
-# AFter this point, features development around physics engine and algo
-# octree
-# panda bullet
-# panda ode
-# ==============================================================================
+    # ==============================================================================
+    # AFter this point, features development around physics engine and algo
+    # octree
+    # panda bullet
+    # panda ode
+    # ==============================================================================
 
     def setupOctree(
         self,
@@ -3326,7 +3342,9 @@ class Environment(CompartmentList):
         if ingr.Type == "Mesh":
             return ingr.add_rb_mesh(self.worldNP)
         elif self.panda_solver == "ode" and ingr.Type == "Sphere":
-            mat3x3 = Mat3(mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10])
+            mat3x3 = Mat3(
+                mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10]
+            )
             return ingr.add_rb_node_ode(self.world, trans, mat3x3)
         return ingr.add_rb_node(self.worldNP)
 

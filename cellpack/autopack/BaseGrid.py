@@ -75,6 +75,7 @@ class BaseGrid:
     3d positions, distances, freePoints and inside/surface points from organelles.
     NOTE : thi class could be completely replace if openvdb is wrapped to python.
     """
+
     @staticmethod
     def reorder_free_points(pt, freePoints, nbFreePoints):
         # TODO: move this to env class, ing shouldn't aware of the whole grid
