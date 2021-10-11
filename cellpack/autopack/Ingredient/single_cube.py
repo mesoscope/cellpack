@@ -200,7 +200,6 @@ class SingleCubeIngr(Ingredient):
         jtrans,
         rotMat,
         gridPointsCoords,
-        distance,
         histoVol,
     ):
         """

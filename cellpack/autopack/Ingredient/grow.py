@@ -2557,7 +2557,7 @@ class GrowIngredient(MultiCylindersIngr):
                 )
                 self.vi.update()
         return secondPoint
-    
+
     def add_rb_multi_sphere(self):
         inodenp = self.env.worldNP.attachNewNode(BulletRigidBodyNode(self.name))
         inodenp.node().setMass(1.0)

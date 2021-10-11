@@ -78,8 +78,7 @@ from .transformation import euler_from_matrix
 from .ingredient import MultiSphereIngr, MultiCylindersIngr, SingleSphereIngr, SingleCubeIngr
 # backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
-
-
+from .trajectory import dcdTrajectory, molbTrajectory
 from .randomRot import RandomRot
 
 try:
@@ -2028,7 +2027,7 @@ class Environment(CompartmentList):
                 ingr.prev_alt = None
                 ingr.results = []
                 ingr.start_positions = []
-   
+
                 if hasattr(ingr, "isph"):
                     ingr.isph = None
                 if hasattr(ingr, "icyl"):
@@ -3676,8 +3675,6 @@ class Environment(CompartmentList):
     #         Animate
     # ==============================================================================
     def readTraj(self, filename):
-        from autopack.trajectory import dcdTrajectory, molbTrajectory
-
         self.collectResultPerIngredient()
         lenIngrInstance = len(self.molecules)
         for orga in self.compartments:

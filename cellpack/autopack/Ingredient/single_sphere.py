@@ -118,7 +118,6 @@ class SingleSphereIngr(Ingredient):
         rotMat,
         level,
         gridPointsCoords,
-        distance,
         histoVol,
     ):
         """

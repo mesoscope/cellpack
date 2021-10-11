@@ -1170,7 +1170,7 @@ class Ingredient(Agent):
                 radii = [[0]]
             self.radii = radii
             self.positions = positions
-    
+
     def reset(self):
         """reset the states of an ingredient"""
         self.counter = 0
@@ -2000,7 +2000,7 @@ class Ingredient(Agent):
         self, level, jtrans, rotMatj, gridPointsCoords, distance
     ):
         collisionComp = self.collides_with_compartment(
-            jtrans, rotMatj, level, gridPointsCoords, distance, self.env
+            jtrans, rotMatj, level, gridPointsCoords, self.env
         )
 
         return collisionComp
@@ -4002,7 +4002,6 @@ class Ingredient(Agent):
                     packing_rotation,
                     level,
                     gridPointsCoords,
-                    distance,
                     env,
                 )
                 collision_results.extend([collision])

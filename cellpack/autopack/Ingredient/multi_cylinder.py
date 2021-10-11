@@ -149,7 +149,6 @@ class MultiCylindersIngr(Ingredient):
         rotMat,
         level,
         gridPointsCoords,
-        distance,
         histoVol,
     ):
         """
