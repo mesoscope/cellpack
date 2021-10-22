@@ -514,7 +514,6 @@ class BaseGrid:
 
     def getPositionPeridocity(self, pt3d, jitter, cutoff):
         tr = []
-
         if autopack.biasedPeriodicity:
             biased = numpy.array(autopack.biasedPeriodicity)
         else:
@@ -526,7 +525,6 @@ class BaseGrid:
         px, py, pz = pt3d
         p_xyz = [0, 0, 0]
         # can I use rapid and find the collision ?
-
         # distance plane X
         dist_origin_x = px - ox
         dist_edge_x = ex - px
@@ -541,7 +539,6 @@ class BaseGrid:
             pass
         else:
             p_xyz[0] = 0
-
         # distance plane Y
         doy = py - oy
         dey = ey - py
@@ -556,7 +553,6 @@ class BaseGrid:
             pass
         else:
             p_xyz[1] = 0
-
         # distance plane Z
         doz = pz - oz
         dez = ez - pz
@@ -579,6 +575,7 @@ class BaseGrid:
 
         for i in indices_non_zero:
             # i is the axis that is close to the point
+
             tr.append(pt3d + (self.periodic_table["left"][i] * p_xyz[i]))  # 0,1,2
             corner[0] += self.periodic_table["left"][i] * p_xyz[i]  # 1
             # the corner are
@@ -590,6 +587,7 @@ class BaseGrid:
             # two axis cross-> three pos
             tr.append(pt3d + corner[0])
         if len(indices_non_zero) == 3:
+
             # in a corner need total 7 pos, never happen in 2D
             corner[1] = (
                 self.periodic_table["left"][0] * p_xyz[0]
@@ -606,6 +604,7 @@ class BaseGrid:
             for i in range(4):  # 4+1=5
                 tr.append(pt3d + corner[i])
         return tr
+
 
     def checkPointInside(self, pt3d, dist=None, jitter=[1, 1, 1], bb=None):
         """

@@ -281,7 +281,6 @@ class Grid(BaseGrid):
         """
         # ptInd = k*(sizex)*(sizey)+j*(sizex)+i;#want i,j,k
         return self.ijkPtIndice[ptInd]
-
         # ==============================================================================
 
     # TO DO File IO
@@ -2204,6 +2203,7 @@ class Environment(CompartmentList):
             self._hackFreepts,
         )
 
+
         if len(allIngrPts) == 0:
             t = time.time()
             ingr.completion = 1.0
@@ -2264,7 +2264,6 @@ class Environment(CompartmentList):
                 previousThresh = np + float(previousThresh)
             self.activeIngr = self.activeIngr0 + self.activeIngr12
             self.log.info("time to reject the picking %d", time.time() - t)
-
             return False, vRangeStart
 
         if self.pickRandPt:

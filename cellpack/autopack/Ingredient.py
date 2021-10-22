@@ -1050,7 +1050,6 @@ class Ingredient(Agent):
         )
         self.log = logging.getLogger("ingredient")
         self.log.propagate = False
-
         self.molarity = molarity
         self.packingPriority = packingPriority
         self.log.info(
@@ -2828,7 +2827,6 @@ class Ingredient(Agent):
             "*************updating Distances %d %d", nbFreePoints, len(insidePoints)
         )
         # TODO: move this to env class, ing shouldn't aware of the whole grid
-
         t1 = time()
         # distChanges = {}
         self.nbPts = len(insidePoints)
@@ -3340,7 +3338,6 @@ class Ingredient(Agent):
                 else:
                     self.vi.updateBox(box, cornerPoints=bb)
                 self.vi.update()
-
             pointsToCheck = histoVol.grid.getPointsInSphere(
                 posc, radius_of_area_to_check
             )  # indices
@@ -3351,6 +3348,7 @@ class Ingredient(Agent):
 
             for pti in range(len(pointsToCheck)):
                 pt = pointsToCheck[
+
                     pti
                 ]  # index of master grid point that is inside the sphere
                 distance_to_packing_location = distA[
@@ -3405,6 +3403,7 @@ class Ingredient(Agent):
 
                 if (
                     signed_distance_to_sphere_surface <= 0
+
                 ):  # point is inside dropped sphere
                     if (
                         histoVol.grid.gridPtId[pt] != self.compNum and self.compNum <= 0
@@ -3446,6 +3445,7 @@ class Ingredient(Agent):
                     histoVol,
                     dpad,
                 )
+
         return False, insidePoints, newDistPoints
 
     def checkSphCompart(
@@ -5120,7 +5120,6 @@ class Ingredient(Agent):
         t1 = time()  # for timing the functions
         insidePoints = {}
         newDistPoints = {}
-
         for attempt_number in range(self.nbJitter):
             packing_location, _, _, _ = self.randomize_translation(
                 env, targeted_master_grid_point, rot_mat
@@ -5137,6 +5136,7 @@ class Ingredient(Agent):
                     env.runTimeDisplay,
                     moving,
                 )
+
 
             env.totnbJitter += 1
             if env.runTimeDisplay and moving is not None:
@@ -5185,6 +5185,7 @@ class Ingredient(Agent):
                             [0.5, 0, 0] if True in collision_results else [0, 0.5, 0],
                         )
                         self.update_display_rt(moving, p, jitter_rot)
+
             else:
                 collision_results = [False]
             self.log.info("check collision ")
@@ -5202,10 +5203,10 @@ class Ingredient(Agent):
                     env,
                     dpad,
                 )
-
                 # merge with the already found periodic collision points
                 insidePoints = self.merge_place_results(new_inside_points, insidePoints)
                 newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
+
             self.log.info("collision_jitter %r", collision)
             if env.runTimeDisplay and moving is not None:
                 box = self.vi.getObject("collBox")
@@ -5260,7 +5261,6 @@ class Ingredient(Agent):
             self.update_data_tree(packing_location, rot_mat, ptInd)
             if attempt_number > 0:
                 env.successfullJitter.append((self, jitterList, collD1, collD2))
-
             self.log.info(
                 "Success nb free point :%d %d/%d dpad %.2f",
                 nbFreePoints,
