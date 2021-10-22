@@ -280,7 +280,6 @@ class Grid(BaseGrid):
         """
         # ptInd = k*(sizex)*(sizey)+j*(sizex)+i;#want i,j,k
         return self.ijkPtIndice[ptInd]
-
         # ==============================================================================
 
     # TO DO File IO

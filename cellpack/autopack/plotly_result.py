@@ -70,7 +70,6 @@ class PlotlyAnalysis:
         y = []
         colors = []
         color_scale = pcolors.diverging.PiYG
-
         fig = self.plot
         for i in range(len(env.grid.masterGridPositions)):
             ids.append(i)

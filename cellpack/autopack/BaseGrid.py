@@ -574,7 +574,6 @@ class BaseGrid:
 
     def getPositionPeridocity(self, pt3d, jitter, cutoff):
         tr = []
-
         if autopack.biasedPeriodicity:
             biased = numpy.array(autopack.biasedPeriodicity)
         else:
@@ -601,7 +600,6 @@ class BaseGrid:
             pass
         else:
             p_xyz[0] = 0
-
         # distance plane Y
         doy = py - oy
         dey = ey - py
@@ -616,7 +614,6 @@ class BaseGrid:
             pass
         else:
             p_xyz[1] = 0
-
         # distance plane Z
         doz = pz - oz
         dez = ez - pz
