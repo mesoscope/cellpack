@@ -513,30 +513,29 @@ class BaseGrid:
         )
 
     def getPositionPeridocity(self, pt3d, jitter, cutoff):
-
+        tr = []
         if autopack.biasedPeriodicity:
             biased = numpy.array(autopack.biasedPeriodicity)
         else:
             biased = numpy.array(jitter)
-        translation = None
         if not autopack.testPeriodicity:
-            return None
+            return tr
         ox, oy, oz = self.boundingBox[0]
         ex, ey, ez = self.boundingBox[1]
         px, py, pz = pt3d
         p_xyz = [0, 0, 0]
         # can I use rapid and find the collision ?
         # distance plane X
-        dox = px - ox
-        dex = ex - px
+        dist_origin_x = px - ox
+        dist_edge_x = ex - px
         dx = 0
-        if dox < dex:
-            dx = dox  # 1
+        if dist_origin_x < dist_edge_x:
+            dx = dist_origin_x  # 1
             p_xyz[0] = 1
         else:
-            dx = dex  # -1
+            dx = dist_edge_x  # -1
             p_xyz[0] = -1
-        if dx < cutoff and dx != 0.0:
+        if dx < cutoff and dx != 0:
             pass
         else:
             p_xyz[0] = 0
@@ -564,15 +563,19 @@ class BaseGrid:
         else:
             dz = dez  # -1
             p_xyz[2] = -1
-        if dz < cutoff and dz != 0.0:
+        if dz < cutoff and dz != 0:
             pass
         else:
             p_xyz[2] = 0
         p_xyz = numpy.array(p_xyz) * biased
-        tr = []
-        corner = numpy.zeros((4, 3))  # 7 corner / 3 corner 3D / 2D
-        i1 = numpy.nonzero(p_xyz)[0]
-        for i in i1:
+        # for 2D we need 3 corner tiles
+        # for 3D we need 7 corner tiles
+        corner = numpy.zeros((4, 3))
+        indices_non_zero = numpy.nonzero(p_xyz)[0]
+
+        for i in indices_non_zero:
+            # i is the axis that is close to the point
+
             tr.append(pt3d + (self.periodic_table["left"][i] * p_xyz[i]))  # 0,1,2
             corner[0] += self.periodic_table["left"][i] * p_xyz[i]  # 1
             # the corner are
@@ -580,10 +583,11 @@ class BaseGrid:
             # X+Y+0 corner[1]
             # X+0+Z corner[2]
             # 0+Y+Z corner[3]
-        if len(i1) == 2:
+        if len(indices_non_zero) == 2:
             # two axis cross-> three pos
             tr.append(pt3d + corner[0])
-        if len(i1) == 3:
+        if len(indices_non_zero) == 3:
+
             # in a corner need total 7 pos, never happen in 2D
             corner[1] = (
                 self.periodic_table["left"][0] * p_xyz[0]
@@ -599,87 +603,8 @@ class BaseGrid:
             )
             for i in range(4):  # 4+1=5
                 tr.append(pt3d + corner[i])
-        if len(tr):
-            translation = tr
-        return translation
+        return tr
 
-    def getPositionPeridocityBroke(self, pt3d, jitter, cutoff):
-        if autopack.biasedPeriodicity is not None:
-            biased = autopack.biasedPeriodicity
-        else:
-            biased = jitter
-        origin = numpy.array(self.boundingBox[0])
-        E = numpy.array(self.boundingBox[1])
-        P = numpy.array(pt3d)
-        translation = None
-        if not autopack.testPeriodicity:
-            return None
-        # distance to front-lower-left
-        d1 = (P - origin) * biased
-        s1 = min(x for x in d1[d1 != 0] if x != 0)
-        #        i1=list(d1).index(s1)
-        m1 = numpy.logical_and(numpy.less(d1, cutoff), numpy.greater(d1, 0.0))
-        i1 = numpy.nonzero(m1)[0]
-
-        # distance to back-upper-right
-        d2 = (E - P) * biased
-        s2 = min(x for x in d2[d2 != 0] if x != 0)
-        #        i2=list(d2).index(s2)
-        m2 = numpy.logical_and(numpy.less(d2, cutoff), numpy.greater(d2, 0.0))
-        i2 = numpy.nonzero(m2)[0]
-        # first case to look for is the corner and return all positions
-        if s1 < s2:  # closer to left bottom corner
-            tr = []
-            corner = numpy.zeros((4, 3))  # 7 corner / 3 corner 3D / 2D
-            for i in i1:
-                tr.append(pt3d + self.periodic_table["left"][i])
-                corner[0] += self.periodic_table["left"][i]
-                # the corner are
-                # X+Y+Z corner[0]
-                # X+Y+0 corner[1]
-                # X+0+Z corner[2]
-                # 0+Y+Z corner[3]
-            if len(i1) == 2:
-                tr.append(pt3d + corner[0])
-            if len(i1) == 3:
-                corner[1] = (
-                    self.periodic_table["left"][0] + self.periodic_table["left"][1]
-                )
-                corner[2] = (
-                    self.periodic_table["left"][0] + self.periodic_table["left"][2]
-                )
-                corner[3] = (
-                    self.periodic_table["left"][1] + self.periodic_table["left"][2]
-                )
-                for i in range(4):
-                    if sum(corner[i]) != 0:
-                        tr.append(pt3d + corner[i])
-            translation = tr
-            return translation
-        else:
-            tr = []
-            corner = numpy.zeros((4, 3))  # 7 corner / 3 corner 3D / 2D
-            for i in i2:
-                tr.append(pt3d + self.periodic_table["right"][i])
-                corner[0] += self.periodic_table["right"][i]
-            if len(i2) == 2:
-                tr.append(pt3d + corner[0])
-            if len(i2) == 3:
-                corner[1] = (
-                    self.periodic_table["right"][0] + self.periodic_table["right"][1]
-                )
-                corner[2] = (
-                    self.periodic_table["right"][0] + self.periodic_table["right"][2]
-                )
-                corner[3] = (
-                    self.periodic_table["right"][1] + self.periodic_table["right"][2]
-                )
-                for i in range(4):
-                    if sum(corner[i]) != 0:
-                        tr.append(pt3d + corner[i])
-            translation = tr
-            return translation
-        return None
 
     def checkPointInside(self, pt3d, dist=None, jitter=[1, 1, 1], bb=None):
         """
@@ -729,7 +654,7 @@ class BaseGrid:
         s = numpy.sum(d * d)
         return math.sqrt(s)
 
-    def getPointsInSphere(self, bb, pt, radius, addSP=True, info=False):
+    def getPointsInSphere(self, pt, radius):
         if self.tree is None:
             self.tree = spatial.cKDTree(self.masterGridPositions, leafsize=10)
         # add surface points
@@ -812,10 +737,42 @@ class BaseGrid:
 
     def getPointsInCube(self, bb, pt, radius, addSP=True, info=False):
         """
-        Return all grid points indices inside the given bounding box.
-        NOTE : need to fix with grid build with numpy arrange
+        Return all grid points indicesinside the given bounding box.
         """
-        return self.getPointsInSphere(bb, pt, radius, addSP=addSP, info=info)
+        spacing1 = 1.0 / self.gridSpacing
+        NX, NY, NZ = self.nbGridPoints
+        OX, OY, OZ = self.boundingBox[
+            0
+        ]  # origin of Pack grid-> bottom lef corner not origin
+        ox, oy, oz = bb[0]
+        ex, ey, ez = bb[1]
+
+        i0 = int(max(0, floor((ox - OX) * spacing1)))
+        i1 = int(min(NX, int((ex - OX) * spacing1) + 1))
+        j0 = int(max(0, floor((oy - OY) * spacing1)))
+        j1 = int(min(NY, int((ey - OY) * spacing1) + 1))
+        k0 = int(max(0, floor((oz - OZ) * spacing1)))
+        k1 = int(min(NZ, int((ez - OZ) * spacing1) + 1))
+
+        zPlaneLength = NX * NY
+
+        ptIndices = []
+        for z in range(int(k0), int(k1)):
+            offz = z * zPlaneLength
+            for y in range(int(j0), int(j1)):
+                off = y * NX + offz
+                for x in range(int(i0), int(i1)):
+                    ptIndices.append(x + off)
+
+        # add surface points
+        if addSP and self.nbSurfacePoints != 0:
+            result = numpy.zeros((self.nbSurfacePoints,), "i")
+            nb = self.surfPtsBht.closePoints(tuple(pt), radius, result)
+            dimx, dimy, dimz = self.nbGridPoints
+            ptIndices.extend(
+                list(map(lambda x, length=self.gridVolume: x + length, result[:nb]))
+            )
+        return ptIndices
 
     def computeGridNumberOfPoint(self, boundingBox, space):
         """

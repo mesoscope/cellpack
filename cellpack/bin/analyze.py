@@ -164,7 +164,6 @@ def main():
 
             env.placeMethod = place_method
             env.encapsulatingGrid = 0
-            autopack.testPeriodicity = False
             analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
             analyse.g.Resolution = 1.0
             env.boundingBox = numpy.array(env.boundingBox)

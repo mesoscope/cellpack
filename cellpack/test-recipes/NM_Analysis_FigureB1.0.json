@@ -35,7 +35,7 @@
         "pickRandPt": true,
         "largestProteinSize": 200,
         "resultfile": "autoPACKserver/results/NM_Analysis_FigureB1.0.apr.json",
-        "use_periodicity": false,
+        "use_periodicity": true,
         "EnviroOnly": false
     },
     "cytoplasme": {
@@ -321,7 +321,7 @@
                 "orientBiasRotRangeMin": -3.1415927,
                 "radii": [
                     [
-                        25
+                        12.5
                     ]
                 ],
                 "cutoff_boundary": 0,
@@ -332,7 +332,7 @@
                     0
                 ],
                 "perturbAxisAmplitude": 0.1,
-                "encapsulatingRadius": 25,
+                "encapsulatingRadius": 12.5,
                 "positions2": null,
                 "useOrientBias": false,
                 "gradient": "",

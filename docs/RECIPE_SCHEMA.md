@@ -53,7 +53,7 @@ Prioritize ingredient selection by packingWeight.
 ### pickRandPt
 _Optional `boolean`_. Default: `true`.
 
-Pick drop position point randomly.
+Pick drop position point randomly. If `false`, recipe packs in order from origin to opposite corner. 
 
 ### ingrLookForNeighbours
 _Optional `boolean`_. Default: `false`. 

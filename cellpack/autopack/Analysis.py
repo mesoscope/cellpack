@@ -27,6 +27,7 @@ from cellpack.autopack.ldSequence import halton
 
 from cellpack.autopack.GeometryTools import GeometryTools, Rectangle
 from cellpack.autopack.upy.colors import map_colors
+from cellpack.autopack.plotly_result import PlotlyAnalysis
 
 
 def autolabel(rects, ax):
@@ -142,6 +143,8 @@ class AnalyseAP:
         self.g.Resolution = 1.0  # or grid step?
         self.current_pos = None
         self.current_distance = None
+        self.plotly = PlotlyAnalysis()
+
         autopack._colors = None
 
     def getMinMaxProteinSize(self):
@@ -955,14 +958,10 @@ class AnalyseAP:
         pylab.ylabel(r"radial distribution function $g(r)$")
         pylab.savefig(file_name)
 
-    #        pylab.close()     # closes the current figure
-
     def simpleplot(self, X, Y, filenameme, w=3):
         pylab.clf()
         pylab.plot(X, Y, linewidth=w)
         pylab.savefig(filenameme)
-
-    #        pylab.close()     # closes the current figure
 
     def grid_pack(
         self,
@@ -993,22 +992,21 @@ class AnalyseAP:
 
         t2 = time()
         gridTime = t2 - t1
+        print("time to Build Grid", gridTime)
         if fill:
             self.pack(seed=seed, vTestid=vTestid, vAnalysis=vAnalysis, fbox_bb=fbox_bb)
-        print("time to Build Grid", gridTime)
-
-    #    afviewer.displayOrganellesPoints()
-    # return
-    # actine.updateFromBB(h.grid)
 
     def pack(self, seed=20, forceBuild=True, vTestid=3, vAnalysis=0, fbox_bb=None):
+        self.plotly.update_title(self.env.placeMethod)
         t1 = time()
-        # self.log.info("seed is %d %r", seed, fbox_bb)
         self.env.pack_grid(
             seedNum=seed, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb
         )
         t2 = time()
         print("time to run pack_grid", t2 - t1)
+        self.plotly.make_grid_heatmap(self.env)
+        self.plotly.add_ingredient_positions(self.env)
+        self.plotly.show()
 
     def calcDistanceMatrixFastEuclidean2(self, nDimPoints):
         nDimPoints = numpy.array(nDimPoints)
