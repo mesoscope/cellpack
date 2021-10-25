@@ -452,7 +452,7 @@ class Partner:
             return None
 
     def distanceFunction(self, d, expression=None, function=None):
-        # default functino that can be overwrite or
+        # default function that can be overwrite or
         # can provide an experssion which 1/d or 1/d^2 or d^2etc.w*expression
         # can provide directly a function that take as
         # arguments the w and the distance
@@ -879,7 +879,7 @@ class Ingredient(Agent):
         self.minRadius = 0
         self.min_distance = 0
         self.encapsulatingRadius = 0
-        self.maxLevel = 1
+        self.deepest_level = 1
         self.is_previous = False
         self.vertices = []
         self.faces = []
@@ -934,7 +934,7 @@ class Ingredient(Agent):
         self.positions2 = positions2
         self.children = children
         self.rbnode = {}  # keep the rbnode if any
-        self.collisionLevel = 0  # self.maxLevel
+        self.collisionLevel = 0  # self.deepest_level
         # first level used for collision detection
         self.jitterMax = jitterMax
         # (1,1,1) means 1/2 grid spacing in all directions
@@ -1169,7 +1169,7 @@ class Ingredient(Agent):
             # for r, c in zip(radii, positions):
             #     assert len(r) == len(c)
             if radii is not None:
-                self.maxLevel = len(radii) - 1
+                self.deepest_level = len(radii) - 1
             if radii is None:
                 radii = [[0]]
             self.radii = radii
@@ -2059,7 +2059,7 @@ class Ingredient(Agent):
         # self.distances_temp = []
         insidePoints = {}
         newDistPoints = {}
-        at_max_level = level == self.maxLevel and (level + 1) == len(self.positions)
+        at_max_level = level == self.deepest_level and (level + 1) == len(self.positions)
         for radius_of_ing_being_packed, posc in zip(radii, centT):
             x, y, z = posc
             radius_of_area_to_check = (
@@ -2174,7 +2174,7 @@ class Ingredient(Agent):
             if not at_max_level:
                 # we didn't find any colisions with the this level, but we still want
                 # the inside points to be based on the most detailed geom
-                new_level = self.maxLevel
+                new_level = self.deepest_level
                 return self.collision_jitter(
                     jtrans,
                     rotMat,
@@ -2328,9 +2328,9 @@ class Ingredient(Agent):
         x, y, z = jtrans
         bb = ([x - rad, y - rad, z - rad], [x + rad, y + rad, z + rad])
         if self.modelType == "Cylinders":
-            cent1T = self.transformPoints(jtrans, rotMat, self.positions[self.maxLevel])
+            cent1T = self.transformPoints(jtrans, rotMat, self.positions[self.deepest_level])
             cent2T = self.transformPoints(
-                jtrans, rotMat, self.positions2[self.maxLevel]
+                jtrans, rotMat, self.positions2[self.deepest_level]
             )
             bbs = []
             for radc, p1, p2 in zip(self.radii, cent1T, cent2T):
@@ -3717,7 +3717,7 @@ class Ingredient(Agent):
                         gridPointsCoords,
                         distance,
                         dpad,
-                        self.maxLevel,
+                        self.deepest_level,
                     )
                     insidePoints = self.merge_place_results(
                         new_inside_pts, insidePoints
@@ -3884,7 +3884,7 @@ class Ingredient(Agent):
                         gridPointsCoords,
                         distance,
                         dpad,
-                        self.maxLevel,
+                        self.deepest_level,
                     )
                     insidePoints = self.merge_place_results(
                         new_inside_pts, insidePoints
@@ -4025,7 +4025,7 @@ class Ingredient(Agent):
                         gridPointsCoords,
                         distance,
                         dpad,
-                        self.maxLevel,
+                        self.deepest_level,
                     )
                     insidePoints = self.merge_place_results(
                         new_inside_pts, insidePoints

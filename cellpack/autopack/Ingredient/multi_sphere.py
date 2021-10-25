@@ -67,7 +67,7 @@ class MultiSphereIngr(SingleSphereIngr):
     def add_rb_node(self, worldNP):
         inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
         inodenp.node().setMass(1.0)
-        level = self.maxLevel
+        level = self.deepest_level
         centers = self.positions[level]
         radii = self.radii[level]
         for radc, posc in zip(radii, centers):

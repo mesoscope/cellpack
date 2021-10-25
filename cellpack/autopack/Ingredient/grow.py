@@ -2564,7 +2564,7 @@ class GrowIngredient(MultiCylindersIngr):
     def add_rb_multi_sphere(self):
         inodenp = self.env.worldNP.attachNewNode(BulletRigidBodyNode(self.name))
         inodenp.node().setMass(1.0)
-        level = self.maxLevel
+        level = self.deepest_level
         centers = self.positions[level]
         radii = self.radii[level]
         for radc, posc in zip(radii, centers):

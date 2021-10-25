@@ -2343,7 +2343,7 @@ class Environment(CompartmentList):
             self.freePointMask[bb_insidepoint] = 0
             bb_outside = numpy.nonzero(self.freePointMask)
             self.grid.gridPtId[bb_outside] = 99999
-        component_ids = self.grid.gridPtId
+        compartment_ids = self.grid.gridPtId
         # why a copy? --> can we split ?
         distances = self.grid.distToClosestSurf[:]
         spacing = self.smallestProteinSize
@@ -2476,15 +2476,15 @@ class Environment(CompartmentList):
                     if self.afviewer.renderDistance:
                         self.afviewer.vi.displayParticleVolumeDistance(distances, self)
 
-            compNum = ingr.compNum
+            current_ingr_compartment = ingr.compNum
             # compute dpad which is the distance at which we need to update
             # distances after the drop is successfull
-            max_radius = self.get_dpad(compNum)
+            max_radius = self.get_dpad(current_ingr_compartment)
 
             self.log.info(
                 "picked Ingr radius compNum dpad %d %s %d",
                 ingr.minRadius,
-                compNum,
+                current_ingr_compartment,
             )
 
             # find the points that can be used for this ingredient
@@ -2496,7 +2496,7 @@ class Environment(CompartmentList):
                 nbFreePoints,
                 distances,
                 spacing,
-                component_ids,
+                compartment_ids,
                 vRangeStart,
                 vThreshStart,
             )
