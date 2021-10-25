@@ -31,6 +31,7 @@ class ConvertToSimularium(argparse.Namespace):
     DEFAULT_PACKING_RESULT = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/results_seed_0.json"
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
+    # @staticmethod
 
     def __init__(self, total_steps=1):
         # Arguments that could be passed in through the command line
@@ -47,6 +48,7 @@ class ConvertToSimularium(argparse.Namespace):
         self.n_agents = [0 for x in range(total_steps)]
         self.points_per_fiber = 0
         self.type_names = [[] for x in range(total_steps)]
+        self.display_data = {}
         self.positions = [[] for x in range(total_steps)]
         self.rotations = [[] for x in range(total_steps)]
         self.viz_types = [[] for x in range(total_steps)]
@@ -110,6 +112,31 @@ class ConvertToSimularium(argparse.Namespace):
         z_size = bb[1][2] - bb[0][2]
         self.box_size = [x_size, y_size, z_size]
 
+    def get_ingredient_display_data(self, main_container, ingredient, version):
+        data = None
+        if version == 0:
+            ingredient_name = ingredient
+            ingredients = main_container["ingredients"]
+            try:
+                data = ingredients[ingredient]
+            except Exception:
+                pass
+        elif version == 1:
+            ingredient_name = ingredient["name"]
+            compartment = main_container[ingredient["compartment"]]
+            position = ingredient["position"]
+            try:
+                compartment[position]
+                data = compartment[ingredient["position"]]["ingredients"][
+                    ingredient_name
+                ]
+            except Exception as e:
+                # Ingredient in recipe wasn't packed
+                print(e, position, ingredient_name)
+        if data["include"]:
+            data["rep_file"] = ""
+        return data
+
     def get_ingredient_data(self, main_container, ingredient, version):
         data = None
         if version == 0:
@@ -152,12 +179,14 @@ class ConvertToSimularium(argparse.Namespace):
         else:
             return self.get_euler_from_quat(data_in)
 
-    def loop_through_ingredients(self, results_data_in, time_step_index):
+    def loop_through_ingredients(self, results_data_in, time_step_index, recipe_data):
         if "cytoplasme" in results_data_in:
             main_container = results_data_in["cytoplasme"]
+            recipe_container = recipe_data["cytoplasme"]
             version = 0
         elif "compartments" in results_data_in:
             main_container = results_data_in["compartments"]
+            recipe_container = recipe_data["compartments"]
             version = 1
         id = 0
         for i in range(len(self.unique_ingredient_names)):
@@ -165,6 +194,18 @@ class ConvertToSimularium(argparse.Namespace):
             (ingredient_name, data) = self.get_ingredient_data(
                 main_container, ingredient, version
             )
+            display_data = self.get_ingredient_display_data(
+                recipe_container, ingredient, version
+            )
+            print(display_data)
+            self.display_data[ingredient_name] = {
+                "display_type": "OBJ"
+                if display_data["rep_file"] is not None
+                else "SPHERE",
+                "url": display_data["rep_file"] + ".obj"
+                if display_data["rep_file"] is not None
+                else "",
+            }
             if data is None:
                 continue
             elif len(data["results"]) > 0:
@@ -204,7 +245,9 @@ class ConvertToSimularium(argparse.Namespace):
                         self.max_fiber_length = len(data[curve])
                     id = id + 1
 
-    def get_positions_per_ingredient(self, results_data_in, time_step_index):
+    def get_positions_per_ingredient(
+        self, results_data_in, time_step_index, recipe_data
+    ):
         if results_data_in["recipe"]["name"] != self.recipe_name:
             raise Exception(
                 "Recipe name in results file doesn't match recipe file",
@@ -213,7 +256,7 @@ class ConvertToSimularium(argparse.Namespace):
                 "recipe",
                 self.recipe_name,
             )
-        self.loop_through_ingredients(results_data_in, time_step_index)
+        self.loop_through_ingredients(results_data_in, time_step_index, recipe_data)
 
     def fill_in_empty_fiber_data(self, time_step_index):
         blank_value = [[0, 0, 0] for x in range(self.max_fiber_length)]
@@ -230,6 +273,7 @@ class ConvertToSimularium(argparse.Namespace):
 
     def get_all_ingredient_names(self, recipe_in):
         self.recipe_name = recipe_in["recipe"]["name"]
+
         if "cytoplasme" in recipe_in:
             container = recipe_in["cytoplasme"]
             ingredients = container["ingredients"]
@@ -248,21 +292,14 @@ class ConvertToSimularium(argparse.Namespace):
                         for ingredient in current_compartment["surface"]["ingredients"]
                     ]
                 if "interior" in current_compartment:
-
-                    ingredients = (
-                        ingredients
-                        + ingredients
-                        + [
-                            {
-                                "name": ingredient,
-                                "compartment": compartment,
-                                "position": "interior",
-                            }
-                            for ingredient in current_compartment["interior"][
-                                "ingredients"
-                            ]
-                        ]
-                    )
+                    ingredients = ingredients + [
+                        {
+                            "name": ingredient,
+                            "compartment": compartment,
+                            "position": "interior",
+                        }
+                        for ingredient in current_compartment["interior"]["ingredients"]
+                    ]
             self.unique_ingredient_names = ingredients
 
 
@@ -283,7 +320,9 @@ def main():
 
         packing_data = json.load(open(results_in, "r"))
         box_size = converter.box_size
-        converter.get_positions_per_ingredient(packing_data, time_point_index)
+        converter.get_positions_per_ingredient(
+            packing_data, time_point_index, recipe_data
+        )
         converter.fill_in_empty_fiber_data(time_point_index)
         if converter.debug:
             print("SUBPOINTS LENGTH", len(converter.subpoints[time_point_index]))

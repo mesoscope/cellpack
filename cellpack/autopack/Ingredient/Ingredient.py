@@ -2059,7 +2059,9 @@ class Ingredient(Agent):
         # self.distances_temp = []
         insidePoints = {}
         newDistPoints = {}
-        at_max_level = level == self.deepest_level and (level + 1) == len(self.positions)
+        at_max_level = level == self.deepest_level and (level + 1) == len(
+            self.positions
+        )
         for radius_of_ing_being_packed, posc in zip(radii, centT):
             x, y, z = posc
             radius_of_area_to_check = (
@@ -2328,7 +2330,9 @@ class Ingredient(Agent):
         x, y, z = jtrans
         bb = ([x - rad, y - rad, z - rad], [x + rad, y + rad, z + rad])
         if self.modelType == "Cylinders":
-            cent1T = self.transformPoints(jtrans, rotMat, self.positions[self.deepest_level])
+            cent1T = self.transformPoints(
+                jtrans, rotMat, self.positions[self.deepest_level]
+            )
             cent2T = self.transformPoints(
                 jtrans, rotMat, self.positions2[self.deepest_level]
             )
