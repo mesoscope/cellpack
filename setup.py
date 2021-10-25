@@ -43,7 +43,7 @@ requirements = [
     "panda3d==1.10.9",
     "pmw==2.0.1",
     "scipy==1.6.2",
-    "simulariumio==1.1.0",
+    "simulariumio>=1.2.0",
     "pycollada==0.7.1",
 ]
 
@@ -73,7 +73,7 @@ setup(
     entry_points={
         "console_scripts": [
             "analyze=cellpack.bin.analyze:main", 
-            "sim-convert=cellpack.bin.simularium_converter:main"],
+            "convert=cellpack.bin.simularium_converter:main"],
     },
     install_requires=requirements,
     license="MIT license",
