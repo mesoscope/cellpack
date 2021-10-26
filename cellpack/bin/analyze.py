@@ -180,14 +180,14 @@ def main():
                     os.mkdir(output)
                 print(output)
                 analyse.doloop(
-                            1,
-                            env.boundingBox,
-                            output,
-                            rdf=True,
-                            render=False,
-                            twod=(dim == 2),
-                            use_file=True,
-                        )  # ,fbox_bb=fbox_bb)
+                    1,
+                    env.boundingBox,
+                    output,
+                    rdf=True,
+                    render=False,
+                    twod=(dim == 2),
+                    use_file=True,
+                )
         else:
             for place_method in args.place_methods:
 
