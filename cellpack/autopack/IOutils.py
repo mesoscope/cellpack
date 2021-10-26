@@ -17,7 +17,7 @@ from numpy.core.arrayprint import printoptions
 
 import cellpack.autopack as autopack
 import cellpack.autopack.transformation as tr
-from cellpack.autopack.Ingredient import GrowIngredient, ActinIngredient, KWDS
+from .ingredient.Ingredient import KWDS
 from cellpack.autopack.Serializable import (
     sCompartment,
     sIngredientGroup,
@@ -26,6 +26,14 @@ from cellpack.autopack.Serializable import (
 )
 from cellpack.autopack.Recipe import Recipe
 from cellpack.autopack.Compartment import Compartment
+from .ingredient import (
+    ActinIngredient,
+    SingleSphereIngr,
+    MultiSphereIngr,
+    SingleCubeIngr,
+    MultiCylindersIngr,
+    GrowIngredient,
+)
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
@@ -399,13 +407,6 @@ class IOingredientTool(object):
         return inrStr
 
     def makeIngredient(self, **kw):
-        from cellpack.autopack.Ingredient import (
-            SingleSphereIngr,
-            MultiSphereIngr,
-            SingleCubeIngr,
-            MultiCylindersIngr,
-            GrowIngredient,
-        )
 
         ingr = None
         if kw["Type"] == "SingleSphere":

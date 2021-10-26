@@ -47,11 +47,12 @@
 """
 
 import os
-import time
+from time import time
 from random import random, uniform, seed
 from scipy import spatial
 import numpy
 import pickle
+import math
 from math import pi
 import json
 from json import encoder
@@ -61,31 +62,29 @@ from collections import OrderedDict
 # PANDA3D Physics engine ODE and Bullet
 import panda3d
 
-from panda3d.core import Mat3, Mat4, Vec3, Point3
-from panda3d.core import TransformState
-from panda3d.core import BitMask32
-from panda3d.bullet import BulletSphereShape, BulletBoxShape, BulletCylinderShape
-
+from panda3d.core import Mat3, Mat4, Vec3, BitMask32, NodePath
 from panda3d.bullet import BulletRigidBodyNode
-from panda3d.ode import OdeBody, OdeMass
-from panda3d.ode import OdeSphereGeom
-from panda3d.core import NodePath
 
 from cellpack.mgl_tools.bhtree import bhtreelib
 
 import cellpack.autopack as autopack
 from .Compartment import CompartmentList
 from .Recipe import Recipe
-from .Ingredient import GrowIngredient, ActinIngredient
-from .ray import vlen, vdiff
+from .ingredient import GrowIngredient, ActinIngredient
 from cellpack.autopack import IOutils
+from .octree import Octree
 from .Gradient import Gradient
-from cellpack.autopack.transformation import euler_from_matrix
+from .transformation import euler_from_matrix
+from .ingredient import (
+    MultiSphereIngr,
+    MultiCylindersIngr,
+    SingleSphereIngr,
+    SingleCubeIngr,
+)
 
 # backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
-
-
+from .trajectory import dcdTrajectory, molbTrajectory
 from .randomRot import RandomRot
 
 try:
@@ -670,13 +669,6 @@ class Environment(CompartmentList):
         """
         Helper function to make an ingredient, pass all arguments as keywords.
         """
-        from autopack.Ingredient import (
-            SingleSphereIngr,
-            MultiSphereIngr,
-            SingleCubeIngr,
-        )
-        from autopack.Ingredient import MultiCylindersIngr, GrowIngredient
-
         ingr = None
 
         if kw["Type"] == "SingleSphere":
@@ -793,7 +785,7 @@ class Environment(CompartmentList):
             result=True,
             quaternion=True,
         )  # pdb ?
-        self.log.info("time to save result file %d", time.time() - t0)
+        self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
             #    START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
             # totalVolume = self.grid.gridVolume*unitVol
@@ -871,7 +863,6 @@ class Environment(CompartmentList):
                     if hasattr(self, "afviewer"):
                         mat = rot.copy()
                         mat[:3, 3] = pos
-                        import math
 
                         # r = R.from_matrix(mat).as_euler("xyz", degrees=False)
                         r = euler_from_matrix(mat, "rxyz")
@@ -966,7 +957,7 @@ class Environment(CompartmentList):
             self.log.info("histoVol.timeUpDistLoopTotal = %d", self.timeUpDistLoopTotal)
 
             #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
-        self.log.info("time to save end %d", time.time() - t0)
+        self.log.info("time to save end %d", time() - t0)
 
     def saveRecipe(
         self,
@@ -1012,15 +1003,15 @@ class Environment(CompartmentList):
             )
 
     def saveNewRecipe(self, filename):
-        from autopack.IOutils import serializedRecipe, saveResultBinary
-
-        djson, all_pos, all_rot = serializedRecipe(
+        djson, all_pos, all_rot = IOutils.serializedRecipe(
             self, False, True
         )  # transpose, use_quaternion, result=False, lefthand=False
         with open(filename + "_serialized.json", "w") as f:
             f.write(djson)
-        saveResultBinary(self, filename + "_serialized.bin", False, True, lefthand=True)
-        saveResultBinary(
+        IOutils.saveResultBinary(
+            self, filename + "_serialized.bin", False, True, lefthand=True
+        )
+        IOutils.saveResultBinary(
             self, filename + "_serialized_tr.bin", True, True, lefthand=True
         )  # transpose, quaternio, left hand
 
@@ -1168,7 +1159,7 @@ class Environment(CompartmentList):
         @return:  the center of mass of the coordinates
         """
 
-        t1 = time.time()
+        t1 = time()
         if len(kw):
             res = function(*args, **kw)
         else:
@@ -1311,9 +1302,6 @@ class Environment(CompartmentList):
         """
         Read and setup the grid from the given filename. (pickle)
         """
-        #        from bhtree import bhtreelib
-        from scipy import spatial
-
         aInteriorGrids = []
         aSurfaceGrids = []
         f = open(gridFileName, "rb")
@@ -1976,14 +1964,6 @@ class Environment(CompartmentList):
 
         return activeIngr0, activeIngr12
 
-    #    import fill3isolated # Graham cut the outdated fill3 from this document and put it in a separate file. turn on here if you want to use it.
-
-    def updateIngr(self, ingr, completion=0.0, nbMol=0, counter=0):
-        """helper function for updating the ingredient completion, nbmol and counter"""
-        ingr.counter = counter
-        ingr.nbMol = nbMol
-        ingr.completion = completion
-
     def clearRBingredient(self, ingr):
         if ingr.bullet_nodes[0] is not None:
             self.delRB(ingr.bullet_nodes[0])
@@ -2039,50 +2019,28 @@ class Environment(CompartmentList):
                 ingr.completion = 0.0
                 ingr.prev_alt = None
                 ingr.start_positions = []
-                if hasattr(
-                    ingr, "allIngrPts"
-                ):  # Graham here on 5/16/12 are these two lines safe?
-                    del (
-                        ingr.allIngrPts
-                    )  # Graham here on 5/16/12 are these two lines safe?
+                if len(ingr.allIngrPts) > 0:
+                    ingr.allIngrPts = []
                 if hasattr(ingr, "isph"):
                     ingr.isph = None
                 if hasattr(ingr, "icyl"):
                     ingr.icyl = None
-                if hasattr(ingr, "allIngrPts"):
-                    delattr(ingr, "allIngrPts")
-                #                if hasattr(ingr,"rb_nodes"):
-                #                    for node in ingr.rb_nodes:
-                #                        self.delRB(node)
-                #                    ingr.rb_nodes=[]
+
             for ingr in recip.exclude:
-                ingr.start_positions = []
-                ingr.prev_alt = None
-                ingr.results = []
                 ingr.firstTimeUpdate = True
                 ingr.counter = 0
                 ingr.rejectionCounter = 0
                 ingr.completion = 0.0
-                if hasattr(
-                    ingr, "allIngrPts"
-                ):  # Graham here on 5/16/12 are these two lines safe?
-                    del ingr.allIngrPts
+                ingr.prev_alt = None
+                ingr.results = []
+                ingr.start_positions = []
+
                 if hasattr(ingr, "isph"):
                     ingr.isph = None
                 if hasattr(ingr, "icyl"):
                     ingr.icyl = None
-                if hasattr(ingr, "allIngrPts"):
-                    delattr(ingr, "allIngrPts")
-                #                if hasattr(ingr,"rb_nodes"):
-                #                    for node in ingr.rb_nodes:
-                #                        self.delRB(node)
-                #                    ingr.rb_nodes=[]
-
-    def resetIngr(self, ingr):
-        """Reset the given ingredient (count, completion, nmol)"""
-        ingr.counter = 0
-        ingr.nbMol = 0
-        ingr.completion = 0.0
+                if len(ingr.allIngrPts) > 0:
+                    ingr.allIngrPts = []
 
     def getActiveIng(self):
         """Return all remaining active ingredients"""
@@ -2177,13 +2135,11 @@ class Environment(CompartmentList):
     def getPointToDrop(
         self,
         ingr,
-        radius,
-        jitter,
         freePoints,
         nbFreePoints,
         distance,
+        spacing,
         compId,
-        compNum,
         vRangeStart,
         vThreshStart,
     ):
@@ -2196,16 +2152,13 @@ class Environment(CompartmentList):
             distance,
             freePoints,
             nbFreePoints,
+            spacing,
             compId,
-            compNum,
-            jitter,
             self.freePtsUpdateThreshold,
-            self._hackFreepts,
         )
 
-
         if len(allIngrPts) == 0:
-            t = time.time()
+            t = time()
             ingr.completion = 1.0
             ind = self.activeIngr.index(ingr)
             # if ind == 0:
@@ -2222,14 +2175,7 @@ class Environment(CompartmentList):
             self.activeIngr0, self.activeIngr12 = self.callFunction(
                 self.getSortedActiveIngredients, ([self.activeIngr])
             )
-            self.log.info(
-                "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d",
-                ingr.name,
-                ingr.molarity,
-                radius,
-                jitter,
-                compNum,
-            )
+            self.log.info(f"No point left for ingredient {ingr.name}")
             self.log.info("len(allIngredients %d", len(self.activeIngr))
             self.log.info("len(self.activeIngr0) %d", len(self.activeIngr0))
             self.log.info("len(self.activeIngr12) %d", len(self.activeIngr12))
@@ -2263,7 +2209,8 @@ class Environment(CompartmentList):
                 self.thresholdPriorities.append(np + previousThresh)
                 previousThresh = np + float(previousThresh)
             self.activeIngr = self.activeIngr0 + self.activeIngr12
-            self.log.info("time to reject the picking %d", time.time() - t)
+            self.log.info("time to reject the picking %d", time() - t)
+
             return False, vRangeStart
 
         if self.pickRandPt:
@@ -2289,15 +2236,8 @@ class Environment(CompartmentList):
                 ptIndr = int(uniform(0.0, 1.0) * len(allIngrPts))
                 ptInd = allIngrPts[ptIndr]
             if ptInd is None:
-                t = time.time()
-                self.log.info(
-                    "No point left for ingredient %s %f minRad %.2f jitter %.3f in component %d",
-                    ingr.name,
-                    ingr.molarity,
-                    radius,
-                    jitter,
-                    compNum,
-                )
+                t = time()
+                self.log.info(f"No point left for ingredient {ingr.name}")
                 ingr.completion = 1.0
                 ind = self.activeIngr.index(ingr)
                 # if ind == 0:
@@ -2316,7 +2256,7 @@ class Environment(CompartmentList):
                 self.thresholdPriorities.pop(ind)
                 self.normalizedPriorities.pop(ind)
                 if verbose > 1:
-                    print(("time to reject the picking", time.time() - t))
+                    print(("time to reject the picking", time() - t))
                     print(("vRangeStart", vRangeStart))
                 return False, vRangeStart
 
@@ -2358,11 +2298,9 @@ class Environment(CompartmentList):
         name=None,
         vTestid=3,
         vAnalysis=0,
-        **kw
+        **kw,
     ):
         """
-        the latest packing loop
-        ## this packing should be able to continue from a previous one
         ## Fill the grid by picking an ingredient first and then
         ## find a suitable point using the ingredient's placer object
         """
@@ -2370,7 +2308,7 @@ class Environment(CompartmentList):
         autopack.testPeriodicity = self.use_periodicity
         self.grid.testPeriodicity = self.use_periodicity
 
-        t1 = time.time()
+        t1 = time()
         self.timeUpDistLoopTotal = 0
         self.static = []
         if self.grid is None:
@@ -2405,7 +2343,7 @@ class Environment(CompartmentList):
             self.freePointMask[bb_insidepoint] = 0
             bb_outside = numpy.nonzero(self.freePointMask)
             self.grid.gridPtId[bb_outside] = 99999
-        compId = self.grid.gridPtId
+        compartment_ids = self.grid.gridPtId
         # why a copy? --> can we split ?
         distances = self.grid.distToClosestSurf[:]
         spacing = self.smallestProteinSize
@@ -2477,7 +2415,7 @@ class Environment(CompartmentList):
                 nls += 1
 
         vRangeStart = 0.0
-        tCancelPrev = time.time()
+        tCancelPrev = time()
         ptInd = 0
 
         PlacedMols = 0
@@ -2492,7 +2430,7 @@ class Environment(CompartmentList):
         # ==============================================================================
         dump_freq = self.dump_freq  # 120.0#every minute
         dump = self.dump
-        stime = time.time()
+        stime = time()
 
         while nbFreePoints:
             self.log.info(
@@ -2511,7 +2449,7 @@ class Environment(CompartmentList):
                 self.log.info("exit packing loop because vRange and hence Done!!!****")
                 break
             if self.cancelDialog:
-                tCancel = time.time()
+                tCancel = time()
                 if tCancel - tCancelPrev > 10.0:
                     cancel = self.displayCancelDialog()
                     if cancel:
@@ -2522,10 +2460,10 @@ class Environment(CompartmentList):
                         break
                     # if OK, do nothing, i.e., continue loop
                     # (but not the function continue)
-                    tCancelPrev = time.time()
+                    tCancelPrev = time()
 
             # pick an ingredient
-            ingr = self.callFunction(self.pickIngredient, (vThreshStart,))
+            ingr = self.pickIngredient(vThreshStart)
             if hasattr(self, "afviewer"):
                 p = (
                     (float(PlacedMols)) / float(totalNumMols)
@@ -2538,39 +2476,29 @@ class Environment(CompartmentList):
                     if self.afviewer.renderDistance:
                         self.afviewer.vi.displayParticleVolumeDistance(distances, self)
 
-            compNum = ingr.compNum
-            radius = ingr.minRadius
-            jitter = self.callFunction(ingr.getMaxJitter, (spacing,))
-
+            current_ingr_compartment = ingr.compNum
             # compute dpad which is the distance at which we need to update
             # distances after the drop is successfull
-            mr = self.get_dpad(compNum)
-            dpad = ingr.minRadius + mr + jitter
+            max_radius = self.get_dpad(current_ingr_compartment)
 
             self.log.info(
                 "picked Ingr radius compNum dpad %d %s %d",
                 ingr.minRadius,
-                compNum,
-                dpad,
+                current_ingr_compartment,
             )
 
             # find the points that can be used for this ingredient
             ##
 
-            res = self.callFunction(
-                self.getPointToDrop,
-                [
-                    ingr,
-                    radius,
-                    jitter,
-                    freePoints,
-                    nbFreePoints,
-                    distances,
-                    compId,
-                    compNum,
-                    vRangeStart,
-                    vThreshStart,
-                ],
+            res = self.getPointToDrop(
+                ingr,
+                freePoints,
+                nbFreePoints,
+                distances,
+                spacing,
+                compartment_ids,
+                vRangeStart,
+                vThreshStart,
             )
             if ingr.compNum > 0:
                 allSrfpts = list(
@@ -2597,25 +2525,28 @@ class Environment(CompartmentList):
                 ptInd,
                 self.grid.masterGridPositions[ptInd],
             )
-            success, nbFreePoints = self.callFunction(
-                ingr.place,
-                (
-                    self,
-                    ptInd,
-                    freePoints,
-                    nbFreePoints,
-                    distances,
-                    dpad,
-                    usePP,
-                ),
+            (
+                success,
+                insidePoints,
+                newDistPoints,
+            ) = ingr.attempt_to_pack_at_grid_location(
+                self,
+                ptInd,
+                distances,
+                max_radius,
+                spacing,
+                usePP,
             )
             self.log.info(
-                "after place attempt placed: %r, number of free points:%d, length of free points=%d",
+                "after place attempt, placed: %r, number of free points:%d, length of free points=%d",
                 success,
                 nbFreePoints,
                 len(freePoints),
             )
             if success:
+                nbFreePoints = BaseGrid.updateDistances(
+                    insidePoints, newDistPoints, freePoints, nbFreePoints, distances
+                )
                 self.grid.distToClosestSurf = numpy.array(distances[:])
                 self.grid.freePoints = numpy.array(freePoints[:])
                 self.grid.nbFreePoints = len(freePoints)  # -1
@@ -2629,15 +2560,13 @@ class Environment(CompartmentList):
 
             if ingr.completion >= 1.0:
                 ind = self.activeIngr.index(ingr)
-                if verbose > 1:
-                    print("completed***************", ingr.name)
-                    print("PlacedMols = ", PlacedMols)
-                    print("activeIngr index of ", ingr.name, ind)
-                    print(
-                        "threshold p len ",
-                        len(self.thresholdPriorities),
-                        len(self.normalizedPriorities),
-                    )
+
+                self.log.info(f"completed*************** {ingr.name}")
+                self.log.info(f"PlacedMols = {PlacedMols}")
+                self.log.info(f"activeIngr index of {ingr.name}, {ind}")
+                self.log.info(
+                    f"threshold p len {len(self.thresholdPriorities)}, {len(self.normalizedPriorities)}"
+                )
                 if ind > 0:
                     # j = 0
                     for j in range(ind):
@@ -2652,9 +2581,8 @@ class Environment(CompartmentList):
                 self.activeIngr0, self.activeIngr12 = self.callFunction(
                     self.getSortedActiveIngredients, ([self.activeIngr])
                 )
-                if verbose > 2:
-                    print("len(self.activeIngr0)", len(self.activeIngr0))
-                    print("len(self.activeIngr12)", len(self.activeIngr12))
+                self.log.info(f"len(self.activeIngr0) {len(self.activeIngr0)}")
+                self.log.info(f"len(self.activeIngr12) {len(self.activeIngr12)}")
                 self.activeIngre_saved = self.activeIngr[:]
 
                 self.totalPriorities = 0  # 0.00001
@@ -2684,7 +2612,7 @@ class Environment(CompartmentList):
                     self.thresholdPriorities.append(np + previousThresh)
                     previousThresh = np + float(previousThresh)
                 self.activeIngr = self.activeIngr0 + self.activeIngr12
-            if dump and ((time.time() - stime) > dump_freq):
+            if dump and ((time() - stime) > dump_freq):
                 self.collectResultPerIngredient()
                 print("SAVING", self.resultfile)
                 self.saveRecipe(
@@ -2704,13 +2632,13 @@ class Environment(CompartmentList):
                     quaternion=True,
                     transpose=True,
                 )
-                stime = time.time()
+                stime = time()
 
         self.distancesAfterFill = distances[:]
         self.freePointsAfterFill = freePoints[:]
         self.nbFreePointsAfterFill = nbFreePoints
         self.distanceAfterFill = distances[:]
-        t2 = time.time()
+        t2 = time()
         self.log.info("time to fill %d", t2 - t1)
 
         if self.saveResult:
@@ -2746,8 +2674,6 @@ class Environment(CompartmentList):
                 ingredients[ingr.name][3].append(numpy.array(mat))
         self.ingr_result = ingredients
         if self.treemode == "bhtree":
-            from bhtree import bhtreelib
-
             bhtreelib.freeBHtree(self.close_ingr_bhtree)
         #        bhtreelib.FreeRBHTree(self.close_ingr_bhtree)
         #        del self.close_ingr_bhtree
@@ -2761,10 +2687,10 @@ class Environment(CompartmentList):
     #        dialog = TimerDialog()
     #        dialog.init()
     #        dialog.Open(async=True, pluginid=25555589, width=120, height=100)
-    #        tt=time.time()
+    #        tt=time()
     # while dialog.IsOpen():
-    #    if time.time()-tt > 5.:
-    #        print "time.time()-tt = ", time.time()-tt
+    #    if time()-tt > 5.:
+    #        print "time()-tt = ", time()-tt
     #        dialog.Close()
     #        cancel = dialog._cancel
     #        cancel=c4d.gui.QuestionDialog('WannaCancel?') # Removed by Graham on July 10, 2012 because it may no longer be needed, but test it TODO
@@ -2996,7 +2922,6 @@ class Environment(CompartmentList):
                     ingr.results.append([pos, rot])
 
     def load_asJson(self, resultfilename=None):
-        #        from upy.hostHelper import Helper as helper
         if resultfilename is None:
             resultfilename = self.resultfile
         with open(resultfilename, "r") as fp:  # doesnt work with symbol link ?
@@ -3323,96 +3248,17 @@ class Environment(CompartmentList):
                 realTotalVol = o.interiorVolume
                 ri.setCount(realTotalVol, reset=False)
 
-    def estimateVolume_old(self, boundingBox, spacing):
-        # need to box N point and coordinaePoint
-        pad = 10.0
-        grid = Grid()
-        grid.boundingBox = boundingBox
-        grid.gridSpacing = spacing  # = self.smallestProteinSize*1.1547  # 2/sqrt(3)????
-        grid.gridVolume, grid.nbGridPoints = self.callFunction(
-            grid.computeGridNumberOfPoint, (boundingBox, spacing)
-        )
-        nbPoints = grid.gridVolume
-        # compute 3D point coordiantes for all grid points
-        self.callFunction(grid.create3DPointLookup)
-        grid.gridPtId = [0] * nbPoints
-        xl, yl, zl = boundingBox[0]
-        xr, yr, zr = boundingBox[1]
-        realTotalVol = (xr - xl) * (yr - yl) * (zr - zl)
-        print("totalVolume %f for %d points" % (realTotalVol, nbPoints))
-        # distToClosestSurf is set to self.diag initially
-        grid.diag = diag = vlen(vdiff((xr, yr, zr), (xl, yl, zl)))
-        distance = grid.distToClosestSurf = [diag] * nbPoints
-        # foreach ingredient get estimation of insidepoint and report the percantage of total point in Volume
-        r = self.exteriorRecipe
-        if r:
-            for ingr in r.ingredients:
-                insidePoints, newDistPoints = ingr.getInsidePoints(
-                    grid,
-                    grid.masterGridPositions,
-                    pad,
-                    distance,
-                    centT=ingr.positions[-1],
-                    jtrans=[0.0, 0.0, 0.0],
-                    rotMatj=numpy.identity(4),
-                )
-                ingr.nbPts = len(insidePoints)
-                onemol = (realTotalVol * float(ingr.nbPts)) / float(nbPoints)
-                ingr.vol_nbmol = int(ingr.molarity * onemol)
-                print(
-                    "ingr %s has %d points representing %f for one mol thus %d mol"
-                    % (ingr.name, ingr.nbPts, onemol, ingr.vol_nbmol)
-                )
-            #                ingr.vol_nbmol = ?
-        for o in self.compartments:
-            rs = o.surfaceRecipe
-            if rs:
-                for ingr in rs.ingredients:
-                    insidePoints, newDistPoints = ingr.getInsidePoints(
-                        grid,
-                        grid.masterGridPositions,
-                        pad,
-                        distance,
-                        centT=ingr.positions[-1],
-                        jtrans=[0.0, 0.0, 0.0],
-                        rotMatj=numpy.identity(4),
-                    )
-                    ingr.nbPts = len(insidePoints)
-                    onemol = (realTotalVol * float(ingr.nbPts)) / float(nbPoints)
-                    ingr.vol_nbmol = int(ingr.molarity * onemol)
-            ri = o.innerRecipe
-            if ri:
-                for ingr in ri.ingredients:
-                    insidePoints, newDistPoints = ingr.getInsidePoints(
-                        grid,
-                        grid.masterGridPositions,
-                        pad,
-                        distance,
-                        centT=ingr.positions[-1],
-                        jtrans=[0.0, 0.0, 0.0],
-                        rotMatj=numpy.identity(4),
-                    )
-                    ingr.nbPts = len(insidePoints)
-                    onemol = (realTotalVol * float(ingr.nbPts)) / float(nbPoints)
-                    ingr.vol_nbmol = int(ingr.molarity * onemol)
-
-                    # ==============================================================================
-                # AFter this point, features development around physics engine and algo
-                # octree
-                # panda bullet
-                # panda ode
-                # ==============================================================================
+    # ==============================================================================
+    # AFter this point, features development around physics engine and algo
+    # octree
+    # panda bullet
+    # panda ode
+    # ==============================================================================
 
     def setupOctree(
         self,
     ):
         if self.octree is None:
-            #            from autopack.octree import Octree
-            from autopack import octree_exteneded as octree
-            from autopack import Octree
-
-            octree.MINIMUM_SIZE = self.smallestProteinSize
-            octree.MAX_OBJECTS_PER_NODE = 10
             self.octree = Octree(
                 self.grid.getRadius(), helper=helper
             )  # Octree((0,0,0),self.grid.getRadius())   #0,0,0 or center of grid?
@@ -3422,17 +3268,6 @@ class Environment(CompartmentList):
             import panda3d
         except Exception:
             return
-        self.rb_func_dic = {
-            "bullet": {
-                "SingleSphere": self.addSingleSphereRB,
-                "SingleCube": self.addSingleCubeRB,
-                "MultiSphere": self.addMultiSphereRB,
-                "MultiCylinder": self.addMultiCylinderRB,
-                "Grow": self.addMultiCylinderRB,
-                "Mesh": self.addMeshRB,
-            },
-            "ode": {"SingleSphere": self.addSingleSphereRBODE},
-        }
         from panda3d.core import loadPrcFileData
 
         if self.grid is not None:
@@ -3502,6 +3337,16 @@ class Environment(CompartmentList):
             if o.rbnode is None:
                 o.rbnode = o.addShapeRB()  # addMeshRBOrganelle(o)
 
+    def add_rb_node(self, ingr, trans, mat):
+        if ingr.Type == "Mesh":
+            return ingr.add_rb_mesh(self.worldNP)
+        elif self.panda_solver == "ode" and ingr.Type == "Sphere":
+            mat3x3 = Mat3(
+                mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10]
+            )
+            return ingr.add_rb_node_ode(self.world, trans, mat3x3)
+        return ingr.add_rb_node(self.worldNP)
+
     def delRB(self, node):
         if panda3d is None:
             return
@@ -3520,132 +3365,6 @@ class Environment(CompartmentList):
         if node == self.moving:
             self.moving = None
 
-    def addSingleSphereRBODE(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        body = OdeBody(self.world)
-        M = OdeMass()
-        M.setSphereTotal(1.0, ingr.encapsulatingRadius)
-        body.setMass(M)
-        body.setPosition(Vec3(jtrans[0], jtrans[1], jtrans[2]))
-        body.setRotation(pMat)
-        # the geometry for the collision ?
-        geom = OdeSphereGeom(self.ode_space, ingr.encapsulatingRadius)
-        geom.setBody(body)
-        return geom
-
-    def addSingleSphereRB(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        shape = BulletSphereShape(ingr.encapsulatingRadius)
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        inodenp.node().setMass(1.0)
-        #        inodenp.node().addShape(shape)
-        inodenp.node().addShape(
-            shape, TransformState.makePos(Point3(0, 0, 0))
-        )  # rotation ?
-        #        spherenp.setPos(-2, 0, 4)
-        return inodenp
-
-    def addMultiSphereRB(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        inodenp.node().setMass(1.0)
-        centT = ingr.positions[
-            0
-        ]  # ingr.transformPoints(jtrans, rotMat, ingr.positions[0])
-        for radc, posc in zip(ingr.radii[0], centT):
-            shape = BulletSphereShape(radc)
-            inodenp.node().addShape(
-                shape, TransformState.makePos(Point3(posc[0], posc[1], posc[2]))
-            )  #
-        return inodenp
-
-    def multiSphereRB(self, name, pos, rad):
-        if panda3d is None:
-            return
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(name))
-        inodenp.node().setMass(1.0)
-        # centT = ingr.positions[0]#ingr.transformPoints(jtrans, rotMat, ingr.positions[0])
-        #        for i in range(len(pos)):#
-        #            posc = pos[i]
-        #            radc = rad[i]
-        for radc, posc in zip(rad, pos):
-            shape = BulletSphereShape(radc)
-            inodenp.node().addShape(
-                shape, TransformState.makePos(Point3(posc[0], posc[1], posc[2]))
-            )  #
-        return inodenp
-
-    def addSingleCubeRB(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        halfextents = ingr.bb[1]
-        shape = BulletBoxShape(
-            Vec3(halfextents[0], halfextents[1], halfextents[2])
-        )  # halfExtents
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        inodenp.node().setMass(1.0)
-        #        inodenp.node().addShape(shape)
-        inodenp.node().addShape(
-            shape, TransformState.makePos(Point3(0, 0, 0))
-        )  # , pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
-        #        spherenp.setPos(-2, 0, 4)
-        return inodenp
-
-    def addMultiCylinderRB(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        helper = autopack.helper
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        inodenp.node().setMass(1.0)
-        centT1 = ingr.positions[
-            0
-        ]  # ingr.transformPoints(jtrans, rotMat, ingr.positions[0])
-        centT2 = ingr.positions2[
-            0
-        ]  # ingr.transformPoints(jtrans, rotMat, ingr.positions2[0])
-        for radc, p1, p2 in zip(ingr.radii[0], centT1, centT2):
-            length, mat = helper.getTubePropertiesMatrix(p1, p2)
-            pMat = self.pandaMatrice(mat)
-            #            d = numpy.array(p1) - numpy.array(p2)
-            #            s = numpy.sum(d*d)
-            Point3(
-                ingr.principalVector[0],
-                ingr.principalVector[1],
-                ingr.principalVector[2],
-            )
-            shape = BulletCylinderShape(
-                radc, length, 1
-            )  # math.sqrt(s), 1)# { XUp = 0, YUp = 1, ZUp = 2 } or LVector3f const half_extents
-            inodenp.node().addShape(shape, TransformState.makeMat(pMat))  #
-        return inodenp
-
-    def addMeshRBOld(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        helper = autopack.helper
-        if ingr.mesh is None:
-            return
-        faces, vertices, vnormals = helper.DecomposeMesh(
-            ingr.mesh, edit=False, copy=False, tri=True, transform=True
-        )
-        from panda3d.bullet import BulletTriangleMesh, BulletTriangleMeshShape
-
-        mesh = BulletTriangleMesh()
-        points3d = [Point3(v[0], v[1], v[2]) for v in vertices]
-        for f in faces:
-            mesh.addTriangle(points3d[f[0]], points3d[f[1]], points3d[f[2]])
-
-        shape = BulletTriangleMeshShape(mesh, dynamic=False)
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        inodenp.node().setMass(1.0)
-        inodenp.node().addShape(
-            shape, TransformState.makePos(Point3(0, 0, 0))
-        )  # , pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
-        return inodenp
-
     def setGeomFaces(self, tris, face):
         if panda3d is None:
             return
@@ -3655,57 +3374,6 @@ class Environment(CompartmentList):
         for i in face:
             tris.addVertex(i)
         tris.closePrimitive()
-
-    def addMeshRB(self, ingr, pMat, jtrans, rotMat):
-        if panda3d is None:
-            return
-        inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        inodenp.node().setMass(1.0)
-        if ingr.mesh is None:
-            return
-        ingr.getData()
-        if not len(ingr.vertices):
-            return inodenp
-        from panda3d.core import (
-            GeomVertexFormat,
-            GeomVertexWriter,
-            GeomVertexData,
-            Geom,
-            GeomTriangles,
-        )
-        from panda3d.bullet import (
-            BulletTriangleMesh,
-            BulletTriangleMeshShape,
-        )
-
-        # step 1) create GeomVertexData and add vertex information
-        format = GeomVertexFormat.getV3()
-        vdata = GeomVertexData("vertices", format, Geom.UHStatic)
-        vertexWriter = GeomVertexWriter(vdata, "vertex")
-        [vertexWriter.addData3f(v[0], v[1], v[2]) for v in ingr.vertices]
-
-        # step 2) make primitives and assign vertices to them
-        tris = GeomTriangles(Geom.UHStatic)
-        [self.setGeomFaces(tris, face) for face in ingr.faces]
-
-        # step 3) make a Geom object to hold the primitives
-        geom = Geom(vdata)
-        geom.addPrimitive(tris)
-        # step 4) create the bullet mesh and node
-        #        if ingr.convex_hull:
-        #            shape = BulletConvexHullShape()
-        #            shape.add_geom(geom)
-        #        else :
-        mesh = BulletTriangleMesh()
-        mesh.addGeom(geom)
-        shape = BulletTriangleMeshShape(mesh, dynamic=False)  # BulletConvexHullShape
-        print("shape ok", shape)
-        # inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
-        # inodenp.node().setMass(1.0)
-        inodenp.node().addShape(
-            shape
-        )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
-        return inodenp
 
     def addMeshRBOrganelle(self, o):
         if panda3d is None:
@@ -3757,7 +3425,6 @@ class Environment(CompartmentList):
         # or
         # shape = BulletConvexHullShape()
         # shape.add_geom(geom)
-        print("shape ok", shape)
         # inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
         # inodenp.node().setMass(1.0)
         inodenp.node().addShape(
@@ -3808,9 +3475,7 @@ class Environment(CompartmentList):
         #        mat[:3, 3] = trans
         #        mat = mat.transpose()
         mat = mat.transpose().reshape((16,))
-        mat3x3 = Mat3(
-            mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10]
-        )
+
         pmat = Mat4(
             mat[0],
             mat[1],
@@ -3829,15 +3494,8 @@ class Environment(CompartmentList):
             trans[2],
             mat[15],
         )
-        pMat = TransformState.makeMat(pmat)
-        if self.panda_solver == "ode":
-            pMat = mat3x3
         inodenp = None
-        #        print (pMat)
-        if ingr.use_mesh_rb:
-            rtype = "Mesh"
-            # print ("#######RBNode Mesh ####", ingr.name, ingr.rbnode,self.rb_func_dic[rtype])
-        inodenp = self.rb_func_dic[self.panda_solver][rtype](ingr, pMat, trans, rotMat)
+        inodenp = self.add_rb_node(ingr, trans, mat)
         if self.panda_solver == "bullet":
             inodenp.setCollideMask(BitMask32.allOn())
             inodenp.node().setAngularDamping(1.0)
@@ -3930,7 +3588,6 @@ class Environment(CompartmentList):
                 for n in self.static
             ]
             done = not (True in r)
-            print(done, dt, "time", time() - t1)
             if runTimeDisplay:
                 # move self.moving and update
                 nodenp = NodePath(self.moving)
@@ -4035,8 +3692,6 @@ class Environment(CompartmentList):
     #         Animate
     # ==============================================================================
     def readTraj(self, filename):
-        from autopack.trajectory import dcdTrajectory, molbTrajectory
-
         self.collectResultPerIngredient()
         lenIngrInstance = len(self.molecules)
         for orga in self.compartments:

@@ -31,6 +31,19 @@ class PlotlyAnalysis:
             opacity=opacity,
         )
 
+    def add_square(self, radius, pos, color, opacity=1):
+        self.plot.add_shape(
+            type="rect",
+            xref="x",
+            yref="y",
+            x0=pos[0] - radius,
+            y0=pos[1] - radius,
+            x1=pos[0] + radius,
+            y1=pos[1] + radius,
+            line_color=PlotlyAnalysis.format_color(color),
+            opacity=opacity,
+        )
+
     def add_ingredient_positions(self, env):
         for pos, rot, ingr, ptInd in env.molecules:
             if len(ingr.positions) > 1:
@@ -39,7 +52,6 @@ class PlotlyAnalysis:
                         position = ingr.apply_rotation(
                             rot, ingr.positions[level][i], pos
                         )
-                        # position = (numpy.array(ingr.positions[level][i]) + numpy.array(pos))
                         self.add_circle(
                             ingr.radii[level][i],
                             [position[0], position[1]],
@@ -47,7 +59,10 @@ class PlotlyAnalysis:
                             level / len(ingr.positions),
                         )
             else:
-                self.add_circle(ingr.encapsulatingRadius, pos, ingr.color)
+                if ingr.modelType == "Spheres":
+                    self.add_circle(ingr.encapsulatingRadius, pos, ingr.color)
+                elif ingr.modelType == "Cube":
+                    self.add_square(ingr.encapsulatingRadius, pos, ingr.color)
 
     def make_grid_heatmap(self, env):
         ids = []

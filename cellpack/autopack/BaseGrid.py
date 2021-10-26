@@ -76,6 +76,66 @@ class BaseGrid:
     NOTE : thi class could be completely replace if openvdb is wrapped to python.
     """
 
+    @staticmethod
+    def reorder_free_points(pt, freePoints, nbFreePoints):
+        # TODO: move this to env class, ing shouldn't aware of the whole grid
+        # Swap the newly inside point value with the value of the last free point
+        # Point will no longer be considered "free" because it will be beyond the range of
+        # nbFreePoints. The value of the point itself is the history of it's original index
+        # so any future swaps will still result in the correct index being move into the range
+        # of nbFreePoints
+        nbFreePoints -= 1
+        vKill = freePoints[pt]
+        vLastFree = freePoints[nbFreePoints]
+        freePoints[vKill] = vLastFree
+        freePoints[vLastFree] = vKill
+        # Turn on these printlines if there is a problem with incorrect points showing in display points
+        # self.log.debug("*************pt = masterGridPointValue = %d", pt)
+        # self.log.debug("nbFreePointAfter = %d", nbFreePoints)
+        # self.log.debug("vKill = %d", vKill)
+        # self.log.debug("vLastFree = %d", vLastFree)
+        # self.log.debug("freePoints[vKill] = %d", freePoints[vKill])
+        # self.log.debug("freePoints[vLastFree] = %d", freePoints[vLastFree])
+        # self.log.debug("pt = masterGridPointValue = %d", pt)
+        # self.log.debug("freePoints[nbFreePoints-1] = %d", freePoints[nbFreePoints])
+        # self.log.debug("freePoints[pt] = %d", freePoints[pt])
+        # freePoints will now have all the available indices between 0 and nbFreePoints in
+        # freePoints[nbFreePoints:] won't necessarily be the indices of inside points
+        return freePoints, nbFreePoints
+
+    @staticmethod
+    def updateDistances(
+        insidePoints,
+        newDistPoints,
+        freePoints,
+        nbFreePoints,
+        distance,
+    ):
+        # self.log.info(
+        #     "*************updating Distances %d %d", nbFreePoints, len(insidePoints)
+        # )
+        # TODO: move this to env class, ing shouldn't aware of the whole grid
+
+        # t1 = time()
+        # distChanges = {}
+        for pt, dist in list(insidePoints.items()):
+            try:
+                freePoints, nbFreePoints = BaseGrid.reorder_free_points(
+                    pt, freePoints, nbFreePoints
+                )
+            except Exception:
+                print(pt, "not in freeePoints********************************")
+                pass
+            distance[pt] = dist
+        # self.log.debug("update free points loop %d", time() - t1)
+        # t2 = time()
+        for pt, dist in list(newDistPoints.items()):
+            if pt not in insidePoints:
+
+                distance[pt] = dist
+        # self.log.debug("update distance loop %d", time() - t2)
+        return nbFreePoints
+
     def __init__(
         self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=True, lookup=0
     ):
@@ -525,6 +585,7 @@ class BaseGrid:
         px, py, pz = pt3d
         p_xyz = [0, 0, 0]
         # can I use rapid and find the collision ?
+
         # distance plane X
         dist_origin_x = px - ox
         dist_edge_x = ex - px
@@ -575,7 +636,6 @@ class BaseGrid:
 
         for i in indices_non_zero:
             # i is the axis that is close to the point
-
             tr.append(pt3d + (self.periodic_table["left"][i] * p_xyz[i]))  # 0,1,2
             corner[0] += self.periodic_table["left"][i] * p_xyz[i]  # 1
             # the corner are
@@ -587,7 +647,6 @@ class BaseGrid:
             # two axis cross-> three pos
             tr.append(pt3d + corner[0])
         if len(indices_non_zero) == 3:
-
             # in a corner need total 7 pos, never happen in 2D
             corner[1] = (
                 self.periodic_table["left"][0] * p_xyz[0]
@@ -604,7 +663,6 @@ class BaseGrid:
             for i in range(4):  # 4+1=5
                 tr.append(pt3d + corner[i])
         return tr
-
 
     def checkPointInside(self, pt3d, dist=None, jitter=[1, 1, 1], bb=None):
         """
