@@ -1,0 +1,69 @@
+cellpack.autopack.Ingredient package
+====================================
+
+Submodules
+----------
+
+cellpack.autopack.Ingredient.Ingredient module
+----------------------------------------------
+
+.. automodule:: cellpack.autopack.Ingredient.Ingredient
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.Ingredient.grow module
+----------------------------------------
+
+.. automodule:: cellpack.autopack.Ingredient.grow
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.Ingredient.multi\_cylinder module
+---------------------------------------------------
+
+.. automodule:: cellpack.autopack.Ingredient.multi_cylinder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.Ingredient.multi\_sphere module
+-------------------------------------------------
+
+.. automodule:: cellpack.autopack.Ingredient.multi_sphere
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.Ingredient.single\_cube module
+------------------------------------------------
+
+.. automodule:: cellpack.autopack.Ingredient.single_cube
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.Ingredient.single\_sphere module
+--------------------------------------------------
+
+.. automodule:: cellpack.autopack.Ingredient.single_sphere
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.Ingredient.utils module
+-----------------------------------------
+
+.. automodule:: cellpack.autopack.Ingredient.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.autopack.Ingredient
+   :members:
+   :undoc-members:
+   :show-inheritance:

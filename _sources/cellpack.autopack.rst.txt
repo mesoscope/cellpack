@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   cellpack.autopack.Ingredient
    cellpack.autopack.upy
 
 Submodules
@@ -72,14 +73,6 @@ cellpack.autopack.IOutils module
 --------------------------------
 
 .. automodule:: cellpack.autopack.IOutils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cellpack.autopack.Ingredient module
------------------------------------
-
-.. automodule:: cellpack.autopack.Ingredient
    :members:
    :undoc-members:
    :show-inheritance:
