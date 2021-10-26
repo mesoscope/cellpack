@@ -435,7 +435,6 @@ class Environment(CompartmentList):
         # can't pickle this dictionary
         self.rb_func_dic = {}
         self.use_periodicity = False
-        self.gridbiasedPeriodicity = None  # unused here
         # need options for the save/server data etc....
         # should it be in __init__ like other general options ?
         self.dump = True
@@ -2306,8 +2305,6 @@ class Environment(CompartmentList):
         """
         # set periodicity
         autopack.testPeriodicity = self.use_periodicity
-        self.grid.testPeriodicity = self.use_periodicity
-
         t1 = time()
         self.timeUpDistLoopTotal = 0
         self.static = []

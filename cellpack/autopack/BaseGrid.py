@@ -184,8 +184,6 @@ class BaseGrid:
         self.tree = None
         self.tree_free = None
         self.encapsulatingGrid = 0
-        self.testPeriodicity = autopack.testPeriodicity
-        self.biasedPeriodicity = autopack.biasedPeriodicity
         self.lookup = lookup
         self.center = None
         self.backup = None

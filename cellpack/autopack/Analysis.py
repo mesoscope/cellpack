@@ -1239,7 +1239,6 @@ class AnalyseAP:
                                 #  Plot "image" particles to verify that periodic boundary conditions are working
                                 r = ingr.encapsulatingRadius
                                 if autopack.testPeriodicity:
-                                    print("use periodicity")
                                     if p[0] < r:
                                         ax.add_patch(
                                             Circle(
