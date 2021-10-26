@@ -963,23 +963,12 @@ class AnalyseAP:
         pylab.plot(X, Y, linewidth=w)
         pylab.savefig(filenameme)
 
-    def grid_pack(
+    def build_grid(
         self,
         bb,
-        wrkDir,
         forceBuild=True,
-        fill=0,
-        seed=20,
-        vTestid=3,
-        vAnalysis=0,
-        fbox_bb=None,
     ):
         t1 = time()
-        #        if bbox is None :
-        #            box=self.helper.getCurrentSelection()[0]
-        #        else :
-        #            box = bbox[0]
-        #        bb=self.helper.getCornerPointCube(box)
         gridFileIn = None
         gridFileOut = None
         self.env.buildGrid(
@@ -993,10 +982,8 @@ class AnalyseAP:
         t2 = time()
         gridTime = t2 - t1
         print("time to Build Grid", gridTime)
-        if fill:
-            self.pack(seed=seed, vTestid=vTestid, vAnalysis=vAnalysis, fbox_bb=fbox_bb)
 
-    def pack(self, seed=20, forceBuild=True, vTestid=3, vAnalysis=0, fbox_bb=None):
+    def pack(self, seed=20, vTestid=3, vAnalysis=0, fbox_bb=None):
         self.plotly.update_title(self.env.placeMethod)
         t1 = time()
         self.env.pack_grid(
@@ -1132,7 +1119,6 @@ class AnalyseAP:
         self,
         n,
         bbox,
-        wrkDir,
         output,
         rdf=True,
         render=False,
@@ -1169,31 +1155,22 @@ class AnalyseAP:
         angles = None
         rebuild = True
         #        seeds_i=[]
-        for si in range(n):
+        for seed_index in range(n):
             #            if i > 0 : rebuild = False #bu need to reset ...
-            basename = output + os.sep + "results_seed_" + str(si)
+            basename = output + os.sep + "results_seed_" + str(seed_index)
             # Clear
             if self.afviewer:
                 self.afviewer.clearFill("Test_Spheres2D")
             else:
                 self.env.reset()
-            # no need to rebuild the grid ?
             self.env.saveResult = True
             self.env.resultfile = basename
-            se = seeds_i[si]  # int(time())
-            #            seeds_i.append(se)
-            self.grid_pack(
+            seed = seeds_i[seed_index]  # int(time())
+            self.build_grid(
                 bbox,
-                output,
-                seed=se,
-                fill=1,
-                vTestid=si,
-                vAnalysis=1,
                 forceBuild=rebuild,
-                fbox_bb=fbox_bb,
-            )  # build grid and fill
-            # store the result
-            #            self.env.store_asJson(resultfilename=basename)
+            )
+            self.pack(seed=seed, vTestid=seed_index, vAnalysis=1, fbox_bb=fbox_bb)
             self.center = self.env.grid.getCenter()
             if render:
                 # render/save scene if hosted otherwise nothing
@@ -1255,9 +1232,10 @@ class AnalyseAP:
                                         facecolor=ingr.color,
                                     )
                                 )
-                                #                                 Plot "image" particles to verify that periodic boundary conditions are working
+                                #  Plot "image" particles to verify that periodic boundary conditions are working
                                 r = ingr.encapsulatingRadius
                                 if autopack.testPeriodicity:
+                                    print("use periodicity")
                                     if p[0] < r:
                                         ax.add_patch(
                                             Circle(
@@ -1387,13 +1365,13 @@ class AnalyseAP:
                 # write
                 if use_file:
                     self.writeJSON(
-                        output + os.sep + "_posIngr_" + str(si) + ".json", ingrpositions
+                        output + os.sep + "_posIngr_" + str(seed_index) + ".json", ingrpositions
                     )
                     self.writeJSON(
-                        output + os.sep + "_dIngr_" + str(si) + ".json", distances
+                        output + os.sep + "_dIngr_" + str(seed_index) + ".json", distances
                     )
                     self.writeJSON(
-                        output + os.sep + "_angleIngr_" + str(si) + ".json", anglesingr
+                        output + os.sep + "_angleIngr_" + str(seed_index) + ".json", anglesingr
                     )
                 if plot and twod:
                     ax.set_aspect(1.0)

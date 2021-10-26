@@ -131,7 +131,7 @@ def main():
         dim = args.dim
         place_method = args.place_method
         log.info("Recipe : {}\n".format(args.recipe))
-        localdir = wrkDir = autopack.__path__[0]
+        localdir = autopack.__path__[0]
         helperClass = upy.getHelperClass()
         helper = helperClass(vi="nogui")
         log.info("HELPER %r", helper)
@@ -171,7 +171,6 @@ def main():
             analyse.doloop(
                 1,
                 env.boundingBox,
-                wrkDir,
                 output,
                 rdf=True,
                 render=False,
