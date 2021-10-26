@@ -975,11 +975,6 @@ class AnalyseAP:
         fbox_bb=None,
     ):
         t1 = time()
-        #        if bbox is None :
-        #            box=self.helper.getCurrentSelection()[0]
-        #        else :
-        #            box = bbox[0]
-        #        bb=self.helper.getCornerPointCube(box)
         gridFileIn = None
         gridFileOut = None
         self.env.buildGrid(
@@ -1003,7 +998,11 @@ class AnalyseAP:
             seedNum=seed, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb
         )
         t2 = time()
-        print("time to run pack_grid", t2 - t1)
+        print("time to run pack_grid", self.env.placeMethod, t2 - t1)
+        print("num placed", len(self.env.molecules))
+        self.plotly.update_title(
+            f"{self.env.placeMethod} took {str(round(t2 - t1, 2))}s, packed {len(self.env.molecules)}"
+        )
         self.plotly.make_grid_heatmap(self.env)
         self.plotly.add_ingredient_positions(self.env)
         self.plotly.show()

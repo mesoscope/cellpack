@@ -1146,7 +1146,7 @@ class AutopackViewer:
     def collectResult(self, ingr, pos, rot):
         verts = []
         radii = []
-        level = ingr.maxLevel
+        level = ingr.deepest_level
         px = ingr.transformPoints(pos, rot, ingr.positions[level])
         if ingr.modelType == "Spheres":
             for ii in range(len(ingr.radii[level])):
@@ -1292,7 +1292,7 @@ class AutopackViewer:
             return
         if self.doSpheres:
             for pos, rot, ingr, ptInd in self.histo.molecules:
-                level = ingr.maxLevel
+                level = ingr.deepest_level
                 px = ingr.transformPoints(pos, rot, ingr.positions[level])
                 if ingr.modelType == "Spheres":
                     for ii in range(len(ingr.radii[level])):
@@ -1404,7 +1404,7 @@ class AutopackViewer:
                         verts[ingr] = []
                         radii[ingr] = []
                 for pos, rot, ingr, ptInd in orga.molecules:
-                    level = ingr.maxLevel
+                    level = ingr.deepest_level
                     px = ingr.transformPoints(pos, rot, ingr.positions[level])
                     if ingr.modelType == "Spheres":
                         for ii in range(len(ingr.radii[level])):

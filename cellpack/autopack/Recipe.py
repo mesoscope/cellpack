@@ -116,7 +116,7 @@ class Recipe:
         for i, ingr in enumerate(self.ingredients):
             # 6.02 / 10000)# 1x10^27 / 1x10^23 = 10000
             if reset:
-                self.resetIngr(ingr)
+                ingr.reset()
             # Overridden by next 18 lines marked Mod
             # by Graham 8/18/11 into Hybrid on 5/16/12
             # Mod by Graham 8/18/11: Needed this to give
@@ -159,20 +159,12 @@ class Recipe:
             else:
                 self.activeIngredients.append(i)
 
-    def resetIngr(self, ingr):
-        """reset the states of the given ingredient"""
-        ingr.counter = 0
-        ingr.nbMol = 0
-        ingr.completion = 0.0
-
     def resetIngrs(
         self,
     ):
         """reset the states of all recipe ingredients"""
         for ingr in self.ingredients:
-            ingr.counter = 0
-            ingr.nbMol = 0
-            ingr.completion = 0.0
+            ingr.reset()
 
     def getMinMaxProteinSize(self):
         """get the mini and maxi radius from all recipe ingredients"""
