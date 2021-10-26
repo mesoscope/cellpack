@@ -437,7 +437,3 @@ class molbTrajectory(Trajectory):
 
     def applyState_primitive_name(self, h, frame):
         return self.applyState_name(h, frame)
-
-
-# from autopack.trajectory import dcdTrajectory
-# dcd = dcdTrajectory("/Users/ludo/Downloads/autopack_ouput/spheres.dcd",len(h.result))
