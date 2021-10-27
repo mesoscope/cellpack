@@ -331,8 +331,6 @@ class AnalyseAP:
             self.helper.deleteObject(p)  # recursif?
         p = self.helper.newEmpty(self.env.name + "distances_p")
 
-        print("grid is ", self.env.grid.nbGridPoints)
-        print("colors shape is ", colors.shape)
         d = numpy.array(self.env.grid.boundingBox[0]) - numpy.array(
             self.env.grid.boundingBox[1]
         )
@@ -1115,7 +1113,7 @@ class AnalyseAP:
     def getHaltonUnique(self, n):
         seeds_f = numpy.array(halton(int(n * 1.5))) * int(n * 1.5)
         seeds_int = numpy.array(numpy.round(seeds_f), "int")
-        sorted_s, indices_u = numpy.unique(seeds_int, return_index=True)
+        _, indices_u = numpy.unique(seeds_int, return_index=True)
         seeds_i = numpy.array(seeds_int[numpy.sort(indices_u)])[:n]
         return seeds_i
 
@@ -1158,7 +1156,6 @@ class AnalyseAP:
         self.bbox = bbox
         angles = None
         rebuild = True
-        #        seeds_i=[]
         for seed_index in range(n):
             #            if i > 0 : rebuild = False #bu need to reset ...
             basename = output + os.sep + "results_seed_" + str(seed_index)
@@ -1415,8 +1412,6 @@ class AnalyseAP:
         self.env.loopThroughIngr(self.axis_distribution)
         self.env.loopThroughIngr(self.occurence_distribution)
         self.axis_distribution_total(total_positions)
-        #        self.env.loopThroughIngr(self.correlation)
-        #        print ("DONE3!!!!")
         # plot the angle
         if len(total_angles):
             self.histo(
@@ -1437,4 +1432,3 @@ class AnalyseAP:
                 bins=12,
                 size=max(total_angles[2]),
             )
-        return distances
