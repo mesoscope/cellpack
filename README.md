@@ -31,8 +31,12 @@ in terminal:
 3. `pip install -e .[dev]`
 
 ### Run analysis code
-1. `analyze -o [PATH/TO/OUTPUT/FOLDER]`
-example: `analyze -r cellpack/test-recipes/NM_Analysis_FigureC1.json  -o /Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_1 -d 3`
+By default analyze will run all packing methods on `cellpack/test-recipes/NM_Analysis_FigureB1.0.json
+Examples:
+* `analyze -o [PATH/TO/OUTPUT/FOLDER]` will create subfolders for each packing method at your output folder
+* To run just one packing method: `analyze -o [PATH/TO/OUTPUT/FOLDER] -p jitter`
+* To change the dimension of the packing: `analyze -r cellpack/test-recipes/NM_Analysis_FigureC1.json  -o /Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_1 -d 3`
+* Turn off plotly plot: `analyze -o [PATH/TO/OUTPUT/FOLDER] -ng` or `analyze -o [PATH/TO/OUTPUT/FOLDER] --no-grid-plot`
 
 ## Installation
 
@@ -47,7 +51,7 @@ For full package documentation please visit [mesoscope.github.io/cellpack](https
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the code.
 
-## The Four Commands You Need To Know
+### Contributing cheat sheet
 
 1. `pip install -e .[dev]`
 
@@ -68,33 +72,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for information related to developing the
 
     This will generate and launch a web browser to view the most up-to-date
     documentation for your Python package.
-
-#### Additional Optional Setup Steps:
-
--   Turn your project into a GitHub repository:
-    -   Make an account on [github.com](https://github.com)
-    -   Go to [make a new repository](https://github.com/new)
-    -   _Recommendations:_
-        -   _It is strongly recommended to make the repository name the same as the Python
-            package name_
-        -   _A lot of the following optional steps are *free* if the repository is Public,
-            plus open source is cool_
-    -   After a GitHub repo has been created, run the commands listed under:
-        "...or push an existing repository from the command line"
--   Register your project with Codecov:
-    -   Make an account on [codecov.io](https://codecov.io)(Recommended to sign in with GitHub)
-        everything else will be handled for you.
--   Ensure that you have set GitHub pages to build the `gh-pages` branch by selecting the
-    `gh-pages` branch in the dropdown in the "GitHub Pages" section of the repository settings.
-    ([Repo Settings](https://github.com/mesoscope/cellpack/settings))
--   Register your project with PyPI:
-    -   Make an account on [pypi.org](https://pypi.org)
-    -   Go to your GitHub repository's settings and under the
-        [Secrets tab](https://github.com/mesoscope/cellpack/settings/secrets/actions),
-        add a secret called `PYPI_TOKEN` with your password for your PyPI account.
-        Don't worry, no one will see this password because it will be encrypted.
-    -   Next time you push to the branch `main` after using `bump2version`, GitHub
-        actions will build and deploy your Python package to PyPI.
 
 #### Suggested Git Branch Strategy
 
