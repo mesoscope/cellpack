@@ -1318,13 +1318,11 @@ class Helper:
         if color is None:
             return None
         mat = self.getMaterial(color)
-        print(mat, color, type(mat))
         if mat is not None and type(mat) != list and type(mat) != tuple:
             return mat
         if len(mat) == 1:
             if mat[0] is not None and type(mat[0]) != list and type(mat[0]) != tuple:
                 return mat[0]
-        print(type(color))
         if type(color) == str or type(color) == unicode:
             if color in colors.cnames:
                 if mat is None:
@@ -2430,7 +2428,6 @@ class Helper:
         p4 = self.normalize((-1.0, 1.0, -1.0))
         vertices.extend([p1, p2, p3, p4])
         allfacets = int(math.pow(4, iterations))
-        print(allfacets)
         facets = numpy.zeros((allfacets, 3), "int")
         facets[0] = [0, 1, 2]  # p1; facets[0].p2 = p2; facets[0].p3 = p3;
         facets[1] = [0, 1, 3]  # .p1 = p2; facets[1].p2 = p1; facets[1].p3 = p4;
@@ -2490,7 +2487,6 @@ class Helper:
     def reporthook(self, count, blockSize, totalSize):
         percent = float(count * blockSize / totalSize)
         self.progressBar(percent, "Downloading...")
-        print(percent)
         if percent >= 1.0:
             self.resetProgressBar()
 
@@ -4550,8 +4546,6 @@ class Helper:
             # img=img.reshape(sizex,sizey,n)
             mode = "RGB"
             # else : mode = "RGBA"
-            print(mode)
-
             pilImage = Image.fromstring(mode, img.shape[0:2], img.tostring())
             # img=numpy.array(img)
             # pilImage = Image.fromarray(img, mode)
@@ -4600,9 +4594,6 @@ class Helper:
 
         """
         # uv is the 3 vertex coordinate in UV
-
-        if debug:
-            print(uv)
         #        uv=extendUV(uv)
         uv = numpy.array(uv)
         u = uv[0][0]
@@ -4638,7 +4629,6 @@ class Helper:
         if u - 1 == -1:
             rgu = rgu[1:]
         if debug:
-            print(rgu)
             print("1x ", uv[order[1]][1], v)
             print("1x ", uv[order[2]][1], v)
         maxv = uv[order[1]][1]
@@ -4662,11 +4652,7 @@ class Helper:
         indice1 = 0  # more on right
         indice2 = 2  # midlle which can be up/down compare to 1
         x = 0.0
-        if debug:
-            print(order)
-            print(uv)
-            print(color[order[0]], color[order[1]], color[order[2]])
-            print(ab)
+
         ca = 0.0
         for gg in rgu:
             # range of v
@@ -4724,8 +4710,6 @@ class Helper:
                     ycol = xcol + (1 - ycola) * (color[order[1]] - xcol)
                     # else :
                     # ycol = color[order[1]]+y/n*(xcol-color[order[1]])
-                if debug:
-                    print(v, xcol, ycol)
                 imdraw.point((u, v), fill=(ycol[0], ycol[1], ycol[2]))
                 y = y + 1.0
             if u == uv[order[1]][0]:
@@ -4771,7 +4755,6 @@ class Helper:
             min = [9999, 0]
             for ind, val in enumerate(v):
                 if ind != order[0]:
-                    print(ind, val)
                     if val < min[0]:
                         min = [val, ind]
         order[1] = min[1]
@@ -5032,9 +5015,7 @@ class Helper:
         @type  filename: string
         @param filename: the destinaon filename.
         """
-        print(polygon, self.getName(polygon))
         # get shild ?
-
         faces, vertices, vnormals, fnormals = self.DecomposeMesh(
             self.getMesh(polygon),
             edit=False,
