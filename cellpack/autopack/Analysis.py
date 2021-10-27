@@ -1412,9 +1412,10 @@ class AnalyseAP:
         self.env.basename = basename
         self.env.occurences = occurences
         self.env.angles = total_angles
-        self.env.loopThroughIngr(self.axis_distribution)
-        self.env.loopThroughIngr(self.occurence_distribution)
-        self.axis_distribution_total(total_positions)
+        if plot and twod:
+            self.env.loopThroughIngr(self.axis_distribution)
+            self.env.loopThroughIngr(self.occurence_distribution)
+            self.axis_distribution_total(total_positions)
         # plot the angle
         if len(total_angles):
             self.histo(
