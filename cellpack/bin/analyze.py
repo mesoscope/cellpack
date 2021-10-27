@@ -52,6 +52,8 @@ class Args(argparse.Namespace):
         self.recipe = self.DEFAULT_RECIPE_FILE
         self.output = self.DEFAULT_OUTPUT_FOLDER
         self.place_methods = self.DEFAULT_PLACE_METHODS
+        self.save_analysis_plot = None
+        self.grid_plot = None
         self.debug = True
         #
         self.__parse()
@@ -96,13 +98,12 @@ class Args(argparse.Namespace):
             help="The dimensions of the packing",
         )
         p.add_argument(
-            "-a",
-            "--analysis",
-            action="store",
+            "-na",
+            "--no-analysis",
+            action="store_false",
             dest="analysis",
-            type=bool,
             default=self.analysis,
-            help="The mode of the packing",
+            help="Turn off analysis script",
         )
         p.add_argument(
             "-p",
@@ -111,7 +112,23 @@ class Args(argparse.Namespace):
             dest="place_methods",
             nargs="+",
             default=self.place_methods,
-            help="The place methods",
+            help="The place methods to test, can be an array",
+        )
+        p.add_argument(
+            "-np",
+            "--no-plot",
+            action="store_false",
+            dest="save_analysis_plot",
+            default=self.dim == 2 and self.analysis,
+            help="Turn off the save plot function, defaults to True if analysis is True and 2D",
+        )
+        p.add_argument(
+            "-ng",
+            "--no-grid-plot",
+            action="store_false",
+            dest="grid_plot",
+            default=self.dim == 2 and self.analysis,
+            help="Turn off plotly plot, defaults to True if analysis is True and 2D",
         )
         p.add_argument(
             "--debug",
@@ -131,15 +148,16 @@ def main():
     try:
         recipe_path = os.path.join(os.getcwd(), args.recipe)
         do_analysis = args.analysis
+        dim = args.dim
+        default_should_plot = args.dim == 2 and do_analysis
+        save_plot = args.save_analysis_plot if args.save_analysis_plot is not None else default_should_plot
+        show_plotly_plot = args.grid_plot if args.grid_plot is not None else default_should_plot
         output = args.output
         if os.path.isdir(output) is False:
             os.mkdir(output)
-        dim = args.dim
         log.info("Recipe : {}\n".format(args.recipe))
-        localdir = autopack.__path__[0]
         helperClass = upy.getHelperClass()
         helper = helperClass(vi="nogui")
-        log.info("HELPER %r", helper)
 
         autopack.helper = helper
 
@@ -178,31 +196,23 @@ def main():
                 output = os.path.join(output_folder, place_method)
                 if os.path.isdir(output) is False:
                     os.mkdir(output)
-                print(output)
+                log.info(f"saving to {output}")
                 analyse.doloop(
                     1,
                     env.boundingBox,
                     output,
-                    rdf=True,
-                    render=False,
+                    plot=save_plot,
+                    show_plotly_plot=show_plotly_plot,
                     twod=(dim == 2),
-                    use_file=True,
                 )
         else:
             for place_method in args.place_methods:
-
-                gridfile = (
-                    localdir
-                    + os.sep
-                    + "autoFillRecipeScripts/Mycoplasma/results/grid_store"
-                )
                 env.placeMethod = place_method
                 env.saveResult = True
                 env.innerGridMethod = "jordan"  # jordan pure python ? sdf ?
                 env.boundingBox = [[-2482, -2389.0, 100.0], [2495, 2466, 2181.0]]
                 env.buildGrid(
                     boundingBox=env.boundingBox,
-                    gridFileIn=gridfile,
                     rebuild=True,
                     gridFileOut=None,
                     previousFill=False,

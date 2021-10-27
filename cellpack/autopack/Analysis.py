@@ -981,8 +981,10 @@ class AnalyseAP:
         gridTime = t2 - t1
         print("time to Build Grid", gridTime)
 
-    def pack(self, seed=20, vTestid=3, vAnalysis=0, fbox_bb=None):
-        self.plotly.update_title(self.env.placeMethod)
+    def pack(self, seed=20, vTestid=3, vAnalysis=0, fbox_bb=None, show_plotly_plot=True):
+        if show_plotly_plot:
+            self.plotly.update_title(self.env.placeMethod)
+        
         t1 = time()
         self.env.pack_grid(
             seedNum=seed, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb
@@ -990,12 +992,13 @@ class AnalyseAP:
         t2 = time()
         print("time to run pack_grid", self.env.placeMethod, t2 - t1)
         print("num placed", len(self.env.molecules))
-        self.plotly.update_title(
-            f"{self.env.placeMethod} took {str(round(t2 - t1, 2))}s, packed {len(self.env.molecules)}"
-        )
-        self.plotly.make_grid_heatmap(self.env)
-        self.plotly.add_ingredient_positions(self.env)
-        self.plotly.show()
+        if show_plotly_plot:
+            self.plotly.update_title(
+                f"{self.env.placeMethod} took {str(round(t2 - t1, 2))}s, packed {len(self.env.molecules)}"
+            )
+            self.plotly.make_grid_heatmap(self.env)
+            self.plotly.add_ingredient_positions(self.env)
+            self.plotly.show()
 
     def calcDistanceMatrixFastEuclidean2(self, nDimPoints):
         nDimPoints = numpy.array(nDimPoints)
@@ -1125,6 +1128,7 @@ class AnalyseAP:
         rdf=True,
         render=False,
         plot=True,
+        show_plotly_plot=True,
         twod=True,
         fbox_bb=None,
         use_file=True,
@@ -1157,7 +1161,6 @@ class AnalyseAP:
         angles = None
         rebuild = True
         for seed_index in range(n):
-            #            if i > 0 : rebuild = False #bu need to reset ...
             basename = output + os.sep + "results_seed_" + str(seed_index)
             # Clear
             if self.afviewer:
@@ -1171,7 +1174,7 @@ class AnalyseAP:
                 bbox,
                 forceBuild=rebuild,
             )
-            self.pack(seed=seed, vTestid=seed_index, vAnalysis=1, fbox_bb=fbox_bb)
+            self.pack(seed=seed, vTestid=seed_index, vAnalysis=1, fbox_bb=fbox_bb, show_plotly_plot=show_plotly_plot)
             self.center = self.env.grid.getCenter()
             if render:
                 # render/save scene if hosted otherwise nothing
