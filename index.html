@@ -221,10 +221,14 @@
 </section>
 <section id="run-analysis-code">
 <h3>Run analysis code<a class="headerlink" href="#run-analysis-code" title="Permalink to this headline"></a></h3>
-<ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">analyze</span> <span class="pre">-o</span> <span class="pre">[PATH/TO/OUTPUT/FOLDER]</span></code>
-example: <code class="docutils literal notranslate"><span class="pre">analyze</span> <span class="pre">-r</span> <span class="pre">cellpack/test-recipes/NM_Analysis_FigureC1.json</span>&#160; <span class="pre">-o</span> <span class="pre">/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_1</span> <span class="pre">-d</span> <span class="pre">3</span></code></p></li>
-</ol>
+<p>By default analyze will run all packing methods on <a href="#id1"><span class="problematic" id="id2">`</span></a>cellpack/test-recipes/NM_Analysis_FigureB1.0.json
+Examples:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">analyze</span> <span class="pre">-o</span> <span class="pre">[PATH/TO/OUTPUT/FOLDER]</span></code> will create subfolders for each packing method at your output folder</p></li>
+<li><p>To run just one packing method: <code class="docutils literal notranslate"><span class="pre">analyze</span> <span class="pre">-o</span> <span class="pre">[PATH/TO/OUTPUT/FOLDER]</span> <span class="pre">-p</span> <span class="pre">jitter</span></code></p></li>
+<li><p>To change the dimension of the packing: <code class="docutils literal notranslate"><span class="pre">analyze</span> <span class="pre">-r</span> <span class="pre">cellpack/test-recipes/NM_Analysis_FigureC1.json</span>&#160; <span class="pre">-o</span> <span class="pre">/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_1</span> <span class="pre">-d</span> <span class="pre">3</span></code></p></li>
+<li><p>Turn off plotly plot: <code class="docutils literal notranslate"><span class="pre">analyze</span> <span class="pre">-o</span> <span class="pre">[PATH/TO/OUTPUT/FOLDER]</span> <span class="pre">-ng</span></code> or <code class="docutils literal notranslate"><span class="pre">analyze</span> <span class="pre">-o</span> <span class="pre">[PATH/TO/OUTPUT/FOLDER]</span> <span class="pre">--no-grid-plot</span></code></p></li>
+</ul>
 </section>
 </section>
 <section id="installation">
@@ -239,9 +243,8 @@ example: <code class="docutils literal notranslate"><span class="pre">analyze</s
 <section id="development">
 <h2>Development<a class="headerlink" href="#development" title="Permalink to this headline"></a></h2>
 <p>See <a class="reference external" href="CONTRIBUTING.md">CONTRIBUTING.md</a> for information related to developing the code.</p>
-</section>
-<section id="the-four-commands-you-need-to-know">
-<h2>The Four Commands You Need To Know<a class="headerlink" href="#the-four-commands-you-need-to-know" title="Permalink to this headline"></a></h2>
+<section id="contributing-cheat-sheet">
+<h3>Contributing cheat sheet<a class="headerlink" href="#contributing-cheat-sheet" title="Permalink to this headline"></a></h3>
 <ol class="arabic">
 <li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.[dev]</span></code></p>
 <blockquote>
@@ -268,44 +271,8 @@ documentation for your Python package.</p>
 </div></blockquote>
 </li>
 </ol>
-<ul class="simple">
-<li><p>Turn your project into a GitHub repository:</p>
-<ul>
-<li><p>Make an account on <a class="reference external" href="https://github.com">github.com</a></p></li>
-<li><p>Go to <a class="reference external" href="https://github.com/new">make a new repository</a></p></li>
-<li><p><em>Recommendations:</em></p>
-<ul>
-<li><p><em>It is strongly recommended to make the repository name the same as the Python
-package name</em></p></li>
-<li><p><em>A lot of the following optional steps are *free</em> if the repository is Public,
-plus open source is cool*</p></li>
-</ul>
-</li>
-<li><p>After a GitHub repo has been created, run the commands listed under:
-“…or push an existing repository from the command line”</p></li>
-</ul>
-</li>
-<li><p>Register your project with Codecov:</p>
-<ul>
-<li><p>Make an account on <a class="reference external" href="https://codecov.io">codecov.io</a>(Recommended to sign in with GitHub)
-everything else will be handled for you.</p></li>
-</ul>
-</li>
-<li><p>Ensure that you have set GitHub pages to build the <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> branch by selecting the
-<code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> branch in the dropdown in the “GitHub Pages” section of the repository settings.
-(<a class="reference external" href="https://github.com/mesoscope/cellpack/settings">Repo Settings</a>)</p></li>
-<li><p>Register your project with PyPI:</p>
-<ul>
-<li><p>Make an account on <a class="reference external" href="https://pypi.org">pypi.org</a></p></li>
-<li><p>Go to your GitHub repository’s settings and under the
-<a class="reference external" href="https://github.com/mesoscope/cellpack/settings/secrets/actions">Secrets tab</a>,
-add a secret called <code class="docutils literal notranslate"><span class="pre">PYPI_TOKEN</span></code> with your password for your PyPI account.
-Don’t worry, no one will see this password because it will be encrypted.</p></li>
-<li><p>Next time you push to the branch <code class="docutils literal notranslate"><span class="pre">main</span></code> after using <code class="docutils literal notranslate"><span class="pre">bump2version</span></code>, GitHub
-actions will build and deploy your Python package to PyPI.</p></li>
-</ul>
-</li>
-</ul>
+<section id="suggested-git-branch-strategy">
+<h4>Suggested Git Branch Strategy<a class="headerlink" href="#suggested-git-branch-strategy" title="Permalink to this headline"></a></h4>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">main</span></code> is for the most up-to-date development, very rarely should you directly
 commit to this branch. GitHub Actions will run on every push and on a CRON to this
@@ -321,6 +288,8 @@ each set of changes to <code class="docutils literal notranslate"><span class="p
 well defined PR’s.</p></li>
 </ol>
 <p><strong>MIT license</strong></p>
+</section>
+</section>
 </section>
 </section>
 <section id="indices-and-tables">

@@ -117,6 +117,14 @@ cellpack.autopack.ldSequence module
    :undoc-members:
    :show-inheritance:
 
+cellpack.autopack.octree module
+-------------------------------
+
+.. automodule:: cellpack.autopack.octree
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.plotly\_result module
 ---------------------------------------
 
@@ -137,6 +145,14 @@ cellpack.autopack.ray module
 ----------------------------
 
 .. automodule:: cellpack.autopack.ray
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.trajectory module
+-----------------------------------
+
+.. automodule:: cellpack.autopack.trajectory
    :members:
    :undoc-members:
    :show-inheritance:

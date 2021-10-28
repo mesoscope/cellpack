@@ -1054,6 +1054,41 @@ This one gives the same results as the other.</p>
 <dd></dd></dl>
 
 </section>
+<section id="module-cellpack.autopack.octree">
+<span id="cellpack-autopack-octree-module"></span><h2>cellpack.autopack.octree module<a class="headerlink" href="#module-cellpack.autopack.octree" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.octree.OctNode">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.octree.</span></span><span class="sig-name descname"><span class="pre">OctNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/octree.html#OctNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.octree.OctNode" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.octree.Octree">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.octree.</span></span><span class="sig-name descname"><span class="pre">Octree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">center</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worldSize</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/octree.html#Octree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.octree.Octree" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.octree.Octree.addNode">
+<span class="sig-name descname"><span class="pre">addNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objects</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/octree.html#Octree.addNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.octree.Octree.addNode" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.octree.Octree.findBranch">
+<span class="sig-name descname"><span class="pre">findBranch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/octree.html#Octree.findBranch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.octree.Octree.findBranch" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.octree.Octree.findPosition">
+<span class="sig-name descname"><span class="pre">findPosition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/octree.html#Octree.findPosition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.octree.Octree.findPosition" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.octree.Octree.insertNode">
+<span class="sig-name descname"><span class="pre">insertNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objData</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/octree.html#Octree.insertNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.octree.Octree.insertNode" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="cellpack-autopack-plotly-result-module">
 <h2>cellpack.autopack.plotly_result module<a class="headerlink" href="#cellpack-autopack-plotly-result-module" title="Permalink to this headline"></a></h2>
 </section>
@@ -1310,6 +1345,155 @@ for the cube of points surrounding our center point.</p>
 <dd></dd></dl>
 
 </section>
+</section>
+<section id="module-cellpack.autopack.trajectory">
+<span id="cellpack-autopack-trajectory-module"></span><h2>cellpack.autopack.trajectory module<a class="headerlink" href="#module-cellpack.autopack.trajectory" title="Permalink to this headline"></a></h2>
+<p>Created on Wed Mar 19 11:50:35 2014</p>
+<p>&#64;author: ludo</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.Trajectory">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.trajectory.</span></span><span class="sig-name descname"><span class="pre">Trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbIngredients</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#Trajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.Trajectory" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.Trajectory.applyState">
+<span class="sig-name descname"><span class="pre">applyState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#Trajectory.applyState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.Trajectory.applyState" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.Trajectory.applyState_cb">
+<span class="sig-name descname"><span class="pre">applyState_cb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#Trajectory.applyState_cb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.Trajectory.applyState_cb" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.Trajectory.applyState_name">
+<span class="sig-name descname"><span class="pre">applyState_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#Trajectory.applyState_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.Trajectory.applyState_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.Trajectory.applyState_primitive_name">
+<span class="sig-name descname"><span class="pre">applyState_primitive_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#Trajectory.applyState_primitive_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.Trajectory.applyState_primitive_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.Trajectory.completeMapping">
+<span class="sig-name descname"><span class="pre">completeMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#Trajectory.completeMapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.Trajectory.completeMapping" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.Trajectory.generalApply">
+<span class="sig-name descname"><span class="pre">generalApply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#Trajectory.generalApply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.Trajectory.generalApply" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.Trajectory.getIngredientInstancePos">
+<span class="sig-name descname"><span class="pre">getIngredientInstancePos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#Trajectory.getIngredientInstancePos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.Trajectory.getIngredientInstancePos" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.Trajectory.makeIngrMapping">
+<span class="sig-name descname"><span class="pre">makeIngrMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbInstance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#Trajectory.makeIngrMapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.Trajectory.makeIngrMapping" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.Trajectory.reg">
+<span class="sig-name descname"><span class="pre">reg</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'[-+]?[0-9]*\\.?[0-9]+'</span></em><a class="headerlink" href="#cellpack.autopack.trajectory.Trajectory.reg" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.Trajectory.traj_type">
+<span class="sig-name descname"><span class="pre">traj_type</span></span><em class="property"> <span class="pre">=</span> <span class="pre">''</span></em><a class="headerlink" href="#cellpack.autopack.trajectory.Trajectory.traj_type" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.dcdTrajectory">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.trajectory.</span></span><span class="sig-name descname"><span class="pre">dcdTrajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbIngredients</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#dcdTrajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.dcdTrajectory" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory" title="cellpack.autopack.trajectory.Trajectory"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.autopack.trajectory.Trajectory</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.dcdTrajectory.dcd">
+<span class="sig-name descname"><span class="pre">dcd</span></span><em class="property"> <span class="pre">=</span> <span class="pre">None</span></em><a class="headerlink" href="#cellpack.autopack.trajectory.dcdTrajectory.dcd" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.dcdTrajectory.getPosAt">
+<span class="sig-name descname"><span class="pre">getPosAt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#dcdTrajectory.getPosAt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.dcdTrajectory.getPosAt" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.dcdTrajectory.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#dcdTrajectory.parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.dcdTrajectory.parse" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.dcdTrajectory.traj_type">
+<span class="sig-name descname"><span class="pre">traj_type</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'dcd'</span></em><a class="headerlink" href="#cellpack.autopack.trajectory.dcdTrajectory.traj_type" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.molbTrajectory">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.trajectory.</span></span><span class="sig-name descname"><span class="pre">molbTrajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbIngredients</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#molbTrajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.molbTrajectory" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory" title="cellpack.autopack.trajectory.Trajectory"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.autopack.trajectory.Trajectory</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.molbTrajectory.applyState_name">
+<span class="sig-name descname"><span class="pre">applyState_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#molbTrajectory.applyState_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.molbTrajectory.applyState_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.molbTrajectory.applyState_primitive_name">
+<span class="sig-name descname"><span class="pre">applyState_primitive_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#molbTrajectory.applyState_primitive_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.molbTrajectory.applyState_primitive_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.molbTrajectory.getPosAt">
+<span class="sig-name descname"><span class="pre">getPosAt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#molbTrajectory.getPosAt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.molbTrajectory.getPosAt" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.molbTrajectory.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbMol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#molbTrajectory.parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.molbTrajectory.parse" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.molbTrajectory.parse_one_mol">
+<span class="sig-name descname"><span class="pre">parse_one_mol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ftype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'double'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#molbTrajectory.parse_one_mol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.molbTrajectory.parse_one_mol" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.molbTrajectory.traj_type">
+<span class="sig-name descname"><span class="pre">traj_type</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'molb'</span></em><a class="headerlink" href="#cellpack.autopack.trajectory.molbTrajectory.traj_type" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.xyzTrajectory">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.trajectory.</span></span><span class="sig-name descname"><span class="pre">xyzTrajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbIngredients</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#xyzTrajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.xyzTrajectory" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory" title="cellpack.autopack.trajectory.Trajectory"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.autopack.trajectory.Trajectory</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.xyzTrajectory.getPosAt">
+<span class="sig-name descname"><span class="pre">getPosAt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#xyzTrajectory.getPosAt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.xyzTrajectory.getPosAt" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.xyzTrajectory.getPosLine">
+<span class="sig-name descname"><span class="pre">getPosLine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#xyzTrajectory.getPosLine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.xyzTrajectory.getPosLine" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.xyzTrajectory.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#xyzTrajectory.parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.xyzTrajectory.parse" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.trajectory.xyzTrajectory.traj_type">
+<span class="sig-name descname"><span class="pre">traj_type</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'xyz'</span></em><a class="headerlink" href="#cellpack.autopack.trajectory.xyzTrajectory.traj_type" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-cellpack.autopack.transformation">
 <span id="cellpack-autopack-transformation-module"></span><h2>cellpack.autopack.transformation module<a class="headerlink" href="#module-cellpack.autopack.transformation" title="Permalink to this headline"></a></h2>

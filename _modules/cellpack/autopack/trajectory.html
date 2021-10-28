@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cellpack.autopack.trajectory &mdash; cellPack 0.1.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> cellPack
+          </a>
+              <div class="version">
+                0.1.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../recipe-schema.html">Cellpack Recipe Schema 1.0</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#recipe-definition-properties">Recipe definition properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#name">name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#version">version</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../recipe-schema.html#example">example:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#options-properties">Options properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#saveresult">saveResult</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#resultfile">resultfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#enviroonly">EnviroOnly</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#canceldialog">cancelDialog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pickrandpt">pickRandPt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#ingrlookforneighbours">ingrLookForNeighbours</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#overwriteplacemethod">overwritePlaceMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#boundingbox">boundingBox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#smallestproteinsize">smallestProteinSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#largestproteinsize">largestProteinSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#computegridparams">computeGridParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#windowssize">windowsSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#placemethod">placeMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-gradient">use_gradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradients">gradients</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#innergridmethod">innerGridMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#freeptsupdatethreshold">freePtsUpdateThreshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-periodicity">use_periodicity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#timer">_timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#hackfreepts">_hackFreepts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../recipe-schema.html#example-options">example <code class="docutils literal notranslate"><span class="pre">Options</span></code>:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#id81">name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#molarity">molarity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbmol">nbMol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#radii">radii</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#positions">positions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#positions2">positions2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#spherefile">sphereFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pdb">pdb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#color">color</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#meshfile">meshFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#meshname">meshName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#coordsystem">coordsystem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#principalvector">principalVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#offset">offset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#jittermax">jitterMax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbjitter">nbJitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#userotaxis">useRotAxis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotaxis">rotAxis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotrange">rotRange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#placetype">placeType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradient">gradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#proba-binding">proba_binding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#weight">weight</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#partners-name">partners_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#partners-position">partners_position</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#partners-weight">partners_weight</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#properties">properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#score">score</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#organism">organism</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#example-ingredient">example ingredient</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">cellPack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../cellpack.html">cellpack</a> &raquo;</li>
+          <li><a href="../autopack.html">cellpack.autopack</a> &raquo;</li>
+      <li>cellpack.autopack.trajectory</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cellpack.autopack.trajectory</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Wed Mar 19 11:50:35 2014</span>
+
+<span class="sd">@author: ludo</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">fromfile</span>
+
+<span class="c1"># check if MDAnalysis is available we can parse DCD file, otherwise parse the txt</span>
+<span class="n">MDAnalysis</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">MDAnalysis</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="n">MDAnalysis</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="Trajectory"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory">[docs]</a><span class="k">class</span> <span class="nc">Trajectory</span><span class="p">:</span>
+    <span class="n">traj_type</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">reg</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;[-+]?[0-9]*\.?[0-9]+&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">nbIngredients</span><span class="p">):</span>
+        <span class="c1"># need to parse</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nconf</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="c1"># self.f = open(self.filename,&quot;r&quot;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nbIngredients</span> <span class="o">=</span> <span class="n">nbIngredients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">nbMol</span><span class="o">=</span><span class="n">nbIngredients</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ok parsed&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_indice</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sub_id</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="Trajectory.makeIngrMapping"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.makeIngrMapping">[docs]</a>    <span class="k">def</span> <span class="nf">makeIngrMapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">nbInstance</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sub_id</span><span class="p">]</span>
+        <span class="n">sub_id_instance</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbInstance</span><span class="p">):</span>  <span class="c1">#</span>
+            <span class="n">sub_id_instance</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_indice</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_indice</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub_id_instance</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sub_id</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Trajectory.getIngredientInstancePos"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.getIngredientInstancePos">[docs]</a>    <span class="k">def</span> <span class="nf">getIngredientInstancePos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="n">indice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">instance_id</span><span class="p">]</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPosAt</span><span class="p">(</span><span class="n">indice</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pos</span></div>
+
+    <span class="c1"># callback that should update the scene with the trajectory</span>
+    <span class="c1"># just position....no rotation ?</span>
+<div class="viewcode-block" id="Trajectory.generalApply"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.generalApply">[docs]</a>    <span class="k">def</span> <span class="nf">generalApply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="n">matrice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPosAt</span><span class="p">(</span><span class="n">obj_id</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setObjectMatrix</span><span class="p">(</span><span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">matrice</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Trajectory.applyState"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.applyState">[docs]</a>    <span class="k">def</span> <span class="nf">applyState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">exteriorRecipe</span>
+        <span class="n">indice</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                    <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                    <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">ipoly</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">pos</span><span class="p">)</span>
+                    <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># k+=1</span>
+        <span class="c1">#        k=0</span>
+        <span class="c1"># compartment ingr</span>
+        <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
+            <span class="c1"># compartment surface ingr</span>
+            <span class="n">rs</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">surfaceRecipe</span>
+            <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">ipoly</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">pos</span><span class="p">)</span>
+                        <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># compartment matrix ingr</span>
+            <span class="n">ri</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">innerRecipe</span>
+            <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">ipoly</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">pos</span><span class="p">)</span>
+                        <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Trajectory.applyState_name"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.applyState_name">[docs]</a>    <span class="k">def</span> <span class="nf">applyState_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">exteriorRecipe</span>
+        <span class="n">indice</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                    <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                    <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span>
+                        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">ipoly</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="n">pos</span>
+                    <span class="p">)</span>
+                    <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># k+=1</span>
+        <span class="c1">#        k=0</span>
+        <span class="c1"># compartment ingr</span>
+        <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
+            <span class="c1"># compartment surface ingr</span>
+            <span class="n">rs</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">surfaceRecipe</span>
+            <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span>
+                            <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">ipoly</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="n">pos</span>
+                        <span class="p">)</span>
+                        <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># compartment matrix ingr</span>
+            <span class="n">ri</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">innerRecipe</span>
+            <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span>
+                            <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">ipoly</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="n">pos</span>
+                        <span class="p">)</span>
+                        <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Trajectory.applyState_primitive_name"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.applyState_primitive_name">[docs]</a>    <span class="k">def</span> <span class="nf">applyState_primitive_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">exteriorRecipe</span>
+        <span class="n">indice</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleSphere&quot;</span> <span class="ow">or</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleCube&quot;</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span>
+                            <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">ipoly</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="n">pos</span>
+                        <span class="p">)</span>
+                        <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;MultiSphere&quot;</span><span class="p">:</span>
+                    <span class="n">level</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">maxLevel</span>
+                    <span class="n">nbPrim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)</span> <span class="o">*</span> <span class="n">nbPrim</span><span class="p">):</span>
+                        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span>
+                            <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">isph</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="n">pos</span>
+                        <span class="p">)</span>
+                        <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
+            <span class="c1"># compartment surface ingr</span>
+            <span class="n">rs</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">surfaceRecipe</span>
+            <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleSphere&quot;</span> <span class="ow">or</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleCube&quot;</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                            <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                            <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span>
+                                <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">ipoly</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="n">pos</span>
+                            <span class="p">)</span>
+                            <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;MultiSphere&quot;</span><span class="p">:</span>
+                        <span class="n">level</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">maxLevel</span>
+                        <span class="n">nbPrim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
+                        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)</span> <span class="o">*</span> <span class="n">nbPrim</span><span class="p">):</span>
+                            <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                            <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span>
+                                <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">isph</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="n">pos</span>
+                            <span class="p">)</span>
+                            <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># compartment matrix ingr</span>
+            <span class="n">ri</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">innerRecipe</span>
+            <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleSphere&quot;</span> <span class="ow">or</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleCube&quot;</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                            <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                            <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span>
+                                <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">ipoly</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="n">pos</span>
+                            <span class="p">)</span>
+                            <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;MultiSphere&quot;</span><span class="p">:</span>
+                        <span class="n">level</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">maxLevel</span>
+                        <span class="n">nbPrim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
+                        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)</span> <span class="o">*</span> <span class="n">nbPrim</span><span class="p">):</span>
+                            <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                            <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span>
+                                <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">isph</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="n">pos</span>
+                            <span class="p">)</span>
+                            <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Trajectory.applyState_cb"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.applyState_cb">[docs]</a>    <span class="k">def</span> <span class="nf">applyState_cb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">cb</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">exteriorRecipe</span>
+        <span class="n">indice</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                    <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                    <span class="n">cb</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+                    <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># k+=1</span>
+        <span class="c1">#        k=0</span>
+        <span class="c1"># compartment ingr</span>
+        <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
+            <span class="c1"># compartment surface ingr</span>
+            <span class="n">rs</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">surfaceRecipe</span>
+            <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                        <span class="n">cb</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+                        <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># compartment matrix ingr</span>
+            <span class="n">ri</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">innerRecipe</span>
+            <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                        <span class="n">cb</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+                        <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Trajectory.completeMapping"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.completeMapping">[docs]</a>    <span class="k">def</span> <span class="nf">completeMapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_indice</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sub_id</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">exteriorRecipe</span>
+        <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">):</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleSphere&quot;</span>
+                    <span class="ow">or</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleCube&quot;</span>
+                    <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">traj_type</span> <span class="o">==</span> <span class="s2">&quot;molb&quot;</span>
+                <span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">makeIngrMapping</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;MultiSphere&quot;</span><span class="p">:</span>
+                    <span class="n">level</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">maxLevel</span>
+                    <span class="n">nbPrim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">makeIngrMapping</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)</span> <span class="o">*</span> <span class="n">nbPrim</span><span class="p">)</span>
+
+        <span class="c1"># compartment ingr</span>
+        <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
+            <span class="c1"># compartment surface ingr</span>
+            <span class="n">rs</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">surfaceRecipe</span>
+            <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">):</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleSphere&quot;</span>
+                        <span class="ow">or</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleCube&quot;</span>
+                        <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">traj_type</span> <span class="o">==</span> <span class="s2">&quot;molb&quot;</span>
+                    <span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">makeIngrMapping</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">))</span>
+                    <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;MultiSphere&quot;</span><span class="p">:</span>
+                        <span class="n">level</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">maxLevel</span>
+                        <span class="n">nbPrim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">makeIngrMapping</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)</span> <span class="o">*</span> <span class="n">nbPrim</span><span class="p">)</span>
+            <span class="c1"># compartment matrix ingr</span>
+            <span class="n">ri</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">innerRecipe</span>
+            <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">):</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleSphere&quot;</span>
+                        <span class="ow">or</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleCube&quot;</span>
+                        <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">traj_type</span> <span class="o">==</span> <span class="s2">&quot;molb&quot;</span>
+                    <span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">makeIngrMapping</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">))</span>
+                    <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;MultiSphere&quot;</span><span class="p">:</span>
+                        <span class="n">level</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">maxLevel</span>
+                        <span class="n">nbPrim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">makeIngrMapping</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)</span> <span class="o">*</span> <span class="n">nbPrim</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="dcdTrajectory"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.dcdTrajectory">[docs]</a><span class="k">class</span> <span class="nc">dcdTrajectory</span><span class="p">(</span><span class="n">Trajectory</span><span class="p">):</span>
+    <span class="n">traj_type</span> <span class="o">=</span> <span class="s2">&quot;dcd&quot;</span>
+    <span class="n">dcd</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="dcdTrajectory.parse"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.dcdTrajectory.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">MDAnalysis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dcd</span> <span class="o">=</span> <span class="n">MDAnalysis</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">DCD</span><span class="o">.</span><span class="n">DCDReader</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="dcdTrajectory.getPosAt"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.dcdTrajectory.getPosAt">[docs]</a>    <span class="k">def</span> <span class="nf">getPosAt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indice</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dcd</span><span class="p">[</span><span class="n">frame</span><span class="p">][</span><span class="n">indice</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="xyzTrajectory"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.xyzTrajectory">[docs]</a><span class="k">class</span> <span class="nc">xyzTrajectory</span><span class="p">(</span><span class="n">Trajectory</span><span class="p">):</span>
+    <span class="c1"># NMR Type file type</span>
+    <span class="n">traj_type</span> <span class="o">=</span> <span class="s2">&quot;xyz&quot;</span>
+
+<div class="viewcode-block" id="xyzTrajectory.parse"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.xyzTrajectory.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="c1"># brutforce parsing</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">line_offset</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nLines</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">line_offset</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+            <span class="n">offset</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nLines</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># Now, to skip to line n (with the first line being line 0), just do</span>
+        <span class="c1"># file.seek(line_offset[n])</span>
+        <span class="c1"># &#39;ATOM     39 ext__i200_n50 sub    39     -21.404-192.392  -1.462 -5.00 25.00\n&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nconf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nLines</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbIngredients</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="xyzTrajectory.getPosAt"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.xyzTrajectory.getPosAt">[docs]</a>    <span class="k">def</span> <span class="nf">getPosAt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indice</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="n">real_indice</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbIngredients</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">frame</span> <span class="o">+</span> <span class="n">indice</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPosLine</span><span class="p">(</span><span class="n">real_indice</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="xyzTrajectory.getPosLine"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.xyzTrajectory.getPosLine">[docs]</a>    <span class="k">def</span> <span class="nf">getPosLine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line_offset</span><span class="p">[</span><span class="n">line</span><span class="p">])</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reg</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">matches</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">],</span> <span class="n">matches</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">],</span> <span class="n">matches</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]]</span></div></div>
+
+
+<div class="viewcode-block" id="molbTrajectory"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.molbTrajectory">[docs]</a><span class="k">class</span> <span class="nc">molbTrajectory</span><span class="p">(</span><span class="n">Trajectory</span><span class="p">):</span>
+    <span class="c1"># NMR Type file type</span>
+    <span class="n">traj_type</span> <span class="o">=</span> <span class="s2">&quot;molb&quot;</span>
+
+<div class="viewcode-block" id="molbTrajectory.parse"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.molbTrajectory.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nbMol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># brutforce parsing</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
+        <span class="c1"># for all molecules grab the result ? nbMol is the total number of molecules</span>
+        <span class="c1"># but how make difference between 2 molecules</span>
+        <span class="c1"># dicrionary indice in moldb-&gt; indice in input ?</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbMol</span><span class="p">):</span>
+            <span class="n">mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_one_mol</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="n">log</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">mat</span></div>
+
+<div class="viewcode-block" id="molbTrajectory.parse_one_mol"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.molbTrajectory.parse_one_mol">[docs]</a>    <span class="k">def</span> <span class="nf">parse_one_mol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">ftype</span><span class="o">=</span><span class="s2">&quot;double&quot;</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># start_time = clock()</span>
+        <span class="c1"># progresss bard ? but it slow down</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+        <span class="n">nr</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">step_nr</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">mols</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">state_size</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="n">liste_m</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">nr</span> <span class="o">=</span> <span class="n">instance_id</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+                <span class="k">break</span>
+            <span class="n">step_nr</span> <span class="o">=</span> <span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">mols</span> <span class="o">=</span> <span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">progressBar</span><span class="p">(</span>
+                    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;parsin moldb &quot;</span>
+                    <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">step_nr</span><span class="p">)</span>
+                    <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+                    <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mols</span><span class="p">)</span>
+                    <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+                    <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nr</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">mols</span> <span class="o">&lt;=</span> <span class="n">nr</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Number of molecules (</span><span class="si">%d</span><span class="s2">) is less of equal than the number given (</span><span class="si">%d</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="n">mols</span><span class="p">,</span> <span class="n">nr</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">mols</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">state_size</span> <span class="o">=</span> <span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">state_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">size</span> <span class="o">*</span> <span class="n">nr</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">m</span><span class="p">[</span><span class="mi">3</span><span class="p">][:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;&lt;d&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">4</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span>  <span class="c1"># size*4 4 double ?</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">size</span> <span class="o">*</span> <span class="p">(</span><span class="n">mols</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">nr</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">size</span> <span class="o">*</span> <span class="n">nr</span> <span class="o">*</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">m</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">fromfile</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;&lt;d&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span>
+            <span class="p">)</span>  <span class="c1"># .transpose()#size*4 4 double ?</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">size</span> <span class="o">*</span> <span class="p">(</span><span class="n">mols</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">nr</span><span class="p">)</span> <span class="o">*</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">liste_m</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="c1"># end_time = clock()</span>
+        <span class="c1"># print &#39;It took&#39;,end_time - start_time,&#39;seconds&#39;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">liste_m</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="molbTrajectory.getPosAt"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.molbTrajectory.getPosAt">[docs]</a>    <span class="k">def</span> <span class="nf">getPosAt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indice</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">indice</span><span class="p">][</span><span class="n">frame</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="molbTrajectory.applyState_name"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.molbTrajectory.applyState_name">[docs]</a>    <span class="k">def</span> <span class="nf">applyState_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">exteriorRecipe</span>
+        <span class="n">indice</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                    <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                    <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTransformation</span><span class="p">(</span>
+                        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">ipoly</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="n">mat</span><span class="o">=</span><span class="n">pos</span>
+                    <span class="p">)</span>
+                    <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># k+=1</span>
+        <span class="c1">#        k=0</span>
+        <span class="c1"># compartment ingr</span>
+        <span class="k">for</span> <span class="n">orga</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
+            <span class="c1"># compartment surface ingr</span>
+            <span class="n">rs</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">surfaceRecipe</span>
+            <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                        <span class="c1"># pos</span>
+                        <span class="n">newp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+                        <span class="n">newp</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+                        <span class="n">newp</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos</span><span class="o">.</span><span class="n">transpose</span><span class="p">()[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+                        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTransformation</span><span class="p">(</span>
+                            <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">ipoly</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="n">mat</span><span class="o">=</span><span class="n">pos</span>
+                        <span class="p">)</span>
+                        <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># compartment matrix ingr</span>
+            <span class="n">ri</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">innerRecipe</span>
+            <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)):</span>
+                        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngredientInstancePos</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+                        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">setTransformation</span><span class="p">(</span>
+                            <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">ipoly</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="n">mat</span><span class="o">=</span><span class="n">pos</span>
+                        <span class="p">)</span>
+                        <span class="n">indice</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="molbTrajectory.applyState_primitive_name"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.trajectory.molbTrajectory.applyState_primitive_name">[docs]</a>    <span class="k">def</span> <span class="nf">applyState_primitive_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">applyState_name</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Megan Riel-Mehan.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
