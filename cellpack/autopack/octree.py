@@ -142,7 +142,7 @@ class Octree:
             elif len(root.data) == MAX_OBJECTS_PER_CUBE:
                 # Adding this object to this leaf takes us over the limit
                 # So we have to subdivide the leaf and redistribute the objects
-                # on the new children. 
+                # on the new children.
                 # Add the new object to pre-existing list
                 root.data.append(objData)
                 # copy the list

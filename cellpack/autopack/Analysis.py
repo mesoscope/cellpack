@@ -984,7 +984,7 @@ class AnalyseAP:
     def pack(self, seed=20, vTestid=3, vAnalysis=0, fbox_bb=None, show_plotly_plot=True):
         if show_plotly_plot:
             self.plotly.update_title(self.env.placeMethod)
-        
+
         t1 = time()
         self.env.pack_grid(
             seedNum=seed, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb
