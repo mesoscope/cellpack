@@ -395,7 +395,6 @@ def f_ray_intersect_polyhedron(
                 f_dot_product(vLineSlope, vCollidePos - pRayStartPos) > 0
             ):  # This truncates our infinite line to a ray pointing from start THROUGH end positions.
                 vHitCount += 1
-                # print(testingFace)
                 if pTruncateToSegment and vlen(vLineSlope) < vlen(
                     vCollidePos - pRayStartPos
                 ):

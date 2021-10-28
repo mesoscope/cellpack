@@ -72,7 +72,7 @@ import warnings
 try:
     from opengltk import OpenGL
 except ImportError:
-    print("no opengltk")  # ('FATAL ERROR: opengltk.OpenGL Package not found')
+    pass
     # raise RuntimeError('FATAL ERROR: opengltk.OpenGL Package not found')
 
 from tkinter import _default_root, Tk

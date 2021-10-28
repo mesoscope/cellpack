@@ -331,8 +331,6 @@ class AnalyseAP:
             self.helper.deleteObject(p)  # recursif?
         p = self.helper.newEmpty(self.env.name + "distances_p")
 
-        print("grid is ", self.env.grid.nbGridPoints)
-        print("colors shape is ", colors.shape)
         d = numpy.array(self.env.grid.boundingBox[0]) - numpy.array(
             self.env.grid.boundingBox[1]
         )
@@ -963,16 +961,10 @@ class AnalyseAP:
         pylab.plot(X, Y, linewidth=w)
         pylab.savefig(filenameme)
 
-    def grid_pack(
+    def build_grid(
         self,
         bb,
-        wrkDir,
         forceBuild=True,
-        fill=0,
-        seed=20,
-        vTestid=3,
-        vAnalysis=0,
-        fbox_bb=None,
     ):
         t1 = time()
         gridFileIn = None
@@ -988,11 +980,13 @@ class AnalyseAP:
         t2 = time()
         gridTime = t2 - t1
         print("time to Build Grid", gridTime)
-        if fill:
-            self.pack(seed=seed, vTestid=vTestid, vAnalysis=vAnalysis, fbox_bb=fbox_bb)
 
-    def pack(self, seed=20, forceBuild=True, vTestid=3, vAnalysis=0, fbox_bb=None):
-        self.plotly.update_title(self.env.placeMethod)
+    def pack(
+        self, seed=20, vTestid=3, vAnalysis=0, fbox_bb=None, show_plotly_plot=True
+    ):
+        if show_plotly_plot:
+            self.plotly.update_title(self.env.placeMethod)
+
         t1 = time()
         self.env.pack_grid(
             seedNum=seed, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb
@@ -1000,12 +994,13 @@ class AnalyseAP:
         t2 = time()
         print("time to run pack_grid", self.env.placeMethod, t2 - t1)
         print("num placed", len(self.env.molecules))
-        self.plotly.update_title(
-            f"{self.env.placeMethod} took {str(round(t2 - t1, 2))}s, packed {len(self.env.molecules)}"
-        )
-        self.plotly.make_grid_heatmap(self.env)
-        self.plotly.add_ingredient_positions(self.env)
-        self.plotly.show()
+        if show_plotly_plot:
+            self.plotly.update_title(
+                f"{self.env.placeMethod} took {str(round(t2 - t1, 2))}s, packed {len(self.env.molecules)}"
+            )
+            self.plotly.make_grid_heatmap(self.env)
+            self.plotly.add_ingredient_positions(self.env)
+            self.plotly.show()
 
     def calcDistanceMatrixFastEuclidean2(self, nDimPoints):
         nDimPoints = numpy.array(nDimPoints)
@@ -1123,7 +1118,7 @@ class AnalyseAP:
     def getHaltonUnique(self, n):
         seeds_f = numpy.array(halton(int(n * 1.5))) * int(n * 1.5)
         seeds_int = numpy.array(numpy.round(seeds_f), "int")
-        sorted_s, indices_u = numpy.unique(seeds_int, return_index=True)
+        _, indices_u = numpy.unique(seeds_int, return_index=True)
         seeds_i = numpy.array(seeds_int[numpy.sort(indices_u)])[:n]
         return seeds_i
 
@@ -1131,11 +1126,11 @@ class AnalyseAP:
         self,
         n,
         bbox,
-        wrkDir,
         output,
         rdf=True,
         render=False,
         plot=True,
+        show_plotly_plot=True,
         twod=True,
         fbox_bb=None,
         use_file=True,
@@ -1167,32 +1162,27 @@ class AnalyseAP:
         self.bbox = bbox
         angles = None
         rebuild = True
-        #        seeds_i=[]
-        for si in range(n):
-            #            if i > 0 : rebuild = False #bu need to reset ...
-            basename = output + os.sep + "results_seed_" + str(si)
+        for seed_index in range(n):
+            basename = output + os.sep + "results_seed_" + str(seed_index)
             # Clear
             if self.afviewer:
                 self.afviewer.clearFill("Test_Spheres2D")
             else:
                 self.env.reset()
-            # no need to rebuild the grid ?
             self.env.saveResult = True
             self.env.resultfile = basename
-            se = seeds_i[si]  # int(time())
-            #            seeds_i.append(se)
-            self.grid_pack(
+            seed = seeds_i[seed_index]  # int(time())
+            self.build_grid(
                 bbox,
-                output,
-                seed=se,
-                fill=1,
-                vTestid=si,
-                vAnalysis=1,
                 forceBuild=rebuild,
+            )
+            self.pack(
+                seed=seed,
+                vTestid=seed_index,
+                vAnalysis=1,
                 fbox_bb=fbox_bb,
-            )  # build grid and fill
-            # store the result
-            #            self.env.store_asJson(resultfilename=basename)
+                show_plotly_plot=show_plotly_plot,
+            )
             self.center = self.env.grid.getCenter()
             if render:
                 # render/save scene if hosted otherwise nothing
@@ -1254,7 +1244,7 @@ class AnalyseAP:
                                         facecolor=ingr.color,
                                     )
                                 )
-                                #                                 Plot "image" particles to verify that periodic boundary conditions are working
+                                #  Plot "image" particles to verify that periodic boundary conditions are working
                                 r = ingr.encapsulatingRadius
                                 if autopack.testPeriodicity:
                                     if p[0] < r:
@@ -1386,13 +1376,16 @@ class AnalyseAP:
                 # write
                 if use_file:
                     self.writeJSON(
-                        output + os.sep + "_posIngr_" + str(si) + ".json", ingrpositions
+                        output + os.sep + "_posIngr_" + str(seed_index) + ".json",
+                        ingrpositions,
                     )
                     self.writeJSON(
-                        output + os.sep + "_dIngr_" + str(si) + ".json", distances
+                        output + os.sep + "_dIngr_" + str(seed_index) + ".json",
+                        distances,
                     )
                     self.writeJSON(
-                        output + os.sep + "_angleIngr_" + str(si) + ".json", anglesingr
+                        output + os.sep + "_angleIngr_" + str(seed_index) + ".json",
+                        anglesingr,
                     )
                 if plot and twod:
                     ax.set_aspect(1.0)
@@ -1430,11 +1423,10 @@ class AnalyseAP:
         self.env.basename = basename
         self.env.occurences = occurences
         self.env.angles = total_angles
-        self.env.loopThroughIngr(self.axis_distribution)
-        self.env.loopThroughIngr(self.occurence_distribution)
-        self.axis_distribution_total(total_positions)
-        #        self.env.loopThroughIngr(self.correlation)
-        #        print ("DONE3!!!!")
+        if plot and twod:
+            self.env.loopThroughIngr(self.axis_distribution)
+            self.env.loopThroughIngr(self.occurence_distribution)
+            self.axis_distribution_total(total_positions)
         # plot the angle
         if len(total_angles):
             self.histo(
@@ -1455,4 +1447,3 @@ class AnalyseAP:
                 bins=12,
                 size=max(total_angles[2]),
             )
-        return distances
