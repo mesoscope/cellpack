@@ -27,7 +27,7 @@
 MAX_OBJECTS_PER_CUBE = 10
 
 # This dictionary is used by the findBranch function, to return the correct branch index
-DIRLOOKUP = {"3": 0, "2": 1, "-2": 2, "-1": 3, "1": 4 , "0": 5, "-4": 6, "-3": 7}
+DIRLOOKUP = {"3": 0, "2": 1, "-2": 2, "-1": 3, "1": 4, "0": 5, "-4": 6, "-3": 7}
 
 # End Globals ####
 
@@ -35,6 +35,7 @@ DIRLOOKUP = {"3": 0, "2": 1, "-2": 2, "-1": 3, "1": 4 , "0": 5, "-4": 6, "-3": 7
 # ( Speed increase seems to vary depending on system ).
 try:
     import psyco
+
     psyco.full()
 except Exception:
     print("Could not import psyco, speed may suffer :)")
@@ -59,8 +60,16 @@ class OctNode:
         self.branches = [None, None, None, None, None, None, None, None]
 
         # The cube's bounding coordinates -- Not currently used
-        self.ldb = (position[0] - (size / 2), position[1] - (size / 2), position[2] - (size / 2))
-        self.ruf = (position[0] + (size / 2), position[1] + (size / 2), position[2] + (size / 2))
+        self.ldb = (
+            position[0] - (size / 2),
+            position[1] - (size / 2),
+            position[2] - (size / 2),
+        )
+        self.ruf = (
+            position[0] + (size / 2),
+            position[1] + (size / 2),
+            position[2] + (size / 2),
+        )
 
 
 class Octree:
@@ -128,7 +137,9 @@ class Octree:
             # Find the new scale we working with
             newSize = root.size / 2
             # Perform the same operation on the appropriate branch recursively
-            root.branches[branch] = self.insertNode(root.branches[branch], newSize, root, objData)
+            root.branches[branch] = self.insertNode(
+                root.branches[branch], newSize, root, objData
+            )
         # else, is this node a leaf node with objects already in it?
         elif root.isLeafNode:
             # We've reached a leaf node. This has no branches yet, but does hold
@@ -157,7 +168,9 @@ class Octree:
                 # print "Subdividing Node sized at: " + str(root.size) + " at " + str(root.position)
                 for ob in objList:
                     branch = self.findBranch(root, ob.position)
-                    root.branches[branch] = self.insertNode(root.branches[branch], newSize, root, ob)
+                    root.branches[branch] = self.insertNode(
+                        root.branches[branch], newSize, root, ob
+                    )
         return root
 
     def findPosition(self, root, position):
@@ -183,11 +196,12 @@ class Octree:
         # See DIRLOOKUP above for the corresponding return values and branch indices
         for i in range(3):
             if vec1[i] <= vec2[i]:
-                result += (-4 / (i + 1) / 2)
+                result += -4 / (i + 1) / 2
             else:
-                result += (4 / (i + 1) / 2)
+                result += 4 / (i + 1) / 2
         result = DIRLOOKUP[str(result)]
         return result
+
 
 # ---------------------------------------------------------------------------------------------------##
 
@@ -217,20 +231,32 @@ if __name__ == "__main__":
     Start = time.time()
     for x in range(NUM_TEST_OBJECTS):
         name = "Node__" + str(x)
-        pos = (random.randrange(-4500.000, 4500.000), random.randrange(-4500.00, 4500.00), random.randrange(-4500.00, 4500.00))
+        pos = (
+            random.randrange(-4500.000, 4500.000),
+            random.randrange(-4500.00, 4500.00),
+            random.randrange(-4500.00, 4500.00),
+        )
         testOb = TestObject(name, pos)
         myTree.insertNode(myTree.root, 15000.000, myTree.root, testOb)
     End = time.time() - Start
 
     # print some results.
     print(str(NUM_TEST_OBJECTS) + "-Node Tree Generated in " + str(End) + " Seconds")
-    print("Tree Leaves contain a maximum of " + str(MAX_OBJECTS_PER_CUBE) + " objects each.")
+    print(
+        "Tree Leaves contain a maximum of "
+        + str(MAX_OBJECTS_PER_CUBE)
+        + " objects each."
+    )
 
     # Lookup Tests ###
     # Look up some random positions and time it
     Start = time.time()
     for x in range(NUM_COLLISION_LOOKUPS):
-        pos = (random.randrange(-4500.000, 4500.000), random.randrange(-4500.00, 4500.00), random.randrange(-4500.00, 4500.00))
+        pos = (
+            random.randrange(-4500.000, 4500.000),
+            random.randrange(-4500.00, 4500.00),
+            random.randrange(-4500.00, 4500.00),
+        )
         result = myTree.findPosition(myTree.root, pos)
         ##################################################################################
         # This proves that results are being returned - but may result in a large printout

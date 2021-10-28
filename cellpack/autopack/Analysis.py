@@ -981,7 +981,9 @@ class AnalyseAP:
         gridTime = t2 - t1
         print("time to Build Grid", gridTime)
 
-    def pack(self, seed=20, vTestid=3, vAnalysis=0, fbox_bb=None, show_plotly_plot=True):
+    def pack(
+        self, seed=20, vTestid=3, vAnalysis=0, fbox_bb=None, show_plotly_plot=True
+    ):
         if show_plotly_plot:
             self.plotly.update_title(self.env.placeMethod)
 
@@ -1174,7 +1176,13 @@ class AnalyseAP:
                 bbox,
                 forceBuild=rebuild,
             )
-            self.pack(seed=seed, vTestid=seed_index, vAnalysis=1, fbox_bb=fbox_bb, show_plotly_plot=show_plotly_plot)
+            self.pack(
+                seed=seed,
+                vTestid=seed_index,
+                vAnalysis=1,
+                fbox_bb=fbox_bb,
+                show_plotly_plot=show_plotly_plot,
+            )
             self.center = self.env.grid.getCenter()
             if render:
                 # render/save scene if hosted otherwise nothing
@@ -1368,13 +1376,16 @@ class AnalyseAP:
                 # write
                 if use_file:
                     self.writeJSON(
-                        output + os.sep + "_posIngr_" + str(seed_index) + ".json", ingrpositions
+                        output + os.sep + "_posIngr_" + str(seed_index) + ".json",
+                        ingrpositions,
                     )
                     self.writeJSON(
-                        output + os.sep + "_dIngr_" + str(seed_index) + ".json", distances
+                        output + os.sep + "_dIngr_" + str(seed_index) + ".json",
+                        distances,
                     )
                     self.writeJSON(
-                        output + os.sep + "_angleIngr_" + str(seed_index) + ".json", anglesingr
+                        output + os.sep + "_angleIngr_" + str(seed_index) + ".json",
+                        anglesingr,
                     )
                 if plot and twod:
                     ax.set_aspect(1.0)

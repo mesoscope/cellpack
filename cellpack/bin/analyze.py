@@ -150,8 +150,14 @@ def main():
         do_analysis = args.analysis
         dim = args.dim
         default_should_plot = args.dim == 2 and do_analysis
-        save_plot = args.save_analysis_plot if args.save_analysis_plot is not None else default_should_plot
-        show_plotly_plot = args.grid_plot if args.grid_plot is not None else default_should_plot
+        save_plot = (
+            args.save_analysis_plot
+            if args.save_analysis_plot is not None
+            else default_should_plot
+        )
+        show_plotly_plot = (
+            args.grid_plot if args.grid_plot is not None else default_should_plot
+        )
         output = args.output
         if os.path.isdir(output) is False:
             os.mkdir(output)
