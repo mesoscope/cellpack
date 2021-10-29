@@ -17,7 +17,7 @@ from numpy.core.arrayprint import printoptions
 
 import cellpack.autopack as autopack
 import cellpack.autopack.transformation as tr
-from .ingredient.Ingredient import KWDS
+from .Ingredient.Ingredient import KWDS
 from cellpack.autopack.Serializable import (
     sCompartment,
     sIngredientGroup,
@@ -26,7 +26,7 @@ from cellpack.autopack.Serializable import (
 )
 from cellpack.autopack.Recipe import Recipe
 from cellpack.autopack.Compartment import Compartment
-from .ingredient import (
+from .Ingredient import (
     ActinIngredient,
     SingleSphereIngr,
     MultiSphereIngr,
