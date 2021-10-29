@@ -374,7 +374,7 @@ class dejavuHelper(hostHelper.Helper):
 
     def reParent(self, obj, parent):
         if self.nogui:
-            return        
+            return
         vi = self.getCurrentScene()
         parent = self.getObject(parent)
         if parent is None:

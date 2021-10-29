@@ -265,7 +265,6 @@ class BaseGrid:
         if boundingBox is None:
             boundingBox = self.boundingBox
         xl, yl, zl = boundingBox[0]
-        print (boundingBox,self.gridSpacing)
         self.gridVolume, self.nbGridPoints = self.computeGridNumberOfPoint(
             boundingBox, self.gridSpacing
         )
