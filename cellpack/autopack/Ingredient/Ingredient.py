@@ -1149,7 +1149,7 @@ class Ingredient(Agent):
             for i in range(nLOD):
                 c = numpy.array(positions[i]["coords"])
                 n = len(c)
-                self.positions.append(c.reshape((n / 3, 3)).tolist())
+                self.positions.append(c.reshape((int(n / 3), 3)).tolist())
                 self.radii.append(radii[i]["radii"])
             if len(self.radii) == 0:
                 self.radii = [[10]]  # some default value ?
@@ -1634,10 +1634,10 @@ class Ingredient(Agent):
         """
         Create a polygon mesh object from a dictionary verts,faces,normals
         """
-        nv = len(data["verts"])
-        nf = len(data["faces"])
-        self.vertices = numpy.array(data["verts"]).reshape((nv / 3, 3))
-        self.faces = numpy.array(data["faces"]).reshape((nf / 3, 3))
+        nv = int(len(data["verts"]) / 3)
+        nf = int(len(data["faces"]) / 3)
+        self.vertices = numpy.array(data["verts"]).reshape((nv, 3))
+        self.faces = numpy.array(data["faces"]).reshape((nf, 3))
         # self.normals = data.normals
         geom = autopack.helper.createsNmesh(geomname, self.vertices, None, self.faces)[
             0
@@ -2050,6 +2050,7 @@ class Ingredient(Agent):
         """
         Check spheres for collision
         """
+        print (self.positions,level)
         centers = self.positions[level]
         radii = self.radii[level]
         # should we also check for outside the main grid ?

@@ -327,7 +327,7 @@ class Compartment(CompartmentList):
                 geom = autopack.helper.unitSphere(geomname, 4, radius=radius)[0]
             self.filename = geomname
             self.ref_obj = geomname
-            self.faces, self.vertices, self.vnormals = helper.DecomposeMesh(
+            self.faces, self.vertices, self.vnormals = autopack.helper.DecomposeMesh(
                 geom, edit=False, copy=False, tri=True
             )
 

@@ -352,7 +352,11 @@ class IOingredientTool(object):
         toupdate = updatePositionsRadii(ingr)
         ingdic.update(toupdate)
         if numpy.sum(ingr.offset) != 0.0:
-            ingr.source["transform"]["offset"] = ingr.offset
+            if "transform" not in ingr.source :
+                ingr.source["transform"] = {"offset" : ingr.offset}
+            else :
+                ingr.source["transform"]["offset"] = ingr.offset
+
         # reslt ?s
         if result:
             ingdic["results"] = []

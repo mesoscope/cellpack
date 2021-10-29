@@ -152,7 +152,7 @@ class Recipe:
                 ingr.vol_nbmol = ingr.nbMol = nb + ingr.overwrite_nbMol_value
 
             if ingr.nbMol == 0:
-                self.info.warning(
+                self.log.warning(
                     "WARNING GRAHAM: recipe ingredient %s has 0 molecules as target",
                     ingr.name,
                 )
