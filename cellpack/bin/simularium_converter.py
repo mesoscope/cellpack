@@ -133,7 +133,7 @@ class ConvertToSimularium(argparse.Namespace):
             except Exception as e:
                 # Ingredient in recipe wasn't packed
                 print(e, position, ingredient_name)
-        if data["include"]:
+        if "include" in data and data["include"]:
             data["rep_file"] = ""
         return data
 
@@ -200,10 +200,10 @@ class ConvertToSimularium(argparse.Namespace):
             print(display_data)
             self.display_data[ingredient_name] = {
                 "display_type": "OBJ"
-                if display_data["rep_file"] is not None
+                if "rep_file" in display_data and display_data["rep_file"] is not None
                 else "SPHERE",
                 "url": display_data["rep_file"] + ".obj"
-                if display_data["rep_file"] is not None
+                if "rep_file" in display_data and display_data["rep_file"] is not None
                 else "",
             }
             if data is None:
