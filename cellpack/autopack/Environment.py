@@ -70,12 +70,12 @@ from cellpack.mgl_tools.bhtree import bhtreelib
 import cellpack.autopack as autopack
 from .Compartment import CompartmentList
 from .Recipe import Recipe
-from .Ingredient import GrowIngredient, ActinIngredient
+from .ingredient import GrowIngredient, ActinIngredient
 from cellpack.autopack import IOutils
 from .octree import Octree
 from .Gradient import Gradient
 from .transformation import euler_from_matrix
-from .Ingredient import (
+from .ingredient import (
     MultiSphereIngr,
     MultiCylindersIngr,
     SingleSphereIngr,
