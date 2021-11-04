@@ -52,7 +52,14 @@ import cellpack.autopack as autopack
 import cellpack.mgl_tools.upy as upy
 from cellpack.autopack.upy import colors as upyColors
 
-from .ingredient import GrowIngredient, ActinIngredient, MultiCylindersIngr, SingleCubeIngr, SingleSphereIngr, MultiSphereIngr
+from .ingredient import (
+    GrowIngredient,
+    ActinIngredient,
+    MultiCylindersIngr,
+    SingleCubeIngr,
+    SingleSphereIngr,
+    MultiSphereIngr,
+)
 
 
 class AutopackViewer:
