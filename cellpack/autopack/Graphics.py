@@ -52,7 +52,7 @@ import cellpack.autopack as autopack
 import cellpack.mgl_tools.upy as upy
 from cellpack.autopack.upy import colors as upyColors
 
-from .Ingredient import GrowIngredient, ActinIngredient
+from .ingredient import GrowIngredient, ActinIngredient, MultiCylindersIngr, SingleCubeIngr, SingleSphereIngr, MultiSphereIngr
 
 
 class AutopackViewer:
@@ -1864,7 +1864,6 @@ class AutopackViewer:
             elif (
                 ingtype == self.helper.SPHERE
             ):  # should be able to detect this using distance vertex->center
-                from autopack.Ingredient import MultiSphereIngr
 
                 positions = []
                 radius = []
@@ -1893,7 +1892,6 @@ class AutopackViewer:
                     meshObject=obj,
                 )
             elif ingtype == self.helper.CYLINDER:
-                from autopack.Ingredient import MultiCylindersIngr
 
                 positions = []
                 positions2 = []
@@ -1920,7 +1918,6 @@ class AutopackViewer:
                     principalVector=axis,
                 )
             elif ingtype == self.helper.CUBE:
-                from autopack.Ingredient import SingleCubeIngr
 
                 # need to create a SphereIngredient
                 s = self.helper.getPropertyObject(child0, key=["scale"])[0]
@@ -1937,7 +1934,6 @@ class AutopackViewer:
             else:
                 pass
         if self.helper.getType(obj) == self.helper.SPHERE:
-            from autopack.Ingredient import SingleSphereIngr
 
             # need to create a SphereIngredient
             ingr = SingleSphereIngr(
@@ -1949,7 +1945,6 @@ class AutopackViewer:
             )
             # compartiment ?
         elif self.helper.getType(obj) == self.helper.CYLINDER:
-            from autopack.Ingredient import MultiCylindersIngr
 
             # need to create a SphereIngredient
             r, h, axis = self.helper.getPropertyObject(
@@ -1970,7 +1965,6 @@ class AutopackViewer:
                 principalVector=axis,  # should come from the object
             )
         elif self.helper.getType(obj) == self.helper.CUBE:
-            from autopack.Ingredient import SingleCubeIngr
 
             # need to create a SphereIngredient
             size = self.helper.getPropertyObject(obj, key=["length"])[0]
