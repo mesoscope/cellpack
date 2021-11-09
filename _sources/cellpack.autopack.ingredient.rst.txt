@@ -1,61 +1,61 @@
-cellpack.autopack.Ingredient package
+cellpack.autopack.ingredient package
 ====================================
 
 Submodules
 ----------
 
-cellpack.autopack.Ingredient.Ingredient module
+cellpack.autopack.ingredient.Ingredient module
 ----------------------------------------------
 
-.. automodule:: cellpack.autopack.Ingredient.Ingredient
+.. automodule:: cellpack.autopack.ingredient.Ingredient
    :members:
    :undoc-members:
    :show-inheritance:
 
-cellpack.autopack.Ingredient.grow module
+cellpack.autopack.ingredient.grow module
 ----------------------------------------
 
-.. automodule:: cellpack.autopack.Ingredient.grow
+.. automodule:: cellpack.autopack.ingredient.grow
    :members:
    :undoc-members:
    :show-inheritance:
 
-cellpack.autopack.Ingredient.multi\_cylinder module
+cellpack.autopack.ingredient.multi\_cylinder module
 ---------------------------------------------------
 
-.. automodule:: cellpack.autopack.Ingredient.multi_cylinder
+.. automodule:: cellpack.autopack.ingredient.multi_cylinder
    :members:
    :undoc-members:
    :show-inheritance:
 
-cellpack.autopack.Ingredient.multi\_sphere module
+cellpack.autopack.ingredient.multi\_sphere module
 -------------------------------------------------
 
-.. automodule:: cellpack.autopack.Ingredient.multi_sphere
+.. automodule:: cellpack.autopack.ingredient.multi_sphere
    :members:
    :undoc-members:
    :show-inheritance:
 
-cellpack.autopack.Ingredient.single\_cube module
+cellpack.autopack.ingredient.single\_cube module
 ------------------------------------------------
 
-.. automodule:: cellpack.autopack.Ingredient.single_cube
+.. automodule:: cellpack.autopack.ingredient.single_cube
    :members:
    :undoc-members:
    :show-inheritance:
 
-cellpack.autopack.Ingredient.single\_sphere module
+cellpack.autopack.ingredient.single\_sphere module
 --------------------------------------------------
 
-.. automodule:: cellpack.autopack.Ingredient.single_sphere
+.. automodule:: cellpack.autopack.ingredient.single_sphere
    :members:
    :undoc-members:
    :show-inheritance:
 
-cellpack.autopack.Ingredient.utils module
+cellpack.autopack.ingredient.utils module
 -----------------------------------------
 
-.. automodule:: cellpack.autopack.Ingredient.utils
+.. automodule:: cellpack.autopack.ingredient.utils
    :members:
    :undoc-members:
    :show-inheritance:
@@ -63,7 +63,7 @@ cellpack.autopack.Ingredient.utils module
 Module contents
 ---------------
 
-.. automodule:: cellpack.autopack.Ingredient
+.. automodule:: cellpack.autopack.ingredient
    :members:
    :undoc-members:
    :show-inheritance:

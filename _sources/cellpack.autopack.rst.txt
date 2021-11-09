@@ -7,7 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   cellpack.autopack.Ingredient
+   cellpack.autopack.ingredient
    cellpack.autopack.upy
 
 Submodules
