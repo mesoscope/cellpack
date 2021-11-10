@@ -1,3 +1,4 @@
+import os
 import sys
 import argparse
 import traceback
@@ -16,6 +17,8 @@ from simulariumio import (
     MetaData,
     CameraData,
 )
+
+from cellpack.autopack.iotools_simple import RecipeLoader
 
 ###############################################################################
 
@@ -112,16 +115,16 @@ class ConvertToSimularium(argparse.Namespace):
         z_size = bb[1][2] - bb[0][2]
         self.box_size = [x_size, y_size, z_size]
 
-    def get_ingredient_display_data(self, main_container, ingredient, version):
+    def get_ingredient_display_data(self, cytoplasm, main_container, ingredient):
         data = None
-        if version == 0:
+        if cytoplasm is not None:
             ingredient_name = ingredient
             ingredients = main_container["ingredients"]
             try:
                 data = ingredients[ingredient]
             except Exception:
                 pass
-        elif version == 1:
+        elif main_container is not None:
             ingredient_name = ingredient["name"]
             compartment = main_container[ingredient["compartment"]]
             position = ingredient["position"]
@@ -133,32 +136,40 @@ class ConvertToSimularium(argparse.Namespace):
             except Exception as e:
                 # Ingredient in recipe wasn't packed
                 print(e, position, ingredient_name)
-        if data["include"]:
-            data["rep_file"] = ""
-        return data
+        if "pdb" in data:
+            print("isPDB")
+            return {
+                "display_type": "PDB",
+                "url": data["pdb"]
+            }
+        else:
+            return {
+                "display_type": "SPHERE",
+            }
 
-    def get_ingredient_data(self, main_container, ingredient, version):
-        data = None
-        if version == 0:
+    def get_ingredient_data(self, cytoplasm, main_container, ingredient):
+        cytoplasm_data = None
+        container_data = None
+        if cytoplasm is not None:
             ingredient_name = ingredient
-            ingredients = main_container["ingredients"]
+            ingredients = cytoplasm["ingredients"]
             try:
-                data = ingredients[ingredient]
+                cytoplasm_data = ingredients[ingredient]
             except Exception:
                 pass
-        elif version == 1:
+        if main_container is not None:
             ingredient_name = ingredient["name"]
             compartment = main_container[ingredient["compartment"]]
             position = ingredient["position"]
             try:
                 compartment[position]
-                data = compartment[ingredient["position"]]["ingredients"][
+                container_data = compartment[ingredient["position"]]["ingredients"][
                     ingredient_name
                 ]
             except Exception as e:
                 # Ingredient in recipe wasn't packed
                 print(e, position, ingredient_name)
-        return (ingredient_name, data)
+        return (ingredient_name, cytoplasm_data, container_data)
 
     def get_euler_from_matrix(self, data_in):
         rotation_matrix = [data_in[0][0:3], data_in[1][0:3], data_in[2][0:3]]
@@ -172,6 +183,39 @@ class ConvertToSimularium(argparse.Namespace):
             return True
         else:
             return False
+    
+    def unpack_curve(self, data, time_step_index, ingredient_name, index, agent_id):
+        curve = "curve" + str(index)
+        self.positions[time_step_index].append([0, 0, 0])
+        self.rotations[time_step_index].append([0, 0, 0])
+        self.viz_types[time_step_index].append(1001)
+        self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
+        self.type_names[time_step_index].append(ingredient_name)
+        self.unique_ids[time_step_index].append(agent_id)
+        self.radii[time_step_index].append(data["encapsulatingRadius"])
+        self.n_subpoints[time_step_index].append(len(data[curve]))
+        self.fiber_points[time_step_index].append(data[curve])
+        if len(data[curve]) > self.max_fiber_length:
+            if self.debug:
+                print("found longer fiber, new max", len(data[curve]))
+            self.max_fiber_length = len(data[curve])
+
+    def unpack_positions(self, data, time_step_index, ingredient_name, index, agent_id):
+        self.positions[time_step_index].append(data["results"][index][0])
+        rotation = self.get_euler(data["results"][index][1])
+        self.rotations[time_step_index].append(rotation)
+        self.viz_types[time_step_index].append(1000)
+        self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
+        self.type_names[time_step_index].append(ingredient_name)
+        self.unique_ids[time_step_index].append(agent_id)
+        if "radii" in data:
+            self.radii[time_step_index].append(data["radii"][0]["radii"][0])
+        elif "encapsulatingRadius" in data:
+            self.radii[time_step_index].append(data["encapsulatingRadius"])
+        else:
+            self.radii[time_step_index].append(self.default_radius)
+
+        self.n_subpoints[time_step_index].append(0) 
 
     def get_euler(self, data_in):
         if self.is_matrix(data_in):
@@ -180,70 +224,52 @@ class ConvertToSimularium(argparse.Namespace):
             return self.get_euler_from_quat(data_in)
 
     def loop_through_ingredients(self, results_data_in, time_step_index, recipe_data):
-        if "cytoplasme" in results_data_in:
-            main_container = results_data_in["cytoplasme"]
+        cytoplasm = None
+        main_container = None
+        if "cytoplasme" in results_data_in and "compartments" not in results_data_in:
+            cytoplasm = results_data_in["cytoplasme"]
             recipe_container = recipe_data["cytoplasme"]
-            version = 0
-        elif "compartments" in results_data_in:
+        elif "compartments" in results_data_in and "cytoplasme" not in results_data_in:
             main_container = results_data_in["compartments"]
             recipe_container = recipe_data["compartments"]
-            version = 1
-        id = 0
+        else:
+            cytoplasm = results_data_in["cytoplasme"]
+            main_container = results_data_in["compartments"]
+        agent_id = 0
         for i in range(len(self.unique_ingredient_names)):
             ingredient = self.unique_ingredient_names[i]
-            (ingredient_name, data) = self.get_ingredient_data(
-                main_container, ingredient, version
+            (ingredient_name, cytoplasm_data, container_data) = self.get_ingredient_data(
+                cytoplasm, main_container, ingredient
             )
             display_data = self.get_ingredient_display_data(
-                recipe_container, ingredient, version
+                cytoplasm, recipe_container, ingredient
             )
             print(display_data)
-            self.display_data[ingredient_name] = {
-                "display_type": "OBJ"
-                if display_data["rep_file"] is not None
-                else "SPHERE",
-                "url": display_data["rep_file"] + ".obj"
-                if display_data["rep_file"] is not None
-                else "",
-            }
-            if data is None:
+            self.display_data[ingredient_name] = display_data
+            if cytoplasm_data is None and container_data is None:
                 continue
-            elif len(data["results"]) > 0:
-                for j in range(len(data["results"])):
-                    self.positions[time_step_index].append(data["results"][j][0])
-                    rotation = self.get_euler(data["results"][j][1])
-                    self.rotations[time_step_index].append(rotation)
-                    self.viz_types[time_step_index].append(1000)
-                    self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
-                    self.type_names[time_step_index].append(ingredient_name)
-                    self.unique_ids[time_step_index].append(id)
-                    if "radii" in data:
-                        self.radii[time_step_index].append(data["radii"][0]["radii"][0])
-                    elif "encapsulatingRadius" in data:
-                        self.radii[time_step_index].append(data["encapsulatingRadius"])
-                    else:
-                        self.radii[time_step_index].append(self.default_radius)
+            if cytoplasm_data is not None:
+                data = cytoplasm_data
+                if len(cytoplasm_data["results"]) > 0:
+                    for j in range(len(data["results"])):
+                        self.unpack_positions(data, time_step_index, ingredient_name, j, agent_id)
+                        agent_id = agent_id + 1
 
-                    self.n_subpoints[time_step_index].append(0)
-                    id = id + 1
+                elif cytoplasm_data["nbCurve"] > 0:
+                    for i in range(data["nbCurve"]):
+                        self.unpack_curve(data, time_step_index, ingredient_name, i, agent_id)
+                        agent_id = agent_id + 1
+            if container_data is not None:
+                data = container_data
+                if len(data["results"]) > 0:
+                    for j in range(len(data["results"])):
+                        self.unpack_positions(data, time_step_index, ingredient_name, j, agent_id)
+                        agent_id = agent_id + 1
 
-            elif data["nbCurve"] > 0:
-                for i in range(data["nbCurve"]):
-                    curve = "curve" + str(i)
-                    self.positions[time_step_index].append([0, 0, 0])
-                    self.rotations[time_step_index].append([0, 0, 0])
-                    self.viz_types[time_step_index].append(1001)
-                    self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
-                    self.type_names[time_step_index].append(ingredient_name)
-                    self.unique_ids[time_step_index].append(id)
-                    self.radii[time_step_index].append(data["encapsulatingRadius"])
-                    self.n_subpoints[time_step_index].append(len(data[curve]))
-                    self.fiber_points[time_step_index].append(data[curve])
-                    if len(data[curve]) > self.max_fiber_length:
-                        if self.debug:
-                            print("found longer fiber, new max", len(data[curve]))
-                        self.max_fiber_length = len(data[curve])
-                    id = id + 1
+                elif data["nbCurve"] > 0:
+                    for i in range(data["nbCurve"]):
+                        self.unpack_curve(data, time_step_index, ingredient_name, i, agent_id)
+                        agent_id = agent_id + 1
 
     def get_positions_per_ingredient(
         self, results_data_in, time_step_index, recipe_data
@@ -273,13 +299,12 @@ class ConvertToSimularium(argparse.Namespace):
 
     def get_all_ingredient_names(self, recipe_in):
         self.recipe_name = recipe_in["recipe"]["name"]
-
+        ingredients = []
         if "cytoplasme" in recipe_in:
             container = recipe_in["cytoplasme"]
             ingredients = container["ingredients"]
             self.unique_ingredient_names = list(ingredients)
-        elif "compartments" in recipe_in:
-            ingredients = []
+        if "compartments" in recipe_in:
             for compartment in recipe_in["compartments"]:
                 current_compartment = recipe_in["compartments"][compartment]
                 if "surface" in current_compartment:
@@ -311,10 +336,9 @@ def main():
     dbg = converter.debug
     try:
         time_point_index = 0
-
-        recipe_in = converter.input_recipe
         results_in = converter.packing_result
-        recipe_data = json.load(open(recipe_in, "r"))
+        recipe_data = RecipeLoader(converter.input_recipe).read()
+        # recipe_data = json.load(open(recipe_in, "r"))
         converter.get_all_ingredient_names(recipe_data)
         converter.get_bounding_box(recipe_data)
 
