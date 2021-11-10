@@ -1,3 +1,4 @@
+import os
 import sys
 import argparse
 import traceback
@@ -35,6 +36,7 @@ class ConvertToSimularium(argparse.Namespace):
     DEFAULT_PACKING_RESULT = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/results_seed_0.json"
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
+    DEFAULT_GEO_TYPE = "OBJ"
     # @staticmethod
 
     def __init__(self, total_steps=1):
@@ -44,6 +46,7 @@ class ConvertToSimularium(argparse.Namespace):
         self.output = self.DEFAULT_OUTPUT_DIRECTORY
         self.recipe_name = ""
         self.debug = True
+        self.geo_type = self.DEFAULT_GEO_TYPE
         self.__parse()
         # simularium parameters
         self.total_steps = total_steps
@@ -92,6 +95,15 @@ class ConvertToSimularium(argparse.Namespace):
         )
         p.add_argument(
             "-o",
+            "--geo-type",
+            action="store",
+            dest="geo_type",
+            type=str,
+            default=self.geo_type,
+            help="Whether to use PDB ids or OBJs",
+        )
+        p.add_argument(
+            "-g",
             "--output",
             action="store",
             dest="output",
@@ -118,6 +130,7 @@ class ConvertToSimularium(argparse.Namespace):
 
     def get_ingredient_display_data(self, cytoplasm, main_container, ingredient):
         data = None
+        ingredient_name = None
         if cytoplasm is not None:
             ingredient_name = ingredient
             ingredients = main_container["ingredients"]
@@ -137,7 +150,14 @@ class ConvertToSimularium(argparse.Namespace):
             except Exception as e:
                 # Ingredient in recipe wasn't packed
                 print(e, position, ingredient_name)
-        if "pdb" in data:
+        if self.geo_type == "OBJ" and "meshFile" in data:
+            file_path = os.path.basename(data["meshFile"])
+            file_name, _ = os.path.splitext(file_path)
+            return {
+                "display_type": DISPLAY_TYPE.OBJ,
+                "url": f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/{file_name}.obj"
+            }
+        elif self.geo_type == "PDB" and "pdb" in data:
             return {
                 "display_type":DISPLAY_TYPE.PDB,
                 "url": data["pdb"]
