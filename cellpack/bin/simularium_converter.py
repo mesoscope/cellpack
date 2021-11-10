@@ -1,4 +1,3 @@
-import os
 import sys
 import argparse
 import traceback
@@ -16,7 +15,9 @@ from simulariumio import (
     UnitData,
     MetaData,
     CameraData,
+    DisplayData,
 )
+from simulariumio.constants import DISPLAY_TYPE
 
 from cellpack.autopack.iotools_simple import RecipeLoader
 
@@ -137,14 +138,14 @@ class ConvertToSimularium(argparse.Namespace):
                 # Ingredient in recipe wasn't packed
                 print(e, position, ingredient_name)
         if "pdb" in data:
-            print("isPDB")
             return {
-                "display_type": "PDB",
+                "display_type":DISPLAY_TYPE.PDB,
                 "url": data["pdb"]
             }
         else:
             return {
-                "display_type": "SPHERE",
+                "display_type": DISPLAY_TYPE.SPHERE,
+                "url": ""
             }
 
     def get_ingredient_data(self, cytoplasm, main_container, ingredient):
@@ -244,8 +245,11 @@ class ConvertToSimularium(argparse.Namespace):
             display_data = self.get_ingredient_display_data(
                 cytoplasm, recipe_container, ingredient
             )
-            print(display_data)
-            self.display_data[ingredient_name] = display_data
+            self.display_data[ingredient_name] = DisplayData(
+                name=ingredient_name,
+                display_type=display_data["display_type"],
+                url=display_data["url"]
+            )
             if cytoplasm_data is None and container_data is None:
                 continue
             if cytoplasm_data is not None:
@@ -362,6 +366,7 @@ def main():
                 ),
             ),
             agent_data=AgentData(
+                display_data=converter.display_data,
                 times=converter.timestep * np.array(list(range(converter.total_steps))),
                 n_agents=np.array(converter.n_agents),
                 viz_types=np.array(converter.viz_types),
