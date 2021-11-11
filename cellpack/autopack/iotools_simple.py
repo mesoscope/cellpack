@@ -46,7 +46,6 @@ class RecipeLoader(object):
         else:
             print("filename is None and not ingredient dictionary provided")
             return None
-
         return data
 
     def _load_json(self):
@@ -77,11 +76,16 @@ class RecipeLoader(object):
                 # include all compartments from given filename.
                 # transform the geometry of the compartment packing rep
                 for cname in recipe_data["compartments"]:
-                    # if cname == "include":
-                    #     for i, ncompart in enumerate(
-                    #         recipe_data["compartments"]["include"]
-                    #     ):
-                            # sub_recipe = 
+                    if cname == "include":
+                        for i, compartment in enumerate(
+                            recipe_data["compartments"]["include"]
+                        ):
+                            node = {
+                                "include": compartment["from"]
+                            }
+                            sub_recipe = self._request_sub_recipe(inode=node)
+                            recipe_data["compartments"][compartment["from"]] = sub_recipe["compartments"]
+                        continue
                     comp_dic = recipe_data["compartments"][cname]
   
                     if "rep" in comp_dic:
