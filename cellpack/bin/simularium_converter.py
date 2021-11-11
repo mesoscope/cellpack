@@ -37,6 +37,7 @@ class ConvertToSimularium(argparse.Namespace):
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
     DEFAULT_GEO_TYPE = "OBJ"
+    DEFAULT_SCALE_FACTOR = 1.0 / 10
     # @staticmethod
 
     def __init__(self, total_steps=1):
@@ -45,13 +46,14 @@ class ConvertToSimularium(argparse.Namespace):
         self.packing_result = self.DEFAULT_PACKING_RESULT
         self.output = self.DEFAULT_OUTPUT_DIRECTORY
         self.recipe_name = ""
-        self.debug = True
+        self.scale_factor = self.DEFAULT_SCALE_FACTOR
         self.geo_type = self.DEFAULT_GEO_TYPE
+        self.debug = True
         self.__parse()
         # simularium parameters
         self.total_steps = total_steps
         self.timestep = 1
-        self.box_size = 1000
+        self.box_size = 1000 * self.scale_factor
         self.n_agents = [0 for x in range(total_steps)]
         self.points_per_fiber = 0
         self.type_names = [[] for x in range(total_steps)]
@@ -68,7 +70,7 @@ class ConvertToSimularium(argparse.Namespace):
         self.fiber_points = [[] for x in range(total_steps)]
         self.max_fiber_length = 0
         # defaults for missing data
-        self.default_radius = 5
+        self.default_radius = 5 * self.scale_factor
 
     def __parse(self):
         p = argparse.ArgumentParser(
@@ -94,7 +96,7 @@ class ConvertToSimularium(argparse.Namespace):
             help="Full path of the packing result file",
         )
         p.add_argument(
-            "-o",
+            "-g",
             "--geo-type",
             action="store",
             dest="geo_type",
@@ -103,7 +105,7 @@ class ConvertToSimularium(argparse.Namespace):
             help="Whether to use PDB ids or OBJs",
         )
         p.add_argument(
-            "-g",
+            "-o",
             "--output",
             action="store",
             dest="output",
@@ -126,7 +128,11 @@ class ConvertToSimularium(argparse.Namespace):
         x_size = bb[1][0] - bb[0][0]
         y_size = bb[1][1] - bb[0][1]
         z_size = bb[1][2] - bb[0][2]
-        self.box_size = [x_size, y_size, z_size]
+        self.box_size = [
+            x_size * self.scale_factor,
+            y_size * self.scale_factor,
+            z_size * self.scale_factor,
+        ]
 
     def get_ingredient_display_data(self, cytoplasm, main_container, ingredient):
         data = None
@@ -155,18 +161,20 @@ class ConvertToSimularium(argparse.Namespace):
             file_name, _ = os.path.splitext(file_path)
             return {
                 "display_type": DISPLAY_TYPE.OBJ,
-                "url": f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/{file_name}.obj"
+                "url": f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/{file_name}.obj",
             }
         elif self.geo_type == "PDB" and "pdb" in data:
+            pdb_file_name = data["pdb"]
+            if ".pdb" in pdb_file_name:
+                url = f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/other/{pdb_file_name}"
+            else:
+                url = pdb_file_name
             return {
-                "display_type":DISPLAY_TYPE.PDB,
-                "url": data["pdb"]
+                "display_type": DISPLAY_TYPE.PDB,
+                "url": url,
             }
         else:
-            return {
-                "display_type": DISPLAY_TYPE.SPHERE,
-                "url": ""
-            }
+            return {"display_type": DISPLAY_TYPE.SPHERE, "url": ""}
 
     def get_ingredient_data(self, cytoplasm, main_container, ingredient):
         cytoplasm_data = None
@@ -193,7 +201,7 @@ class ConvertToSimularium(argparse.Namespace):
         return (ingredient_name, cytoplasm_data, container_data)
 
     def get_euler_from_matrix(self, data_in):
-        rotation_matrix = [data_in[0][0:3], data_in[1][0:3], data_in[2][0:3]]
+        rotation_matrix = [-1 * np.array(data_in[0][0:3]), -1 * np.array(data_in[1][0:3]), data_in[2][0:3]]
         return R.from_matrix(rotation_matrix).as_euler("xyz", degrees=True)
 
     def get_euler_from_quat(self, data_in):
@@ -204,7 +212,7 @@ class ConvertToSimularium(argparse.Namespace):
             return True
         else:
             return False
-    
+
     def unpack_curve(self, data, time_step_index, ingredient_name, index, agent_id):
         curve = "curve" + str(index)
         self.positions[time_step_index].append([0, 0, 0])
@@ -213,30 +221,54 @@ class ConvertToSimularium(argparse.Namespace):
         self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
         self.type_names[time_step_index].append(ingredient_name)
         self.unique_ids[time_step_index].append(agent_id)
-        self.radii[time_step_index].append(data["encapsulatingRadius"])
-        self.n_subpoints[time_step_index].append(len(data[curve]))
+        self.radii[time_step_index].append(
+            data["encapsulatingRadius"] * self.scale_factor
+        )
+        self.n_subpoints[time_step_index].append(len(data[curve]) * self.scale_factor)
         self.fiber_points[time_step_index].append(data[curve])
         if len(data[curve]) > self.max_fiber_length:
             if self.debug:
                 print("found longer fiber, new max", len(data[curve]))
             self.max_fiber_length = len(data[curve])
 
-    def unpack_positions(self, data, time_step_index, ingredient_name, index, agent_id):
-        self.positions[time_step_index].append(data["results"][index][0])
+    def unpack_positions(
+        self, data, time_step_index, ingredient_name, index, agent_id, comp_id=0
+    ):
+        position = data["results"][index][0]
+        offset = None
+        if "source" in data:
+            offset = np.array(data["source"]["transform"]["offset"])
+        else:
+            offset = np.array([0, 0, 0])
+        if comp_id <= 0:
+            offset = offset * -1
+        self.positions[time_step_index].append(
+            [
+                (position[0] + offset[0]) * self.scale_factor,
+                (position[1] + offset[1]) * self.scale_factor,
+                (position[2] + offset[2]) * self.scale_factor,
+            ]
+        )
+            
         rotation = self.get_euler(data["results"][index][1])
+
         self.rotations[time_step_index].append(rotation)
         self.viz_types[time_step_index].append(1000)
         self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
         self.type_names[time_step_index].append(ingredient_name)
         self.unique_ids[time_step_index].append(agent_id)
         if "radii" in data:
-            self.radii[time_step_index].append(data["radii"][0]["radii"][0])
+            self.radii[time_step_index].append(
+                data["radii"][0]["radii"][0] * self.scale_factor
+            )
         elif "encapsulatingRadius" in data:
-            self.radii[time_step_index].append(data["encapsulatingRadius"])
+            self.radii[time_step_index].append(
+                data["encapsulatingRadius"] * self.scale_factor
+            )
         else:
             self.radii[time_step_index].append(self.default_radius)
 
-        self.n_subpoints[time_step_index].append(0) 
+        self.n_subpoints[time_step_index].append(0)
 
     def get_euler(self, data_in):
         if self.is_matrix(data_in):
@@ -259,16 +291,18 @@ class ConvertToSimularium(argparse.Namespace):
         agent_id = 0
         for i in range(len(self.unique_ingredient_names)):
             ingredient = self.unique_ingredient_names[i]
-            (ingredient_name, cytoplasm_data, container_data) = self.get_ingredient_data(
-                cytoplasm, main_container, ingredient
-            )
+            (
+                ingredient_name,
+                cytoplasm_data,
+                container_data,
+            ) = self.get_ingredient_data(cytoplasm, main_container, ingredient)
             display_data = self.get_ingredient_display_data(
                 cytoplasm, recipe_container, ingredient
             )
             self.display_data[ingredient_name] = DisplayData(
                 name=ingredient_name,
                 display_type=display_data["display_type"],
-                url=display_data["url"]
+                url=display_data["url"],
             )
             if cytoplasm_data is None and container_data is None:
                 continue
@@ -276,23 +310,32 @@ class ConvertToSimularium(argparse.Namespace):
                 data = cytoplasm_data
                 if len(cytoplasm_data["results"]) > 0:
                     for j in range(len(data["results"])):
-                        self.unpack_positions(data, time_step_index, ingredient_name, j, agent_id)
+                        self.unpack_positions(
+                            data, time_step_index, ingredient_name, j, agent_id
+                        )
                         agent_id = agent_id + 1
 
                 elif cytoplasm_data["nbCurve"] > 0:
                     for i in range(data["nbCurve"]):
-                        self.unpack_curve(data, time_step_index, ingredient_name, i, agent_id)
+                        self.unpack_curve(
+                            data, time_step_index, ingredient_name, i, agent_id
+                        )
                         agent_id = agent_id + 1
             if container_data is not None:
                 data = container_data
+                comp_id = container_data["compNum"]
                 if len(data["results"]) > 0:
                     for j in range(len(data["results"])):
-                        self.unpack_positions(data, time_step_index, ingredient_name, j, agent_id)
+                        self.unpack_positions(
+                            data, time_step_index, ingredient_name, j, agent_id, comp_id
+                        )
                         agent_id = agent_id + 1
 
                 elif data["nbCurve"] > 0:
                     for i in range(data["nbCurve"]):
-                        self.unpack_curve(data, time_step_index, ingredient_name, i, agent_id)
+                        self.unpack_curve(
+                            data, time_step_index, ingredient_name, i, agent_id
+                        )
                         agent_id = agent_id + 1
 
     def get_positions_per_ingredient(
@@ -365,7 +408,6 @@ def main():
         # recipe_data = json.load(open(recipe_in, "r"))
         converter.get_all_ingredient_names(recipe_data)
         converter.get_bounding_box(recipe_data)
-
         packing_data = json.load(open(results_in, "r"))
         box_size = converter.box_size
         converter.get_positions_per_ingredient(
