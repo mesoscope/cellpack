@@ -201,7 +201,7 @@ class ConvertToSimularium(argparse.Namespace):
         return (ingredient_name, cytoplasm_data, container_data)
 
     def get_euler_from_matrix(self, data_in):
-        rotation_matrix = [-1 * np.array(data_in[0][0:3]), -1 * np.array(data_in[1][0:3]), data_in[2][0:3]]
+        rotation_matrix = [np.array(data_in[0][0:3]), np.array(data_in[1][0:3]), data_in[2][0:3]]
         return R.from_matrix(rotation_matrix).as_euler("xyz", degrees=True)
 
     def get_euler_from_quat(self, data_in):
