@@ -1149,11 +1149,12 @@ class Ingredient(Agent):
             for i in range(nLOD):
                 c = numpy.array(positions[i]["coords"])
                 n = len(c)
-                self.positions.append(c.reshape((n / 3, 3)).tolist())
+                self.positions.append(c.reshape((int(n / 3), 3)).tolist())
                 self.radii.append(radii[i]["radii"])
             if len(self.radii) == 0:
                 self.radii = [[10]]  # some default value ?
                 self.positions = [[[0, 0, 0]]]
+            self.deepest_level = len(radii) - 1
         else:  # regular nested
             if (
                 positions is None or positions[0] is None or positions[0][0] is None
@@ -1634,10 +1635,10 @@ class Ingredient(Agent):
         """
         Create a polygon mesh object from a dictionary verts,faces,normals
         """
-        nv = len(data["verts"])
-        nf = len(data["faces"])
-        self.vertices = numpy.array(data["verts"]).reshape((nv / 3, 3))
-        self.faces = numpy.array(data["faces"]).reshape((nf / 3, 3))
+        nv = int(len(data["verts"]) / 3)
+        nf = int(len(data["faces"]) / 3)
+        self.vertices = numpy.array(data["verts"]).reshape((nv, 3))
+        self.faces = numpy.array(data["faces"]).reshape((nf, 3))
         # self.normals = data.normals
         geom = autopack.helper.createsNmesh(geomname, self.vertices, None, self.faces)[
             0

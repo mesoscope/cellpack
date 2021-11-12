@@ -373,6 +373,8 @@ class dejavuHelper(hostHelper.Helper):
         pass
 
     def reParent(self, obj, parent):
+        if self.nogui:
+            return
         vi = self.getCurrentScene()
         parent = self.getObject(parent)
         if parent is None:
@@ -996,7 +998,7 @@ class dejavuHelper(hostHelper.Helper):
         faces = poly.getFaces()
         vertices = poly.getVertices()
         vnormals = poly.getVNormals()
-        if transform:
+        if transform and not self.nogui:
             mat = poly.GetMatrix(poly.LastParentBeforeRoot())
             vertices = self.ApplyMatrix(vertices, mat)
         return faces, vertices, vnormals
