@@ -234,7 +234,7 @@ class ConvertToSimularium(argparse.Namespace):
 
     def get_euler_from_matrix(self, data_in):
         rotation_matrix = [np.array(data_in[0][0:3]), np.array(data_in[1][0:3]), data_in[2][0:3]]
-        return R.from_matrix(np.array(rotation_matrix).transpose()).as_euler("xyz", degrees=True)
+        return R.from_matrix(rotation_matrix).as_euler("xyz", degrees=True)
 
     def get_euler_from_quat(self, data_in):
         return R.from_quat(data_in).as_euler("xyz", degrees=True)
@@ -307,68 +307,45 @@ class ConvertToSimularium(argparse.Namespace):
         else:
             return self.get_euler_from_quat(data_in)
 
-    def loop_through_ingredients(self, results_data_in, time_step_index, recipe_data):
-        cytoplasm = None
-        main_container = None
-        recipe_container = None
-        if "cytoplasme" in results_data_in and "compartments" not in results_data_in:
-            cytoplasm = results_data_in["cytoplasme"]
-            recipe_container = recipe_data["cytoplasme"]
-        elif "compartments" in results_data_in and "cytoplasme" not in results_data_in:
-            main_container = results_data_in["compartments"]
-            recipe_container = recipe_data["compartments"]
-        else:
-            cytoplasm = results_data_in["cytoplasme"]
-            main_container = results_data_in["compartments"]
-        agent_id = 0
-        for i in range(len(self.unique_ingredient_names)):
-            ingredient = self.unique_ingredient_names[i]
-            (
-                ingredient_name,
-                cytoplasm_data,
-                container_data,
-            ) = self.get_ingredient_data(cytoplasm, main_container, ingredient)
-            display_data = self.get_ingredient_display_data(
-                cytoplasm, recipe_container, ingredient
-            )
-            self.display_data[ingredient_name] = DisplayData(
-                name=ingredient_name,
+    def loop_through_ingredients(self,
+                                result_compartments_ingredients,
+                                recipe_compartments_ingredients,
+                                time_step_index):
+        for ingredient_key in recipe_compartments_ingredients :
+            if (ingredient_key not in result_compartments_ingredients) :
+                continue
+            ingredient_data = recipe_compartments_ingredients[ingredient_key]
+            ingredient_results_data = result_compartments_ingredients[ingredient_key]
+            display_data = self.get_ingredient_display(ingredient_data)
+            self.display_data[ingredient_key] = DisplayData(
+                name=ingredient_key,
                 display_type=display_data["display_type"],
                 url=display_data["url"],
             )
-            if cytoplasm_data is None and container_data is None:
-                continue
-            if cytoplasm_data is not None:
-                data = cytoplasm_data
-                if len(cytoplasm_data["results"]) > 0:
-                    for j in range(len(data["results"])):
-                        self.unpack_positions(
-                            data, time_step_index, ingredient_name, j, agent_id
-                        )
-                        agent_id = agent_id + 1
+            if len(ingredient_results_data["results"]) > 0:
+                for j in range(len(ingredient_results_data["results"])):
+                    self.unpack_positions(
+                        ingredient_results_data, time_step_index, ingredient_key, j, self.agent_id_counter
+                    )
+                    self.agent_id_counter = self.agent_id_counter + 1
+            elif ingredient_results_data["nbCurve"] > 1000000:
+                for i in range(ingredient_results_data["nbCurve"]):
+                    self.unpack_curve(
+                        ingredient_results_data, time_step_index, ingredient_key, i, self.agent_id_counter
+                    )
+                    self.agent_id_counter = self.agent_id_counter + 1
 
-                elif cytoplasm_data["nbCurve"] > 0:
-                    for i in range(data["nbCurve"]):
-                        self.unpack_curve(
-                            data, time_step_index, ingredient_name, i, agent_id
-                        )
-                        agent_id = agent_id + 1
-            if container_data is not None:
-                data = container_data
-                comp_id = container_data["compNum"]
-                if len(data["results"]) > 0:
-                    for j in range(len(data["results"])):
-                        self.unpack_positions(
-                            data, time_step_index, ingredient_name, j, agent_id, comp_id
-                        )
-                        agent_id = agent_id + 1
-
-                elif data["nbCurve"] > 0:
-                    for i in range(data["nbCurve"]):
-                        self.unpack_curve(
-                            data, time_step_index, ingredient_name, i, agent_id
-                        )
-                        agent_id = agent_id + 1
+    def loop_through_compartment(self, results_data_in, time_step_index, recipe_data):
+        if "cytoplasme" in results_data_in:
+            if (len(results_data_in["cytoplasme"]["ingredients"]) != 0) :
+                self.loop_through_ingredients(results_data_in["cytoplasme"]["ingredients"], recipe_data["cytoplasme"]["ingredients"], time_step_index)
+        if "compartments" in results_data_in:
+            for compartment in results_data_in["compartments"]:
+                current_compartment = results_data_in["compartments"][compartment]
+                if "surface" in current_compartment:
+                    self.loop_through_ingredients(current_compartment["surface"]["ingredients"], recipe_data["compartments"][compartment]["surface"]["ingredients"], time_step_index)
+                if "interior" in current_compartment:
+                    self.loop_through_ingredients(current_compartment["interior"]["ingredients"], recipe_data["compartments"][compartment]["interior"]["ingredients"], time_step_index)
 
     def get_positions_per_ingredient(
         self, results_data_in, time_step_index, recipe_data
@@ -382,7 +359,7 @@ class ConvertToSimularium(argparse.Namespace):
                 self.recipe_name,
             )
         self.agent_id_counter = 0
-        self.loop_through_ingredients_legacy(results_data_in, time_step_index, recipe_data)
+        self.loop_through_compartment(results_data_in, time_step_index, recipe_data)
 
     def fill_in_empty_fiber_data(self, time_step_index):
         blank_value = [[0, 0, 0] for x in range(self.max_fiber_length)]
@@ -398,8 +375,6 @@ class ConvertToSimularium(argparse.Namespace):
                 self.subpoints[time_step_index].append(control_points)
 
     def get_all_ingredient_names(self, recipe_in):
-        print(recipe_in.keys())
-        print(recipe_in["recipe"])
         self.recipe_name = recipe_in["recipe"]["name"]
         ingredients = []
         if "cytoplasme" in recipe_in:
