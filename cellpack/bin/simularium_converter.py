@@ -3,7 +3,8 @@ import sys
 import argparse
 import traceback
 
-# import cellpack.autopack.transformation as tr
+import cellpack.autopack.transformation as tr
+import math
 import numpy as np
 import json
 import logging
@@ -234,10 +235,10 @@ class ConvertToSimularium(argparse.Namespace):
 
     def get_euler_from_matrix(self, data_in):
         rotation_matrix = [np.array(data_in[0][0:3]), np.array(data_in[1][0:3]), data_in[2][0:3]]
-        return R.from_matrix(rotation_matrix).as_euler("xyz", degrees=True)
+        return np.degrees(tr.euler_from_matrix(rotation_matrix)) # R.from_matrix(rotation_matrix).as_euler("xyz", degrees=True)
 
     def get_euler_from_quat(self, data_in):
-        return R.from_quat(data_in).as_euler("xyz", degrees=True)
+        return np.degrees(tr.euler_from_quaternion(data_in)) # return R.from_quat(data_in).as_euler("xyz", degrees=True)
 
     def is_matrix(self, data_in):
         if isinstance(data_in[0], list):
