@@ -36,7 +36,7 @@ class ConvertToSimularium(argparse.Namespace):
     DEFAULT_PACKING_RESULT = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/results_seed_0.json"
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
-    DEFAULT_GEO_TYPE = "OBJ" # "PDB"
+    DEFAULT_GEO_TYPE = "OBJ"  # "PDB"
     DEFAULT_SCALE_FACTOR = 1.0 / 10
     # @staticmethod
 
@@ -145,7 +145,7 @@ class ConvertToSimularium(argparse.Namespace):
                     "url": f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/{file_name}.obj",
                 }
             elif (meshType == 'raw'):
-                # TODO : need to build a mesh from the vertices, faces, indexes dictionary
+                # need to build a mesh from the vertices, faces, indexes dictionary
                 print(meshType, ingredient_data["meshFile"].keys())
                 return {"display_type": DISPLAY_TYPE.SPHERE, "url": ""}
         elif self.geo_type == "PDB" :
@@ -264,7 +264,7 @@ class ConvertToSimularium(argparse.Namespace):
                 print("found longer fiber, new max", len(data[curve]))
             self.max_fiber_length = len(data[curve])
 
-    def unpack_positions(self, data, time_step_index, ingredient_name, index, agent_id, comp_id = 0):
+    def unpack_positions(self, data, time_step_index, ingredient_name, index, agent_id, comp_id=0):
         position = data["results"][index][0]
         offset = None
         offset = np.array([0, 0, 0])
@@ -369,50 +369,6 @@ class ConvertToSimularium(argparse.Namespace):
                             data, time_step_index, ingredient_name, i, agent_id
                         )
                         agent_id = agent_id + 1
-
-    def loop_through_compartment_ingredients_legacy(self,
-                                result_compartments_ingredients,
-                                recipe_compartments_ingredients,
-                                time_step_index):
-        # agent_id = 0 ?
-        print(result_compartments_ingredients.keys())
-        print(recipe_compartments_ingredients.keys())
-        for ingredient_key in recipe_compartments_ingredients :
-            if (ingredient_key not in result_compartments_ingredients) :
-                continue
-            ingredient_data = recipe_compartments_ingredients[ingredient_key]
-            ingredient_results_data = result_compartments_ingredients[ingredient_key]
-            display_data = self.get_ingredient_display(ingredient_data)
-            self.display_data[ingredient_key] = DisplayData(
-                name=ingredient_key,
-                display_type=display_data["display_type"],
-                url=display_data["url"],
-            )
-            if len(ingredient_results_data["results"]) > 0:
-                for j in range(len(ingredient_results_data["results"])):
-                    self.unpack_positions(
-                        ingredient_results_data, time_step_index, ingredient_key, j, self.agent_id_counter
-                    )
-                    self.agent_id_counter = self.agent_id_counter + 1
-            elif ingredient_results_data["nbCurve"] > 1000000:
-                for i in range(ingredient_results_data["nbCurve"]):
-                    self.unpack_curve(
-                        ingredient_results_data, time_step_index, ingredient_key, i, self.agent_id_counter
-                    )
-                    self.agent_id_counter = self.agent_id_counter + 1
-
-    def loop_through_ingredients_legacy(self, results_data_in, time_step_index, recipe_data):
-        if "cytoplasme" in results_data_in:
-            if (len(results_data_in["cytoplasme"]["ingredients"]) != 0) :
-                self.loop_through_compartment_ingredients_legacy(results_data_in["cytoplasme"]["ingredients"], recipe_data["cytoplasme"]["ingredients"], time_step_index)
-        if "compartments" in results_data_in:
-            for compartment in results_data_in["compartments"]:
-                current_compartment = results_data_in["compartments"][compartment]
-                if "surface" in current_compartment:
-                    self.loop_through_compartment_ingredients_legacy(current_compartment["surface"]["ingredients"], recipe_data["compartments"][compartment]["surface"]["ingredients"], time_step_index)
-                if "interior" in current_compartment:
-                    self.loop_through_compartment_ingredients_legacy(current_compartment["interior"]["ingredients"], recipe_data["compartments"][compartment]["interior"]["ingredients"], time_step_index)
-
 
     def get_positions_per_ingredient(
         self, results_data_in, time_step_index, recipe_data
