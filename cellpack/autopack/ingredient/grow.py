@@ -13,6 +13,7 @@ import math
 from cellpack.mgl_tools.bhtree import bhtreelib
 from cellpack.autopack.transformation import angle_between_vectors
 from cellpack.autopack.ldSequence import SphereHalton
+from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
 from .utils import rotVectToVect
 
 import cellpack.autopack as autopack
@@ -324,7 +325,7 @@ class GrowIngredient(MultiCylindersIngr):
         }
 
     def get_new_distance_values(
-        self, jtrans, rotMatj, gridPointsCoords, distance, dpad
+        self, jtrans, rotMatj, gridPointsCoords, distance, dpad, level=0
     ):
         insidePoints = {}
         newDistPoints = {}
@@ -798,7 +799,7 @@ class GrowIngredient(MultiCylindersIngr):
                 attempted += 1
                 continue
 
-    def walkSphere(self, pt1, pt2, distance, histoVol, marge=90.0, checkcollision=True):
+    def walkSphere(self, pt1, pt2, distance, histoVol, dpad, marge=90.0, checkcollision=True):
         """use a random point on a sphere of radius uLength, and useCylinder collision on the grid"""
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
         found = False
@@ -873,6 +874,7 @@ class GrowIngredient(MultiCylindersIngr):
                             histoVol.grid.masterGridPositions,
                             distance,
                             histoVol,
+                            dpad
                         )
                         if not collision:
                             found = True
@@ -2298,6 +2300,7 @@ class GrowIngredient(MultiCylindersIngr):
                         startingPoint,
                         distance,
                         histoVol,
+                        dpad,
                         marge=self.marge,
                         checkcollision=True,
                     )
@@ -2417,7 +2420,7 @@ class GrowIngredient(MultiCylindersIngr):
                         rotMatj=rotMatj,
                     )
 
-                    nbFreePoints = self.updateDistances(
+                    nbFreePoints = BaseGrid.updateDistances(
                         insidePoints,
                         newDistPoints,
                         freePoints,
@@ -2466,12 +2469,12 @@ class GrowIngredient(MultiCylindersIngr):
         distance,
         gridPointsCoords,
     ):
+        insidePoints = {}
+        newDistPoints = {}
         for i in range(rg):  # len(self.results)):
             jtrans, rotMatj = self.results[-i]
             cent1T = self.transformPoints(jtrans, rotMatj, self.positions[-1])
-            insidePoints = {}
-            newDistPoints = {}
-            insidePoints, newDistPoints = self.getInsidePoints(
+            new_inside_pts, new_dist_points = self.getInsidePoints(
                 histoVol.grid,
                 gridPointsCoords,
                 dpad,
@@ -2480,11 +2483,17 @@ class GrowIngredient(MultiCylindersIngr):
                 jtrans=jtrans,
                 rotMatj=rotMatj,
             )
-            # update free points
-            nbFreePoints = self.updateDistances(
-                insidePoints, newDistPoints, freePoints, nbFreePoints, distance
+            insidePoints = self.merge_place_results(
+                        new_inside_pts, insidePoints
             )
-            return nbFreePoints, freePoints
+            newDistPoints = self.merge_place_results(
+                        new_dist_points, newDistPoints
+            )
+            # update free points
+            nbFreePoints = BaseGrid.updateDistances(
+                new_inside_pts, new_dist_points, freePoints, nbFreePoints, distance
+            )
+        return insidePoints, newDistPoints, nbFreePoints, freePoints
 
     def getFirstPoint(self, ptInd, seed=0):
         if self.compNum > 0:  # surfacegrowing: first point is aling to the normal:
@@ -2576,7 +2585,7 @@ class GrowIngredient(MultiCylindersIngr):
 
     def jitter_place(
         self,
-        histoVol,
+        env,
         ptInd,
         freePoints,
         nbFreePoints,
@@ -2589,19 +2598,19 @@ class GrowIngredient(MultiCylindersIngr):
             self.prepare_alternates()
         success = True
         self.vi = autopack.helper
-        self.env = histoVol
-        gridPointsCoords = histoVol.grid.masterGridPositions
-        self.runTimeDisplay = histoVol.runTimeDisplay
+        self.env = env
+        gridPointsCoords = env.grid.masterGridPositions
+        self.runTimeDisplay = env.runTimeDisplay
         normal = None
 
         # jitter the first point
         if self.compNum > 0:
-            normal = histoVol.compartments[abs(self.compNum) - 1].surfacePointsNormals[
+            normal = env.compartments[abs(self.compNum) - 1].surfacePointsNormals[
                 ptInd
             ]
         self.startingpoint = previousPoint = startingPoint = self.jitterPosition(
-            numpy.array(histoVol.grid.masterGridPositions[ptInd]),
-            histoVol.smallestProteinSize,
+            numpy.array(env.grid.masterGridPositions[ptInd]),
+            env.smallestProteinSize,
             normal=normal,
         )
 
@@ -2662,7 +2671,7 @@ class GrowIngredient(MultiCylindersIngr):
 
         self.currentLength = 0.0
         #        self.Ptis=[ptInd,histoVol.grid.getPointFrom3D(secondPoint)]
-        dist, pid = histoVol.grid.getClosestGridPoint(secondPoint)
+        dist, pid = env.grid.getClosestGridPoint(secondPoint)
         self.Ptis = [ptInd, pid]
         print("the starting point on the grid was ", startingPoint, pid, ptInd)
         listePtCurve = [jtrans]
@@ -2675,7 +2684,7 @@ class GrowIngredient(MultiCylindersIngr):
             secondPoint,
             listePtCurve,
             listePtLinear,
-            histoVol,
+            env,
             ptInd,
             freePoints,
             nbFreePoints,
@@ -2684,9 +2693,9 @@ class GrowIngredient(MultiCylindersIngr):
             stepByStep=False,
             usePP=usePP,
         )
-        nbFreePoints, freePoints = self.updateGrid(
+        insidePoints, newDistPoints, nbFreePoints, freePoints = self.updateGrid(
             2,
-            histoVol,
+            env,
             dpad,
             freePoints,
             nbFreePoints,
@@ -2700,7 +2709,7 @@ class GrowIngredient(MultiCylindersIngr):
                 listePtLinear[0],
                 listePtCurve,
                 listePtLinear,
-                histoVol,
+                env,
                 ptInd,
                 freePoints,
                 nbFreePoints,
@@ -2709,9 +2718,9 @@ class GrowIngredient(MultiCylindersIngr):
                 stepByStep=False,
                 r=True,
             )
-            nbFreePoints, freePoints = self.updateGrid(
+            insidePoints, newDistPoints, nbFreePoints, freePoints = self.updateGrid(
                 2,
-                histoVol,
+                env,
                 dpad,
                 freePoints,
                 nbFreePoints,
@@ -2722,7 +2731,7 @@ class GrowIngredient(MultiCylindersIngr):
         self.log.info("res %d", len(self.results))
         for i in range(len(self.results)):
             jtrans, rotMatj = self.results[-i]
-            dist, ptInd = histoVol.grid.getClosestGridPoint(jtrans)
+            dist, ptInd = env.grid.getClosestGridPoint(jtrans)
             compartment.molecules.append([jtrans, rotMatj, self, ptInd])
             # reset the result ?
         self.results = []
@@ -2732,7 +2741,7 @@ class GrowIngredient(MultiCylindersIngr):
         self.nbCurve += 1
         self.completion = float(self.nbCurve) / float(self.nbMol)
         self.log.info("completion %r %r %r", self.completion, self.nbCurve, self.nbMol)
-        return success, nbFreePoints
+        return success, jtrans, rotMatj, insidePoints, newDistPoints
 
     def prepare_alternates(
         self,

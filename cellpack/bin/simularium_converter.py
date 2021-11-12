@@ -36,7 +36,7 @@ class ConvertToSimularium(argparse.Namespace):
     DEFAULT_PACKING_RESULT = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/results_seed_0.json"
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
-    DEFAULT_GEO_TYPE = "OBJ"#"PDB"#"OBJ"
+    DEFAULT_GEO_TYPE = "OBJ" # "PDB"
     DEFAULT_SCALE_FACTOR = 1.0 / 10
     # @staticmethod
 
@@ -134,7 +134,6 @@ class ConvertToSimularium(argparse.Namespace):
             z_size * self.scale_factor,
         ]
 
-    
     def get_ingredient_display(self, ingredient_data) :
         if self.geo_type == "OBJ" and "meshFile" in ingredient_data:
             meshType = ingredient_data['meshType'] if ('meshType' in ingredient_data) else "file"
@@ -146,8 +145,8 @@ class ConvertToSimularium(argparse.Namespace):
                     "url": f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/{file_name}.obj",
                 }
             elif (meshType == 'raw'):
-                #need to build a mesh from the vertices, faces, indexes dictionary
-                print (meshType,ingredient_data["meshFile"].keys())
+                # TODO : need to build a mesh from the vertices, faces, indexes dictionary
+                print(meshType, ingredient_data["meshFile"].keys())
                 return {"display_type": DISPLAY_TYPE.SPHERE, "url": ""}
         elif self.geo_type == "PDB" :
             pdb_file_name = ""
@@ -265,16 +264,15 @@ class ConvertToSimularium(argparse.Namespace):
                 print("found longer fiber, new max", len(data[curve]))
             self.max_fiber_length = len(data[curve])
 
-    def unpack_positions(
-        self, data, time_step_index, ingredient_name, index, agent_id, comp_id=0
-        ):
+    def unpack_positions(self, data, time_step_index, ingredient_name, index, agent_id, comp_id = 0):
         position = data["results"][index][0]
         offset = None
         offset = np.array([0, 0, 0])
-        #if "source" in data:
-        #    offset = np.array(data["source"]["transform"]["offset"])
-        #else:
-        #    offset = np.array([0, 0, 0])
+        # TODO : deal with membrane ingredient transformation
+        # if "source" in data:
+        #     offset = np.array(data["source"]["transform"]["offset"])
+        # else:
+        #     offset = np.array([0, 0, 0])
         if comp_id <= 0:
             offset = offset * -1
         self.positions[time_step_index].append(
@@ -284,9 +282,7 @@ class ConvertToSimularium(argparse.Namespace):
                 (position[2] + offset[2]) * self.scale_factor,
             ]
         )
-
         rotation = self.get_euler(data["results"][index][1])
-
         self.rotations[time_step_index].append(rotation)
         self.viz_types[time_step_index].append(1000)
         self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
@@ -374,13 +370,13 @@ class ConvertToSimularium(argparse.Namespace):
                         )
                         agent_id = agent_id + 1
 
-    def loop_through_compartment_ingredients_legacy(self, 
-                                result_compartments_ingredients, 
-                                recipe_compartments_ingredients, 
+    def loop_through_compartment_ingredients_legacy(self,
+                                result_compartments_ingredients,
+                                recipe_compartments_ingredients,
                                 time_step_index):
-        #agent_id = 0 ?
-        print (result_compartments_ingredients.keys())
-        print (recipe_compartments_ingredients.keys())
+        # agent_id = 0 ?
+        print(result_compartments_ingredients.keys())
+        print(recipe_compartments_ingredients.keys())
         for ingredient_key in recipe_compartments_ingredients :
             if (ingredient_key not in result_compartments_ingredients) :
                 continue
@@ -408,14 +404,14 @@ class ConvertToSimularium(argparse.Namespace):
     def loop_through_ingredients_legacy(self, results_data_in, time_step_index, recipe_data):
         if "cytoplasme" in results_data_in:
             if (len(results_data_in["cytoplasme"]["ingredients"]) != 0) :
-                self.loop_through_compartment_ingredients_legacy(results_data_in["cytoplasme"]["ingredients"],recipe_data["cytoplasme"]["ingredients"],time_step_index)
+                self.loop_through_compartment_ingredients_legacy(results_data_in["cytoplasme"]["ingredients"], recipe_data["cytoplasme"]["ingredients"], time_step_index)
         if "compartments" in results_data_in:
             for compartment in results_data_in["compartments"]:
                 current_compartment = results_data_in["compartments"][compartment]
-                if "surface" in current_compartment: 
-                    self.loop_through_compartment_ingredients_legacy(current_compartment["surface"]["ingredients"],recipe_data["compartments"][compartment]["surface"]["ingredients"],time_step_index)
+                if "surface" in current_compartment:
+                    self.loop_through_compartment_ingredients_legacy(current_compartment["surface"]["ingredients"], recipe_data["compartments"][compartment]["surface"]["ingredients"], time_step_index)
                 if "interior" in current_compartment:
-                    self.loop_through_compartment_ingredients_legacy(current_compartment["interior"]["ingredients"],recipe_data["compartments"][compartment]["interior"]["ingredients"],time_step_index)
+                    self.loop_through_compartment_ingredients_legacy(current_compartment["interior"]["ingredients"], recipe_data["compartments"][compartment]["interior"]["ingredients"], time_step_index)
 
 
     def get_positions_per_ingredient(
@@ -446,8 +442,8 @@ class ConvertToSimularium(argparse.Namespace):
                 self.subpoints[time_step_index].append(control_points)
 
     def get_all_ingredient_names(self, recipe_in):
-        print (recipe_in.keys())
-        print (recipe_in["recipe"])
+        print(recipe_in.keys())
+        print(recipe_in["recipe"])
         self.recipe_name = recipe_in["recipe"]["name"]
         ingredients = []
         if "cytoplasme" in recipe_in:
@@ -458,8 +454,7 @@ class ConvertToSimularium(argparse.Namespace):
                             "name": ingredient,
                             "compartment": container,
                             "position": "cytoplasme",
-                        }
-                        for ingredient in container["ingredients"]
+                        } for ingredient in container["ingredients"]
                     ]
             self.unique_ingredient_names = list(ingredients)
         if "compartments" in recipe_in:
@@ -471,8 +466,7 @@ class ConvertToSimularium(argparse.Namespace):
                             "name": ingredient,
                             "compartment": compartment,
                             "position": "surface",
-                        }
-                        for ingredient in current_compartment["surface"]["ingredients"]
+                        } for ingredient in current_compartment["surface"]["ingredients"]
                     ]
                 if "interior" in current_compartment:
                     ingredients = ingredients + [
@@ -480,8 +474,7 @@ class ConvertToSimularium(argparse.Namespace):
                             "name": ingredient,
                             "compartment": compartment,
                             "position": "interior",
-                        }
-                        for ingredient in current_compartment["interior"]["ingredients"]
+                        } for ingredient in current_compartment["interior"]["ingredients"]
                     ]
             self.unique_ingredient_names = ingredients
 

@@ -246,7 +246,7 @@ class SingleCubeIngr(Ingredient):
                 return True
         return False
 
-    def get_new_distance_values(self, jtrans, rotMat, gridPointsCoords, distance):
+    def get_new_distance_values(self, jtrans, rotMat, gridPointsCoords, distance, dpad, level =0):
         radii = self.radii
         insidePoints = {}
         newDistPoints = {}

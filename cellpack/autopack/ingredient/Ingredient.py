@@ -2312,8 +2312,11 @@ class Ingredient(Agent):
         rotMatj=None,
     ):
         return self.get_new_distance_values(
-            grid, gridPointsCoords, dpad, distance, centT, jtrans, rotMatj, dpad
-        )
+            jtrans, rotMatj, gridPointsCoords, distance, dpad
+        )    
+        #return self.get_new_distance_values(
+        #    grid, gridPointsCoords, dpad, distance, centT, jtrans, rotMatj, dpad
+        #)
 
     def getIngredientsInBox(self, histoVol, jtrans, rotMat, compartment, afvi):
         if histoVol.windowsSize_overwrite:
@@ -2975,16 +2978,14 @@ class Ingredient(Agent):
             )
 
         # grow doesnt use panda.......but could use all the geom produce by the grow as rb
-        if self.placeType == "jitter" or self.Type == "Grow" or self.Type == "Actine":
+        if self.Type == "Grow" or self.Type == "Actine":
             success, jtrans, rotMatj, insidePoints, newDistPoints = self.jitter_place(
                 env,
-                compartment,
-                target_grid_point_position,
-                rotation_matrix,
-                moving,
+                ptInd,
+                env.grid.freePoints,
+                env.grid.nbFreePoints,
                 distance,
-                dpad,
-                env.afviewer,
+                dpad
             )
 
         elif self.placeType == "spheresBHT":
