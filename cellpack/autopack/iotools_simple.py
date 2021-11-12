@@ -126,4 +126,4 @@ class RecipeLoader(object):
                                 sub_recipe = self._request_sub_recipe(inode=ing_dic)
                                 comp_dic["interior"]["ingredients"][ing_name] = sub_recipe
 
-                    return recipe_data
+        return recipe_data
