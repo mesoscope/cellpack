@@ -87,7 +87,7 @@ class RecipeLoader(object):
                             recipe_data["compartments"][compartment["from"]] = sub_recipe["compartments"]
                         continue
                     comp_dic = recipe_data["compartments"][cname]
-  
+                    rep = "None"
                     if "rep" in comp_dic:
                         rep = str(comp_dic["rep"])
                     rep_file = ""
@@ -126,4 +126,4 @@ class RecipeLoader(object):
                                 sub_recipe = self._request_sub_recipe(inode=ing_dic)
                                 comp_dic["interior"]["ingredients"][ing_name] = sub_recipe
 
-                    return recipe_data
+        return recipe_data
