@@ -316,7 +316,7 @@
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="c1"># Ingredient in recipe wasn&#39;t packed</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;include&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="s2">&quot;include&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;include&quot;</span><span class="p">]:</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;rep_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">return</span> <span class="n">data</span></div>
 
@@ -383,10 +383,10 @@
             <span class="nb">print</span><span class="p">(</span><span class="n">display_data</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">display_data</span><span class="p">[</span><span class="n">ingredient_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;display_type&quot;</span><span class="p">:</span> <span class="s2">&quot;OBJ&quot;</span>
-                <span class="k">if</span> <span class="n">display_data</span><span class="p">[</span><span class="s2">&quot;rep_file&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="s2">&quot;rep_file&quot;</span> <span class="ow">in</span> <span class="n">display_data</span> <span class="ow">and</span> <span class="n">display_data</span><span class="p">[</span><span class="s2">&quot;rep_file&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                 <span class="k">else</span> <span class="s2">&quot;SPHERE&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">display_data</span><span class="p">[</span><span class="s2">&quot;rep_file&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.obj&quot;</span>
-                <span class="k">if</span> <span class="n">display_data</span><span class="p">[</span><span class="s2">&quot;rep_file&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="s2">&quot;rep_file&quot;</span> <span class="ow">in</span> <span class="n">display_data</span> <span class="ow">and</span> <span class="n">display_data</span><span class="p">[</span><span class="s2">&quot;rep_file&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                 <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
             <span class="p">}</span>
             <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

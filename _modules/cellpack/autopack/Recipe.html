@@ -336,7 +336,7 @@
                 <span class="n">ingr</span><span class="o">.</span><span class="n">vol_nbmol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="n">nb</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">overwrite_nbMol_value</span>
 
             <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                     <span class="s2">&quot;WARNING GRAHAM: recipe ingredient </span><span class="si">%s</span><span class="s2"> has 0 molecules as target&quot;</span><span class="p">,</span>
                     <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                 <span class="p">)</span>
