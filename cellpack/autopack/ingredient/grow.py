@@ -799,7 +799,9 @@ class GrowIngredient(MultiCylindersIngr):
                 attempted += 1
                 continue
 
-    def walkSphere(self, pt1, pt2, distance, histoVol, dpad, marge=90.0, checkcollision=True):
+    def walkSphere(
+        self, pt1, pt2, distance, histoVol, dpad, marge=90.0, checkcollision=True
+    ):
         """use a random point on a sphere of radius uLength, and useCylinder collision on the grid"""
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
         found = False
@@ -874,7 +876,7 @@ class GrowIngredient(MultiCylindersIngr):
                             histoVol.grid.masterGridPositions,
                             distance,
                             histoVol,
-                            dpad
+                            dpad,
                         )
                         if not collision:
                             found = True
@@ -2483,12 +2485,8 @@ class GrowIngredient(MultiCylindersIngr):
                 jtrans=jtrans,
                 rotMatj=rotMatj,
             )
-            insidePoints = self.merge_place_results(
-                new_inside_pts, insidePoints
-            )
-            newDistPoints = self.merge_place_results(
-                new_dist_points, newDistPoints
-            )
+            insidePoints = self.merge_place_results(new_inside_pts, insidePoints)
+            newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
             # update free points
             nbFreePoints = BaseGrid.updateDistances(
                 new_inside_pts, new_dist_points, freePoints, nbFreePoints, distance
@@ -2605,9 +2603,7 @@ class GrowIngredient(MultiCylindersIngr):
 
         # jitter the first point
         if self.compNum > 0:
-            normal = env.compartments[abs(self.compNum) - 1].surfacePointsNormals[
-                ptInd
-            ]
+            normal = env.compartments[abs(self.compNum) - 1].surfacePointsNormals[ptInd]
         self.startingpoint = previousPoint = startingPoint = self.jitterPosition(
             numpy.array(env.grid.masterGridPositions[ptInd]),
             env.smallestProteinSize,

@@ -2980,12 +2980,7 @@ class Ingredient(Agent):
         # grow doesnt use panda.......but could use all the geom produce by the grow as rb
         if self.Type == "Grow" or self.Type == "Actine":
             success, jtrans, rotMatj, insidePoints, newDistPoints = self.grow_place(
-                env,
-                ptInd,
-                env.grid.freePoints,
-                env.grid.nbFreePoints,
-                distance,
-                dpad
+                env, ptInd, env.grid.freePoints, env.grid.nbFreePoints, distance, dpad
             )
 
         elif self.placeType == "spheresBHT":

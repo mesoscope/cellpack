@@ -387,8 +387,18 @@ class MultiCylindersIngr(Ingredient):
             inodenp.node().addShape(shape, TransformState.makeMat(pMat))  #
         return inodenp
 
-    def checkCylCollisions(self, centers1, centers2, radii, jtrans, rotMat,
-                           gridPointsCoords, distance, histoVol, dpad):
+    def checkCylCollisions(
+        self,
+        centers1,
+        centers2,
+        radii,
+        jtrans,
+        rotMat,
+        gridPointsCoords,
+        distance,
+        histoVol,
+        dpad,
+    ):
         """
         Check cylinders for collision
         """
@@ -404,22 +414,22 @@ class MultiCylindersIngr(Ingredient):
                 name = "cyl"
                 cyl = self.vi.getObject("cyl")
                 if cyl is None:
-                    cyl = self.vi.oneCylinder(name, p1, p2,
-                                              color=(1., 1., 1.),
-                                              radius=radc)
+                    cyl = self.vi.oneCylinder(
+                        name, p1, p2, color=(1.0, 1.0, 1.0), radius=radc
+                    )
                 # self.vi.updateTubeMesh(cyl,cradius=radc)
                 else:
                     self.vi.updateOneCylinder(cyl, p1, p2, radius=radc)
-                self.vi.changeObjColorMat(cyl, (1., 1., 1.))
+                self.vi.changeObjColorMat(cyl, (1.0, 1.0, 1.0))
                 name = "sph1"
                 sph1 = self.vi.getObject("sph1")
                 if sph1 is None:
-                    sph1 = self.vi.Sphere(name, radius=radc * 2.)[0]
+                    sph1 = self.vi.Sphere(name, radius=radc * 2.0)[0]
                 self.vi.setTranslation(sph1, p1)
                 name = "sph2"
                 sph2 = self.vi.getObject("sph2")
                 if sph2 is None:
-                    sph2 = self.vi.Sphere(name, radius=radc * 2.)[0]
+                    sph2 = self.vi.Sphere(name, radius=radc * 2.0)[0]
                 self.vi.setTranslation(sph2, p2)
 
                 self.vi.update()
@@ -428,7 +438,7 @@ class MultiCylindersIngr(Ingredient):
             vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
             lengthsq = vx * vx + vy * vy + vz * vz
             length = sqrt(lengthsq)
-            cx, cy, cz = posc = x1 + vx * .5, y1 + vy * .5, z1 + vz * .5
+            cx, cy, cz = posc = x1 + vx * 0.5, y1 + vy * 0.5, z1 + vz * 0.5
             radt = length + radc
 
             bb = self.correctBB(p1, p2, radc)
@@ -436,7 +446,7 @@ class MultiCylindersIngr(Ingredient):
             if histoVol.runTimeDisplay > 1:
                 box = self.vi.getObject("collBox")
                 if box is None:
-                    box = self.vi.Box('collBox', cornerPoints=bb, visible=1)
+                    box = self.vi.Box("collBox", cornerPoints=bb, visible=1)
                 else:
                     #                    self.vi.toggleDisplay(box,True)
                     self.vi.updateBox(box, cornerPoints=bb)
@@ -450,8 +460,11 @@ class MultiCylindersIngr(Ingredient):
             rad2 = radc * radc
             dsq = numpy.sum(pd * pd, 1) - dotp * dotp / lengthsq
 
-            ptsWithinCaps = numpy.nonzero(numpy.logical_and(
-                numpy.greater_equal(dotp, 0.), numpy.less_equal(dotp, lengthsq)))
+            ptsWithinCaps = numpy.nonzero(
+                numpy.logical_and(
+                    numpy.greater_equal(dotp, 0.0), numpy.less_equal(dotp, lengthsq)
+                )
+            )
             if not len(ptsWithinCaps[0]):
                 print("no point inside the geom?")
                 return False, insidePoints, newDistPoints
@@ -507,7 +520,7 @@ class MultiCylindersIngr(Ingredient):
                             newDistPoints[pt] = d
                 else:
                     d = sqrt(dsq[pti]) - radc
-                    if d < 0.:  # point is inside dropped sphere
+                    if d < 0.0:  # point is inside dropped sphere
                         if pt in insidePoints:
                             if d < insidePoints[pt]:
                                 insidePoints[pt] = d

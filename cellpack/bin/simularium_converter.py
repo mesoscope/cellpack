@@ -7,6 +7,7 @@ import cellpack.autopack.transformation as tr
 import numpy as np
 import json
 import logging
+
 # from scipy.spatial.transform import Rotation as R
 
 from simulariumio import (
@@ -134,25 +135,29 @@ class ConvertToSimularium(argparse.Namespace):
             z_size * self.scale_factor,
         ]
 
-    def get_ingredient_display(self, ingredient_data) :
+    def get_ingredient_display(self, ingredient_data):
         if self.geo_type == "OBJ" and "meshFile" in ingredient_data:
-            meshType = ingredient_data['meshType'] if ('meshType' in ingredient_data) else "file"
-            if (meshType == 'file') :
+            meshType = (
+                ingredient_data["meshType"]
+                if ("meshType" in ingredient_data)
+                else "file"
+            )
+            if meshType == "file":
                 file_path = os.path.basename(ingredient_data["meshFile"])
                 file_name, _ = os.path.splitext(file_path)
                 return {
                     "display_type": DISPLAY_TYPE.OBJ,
                     "url": f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/{file_name}.obj",
                 }
-            elif (meshType == 'raw'):
+            elif meshType == "raw":
                 # need to build a mesh from the vertices, faces, indexes dictionary
                 print(meshType, ingredient_data["meshFile"].keys())
                 return {"display_type": DISPLAY_TYPE.SPHERE, "url": ""}
-        elif self.geo_type == "PDB" :
+        elif self.geo_type == "PDB":
             pdb_file_name = ""
-            if "source" in ingredient_data :
+            if "source" in ingredient_data:
                 pdb_file_name = ingredient_data["source"]["pdb"]
-            elif "pdb" in ingredient_data :
+            elif "pdb" in ingredient_data:
                 pdb_file_name = ingredient_data["pdb"]
             if ".pdb" in pdb_file_name:
                 url = f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/other/{pdb_file_name}"
@@ -233,11 +238,19 @@ class ConvertToSimularium(argparse.Namespace):
         return (ingredient_name, cytoplasm_data, container_data)
 
     def get_euler_from_matrix(self, data_in):
-        rotation_matrix = [np.array(data_in[0][0:3]), np.array(data_in[1][0:3]), data_in[2][0:3]]
-        return np.degrees(tr.euler_from_matrix(rotation_matrix))  # R.from_matrix(rotation_matrix).as_euler("xyz", degrees=True)
+        rotation_matrix = [
+            np.array(data_in[0][0:3]),
+            np.array(data_in[1][0:3]),
+            data_in[2][0:3],
+        ]
+        return np.degrees(
+            tr.euler_from_matrix(rotation_matrix)
+        )  # R.from_matrix(rotation_matrix).as_euler("xyz", degrees=True)
 
     def get_euler_from_quat(self, data_in):
-        return np.degrees(tr.euler_from_quaternion(data_in))  # return R.from_quat(data_in).as_euler("xyz", degrees=True)
+        return np.degrees(
+            tr.euler_from_quaternion(data_in)
+        )  # return R.from_quat(data_in).as_euler("xyz", degrees=True)
 
     def is_matrix(self, data_in):
         if isinstance(data_in[0], list):
@@ -253,10 +266,12 @@ class ConvertToSimularium(argparse.Namespace):
         self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
         self.type_names[time_step_index].append(ingredient_name)
         self.unique_ids[time_step_index].append(agent_id)
-        r = data["encapsulatingRadius"] if ("encapsulatingRadius" in data) else self.default_radius
-        self.radii[time_step_index].append(
-            r * self.scale_factor
+        r = (
+            data["encapsulatingRadius"]
+            if ("encapsulatingRadius" in data)
+            else self.default_radius
         )
+        self.radii[time_step_index].append(r * self.scale_factor)
         self.n_subpoints[time_step_index].append(len(data[curve]) * self.scale_factor)
         self.fiber_points[time_step_index].append(data[curve])
         if len(data[curve]) > self.max_fiber_length:
@@ -264,7 +279,9 @@ class ConvertToSimularium(argparse.Namespace):
                 print("found longer fiber, new max", len(data[curve]))
             self.max_fiber_length = len(data[curve])
 
-    def unpack_positions(self, data, time_step_index, ingredient_name, index, agent_id, comp_id=0):
+    def unpack_positions(
+        self, data, time_step_index, ingredient_name, index, agent_id, comp_id=0
+    ):
         position = data["results"][index][0]
         offset = None
         offset = np.array([0, 0, 0])
@@ -308,12 +325,13 @@ class ConvertToSimularium(argparse.Namespace):
             return self.get_euler_from_quat(data_in)
 
     def loop_through_ingredients(
-            self,
-            result_compartments_ingredients,
-            recipe_compartments_ingredients,
-            time_step_index):
-        for ingredient_key in recipe_compartments_ingredients :
-            if (ingredient_key not in result_compartments_ingredients) :
+        self,
+        result_compartments_ingredients,
+        recipe_compartments_ingredients,
+        time_step_index,
+    ):
+        for ingredient_key in recipe_compartments_ingredients:
+            if ingredient_key not in result_compartments_ingredients:
                 continue
             ingredient_data = recipe_compartments_ingredients[ingredient_key]
             ingredient_results_data = result_compartments_ingredients[ingredient_key]
@@ -326,27 +344,51 @@ class ConvertToSimularium(argparse.Namespace):
             if len(ingredient_results_data["results"]) > 0:
                 for j in range(len(ingredient_results_data["results"])):
                     self.unpack_positions(
-                        ingredient_results_data, time_step_index, ingredient_key, j, self.agent_id_counter
+                        ingredient_results_data,
+                        time_step_index,
+                        ingredient_key,
+                        j,
+                        self.agent_id_counter,
                     )
                     self.agent_id_counter = self.agent_id_counter + 1
             elif ingredient_results_data["nbCurve"] > 1000000:
                 for i in range(ingredient_results_data["nbCurve"]):
                     self.unpack_curve(
-                        ingredient_results_data, time_step_index, ingredient_key, i, self.agent_id_counter
+                        ingredient_results_data,
+                        time_step_index,
+                        ingredient_key,
+                        i,
+                        self.agent_id_counter,
                     )
                     self.agent_id_counter = self.agent_id_counter + 1
 
     def loop_through_compartment(self, results_data_in, time_step_index, recipe_data):
         if "cytoplasme" in results_data_in:
-            if (len(results_data_in["cytoplasme"]["ingredients"]) != 0) :
-                self.loop_through_ingredients(results_data_in["cytoplasme"]["ingredients"], recipe_data["cytoplasme"]["ingredients"], time_step_index)
+            if len(results_data_in["cytoplasme"]["ingredients"]) != 0:
+                self.loop_through_ingredients(
+                    results_data_in["cytoplasme"]["ingredients"],
+                    recipe_data["cytoplasme"]["ingredients"],
+                    time_step_index,
+                )
         if "compartments" in results_data_in:
             for compartment in results_data_in["compartments"]:
                 current_compartment = results_data_in["compartments"][compartment]
                 if "surface" in current_compartment:
-                    self.loop_through_ingredients(current_compartment["surface"]["ingredients"], recipe_data["compartments"][compartment]["surface"]["ingredients"], time_step_index)
+                    self.loop_through_ingredients(
+                        current_compartment["surface"]["ingredients"],
+                        recipe_data["compartments"][compartment]["surface"][
+                            "ingredients"
+                        ],
+                        time_step_index,
+                    )
                 if "interior" in current_compartment:
-                    self.loop_through_ingredients(current_compartment["interior"]["ingredients"], recipe_data["compartments"][compartment]["interior"]["ingredients"], time_step_index)
+                    self.loop_through_ingredients(
+                        current_compartment["interior"]["ingredients"],
+                        recipe_data["compartments"][compartment]["interior"][
+                            "ingredients"
+                        ],
+                        time_step_index,
+                    )
 
     def get_positions_per_ingredient(
         self, results_data_in, time_step_index, recipe_data
@@ -386,7 +428,8 @@ class ConvertToSimularium(argparse.Namespace):
                     "name": ingredient,
                     "compartment": container,
                     "position": "cytoplasme",
-                } for ingredient in container["ingredients"]
+                }
+                for ingredient in container["ingredients"]
             ]
             self.unique_ingredient_names = list(ingredients)
         if "compartments" in recipe_in:
@@ -398,7 +441,8 @@ class ConvertToSimularium(argparse.Namespace):
                             "name": ingredient,
                             "compartment": compartment,
                             "position": "surface",
-                        } for ingredient in current_compartment["surface"]["ingredients"]
+                        }
+                        for ingredient in current_compartment["surface"]["ingredients"]
                     ]
                 if "interior" in current_compartment:
                     ingredients = ingredients + [
@@ -406,7 +450,8 @@ class ConvertToSimularium(argparse.Namespace):
                             "name": ingredient,
                             "compartment": compartment,
                             "position": "interior",
-                        } for ingredient in current_compartment["interior"]["ingredients"]
+                        }
+                        for ingredient in current_compartment["interior"]["ingredients"]
                     ]
             self.unique_ingredient_names = ingredients
 

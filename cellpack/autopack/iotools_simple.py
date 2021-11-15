@@ -80,11 +80,11 @@ class RecipeLoader(object):
                         for i, compartment in enumerate(
                             recipe_data["compartments"]["include"]
                         ):
-                            node = {
-                                "include": compartment["from"]
-                            }
+                            node = {"include": compartment["from"]}
                             sub_recipe = self._request_sub_recipe(inode=node)
-                            recipe_data["compartments"][compartment["from"]] = sub_recipe["compartments"]
+                            recipe_data["compartments"][
+                                compartment["from"]
+                            ] = sub_recipe["compartments"]
                         continue
                     comp_dic = recipe_data["compartments"][cname]
                     rep = None
@@ -109,21 +109,29 @@ class RecipeLoader(object):
                         snode = comp_dic["surface"]
                         ingrs_dic = snode["ingredients"]
                         if len(ingrs_dic):
-                            for ing_name in sorted(ingrs_dic, key=sortkey):  # ingrs_dic:
+                            for ing_name in sorted(
+                                ingrs_dic, key=sortkey
+                            ):  # ingrs_dic:
                                 # either xref or defined
                                 ing_dic = ingrs_dic[ing_name]
                                 sub_recipe = self._request_sub_recipe(inode=ing_dic)
-                                comp_dic["surface"]["ingredients"][ing_name] = sub_recipe
+                                comp_dic["surface"]["ingredients"][
+                                    ing_name
+                                ] = sub_recipe
 
                                 # setup recipe
                     if "interior" in comp_dic:
                         snode = comp_dic["interior"]
                         ingrs_dic = snode["ingredients"]
                         if len(ingrs_dic):
-                            for ing_name in sorted(ingrs_dic, key=sortkey):  # ingrs_dic:
+                            for ing_name in sorted(
+                                ingrs_dic, key=sortkey
+                            ):  # ingrs_dic:
                                 # either xref or defined
                                 ing_dic = ingrs_dic[ing_name]
                                 sub_recipe = self._request_sub_recipe(inode=ing_dic)
-                                comp_dic["interior"]["ingredients"][ing_name] = sub_recipe
+                                comp_dic["interior"]["ingredients"][
+                                    ing_name
+                                ] = sub_recipe
 
         return recipe_data
