@@ -176,6 +176,8 @@ class dejavuHelper(hostHelper.Helper):
 
     def getCurrentScene(self):
         # actually return the Viewer instance
+        if self.viewer == "nogui":
+            self.nogui = True
         return self.viewer
 
     def progressBar(self, progress=None, label=None):
@@ -376,7 +378,11 @@ class dejavuHelper(hostHelper.Helper):
         pass
 
     def reParent(self, obj, parent):
+        if self.nogui:
+            return
         vi = self.getCurrentScene()
+        if vi == "nogui" :
+            return
         parent = self.getObject(parent)
         if parent is None:
             return

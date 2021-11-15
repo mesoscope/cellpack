@@ -1792,7 +1792,7 @@ class Environment(CompartmentList):
             marray[i][3] = -ptInd  # uniq Id ?
             # ingr.rbnode[-1] = rbnode
         # doesnt seem to work properly...
-        nbFreePoints = ingr.updateDistances(
+        nbFreePoints = BaseGrid.updateDistances(
             self,
             insidePoints,
             newDistPoints,

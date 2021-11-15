@@ -4,11 +4,10 @@ import argparse
 import traceback
 
 import cellpack.autopack.transformation as tr
-import math
 import numpy as np
 import json
 import logging
-from scipy.spatial.transform import Rotation as R
+# from scipy.spatial.transform import Rotation as R
 
 from simulariumio import (
     TrajectoryConverter,
@@ -37,7 +36,7 @@ class ConvertToSimularium(argparse.Namespace):
     DEFAULT_PACKING_RESULT = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/results_seed_0.json"
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
-    DEFAULT_GEO_TYPE = "OBJ"  # "PDB"
+    DEFAULT_GEO_TYPE = "OBJ"  # or PDB
     DEFAULT_SCALE_FACTOR = 1.0 / 10
     # @staticmethod
 
@@ -235,10 +234,10 @@ class ConvertToSimularium(argparse.Namespace):
 
     def get_euler_from_matrix(self, data_in):
         rotation_matrix = [np.array(data_in[0][0:3]), np.array(data_in[1][0:3]), data_in[2][0:3]]
-        return np.degrees(tr.euler_from_matrix(rotation_matrix)) # R.from_matrix(rotation_matrix).as_euler("xyz", degrees=True)
+        return np.degrees(tr.euler_from_matrix(rotation_matrix))  # R.from_matrix(rotation_matrix).as_euler("xyz", degrees=True)
 
     def get_euler_from_quat(self, data_in):
-        return np.degrees(tr.euler_from_quaternion(data_in)) # return R.from_quat(data_in).as_euler("xyz", degrees=True)
+        return np.degrees(tr.euler_from_quaternion(data_in))  # return R.from_quat(data_in).as_euler("xyz", degrees=True)
 
     def is_matrix(self, data_in):
         if isinstance(data_in[0], list):
@@ -308,10 +307,11 @@ class ConvertToSimularium(argparse.Namespace):
         else:
             return self.get_euler_from_quat(data_in)
 
-    def loop_through_ingredients(self,
-                                result_compartments_ingredients,
-                                recipe_compartments_ingredients,
-                                time_step_index):
+    def loop_through_ingredients(
+            self,
+            result_compartments_ingredients,
+            recipe_compartments_ingredients,
+            time_step_index):
         for ingredient_key in recipe_compartments_ingredients :
             if (ingredient_key not in result_compartments_ingredients) :
                 continue
@@ -382,12 +382,12 @@ class ConvertToSimularium(argparse.Namespace):
             container = recipe_in["cytoplasme"]
             # ingredients = container["ingredients"]
             ingredients = ingredients + [
-                        {
-                            "name": ingredient,
-                            "compartment": container,
-                            "position": "cytoplasme",
-                        } for ingredient in container["ingredients"]
-                    ]
+                {
+                    "name": ingredient,
+                    "compartment": container,
+                    "position": "cytoplasme",
+                } for ingredient in container["ingredients"]
+            ]
             self.unique_ingredient_names = list(ingredients)
         if "compartments" in recipe_in:
             for compartment in recipe_in["compartments"]:
