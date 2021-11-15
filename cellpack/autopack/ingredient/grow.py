@@ -2484,10 +2484,10 @@ class GrowIngredient(MultiCylindersIngr):
                 rotMatj=rotMatj,
             )
             insidePoints = self.merge_place_results(
-                        new_inside_pts, insidePoints
+                new_inside_pts, insidePoints
             )
             newDistPoints = self.merge_place_results(
-                        new_dist_points, newDistPoints
+                new_dist_points, newDistPoints
             )
             # update free points
             nbFreePoints = BaseGrid.updateDistances(
@@ -2583,7 +2583,7 @@ class GrowIngredient(MultiCylindersIngr):
             )  #
         return inodenp
 
-    def jitter_place(
+    def grow_place(
         self,
         env,
         ptInd,

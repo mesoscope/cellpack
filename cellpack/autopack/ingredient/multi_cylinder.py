@@ -427,9 +427,9 @@ class MultiCylindersIngr(Ingredient):
             x2, y2, z2 = p2
             vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
             lengthsq = vx * vx + vy * vy + vz * vz
-            l = sqrt(lengthsq)
+            length = sqrt(lengthsq)
             cx, cy, cz = posc = x1 + vx * .5, y1 + vy * .5, z1 + vz * .5
-            radt = l + radc
+            radt = length + radc
 
             bb = self.correctBB(p1, p2, radc)
             #            bb = self.correctBB(posc,posc,radt)
@@ -450,11 +450,11 @@ class MultiCylindersIngr(Ingredient):
             rad2 = radc * radc
             dsq = numpy.sum(pd * pd, 1) - dotp * dotp / lengthsq
 
-            # ptsWithinCaps = numpy.nonzero(numpy.logical_and(
-            #    numpy.greater_equal(dotp, 0.), numpy.less_equal(dotp, lengthsq)))
-            #            if not len(ptsWithinCaps[0]):
-            #                print "no point inside the geom?"
-            #                return False
+            ptsWithinCaps = numpy.nonzero(numpy.logical_and(
+                numpy.greater_equal(dotp, 0.), numpy.less_equal(dotp, lengthsq)))
+            if not len(ptsWithinCaps[0]):
+                print("no point inside the geom?")
+                return False, insidePoints, newDistPoints
             if self.compareCompartment:
                 ptsInSphereId = numpy.take(pointsInCube, ptsWithinCaps[0], 0)
                 compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptsInSphereId, 0)
