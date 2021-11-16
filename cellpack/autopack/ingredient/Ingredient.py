@@ -2982,7 +2982,17 @@ class Ingredient(Agent):
             success, jtrans, rotMatj, insidePoints, newDistPoints = self.grow_place(
                 env, ptInd, env.grid.freePoints, env.grid.nbFreePoints, distance, dpad
             )
-
+        elif self.placeType == "jitter":
+            success, jtrans, rotMatj, insidePoints, newDistPoints = self.jitter_place(
+                env,
+                compartment,
+                target_grid_point_position,
+                rotation_matrix,
+                moving,
+                distance,
+                dpad,
+                env.afviewer,
+            )
         elif self.placeType == "spheresBHT":
             (
                 success,

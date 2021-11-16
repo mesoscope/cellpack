@@ -10,6 +10,31 @@ import cellpack.autopack as autopack
 
 helper = autopack.helper
 
+# TODO : move somewhere in a more apropriate place ? 
+def pandaMatrice(mat):
+    if panda3d is None:
+        return
+    mat = mat.transpose().reshape((16,))
+    #        print mat,len(mat),mat.shape
+    pMat = Mat4(
+        mat[0],
+        mat[1],
+        mat[2],
+        mat[3],
+        mat[4],
+        mat[5],
+        mat[6],
+        mat[7],
+        mat[8],
+        mat[9],
+        mat[10],
+        mat[11],
+        mat[12],
+        mat[13],
+        mat[14],
+        mat[15],
+    )
+    return pMat
 
 class MultiCylindersIngr(Ingredient):
     """
@@ -213,154 +238,17 @@ class MultiCylindersIngr(Ingredient):
         centers1 = self.positions[level]
         centers2 = self.positions2[level]
         radii = self.radii[level]
-        cent1T = self.transformPoints(jtrans, rotMat, centers1)
-        cent2T = self.transformPoints(jtrans, rotMat, centers2)
-
-        insidePoints = {}
-        newDistPoints = {}
-
-        cylNum = 0
-        for radc, p1, p2 in zip(radii, cent1T, cent2T):
-            if histoVol.runTimeDisplay > 1:
-                name = "cyl"
-                cyl = self.vi.getObject("cyl")
-                if cyl is None:
-                    cyl = self.vi.oneCylinder(
-                        name, p1, p2, color=(1.0, 1.0, 1.0), radius=radc
-                    )
-                # self.vi.updateTubeMesh(cyl,cradius=radc)
-                else:
-                    self.vi.updateOneCylinder(cyl, p1, p2, radius=radc)
-                self.vi.changeObjColorMat(cyl, (1.0, 1.0, 1.0))
-                name = "sph1"
-                sph1 = self.vi.getObject("sph1")
-                if sph1 is None:
-                    sph1 = self.vi.Sphere(name, radius=radc * 2.0)[0]
-                self.vi.setTranslation(sph1, p1)
-                name = "sph2"
-                sph2 = self.vi.getObject("sph2")
-                if sph2 is None:
-                    sph2 = self.vi.Sphere(name, radius=radc * 2.0)[0]
-                self.vi.setTranslation(sph2, p2)
-
-                self.vi.update()
-            x1, y1, z1 = p1
-            x2, y2, z2 = p2
-            vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
-            lengthsq = vx * vx + vy * vy + vz * vz
-            length = math.sqrt(lengthsq)
-            cx, cy, cz = posc = x1 + vx * 0.5, y1 + vy * 0.5, z1 + vz * 0.5
-            radt = length + radc
-
-            bb = self.correctBB(p1, p2, radc)
-            #            bb = self.correctBB(posc,posc,radt)
-            if histoVol.runTimeDisplay > 1:
-                box = self.vi.getObject("collBox")
-                if box is None:
-                    box = self.vi.Box("collBox", cornerPoints=bb, visible=1)
-                else:
-                    #                    self.vi.toggleDisplay(box,True)
-                    self.vi.updateBox(box, cornerPoints=bb)
-                    self.vi.update()
-                    #                 sleep(1.0)
-            pointsInCube = histoVol.grid.getPointsInCube(bb, posc, radt, info=True)
-
-            # check for collisions with cylinder
-            pd = numpy.take(gridPointsCoords, pointsInCube, 0) - p1
-            dotp = numpy.dot(pd, vect)
-            rad2 = radc * radc
-            dsq = numpy.sum(pd * pd, 1) - dotp * dotp / lengthsq
-
-            ptsWithinCaps = numpy.nonzero(
-                numpy.logical_and(
-                    numpy.greater_equal(dotp, 0.0), numpy.less_equal(dotp, lengthsq)
-                )
+        return self.checkCylCollisions(        
+            centers1,
+            centers2,
+            radii,
+            jtrans,
+            rotMat,
+            gridPointsCoords,
+            distance,
+            histoVol,
+            dpad
             )
-
-            if self.compareCompartment:
-                ptsInSphereId = numpy.take(pointsInCube, ptsWithinCaps[0], 0)
-                compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptsInSphereId, 0)
-                if self.compNum <= 0:
-                    wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
-                    if len(wrongPt):
-                        return True, insidePoints, newDistPoints
-            # for pti in ptsWithinCaps[0]:
-            #     pt = pointsInCube[pti]
-            #     dist = dsq[pti]
-            #     if dist > rad2:
-            #         continue  # outside radius
-            #     elif distance[pt] < -0.0001:  # or trigger: # pt is inside cylinder
-            #         # changeObjColorMat
-            #         if histoVol.runTimeDisplay > 1:
-            #             self.vi.changeObjColorMat(cyl, (1., 0., 0.))
-            #             self.vi.update()
-            #         #                        sleep(1.0)
-            #         # reject
-            #         return True
-            d2toP1 = numpy.sum(pd * pd, 1)
-            dsq = d2toP1 - dotp * dotp / lengthsq
-            pd2 = numpy.take(gridPointsCoords, pointsInCube, 0) - p2
-            d2toP2 = numpy.sum(pd2 * pd2, 1)
-
-            for pti, pt in enumerate(pointsInCube):
-                dist = dsq[pti]
-                if dist > rad2:
-                    continue  # outside radius
-                elif distance[pt] < -0.0001:
-                    return True, insidePoints, newDistPoints
-                if pt in insidePoints:
-                    continue
-                if dotp[pti] < 0.0:  # outside 1st cap
-                    d = math.sqrt(d2toP1[pti])
-                    if d < distance[pt]:  # point in region of influence
-                        if pt in newDistPoints:
-                            if d < newDistPoints[pt]:
-                                newDistPoints[pt] = d
-                        else:
-                            newDistPoints[pt] = d
-                elif dotp[pti] > lengthsq:
-                    d = math.sqrt(d2toP2[pti])
-                    if d < distance[pt]:  # point in region of influence
-                        if pt in newDistPoints:
-                            if d < newDistPoints[pt]:
-                                newDistPoints[pt] = d
-                        else:
-                            newDistPoints[pt] = d
-                else:
-                    d = math.sqrt(dsq[pti]) - radc
-                    if d < 0.0:  # point is inside dropped sphere
-                        if pt in insidePoints:
-                            if d < insidePoints[pt]:
-                                insidePoints[pt] = d
-                        else:
-                            insidePoints[pt] = d
-            cylNum += 1
-        return False, insidePoints, newDistPoints
-
-    def pandaMatrice(self, mat):
-        if panda3d is None:
-            return
-        mat = mat.transpose().reshape((16,))
-        #        print mat,len(mat),mat.shape
-        pMat = Mat4(
-            mat[0],
-            mat[1],
-            mat[2],
-            mat[3],
-            mat[4],
-            mat[5],
-            mat[6],
-            mat[7],
-            mat[8],
-            mat[9],
-            mat[10],
-            mat[11],
-            mat[12],
-            mat[13],
-            mat[14],
-            mat[15],
-        )
-        return pMat
 
     def add_rb_node(self, worldNP):
         inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
@@ -373,7 +261,7 @@ class MultiCylindersIngr(Ingredient):
         ]  # ingr.transformPoints(jtrans, rotMat, ingr.positions2[0])
         for radc, p1, p2 in zip(self.radii[0], centT1, centT2):
             length, mat = autopack.helper.getTubePropertiesMatrix(p1, p2)
-            pMat = self.pandaMatrice(mat)
+            pMat = pandaMatrice(mat)
             #            d = numpy.array(p1) - numpy.array(p2)
             #            s = numpy.sum(d*d)
             Point3(
