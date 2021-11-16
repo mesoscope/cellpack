@@ -352,6 +352,7 @@ class ConvertToSimularium(argparse.Namespace):
                     )
                     self.agent_id_counter = self.agent_id_counter + 1
             elif ingredient_results_data["nbCurve"] > 1000000:
+                # TODO : change the test to 0 when ready for testing
                 for i in range(ingredient_results_data["nbCurve"]):
                     self.unpack_curve(
                         ingredient_results_data,
