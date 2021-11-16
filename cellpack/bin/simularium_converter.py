@@ -21,6 +21,7 @@ from simulariumio import (
 from simulariumio.constants import DISPLAY_TYPE
 
 from cellpack.autopack.iotools_simple import RecipeLoader
+import cellpack.autopack.transformation as tr
 
 ###############################################################################
 
@@ -135,13 +136,13 @@ class ConvertToSimularium(argparse.Namespace):
         ]
 
     def get_ingredient_display_data(self, cytoplasm, main_container, ingredient):
-        data = None
+        ing_recipe_data = None
         ingredient_name = None
         if cytoplasm is not None:
             ingredient_name = ingredient
             ingredients = main_container["ingredients"]
             try:
-                data = ingredients[ingredient]
+                ing_recipe_data = ingredients[ingredient]
             except Exception:
                 pass
         elif main_container is not None:
@@ -150,21 +151,22 @@ class ConvertToSimularium(argparse.Namespace):
             position = ingredient["position"]
             try:
                 compartment[position]
-                data = compartment[ingredient["position"]]["ingredients"][
+                ing_recipe_data = compartment[ingredient["position"]]["ingredients"][
                     ingredient_name
                 ]
             except Exception as e:
                 # Ingredient in recipe wasn't packed
                 print(e, position, ingredient_name)
-        if self.geo_type == "OBJ" and "meshFile" in data:
-            file_path = os.path.basename(data["meshFile"])
+        print(ing_recipe_data)
+        if self.geo_type == "OBJ" and "meshFile" in ing_recipe_data:
+            file_path = os.path.basename(ing_recipe_data["meshFile"])
             file_name, _ = os.path.splitext(file_path)
             return {
                 "display_type": DISPLAY_TYPE.OBJ,
                 "url": f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/{file_name}.obj",
             }
-        elif self.geo_type == "PDB" and "pdb" in data:
-            pdb_file_name = data["pdb"]
+        elif self.geo_type == "PDB" and "pdb" in ing_recipe_data:
+            pdb_file_name = ing_recipe_data["pdb"]
             if ".pdb" in pdb_file_name:
                 url = f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/other/{pdb_file_name}"
             else:
@@ -174,7 +176,8 @@ class ConvertToSimularium(argparse.Namespace):
                 "url": url,
             }
         else:
-            return {"display_type": DISPLAY_TYPE.SPHERE, "url": ""}
+            display_type = DISPLAY_TYPE.FIBER if ing_recipe_data["Type"] == "Grow" else DISPLAY_TYPE.SPHERE
+            return {"display_type": display_type, "url": ""}
 
     def get_ingredient_data(self, cytoplasm, main_container, ingredient):
         cytoplasm_data = None
@@ -203,11 +206,14 @@ class ConvertToSimularium(argparse.Namespace):
     def get_euler_from_matrix(self, data_in):
         rotation_matrix = np.array(
             [
-                np.array(data_in[0][0:3]),
-                np.array(data_in[1][0:3]),
-                np.array(data_in[2][0:3]),
+                data_in[0][0:3],
+                data_in[1][0:3],
+                data_in[2][0:3],
             ]
         ).transpose()
+        # return np.degrees(
+        #     tr.euler_from_matrix(rotation_matrix)
+        # )  
         return R.from_matrix(rotation_matrix).as_euler("xyz", degrees=True)
 
     def get_euler_from_quat(self, data_in):
@@ -227,9 +233,12 @@ class ConvertToSimularium(argparse.Namespace):
         self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
         self.type_names[time_step_index].append(ingredient_name)
         self.unique_ids[time_step_index].append(agent_id)
-        self.radii[time_step_index].append(
-            data["encapsulatingRadius"] * self.scale_factor
+        radius = (
+            data["encapsulatingRadius"]
+            if ("encapsulatingRadius" in data)
+            else self.default_radius
         )
+        self.radii[time_step_index].append(radius * self.scale_factor)
         self.n_subpoints[time_step_index].append(len(data[curve]) * self.scale_factor)
         self.fiber_points[time_step_index].append(data[curve])
         if len(data[curve]) > self.max_fiber_length:
@@ -242,7 +251,7 @@ class ConvertToSimularium(argparse.Namespace):
     ):
         position = data["results"][index][0]
         offset = None
-        if "source" in data:
+        if "source" in data and data["source"]["transform"] is not None and "offset" in data["source"]["transform"]:
             offset = np.array(data["source"]["transform"]["offset"])
         else:
             offset = np.array([0, 0, 0])
@@ -411,7 +420,6 @@ def main():
         time_point_index = 0
         results_in = converter.packing_result
         recipe_data = RecipeLoader(converter.input_recipe).read()
-        # recipe_data = json.load(open(recipe_in, "r"))
         converter.get_all_ingredient_names(recipe_data)
         converter.get_bounding_box(recipe_data)
         packing_data = json.load(open(results_in, "r"))

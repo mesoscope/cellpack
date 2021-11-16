@@ -2577,11 +2577,13 @@ class GrowIngredient(MultiCylindersIngr):
     def jitter_place(
         self,
         histoVol,
+        compartment,
         ptInd,
-        freePoints,
-        nbFreePoints,
+        rot_mat,
+        moving,
         distance,
         dpad,
+        afvi,
         usePP=False,
     ):
         if type(self.compMask) is str:
@@ -2610,11 +2612,6 @@ class GrowIngredient(MultiCylindersIngr):
 
         if u != self.uLength:
             self.positions2 = [[self.vector]]
-        if self.compNum == 0:
-            compartment = self.env
-        else:
-            compartment = self.env.compartments[abs(self.compNum) - 1]
-        self.compartment = compartment
 
         secondPoint = self.getFirstPoint(ptInd)
         # check collision ?

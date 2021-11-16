@@ -2853,7 +2853,6 @@ class Environment(CompartmentList):
         )  # ingrdic["compNum"],1,ingrdic["encapsulatingRadius"]
 
     def load_asTxt(self, resultfilename=None):
-        #        from upy.hostHelper import Helper as helper
         if resultfilename is None:
             resultfilename = self.resultfile
         rfile = open(resultfilename, "r")

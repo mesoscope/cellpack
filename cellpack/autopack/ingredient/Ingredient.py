@@ -51,6 +51,7 @@ import logging
 import collada
 from scipy.spatial.transform import Rotation as R
 from math import sqrt, pi
+from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
 from cellpack.mgl_tools.bhtree import bhtreelib
 from random import uniform, gauss, random
 from time import time
@@ -1511,7 +1512,6 @@ class Ingredient(Agent):
             self.log.info("read dae withHelper", filename, helper, autopack.helper)
             # use the host helper if any to read
             if helper is None:
-                from upy.dejavuTk.dejavuHelper import dejavuHelper
 
                 # need to get the mesh directly. Only possible if dae or dejavu format
                 # get the dejavu heper but without the View, and in nogui mode
@@ -1547,7 +1547,6 @@ class Ingredient(Agent):
                     if helper.host != "dejavu":
 
                         if collada is not None:
-                            from upy.dejavuTk.dejavuHelper import dejavuHelper
 
                             # need to get the mesh directly. Only possible if dae or dejavu format
                             # get the dejavu heper but without the View, and in nogui mode

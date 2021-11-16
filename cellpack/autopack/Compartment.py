@@ -65,6 +65,7 @@ import math
 import trimesh
 import trimesh.voxel as Voxel
 from scipy import spatial
+from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
 
 from cellpack.mgl_tools.RAPID import RAPIDlib
 import cellpack.autopack as autopack
@@ -593,7 +594,6 @@ class Compartment(CompartmentList):
         elif fileExtension == ".dae":
             # use the host helper if any to read
             if helper is None:
-                from upy.dejavuTk.dejavuHelper import dejavuHelper
 
                 # need to get the mesh directly. Only possible if dae or dejavu format
                 # get the dejavu heper but without the View, and in nogui mode
