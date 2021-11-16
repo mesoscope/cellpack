@@ -240,7 +240,7 @@ class MultiCylindersIngr(Ingredient):
         centers1 = self.positions[level]
         centers2 = self.positions2[level]
         radii = self.radii[level]
-        return self.checkCylCollisions(        
+        return self.checkCylCollisions(
             centers1,
             centers2,
             radii,
