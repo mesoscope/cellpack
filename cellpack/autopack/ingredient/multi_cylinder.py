@@ -10,7 +10,8 @@ import cellpack.autopack as autopack
 
 helper = autopack.helper
 
-# TODO : move somewhere in a more apropriate place ? 
+
+# TODO : move somewhere in a more apropriate place ?
 def pandaMatrice(mat):
     if panda3d is None:
         return
@@ -35,6 +36,7 @@ def pandaMatrice(mat):
         mat[15],
     )
     return pMat
+
 
 class MultiCylindersIngr(Ingredient):
     """
@@ -248,7 +250,7 @@ class MultiCylindersIngr(Ingredient):
             distance,
             histoVol,
             dpad
-            )
+        )
 
     def add_rb_node(self, worldNP):
         inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
