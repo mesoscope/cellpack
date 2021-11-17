@@ -71,7 +71,7 @@ class ConvertToSimularium(argparse.Namespace):
         self.fiber_points = [[] for x in range(total_steps)]
         self.max_fiber_length = 0
         # defaults for missing data
-        self.default_radius = 5 * self.scale_factor
+        self.default_radius = 1
 
     def __parse(self):
         p = argparse.ArgumentParser(
@@ -238,19 +238,15 @@ class ConvertToSimularium(argparse.Namespace):
         return (ingredient_name, cytoplasm_data, container_data)
 
     def get_euler_from_matrix(self, data_in):
-        rotation_matrix = [
+        rotation_matrix = np.array([
             np.array(data_in[0][0:3]),
             np.array(data_in[1][0:3]),
-            data_in[2][0:3],
-        ]
-        return np.degrees(
-            tr.euler_from_matrix(rotation_matrix)
-        )  # R.from_matrix(rotation_matrix).as_euler("xyz", degrees=True)
+            np.array(data_in[2][0:3]),
+        ]).transpose()
+        return tr.euler_from_matrix(rotation_matrix)
 
     def get_euler_from_quat(self, data_in):
-        return np.degrees(
-            tr.euler_from_quaternion(data_in)
-        )  # return R.from_quat(data_in).as_euler("xyz", degrees=True)
+        return tr.euler_from_quaternion(data_in)
 
     def is_matrix(self, data_in):
         if isinstance(data_in[0], list):
@@ -481,12 +477,12 @@ def main():
         if converter.debug:
             print("SUBPOINTS LENGTH", len(converter.subpoints[time_point_index]))
             print("N_SUBPOINTS LENGTH", len(converter.n_subpoints[time_point_index]))
-
+        camera_z_position = box_size[2] if box_size[2] > 10 else 100.0
         converted_data = TrajectoryData(
             meta_data=MetaData(
                 box_size=np.array(box_size),
                 camera_defaults=CameraData(
-                    position=np.array([10.0, 0.0, box_size[2]]),
+                    position=np.array([10.0, 0.0, camera_z_position]),
                     look_at_position=np.array([10.0, 0.0, 0.0]),
                     fov_degrees=60.0,
                 ),
