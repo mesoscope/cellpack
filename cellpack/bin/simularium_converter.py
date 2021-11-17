@@ -135,7 +135,7 @@ class ConvertToSimularium(argparse.Namespace):
             z_size * self.scale_factor,
         ]
 
-    def get_ingredient_display(self, ingredient_data):
+    def get_ingredient_display_data(self, ingredient_data):
         if self.geo_type == "OBJ" and "meshFile" in ingredient_data:
             meshType = (
                 ingredient_data["meshType"]
@@ -151,7 +151,7 @@ class ConvertToSimularium(argparse.Namespace):
                 }
             elif meshType == "raw":
                 # need to build a mesh from the vertices, faces, indexes dictionary
-                print(meshType, ingredient_data["meshFile"].keys())
+                log.info(meshType, ingredient_data["meshFile"].keys())
                 return {"display_type": DISPLAY_TYPE.SPHERE, "url": ""}
         elif self.geo_type == "PDB":
             pdb_file_name = ""
@@ -168,49 +168,8 @@ class ConvertToSimularium(argparse.Namespace):
                 "url": url,
             }
         else:
-            return {"display_type": DISPLAY_TYPE.SPHERE, "url": ""}
-
-    def get_ingredient_display_data(self, cytoplasm, main_container, ingredient):
-        data = None
-        ingredient_name = None
-        if cytoplasm is not None:
-            ingredient_name = ingredient["name"]
-            ingredients = cytoplasm["ingredients"]
-            try:
-                data = ingredients[ingredient["name"]]
-            except Exception:
-                pass
-        elif main_container is not None:
-            ingredient_name = ingredient["name"]
-            compartment = main_container[ingredient["compartment"]]
-            position = ingredient["position"]
-            try:
-                compartment[position]
-                data = compartment[ingredient["position"]]["ingredients"][
-                    ingredient_name
-                ]
-            except Exception as e:
-                # Ingredient in recipe wasn't packed
-                print(e, position, ingredient_name)
-        if self.geo_type == "OBJ" and "meshFile" in data:
-            file_path = os.path.basename(data["meshFile"])
-            file_name, _ = os.path.splitext(file_path)
-            return {
-                "display_type": DISPLAY_TYPE.OBJ,
-                "url": f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/{file_name}.obj",
-            }
-        elif self.geo_type == "PDB" and "pdb" in data:
-            pdb_file_name = data["pdb"]
-            if ".pdb" in pdb_file_name:
-                url = f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/other/{pdb_file_name}"
-            else:
-                url = pdb_file_name
-            return {
-                "display_type": DISPLAY_TYPE.PDB,
-                "url": url,
-            }
-        else:
-            return {"display_type": DISPLAY_TYPE.SPHERE, "url": ""}
+            display_type = DISPLAY_TYPE.FIBER if ingredient_data["Type"] == "Grow" else DISPLAY_TYPE.SPHERE
+            return {"display_type": display_type, "url": ""}
 
     def get_ingredient_data(self, cytoplasm, main_container, ingredient):
         ingredient_name = None
@@ -234,7 +193,7 @@ class ConvertToSimularium(argparse.Namespace):
                 ]
             except Exception as e:
                 # Ingredient in recipe wasn't packed
-                print(e, position, ingredient_name)
+                log.error(e, position, ingredient_name)
         return (ingredient_name, cytoplasm_data, container_data)
 
     def get_euler_from_matrix(self, data_in):
@@ -263,13 +222,14 @@ class ConvertToSimularium(argparse.Namespace):
         self.type_names[time_step_index].append(ingredient_name)
         self.unique_ids[time_step_index].append(agent_id)
         r = (
-            data["encapsulatingRadius"]
+            data["encapsulatingRadius"] * self.scale_factor
             if ("encapsulatingRadius" in data)
             else self.default_radius
         )
-        self.radii[time_step_index].append(r * self.scale_factor)
-        self.n_subpoints[time_step_index].append(len(data[curve]) * self.scale_factor)
-        self.fiber_points[time_step_index].append(data[curve])
+        self.radii[time_step_index].append(r)
+        self.n_subpoints[time_step_index].append(len(data[curve]))
+        scaled_control_points = np.array(data[curve]) * self.scale_factor
+        self.fiber_points[time_step_index].append(scaled_control_points.tolist())
         if len(data[curve]) > self.max_fiber_length:
             if self.debug:
                 print("found longer fiber, new max", len(data[curve]))
@@ -331,7 +291,7 @@ class ConvertToSimularium(argparse.Namespace):
                 continue
             ingredient_data = recipe_compartments_ingredients[ingredient_key]
             ingredient_results_data = result_compartments_ingredients[ingredient_key]
-            display_data = self.get_ingredient_display(ingredient_data)
+            display_data = self.get_ingredient_display_data(ingredient_data)
             self.display_data[ingredient_key] = DisplayData(
                 name=ingredient_key,
                 display_type=display_data["display_type"],
@@ -347,8 +307,7 @@ class ConvertToSimularium(argparse.Namespace):
                         self.agent_id_counter,
                     )
                     self.agent_id_counter = self.agent_id_counter + 1
-            elif ingredient_results_data["nbCurve"] > 1000000:
-                # TODO : change the test to 0 when ready for testing
+            elif ingredient_results_data["nbCurve"] > 0:
                 for i in range(ingredient_results_data["nbCurve"]):
                     self.unpack_curve(
                         ingredient_results_data,
@@ -402,9 +361,9 @@ class ConvertToSimularium(argparse.Namespace):
         self.loop_through_compartment(results_data_in, time_step_index, recipe_data)
 
     def fill_in_empty_fiber_data(self, time_step_index):
-        blank_value = [[0, 0, 0] for x in range(self.max_fiber_length)]
         for viz_type in self.viz_types[time_step_index]:
             if viz_type == 1000:
+                blank_value = [[0, 0, 0] for x in range(self.max_fiber_length)]
                 self.subpoints[time_step_index].append(blank_value)
             elif viz_type == 1001:
                 if self.debug:
@@ -462,7 +421,6 @@ def main():
     try:
         time_point_index = 0
         results_in = converter.packing_result
-        print(converter.input_recipe)
         recipe_data = RecipeLoader(converter.input_recipe).read()
 
         # recipe_data = json.load(open(recipe_in, "r"))
@@ -476,7 +434,7 @@ def main():
         converter.fill_in_empty_fiber_data(time_point_index)
         if converter.debug:
             print("SUBPOINTS LENGTH", len(converter.subpoints[time_point_index]))
-            print("N_SUBPOINTS LENGTH", len(converter.n_subpoints[time_point_index]))
+            print("N_SUBPOINTS", converter.n_subpoints[time_point_index])
         camera_z_position = box_size[2] if box_size[2] > 10 else 100.0
         converted_data = TrajectoryData(
             meta_data=MetaData(
