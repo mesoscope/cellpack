@@ -384,7 +384,6 @@ class ConvertToSimularium(argparse.Namespace):
         ingredients = []
         if "cytoplasme" in recipe_in:
             container = recipe_in["cytoplasme"]
-            # ingredients = container["ingredients"]
             ingredients = ingredients + [
                 {
                     "name": ingredient,
