@@ -168,7 +168,11 @@ class ConvertToSimularium(argparse.Namespace):
                 "url": url,
             }
         else:
-            display_type = DISPLAY_TYPE.FIBER if ingredient_data["Type"] == "Grow" else DISPLAY_TYPE.SPHERE
+            display_type = (
+                DISPLAY_TYPE.FIBER
+                if ingredient_data["Type"] == "Grow"
+                else DISPLAY_TYPE.SPHERE
+            )
             return {"display_type": display_type, "url": ""}
 
     def get_ingredient_data(self, cytoplasm, main_container, ingredient):
@@ -197,11 +201,13 @@ class ConvertToSimularium(argparse.Namespace):
         return (ingredient_name, cytoplasm_data, container_data)
 
     def get_euler_from_matrix(self, data_in):
-        rotation_matrix = np.array([
-            np.array(data_in[0][0:3]),
-            np.array(data_in[1][0:3]),
-            np.array(data_in[2][0:3]),
-        ]).transpose()
+        rotation_matrix = np.array(
+            [
+                np.array(data_in[0][0:3]),
+                np.array(data_in[1][0:3]),
+                np.array(data_in[2][0:3]),
+            ]
+        ).transpose()
         return tr.euler_from_matrix(rotation_matrix)
 
     def get_euler_from_quat(self, data_in):

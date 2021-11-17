@@ -249,7 +249,7 @@ class MultiCylindersIngr(Ingredient):
             gridPointsCoords,
             distance,
             histoVol,
-            dpad
+            dpad,
         )
 
     def add_rb_node(self, worldNP):
