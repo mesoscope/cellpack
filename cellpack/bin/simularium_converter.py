@@ -286,37 +286,6 @@ class ConvertToSimularium(argparse.Namespace):
         else:
             return self.get_euler_from_quat(data_in)
 
-    @staticmethod
-    def _get_all_ingredients(results_data_in, recipe_data):
-        all_ingredients = []
-        if "cytoplasme" in results_data_in:
-            if len(results_data_in["cytoplasme"]["ingredients"]) != 0:
-                for ingredient in results_data_in["cytoplasme"]["ingredients"]:
-                    all_ingredients.append({
-                        "results": results_data_in["cytoplasme"]["ingredients"][ingredient],
-                        "recipe_data": recipe_data["cytoplasme"]["ingredients"][ingredient],
-                    })
-        if "compartments" in results_data_in:
-            for compartment in results_data_in["compartments"]:
-                current_compartment = results_data_in["compartments"][compartment]
-                if "surface" in current_compartment:
-                    for ingredient in current_compartment["surface"]["ingredients"]:
-                        all_ingredients.append({
-                            "results": current_compartment["surface"]["ingredients"][ingredient],
-                            "recipe_data": recipe_data["compartments"][compartment]["surface"][
-                                "ingredients"
-                            ][ingredient],
-                        })
-                if "interior" in current_compartment:
-                    for ingredient in current_compartment["interior"]["ingredients"]:
-                        all_ingredients.append({
-                            "results": current_compartment["interior"]["ingredients"][ingredient],
-                            "recipe_data": recipe_data["compartments"][compartment]["interior"][
-                                "ingredients"
-                            ][ingredient],
-                        })
-        return all_ingredients
-
     def process_one_ingredient(
         self,
         ingredient_data,
@@ -353,7 +322,7 @@ class ConvertToSimularium(argparse.Namespace):
                 self.agent_id_counter = self.agent_id_counter + 1
 
     def get_positions_per_ingredient(
-        self, results_data_in, time_step_index, recipe_data
+        self, all_ingredients, results_data_in, time_step_index
     ):
         if results_data_in["recipe"]["name"] != self.recipe_name:
             raise Exception(
@@ -364,7 +333,6 @@ class ConvertToSimularium(argparse.Namespace):
                 self.recipe_name,
             )
         self.agent_id_counter = 0
-        all_ingredients = self._get_all_ingredients(results_data_in, recipe_data)
         for ingredient_data in all_ingredients:
             self.process_one_ingredient(ingredient_data, time_step_index)
 
@@ -391,14 +359,15 @@ def main():
     try:
         time_point_index = 0
         results_in = converter.packing_result
-        recipe_data = RecipeLoader(converter.input_recipe).read()
+        recipe_loader = RecipeLoader(converter.input_recipe)
+        recipe_data = recipe_loader.recipe_data
+        packing_data = json.load(open(results_in, "r"))
+        all_ingredients = recipe_loader.get_all_ingredients(packing_data)
+
         converter.recipe_name = recipe_data["recipe"]["name"]
         converter.get_bounding_box(recipe_data)
-        packing_data = json.load(open(results_in, "r"))
         box_size = converter.box_size
-        converter.get_positions_per_ingredient(
-            packing_data, time_point_index, recipe_data
-        )
+        converter.get_positions_per_ingredient(all_ingredients, packing_data, time_point_index)
         converter.fill_in_empty_fiber_data(time_point_index)
         if converter.debug:
             print("SUBPOINTS LENGTH", len(converter.subpoints[time_point_index]))
