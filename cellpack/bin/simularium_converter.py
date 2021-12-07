@@ -8,7 +8,7 @@ import numpy as np
 import json
 import logging
 
-# from scipy.spatial.transform import Rotation as R
+from scipy.spatial.transform import Rotation as R
 
 from simulariumio import (
     TrajectoryConverter,
@@ -201,17 +201,19 @@ class ConvertToSimularium(argparse.Namespace):
         return (ingredient_name, cytoplasm_data, container_data)
 
     def get_euler_from_matrix(self, data_in):
-        rotation_matrix = np.array(
-            [
-                np.array(data_in[0][0:3]),
-                np.array(data_in[1][0:3]),
-                np.array(data_in[2][0:3]),
-            ]
-        ).transpose()
-        return tr.euler_from_matrix(rotation_matrix)
+        # rotation_matrix = np.array(
+        #     [
+        #         np.array(data_in[0][0:3]),
+        #         np.array(data_in[1][0:3]),
+        #         np.array(data_in[2][0:3]),
+        #     ]
+        # ).transpose()
+        rotation_matrix = [data_in[0][0:3], data_in[1][0:3], data_in[2][0:3]]
+        return R.from_matrix(rotation_matrix).as_euler("XYZ", degrees=False)
+
 
     def get_euler_from_quat(self, data_in):
-        return tr.euler_from_quaternion(data_in)
+        return R.from_quat(data_in).as_euler("XYZ", degrees=False)
 
     def is_matrix(self, data_in):
         if isinstance(data_in[0], list):
@@ -286,71 +288,71 @@ class ConvertToSimularium(argparse.Namespace):
         else:
             return self.get_euler_from_quat(data_in)
 
-    def loop_through_ingredients(
-        self,
-        result_compartments_ingredients,
-        recipe_compartments_ingredients,
-        time_step_index,
-    ):
-        for ingredient_key in recipe_compartments_ingredients:
-            if ingredient_key not in result_compartments_ingredients:
-                continue
-            ingredient_data = recipe_compartments_ingredients[ingredient_key]
-            ingredient_results_data = result_compartments_ingredients[ingredient_key]
-            display_data = self.get_ingredient_display_data(ingredient_data)
-            self.display_data[ingredient_key] = DisplayData(
-                name=ingredient_key,
-                display_type=display_data["display_type"],
-                url=display_data["url"],
-            )
-            if len(ingredient_results_data["results"]) > 0:
-                for j in range(len(ingredient_results_data["results"])):
-                    self.unpack_positions(
-                        ingredient_results_data,
-                        time_step_index,
-                        ingredient_key,
-                        j,
-                        self.agent_id_counter,
-                    )
-                    self.agent_id_counter = self.agent_id_counter + 1
-            elif ingredient_results_data["nbCurve"] > 0:
-                for i in range(ingredient_results_data["nbCurve"]):
-                    self.unpack_curve(
-                        ingredient_results_data,
-                        time_step_index,
-                        ingredient_key,
-                        i,
-                        self.agent_id_counter,
-                    )
-                    self.agent_id_counter = self.agent_id_counter + 1
-
-    def loop_through_compartment(self, results_data_in, time_step_index, recipe_data):
+    @staticmethod
+    def _get_all_ingredients(results_data_in, recipe_data):
+        all_ingredients = []
         if "cytoplasme" in results_data_in:
             if len(results_data_in["cytoplasme"]["ingredients"]) != 0:
-                self.loop_through_ingredients(
-                    results_data_in["cytoplasme"]["ingredients"],
-                    recipe_data["cytoplasme"]["ingredients"],
-                    time_step_index,
-                )
+                for ingredient in results_data_in["cytoplasme"]["ingredients"]:
+                    all_ingredients.append({
+                        "results": results_data_in["cytoplasme"]["ingredients"][ingredient],
+                        "recipe_data": recipe_data["cytoplasme"]["ingredients"][ingredient],
+                    })
         if "compartments" in results_data_in:
             for compartment in results_data_in["compartments"]:
                 current_compartment = results_data_in["compartments"][compartment]
                 if "surface" in current_compartment:
-                    self.loop_through_ingredients(
-                        current_compartment["surface"]["ingredients"],
-                        recipe_data["compartments"][compartment]["surface"][
-                            "ingredients"
-                        ],
-                        time_step_index,
-                    )
+                    for ingredient in current_compartment["surface"]["ingredients"]:
+                        all_ingredients.append({
+                            "results": current_compartment["surface"]["ingredients"][ingredient],
+                            "recipe_data": recipe_data["compartments"][compartment]["surface"][
+                                "ingredients"
+                            ][ingredient],
+                        })
                 if "interior" in current_compartment:
-                    self.loop_through_ingredients(
-                        current_compartment["interior"]["ingredients"],
-                        recipe_data["compartments"][compartment]["interior"][
-                            "ingredients"
-                        ],
-                        time_step_index,
-                    )
+                    for ingredient in current_compartment["interior"]["ingredients"]:
+                        all_ingredients.append({
+                            "results": current_compartment["interior"]["ingredients"][ingredient],
+                            "recipe_data": recipe_data["compartments"][compartment]["interior"][
+                                "ingredients"
+                            ][ingredient],
+                        })
+        return all_ingredients
+
+    def process_one_ingredient(
+        self,
+        ingredient_data,
+        time_step_index,
+    ):
+        recipe_data = ingredient_data["recipe_data"]
+        results = ingredient_data["results"]
+        ingredient_key = results["name"]
+        display_data = self.get_ingredient_display_data(recipe_data)
+        self.display_data[ingredient_key] = DisplayData(
+            name=ingredient_key,
+            display_type=display_data["display_type"],
+            url=display_data["url"],
+        )
+        if len(results["results"]) > 0:
+            for j in range(len(results["results"])):
+                self.unpack_positions(
+                    results,
+                    time_step_index,
+                    ingredient_key,
+                    j,
+                    self.agent_id_counter,
+                )
+                self.agent_id_counter = self.agent_id_counter + 1
+        elif results["nbCurve"] > 0:
+            for i in range(results["nbCurve"]):
+                self.unpack_curve(
+                    results,
+                    time_step_index,
+                    ingredient_key,
+                    i,
+                    self.agent_id_counter,
+                )
+                self.agent_id_counter = self.agent_id_counter + 1
 
     def get_positions_per_ingredient(
         self, results_data_in, time_step_index, recipe_data
@@ -364,7 +366,9 @@ class ConvertToSimularium(argparse.Namespace):
                 self.recipe_name,
             )
         self.agent_id_counter = 0
-        self.loop_through_compartment(results_data_in, time_step_index, recipe_data)
+        all_ingredients = self._get_all_ingredients(results_data_in, recipe_data)
+        for ingredient_data in all_ingredients:
+            self.process_one_ingredient(ingredient_data, time_step_index)
 
     def fill_in_empty_fiber_data(self, time_step_index):
         for viz_type in self.viz_types[time_step_index]:
@@ -379,43 +383,6 @@ class ConvertToSimularium(argparse.Namespace):
                     control_points.append([0, 0, 0])
                 self.subpoints[time_step_index].append(control_points)
 
-    def get_all_ingredient_names(self, recipe_in):
-        self.recipe_name = recipe_in["recipe"]["name"]
-        ingredients = []
-        if "cytoplasme" in recipe_in:
-            container = recipe_in["cytoplasme"]
-            ingredients = ingredients + [
-                {
-                    "name": ingredient,
-                    "compartment": container,
-                    "position": "cytoplasme",
-                }
-                for ingredient in container["ingredients"]
-            ]
-            self.unique_ingredient_names = list(ingredients)
-        if "compartments" in recipe_in:
-            for compartment in recipe_in["compartments"]:
-                current_compartment = recipe_in["compartments"][compartment]
-                if "surface" in current_compartment:
-                    ingredients = ingredients + [
-                        {
-                            "name": ingredient,
-                            "compartment": compartment,
-                            "position": "surface",
-                        }
-                        for ingredient in current_compartment["surface"]["ingredients"]
-                    ]
-                if "interior" in current_compartment:
-                    ingredients = ingredients + [
-                        {
-                            "name": ingredient,
-                            "compartment": compartment,
-                            "position": "interior",
-                        }
-                        for ingredient in current_compartment["interior"]["ingredients"]
-                    ]
-            self.unique_ingredient_names = ingredients
-
 
 ###############################################################################
 
@@ -427,9 +394,7 @@ def main():
         time_point_index = 0
         results_in = converter.packing_result
         recipe_data = RecipeLoader(converter.input_recipe).read()
-
-        # recipe_data = json.load(open(recipe_in, "r"))
-        converter.get_all_ingredient_names(recipe_data)
+        converter.recipe_name = recipe_data["recipe"]["name"]
         converter.get_bounding_box(recipe_data)
         packing_data = json.load(open(results_in, "r"))
         box_size = converter.box_size
@@ -439,7 +404,6 @@ def main():
         converter.fill_in_empty_fiber_data(time_point_index)
         if converter.debug:
             print("SUBPOINTS LENGTH", len(converter.subpoints[time_point_index]))
-            print("N_SUBPOINTS", converter.n_subpoints[time_point_index])
         camera_z_position = box_size[2] if box_size[2] > 10 else 100.0
         converted_data = TrajectoryData(
             meta_data=MetaData(
