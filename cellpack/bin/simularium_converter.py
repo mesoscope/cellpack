@@ -3,7 +3,6 @@ import sys
 import argparse
 import traceback
 
-import cellpack.autopack.transformation as tr
 import numpy as np
 import json
 import logging
@@ -210,7 +209,6 @@ class ConvertToSimularium(argparse.Namespace):
         # ).transpose()
         rotation_matrix = [data_in[0][0:3], data_in[1][0:3], data_in[2][0:3]]
         return R.from_matrix(rotation_matrix).as_euler("XYZ", degrees=False)
-
 
     def get_euler_from_quat(self, data_in):
         return R.from_quat(data_in).as_euler("XYZ", degrees=False)
