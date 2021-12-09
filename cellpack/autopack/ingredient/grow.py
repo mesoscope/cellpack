@@ -100,12 +100,23 @@ class GrowIngredient(MultiCylindersIngr):
         self.direction = None  # direction of growing
         # can be place either using grid point/jittering or dynamics
         #        self.uLength = 0. #length of the cylinder or averall radius for sphere, this is the lenght of one unit
-        self.uLength = 10
+        self.uLength = 0
         if "uLength" in kw:
             self.uLength = kw["uLength"]
+        if self.positions2 is None :
+            if self.uLength == 0 :
+                self.uLength = self.radii[0][0]
+            self.vector = numpy.array(self.principalVector) * self.uLength / 2.0
+            self.positions = [[(self.vector * -1.0).tolist()]]
+            self.positions2 = [[self.vector.tolist()]]
         else:
-            v, u = self.vi.measure_distance(self.positions, self.positions2, vec=True)
-            self.uLength = abs(u)
+            if self.positions2 is not None :
+                v, u = self.vi.measure_distance(self.positions, self.positions2, vec=True)
+                self.uLength = abs(u)
+            else :
+                self.uLength = self.radii[0][0]
+        print(self.positions)
+        print(self.positions2)
         self.encapsulatingRadius = self.uLength / 2.0
         self.unitNumberF = 0  # number of unit pose so far forward
         self.unitNumberR = 0  # number of unit pose so far reverse
@@ -2609,12 +2620,12 @@ class GrowIngredient(MultiCylindersIngr):
             env.smallestProteinSize,
             normal=normal,
         )
-
+        print(self.positions, self.positions2)
         v, u = self.vi.measure_distance(self.positions, self.positions2, vec=True)
         self.vector = numpy.array(self.orientation) * self.uLength
 
-        if u != self.uLength:
-            self.positions2 = [[self.vector]]
+        # if u != self.uLength:
+        #     self.positions2 = [[self.vector]]
         if self.compNum == 0:
             compartment = self.env
         else:
