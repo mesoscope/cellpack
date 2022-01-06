@@ -37,6 +37,8 @@ Examples:
 * To run just one packing method: `analyze -o [PATH/TO/OUTPUT/FOLDER] -p jitter`
 * To change the dimension of the packing: `analyze -r cellpack/test-recipes/NM_Analysis_FigureC1.json  -o /Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_1 -d 3`
 * Turn off plotly plot: `analyze -o [PATH/TO/OUTPUT/FOLDER] -ng` or `analyze -o [PATH/TO/OUTPUT/FOLDER] --no-grid-plot`
+
+### Run conversion code 
 * To convert to simularium and view at https://staging.simularium.allencell.org/viewer
 convert -r [FULL_PATH_TO_INPUT_RECIPE_FILE] -p [FULL_PATH_TO_PACKING_RESULT] -o [OUTPUT_PATH]
 ## Installation
