@@ -56,7 +56,6 @@ from random import uniform, gauss, random
 from time import time
 import math
 from cellpack.mgl_tools.RAPID import RAPIDlib
-from cellpack.autopack.upy.hostHelper import Helper
 # RAPID require a uniq mesh. not an empty or an instance
 # need to combine the vertices and the build the rapid model
 
