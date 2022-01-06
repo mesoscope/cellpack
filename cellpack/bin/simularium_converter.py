@@ -21,7 +21,6 @@ from simulariumio import (
 from simulariumio.constants import DISPLAY_TYPE
 
 from cellpack.autopack.iotools_simple import RecipeLoader
-import cellpack.autopack.transformation as tr
 
 ###############################################################################
 
