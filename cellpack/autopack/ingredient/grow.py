@@ -2593,11 +2593,10 @@ class GrowIngredient(MultiCylindersIngr):
         self,
         env,
         ptInd,
-        rot_mat,
-        moving,
+        freePoints,
+        nbFreePoints,
         distance,
         dpad,
-        afvi,
         usePP=False,
     ):
         if type(self.compMask) is str:
