@@ -1272,7 +1272,7 @@ class Ingredient(Agent):
         self.rejectionCounter += 1
         if (
             self.rejectionCounter >= self.rejectionThreshold
-        ):  # Graham set this to 6000 for figure 13b (Results Fig 3 Test1) otehrwise it fails to fill small guys
+        ):  # Graham set this to 6000 for figure 13b (Results Fig 3 Test1) otherwise it fails to fill small guys
             self.log.info("PREMATURE ENDING of ingredient rejectOnce", self.name)
             self.completion = 1.0
 
