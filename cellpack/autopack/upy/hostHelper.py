@@ -226,8 +226,6 @@ class Helper:
         @rtype: float ? vector
         @return: the distance, and optionly the distance vetor
         """
-        print(c0)
-        print(c1)
         d = numpy.array(c1) - numpy.array(c0)
         s = numpy.sum(d * d)
 
