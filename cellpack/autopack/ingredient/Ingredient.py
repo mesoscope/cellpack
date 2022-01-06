@@ -1154,6 +1154,7 @@ class Ingredient(Agent):
             if len(self.radii) == 0:
                 self.radii = [[10]]  # some default value ?
                 self.positions = [[[0, 0, 0]]]
+            self.deepest_level = len(radii) - 1
         else:  # regular nested
             if (
                 positions is None or positions[0] is None or positions[0][0] is None

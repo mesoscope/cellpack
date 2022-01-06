@@ -195,6 +195,9 @@ class BaseGrid:
             # what about collision ?
 
     def setup(self, boundingBox, space):
+        # TODO : verify the gridSpacing calculation / setup after reading the recipe
+        if space == 0:
+            space = 20
         self.gridSpacing = space  # * 1.1547
         self.boundingBox = boundingBox
 

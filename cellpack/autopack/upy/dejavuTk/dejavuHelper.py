@@ -1016,7 +1016,7 @@ class dejavuHelper(hostHelper.Helper):
         faces = poly.getFaces()
         vertices = poly.getVertices()
         vnormals = poly.getVNormals()
-        if transform:
+        if transform and not self.nogui:
             mat = poly.GetMatrix(poly.LastParentBeforeRoot())
             vertices = self.ApplyMatrix(vertices, mat)
         return faces, vertices, vnormals
