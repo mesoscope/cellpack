@@ -117,8 +117,6 @@ class GrowIngredient(MultiCylindersIngr):
                 self.uLength = abs(u)
             else:
                 self.uLength = self.radii[0][0]
-        print(self.positions)
-        print(self.positions2)
         self.encapsulatingRadius = self.uLength / 2.0
         self.unitNumberF = 0  # number of unit pose so far forward
         self.unitNumberR = 0  # number of unit pose so far reverse
@@ -461,7 +459,6 @@ class GrowIngredient(MultiCylindersIngr):
             # self.sphere_points_mask = i
 
     def mask_sphere_points_dihedral(self, v1, v2, marge_out, marge_diedral, v3=[]):
-        print("mask_sphere_points_dihedral")
         points_mask = numpy.nonzero(self.sphere_points_mask)[0]
         if len(v3):
             #            a=angle_between_vectors(self.vi.unit_vector(v2),self.sphere_points[points_mask], axis=1)
@@ -556,7 +553,6 @@ class GrowIngredient(MultiCylindersIngr):
         v3=[],
     ):
         # self.sphere_points_mask=numpy.ones(10000,'i')
-        print("mask_sphere_points ", marge_diedral, marge, len(listeclosest))
         if marge_diedral is not None:
             self.mask_sphere_points_dihedral(pv, v, marge, marge_diedral, v3)
         else:
@@ -835,7 +831,6 @@ class GrowIngredient(MultiCylindersIngr):
             # main loop thattryto found the next point (similar to jitter)
             if attempted >= safetycutoff:
                 return None, False  # numpy.array(pt2).flatten()+numpy.array(pt),False
-            print("length is ", self.uLength)
             pt = self.vi.randpoint_onsphere(
                 self.uLength
             )  # *numpy.array(self.jitterMax)
@@ -2682,7 +2677,6 @@ class GrowIngredient(MultiCylindersIngr):
         #        self.Ptis=[ptInd,histoVol.grid.getPointFrom3D(secondPoint)]
         dist, pid = env.grid.getClosestGridPoint(secondPoint)
         self.Ptis = [ptInd, pid]
-        print("the starting point on the grid was ", startingPoint, pid, ptInd)
         listePtCurve = [jtrans]
         listePtLinear = [startingPoint, secondPoint]
         # grow until reach self.currentLength >= self.length
@@ -2788,7 +2782,6 @@ class GrowIngredient(MultiCylindersIngr):
         # weights = self.alternates_weight[:]
         proba = self.alternates_proba[:]
         alti = int((r * (len(self.alternates_names))))  # round?
-        # print (alti,proba[alti],ar,self.alternates_names[alti])
         if ar < proba[alti]:
             return self.alternates_names[alti], alti
         return None, 0
@@ -2916,7 +2909,6 @@ class GrowIngredient(MultiCylindersIngr):
         v = numpy.array(pt1) - pts[0]
         m[3, :3] = numpy.array(pt1) + v
         newPts = autopack.helper.ApplyMatrix([ptc, ptd], m.transpose())  # transpose ?
-        print("we got pt3,pt4 ", newPts)
         return numpy.array(newPts[1]) - numpy.array(newPts[0])
 
     def get_alternate_starting_point(self, pt1, pt2, alternate):
