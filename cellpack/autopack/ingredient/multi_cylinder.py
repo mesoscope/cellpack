@@ -131,7 +131,9 @@ class MultiCylindersIngr(Ingredient):
                         #                                res= 5, parent="autopackHider",axis="+X")[0]
             length = 1
             if self.positions2 is not None and self.positions is not None:
-                d = numpy.array(self.positions2[0][0]) - numpy.array(self.positions[0][0])
+                d = numpy.array(self.positions2[0][0]) - numpy.array(
+                    self.positions[0][0]
+                )
                 s = numpy.sum(d * d)
                 length = math.sqrt(s)  # diagonal
             self.mesh = autopack.helper.Cylinder(

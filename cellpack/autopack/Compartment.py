@@ -250,7 +250,9 @@ class Compartment(CompartmentList):
         self.grid_distances = None  # signed closest distance for each point
         # TODO Add openVDB
         if self.filename is None:
-            autopack.helper.saveDejaVuMesh(autopack.cache_geoms + os.sep + self.name, self.vertices, self.faces)
+            autopack.helper.saveDejaVuMesh(
+                autopack.cache_geoms + os.sep + self.name, self.vertices, self.faces
+            )
             self.filename = autopack.cache_geoms + os.sep + self.name
             self.ref_obj = self.name
 
@@ -332,8 +334,12 @@ class Compartment(CompartmentList):
         self.filename = geomname
         self.ref_obj = geomname
         self.meshType = "file"
-        autopack.helper.saveObjMesh(autopack.cache_geoms + os.sep + geomname + ".obj", self.vertices, self.faces)
-        autopack.helper.saveDejaVuMesh(autopack.cache_geoms + os.sep + geomname, self.vertices, self.faces)
+        autopack.helper.saveObjMesh(
+            autopack.cache_geoms + os.sep + geomname + ".obj", self.vertices, self.faces
+        )
+        autopack.helper.saveDejaVuMesh(
+            autopack.cache_geoms + os.sep + geomname, self.vertices, self.faces
+        )
         self.filename = autopack.cache_geoms + os.sep + geomname
         self.ref_obj = self.name
         return geom

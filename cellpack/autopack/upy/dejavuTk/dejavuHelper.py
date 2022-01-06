@@ -24,7 +24,9 @@ import numpy
 from PIL import Image
 
 # DejaVu module
-from cellpack.autopack.upy import hostHelper  # its confusing that upy is in three different place
+from cellpack.autopack.upy import (
+    hostHelper,
+)  # its confusing that upy is in three different place
 from cellpack.mgl_tools.DejaVu.Viewer import Viewer
 from cellpack.mgl_tools.DejaVu.Geom import Geom
 from cellpack.mgl_tools.DejaVu.Spheres import Spheres
@@ -389,7 +391,7 @@ class dejavuHelper(hostHelper.Helper):
         if self.nogui:
             return
         vi = self.getCurrentScene()
-        if vi == "nogui" :
+        if vi == "nogui":
             return
         print("current hgelper is " + vi)
         parent = self.getObject(parent)
@@ -1228,7 +1230,7 @@ class dejavuHelper(hostHelper.Helper):
         if len(sh) == 2 and sh[1] == 3:
             f = g.primitives[0].vertex_index
         else:
-            f = g.primitives[0].vertex_index[: nf].reshape(int(nf / 3), 3)
+            f = g.primitives[0].vertex_index[:nf].reshape(int(nf / 3), 3)
         n = g.primitives[0].normal
         ni = g.primitives[0].normal_index
         vn = []

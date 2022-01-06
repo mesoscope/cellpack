@@ -149,7 +149,6 @@ class ConvertToSimularium(argparse.Namespace):
                     "url": f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/{file_name}.obj",
                 }
             elif meshType == "raw":
-                file_path = "C:\\Users\\ludov\\AppData\\Roaming\\autoPACK\\cache_geometries\\" + ingredient_data["name"] + ".obj"
                 file_name = ingredient_data["name"]
                 return {
                     "display_type": DISPLAY_TYPE.OBJ,
@@ -363,7 +362,9 @@ def main():
         converter.recipe_name = recipe_data["recipe"]["name"]
         converter.get_bounding_box(recipe_data)
         box_size = converter.box_size
-        converter.get_positions_per_ingredient(all_ingredients, packing_data, time_point_index)
+        converter.get_positions_per_ingredient(
+            all_ingredients, packing_data, time_point_index
+        )
         converter.fill_in_empty_fiber_data(time_point_index)
         if converter.debug:
             print("SUBPOINTS LENGTH", len(converter.subpoints[time_point_index]))

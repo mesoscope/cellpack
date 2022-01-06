@@ -1973,7 +1973,7 @@ def setupFromJsonDic(
             if k in options:
                 setattr(env, k, options[k])
         env.boundingBox = options["boundingBox"]
-        if (None in env.boundingBox[0] or None in env.boundingBox[1]):
+        if None in env.boundingBox[0] or None in env.boundingBox[1]:
             env.boundingBox = ([0, 0, 0], [1000, 1000, 1000])
     if "gradients" in env.jsondic:
         env.gradients = {}

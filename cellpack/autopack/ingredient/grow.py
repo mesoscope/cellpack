@@ -103,17 +103,19 @@ class GrowIngredient(MultiCylindersIngr):
         self.uLength = 0
         if "uLength" in kw:
             self.uLength = kw["uLength"]
-        if self.positions2 is None :
-            if self.uLength == 0 :
+        if self.positions2 is None:
+            if self.uLength == 0:
                 self.uLength = self.radii[0][0]
             self.vector = numpy.array(self.principalVector) * self.uLength / 2.0
             self.positions = [[(self.vector * -1.0).tolist()]]
             self.positions2 = [[self.vector.tolist()]]
         else:
-            if self.positions2 is not None :
-                v, u = self.vi.measure_distance(self.positions, self.positions2, vec=True)
+            if self.positions2 is not None:
+                v, u = self.vi.measure_distance(
+                    self.positions, self.positions2, vec=True
+                )
                 self.uLength = abs(u)
-            else :
+            else:
                 self.uLength = self.radii[0][0]
         print(self.positions)
         print(self.positions2)

@@ -143,27 +143,41 @@ class RecipeLoader(object):
         if "cytoplasme" in results_data_in:
             if len(results_data_in["cytoplasme"]["ingredients"]) != 0:
                 for ingredient in results_data_in["cytoplasme"]["ingredients"]:
-                    all_ingredients.append({
-                        "results": results_data_in["cytoplasme"]["ingredients"][ingredient],
-                        "recipe_data": recipe_data["cytoplasme"]["ingredients"][ingredient],
-                    })
+                    all_ingredients.append(
+                        {
+                            "results": results_data_in["cytoplasme"]["ingredients"][
+                                ingredient
+                            ],
+                            "recipe_data": recipe_data["cytoplasme"]["ingredients"][
+                                ingredient
+                            ],
+                        }
+                    )
         if "compartments" in results_data_in:
             for compartment in results_data_in["compartments"]:
                 current_compartment = results_data_in["compartments"][compartment]
                 if "surface" in current_compartment:
                     for ingredient in current_compartment["surface"]["ingredients"]:
-                        all_ingredients.append({
-                            "results": current_compartment["surface"]["ingredients"][ingredient],
-                            "recipe_data": recipe_data["compartments"][compartment]["surface"][
-                                "ingredients"
-                            ][ingredient],
-                        })
+                        all_ingredients.append(
+                            {
+                                "results": current_compartment["surface"][
+                                    "ingredients"
+                                ][ingredient],
+                                "recipe_data": recipe_data["compartments"][compartment][
+                                    "surface"
+                                ]["ingredients"][ingredient],
+                            }
+                        )
                 if "interior" in current_compartment:
                     for ingredient in current_compartment["interior"]["ingredients"]:
-                        all_ingredients.append({
-                            "results": current_compartment["interior"]["ingredients"][ingredient],
-                            "recipe_data": recipe_data["compartments"][compartment]["interior"][
-                                "ingredients"
-                            ][ingredient],
-                        })
+                        all_ingredients.append(
+                            {
+                                "results": current_compartment["interior"][
+                                    "ingredients"
+                                ][ingredient],
+                                "recipe_data": recipe_data["compartments"][compartment][
+                                    "interior"
+                                ]["ingredients"][ingredient],
+                            }
+                        )
         return all_ingredients

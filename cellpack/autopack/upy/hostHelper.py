@@ -5040,7 +5040,7 @@ class Helper:
     @classmethod
     def saveObjMesh(self, filepath, vertices=[], faces=[], vnorms=[]):
         print("save OBJ " + filepath)
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             f.write("OBJ File: \n")
             for v in vertices:
                 f.write("v %.4f %.4f %.4f\n" % (v[0], v[1], v[2]))

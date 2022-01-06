@@ -56,6 +56,7 @@ from random import uniform, gauss, random
 from time import time
 import math
 from cellpack.mgl_tools.RAPID import RAPIDlib
+
 # RAPID require a uniq mesh. not an empty or an instance
 # need to combine the vertices and the build the rapid model
 
@@ -1652,8 +1653,12 @@ class Ingredient(Agent):
         self.meshName = geomname
         self.meshType = "file"
         self.mesh = geom
-        autopack.helper.saveDejaVuMesh(autopack.cache_geoms + os.sep + geomname, self.vertices, self.faces)
-        autopack.helper.saveObjMesh(autopack.cache_geoms + os.sep + geomname + ".obj", self.vertices, self.faces)
+        autopack.helper.saveDejaVuMesh(
+            autopack.cache_geoms + os.sep + geomname, self.vertices, self.faces
+        )
+        autopack.helper.saveObjMesh(
+            autopack.cache_geoms + os.sep + geomname + ".obj", self.vertices, self.faces
+        )
         # self.saveObjMesh(autopack.cache_geoms + os.sep + geomname + ".obj")
         return geom
 

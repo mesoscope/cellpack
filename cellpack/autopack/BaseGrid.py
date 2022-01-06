@@ -142,7 +142,7 @@ class BaseGrid:
         self.log = logging.getLogger("grid")
         self.log.propagate = False
 
-        if (None in boundingBox[0] or None in boundingBox[1]):
+        if None in boundingBox[0] or None in boundingBox[1]:
             boundingBox = ([0, 0, 0], [1000, 1000, 1000])
         # a grid is attached to an environnement
         self.boundingBox = boundingBox
