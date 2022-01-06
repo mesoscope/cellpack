@@ -164,7 +164,6 @@ class BaseGrid:
         # object (or an compartment surface NOT IMPLEMENTED)
         self.distToClosestSurf = []
         self.distToClosestSurf_store = []
-        print(space)
         self.diag = self.getDiagonal()
         self.gridSpacing = space  # * 1.1547#cubic grid with a diagonal spacing equal to that smallest packing radius
         self.nbGridPoints = None
