@@ -103,11 +103,10 @@ class MultiCylindersIngr(Ingredient):
         #        self.encapsulatingRadius = radii[0][0]  #Graham worry: 9/8/11 This is incorrect... shoudl be max(radii[0]) or radii[0][1]
         #        self.encapsulatingRadius = radii[0][0]#nope should be  half length ?
         self.length = 1.0
-        positions = self.positions
         self.useLength = False
         if "useLength" in kw:
             self.useLength = kw["useLength"]
-        if positions2 is not None and positions is not None:
+        if self.positions2 is not None and self.positions is not None:
             # shoulde the overall length of the object from bottom to top
             bb = self.getBigBB()
             d = numpy.array(bb[1]) - numpy.array(bb[0])
@@ -131,8 +130,8 @@ class MultiCylindersIngr(Ingredient):
                         #                                radius=self.radii[0][0]*1.24, length=self.uLength,
                         #                                res= 5, parent="autopackHider",axis="+X")[0]
             length = 1
-            if positions2 is not None and positions is not None:
-                d = numpy.array(positions2[0][0]) - numpy.array(positions[0][0])
+            if self.positions2 is not None and self.positions is not None:
+                d = numpy.array(self.positions2[0][0]) - numpy.array(self.positions[0][0])
                 s = numpy.sum(d * d)
                 length = math.sqrt(s)  # diagonal
             self.mesh = autopack.helper.Cylinder(

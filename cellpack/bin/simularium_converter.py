@@ -36,7 +36,7 @@ class ConvertToSimularium(argparse.Namespace):
     DEFAULT_PACKING_RESULT = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/results_seed_0.json"
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
-    DEFAULT_GEO_TYPE = "OBJ"  # or PDB
+    DEFAULT_GEO_TYPE = "OBJ"  # "SPHERE"  # or PDB
     DEFAULT_SCALE_FACTOR = 1.0 / 10
     # @staticmethod
 
@@ -149,9 +149,12 @@ class ConvertToSimularium(argparse.Namespace):
                     "url": f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/{file_name}.obj",
                 }
             elif meshType == "raw":
-                # need to build a mesh from the vertices, faces, indexes dictionary
-                log.info(meshType, ingredient_data["meshFile"].keys())
-                return {"display_type": DISPLAY_TYPE.SPHERE, "url": ""}
+                file_path = "C:\\Users\\ludov\\AppData\\Roaming\\autoPACK\\cache_geometries\\" + ingredient_data["name"] + ".obj"
+                file_name = ingredient_data["name"]
+                return {
+                    "display_type": DISPLAY_TYPE.OBJ,
+                    "url": f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/{file_name}.obj",
+                }
         elif self.geo_type == "PDB":
             pdb_file_name = ""
             if "source" in ingredient_data:
@@ -304,7 +307,7 @@ class ConvertToSimularium(argparse.Namespace):
                     self.agent_id_counter,
                 )
                 self.agent_id_counter = self.agent_id_counter + 1
-        elif results["nbCurve"] > 0:
+        elif "nbCurve" in results and results["nbCurve"] > 0:
             for i in range(results["nbCurve"]):
                 self.unpack_curve(
                     results,

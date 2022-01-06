@@ -1334,7 +1334,8 @@ class Environment(CompartmentList):
             if maxi > self.largestProteinSize:
                 self.computeGridParams = True
                 self.largestProteinSize = maxi
-
+        print(self.smallestProteinSize)
+        print(self.largestProteinSize)
         if self.exteriorRecipe:
             smallest, largest = self.exteriorRecipe.getMinMaxProteinSize()
 
@@ -1343,6 +1344,8 @@ class Environment(CompartmentList):
 
             if largest > self.largestProteinSize:
                 self.largestProteinSize = largest
+        print(self.smallestProteinSize)#0
+        print(self.largestProteinSize)#40
 
     def extractMeshComponent(self, obj):
         """

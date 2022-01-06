@@ -487,14 +487,14 @@ def addCompartments(env, compdic, i, io_ingr):
             rep_file = ""
             if "rep_file" in comp_dic:
                 rep_file = str(comp_dic["rep_file"])
-            print(
-                "rep ?",
-                name,
-                geom,
-                rep,
-                rep_file,
-                (rep != "None" and len(rep) != 0 and rep != "" and rep == ""),
-            )
+            # print(
+            #    "rep ?",
+            #    name,
+            #    geom,
+            #    rep,
+            #    rep_file,
+            #    (rep != "None" and len(rep) != 0 and rep != "" and rep == ""),
+            # )
             #                print (len(rep),rep == '',rep=="",rep != "None",rep != "None" or len(rep) != 0)
             if rep != "None" and len(rep) != 0 and rep != "" and rep != "":
                 rname = rep_file.split("/")[-1]
@@ -1973,6 +1973,8 @@ def setupFromJsonDic(
             if k in options:
                 setattr(env, k, options[k])
         env.boundingBox = options["boundingBox"]
+        if (None in env.boundingBox[0] or None in env.boundingBox[1]):
+            env.boundingBox = ([0, 0, 0], [1000, 1000, 1000])
     if "gradients" in env.jsondic:
         env.gradients = {}
         gradientsnode = env.jsondic["gradients"]
@@ -2039,15 +2041,15 @@ def setupFromJsonDic(
                 rep_file = ""
                 if "rep_file" in comp_dic:
                     rep_file = str(comp_dic["rep_file"])
-                print(
-                    "rep ?",
-                    name,
-                    geom,
-                    gname,
-                    rep,
-                    rep_file,
-                    (rep != "None" and len(rep) != 0 and rep != "" and rep == ""),
-                )
+                # print(
+                #     "rep ?",
+                #     name,
+                #     geom,
+                #     gname,
+                #     rep,
+                #     rep_file,
+                #     (rep != "None" and len(rep) != 0 and rep != "" and rep == ""),
+                # )
                 #                print (len(rep),rep == '',rep=="",rep != "None",rep != "None" or len(rep) != 0)
                 if rep != "None" and len(rep) != 0 and rep != "" and rep != "":
                     rname = rep_file.split("/")[-1]
