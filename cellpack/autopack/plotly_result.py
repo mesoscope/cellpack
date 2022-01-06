@@ -15,7 +15,9 @@ class PlotlyAnalysis:
         self.plot.update_layout(title=title)
 
     @staticmethod
-    def format_color(color=[1.0, 0.0, 0.0]):  # RED default
+    def format_color(color):
+        if color is None:
+            color = [1.0, 0.0, 0.0]  # RED default
         return "rgb{}".format((255 * color[0], 255 * color[1], 255 * color[2]))
 
     def add_circle(self, radius, pos, color, opacity=1):

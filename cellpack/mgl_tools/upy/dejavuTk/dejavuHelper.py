@@ -176,6 +176,8 @@ class dejavuHelper(hostHelper.Helper):
 
     def getCurrentScene(self):
         # actually return the Viewer instance
+        if self.viewer == "nogui":
+            self.nogui = True
         return self.viewer
 
     def progressBar(self, progress=None, label=None):
@@ -197,6 +199,8 @@ class dejavuHelper(hostHelper.Helper):
         self.update()
 
     def update(self):
+        if self.viewer == "nogui":
+            return
         vi = self.getCurrentScene()
         vi.OneRedraw()
         vi.update()
@@ -207,6 +211,8 @@ class dejavuHelper(hostHelper.Helper):
         return object.__module__
 
     def getMesh(self, m, **kw):
+        if self.viewer == "nogui":
+            return None
         if type(m) is str:
             m = self.getCurrentScene().findGeomsByName(m)
         if m is not None:
@@ -215,6 +221,8 @@ class dejavuHelper(hostHelper.Helper):
             return None
 
     def getName(self, o):
+        if self.viewer == "nogui":
+            return None
         if type(o) is str:
             o = self.getCurrentScene().findGeomsByName(o)
         else:
@@ -225,6 +233,8 @@ class dejavuHelper(hostHelper.Helper):
         obj = None
         if type(name) != str and type(name) != str:
             return name
+        if self.viewer == "nogui":
+            return None
         try:
             obj = self.getCurrentScene().findGeomsByName(name)
             if len(obj) == 0:
@@ -376,7 +386,12 @@ class dejavuHelper(hostHelper.Helper):
         pass
 
     def reParent(self, obj, parent):
+        if self.nogui:
+            return
         vi = self.getCurrentScene()
+        if vi == "nogui" :
+            return
+        print("current hgelper is " + vi)
         parent = self.getObject(parent)
         if parent is None:
             return

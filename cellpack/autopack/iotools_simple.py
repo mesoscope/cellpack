@@ -19,8 +19,9 @@ class RecipeLoader(object):
         _, file_extension = os.path.splitext(input_file_path)
         self.file_path = input_file_path
         self.file_extension = file_extension
+        self.recipe_data = self._read()
 
-    def read(self):
+    def _read(self):
         if self.file_extension == ".xml":
             pass  # self.load_XML(setupfile)
         elif self.file_extension == ".py":  # execute ?
@@ -80,11 +81,11 @@ class RecipeLoader(object):
                         for i, compartment in enumerate(
                             recipe_data["compartments"]["include"]
                         ):
-                            node = {
-                                "include": compartment["from"]
-                            }
+                            node = {"include": compartment["from"]}
                             sub_recipe = self._request_sub_recipe(inode=node)
-                            recipe_data["compartments"][compartment["from"]] = sub_recipe["compartments"]
+                            recipe_data["compartments"][
+                                compartment["from"]
+                            ] = sub_recipe["compartments"]
                         continue
                     comp_dic = recipe_data["compartments"][cname]
                     rep = None
@@ -109,21 +110,74 @@ class RecipeLoader(object):
                         snode = comp_dic["surface"]
                         ingrs_dic = snode["ingredients"]
                         if len(ingrs_dic):
-                            for ing_name in sorted(ingrs_dic, key=sortkey):  # ingrs_dic:
+                            for ing_name in sorted(
+                                ingrs_dic, key=sortkey
+                            ):  # ingrs_dic:
                                 # either xref or defined
                                 ing_dic = ingrs_dic[ing_name]
                                 sub_recipe = self._request_sub_recipe(inode=ing_dic)
-                                comp_dic["surface"]["ingredients"][ing_name] = sub_recipe
+                                comp_dic["surface"]["ingredients"][
+                                    ing_name
+                                ] = sub_recipe
 
                                 # setup recipe
                     if "interior" in comp_dic:
                         snode = comp_dic["interior"]
                         ingrs_dic = snode["ingredients"]
                         if len(ingrs_dic):
-                            for ing_name in sorted(ingrs_dic, key=sortkey):  # ingrs_dic:
+                            for ing_name in sorted(
+                                ingrs_dic, key=sortkey
+                            ):  # ingrs_dic:
                                 # either xref or defined
                                 ing_dic = ingrs_dic[ing_name]
                                 sub_recipe = self._request_sub_recipe(inode=ing_dic)
-                                comp_dic["interior"]["ingredients"][ing_name] = sub_recipe
+                                comp_dic["interior"]["ingredients"][
+                                    ing_name
+                                ] = sub_recipe
 
         return recipe_data
+
+    def get_all_ingredients(self, results_data_in):
+        all_ingredients = []
+        recipe_data = self.recipe_data
+        if "cytoplasme" in results_data_in:
+            if len(results_data_in["cytoplasme"]["ingredients"]) != 0:
+                for ingredient in results_data_in["cytoplasme"]["ingredients"]:
+                    all_ingredients.append(
+                        {
+                            "results": results_data_in["cytoplasme"]["ingredients"][
+                                ingredient
+                            ],
+                            "recipe_data": recipe_data["cytoplasme"]["ingredients"][
+                                ingredient
+                            ],
+                        }
+                    )
+        if "compartments" in results_data_in:
+            for compartment in results_data_in["compartments"]:
+                current_compartment = results_data_in["compartments"][compartment]
+                if "surface" in current_compartment:
+                    for ingredient in current_compartment["surface"]["ingredients"]:
+                        all_ingredients.append(
+                            {
+                                "results": current_compartment["surface"][
+                                    "ingredients"
+                                ][ingredient],
+                                "recipe_data": recipe_data["compartments"][compartment][
+                                    "surface"
+                                ]["ingredients"][ingredient],
+                            }
+                        )
+                if "interior" in current_compartment:
+                    for ingredient in current_compartment["interior"]["ingredients"]:
+                        all_ingredients.append(
+                            {
+                                "results": current_compartment["interior"][
+                                    "ingredients"
+                                ][ingredient],
+                                "recipe_data": recipe_data["compartments"][compartment][
+                                    "interior"
+                                ]["ingredients"][ingredient],
+                            }
+                        )
+        return all_ingredients

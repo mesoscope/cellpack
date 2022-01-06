@@ -1334,7 +1334,6 @@ class Environment(CompartmentList):
             if maxi > self.largestProteinSize:
                 self.computeGridParams = True
                 self.largestProteinSize = maxi
-
         if self.exteriorRecipe:
             smallest, largest = self.exteriorRecipe.getMinMaxProteinSize()
 
@@ -1792,7 +1791,7 @@ class Environment(CompartmentList):
             marray[i][3] = -ptInd  # uniq Id ?
             # ingr.rbnode[-1] = rbnode
         # doesnt seem to work properly...
-        nbFreePoints = ingr.updateDistances(
+        nbFreePoints = BaseGrid.updateDistances(
             self,
             insidePoints,
             newDistPoints,
@@ -3435,31 +3434,6 @@ class Environment(CompartmentList):
             self.world.attachRigidBody(inodenp.node())
             inodenp = inodenp.node()
         return inodenp
-
-    def pandaMatrice(self, mat):
-        if panda3d is None:
-            return
-        mat = mat.transpose().reshape((16,))
-        #        print mat,len(mat),mat.shape
-        pMat = Mat4(
-            mat[0],
-            mat[1],
-            mat[2],
-            mat[3],
-            mat[4],
-            mat[5],
-            mat[6],
-            mat[7],
-            mat[8],
-            mat[9],
-            mat[10],
-            mat[11],
-            mat[12],
-            mat[13],
-            mat[14],
-            mat[15],
-        )
-        return pMat
 
     def addRB(self, ingr, trans, rotMat, rtype="SingleSphere", static=False):
         # Sphere
