@@ -2,12 +2,14 @@ import os
 import sys
 import argparse
 import traceback
+import math
 
 import numpy as np
 import json
 import logging
 
 from scipy.spatial.transform import Rotation as R
+from cellpack.autopack import transformation as TR
 
 from simulariumio import (
     TrajectoryConverter,
@@ -37,7 +39,7 @@ class ConvertToSimularium(argparse.Namespace):
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
     DEFAULT_GEO_TYPE = "OBJ"  # Other options: SPHERE or PDB
-    DEFAULT_SCALE_FACTOR = 1.0 / 10
+    DEFAULT_SCALE_FACTOR = 1.0 # / 10
     # @staticmethod
 
     def __init__(self, total_steps=1):
@@ -202,11 +204,15 @@ class ConvertToSimularium(argparse.Namespace):
         return (ingredient_name, cytoplasm_data, container_data)
 
     def get_euler_from_matrix(self, data_in):
-        rotation_matrix = [data_in[0][0:3], data_in[1][0:3], data_in[2][0:3]]
-        return R.from_matrix(rotation_matrix).as_euler("XYZ", degrees=False)
+        # rotation_matrix = [data_in[0][0:3], data_in[1][0:3], data_in[2][0:3]]
+        # euler = R.from_matrix(rotation_matrix).as_euler("XYZ", degrees=False)
+        euler2 = TR.euler_from_matrix(data_in)
+        return euler2
 
     def get_euler_from_quat(self, data_in):
-        return R.from_quat(data_in).as_euler("XYZ", degrees=False)
+        # euler = R.from_quat(data_in).as_euler("XYZ", degrees=False)
+        euler2 = TR.euler_from_quaternion(data_in)
+        return euler2
 
     def is_matrix(self, data_in):
         if isinstance(data_in[0], list):
@@ -237,7 +243,7 @@ class ConvertToSimularium(argparse.Namespace):
             self.max_fiber_length = len(data[curve])
 
     def unpack_positions(
-        self, data, time_step_index, ingredient_name, index, agent_id, comp_id=0
+        self, data, time_step_index, ingredient_name, index, agent_id, comp_id=0, left_hand=False
     ):
         position = data["results"][index][0]
         offset = None
@@ -256,7 +262,8 @@ class ConvertToSimularium(argparse.Namespace):
                 (position[2] + offset[2]) * self.scale_factor,
             ]
         )
-        rotation = self.get_euler(data["results"][index][1])
+        rotation_in = data["results"][index][1]
+        rotation = self.get_euler(rotation_in)
         self.rotations[time_step_index].append(rotation)
         self.viz_types[time_step_index].append(1000)
         self.n_agents[time_step_index] = self.n_agents[time_step_index] + 1
@@ -295,6 +302,9 @@ class ConvertToSimularium(argparse.Namespace):
             display_type=display_data["display_type"],
             url=display_data["url"],
         )
+        left_hand = False
+        if "coordsystem" in recipe_data and recipe_data["coordsystem"] == "left" :
+            left_hand = True
         if len(results["results"]) > 0:
             for j in range(len(results["results"])):
                 self.unpack_positions(
@@ -303,6 +313,7 @@ class ConvertToSimularium(argparse.Namespace):
                     ingredient_key,
                     j,
                     self.agent_id_counter,
+                    left_hand = left_hand,
                 )
                 self.agent_id_counter = self.agent_id_counter + 1
         elif "nbCurve" in results and results["nbCurve"] > 0:
