@@ -2,14 +2,11 @@ import os
 import sys
 import argparse
 import traceback
-import math
-
 import numpy as np
 import json
 import logging
 
 from scipy.spatial.transform import Rotation as R
-from cellpack.autopack import transformation as TR
 
 from simulariumio import (
     TrajectoryConverter,
@@ -39,8 +36,7 @@ class ConvertToSimularium(argparse.Namespace):
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
     DEFAULT_GEO_TYPE = "OBJ"  # Other options: SPHERE or PDB
-    DEFAULT_SCALE_FACTOR = 1.0 # / 10
-    # @staticmethod
+    DEFAULT_SCALE_FACTOR = 1.0 / 10
 
     def __init__(self, total_steps=1):
         # Arguments that could be passed in through the command line
@@ -204,15 +200,13 @@ class ConvertToSimularium(argparse.Namespace):
         return (ingredient_name, cytoplasm_data, container_data)
 
     def get_euler_from_matrix(self, data_in):
-        # rotation_matrix = [data_in[0][0:3], data_in[1][0:3], data_in[2][0:3]]
-        # euler = R.from_matrix(rotation_matrix).as_euler("XYZ", degrees=False)
-        euler2 = TR.euler_from_matrix(data_in)
-        return euler2
+        rotation_matrix = [data_in[0][0:3], data_in[1][0:3], data_in[2][0:3]]
+        euler = R.from_matrix(rotation_matrix).as_euler("XYZ", degrees=False)
+        return euler
 
     def get_euler_from_quat(self, data_in):
-        # euler = R.from_quat(data_in).as_euler("XYZ", degrees=False)
-        euler2 = TR.euler_from_quaternion(data_in)
-        return euler2
+        euler = R.from_quat(data_in).as_euler("ZYX", degrees=False)
+        return [euler[0], euler[1], -euler[2]]
 
     def is_matrix(self, data_in):
         if isinstance(data_in[0], list):
