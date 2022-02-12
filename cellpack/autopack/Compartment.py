@@ -65,6 +65,7 @@ import math
 import trimesh
 import trimesh.voxel as Voxel
 from scipy import spatial
+from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
 
 from cellpack.mgl_tools.RAPID import RAPIDlib
 import cellpack.autopack as autopack
@@ -250,7 +251,11 @@ class Compartment(CompartmentList):
         self.grid_distances = None  # signed closest distance for each point
         # TODO Add openVDB
         if self.filename is None:
-            self.saveDejaVuMesh(autopack.cache_geoms + os.sep + self.name)
+            autopack.helper.saveDejaVuMesh(
+                autopack.cache_geoms + os.sep + self.name, self.vertices, self.faces
+            )
+            self.filename = autopack.cache_geoms + os.sep + self.name
+            self.ref_obj = self.name
 
     def reset(self):
         """reset the inner compartment data, surface and inner points"""
@@ -294,22 +299,6 @@ class Compartment(CompartmentList):
 
         return geom
 
-    def saveDejaVuMesh(self, filename):
-        # from DejaVu.IndexedPolygons import IndexedPolygons
-        # geometry = IndexedPolygons(self.name, vertices=self.vertices,
-        #                  faces=self.faces, vnormals=self.vnormals, shading='smooth')
-        # geometry.writeToFile(filename)
-        if self.vertices is None:
-            return
-        numpy.savetxt(
-            filename + ".indpolvert",
-            numpy.hstack([self.vertices, self.vnormals]),
-            delimiter=" ",
-        )
-        numpy.savetxt(filename + ".indpolface", self.faces, delimiter=" ")
-        self.filename = filename
-        self.ref_obj = self.name
-
     def buildSphere(self, radius, geomname):
         geom = None
         if autopack.helper is not None:
@@ -335,18 +324,25 @@ class Compartment(CompartmentList):
         """
         Create a polygon mesh object from a dictionary verts,faces,normals
         """
-        nv = len(data["verts"])
-        nf = len(data["faces"])
-        self.vertices = numpy.array(data["verts"]).reshape((nv / 3, 3))
-        self.faces = numpy.array(data["faces"]).reshape((nf / 3, 3))
-        self.vnormals = numpy.array(data["normals"]).reshape((nv / 3, 3))
+        nv = int(len(data["verts"]) / 3)
+        nf = int(len(data["faces"]) / 3)
+        self.vertices = numpy.array(data["verts"]).reshape((nv, 3))
+        self.faces = numpy.array(data["faces"]).reshape((nf, 3))
+        self.vnormals = numpy.array(data["normals"]).reshape((nv, 3))
         geom = autopack.helper.createsNmesh(geomname, self.vertices, None, self.faces)[
             0
         ]
         self.filename = geomname
         self.ref_obj = geomname
         self.meshType = "file"
-        self.saveDejaVuMesh(autopack.cache_geoms + os.sep + geomname)
+        autopack.helper.saveObjMesh(
+            autopack.cache_geoms + os.sep + geomname + ".obj", self.vertices, self.faces
+        )
+        autopack.helper.saveDejaVuMesh(
+            autopack.cache_geoms + os.sep + geomname, self.vertices, self.faces
+        )
+        self.filename = autopack.cache_geoms + os.sep + geomname
+        self.ref_obj = self.name
         return geom
 
     def rapid_model(self):
@@ -593,7 +589,6 @@ class Compartment(CompartmentList):
         elif fileExtension == ".dae":
             # use the host helper if any to read
             if helper is None:
-                from upy.dejavuTk.dejavuHelper import dejavuHelper
 
                 # need to get the mesh directly. Only possible if dae or dejavu format
                 # get the dejavu heper but without the View, and in nogui mode
@@ -3310,7 +3305,7 @@ class Compartment(CompartmentList):
         Compute volume of surface and interior
         set 'nbMol' in each ingredient of both recipes
         """
-        unitVol = histoVol.grid.gridSpacing ** 3
+        unitVol = histoVol.grid.gridSpacing**3
         if surfacePoints:
             self.log.info("%d surface points %.2f unitVol", len(surfacePoints), unitVol)
             # FIXME .. should be surface per surface point instead of unitVol

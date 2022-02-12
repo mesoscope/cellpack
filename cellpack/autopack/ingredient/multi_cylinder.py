@@ -1,12 +1,41 @@
 import numpy
 import math
-from panda3d.core import Point3, TransformState
+from math import sqrt
+import panda3d
+from panda3d.core import Mat4, Point3, TransformState
 from panda3d.bullet import BulletCylinderShape, BulletRigidBodyNode
 
 from .Ingredient import Ingredient
 import cellpack.autopack as autopack
 
 helper = autopack.helper
+
+
+# TODO : move somewhere in a more apropriate place ?
+def pandaMatrice(mat):
+    if panda3d is None:
+        return
+    mat = mat.transpose().reshape((16,))
+    #        print mat,len(mat),mat.shape
+    pMat = Mat4(
+        mat[0],
+        mat[1],
+        mat[2],
+        mat[3],
+        mat[4],
+        mat[5],
+        mat[6],
+        mat[7],
+        mat[8],
+        mat[9],
+        mat[10],
+        mat[11],
+        mat[12],
+        mat[13],
+        mat[14],
+        mat[15],
+    )
+    return pMat
 
 
 class MultiCylindersIngr(Ingredient):
@@ -74,11 +103,10 @@ class MultiCylindersIngr(Ingredient):
         #        self.encapsulatingRadius = radii[0][0]  #Graham worry: 9/8/11 This is incorrect... shoudl be max(radii[0]) or radii[0][1]
         #        self.encapsulatingRadius = radii[0][0]#nope should be  half length ?
         self.length = 1.0
-        positions = self.positions
         self.useLength = False
         if "useLength" in kw:
             self.useLength = kw["useLength"]
-        if positions2 is not None and positions is not None:
+        if self.positions2 is not None and self.positions is not None:
             # shoulde the overall length of the object from bottom to top
             bb = self.getBigBB()
             d = numpy.array(bb[1]) - numpy.array(bb[0])
@@ -102,8 +130,10 @@ class MultiCylindersIngr(Ingredient):
                         #                                radius=self.radii[0][0]*1.24, length=self.uLength,
                         #                                res= 5, parent="autopackHider",axis="+X")[0]
             length = 1
-            if positions2 is not None and positions is not None:
-                d = numpy.array(positions2[0][0]) - numpy.array(positions[0][0])
+            if self.positions2 is not None and self.positions is not None:
+                d = numpy.array(self.positions2[0][0]) - numpy.array(
+                    self.positions[0][0]
+                )
                 s = numpy.sum(d * d)
                 length = math.sqrt(s)  # diagonal
             self.mesh = autopack.helper.Cylinder(
@@ -211,6 +241,58 @@ class MultiCylindersIngr(Ingredient):
         centers1 = self.positions[level]
         centers2 = self.positions2[level]
         radii = self.radii[level]
+        return self.checkCylCollisions(
+            centers1,
+            centers2,
+            radii,
+            jtrans,
+            rotMat,
+            gridPointsCoords,
+            distance,
+            histoVol,
+            dpad,
+        )
+
+    def add_rb_node(self, worldNP):
+        inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
+        inodenp.node().setMass(1.0)
+        centT1 = self.positions[
+            0
+        ]  # ingr.transformPoints(jtrans, rotMat, ingr.positions[0])
+        centT2 = self.positions2[
+            0
+        ]  # ingr.transformPoints(jtrans, rotMat, ingr.positions2[0])
+        for radc, p1, p2 in zip(self.radii[0], centT1, centT2):
+            length, mat = autopack.helper.getTubePropertiesMatrix(p1, p2)
+            pMat = pandaMatrice(mat)
+            #            d = numpy.array(p1) - numpy.array(p2)
+            #            s = numpy.sum(d*d)
+            Point3(
+                self.principalVector[0],
+                self.principalVector[1],
+                self.principalVector[2],
+            )
+            shape = BulletCylinderShape(
+                radc, length, 1
+            )  # math.sqrt(s), 1)# { XUp = 0, YUp = 1, ZUp = 2 } or LVector3f const half_extents
+            inodenp.node().addShape(shape, TransformState.makeMat(pMat))  #
+        return inodenp
+
+    def checkCylCollisions(
+        self,
+        centers1,
+        centers2,
+        radii,
+        jtrans,
+        rotMat,
+        gridPointsCoords,
+        distance,
+        histoVol,
+        dpad,
+    ):
+        """
+        Check cylinders for collision
+        """
         cent1T = self.transformPoints(jtrans, rotMat, centers1)
         cent2T = self.transformPoints(jtrans, rotMat, centers2)
 
@@ -246,7 +328,7 @@ class MultiCylindersIngr(Ingredient):
             x2, y2, z2 = p2
             vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
             lengthsq = vx * vx + vy * vy + vz * vz
-            length = math.sqrt(lengthsq)
+            length = sqrt(lengthsq)
             cx, cy, cz = posc = x1 + vx * 0.5, y1 + vy * 0.5, z1 + vz * 0.5
             radt = length + radc
 
@@ -274,10 +356,13 @@ class MultiCylindersIngr(Ingredient):
                     numpy.greater_equal(dotp, 0.0), numpy.less_equal(dotp, lengthsq)
                 )
             )
-
+            if not len(ptsWithinCaps[0]):
+                print("no point inside the geom?")
+                return False, insidePoints, newDistPoints
             if self.compareCompartment:
                 ptsInSphereId = numpy.take(pointsInCube, ptsWithinCaps[0], 0)
                 compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptsInSphereId, 0)
+                #                print "compId",compIdsSphere
                 if self.compNum <= 0:
                     wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
                     if len(wrongPt):
@@ -309,7 +394,7 @@ class MultiCylindersIngr(Ingredient):
                 if pt in insidePoints:
                     continue
                 if dotp[pti] < 0.0:  # outside 1st cap
-                    d = math.sqrt(d2toP1[pti])
+                    d = sqrt(d2toP1[pti])
                     if d < distance[pt]:  # point in region of influence
                         if pt in newDistPoints:
                             if d < newDistPoints[pt]:
@@ -317,7 +402,7 @@ class MultiCylindersIngr(Ingredient):
                         else:
                             newDistPoints[pt] = d
                 elif dotp[pti] > lengthsq:
-                    d = math.sqrt(d2toP2[pti])
+                    d = sqrt(d2toP2[pti])
                     if d < distance[pt]:  # point in region of influence
                         if pt in newDistPoints:
                             if d < newDistPoints[pt]:
@@ -325,7 +410,7 @@ class MultiCylindersIngr(Ingredient):
                         else:
                             newDistPoints[pt] = d
                 else:
-                    d = math.sqrt(dsq[pti]) - radc
+                    d = sqrt(dsq[pti]) - radc
                     if d < 0.0:  # point is inside dropped sphere
                         if pt in insidePoints:
                             if d < insidePoints[pt]:
@@ -334,28 +419,3 @@ class MultiCylindersIngr(Ingredient):
                             insidePoints[pt] = d
             cylNum += 1
         return False, insidePoints, newDistPoints
-
-    def add_rb_node(self, worldNP):
-        inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
-        inodenp.node().setMass(1.0)
-        centT1 = self.positions[
-            0
-        ]  # ingr.transformPoints(jtrans, rotMat, ingr.positions[0])
-        centT2 = self.positions2[
-            0
-        ]  # ingr.transformPoints(jtrans, rotMat, ingr.positions2[0])
-        for radc, p1, p2 in zip(self.radii[0], centT1, centT2):
-            length, mat = helper.getTubePropertiesMatrix(p1, p2)
-            pMat = self.pandaMatrice(mat)
-            #            d = numpy.array(p1) - numpy.array(p2)
-            #            s = numpy.sum(d*d)
-            Point3(
-                self.principalVector[0],
-                self.principalVector[1],
-                self.principalVector[2],
-            )
-            shape = BulletCylinderShape(
-                radc, length, 1
-            )  # math.sqrt(s), 1)# { XUp = 0, YUp = 1, ZUp = 2 } or LVector3f const half_extents
-            inodenp.node().addShape(shape, TransformState.makeMat(pMat))  #
-        return inodenp

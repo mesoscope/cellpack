@@ -51,11 +51,11 @@ import logging
 import collada
 from scipy.spatial.transform import Rotation as R
 from math import sqrt, pi
+from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
 from cellpack.mgl_tools.bhtree import bhtreelib
 from random import uniform, gauss, random
 from time import time
 import math
-
 from cellpack.mgl_tools.RAPID import RAPIDlib
 
 # RAPID require a uniq mesh. not an empty or an instance
@@ -985,7 +985,7 @@ class Ingredient(Agent):
         # TODO : "med":{"method":"cms","parameters":{"gridres":30}}
         # TODO : "high":{"method":"msms","parameters":{"gridres":30}}
         # TODO : etc...
-        self.coordsystem = "left"
+        self.coordsystem = "right"
         if "coordsystem" in kw:
             self.coordsystem = kw["coordsystem"]
         self.rejectionThreshold = 30
@@ -1148,8 +1148,8 @@ class Ingredient(Agent):
         if positions is not None and isinstance(positions[0], dict):
             for i in range(nLOD):
                 c = numpy.array(positions[i]["coords"])
-                n = len(c)
-                self.positions.append(c.reshape((int(n / 3), 3)).tolist())
+                n = int(len(c) / 3)
+                self.positions.append(c.reshape((n, 3)).tolist())
                 self.radii.append(radii[i]["radii"])
             if len(self.radii) == 0:
                 self.radii = [[10]]  # some default value ?
@@ -1175,6 +1175,8 @@ class Ingredient(Agent):
                 radii = [[0]]
             self.radii = radii
             self.positions = positions
+        if self.minRadius == 0:
+            self.minRadius = min(min(self.radii))
 
     def reset(self):
         """reset the states of an ingredient"""
@@ -1272,7 +1274,7 @@ class Ingredient(Agent):
         self.rejectionCounter += 1
         if (
             self.rejectionCounter >= self.rejectionThreshold
-        ):  # Graham set this to 6000 for figure 13b (Results Fig 3 Test1) otehrwise it fails to fill small guys
+        ):  # Graham set this to 6000 for figure 13b (Results Fig 3 Test1) otherwise it fails to fill small guys
             self.log.info("PREMATURE ENDING of ingredient rejectOnce", self.name)
             self.completion = 1.0
 
@@ -1512,7 +1514,6 @@ class Ingredient(Agent):
             self.log.info("read dae withHelper", filename, helper, autopack.helper)
             # use the host helper if any to read
             if helper is None:
-                from upy.dejavuTk.dejavuHelper import dejavuHelper
 
                 # need to get the mesh directly. Only possible if dae or dejavu format
                 # get the dejavu heper but without the View, and in nogui mode
@@ -1548,7 +1549,6 @@ class Ingredient(Agent):
                     if helper.host != "dejavu":
 
                         if collada is not None:
-                            from upy.dejavuTk.dejavuHelper import dejavuHelper
 
                             # need to get the mesh directly. Only possible if dae or dejavu format
                             # get the dejavu heper but without the View, and in nogui mode
@@ -1653,7 +1653,13 @@ class Ingredient(Agent):
         self.meshName = geomname
         self.meshType = "file"
         self.mesh = geom
-        self.saveDejaVuMesh(autopack.cache_geoms + os.sep + geomname, decompose=False)
+        autopack.helper.saveDejaVuMesh(
+            autopack.cache_geoms + os.sep + geomname, self.vertices, self.faces
+        )
+        autopack.helper.saveObjMesh(
+            autopack.cache_geoms + os.sep + geomname + ".obj", self.vertices, self.faces
+        )
+        # self.saveObjMesh(autopack.cache_geoms + os.sep + geomname + ".obj")
         return geom
 
     def getDejaVuMesh(self, filename, geomname):
@@ -1684,21 +1690,6 @@ class Ingredient(Agent):
         #            if helper.host != "maya" :
         #                helper.rotateObj(geom,[0.0,-math.pi/2.0,0.0])
         return geom
-
-    def saveDejaVuMesh(self, filename, decompose=True):
-        # from DejaVu.IndexedPolygons import IndexedPolygons
-        # geometry = IndexedPolygons(self.name, vertices=self.vertices,
-        #                  faces=self.faces, vnormals=self.vnormals, shading='smooth')
-        # geometry.writeToFile(filename)
-        if decompose:
-            self.faces, self.vertices, self.vnormals = self.DecomposeMesh(
-                self.mesh, edit=True, copy=False, tri=True
-            )
-        numpy.savetxt(
-            filename + ".indpolvert", self.vertices, delimiter=" "
-        )  # numpy.hstack([self.vertices, self.vnormals])
-        numpy.savetxt(filename + ".indpolface", self.faces, delimiter=" ")
-        # self.filename = filename
 
     def jitterPosition(self, position, spacing, normal=None):
         """
@@ -2313,8 +2304,11 @@ class Ingredient(Agent):
         rotMatj=None,
     ):
         return self.get_new_distance_values(
-            grid, gridPointsCoords, dpad, distance, centT, jtrans, rotMatj, dpad
+            jtrans, rotMatj, gridPointsCoords, distance, dpad
         )
+        # return self.get_new_distance_values(
+        #    grid, gridPointsCoords, dpad, distance, centT, jtrans, rotMatj, dpad
+        # )
 
     def getIngredientsInBox(self, histoVol, jtrans, rotMat, compartment, afvi):
         if histoVol.windowsSize_overwrite:
@@ -2976,7 +2970,11 @@ class Ingredient(Agent):
             )
 
         # grow doesnt use panda.......but could use all the geom produce by the grow as rb
-        if self.placeType == "jitter" or self.Type == "Grow" or self.Type == "Actine":
+        if self.Type == "Grow" or self.Type == "Actine":
+            success, jtrans, rotMatj, insidePoints, newDistPoints = self.grow_place(
+                env, ptInd, env.grid.freePoints, env.grid.nbFreePoints, distance, dpad
+            )
+        elif self.placeType == "jitter":
             success, jtrans, rotMatj, insidePoints, newDistPoints = self.jitter_place(
                 env,
                 compartment,
@@ -2987,7 +2985,6 @@ class Ingredient(Agent):
                 dpad,
                 env.afviewer,
             )
-
         elif self.placeType == "spheresBHT":
             (
                 success,

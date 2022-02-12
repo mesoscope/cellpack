@@ -788,7 +788,7 @@ class Environment(CompartmentList):
         if vAnalysis == 1:
             #    START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
             # totalVolume = self.grid.gridVolume*unitVol
-            unitVol = self.grid.gridSpacing ** 3
+            unitVol = self.grid.gridSpacing**3
             wrkDirRes = self.resultfile + "_analyze_"
             for o in self.compartments:  # only for compartment ?
                 # totalVolume -= o.surfaceVolume
@@ -922,7 +922,7 @@ class Environment(CompartmentList):
 
         self.log.info("self.compartments In Environment = %d", len(self.compartments))
         if self.compartments == []:
-            unitVol = self.grid.gridSpacing ** 3
+            unitVol = self.grid.gridSpacing**3
             innerPointNum = len(freePoints)
             self.log.info("  .  .  .  . ")
             self.log.info("inner Point Count = %d", innerPointNum)
@@ -1334,7 +1334,6 @@ class Environment(CompartmentList):
             if maxi > self.largestProteinSize:
                 self.computeGridParams = True
                 self.largestProteinSize = maxi
-
         if self.exteriorRecipe:
             smallest, largest = self.exteriorRecipe.getMinMaxProteinSize()
 
@@ -1792,7 +1791,7 @@ class Environment(CompartmentList):
             marray[i][3] = -ptInd  # uniq Id ?
             # ingr.rbnode[-1] = rbnode
         # doesnt seem to work properly...
-        nbFreePoints = ingr.updateDistances(
+        nbFreePoints = BaseGrid.updateDistances(
             self,
             insidePoints,
             newDistPoints,
@@ -2853,7 +2852,6 @@ class Environment(CompartmentList):
         )  # ingrdic["compNum"],1,ingrdic["encapsulatingRadius"]
 
     def load_asTxt(self, resultfilename=None):
-        #        from upy.hostHelper import Helper as helper
         if resultfilename is None:
             resultfilename = self.resultfile
         rfile = open(resultfilename, "r")
@@ -3228,7 +3226,7 @@ class Environment(CompartmentList):
         grid.gridVolume, grid.nbGridPoints = self.callFunction(
             grid.computeGridNumberOfPoint, (boundingBox, spacing)
         )
-        unitVol = spacing ** 3
+        unitVol = spacing**3
         realTotalVol = grid.gridVolume * unitVol
 
         r = self.exteriorRecipe
@@ -3436,31 +3434,6 @@ class Environment(CompartmentList):
             self.world.attachRigidBody(inodenp.node())
             inodenp = inodenp.node()
         return inodenp
-
-    def pandaMatrice(self, mat):
-        if panda3d is None:
-            return
-        mat = mat.transpose().reshape((16,))
-        #        print mat,len(mat),mat.shape
-        pMat = Mat4(
-            mat[0],
-            mat[1],
-            mat[2],
-            mat[3],
-            mat[4],
-            mat[5],
-            mat[6],
-            mat[7],
-            mat[8],
-            mat[9],
-            mat[10],
-            mat[11],
-            mat[12],
-            mat[13],
-            mat[14],
-            mat[15],
-        )
-        return pMat
 
     def addRB(self, ingr, trans, rotMat, rtype="SingleSphere", static=False):
         # Sphere

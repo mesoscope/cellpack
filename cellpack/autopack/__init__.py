@@ -358,9 +358,7 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
         log.info("autopack return grabbed %s", filename)
         # check the file is not an error
         return filename
-    log.info("autopack search %s %s", filename, os.path.isfile(filename))
     # if no folder provided, use the current_recipe_folder
-
     if os.path.isfile(cache_dir[cache] + os.sep + filename):
         return cache_dir[cache] + os.sep + filename
     if os.path.isfile(current_recipe_path + os.sep + filename):

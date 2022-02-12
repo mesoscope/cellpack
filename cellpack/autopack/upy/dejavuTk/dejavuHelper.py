@@ -2,7 +2,6 @@
 
 """
     Copyright (C) <2010>  Autin L. TSRI
-
     This file git_upy/dejavuTk/dejavuHelper.py is part of upy.
 
     upy is free software: you can redistribute it and/or modify
@@ -19,15 +18,15 @@
     along with upy.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.
 """
 
-# standard module
+# standardmodule
 import os
 import numpy
 from PIL import Image
-import collada
-
-from cellpack.autopack.upy import hostHelper
 
 # DejaVu module
+from cellpack.autopack.upy import (
+    hostHelper,
+)  # its confusing that upy is in three different place
 from cellpack.mgl_tools.DejaVu.Viewer import Viewer
 from cellpack.mgl_tools.DejaVu.Geom import Geom
 from cellpack.mgl_tools.DejaVu.Spheres import Spheres
@@ -37,6 +36,7 @@ from cellpack.mgl_tools.DejaVu.glfLabels import GlfLabels as Labels
 from cellpack.mgl_tools.DejaVu.IndexedPolygons import IndexedPolygons
 from cellpack.mgl_tools.DejaVu.Polylines import Polylines as dejavuPolylines
 from cellpack.mgl_tools.DejaVu.Texture import Texture
+import collada
 
 
 # Problem instance doesnt really exist as its. Or its instance of mesh/sphere/cylinder directly.
@@ -178,6 +178,8 @@ class dejavuHelper(hostHelper.Helper):
 
     def getCurrentScene(self):
         # actually return the Viewer instance
+        if self.viewer == "nogui":
+            self.nogui = True
         return self.viewer
 
     def progressBar(self, progress=None, label=None):
@@ -194,8 +196,13 @@ class dejavuHelper(hostHelper.Helper):
     def resetProgressBar(self):
         """reset the Progress Bar, using value"""
         return
+        if hasattr(self.viewer, "Bar"):
+            self.viewer.Bar.reset()
+        self.update()
 
     def update(self):
+        if self.viewer == "nogui":
+            return
         vi = self.getCurrentScene()
         vi.OneRedraw()
         vi.update()
@@ -206,6 +213,8 @@ class dejavuHelper(hostHelper.Helper):
         return object.__module__
 
     def getMesh(self, m, **kw):
+        if self.viewer == "nogui":
+            return None
         if type(m) is str:
             m = self.getCurrentScene().findGeomsByName(m)
         if m is not None:
@@ -214,14 +223,20 @@ class dejavuHelper(hostHelper.Helper):
             return None
 
     def getName(self, o):
+        if self.viewer == "nogui":
+            return None
         if type(o) is str:
             o = self.getCurrentScene().findGeomsByName(o)
+        else:
+            print("getName", o, type(o))
         return o.name
 
     def getObject(self, name):
         obj = None
         if type(name) != str and type(name) != str:
             return name
+        if self.viewer == "nogui":
+            return None
         try:
             obj = self.getCurrentScene().findGeomsByName(name)
             if len(obj) == 0:
@@ -376,6 +391,9 @@ class dejavuHelper(hostHelper.Helper):
         if self.nogui:
             return
         vi = self.getCurrentScene()
+        if vi == "nogui":
+            return
+        print("current hgelper is " + vi)
         parent = self.getObject(parent)
         if parent is None:
             return
@@ -671,7 +689,7 @@ class dejavuHelper(hostHelper.Helper):
         parent = None
         if "parent" in kw:
             parent = kw.pop("parent")
-        from cellpack.mgl_tools.DejaVu.Points import Points
+        from DejaVu.Points import Points
 
         obj = Points(name, **kw)
         self.addObjectToScene(self.getCurrentScene(), obj, parent=parent)
@@ -1206,6 +1224,7 @@ class dejavuHelper(hostHelper.Helper):
         if name == "":
             name = g.id
         v = numpy.array(g.primitives[0].vertex)  # multiple primitive ?
+        print("vertices nb is ", len(v))
         nf = len(g.primitives[0].vertex_index)
         sh = g.primitives[0].vertex_index.shape
         if len(sh) == 2 and sh[1] == 3:
@@ -1269,6 +1288,7 @@ class dejavuHelper(hostHelper.Helper):
             dicgeoms[g.id]["geom"] = g
             dicgeoms[g.id]["id"] = g.id
             v, vn, f = self.decomposeColladaGeom(g, col)
+            print("vertices nb is ", len(v))
             if self.nogui:
                 # apply transformation from boundGeom
                 dicgeoms[g.id]["node"] = None
@@ -1331,9 +1351,7 @@ class dejavuHelper(hostHelper.Helper):
         #            for i,node in enumerate(col.scene.nodes) :
         #                self.transformNode(node,i,col,col.scene.xmlnode[i])
         else:
-            from cellpack.mgl_tools.DejaVu.IndexedPolygons import (
-                IndexedPolygonsFromFile,
-            )
+            from DejaVu.IndexedPolygons import IndexedPolygonsFromFile
 
             geoms = IndexedPolygonsFromFile(filename, fileName)
             self.AddObject(geoms)

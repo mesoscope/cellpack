@@ -49,7 +49,7 @@ import cellpack.autopack as autopack
 #      - hierarchy
 #
 # ===============================================================================
-import cellpack.mgl_tools.upy as upy
+import cellpack.autopack.upy as upy
 from cellpack.autopack.upy import colors as upyColors
 
 from .ingredient import (

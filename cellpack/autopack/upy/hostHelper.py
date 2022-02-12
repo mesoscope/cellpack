@@ -308,8 +308,8 @@ class Helper:
         else:
             theta = random.uniform(0.0, 1.0) * (2 * math.pi)
             u = random.uniform(0.0, 1.0) * 2 - 1
-        x = radius * math.sqrt(1 - u ** 2) * math.cos(theta)
-        y = radius * math.sqrt(1 - u ** 2) * math.sin(theta)
+        x = radius * math.sqrt(1 - u**2) * math.cos(theta)
+        y = radius * math.sqrt(1 - u**2) * math.sin(theta)
         z = radius * u
         return [x, y, z]
 
@@ -4935,7 +4935,7 @@ class Helper:
             collada_xml.node.append(master_node)
         return collada_xml
 
-    # DejaVu.indexedPolygon have also this function
+    @classmethod
     def writeMeshToFile(self, filename, verts=None, faces=None, vnorms=[], fnorms=[]):
         """
         Write the given mesh data (vertices, faces, normal, face normal) in the DejaVu format.
@@ -5027,6 +5027,26 @@ class Helper:
         self.writeMeshToFile(
             filename, verts=vertices, faces=faces, vnorms=vnormals, fnorms=fnormals
         )
+
+    @classmethod
+    def saveDejaVuMesh(self, filename, verts=[], faces=[]):
+        numpy.savetxt(
+            filename + ".indpolvert", verts, delimiter=" "
+        )  # numpy.hstack([self.vertices, self.vnormals])
+        numpy.savetxt(filename + ".indpolface", faces, delimiter=" ")
+
+    @classmethod
+    def saveObjMesh(self, filepath, vertices=[], faces=[], vnorms=[]):
+        print("save OBJ " + filepath)
+        with open(filepath, "w") as f:
+            f.write("OBJ File: \n")
+            for v in vertices:
+                f.write("v %.4f %.4f %.4f\n" % (v[0], v[1], v[2]))
+            for p in faces:
+                f.write("f ")
+                for i in p:
+                    f.write("%d " % (i + 1))
+                f.write("\n")
 
     @classmethod
     def writeDX(self, filename, gridvalue, gridcenter, gridstep, grisize, commens=""):

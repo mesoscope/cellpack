@@ -142,8 +142,11 @@ class BaseGrid:
         self.log = logging.getLogger("grid")
         self.log.propagate = False
 
+        if None in boundingBox[0] or None in boundingBox[1]:
+            boundingBox = ([0, 0, 0], [1000, 1000, 1000])
         # a grid is attached to an environnement
         self.boundingBox = boundingBox
+
         # this list provides the id of the component this grid points belongs
         # to. The id is an integer where 0 is the Histological Volume, and +i is
         # the surface of compartment i and -i is the interior of compartment i
@@ -161,7 +164,6 @@ class BaseGrid:
         # object (or an compartment surface NOT IMPLEMENTED)
         self.distToClosestSurf = []
         self.distToClosestSurf_store = []
-
         self.diag = self.getDiagonal()
         self.gridSpacing = space  # * 1.1547#cubic grid with a diagonal spacing equal to that smallest packing radius
         self.nbGridPoints = None
@@ -188,7 +190,7 @@ class BaseGrid:
         self.center = None
         self.backup = None
         if setup:
-            self.setup(boundingBox, space)
+            self.setup(self.boundingBox, space)
             # use np.roll to have periodic condition
             # what about collision ?
 
@@ -841,7 +843,6 @@ class BaseGrid:
         xr, yr, zr = boundingBox[1]
         encapsulatingGrid = self.encapsulatingGrid
         # Graham Added on Oct17 to allow for truly 2D grid for test fills... may break everything!
-
         nx = int(ceil((xr - xl) / space)) + encapsulatingGrid
         ny = int(ceil((yr - yl) / space)) + encapsulatingGrid
         nz = int(ceil((zr - zl) / space)) + encapsulatingGrid
@@ -865,7 +866,7 @@ class BaseGrid:
 
     def computeExteriorVolume(self, compartments=None, space=None, fbox_bb=None):
         # compute exterior volume, totalVolume without compartments volume
-        unitVol = self.gridSpacing ** 3
+        unitVol = self.gridSpacing**3
         totalVolume = self.gridVolume * unitVol
         if fbox_bb is not None:
             V, nbG = self.computeGridNumberOfPoint(fbox_bb, space)
@@ -878,7 +879,7 @@ class BaseGrid:
 
     def computeVolume(self, space=None, fbox_bb=None):
         # compute exterior volume, totalVolume without compartments volume
-        unitVol = self.gridSpacing ** 3
+        unitVol = self.gridSpacing**3
         totalVolume = self.gridVolume * unitVol
         if fbox_bb is not None:
             V, nbG = self.computeGridNumberOfPoint(fbox_bb, space)

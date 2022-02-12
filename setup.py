@@ -45,7 +45,7 @@ requirements = [
     "scipy==1.6.2",
     "simulariumio>=1.2.0",
     "plotly>=5.3.1",
-    "pycollada==0.7.1",
+    "pycollada==0.7.2",
     "pymunk>=6.2.0",
     "trimesh>=3.9.34",
 ]
@@ -75,7 +75,7 @@ setup(
     description="algorthim to pack molecular recipes",
     entry_points={
         "console_scripts": [
-            "analyze=cellpack.bin.analyze:main", 
+            "analyze=cellpack.bin.analyze:main",
             "convert=cellpack.bin.simularium_converter:main"],
     },
     install_requires=requirements,
