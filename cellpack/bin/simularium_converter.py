@@ -237,7 +237,14 @@ class ConvertToSimularium(argparse.Namespace):
             self.max_fiber_length = len(data[curve])
 
     def unpack_positions(
-        self, data, time_step_index, ingredient_name, index, agent_id, comp_id=0, left_hand=False
+        self,
+        data,
+        time_step_index,
+        ingredient_name,
+        index,
+        agent_id,
+        comp_id=0,
+        left_hand=False,
     ):
         position = data["results"][index][0]
         offset = None
@@ -297,7 +304,7 @@ class ConvertToSimularium(argparse.Namespace):
             url=display_data["url"],
         )
         left_hand = False
-        if "coordsystem" in recipe_data and recipe_data["coordsystem"] == "left" :
+        if "coordsystem" in recipe_data and recipe_data["coordsystem"] == "left":
             left_hand = True
         if len(results["results"]) > 0:
             for j in range(len(results["results"])):
