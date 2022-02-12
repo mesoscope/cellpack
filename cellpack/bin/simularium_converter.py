@@ -307,7 +307,7 @@ class ConvertToSimularium(argparse.Namespace):
                     ingredient_key,
                     j,
                     self.agent_id_counter,
-                    left_hand = left_hand,
+                    left_hand=left_hand,
                 )
                 self.agent_id_counter = self.agent_id_counter + 1
         elif "nbCurve" in results and results["nbCurve"] > 0:
