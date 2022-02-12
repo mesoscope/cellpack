@@ -75,7 +75,7 @@ setup(
     description="algorthim to pack molecular recipes",
     entry_points={
         "console_scripts": [
-            "analyze=cellpack.bin.analyze:main", 
+            "analyze=cellpack.bin.analyze:main",
             "convert=cellpack.bin.simularium_converter:main"],
     },
     install_requires=requirements,
