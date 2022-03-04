@@ -67,7 +67,6 @@ import trimesh.voxel as Voxel
 from scipy import spatial
 from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
 
-from cellpack.mgl_tools.RAPID import RAPIDlib
 import cellpack.autopack as autopack
 from cellpack.mgl_tools.bhtree import bhtreelib
 from cellpack.autopack import transformation as tr, binvox_rw
@@ -344,27 +343,6 @@ class Compartment(CompartmentList):
         self.filename = autopack.cache_geoms + os.sep + geomname
         self.ref_obj = self.name
         return geom
-
-    def rapid_model(self):
-        rapid_model = RAPIDlib.RAPID_model()
-        rapid_model.addTriangles(
-            numpy.array(self.vertices, "f"), numpy.array(self.faces, "i")
-        )
-        return rapid_model
-
-    def create_rapid_model(self):
-        self.rapid_model = RAPIDlib.RAPID_model()
-        # need triangle and vertices
-        # faces,vertices,vnormals = helper.DecomposeMesh(self.mesh,
-        #                   edit=False,copy=False,tri=True,transform=True)
-        self.rapid_model.addTriangles(
-            numpy.array(self.vertices, "f"), numpy.array(self.faces, "i")
-        )
-
-    def get_rapid_model(self):
-        if self.rapid_model is None:
-            self.create_rapid_model()
-        return self.rapid_model
 
     def addShapeRB(self):
         # in case our shape is a regular primitive
@@ -1095,44 +1073,6 @@ class Compartment(CompartmentList):
 
         self.ogsurfacePoints = points
         self.ogsurfacePointsNormals = normals
-
-    def one_rapid_ray(self, pt1, pt2, diag):
-        # return number of triangle /triangle contact
-        helper = autopack.helper
-        rm = self.get_rapid_model()
-        v1 = numpy.array(pt1)
-        direction = helper.unit_vector(pt2 - pt1) * diag
-        v2 = v1 + direction
-        if sum(v1) == 0.0:
-            v3 = v2 + numpy.array([0.0, 1.0, 0.0])
-        else:
-            vcross = numpy.cross(v1, v2)  # v1 and v2 are parrallele
-            if sum(vcross) == 0:
-                v3 = v2 + numpy.array([0.0, 1.0, 0.0])
-            else:
-                v3 = v2 + helper.unit_vector(numpy.cross(v1, v2))
-        f = [0, 1, 2]
-        ray_model = RAPIDlib.RAPID_model()
-        ray_model.addTriangles(
-            numpy.array([v1, v2, v3], "f"),
-            numpy.array(
-                [f],
-                "i",
-            ),
-        )
-        RAPIDlib.RAPID_Collide_scaled(
-            numpy.identity(3),
-            numpy.array([0.0, 0.0, 0.0], "f"),
-            1.0,
-            rm,
-            numpy.identity(3),
-            numpy.array([0.0, 0.0, 0.0], "f"),
-            1.0,
-            ray_model,
-            RAPIDlib.cvar.RAPID_ALL_CONTACTS,
-        )
-        # could display it ?
-        return RAPIDlib.cvar.RAPID_num_contacts
 
     def checkPointInside_rapid(self, point, diag, ray=1):
         # we want to be sure to cover the organelle

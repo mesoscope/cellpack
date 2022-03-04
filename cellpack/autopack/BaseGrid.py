@@ -43,7 +43,6 @@ from math import ceil, floor
 from random import randrange
 import cellpack.autopack as autopack
 from cellpack.autopack.ldSequence import cHaltonSequence3
-from cellpack.mgl_tools.RAPID import RAPIDlib
 from cellpack.mgl_tools.bhtree import bhtreelib
 
 
@@ -885,74 +884,6 @@ class BaseGrid:
             V, nbG = self.computeGridNumberOfPoint(fbox_bb, space)
             totalVolume = V * unitVol
         return totalVolume
-
-    def create_rapid_model(self):
-        self.rapid_model = RAPIDlib.RAPID_model()
-        # need triangle and vertices
-        self.rapid_model.addTriangles(
-            numpy.array(self.vertices, "f"), numpy.array(self.faces, "i")
-        )
-
-    def get_rapid_model(self):
-        if self.rapid_model is None:
-            self.create_rapid_model()
-        return self.rapid_model
-
-    def one_rapid_ray(self, pt1, pt2, diag):
-        # return number of triangle /triangle contact
-        helper = autopack.helper
-        rm = self.get_rapid_model()
-        v1 = numpy.array(pt1)
-        direction = helper.unit_vector(pt2 - pt1) * diag
-        v2 = v1 + direction
-        if sum(v1) == 0.0:
-            v3 = v2 + numpy.array([0.0, 1.0, 0.0])
-        else:
-            v3 = v2 + helper.unit_vector(numpy.cross(v1, v2))
-        f = [0, 1, 2]
-        ray_model = RAPIDlib.RAPID_model()
-        ray_model.addTriangles(
-            numpy.array([v1, v2, v3], "f"),
-            numpy.array(
-                [f],
-                "i",
-            ),
-        )
-        RAPIDlib.RAPID_Collide_scaled(
-            numpy.identity(3),
-            numpy.array([0.0, 0.0, 0.0], "f"),
-            1.0,
-            rm,
-            numpy.identity(3),
-            numpy.array([0.0, 0.0, 0.0], "f"),
-            1.0,
-            ray_model,
-            RAPIDlib.cvar.RAPID_ALL_CONTACTS,
-        )
-        # could display it ?
-        return RAPIDlib.cvar.RAPID_num_contacts
-
-    def checkPointInside_rapid(self, point, diag, ray=1):
-        # we want to be sure to cover the organelle
-        if diag < self.diag:
-            diag = self.diag
-        inside = False
-        v1 = numpy.array(point)
-        self.getCenter()
-        count1 = self.one_rapid_ray(v1, v1 + numpy.array([0.0, 0.0, 1.1]), diag)
-        r = (count1 % 2) == 1  # inside ?
-        # we need 2 out of 3 ?
-        if ray == 3:
-            count2 = self.one_rapid_ray(v1, numpy.array(self.center), diag)
-            if (count2 % 2) == 1 and r:
-                return True
-            count3 = self.one_rapid_ray(v1, v1 + numpy.array([0.0, 1.1, 0.0]), diag)
-            if (count3 % 2) == 1 and r:
-                return True
-            return False
-        if r:  # odd inside
-            inside = True
-        return inside
 
     def getSurfaceInnerPoints_jordan(self, vertices, faces, ray=1):
         """
