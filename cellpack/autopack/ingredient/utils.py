@@ -2,6 +2,7 @@ import numpy
 from math import sqrt, pi, sin, cos, asin
 from cellpack.autopack.transformation import angle_between_vectors
 
+
 # should use transform.py instead
 def getNormedVectorOnes(a):
     n = a / numpy.linalg.norm(a)

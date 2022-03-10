@@ -7,7 +7,6 @@ from math import sqrt
 from panda3d.core import Point3, TransformState
 from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
 from random import uniform, gauss, random
-from time import time
 import math
 
 from cellpack.mgl_tools.bhtree import bhtreelib

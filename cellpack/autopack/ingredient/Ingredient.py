@@ -60,7 +60,6 @@ import math
 from .utils import (
     ApplyMatrix,
     getNormedVectorOnes,
-    rapid_checkCollision_rmp,
     rotVectToVect,
     rotax,
 )
