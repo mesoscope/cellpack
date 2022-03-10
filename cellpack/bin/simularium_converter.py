@@ -135,11 +135,9 @@ class ConvertToSimularium(argparse.Namespace):
     @staticmethod
     def get_mesh_data(ingredient_data):
         meshType = (
-            ingredient_data["meshType"]
-            if ("meshType" in ingredient_data)
-            else "file"
+            ingredient_data["meshType"] if ("meshType" in ingredient_data) else "file"
         )
-        
+
         if meshType == "file":
             file_path = os.path.basename(ingredient_data["meshFile"])
             file_name, _ = os.path.splitext(file_path)
@@ -155,21 +153,22 @@ class ConvertToSimularium(argparse.Namespace):
     def get_ingredient_display_data(self, ingredient_data):
         if self.geo_type == "OBJ" and "meshFile" in ingredient_data:
             return ConvertToSimularium.get_mesh_data(ingredient_data)
-       
+
         elif self.geo_type == "PDB":
             pdb_file_name = ""
             if "source" in ingredient_data:
                 pdb_file_name = ingredient_data["source"]["pdb"]
-            elif "pdb" in ingredient_data and ingredient_data["pdb"] is not None and ".map" not in ingredient_data["pdb"]:
+            elif (
+                "pdb" in ingredient_data
+                and ingredient_data["pdb"] is not None
+                and ".map" not in ingredient_data["pdb"]
+            ):
                 pdb_file_name = ingredient_data["pdb"]
             elif "meshFile" in ingredient_data:
                 return ConvertToSimularium.get_mesh_data(ingredient_data)
             else:
                 print("NO PDB", ingredient_data["meshFile"])
-                return {
-                    "display_type": DISPLAY_TYPE.SPHERE,
-                    "url": ""
-                }
+                return {"display_type": DISPLAY_TYPE.SPHERE, "url": ""}
             if ".pdb" in pdb_file_name:
                 url = f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/other/{pdb_file_name}"
             else:
