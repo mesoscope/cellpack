@@ -1,7 +1,7 @@
 {
     "recipe": {
         "version": "1.0",
-        "name": "NM_Analysis_FigureB"
+        "name": "one_sphere"
     },
     "options": {
         "cancelDialog": false,
@@ -80,7 +80,7 @@
                 ],
                 "properties": {},
                 "partners_name": [],
-                "nbMol": 2,
+                "nbMol": 1,
                 "name": "Sphere_radius_100",
                 "orientBiasRotRangeMax": -3.1415927,
                 "packingMode": "random",
