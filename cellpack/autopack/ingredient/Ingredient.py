@@ -2742,7 +2742,6 @@ class Ingredient(Agent):
                 R["indices"].append(p[1])
             elif p[1] == ind:
                 R["indices"].append(p[0])
-        # bhtreelib.freeBHtree(bht)
         print("getClosePairIngredient ", R)
         print("all pairs ", pairs)
         print("query was ind ", ind)
@@ -2834,14 +2833,10 @@ class Ingredient(Agent):
                 ]
             )
         if updateTree:
-            if self.env.treemode == "bhtree":  # "cKDTree"
-                # if len(self.env.rTrans) >= 1 : bhtreelib.freeBHtree(self.env.close_ingr_bhtree)
-                self.env.close_ingr_bhtree = bhtreelib.BHtree(self.env.rTrans, None, 10)
-            else:
-                if len(self.env.rTrans) >= 1:
-                    self.env.close_ingr_bhtree = spatial.cKDTree(
-                        self.env.rTrans, leafsize=10
-                    )
+            if len(self.env.rTrans) >= 1:
+                self.env.close_ingr_bhtree = spatial.cKDTree(
+                    self.env.rTrans, leafsize=10
+                )
 
     def remove_from_realtime_display(env, moving):
         env.afvi.vi.deleteObject(moving)
@@ -3686,19 +3681,11 @@ class Ingredient(Agent):
                         new_dist_points, newDistPoints
                     )
                 self.log.info("compute distance loop %d", time() - t3)
-                if self.env.treemode == "bhtree":  # "cKDTree"
-                    if len(self.env.rTrans) >= 1:
-                        bhtreelib.freeBHtree(self.env.close_ingr_bhtree)
-                    if len(self.env.rTrans):
-                        self.env.close_ingr_bhtree = bhtreelib.BHtree(
-                            self.env.rTrans, None, 10
-                        )
-                else:
-                    # rebuild kdtree
-                    if len(self.env.rTrans) >= 1:
-                        self.env.close_ingr_bhtree = spatial.cKDTree(
-                            self.env.rTrans, leafsize=10
-                        )
+
+                # rebuild kdtree
+                if len(self.env.rTrans) >= 1:
+                    self.env.close_ingr_bhtree = spatial.cKDTree(
+                        self.env.rTrans, leafsize=10)
                 if self.packingMode[-4:] == "tile":
                     self.tilling.dropTile(
                         self.tilling.idc,
@@ -3852,21 +3839,13 @@ class Ingredient(Agent):
                     newDistPoints = self.merge_place_results(
                         new_dist_points, newDistPoints
                     )
-                if self.env.treemode == "bhtree":  # "cKDTree"
-                    # if len(self.env.rTrans) >= 1 : bhtreelib.freeBHtree(self.env.close_ingr_bhtree)
-                    if len(self.env.rTrans):
-                        self.env.close_ingr_bhtree = bhtreelib.BHtree(
-                            self.env.rTrans,
-                            [ing.encapsulatingRadius for ing in self.env.rIngr],
-                            10,
-                        )
-                else:
-                    # rebuild kdtree
-                    if len(self.env.rTrans) >= 1:
-                        del self.env.close_ingr_bhtree
-                        self.env.close_ingr_bhtree = spatial.cKDTree(
-                            self.env.rTrans, leafsize=10
-                        )
+
+                # rebuild kdtree
+                if len(self.env.rTrans) >= 1:
+                    del self.env.close_ingr_bhtree
+                    self.env.close_ingr_bhtree = spatial.cKDTree(
+                        self.env.rTrans, leafsize=10
+                    )
 
                 success = True
                 return (

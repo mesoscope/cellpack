@@ -9,7 +9,6 @@ from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
 from random import uniform, gauss, random
 import math
 
-from cellpack.mgl_tools.bhtree import bhtreelib
 from cellpack.autopack.transformation import angle_between_vectors
 from cellpack.autopack.ldSequence import SphereHalton
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
@@ -1538,18 +1537,11 @@ class GrowIngredient(MultiCylindersIngr):
                             [[numpy.array(pt2).flatten(), newPt], rotMatj, self, 0]
                         )
                         histoVol.callFunction(histoVol.delRB, (rbnode,))
-                        # histoVol.close_ingr_bhtree.InsertRBHPoint((jtrans[0],jtrans[1],jtrans[2]),radius,None,histoVol.nb_ingredient)
-                        if histoVol.treemode == "bhtree":  # "cKDTree"
-                            # if len(histoVol.rTrans) > 1 : bhtreelib.freeBHtree(histoVol.close_ingr_bhtree)
-                            histoVol.close_ingr_bhtree = bhtreelib.BHtree(
-                                histoVol.rTrans, None, 10
+                        # rebuild kdtree
+                        if len(self.env.rTrans) > 1:
+                            histoVol.close_ingr_bhtree = spatial.cKDTree(
+                                histoVol.rTrans, leafsize=10
                             )
-                        else:
-                            # rebuild kdtree
-                            if len(self.env.rTrans) > 1:
-                                histoVol.close_ingr_bhtree = spatial.cKDTree(
-                                    histoVol.rTrans, leafsize=10
-                                )
                         return numpy.array(pt2).flatten() + numpy.array(pt), True
                     else:  # increment the range
                         if not self.constraintMarge:
@@ -1607,17 +1599,11 @@ class GrowIngredient(MultiCylindersIngr):
         self.env.rRot.pop(len(self.env.rRot) - 1)  # rotMatj
         self.env.rIngr.pop(len(self.env.rIngr) - 1)
         self.env.result.pop(len(self.env.result) - 1)
-        if self.env.treemode == "bhtree":  # "cKDTree"
-            if len(self.env.rTrans) > 1:
-                bhtreelib.freeBHtree(self.env.close_ingr_bhtree)
-            if len(self.env.rTrans):
-                self.env.close_ingr_bhtree = bhtreelib.BHtree(self.env.rTrans, None, 10)
-        else:
-            # rebuild kdtree
-            if len(self.env.rTrans) > 1:
-                self.env.close_ingr_bhtree = spatial.cKDTree(
-                    self.env.rTrans, leafsize=10
-                )
+        # rebuild kdtree
+        if len(self.env.rTrans) > 1:
+            self.env.close_ingr_bhtree = spatial.cKDTree(
+                self.env.rTrans, leafsize=10
+            )
 
         # also remove from the result ?
         self.results.pop(len(self.results) - 1)
@@ -2045,16 +2031,11 @@ class GrowIngredient(MultiCylindersIngr):
                 [[numpy.array(startingPoint).flatten(), secondPoint], rotMatj, self, 0]
             )
 
-        if self.env.treemode == "bhtree":  # "cKDTree"
-            # if len(self.env.rTrans) > 1 : bhtreelib.freeBHtree(self.env.close_ingr_bhtree)
-            if len(self.env.rTrans):
-                self.env.close_ingr_bhtree = bhtreelib.BHtree(self.env.rTrans, None, 10)
-        else:
-            # rebuild kdtree
-            if len(self.env.rTrans) > 1:
-                self.env.close_ingr_bhtree = spatial.cKDTree(
-                    self.env.rTrans, leafsize=10
-                )
+        # rebuild kdtree
+        if len(self.env.rTrans) > 1:
+            self.env.close_ingr_bhtree = spatial.cKDTree(
+                self.env.rTrans, leafsize=10
+            )
 
         self.currentLength = 0.0
         #        self.Ptis=[ptInd,histoVol.grid.getPointFrom3D(secondPoint)]

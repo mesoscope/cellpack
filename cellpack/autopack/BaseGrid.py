@@ -43,7 +43,6 @@ from math import ceil, floor
 from random import randrange
 import cellpack.autopack as autopack
 from cellpack.autopack.ldSequence import cHaltonSequence3
-from cellpack.mgl_tools.bhtree import bhtreelib
 
 
 # Kevin Grid point class
@@ -177,7 +176,7 @@ class BaseGrid:
         # this are specific for each compartment
         self.aInteriorGrids = []
         self.aSurfaceGrids = []
-        # bhtree
+        # Treee
         self.surfPtsBht = None
         self.ijkPtIndice = []
         self.filename = None  # used for storing before fill so no need rebuild
@@ -853,7 +852,7 @@ class BaseGrid:
     def set_surfPtsBht(self, verts):
         self.surfPtsBht = None
         if verts is not None and len(verts):
-            self.surfPtsBht = bhtreelib.BHtree(verts, None, 10)
+            self.surfPtsBht = spatial.cKDTree(verts, leafsize=10)
         self.nbSurfacePoints = len(verts)
 
     def set_surfPtscht(self, verts):
@@ -889,7 +888,7 @@ class BaseGrid:
         """
         Only computes the inner point. No grid.
         This is independent from the packing. Help build ingredient sphere tree and representation.
-        - Uses BHTree to compute surface points
+        - Uses cKDTree to compute surface points
         - Uses Jordan raycasting to determine inside/outside (defaults to 1 iteration, can use 3 iterations)
         """
         self.vertices = vertices
@@ -902,15 +901,13 @@ class BaseGrid:
         distances = self.distToClosestSurf
         diag = self.diag
 
-        # Get surface points using bhtree (stored in bht and OGsrfPtsBht)
+        # Get surface points using cKDTree (stored in bht and OGsrfPtsBht)
         # otherwise, regard vertices as surface points.
 
         self.ogsurfacePoints = vertices[
             :
         ]  # Makes a copy of the vertices and vnormals lists
         surfacePoints = srfPts = self.ogsurfacePoints
-
-        # self.OGsrfPtsBht = bht =  bhtreelib.BHtree(tuple(srfPts), None, 10)
         self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)
 
         insidePoints = []
