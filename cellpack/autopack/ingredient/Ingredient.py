@@ -52,7 +52,6 @@ import collada
 from scipy.spatial.transform import Rotation as R
 from math import sqrt, pi
 from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
-from cellpack.mgl_tools.bhtree import bhtreelib
 from random import uniform, gauss, random
 from time import time
 import math
@@ -2421,66 +2420,6 @@ class Ingredient(Agent):
             overlap = True
         return overlap
 
-    def bht_check_collision(self, position, rotation):
-        # use self.env.ingr_bhtree
-        overlap = False
-        if self.env.treemode != "bhtree":
-            self.env.treemode = "bhtree"
-        if not len(self.env.rTrans):
-            return overlap
-        else:
-            if self.env.close_ingr_bhtree is None:
-                self.env.close_ingr_bhtree = bhtreelib.BHtree(
-                    self.env.rTrans,
-                    [ing.encapsulatingRadius for ing in self.env.rIngr],
-                    10,
-                )
-        nb = self.env.close_ingr_bhtree.closePointsPairs(
-            tuple([position]),
-            tuple([self.encapsulatingRadius]),
-            1.0,
-        )
-        p = self.get_new_pos(self, position, rotation)
-        if len(nb) != 0:
-            self.log.info("nb close is %d %s", len(nb), self.name)
-            # build bhtree of self.radii
-            sphtree = bhtreelib.BHtree(tuple(p.tolist()), tuple(self.radii[0]), 10)
-            # overlapping eR, 0 is tree, 1 is query
-            # sph1 = spatial.cKDTree(p)
-            for i in range(len(nb)):
-                #                print ("nbi ",nb[i])
-                indice = nb[i][1]
-                pos = self.get_new_pos(
-                    self.env.rIngr[indice],
-                    self.env.rTrans[indice],
-                    self.env.rRot[indice],
-                )
-                nbo = sphtree.closePointsPairs(
-                    tuple(pos.tolist()),
-                    tuple(self.env.rIngr[indice].radii[0]),
-                    1.0,
-                )
-                self.log.info("against 1 %r %d", nbo, len(nbo))
-                if len(nbo):
-                    overlap = True
-                    break
-        if self.compNum == 0:
-            organelle = self.env
-        else:
-            organelle = self.env.compartments[abs(self.compNum) - 1]
-        for o in self.env.compartments:
-            if organelle.name == o.name:
-                continue
-            d, i = o.OGsrfPtsBht.query(position)
-            if d < self.encapsulatingRadius * 1.1:
-                ds, i = o.OGsrfPtsBht.query(p)
-                D = ds - numpy.array(self.radii[0])
-                nb = numpy.nonzero(D < 0.0)[0]
-                if len(nb) != 0:
-                    overlap = True
-                    break
-        return overlap
-
     def np_check_collision(self, position, rotation):
         # use self.env.ingr_bhtree
         overlap = False
@@ -2491,9 +2430,12 @@ class Ingredient(Agent):
                 self.env.close_ingr_bhtree = spatial.cKDTree(
                     self.env.rTrans, leafsize=10
                 )
-        d, indices = self.env.close_ingr_bhtree.query(position, len(self.env.rTrans))
+        print("LENGTH", len(self.env.rTrans))
+        print("QUERY POSITION", position)
+        distances_to_packing_location, indices = self.env.close_ingr_bhtree.query(position, len(self.env.rTrans))
         R = numpy.array([ing.encapsulatingRadius for ing in self.env.rIngr])
-        D = d - (self.encapsulatingRadius + R) * 1.1
+        D = distances_to_packing_location - (self.encapsulatingRadius + R)
+        print(D[0], indices[0])
         nb = numpy.nonzero(D < 0.0)[0]
         # pdb.set_trace()
         if len(nb) != 0:
@@ -2733,10 +2675,10 @@ class Ingredient(Agent):
         pos = self.env.rTrans[:]  # ).tolist()
         pos.append([point[0], point[1], point[2]])
         ind = len(pos) - 1
-        bht = bhtreelib.BHtree(pos, radius, 10)
+        bht = spatial.cKDTree(pos, leafsize=10)
         # find all pairs for which the distance is less than 1.1
         # times the sum of the radii
-        pairs = bht.closePointsPairsInTree(1.0)
+        pairs = bht.query_ball_point(pos, radius)
         for p in pairs:
             if p[0] == ind:
                 R["indices"].append(p[1])
@@ -2762,40 +2704,30 @@ class Ingredient(Agent):
         )
         if not len(histoVol.rTrans):
             return R
-        else:
-            if histoVol.treemode == "bhtree":
-                if histoVol.close_ingr_bhtree is None:
-                    histoVol.close_ingr_bhtree = bhtreelib.BHtree(
-                        histoVol.rTrans,
-                        [ing.encapsulatingRadius for ing in histoVol.rIngr],
-                        10,
-                    )
+        # else:
+        #     if histoVol.treemode == "bhtree":
+        #         if histoVol.close_ingr_bhtree is None:
+        #             histoVol.close_ingr_bhtree = bhtreelib.BHtree(
+        #                 histoVol.rTrans,
+        #                 [ing.encapsulatingRadius for ing in histoVol.rIngr],
+        #                 10,
+        #             )
         if histoVol.close_ingr_bhtree is not None:
-            if histoVol.treemode == "bhtree":  # "cKDTree"
-                indices = numpy.zeros((histoVol.totalNbIngr,)).astype("i")
-                dist = numpy.zeros((histoVol.totalNbIngr,)).astype("f")
-                nb = histoVol.close_ingr_bhtree.closePointsDist2(
-                    (point[0], point[1], point[2]), cutoff, indices, dist
-                )
-                R["indices"] = indices[:nb]
-                R["distances"] = numpy.sqrt(dist[:nb])
-                return R
-            else:
-                # request kdtree
-                nb = []
-                self.log.info("finding partners")
-                if len(histoVol.rTrans) >= 1:
-                    #                    nb = histoVol.close_ingr_bhtree.query_ball_point(point,cutoff)
-                    #                else :#use the general query, how many we want
-                    distance, nb = histoVol.close_ingr_bhtree.query(
-                        point, len(histoVol.rTrans), distance_upper_bound=cutoff
-                    )  # len of ingr posed so far
-                    if len(histoVol.rTrans) == 1:
-                        distance = [distance]
-                        nb = [nb]
-                    R["indices"] = nb
-                    R["distances"] = distance  # sorted by distance short -> long
-                return R
+            # request kdtree
+            nb = []
+            self.log.info("finding partners")
+            if len(histoVol.rTrans) >= 1:
+                #                    nb = histoVol.close_ingr_bhtree.query_ball_point(point,cutoff)
+                #                else :#use the general query, how many we want
+                distance, nb = histoVol.close_ingr_bhtree.query(
+                    point, len(histoVol.rTrans), distance_upper_bound=cutoff
+                )  # len of ingr posed so far
+                if len(histoVol.rTrans) == 1:
+                    distance = [distance]
+                    nb = [nb]
+                R["indices"] = nb
+                R["distances"] = distance  # sorted by distance short -> long
+            return R
         else:
             return R
             #        closest = histoVol.close_ingr_bhtree.closestPointsArray(tuple(numpy.array([point,])), cutoff, 0)#returnNullIfFail
@@ -3763,7 +3695,7 @@ class Ingredient(Agent):
         # jitter loop
         level = self.collisionLevel
 
-        for jitterPos in range(self.nbJitter):
+        for attempt_number in range(self.nbJitter):
             insidePoints = {}
             newDistPoints = {}
             histoVol.totnbJitter += 1
@@ -3783,17 +3715,17 @@ class Ingredient(Agent):
             rbnode = self.get_rb_model()
             pts_to_check = self.get_all_positions_to_check(packing_location)
             for pt in pts_to_check:
-                perdiodic_collision = self.bht_check_collision(pt, packing_rotation)
+                perdiodic_collision = self.np_check_collision(pt, packing_rotation)
                 collision_results.extend([perdiodic_collision])
                 if True in collision_results:
                     break
                 if numpy.array_equal(numpy.array(pt), numpy.array(packing_location)):
                     # don't need to check point against itself
                     continue
-                col = self.bht_check_pair(
-                    self, pt, packing_rotation, self, packing_location, packing_rotation
-                )
-                collision_results.extend([col])
+                # col = self.bht_check_pair(
+                #     self, pt, packing_rotation, self, packing_location, packing_rotation
+                # )
+                # collision_results.extend([col])
                 if is_realtime:
                     self.update_display_rt(moving, packing_location, packing_rotation)
                 if True in collision_results:
