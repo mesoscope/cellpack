@@ -2405,7 +2405,10 @@ class Ingredient(Agent):
             return False
 
     def get_new_pos(self, ingr, pos, rot, positions_to_adjust):
-        
+        """
+        Takes positions_to_adjust, such as an array of spheres at a level in a
+        sphere tree, and adjusts them relative to the given position and rotation
+        """
         if positions_to_adjust is None:
             positions_to_adjust = ingr.positions[0]
         return self.transformPoints(pos, rot, positions_to_adjust)
@@ -2416,12 +2419,14 @@ class Ingredient(Agent):
             self.env.rIngr[index],
             self.env.rTrans[index],
             self.env.rRot[index],
-            overlapped_ingr.positions[level]
+            overlapped_ingr.positions[level],
         )
         # check distances between the spheres at this level in the ingr we are packing
-        # to the spheres at this level in the ingr already placed 
+        # to the spheres at this level in the ingr already placed
         # return the number of distances for the spheres we are trying to place
-        dist_from_packed_spheres_to_new_spheres, ind = search_tree.query(positions_of_packed_ingr_spheres, len(self.positions[level]))
+        dist_from_packed_spheres_to_new_spheres, ind = search_tree.query(
+            positions_of_packed_ingr_spheres, len(self.positions[level])
+        )
         # return index of sph1 closest to pos of packed ingr
         cradii = numpy.take(self.radii[level], ind)
         oradii = numpy.array(self.env.rIngr[index].radii[level])
@@ -2441,9 +2446,16 @@ class Ingredient(Agent):
         # starting at level 0, check encapsulating radii
         level = 0
         total_levels = len(self.positions)
-        distances_from_packing_location_to_all_ingr, indices = self.env.close_ingr_bhtree.query(packing_location, len(self.env.rTrans))
-        radii_of_placed_ingr = numpy.array([ing.encapsulatingRadius for ing in self.env.rIngr])
-        overlap_distance = distances_from_packing_location_to_all_ingr - (self.encapsulatingRadius + radii_of_placed_ingr)
+        (
+            distances_from_packing_location_to_all_ingr,
+            indices,
+        ) = self.env.close_ingr_bhtree.query(packing_location, len(self.env.rTrans))
+        radii_of_placed_ingr = numpy.array(
+            [ing.encapsulatingRadius for ing in self.env.rIngr]
+        )
+        overlap_distance = distances_from_packing_location_to_all_ingr - (
+            self.encapsulatingRadius + radii_of_placed_ingr
+        )
         # if overlap_distance is negative, the encapsualting radii are overlapping
         overlap_indices = numpy.nonzero(overlap_distance < 0.0)[0]
 
@@ -2452,12 +2464,19 @@ class Ingredient(Agent):
             # for each packed ingredient that had a collision, we want to check the more
             # detailed geometry, ie walk down the sphere tree file.
             while level < total_levels:
-                pos_of_attempting_ingr = self.get_new_pos(self, packing_location, rotation, self.positions[level])
-                sph1 = spatial.cKDTree(pos_of_attempting_ingr)
+                pos_of_attempting_ingr = self.get_new_pos(
+                    self, packing_location, rotation, self.positions[level]
+                )
+                search_tree_for_new_ingr = spatial.cKDTree(pos_of_attempting_ingr)
                 collision = False
+                # NOTE: At certain lengths of overlap_indices, it might help to remove items from the list
+                # if they dont have a collision at a non max level, but for short arrays, removing indices
+                # takes longer than not checking it.
                 for i in range(len(overlap_indices)):
                     index = indices[overlap_indices[i]]
-                    collision = self.check_one_level_for_collision(index, level, sph1)
+                    collision = self.check_one_level_for_collision(
+                        index, level, search_tree_for_new_ingr
+                    )
                     if collision:
                         break
                 level += 1
@@ -2465,7 +2484,7 @@ class Ingredient(Agent):
                     if level == total_levels:
                         # found collision at lowest level, break all the way out
                         return True
-                del sph1
+                del search_tree_for_new_ingr
 
         if self.compNum == 0:
             organelle = self.env
@@ -2476,7 +2495,9 @@ class Ingredient(Agent):
                 continue
             d, i = o.OGsrfPtsBht.query(packing_location)
             if d < self.encapsulatingRadius * 1.1:
-                pos_of_attempting_ingr = self.get_new_pos(self, packing_location, rotation)
+                pos_of_attempting_ingr = self.get_new_pos(
+                    self, packing_location, rotation
+                )
                 d, i = o.OGsrfPtsBht.query(pos_of_attempting_ingr)
                 overlap_distance = d - numpy.array(self.radii[0])
                 overlap_indices = numpy.nonzero(overlap_distance < 0.0)[0]
@@ -3623,7 +3644,8 @@ class Ingredient(Agent):
                 # rebuild kdtree
                 if len(self.env.rTrans) >= 1:
                     self.env.close_ingr_bhtree = spatial.cKDTree(
-                        self.env.rTrans, leafsize=10)
+                        self.env.rTrans, leafsize=10
+                    )
                 if self.packingMode[-4:] == "tile":
                     self.tilling.dropTile(
                         self.tilling.idc,
@@ -3723,7 +3745,7 @@ class Ingredient(Agent):
             for pt in pts_to_check:
                 collision_result = self.np_check_collision(pt, packing_rotation)
                 collision_results.extend([collision_result])
-    
+
                 if is_realtime:
                     self.update_display_rt(moving, packing_location, packing_rotation)
                 if True in collision_results:
