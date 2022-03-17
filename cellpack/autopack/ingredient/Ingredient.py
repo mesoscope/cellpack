@@ -2410,9 +2410,9 @@ class Ingredient(Agent):
             positions_to_adjust = ingr.positions[0]
         return self.transformPoints(pos, rot, positions_to_adjust)
 
-    def check_one_level_for_collision(self, index, level, sph1):
+    def check_one_level_for_collision(self, index, level, search_tree):
         overlapped_ingr = self.env.rIngr[index]
-        pos_of_packed_ingr = self.get_new_pos(
+        positions_of_packed_ingr_spheres = self.get_new_pos(
             self.env.rIngr[index],
             self.env.rTrans[index],
             self.env.rRot[index],
@@ -2421,17 +2421,15 @@ class Ingredient(Agent):
         # check distances between the spheres at this level in the ingr we are packing
         # to the spheres at this level in the ingr already placed 
         # return the number of distances for the spheres we are trying to place
-        dist_from_packed_spheres_to_new_spheres, ind = sph1.query(pos_of_packed_ingr, len(self.positions[level]))
+        dist_from_packed_spheres_to_new_spheres, ind = search_tree.query(positions_of_packed_ingr_spheres, len(self.positions[level]))
         # return index of sph1 closest to pos of packed ingr
         cradii = numpy.take(self.radii[level], ind)
         oradii = numpy.array(self.env.rIngr[index].radii[level])
         sumradii = numpy.add(cradii.transpose(), oradii).transpose()
         sD = dist_from_packed_spheres_to_new_spheres - sumradii
-        # sD = dist - (numpy.take(self.radii[0], ind)+numpy.array(self.env.rIngr[index].radii[0]))
-        return numpy.nonzero(sD < 0.0)[0]
+        return len(numpy.nonzero(sD < 0.0)[0]) != 0
 
     def np_check_collision(self, packing_location, rotation):
-        # use self.env.ingr_bhtree
         overlap = False
         if not len(self.env.rTrans):
             return overlap
@@ -2450,25 +2448,24 @@ class Ingredient(Agent):
         overlap_indices = numpy.nonzero(overlap_distance < 0.0)[0]
 
         if len(overlap_indices) != 0:
-            level = total_levels - 1
+            level = level + 1
             # for each packed ingredient that had a collision, we want to check the more
             # detailed geometry, ie walk down the sphere tree file.
             while level < total_levels:
-                # p is the same as packing location, because we're only ever calling it on the encapsulating radius, which is 
-                # [0, 0, 0]
                 pos_of_attempting_ingr = self.get_new_pos(self, packing_location, rotation, self.positions[level])
                 sph1 = spatial.cKDTree(pos_of_attempting_ingr)
+                collision = False
                 for i in range(len(overlap_indices)):
                     index = indices[overlap_indices[i]]
-                    collisions = self.check_one_level_for_collision(index, level, sph1)
-                    if len(collisions) != 0:
-                        level += 1
-                        if level == total_levels:
-                            return True
-                    else:
+                    collision = self.check_one_level_for_collision(index, level, sph1)
+                    if collision:
                         break
-                del sph1
                 level += 1
+                if collision:
+                    if level == total_levels:
+                        # found collision at lowest level, break all the way out
+                        return True
+                del sph1
 
         if self.compNum == 0:
             organelle = self.env
