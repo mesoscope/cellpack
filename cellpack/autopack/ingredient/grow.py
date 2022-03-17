@@ -1601,9 +1601,7 @@ class GrowIngredient(MultiCylindersIngr):
         self.env.result.pop(len(self.env.result) - 1)
         # rebuild kdtree
         if len(self.env.rTrans) > 1:
-            self.env.close_ingr_bhtree = spatial.cKDTree(
-                self.env.rTrans, leafsize=10
-            )
+            self.env.close_ingr_bhtree = spatial.cKDTree(self.env.rTrans, leafsize=10)
 
         # also remove from the result ?
         self.results.pop(len(self.results) - 1)
@@ -2033,9 +2031,7 @@ class GrowIngredient(MultiCylindersIngr):
 
         # rebuild kdtree
         if len(self.env.rTrans) > 1:
-            self.env.close_ingr_bhtree = spatial.cKDTree(
-                self.env.rTrans, leafsize=10
-            )
+            self.env.close_ingr_bhtree = spatial.cKDTree(self.env.rTrans, leafsize=10)
 
         self.currentLength = 0.0
         #        self.Ptis=[ptInd,histoVol.grid.getPointFrom3D(secondPoint)]
