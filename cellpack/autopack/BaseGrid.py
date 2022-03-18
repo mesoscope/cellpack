@@ -397,30 +397,6 @@ class BaseGrid:
         self.ijkPtIndice = numpy.ndindex(nx, ny, nz)
         self.masterGridPositions = numpy.vstack(xyz).reshape(3, -1).T
 
-    #        self.masterGridPositions = numpy.vstack(numpy.meshgrid(x,y,z,copy=False)).reshape(3,-1).T
-
-    def getPointCompartmentId(self, point, ray=1):
-        # check if point inside on of the compartments
-        # surface point ?
-        n_comp = len(self.histoVol.compartments)
-        if n_comp:
-            for i in range(n_comp):
-                inside = self.checkPointInside_rapid(
-                    self.histoVol.compartments[i],
-                    point,
-                    self.histoVol.grid.diag,
-                    ray=ray,
-                )
-                if inside:
-                    return -(i + 1)
-                    # comp=comp-1
-            # the point is not inside , is it on the surface ? ie distance to surface < X?
-            for i in range(n_comp):
-                distance, nb = self.histoVol.compartments[i].OGsrfPtsBht.query(point)
-                if distance < 10.0:
-                    return i + 1
-        return 0
-
     def getClosestGridPoint(self, pt3d):
         if self.tree is None:
             self.tree = spatial.cKDTree(self.masterGridPositions, leafsize=10)
@@ -884,77 +860,6 @@ class BaseGrid:
             V, nbG = self.computeGridNumberOfPoint(fbox_bb, space)
             totalVolume = V * unitVol
         return totalVolume
-
-    def getSurfaceInnerPoints_jordan(self, vertices, faces, ray=1):
-        """
-        Only computes the inner point. No grid.
-        This is independent from the packing. Help build ingredient sphere tree and representation.
-        - Uses BHTree to compute surface points
-        - Uses Jordan raycasting to determine inside/outside (defaults to 1 iteration, can use 3 iterations)
-        """
-        self.vertices = vertices
-        self.faces = faces
-        self.rapid_model = None
-        self.center = None
-        xl, yl, zl = self.boundingBox[0]  # lower left bounding box corner
-        xr, yr, zr = self.boundingBox[1]  # upper right bounding box corner
-        # distToClosestSurf is set to self.diag initially
-        distances = self.distToClosestSurf
-        diag = self.diag
-
-        # Get surface points using bhtree (stored in bht and OGsrfPtsBht)
-        # otherwise, regard vertices as surface points.
-
-        self.ogsurfacePoints = vertices[
-            :
-        ]  # Makes a copy of the vertices and vnormals lists
-        surfacePoints = srfPts = self.ogsurfacePoints
-
-        # self.OGsrfPtsBht = bht =  bhtreelib.BHtree(tuple(srfPts), None, 10)
-        self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)
-
-        insidePoints = []
-        grdPos = self.masterGridPositions
-        closest = bht.query(tuple(grdPos))
-
-        self.closestId = closest[1]
-        new_distances = closest[0]
-        mask = distances[: len(grdPos)] > new_distances
-        n_indices = numpy.nonzero(mask)
-        distances[n_indices] = new_distances[n_indices]
-        self.grid_distances = distances
-        # returnNullIfFail = 0
-        for ptInd in range(len(grdPos)):  # len(grdPos)):
-            inside = False  # inside defaults to False (meaning outside), unless evidence is found otherwise.
-            # t2=time()
-            coord = [
-                grdPos.item((ptInd, 0)),
-                grdPos.item((ptInd, 1)),
-                grdPos.item((ptInd, 2)),
-            ]  # grdPos[ptInd]
-            insideBB = self.checkPointInside(
-                coord, dist=new_distances.item(ptInd)
-            )  # inside the BB of the surface ?
-            if insideBB:
-                r = self.checkPointInside_rapid(coord, diag, ray=ray)
-                if r:  # odd inside
-                    insidePoints.append(
-                        grdPos[ptInd]
-                    )  # Append the index to the list of inside indices.
-            p = (ptInd / float(len(grdPos))) * 100.0
-            if (ptInd % 100) == 0:
-                self.log.info(
-                    "points from jordan",
-                    int(p),
-                    str(ptInd)
-                    + "/"
-                    + str(len(grdPos))
-                    + " inside "
-                    + str(inside)
-                    + " "
-                    + str(insideBB),
-                )
-        return insidePoints, surfacePoints
 
         # ==============================================================================
 

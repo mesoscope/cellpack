@@ -1074,46 +1074,6 @@ class Compartment(CompartmentList):
         self.ogsurfacePoints = points
         self.ogsurfacePointsNormals = normals
 
-    def checkPointInside_rapid(self, point, diag, ray=1):
-        # we want to be sure to cover the organelle
-        if diag < self.diag:
-            diag = self.diag
-        inside = False
-        v1 = numpy.array(point)
-        self.getCenter()
-        count1 = self.one_rapid_ray(v1, v1 + numpy.array([0.0, 0.0, 1.1]), diag)
-        r = (count1 % 2) == 1  # inside ?
-        # we need 2 out of 3 ?
-        if ray == 3:
-            count2 = self.one_rapid_ray(v1, numpy.array(self.center), diag)
-            if (count2 % 2) == 1 and r:
-                return True
-            count3 = self.one_rapid_ray(v1, v1 + numpy.array([0.0, 1.1, 0.0]), diag)
-            if (count3 % 2) == 1 and r:
-                return True
-            return False
-        #            c = count1+count2+count3
-        #            if c == 3 : #1 1 1
-        #                r = True
-        #            elif c == 4 : # 1 2 1
-        #                r = True
-        #            elif c == 5 : #2 2 1 or 3 1 1 or 3 2 0
-        #                r = False
-        #            elif c == 6 : # 2 2 2 or 3 3 0 or ...
-        #                r = False
-        #            if r < 5 :
-        #                r = True
-        #            else :
-        #                r = False
-        #            if r :
-        #               if (count2 % 2) == 1 and (count3 % 2) == 1 :
-        #                   r=True
-        #               else :
-        #                   r=False
-        if r:  # odd inside
-            inside = True
-        return inside
-
     def checkPointInside(self, point, diag, ray=1):
         inside = False
         insideBB = self.checkPointInsideBB(point)  # cutoff?
@@ -1345,7 +1305,7 @@ class Compartment(CompartmentList):
             insideBB = self.checkPointInsideBB(coord, dist=new_distances.item(ptInd))
             r = False
             if insideBB:
-                r = self.checkPointInside_rapid(coord, diag, ray=ray)
+                r = self.checkPointInside(coord, diag, ray=ray)
             if r:  # odd inside
                 insidePoints.append(ptInd)
                 idarray.itemset(ptInd, -number)
@@ -1689,9 +1649,7 @@ class Compartment(CompartmentList):
             insideBB = self.checkPointInsideBB(coord, dist=new_distances.item(ptInd))
             r = False
             if insideBB:
-                r = trimesh_grid.is_filled(
-                    coord
-                )  # self.checkPointInside_rapid(coord, diag, ray=ray)
+                r = trimesh_grid.is_filled(coord)
             if r:  # odd inside
                 # filter a little to be really inside ?
                 if new_distances.item(ptInd) > env.grid.gridSpacing * 1.1547:
@@ -1853,7 +1811,7 @@ class Compartment(CompartmentList):
             grdPos.item((ptInd, 2)),
         ]
         # is this point inside
-        inside = self.checkPointInside_rapid(coord, diag, ray=3)
+        inside = self.checkPointInside(coord, diag, ray=3)
         for k in range(NZ):
             for i in range(NX):
                 for j in range(NY):
@@ -1872,7 +1830,7 @@ class Compartment(CompartmentList):
                             new_distances.item(ptInd)
                             < env.grid.gridSpacing * 1.1547 * 2.0
                         ):
-                            inside = self.checkPointInside_rapid(coord, diag, ray=3)
+                            inside = self.checkPointInside(coord, diag, ray=3)
                         if inside:
                             insidePoints.append(ptInd)
                             idarray.itemset(ptInd, -number)
@@ -3746,106 +3704,6 @@ class Compartment(CompartmentList):
             + " points."
         )
         # what are the grid distance opinmt ?self.grid_distances
-        return insidePoints, surfacePoints
-
-    def getSurfaceInnerPoints_jordan(
-        self, boundingBox, spacing, display=True, useFix=False, ray=1
-    ):
-        """
-        Only computes the inner point. No grid.
-        This is independant from the packing. Help build ingredient sphere tree and representation.
-        - Uses BHTree to compute surface points
-        - Uses Jordan raycasting to determine inside/outside (defaults to 1 iteration, can use 3 iterations)
-        """
-        helper = autopack.helper
-        #        from autopack.Environment import Grid
-        if self.grid_type == "halton":
-            from cellpack.autopack.BaseGrid import HaltonGrid as Grid
-        else:
-            from cellpack.autopack.BaseGrid import BaseGrid as Grid
-
-            # Initiate a default grid object and set its properties based on inputs and other calculations
-        self.grid = grid = Grid(setup=False)
-        grid.boundingBox = boundingBox
-        grid.gridSpacing = spacing  # = self.smallestProteinSize*1.1547  # 2/sqrt(3)????
-        helper.progressBar(label="BuildGRid")
-        grid.gridVolume, grid.nbGridPoints = grid.computeGridNumberOfPoint(
-            boundingBox, spacing
-        )
-        grid.create3DPointLookup()
-        nbPoints = (
-            grid.gridVolume
-        )  # grid.gridVolume is equal to the total number of points.
-        grid.gridPtId = [0] * nbPoints  # Creates a list of 0's, with length nbPoints
-        xl, yl, zl = boundingBox[0]  # lower left bounding box corner
-        xr, yr, zr = boundingBox[1]  # upper right bounding box corner
-        # distToClosestSurf is set to self.diag initially
-        grid.diag = diag = vlen(vdiff((xr, yr, zr), (xl, yl, zl)))
-        grid.distToClosestSurf = (
-            numpy.ones(nbPoints) * diag
-        )  # Creates distToClosestSurf, a list where every element is the grid diagonal
-        distances = grid.distToClosestSurf
-        diag = grid.diag
-
-        # Get surface points using bhtree (stored in bht and OGsrfPtsBht)
-        # otherwise, regard vertices as surface points.
-        #        from bhtree import bhtreelib
-        from scipy import spatial
-
-        self.ogsurfacePoints = self.vertices[
-            :
-        ]  # Makes a copy of the vertices and vnormals lists
-        self.ogsurfacePointsNormals = self.vnormals[
-            :
-        ]  # helper.FixNormals(self.vertices,self.faces,self.vnormals,fn=self.fnormals)
-        #        mat = helper.getTransformation(self.ref_obj)
-        surfacePoints = srfPts = self.ogsurfacePoints
-
-        # self.OGsrfPtsBht = bht =  bhtreelib.BHtree(tuple(srfPts), None, 10)
-        self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)
-
-        insidePoints = []
-        grdPos = grid.masterGridPositions
-        closest = bht.query(tuple(grdPos))
-
-        self.closestId = closest[1]
-        new_distances = closest[0]
-        mask = distances[: len(grdPos)] > new_distances
-        nindices = numpy.nonzero(mask)
-        distances[nindices] = new_distances[nindices]
-        self.grid_distances = distances
-        # returnNullIfFail = 0
-        t1 = time()
-        # center = helper.getTranslation( self.ref_obj )
-        helper.resetProgressBar()
-        # Walks through every point, determine inside/outside
-        for ptInd in range(len(grdPos)):  # len(grdPos)):
-            inside = False  # inside defaults to False (meaning outside), unless evidence is found otherwise.
-            # t2=time()
-            coord = [
-                grdPos.item((ptInd, 0)),
-                grdPos.item((ptInd, 1)),
-                grdPos.item((ptInd, 2)),
-            ]  # grdPos[ptInd]
-            insideBB = self.checkPointInsideBB(coord, dist=new_distances.item(ptInd))
-            if insideBB:
-                r = self.checkPointInside_rapid(coord, diag, ray=ray)
-                if r:  # odd inside
-                    # idarray[ptInd] = -number
-                    insidePoints.append(
-                        grdPos[ptInd]
-                    )  # Append the index to the list of inside indices.
-            p = (ptInd / float(len(grdPos))) * 100.0
-            if (ptInd % 100) == 0:
-                helper.progressBar(
-                    progress=int(p),
-                    label=str(ptInd)
-                    + "/"
-                    + str(len(grdPos))
-                    + " inside "
-                    + str(inside),
-                )
-        print("total time", time() - t1)
         return insidePoints, surfacePoints
 
     def getSurfaceInnerPoints_sdf_interpolate(

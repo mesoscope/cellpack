@@ -2164,7 +2164,6 @@ class Ingredient(Agent):
             organelle = self.env.compartments[abs(self.compNum) - 1]
         if self.compNum > 0:  # surface ingredient
             # print ("surface ingr of type ",self.Type)
-            # r=compartment.checkPointInside_rapid(point,self.env.grid.diag,ray=3)
             if self.Type == "Grow":
                 # need a list of accepted compNum
                 check = False
@@ -2188,7 +2187,7 @@ class Ingredient(Agent):
         #        else :
         #            return True
         if self.compNum < 0:
-            inside = organelle.checkPointInside_rapid(point, self.env.grid.diag, ray=3)
+            inside = organelle.checkPointInside(point, self.env.grid.diag, ray=3)
             if inside:  # and cID < 0:
                 return True
             else:
@@ -2199,7 +2198,7 @@ class Ingredient(Agent):
                 #                return False
         if self.compNum == 0:  # shouldnt be in any compartments
             for o in self.env.compartments:
-                inside = o.checkPointInside_rapid(point, self.env.grid.diag, ray=3)
+                inside = o.checkPointInside(point, self.env.grid.diag, ray=3)
                 if inside:
                     return False
         if self.compNum != cID:
@@ -2542,93 +2541,6 @@ class Ingredient(Agent):
             rTrans, rRot = self.env.getRotTransRB(node)
             d = self.vi.measure_distance(rTrans, point)
             print("checkDistance", d, d < cutoff)
-
-    def get_rapid_nodes(self, close_indice, curentpt, removelast=False, prevpoint=None):
-        if self.compNum == 0:
-            organelle = self.env
-        else:
-            organelle = self.env.compartments[abs(self.compNum) - 1]
-        nodes = []
-        #        ingrCounter={}
-        #        a=numpy.asarray(self.env.rTrans)[close_indice["indices"]]
-        #        b=numpy.array([curentpt,])
-        #        distances=spatial.distance.cdist(a,b)
-        distances = close_indice[
-            "distances"
-        ]  # spatial.distance.cdist(a,b)#close_indice["distance"]
-        for nid, n in enumerate(close_indice["indices"]):
-            if n == -1:
-                continue
-            if n == len(close_indice["indices"]):
-                continue
-            if n >= len(self.env.rIngr):
-                continue
-            if distances[nid] == 0.0:
-                continue
-            ingr = self.env.rIngr[n]
-            jtrans = self.env.rTrans[n]
-            rotMat = self.env.rRot[n]
-            # print (self.name+" is close to "+ingr.name,jtrans,curentpt)
-            if prevpoint is not None:
-                # print distances[nid],
-                # if prevpoint == jtrans : continue
-                d = self.vi.measure_distance(
-                    numpy.array(jtrans), numpy.array(prevpoint)
-                )
-                if d == 0.0:  # distances[nid] == 0 : #same point
-                    # print ("continue d=0",numpy.array(jtrans),numpy.array(prevpoint),d)
-                    continue
-            if self.Type == "Grow":
-                # shouldnt we use sphere instead
-                if self.name == ingr.name:
-                    # dont want last n-2  point?
-                    c = len(self.env.rIngr)
-                    #                    print jtrans,curentpt
-                    #                    print ("whats ",n,nid,c,(n==c) or n==(c-1) or  (n==c-2),
-                    #                                (nid==c) or nid==(c-1) or  (nid==c-2))
-                    #                    raw_input()
-                    if (n == c) or n == (c - 1):  # or  (n==(c-2)):
-                        continue
-            if ingr.name in self.partners and self.Type == "Grow":
-                # for now just do nothing
-                c = len(self.env.rIngr)
-                #                    print jtrans,curentpt
-                #                print ("whats ",n,nid,c,(n==c) or n==(c-1) or  (n==c-2),
-                #                            (nid==c) or nid==(c-1) or  (nid==c-2))
-                #                    raw_input()
-                if (n == c) or n == (c - 1) or (n == c - 2):
-                    continue
-            if self.name in ingr.partners and ingr.Type == "Grow":
-                c = len(self.env.rIngr)
-                if (n == c) or n == (c - 1) or (n == c - 2):
-                    continue
-                    # else :
-            # print (self.name+" is close to "+ingr.name,jtrans,curentpt)
-            if (
-                distances[nid]
-                > (ingr.encapsulatingRadius + self.encapsulatingRadius)
-                * self.env.scaleER
-            ):
-                # print (distances[nid][0],ingr.encapsulatingRadius+self.encapsulatingRadius)
-                continue
-            node = ingr.get_rapid_model()
-            # distance ? should be < ingrencapsRadius+self.encradius
-            nodes.append(
-                [node, numpy.array(jtrans), numpy.array(rotMat[:3, :3], "f"), ingr]
-            )
-        # append organelle rb nodes
-        node = None
-        for o in self.env.compartments:
-            node = None
-            if self.Type != "Grow":
-                if self.compNum > 0 and o.name == organelle.name:
-                    continue
-            node = o.get_rapid_model()
-            if node is not None:
-                nodes.append([node, numpy.zeros((3), "f"), numpy.identity(3, "f"), o])
-                #        print len(nodes),nodes
-        self.env.nodes = nodes
-        return nodes
 
     def get_rbNodes(
         self, close_indice, currentpt, removelast=False, prevpoint=None, getInfo=False
