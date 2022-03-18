@@ -2413,7 +2413,7 @@ class Ingredient(Agent):
             positions_to_adjust = ingr.positions[0]
         return self.transformPoints(pos, rot, positions_to_adjust)
 
-    def check_one_level_for_collision(self, index, level, search_tree):
+    def check_against_one_packed_ingr(self, index, level, search_tree):
         overlapped_ingr = self.env.rIngr[index]
         positions_of_packed_ingr_spheres = self.get_new_pos(
             self.env.rIngr[index],
@@ -2428,7 +2428,7 @@ class Ingredient(Agent):
             positions_of_packed_ingr_spheres, len(self.positions[level])
         )
         # return index of sph1 closest to pos of packed ingr
-        cradii = numpy.take(self.radii[level], ind)
+        cradii = numpy.array(self.radii[level])[ind]
         oradii = numpy.array(self.env.rIngr[index].radii[level])
         sumradii = numpy.add(cradii.transpose(), oradii).transpose()
         sD = dist_from_packed_spheres_to_new_spheres - sumradii
@@ -2436,6 +2436,7 @@ class Ingredient(Agent):
 
     def np_check_collision(self, packing_location, rotation):
         overlap = False
+        # no ingredients packed yet
         if not len(self.env.rTrans):
             return overlap
         else:
@@ -2452,7 +2453,7 @@ class Ingredient(Agent):
         ) = self.env.close_ingr_bhtree.query(packing_location, len(self.env.rTrans))
         radii_of_placed_ingr = numpy.array(
             [ing.encapsulatingRadius for ing in self.env.rIngr]
-        )
+        )[indices]
         overlap_distance = distances_from_packing_location_to_all_ingr - (
             self.encapsulatingRadius + radii_of_placed_ingr
         )
@@ -2461,6 +2462,9 @@ class Ingredient(Agent):
 
         if len(overlap_indices) != 0:
             level = level + 1
+            # single sphere ingr will exit here.
+            if level == total_levels:
+                overlap = True
             # for each packed ingredient that had a collision, we want to check the more
             # detailed geometry, ie walk down the sphere tree file.
             while level < total_levels:
@@ -2474,7 +2478,7 @@ class Ingredient(Agent):
                 # takes longer than not checking it.
                 for i in range(len(overlap_indices)):
                     index = indices[overlap_indices[i]]
-                    collision = self.check_one_level_for_collision(
+                    collision = self.check_against_one_packed_ingr(
                         index, level, search_tree_for_new_ingr
                     )
                     if collision:
