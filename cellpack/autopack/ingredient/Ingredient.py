@@ -2449,18 +2449,18 @@ class Ingredient(Agent):
         total_levels = len(self.positions)
         (
             distances_from_packing_location_to_all_ingr,
-            indices,
+            ingr_indexes,
         ) = self.env.close_ingr_bhtree.query(packing_location, len(self.env.rTrans))
         radii_of_placed_ingr = numpy.array(
             [ing.encapsulatingRadius for ing in self.env.rIngr]
-        )[indices]
+        )[ingr_indexes]
         overlap_distance = distances_from_packing_location_to_all_ingr - (
             self.encapsulatingRadius + radii_of_placed_ingr
         )
         # if overlap_distance is negative, the encapsualting radii are overlapping
-        overlap_indices = numpy.nonzero(overlap_distance < 0.0)[0]
+        overlap_indexes = numpy.nonzero(overlap_distance < 0.0)[0]
 
-        if len(overlap_indices) != 0:
+        if len(overlap_indexes) != 0:
             level = level + 1
             # single sphere ingr will exit here.
             if level == total_levels:
@@ -2476,7 +2476,8 @@ class Ingredient(Agent):
                 # NOTE: At certain lengths of overlap_indices, it might help to remove items from the list
                 # if they dont have a collision at a non max level, but for short arrays, removing indices
                 # takes longer than not checking it.
-                for index in overlap_indices:
+                for overlap_index in overlap_indexes:
+                    index = ingr_indexes[overlap_index]
                     collision_at_this_level = self.check_against_one_packed_ingr(
                         index, level, search_tree_for_new_ingr
                     )
@@ -2500,16 +2501,19 @@ class Ingredient(Agent):
         for compartment in self.env.compartments:
             if current_ingr_compartment.name == compartment.name:
                 continue
-            distances, indices = compartment.OGsrfPtsBht.query(packing_location)
+            distances, ingr_indexes = compartment.OGsrfPtsBht.query(packing_location)
+
+            # NOTE: this could be optimized by walking down the sphere tree representation 
+            # of the instead of going right to the bottom
             if distances < self.encapsulatingRadius + compartment.encapsulatingRadius:
                 pos_of_attempting_ingr = self.get_new_pos(
                     self, packing_location, rotation, self.positions[total_levels - 1]
                 )
-                distances, indices = compartment.OGsrfPtsBht.query(pos_of_attempting_ingr)
-                radii = self.radii[total_levels - 1][indices]
+                distances, ingr_indexes = compartment.OGsrfPtsBht.query(pos_of_attempting_ingr)
+                radii = self.radii[total_levels - 1][ingr_indexes]
                 overlap_distance = distances - numpy.array(radii)
-                overlap_indices = numpy.nonzero(overlap_distance < 0.0)[0]
-                if len(overlap_indices) != 0:
+                overlap_indexes = numpy.nonzero(overlap_distance < 0.0)[0]
+                if len(overlap_indexes) != 0:
                     return True
         return has_collision
 
