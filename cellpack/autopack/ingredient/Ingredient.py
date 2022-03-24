@@ -2435,10 +2435,10 @@ class Ingredient(Agent):
         return len(numpy.nonzero(sD < 0.0)[0]) != 0
 
     def np_check_collision(self, packing_location, rotation):
-        overlap = False
+        has_collision = False
         # no ingredients packed yet
         if not len(self.env.rTrans):
-            return overlap
+            return has_collision
         else:
             if self.env.close_ingr_bhtree is None:
                 self.env.close_ingr_bhtree = spatial.cKDTree(
@@ -2464,7 +2464,7 @@ class Ingredient(Agent):
             level = level + 1
             # single sphere ingr will exit here.
             if level == total_levels:
-                overlap = True
+                has_collision = True
             # for each packed ingredient that had a collision, we want to check the more
             # detailed geometry, ie walk down the sphere tree file.
             while level < total_levels:
@@ -2472,43 +2472,47 @@ class Ingredient(Agent):
                     self, packing_location, rotation, self.positions[level]
                 )
                 search_tree_for_new_ingr = spatial.cKDTree(pos_of_attempting_ingr)
-                collision = False
+                collision_at_this_level = False
                 # NOTE: At certain lengths of overlap_indices, it might help to remove items from the list
                 # if they dont have a collision at a non max level, but for short arrays, removing indices
                 # takes longer than not checking it.
-                for i in range(len(overlap_indices)):
-                    index = indices[overlap_indices[i]]
-                    collision = self.check_against_one_packed_ingr(
+                for indices in range(len(overlap_indices)):
+                    index = indices[overlap_indices[indices]]
+                    collision_at_this_level = self.check_against_one_packed_ingr(
                         index, level, search_tree_for_new_ingr
                     )
-                    if collision:
+                    if collision_at_this_level:
                         break
                 level += 1
-                if collision:
+                if collision_at_this_level:
                     if level == total_levels:
                         # found collision at lowest level, break all the way out
                         return True
                 del search_tree_for_new_ingr
 
+        # the compartment the ingr belongs to
         if self.compNum == 0:
-            organelle = self.env
+            current_ingr_compartment = self.env
         else:
-            organelle = self.env.compartments[abs(self.compNum) - 1]
-        for o in self.env.compartments:
-            if organelle.name == o.name:
+            # NOTE: env.compartments only includes compartments >=1, ie not the
+            # bounding box/comp==0. So need to subtrack 1 from the id of the compartment
+            # to index into this list.
+            current_ingr_compartment = self.env.compartments[abs(self.compNum) - 1]
+        for compartment in self.env.compartments:
+            if current_ingr_compartment.name == compartment.name:
                 continue
-            d, i = o.OGsrfPtsBht.query(packing_location)
-            if d < self.encapsulatingRadius * 1.1:
+            distances, indices = compartment.OGsrfPtsBht.query(packing_location)
+            if distances < self.encapsulatingRadius + compartment.encapsulatingRadius:
                 pos_of_attempting_ingr = self.get_new_pos(
-                    self, packing_location, rotation
+                    self, packing_location, rotation, self.positions[total_levels - 1]
                 )
-                d, i = o.OGsrfPtsBht.query(pos_of_attempting_ingr)
-                overlap_distance = d - numpy.array(self.radii[0])
+                distances, indices = compartment.OGsrfPtsBht.query(pos_of_attempting_ingr)
+                radii = self.radii[total_levels - 1][indices]
+                overlap_distance = distances - numpy.array(radii)
                 overlap_indices = numpy.nonzero(overlap_distance < 0.0)[0]
                 if len(overlap_indices) != 0:
-                    overlap = True
-                    break
-        return overlap
+                    return True
+        return has_collision
 
     def checkDistance(self, liste_nodes, point, cutoff):
         for node in liste_nodes:
@@ -3048,7 +3052,6 @@ class Ingredient(Agent):
         return jitter_rotation
 
     def randomize_translation(self, env, translation, rotation):
-        # This expensive Gauusian rejection system should not be the default should it?
         # jitter points location
         spacing = env.grid.gridSpacing
         jitter = spacing / 2.0
@@ -3747,12 +3750,11 @@ class Ingredient(Agent):
             rbnode = self.get_rb_model()
             pts_to_check = self.get_all_positions_to_check(packing_location)
             for pt in pts_to_check:
-                collision_result = self.np_check_collision(pt, packing_rotation)
-                collision_results.extend([collision_result])
-
+                collision = self.np_check_collision(pt, packing_rotation)
+                collision_results.extend([collision])
                 if is_realtime:
                     self.update_display_rt(moving, packing_location, packing_rotation)
-                if True in collision_results:
+                if collision:
                     break
             t = time()
             if self.point_is_not_available(packing_location):
@@ -3795,7 +3797,6 @@ class Ingredient(Agent):
                     newDistPoints = self.merge_place_results(
                         new_dist_points, newDistPoints
                     )
-
                 # rebuild kdtree
                 if len(self.env.rTrans) >= 1:
                     del self.env.close_ingr_bhtree
