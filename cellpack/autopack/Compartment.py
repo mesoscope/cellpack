@@ -65,7 +65,7 @@ import math
 import trimesh
 import trimesh.voxel as Voxel
 from scipy import spatial
-from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
+# from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
 
 import cellpack.autopack as autopack
 from cellpack.autopack import transformation as tr, binvox_rw

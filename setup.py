@@ -40,7 +40,7 @@ dev_requirements = [
 requirements = [
     "matplotlib>=3.3.4",
     "numpy>=1.19.2",
-    "panda3d==1.10.9",
+    "panda3d==1.10.10",
     "pmw==2.0.1",
     "scipy>=1.6.2",
     "simulariumio>=1.2.0",

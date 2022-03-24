@@ -51,7 +51,8 @@ import logging
 import collada
 from scipy.spatial.transform import Rotation as R
 from math import sqrt, pi
-from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
+from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
+# from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
 from random import uniform, gauss, random
 from time import time
 import math
@@ -1488,7 +1489,7 @@ class Ingredient(Agent):
 
                 # need to get the mesh directly. Only possible if dae or dejavu format
                 # get the dejavu heper but without the View, and in nogui mode
-                h = dejavuHelper(vi="nogui")
+                h = simulariumHelper(vi="nogui")
                 dgeoms = h.read(filename)
                 # v,vn,f = dgeoms.values()[0]["mesh"]
                 self.vertices, self.vnormals, self.faces = helper.combineDaeMeshData(
@@ -1523,7 +1524,7 @@ class Ingredient(Agent):
 
                             # need to get the mesh directly. Only possible if dae or dejavu format
                             # get the dejavu heper but without the View, and in nogui mode
-                            h = dejavuHelper(vi="nogui")
+                            h = simulariumHelper(vi="nogui")
                             dgeoms = h.read(filename)
                             # should combine both
                             self.vertices, vnormals, self.faces = h.combineDaeMeshData(
