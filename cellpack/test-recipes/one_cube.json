@@ -1,0 +1,111 @@
+{
+    "recipe": {
+        "version": "1.0",
+        "name": "one_cube"
+    },
+    "options": {
+        "cancelDialog": false,
+        "_hackFreepts": false,
+        "windowsSize": 10,
+        "use_gradient": false,
+        "placeMethod": "jitter",
+        "saveResult": false,
+        "runTimeDisplay": false,
+        "overwritePlaceMethod": true,
+        "innerGridMethod": "bhtree",
+        "boundingBox": [
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                1000,
+                1000,
+                1
+            ]
+        ],
+        "gradients": [],
+        "smallestProteinSize": 0,
+        "computeGridParams": true,
+        "freePtsUpdateThreshold": 0,
+        "pickWeightedIngr": true,
+        "_timer": false,
+        "ingrLookForNeighbours": false,
+        "pickRandPt": true,
+        "largestProteinSize": 200,
+        "resultfile": "autoPACKserver/results/NM_Analysis_FigureB1.0.apr.json",
+        "use_periodicity": true,
+        "EnviroOnly": false
+    },
+    "cytoplasme": {
+        "ingredients": {
+            "cube_radius_100": {
+                "overwrite_nbMol_value": 1,
+                "nbJitter": 20,
+                "molarity": 0,
+                "partners_position": [],
+                "rotRange": 6.2831,
+                "color": [
+                    0.498,
+                    0.498,
+                    0.498
+                ],
+                "meshFile": null,
+                "sphereFile": null,
+                "weight": 0.2,
+                "orientBiasRotRangeMin": -3.1415927,
+                "radii": [
+                    [
+                        100
+                    ]
+                ],
+                "cutoff_boundary": 0,
+                "coordsystem": "left",
+                "jitterMax": [
+                    1,
+                    1,
+                    0
+                ],
+                "perturbAxisAmplitude": 0.1,
+                "encapsulatingRadius": 100,
+                "positions2": null,
+                "useOrientBias": false,
+                "gradient": "",
+                "isAttractor": false,
+                "principalVector": [
+                    1,
+                    0,
+                    0
+                ],
+                "properties": {},
+                "partners_name": [],
+                "nbMol": 1,
+                "name": "Sphere_radius_100",
+                "orientBiasRotRangeMax": -3.1415927,
+                "packingMode": "random",
+                "Type": "SingleCube",
+                "excluded_partners_name": [],
+                "rejectionThreshold": 100,
+                "placeType": "jitter",
+                "cutoff_surface": 100,
+                "packingPriority": 0,
+                "proba_binding": 0.5,
+                "rotAxis": null,
+                "positions": [
+                    [
+                        [
+                            0,
+                            0,
+                            0
+                        ]
+                    ]
+                ],
+                "proba_not_binding": 0.5,
+                "use_mesh_rb": false,
+                "pdb": null,
+                "useRotAxis": false
+            }
+        }
+    }
+}
