@@ -2502,13 +2502,15 @@ class Ingredient(Agent):
                 continue
             distances, ingr_indexes = compartment.OGsrfPtsBht.query(packing_location)
 
-            # NOTE: this could be optimized by walking down the sphere tree representation 
+            # NOTE: this could be optimized by walking down the sphere tree representation
             # of the instead of going right to the bottom
             if distances < self.encapsulatingRadius + compartment.encapsulatingRadius:
                 pos_of_attempting_ingr = self.get_new_pos(
                     self, packing_location, rotation, self.positions[total_levels - 1]
                 )
-                distances, ingr_indexes = compartment.OGsrfPtsBht.query(pos_of_attempting_ingr)
+                distances, ingr_indexes = compartment.OGsrfPtsBht.query(
+                    pos_of_attempting_ingr
+                )
                 radii = self.radii[total_levels - 1][ingr_indexes]
                 overlap_distance = distances - numpy.array(radii)
                 overlap_indexes = numpy.nonzero(overlap_distance < 0.0)[0]
