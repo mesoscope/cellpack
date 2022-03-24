@@ -2476,8 +2476,7 @@ class Ingredient(Agent):
                 # NOTE: At certain lengths of overlap_indices, it might help to remove items from the list
                 # if they dont have a collision at a non max level, but for short arrays, removing indices
                 # takes longer than not checking it.
-                for indices in range(len(overlap_indices)):
-                    index = indices[overlap_indices[indices]]
+                for index in overlap_indices:
                     collision_at_this_level = self.check_against_one_packed_ingr(
                         index, level, search_tree_for_new_ingr
                     )
