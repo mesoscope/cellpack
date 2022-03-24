@@ -39,7 +39,6 @@ class Args(argparse.Namespace):
     DEFAULT_OUTPUT_FOLDER = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_PLACE_METHODS = [
         "jitter",
-        "RAPID",
         "pandaBulletRelax",
         "pandaBullet",
         "spheresBHT",

@@ -8,7 +8,7 @@
         "_hackFreepts": false,
         "windowsSize": 10,
         "use_gradient": true,
-        "placeMethod": "RAPID",
+        "placeMethod": "jitter",
         "saveResult": false,
         "runTimeDisplay": false,
         "overwritePlaceMethod": true,

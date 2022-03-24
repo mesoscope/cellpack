@@ -151,13 +151,13 @@ cache_dir = {
 
 usePP = False
 helper = None
-LISTPLACEMETHOD = ["jitter", "spheresBHT", "RAPID"]
+LISTPLACEMETHOD = ["jitter", "spheresBHT"]
 try:
     from panda3d.core import Mat4  # noqa: F401
 
-    LISTPLACEMETHOD = ["jitter", "spheresBHT", "pandaBullet", "RAPID"]
+    LISTPLACEMETHOD = ["jitter", "spheresBHT", "pandaBullet"]
 except ImportError:
-    LISTPLACEMETHOD = ["jitter", "spheresBHT", "RAPID"]
+    LISTPLACEMETHOD = ["jitter", "spheresBHT"]
 
 
 ncpus = 2

@@ -56,15 +56,10 @@ from cellpack.mgl_tools.bhtree import bhtreelib
 from random import uniform, gauss, random
 from time import time
 import math
-from cellpack.mgl_tools.RAPID import RAPIDlib
-
-# RAPID require a uniq mesh. not an empty or an instance
-# need to combine the vertices and the build the rapid model
 
 from .utils import (
     ApplyMatrix,
     getNormedVectorOnes,
-    rapid_checkCollision_rmp,
     rotVectToVect,
     rotax,
 )
@@ -1397,29 +1392,6 @@ class Ingredient(Agent):
                     self.mesh, edit=True, copy=False, tri=True
                 )
 
-    def rapid_model(self):
-        rapid_model = RAPIDlib.RAPID_model()
-        self.getData()
-        if len(self.vertices):
-            rapid_model.addTriangles(
-                numpy.array(self.vertices, "f"), numpy.array(self.faces, "i")
-            )
-        return rapid_model
-
-    def create_rapid_model(self):
-        self.rapid_model = RAPIDlib.RAPID_model()
-        # need triangle and vertices
-        self.getData()
-        if len(self.vertices):
-            self.rapid_model.addTriangles(
-                numpy.array(self.vertices, "f"), numpy.array(self.faces, "i")
-            )
-
-    def get_rapid_model(self):
-        if self.rapid_model is None:
-            self.create_rapid_model()
-        return self.rapid_model
-
     def get_rb_model(self, alt=False):
         ret = 0
         if alt:
@@ -2192,7 +2164,6 @@ class Ingredient(Agent):
             organelle = self.env.compartments[abs(self.compNum) - 1]
         if self.compNum > 0:  # surface ingredient
             # print ("surface ingr of type ",self.Type)
-            # r=compartment.checkPointInside_rapid(point,self.env.grid.diag,ray=3)
             if self.Type == "Grow":
                 # need a list of accepted compNum
                 check = False
@@ -2216,7 +2187,7 @@ class Ingredient(Agent):
         #        else :
         #            return True
         if self.compNum < 0:
-            inside = organelle.checkPointInside_rapid(point, self.env.grid.diag, ray=3)
+            inside = organelle.checkPointInside(point, self.env.grid.diag, ray=3)
             if inside:  # and cID < 0:
                 return True
             else:
@@ -2227,7 +2198,7 @@ class Ingredient(Agent):
                 #                return False
         if self.compNum == 0:  # shouldnt be in any compartments
             for o in self.env.compartments:
-                inside = o.checkPointInside_rapid(point, self.env.grid.diag, ray=3)
+                inside = o.checkPointInside(point, self.env.grid.diag, ray=3)
                 if inside:
                     return False
         if self.compNum != cID:
@@ -2570,93 +2541,6 @@ class Ingredient(Agent):
             rTrans, rRot = self.env.getRotTransRB(node)
             d = self.vi.measure_distance(rTrans, point)
             print("checkDistance", d, d < cutoff)
-
-    def get_rapid_nodes(self, close_indice, curentpt, removelast=False, prevpoint=None):
-        if self.compNum == 0:
-            organelle = self.env
-        else:
-            organelle = self.env.compartments[abs(self.compNum) - 1]
-        nodes = []
-        #        ingrCounter={}
-        #        a=numpy.asarray(self.env.rTrans)[close_indice["indices"]]
-        #        b=numpy.array([curentpt,])
-        #        distances=spatial.distance.cdist(a,b)
-        distances = close_indice[
-            "distances"
-        ]  # spatial.distance.cdist(a,b)#close_indice["distance"]
-        for nid, n in enumerate(close_indice["indices"]):
-            if n == -1:
-                continue
-            if n == len(close_indice["indices"]):
-                continue
-            if n >= len(self.env.rIngr):
-                continue
-            if distances[nid] == 0.0:
-                continue
-            ingr = self.env.rIngr[n]
-            jtrans = self.env.rTrans[n]
-            rotMat = self.env.rRot[n]
-            # print (self.name+" is close to "+ingr.name,jtrans,curentpt)
-            if prevpoint is not None:
-                # print distances[nid],
-                # if prevpoint == jtrans : continue
-                d = self.vi.measure_distance(
-                    numpy.array(jtrans), numpy.array(prevpoint)
-                )
-                if d == 0.0:  # distances[nid] == 0 : #same point
-                    # print ("continue d=0",numpy.array(jtrans),numpy.array(prevpoint),d)
-                    continue
-            if self.Type == "Grow":
-                # shouldnt we use sphere instead
-                if self.name == ingr.name:
-                    # dont want last n-2  point?
-                    c = len(self.env.rIngr)
-                    #                    print jtrans,curentpt
-                    #                    print ("whats ",n,nid,c,(n==c) or n==(c-1) or  (n==c-2),
-                    #                                (nid==c) or nid==(c-1) or  (nid==c-2))
-                    #                    raw_input()
-                    if (n == c) or n == (c - 1):  # or  (n==(c-2)):
-                        continue
-            if ingr.name in self.partners and self.Type == "Grow":
-                # for now just do nothing
-                c = len(self.env.rIngr)
-                #                    print jtrans,curentpt
-                #                print ("whats ",n,nid,c,(n==c) or n==(c-1) or  (n==c-2),
-                #                            (nid==c) or nid==(c-1) or  (nid==c-2))
-                #                    raw_input()
-                if (n == c) or n == (c - 1) or (n == c - 2):
-                    continue
-            if self.name in ingr.partners and ingr.Type == "Grow":
-                c = len(self.env.rIngr)
-                if (n == c) or n == (c - 1) or (n == c - 2):
-                    continue
-                    # else :
-            # print (self.name+" is close to "+ingr.name,jtrans,curentpt)
-            if (
-                distances[nid]
-                > (ingr.encapsulatingRadius + self.encapsulatingRadius)
-                * self.env.scaleER
-            ):
-                # print (distances[nid][0],ingr.encapsulatingRadius+self.encapsulatingRadius)
-                continue
-            node = ingr.get_rapid_model()
-            # distance ? should be < ingrencapsRadius+self.encradius
-            nodes.append(
-                [node, numpy.array(jtrans), numpy.array(rotMat[:3, :3], "f"), ingr]
-            )
-        # append organelle rb nodes
-        node = None
-        for o in self.env.compartments:
-            node = None
-            if self.Type != "Grow":
-                if self.compNum > 0 and o.name == organelle.name:
-                    continue
-            node = o.get_rapid_model()
-            if node is not None:
-                nodes.append([node, numpy.zeros((3), "f"), numpy.identity(3, "f"), o])
-                #        print len(nodes),nodes
-        self.env.nodes = nodes
-        return nodes
 
     def get_rbNodes(
         self, close_indice, currentpt, removelast=False, prevpoint=None, getInfo=False
@@ -3042,20 +2926,6 @@ class Ingredient(Agent):
                 dpad,
                 moving,
                 dpad,
-            )
-        elif self.placeType == "RAPID":
-            success, jtrans, rotMatj, insidePoints, newDistPoints = self.rapid_place(
-                env,
-                ptInd,
-                distance,
-                dpad,
-                env.afviewer,
-                compartment,
-                gridPointsCoords,
-                rotation_matrix,
-                target_grid_point_position,
-                moving,
-                usePP=usePP,
             )
         else:
             self.log.error("Can't pack using this method %s", self.placeType)
@@ -3921,237 +3791,6 @@ class Ingredient(Agent):
 
         success = False
         return success, packing_location, packing_rotation, insidePoints, newDistPoints
-
-    def rapid_place(
-        self,
-        env,
-        ptInd,
-        distance,
-        dpad,
-        afvi,
-        compartment,
-        gridPointsCoords,
-        rot_matrix,
-        target_point,
-        moving,
-        sphGeom=None,
-        sphCenters=None,
-        sphRadii=None,
-        sphColors=None,
-        usePP=False,
-    ):
-        """
-        drop the ingredient on grid point ptInd
-        """
-
-        is_realtime = moving is not None
-
-        for packing_attempt in range(self.nbJitter):
-            insidePoints = {}
-            newDistPoints = {}
-            env.totnbJitter += 1
-            collision_results = []
-            (
-                packing_location,
-                packing_rotation,
-            ) = self.get_new_jitter_location_and_rotation(
-                env,
-                target_point,
-                rot_matrix,
-            )
-            # loop over all spheres representing ingredient
-            if sphGeom is not None:
-                modCent = []
-                modRad = []
-
-            # check for collisions
-            level = self.collisionLevel
-
-            if is_realtime:
-                self.update_display_rt(moving, packing_location, packing_rotation)
-
-            pts_to_check = self.get_all_positions_to_check(packing_location)
-
-            for pt in pts_to_check:
-                collision, liste_nodes = self.collision_rapid(
-                    pt, packing_rotation, usePP=usePP
-                )
-                collision_results.extend([collision])
-                if True in collision_results:
-                    break
-                if numpy.array_equal(numpy.array(pt), numpy.array(packing_location)):
-                    # don't need to check point against itself
-                    continue
-                rbnode = self.get_rapid_model()
-                RAPIDlib.RAPID_Collide_scaled(
-                    numpy.array(packing_rotation[:3, :3], "f"),
-                    numpy.array(pt, "f"),
-                    1.0,
-                    rbnode,
-                    numpy.array(packing_rotation[:3, :3], "f"),
-                    numpy.array(packing_location, "f"),
-                    1.0,
-                    rbnode,
-                    RAPIDlib.cvar.RAPID_FIRST_CONTACT,
-                )
-                col = RAPIDlib.cvar.RAPID_num_contacts != 0
-                collision_results.extend([col])  # = True in perdiodic_collision
-                if env.runTimeDisplay and moving is not None:
-                    self.update_display_rt(moving, packing_location, packing_rotation)
-
-                if True in collision_results:
-                    break
-
-            if self.point_is_not_available(packing_location):
-                continue
-
-            # need to check compartment too
-            if self.compareCompartment:
-                collision = self.collides_with_compartment(
-                    packing_location,
-                    packing_rotation,
-                    level,
-                    gridPointsCoords,
-                    env,
-                )
-                collision_results.extend([collision])
-
-            if True not in collision_results:
-                # update_data_tree
-                self.update_data_tree(packing_location, packing_rotation, ptInd=ptInd)
-                t3 = time()
-                for pt in pts_to_check:
-                    new_inside_pts, new_dist_points = self.get_new_distance_values(
-                        pt,
-                        packing_rotation,
-                        gridPointsCoords,
-                        distance,
-                        dpad,
-                        self.deepest_level,
-                    )
-                    insidePoints = self.merge_place_results(
-                        new_inside_pts, insidePoints
-                    )
-                    newDistPoints = self.merge_place_results(
-                        new_dist_points, newDistPoints
-                    )
-
-                self.log.info("compute distance loop %d", time() - t3)
-
-                if sphGeom is not None:
-                    for po1, ra1 in zip(modCent, modRad):
-                        sphCenters.append(po1)
-                        sphRadii.append(ra1)
-                        sphColors.append(self.color)
-
-                success = True
-                return (
-                    success,
-                    packing_location,
-                    packing_rotation,
-                    insidePoints,
-                    newDistPoints,
-                )
-
-        success = False
-
-        if sphGeom is not None:
-            sphGeom.Set(vertices=sphCenters, radii=sphRadii, materials=sphColors)
-            sphGeom.viewer.OneRedraw()
-            sphGeom.viewer.update()
-
-        return success, packing_location, packing_rotation, {}, {}
-
-    def collision_rapid(
-        self,
-        jtrans,
-        rotMatj,
-        cutoff=None,
-        usePP=False,
-        point=None,
-        prevpoint=None,
-        liste_nodes=None,
-    ):
-        usePP = False
-        r = []
-
-        if cutoff is None:
-            cutoff = self.env.largestProteinSize + self.encapsulatingRadius * 2.0
-        rbnode = self.get_rapid_model()
-        if len(self.env.rTrans) != 0:
-            if liste_nodes is None:
-                if point is not None:
-                    closesbody_indice = self.getClosestIngredient(
-                        point, self.env, cutoff=cutoff
-                    )
-                else:
-                    closesbody_indice = self.getClosestIngredient(
-                        jtrans, self.env, cutoff=cutoff
-                    )
-                if len(closesbody_indice) != 0:  # closesbody_indice[0] == -1
-                    liste_nodes = self.get_rapid_nodes(
-                        closesbody_indice, jtrans, prevpoint=prevpoint  #
-                    )
-            if usePP:
-                n = 0
-                self.env.grab_cb.reset()
-                inputp = {}
-                for c in range(autopack.ncpus):
-                    inputp[c] = []
-                while n < len(liste_nodes):
-                    for c in range(autopack.ncpus):
-                        if n == len(liste_nodes):
-                            break
-                        v1 = self.vertices
-                        f1 = self.faces
-                        v2 = liste_nodes[n][3].vertices
-                        f2 = liste_nodes[n][3].faces
-                        inp = (
-                            v1,
-                            f1,
-                            numpy.array(rotMatj[:3, :3], "f"),
-                            numpy.array(jtrans, "f"),
-                            v2,
-                            f2,
-                            liste_nodes[n][2],
-                            liste_nodes[n][1],
-                            liste_nodes[n][3].name,
-                        )
-                        inputp[c].append(inp)
-                        n += 1
-                jobs = []
-                for c in range(autopack.ncpus):
-                    if not len(inputp[c]):
-                        continue
-                    j = self.env.pp_server.submit(
-                        rapid_checkCollision_rmp,
-                        (inputp[c],),
-                        callback=self.env.grab_cb.grab,
-                        modules=("numpy",),
-                    )
-                    jobs.append(j)
-                self.env.pp_server.wait()
-                r.extend(self.env.grab_cb.collision[:])
-            else:
-                #                    print jtrans, rotMatj
-                for node, trans, rot, ingr in liste_nodes:
-                    #                        print node,trans,rot,ingr
-                    RAPIDlib.RAPID_Collide_scaled(
-                        numpy.array(rotMatj[:3, :3], "f"),
-                        numpy.array(jtrans, "f"),
-                        1.0,
-                        rbnode,
-                        rot,
-                        trans,
-                        1.0,
-                        node,
-                        RAPIDlib.cvar.RAPID_FIRST_CONTACT,
-                    )
-                    collision2 = RAPIDlib.cvar.RAPID_num_contacts != 0
-                    r.append(collision2)
-                    if collision2:
-                        break
-        return True in r, liste_nodes
 
     def pandaBullet_relax(
         self,

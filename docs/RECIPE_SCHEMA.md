@@ -94,11 +94,9 @@ Display packing in realtime (slow)
 
 ### placeMethod
 
-_Optional `enum`_. One of `"RAPID"`, `"jitter"`, `"spheresBHT"`, `"pandaBullet"`.. Default: `"jitter"`.
+_Optional `enum`_. One of `"jitter"`, `"spheresBHT"`, `"pandaBullet"`.. Default: `"jitter"`.
 
 Will be use if placeMethod isn't in an ingredient setup
-
-`"RAPID"` uses ["Robust and Accurate Polygon Interference Detection (RAPID)"](http://gamma.cs.unc.edu/OBB/) to test if the ingredient being placed in the packing loop is colliding with any neighboring objects fed into the list of neighbors.
 
 `"jitter"` uses a simple algorithm developed by GJ, M-A-A, MS, and LA to test if a single sphere, sphere-tree, or other primative (box and cylinder) are colliding with masked/unallowed points on the grid... I can't recall all of the allowed types, but check the input parameters that it accepts. I believe there is also an option to perform simple collisions directly between primatives, e.g. sphere-sphere, sphere-box, sphere-cylinder, cylinder-box, and spheretree-others
 
@@ -183,7 +181,7 @@ no free point update
     "\_hackFreepts": false,
     "windowsSize": 10,
     "use_gradient": false,
-    "placeMethod": "RAPID",
+    "placeMethod": "jitter",
     "saveResult": false,
     "runTimeDisplay": false,
     "overwritePlaceMethod": true,
@@ -335,9 +333,7 @@ The amount this ingredient can move in x, y and z. If z is set to 0, will be a 2
 _Optional `number`_. Default: `5.0`.
 
 ### placeType
-_Optional enum. One of `"RAPID"`, `"jitter"`, `"spheresBHT"`, `"pandaBullet"`_. Default: `"jitter"`.
-
-`"RAPID"` uses ["Robust and Accurate Polygon Interference Detection (RAPID)"](http://gamma.cs.unc.edu/OBB/) to test if the ingredient being placed in the packing loop is colliding with any neighboring objects fed into the list of neighbors.
+_Optional enum. One of `"jitter"`, `"spheresBHT"`, `"pandaBullet"`_. Default: `"jitter"`.
 
 
 `"jitter"` uses a simple algorithm developed by GJ, M-A-A, MS, and LA to test if a single sphere, sphere-tree, or other primative (box and cylinder) are colliding with masked/unallowed points on the grid... I can't recall all of the allowed types, but check the input parameters that it accepts. I believe there is also an option to perform simple collisions directly between primatives, e.g. sphere-sphere, sphere-box, sphere-cylinder, cylinder-box, and spheretree-others

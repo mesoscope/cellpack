@@ -35,7 +35,7 @@ class ConvertToSimularium(argparse.Namespace):
     DEFAULT_PACKING_RESULT = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/results_seed_0.json"
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
-    DEFAULT_GEO_TYPE = "OBJ"  # Other options: SPHERE or PDB
+    DEFAULT_GEO_TYPE = "PDB"  # Other options: SPHERE or PDB
     DEFAULT_SCALE_FACTOR = 1.0 / 10
 
     def __init__(self, total_steps=1):
@@ -132,32 +132,43 @@ class ConvertToSimularium(argparse.Namespace):
             z_size * self.scale_factor,
         ]
 
+    @staticmethod
+    def get_mesh_data(ingredient_data):
+        meshType = (
+            ingredient_data["meshType"] if ("meshType" in ingredient_data) else "file"
+        )
+
+        if meshType == "file":
+            file_path = os.path.basename(ingredient_data["meshFile"])
+            file_name, _ = os.path.splitext(file_path)
+
+        elif meshType == "raw":
+            file_name = ingredient_data["name"]
+
+        return {
+            "display_type": DISPLAY_TYPE.OBJ,
+            "url": f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/{file_name}.obj",
+        }
+
     def get_ingredient_display_data(self, ingredient_data):
         if self.geo_type == "OBJ" and "meshFile" in ingredient_data:
-            meshType = (
-                ingredient_data["meshType"]
-                if ("meshType" in ingredient_data)
-                else "file"
-            )
-            if meshType == "file":
-                file_path = os.path.basename(ingredient_data["meshFile"])
-                file_name, _ = os.path.splitext(file_path)
-                return {
-                    "display_type": DISPLAY_TYPE.OBJ,
-                    "url": f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/{file_name}.obj",
-                }
-            elif meshType == "raw":
-                file_name = ingredient_data["name"]
-                return {
-                    "display_type": DISPLAY_TYPE.OBJ,
-                    "url": f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/{file_name}.obj",
-                }
+            return ConvertToSimularium.get_mesh_data(ingredient_data)
+
         elif self.geo_type == "PDB":
             pdb_file_name = ""
             if "source" in ingredient_data:
                 pdb_file_name = ingredient_data["source"]["pdb"]
-            elif "pdb" in ingredient_data:
+            elif (
+                "pdb" in ingredient_data
+                and ingredient_data["pdb"] is not None
+                and ".map" not in ingredient_data["pdb"]
+            ):
                 pdb_file_name = ingredient_data["pdb"]
+            elif "meshFile" in ingredient_data:
+                return ConvertToSimularium.get_mesh_data(ingredient_data)
+            else:
+                print("NO PDB", ingredient_data["meshFile"])
+                return {"display_type": DISPLAY_TYPE.SPHERE, "url": ""}
             if ".pdb" in pdb_file_name:
                 url = f"https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/other/{pdb_file_name}"
             else:

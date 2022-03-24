@@ -1,7 +1,6 @@
 import numpy
 from math import sqrt, pi, sin, cos, asin
 from cellpack.autopack.transformation import angle_between_vectors
-from cellpack.mgl_tools.RAPID import RAPIDlib
 
 
 # should use transform.py instead
@@ -201,54 +200,3 @@ def bullet_checkCollision_mp(world, node1, node2):
     #    node1 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
     #    node2 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
     return world.contactTestPair(node1, node2).getNumContacts() > 0
-
-
-def rapid_checkCollision_rmp(liste_input):
-
-    node1 = RAPIDlib.RAPID_model()
-    node1.addTriangles(
-        numpy.array(liste_input[0][0], "f"), numpy.array(liste_input[0][1], "i")
-    )
-    node2 = {}
-    for inp in liste_input:
-        if inp[-1] not in node2:
-            node2[inp[-1]] = RAPIDlib.RAPID_model()
-            node2[inp[-1]].addTriangles(
-                numpy.array(inp[4], "f"), numpy.array(inp[5], "i")
-            )
-        RAPIDlib.RAPID_Collide_scaled(
-            inp[2],
-            inp[3],
-            1.0,
-            node1,
-            inp[6],
-            inp[7],
-            1.0,
-            node2[inp[-1]],
-            RAPIDlib.cvar.RAPID_FIRST_CONTACT,
-        )
-        if RAPIDlib.cvar.RAPID_num_contacts != 0:
-            return True
-    return False
-
-
-def rapid_checkCollision_mp(v1, f1, rot1, trans1, v2, f2, rot2, trans2):
-    node1 = RAPIDlib.RAPID_model()
-    node1.addTriangles(numpy.array(v1, "f"), numpy.array(f1, "i"))
-    node2 = RAPIDlib.RAPID_model()
-    node2.addTriangles(numpy.array(v2, "f"), numpy.array(f2, "i"))
-    RAPIDlib.RAPID_Collide_scaled(
-        rot1,
-        trans1,
-        1.0,
-        node1,
-        rot2,
-        trans2,
-        1.0,
-        node2,
-        RAPIDlib.cvar.RAPID_FIRST_CONTACT,
-    )
-    #    print ("Num box tests: %d" % RAPIDlib.cvar.RAPID_num_box_tests)
-    #    print ("Num contact pairs: %d" % RAPIDlib.cvar.RAPID_num_contacts)
-    # data3 = RAPIDlib.RAPID_Get_All_Pairs()
-    return RAPIDlib.cvar.RAPID_num_contacts != 0
