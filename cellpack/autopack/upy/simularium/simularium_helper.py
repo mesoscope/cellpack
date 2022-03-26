@@ -259,16 +259,17 @@ class simulariumHelper(hostHelper.Helper):
     def newEmpty(
         self, name, location=None, parentCenter=None, display=1, visible=0, **kw
     ):
-        empty = Geom(name, visible=display)
-        if location is not None:
-            if parentCenter is not None:
-                location = location - parentCenter
-            empty.SetTranslation(numpy.array(location))
-        parent = None
-        if "parent" in kw:
-            parent = kw["parent"]
-        self.addObjectToScene(None, empty, parent=parent)
-        return empty
+        # empty = Geom(name, visible=display)
+        # if location is not None:
+        #     if parentCenter is not None:
+        #         location = location - parentCenter
+        #     empty.SetTranslation(numpy.array(location))
+        # parent = None
+        # if "parent" in kw:
+        #     parent = kw["parent"]
+        # self.addObjectToScene(None, empty, parent=parent)
+        # return empty
+        return None
 
     def updateMasterInstance(self, master, newMesh, **kw):
         # get the instancematrix frommaster
@@ -991,27 +992,29 @@ class simulariumHelper(hostHelper.Helper):
 
     def DecomposeMesh(self, poly, edit=True, copy=True, tri=True, transform=True):
         # get infos
-        if not isinstance(poly, IndexedPolygons):
-            if isinstance(poly, Cylinders):
-                poly = poly.asIndexedPolygons()
-            elif isinstance(poly, Geom):
-                # getfirst child mesh recursively
-                child = self.getChilds(poly)
-                if len(child):
-                    poly, isit = self.isIndexedPolyon(poly)
-                elif isinstance(poly, Cylinders):
-                    poly = poly.asIndexedPolygons()
-                else:
-                    return [], [], []
-            else:
-                return [], [], []
-        faces = poly.getFaces()
-        vertices = poly.getVertices()
-        vnormals = poly.getVNormals()
-        if transform and not self.nogui:
-            mat = poly.GetMatrix(poly.LastParentBeforeRoot())
-            vertices = self.ApplyMatrix(vertices, mat)
-        return faces, vertices, vnormals
+        # if not isinstance(poly, IndexedPolygons):
+        #     if isinstance(poly, Cylinders):
+        #         poly = poly.asIndexedPolygons()
+        #     elif isinstance(poly, Geom):
+        #         # getfirst child mesh recursively
+        #         child = self.getChilds(poly)
+        #         if len(child):
+        #             poly, isit = self.isIndexedPolyon(poly)
+        #         elif isinstance(poly, Cylinders):
+        #             poly = poly.asIndexedPolygons()
+        #         else:
+        #             return [], [], []
+        #     else:
+        #         return [], [], []
+        # faces = poly.getFaces()
+        # vertices = poly.getVertices()
+        # vnormals = poly.getVNormals()
+        # if transform and not self.nogui:
+        #     mat = poly.GetMatrix(poly.LastParentBeforeRoot())
+        #     vertices = self.ApplyMatrix(vertices, mat)
+        # return faces, vertices, vnormals
+
+        return [], [], []
 
     def changeColorO(self, object, colors):
         object.Set(materials=colors)

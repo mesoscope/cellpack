@@ -795,6 +795,9 @@ class Compartment(CompartmentList):
         newBB = [box[0][:], box[1][:]]
         fits = True
 
+        if not bb:
+            return True, newBB
+
         if xm > bb[0][0] - padding:
             newBB[0][0] = bb[0][0] - padding
             fits = False
@@ -1250,6 +1253,8 @@ class Compartment(CompartmentList):
         diag = env.grid.diag
         self.log.info("distance %d", len(distances))
         t1 = time()
+
+        import ipdb; ipdb.set_trace()
 
         # build search tree for off grid surface points
         srfPts = self.ogsurfacePoints
