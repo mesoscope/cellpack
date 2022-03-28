@@ -41,7 +41,7 @@ class Args(argparse.Namespace):
         "jitter",
         "pandaBulletRelax",
         "pandaBullet",
-        "spheresBHT",
+        "spheresSST",
     ]
 
     def __init__(self):
