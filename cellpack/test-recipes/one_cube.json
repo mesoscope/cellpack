@@ -26,14 +26,14 @@
             ]
         ],
         "gradients": [],
-        "smallestProteinSize": 0,
+        "smallestProteinSize": 15,
         "computeGridParams": true,
         "freePtsUpdateThreshold": 0,
         "pickWeightedIngr": true,
         "_timer": false,
         "ingrLookForNeighbours": false,
         "pickRandPt": true,
-        "largestProteinSize": 200,
+        "largestProteinSize": 100,
         "resultfile": "autoPACKserver/results/NM_Analysis_FigureB1.0.apr.json",
         "use_periodicity": true,
         "EnviroOnly": false
@@ -41,7 +41,7 @@
     "cytoplasme": {
         "ingredients": {
             "cube_radius_100": {
-                "overwrite_nbMol_value": 1,
+                "overwrite_nbMol_value": 100,
                 "nbJitter": 20,
                 "molarity": 0,
                 "partners_position": [],
@@ -55,11 +55,7 @@
                 "sphereFile": null,
                 "weight": 0.2,
                 "orientBiasRotRangeMin": -3.1415927,
-                "radii": [
-                    [
-                        100
-                    ]
-                ],
+                "radii": [[100, 100, 100]],
                 "cutoff_boundary": 0,
                 "coordsystem": "left",
                 "jitterMax": [
@@ -80,27 +76,20 @@
                 ],
                 "properties": {},
                 "partners_name": [],
-                "nbMol": 1,
-                "name": "Sphere_radius_100",
+                "nbMol": 100,
+                "name": "cube_radius_100",
                 "orientBiasRotRangeMax": -3.1415927,
                 "packingMode": "random",
                 "Type": "SingleCube",
                 "excluded_partners_name": [],
                 "rejectionThreshold": 100,
                 "placeType": "jitter",
-                "cutoff_surface": 100,
+                "cutoff_surface": 0,
                 "packingPriority": 0,
                 "proba_binding": 0.5,
                 "rotAxis": null,
-                "positions": [
-                    [
-                        [
-                            0,
-                            0,
-                            0
-                        ]
-                    ]
-                ],
+                "positions": [[[-50.0, -50.0, -50.0]]],
+                "positions2": [[[50.0, 50.0, 50.0]]],
                 "proba_not_binding": 0.5,
                 "use_mesh_rb": false,
                 "pdb": null,
