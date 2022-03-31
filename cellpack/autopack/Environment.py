@@ -2648,7 +2648,6 @@ class Environment(CompartmentList):
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):
             self.afviewer.vi.progressBar(label="Filling Complete")
             self.afviewer.vi.resetProgressBar()
-        print("VIEWER")
         ingredients = {}
         for pos, rot, ingr, ptInd in self.molecules:
             if ingr.name not in ingredients:
@@ -2667,7 +2666,7 @@ class Environment(CompartmentList):
                 ingredients[ingr.name][1].append(pos)
                 ingredients[ingr.name][2].append(rot)
                 ingredients[ingr.name][3].append(numpy.array(mat))
-        autopack.helper.writeToFile(None, './realtime.simularium', len(self.molecules))
+        autopack.helper.writeToFile(None, './realtime')
 
         self.ingr_result = ingredients
 
