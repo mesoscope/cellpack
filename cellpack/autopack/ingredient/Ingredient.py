@@ -1579,15 +1579,6 @@ class Ingredient(Agent):
                 helper.reParent(geom, p)
                 return geom
             return None
-        elif fileExtension == "":
-            geom = self.getDejaVuMesh(filename, geomname)
-            p = helper.getObject("autopackHider")
-            if p is None:
-                p = helper.newEmpty("autopackHider")
-                if helper.host.find("blender") == -1:
-                    helper.toggleDisplay(p, False)
-            helper.reParent(geom, p)
-            return geom
         else:  # host specific file
             if helper is not None:  # neeed the helper
                 helper.read(
@@ -1632,35 +1623,6 @@ class Ingredient(Agent):
             autopack.cache_geoms + os.sep + geomname + ".obj", self.vertices, self.faces
         )
         # self.saveObjMesh(autopack.cache_geoms + os.sep + geomname + ".obj")
-        return geom
-
-    def getDejaVuMesh(self, filename, geomname):
-        """
-        Create a DejaVu polygon mesh object from a filename
-
-        @type  filename: string
-        @param filename: the name of the input file
-        @type  geomname: string
-        @param geomname: the name of the ouput geometry
-
-        @rtype:   DejaVu.IndexedPolygons
-        @return:  the created dejavu mesh
-        """
-
-        self.vertices = numpy.loadtxt(filename + ".indpolvert", numpy.float32)
-        self.faces = numpy.loadtxt(filename + ".indpolface", numpy.int32)
-
-        # geom = IndexedPolygons(geomname, vertices=v[:,:3], faces=f.tolist())
-
-        geom = autopack.helper.createsNmesh(geomname, self.vertices, None, self.faces)[
-            0
-        ]
-        # from DejaVu.IndexedPolygons import IndexedPolygonsFromFile
-        # seems not ok...when they came from c4d ... some transformation are not occuring.
-        # geom = IndexedPolygonsFromFile(filename, 'mesh_%s' % self.pdb)
-        #        if helper is not None:
-        #            if helper.host != "maya" :
-        #                helper.rotateObj(geom,[0.0,-math.pi/2.0,0.0])
         return geom
 
     def jitterPosition(self, position, spacing, normal=None):
@@ -2044,15 +2006,15 @@ class Ingredient(Agent):
                 ],
             )
 
-            if histoVol.runTimeDisplay:  # > 1:
-                box = self.vi.getObject("collBox")
-                if box is None:
-                    box = self.vi.Box(
-                        "collBox", cornerPoints=bb, visible=1
-                    )  # cornerPoints=bb,visible=1)
-                else:
-                    self.vi.updateBox(box, cornerPoints=bb)
-                self.vi.update()
+            # if histoVol.runTimeDisplay:  # > 1:
+                # box = self.vi.getObject("collBox")
+                # if box is None:
+                #     box = self.vi.Box(
+                #         "collBox", cornerPoints=bb, visible=1
+                #     )  # cornerPoints=bb,visible=1)
+                # else:
+                #     self.vi.updateBox(box, cornerPoints=bb)
+                # self.vi.update()
 
             pointsToCheck = histoVol.grid.getPointsInSphere(
                 posc, radius_of_area_to_check
@@ -2722,7 +2684,8 @@ class Ingredient(Agent):
                 )
 
     def remove_from_realtime_display(env, moving):
-        env.afvi.vi.deleteObject(moving)
+        pass
+        # env.afvi.vi.deleteObject(moving)
 
     def reject(
         self,
@@ -2801,9 +2764,9 @@ class Ingredient(Agent):
         ]  # drop point, surface points.
 
         moving = None
-        if env.runTimeDisplay and self.mesh:
+        if env.runTimeDisplay:
             moving = self.handle_real_time_visualization(
-                env.afviewer, ptInd, target_grid_point_position, rotation_matrix
+               autopack.helper, ptInd, target_grid_point_position, rotation_matrix
             )
         is_realtime = moving is not None
 
@@ -2898,6 +2861,8 @@ class Ingredient(Agent):
             self.reject()
             return False, {}, {}
         if success:
+            if is_realtime:
+                autopack.helper.set_object_static(self.name)
             self.place(
                 env, compartment, jtrans, rotMatj, ptInd, insidePoints, newDistPoints
             )
@@ -2998,7 +2963,8 @@ class Ingredient(Agent):
     def update_display_rt(self, moving, translation, rotation):
         mat = rotation.copy()
         mat[:3, 3] = translation
-        autopack.helper.setObjectMatrix(moving, mat, transpose=True)
+        autopack.helper.move_object(self.name, translation, mat)
+
         autopack.helper.update()
 
     def rigid_place(
@@ -3407,30 +3373,15 @@ class Ingredient(Agent):
                 self.update_display_rt(moving, target_point, rot_matrix)
             return target_point, rot_matrix
 
-    def handle_real_time_visualization(self, afvi, ptInd, target_point, rot_mat):
-        moving = None
+    def handle_real_time_visualization(self, helper, ptInd, target_point, rot_mat):
+        name = self.name
+        obj = helper.getObject(name)
+        if obj is None:
+            helper.add_object_to_scene(None, self, target_point, rot_mat)
+        else: 
+            helper.add_new_instance(name, self, target_point, rot_mat)
 
-        if hasattr(self, "mesh_3d"):
-            # create an instance of mesh3d and place it
-            name = self.name + str(ptInd)
-            moving = afvi.vi.getObject(name)
-            if moving is None:
-                if self.mesh_3d is None:
-                    moving = afvi.vi.Sphere(
-                        name, radius=self.radii[0][0], parent=afvi.staticMesh
-                    )[0]
-                    afvi.vi.setTranslation(moving, pos=target_point)
-                else:
-                    moving = afvi.vi.newInstance(
-                        name,
-                        self.mesh_3d,  # .GetDown(),
-                        matrice=rot_mat,
-                        location=target_point,
-                        parent=afvi.staticMesh,
-                    )
-            else:
-                self.update_display_rt(moving, target_point, rot_mat)
-        return moving
+        return obj
 
     def pandaBullet_place(
         self,
@@ -3842,7 +3793,6 @@ class Ingredient(Agent):
             ),
         )
         # run he simulation for simulationTimes
-        #        afvi.vi.frameAdvanced(duration = simulationTimes,display = runTimeDisplay)#,
         histoVol.callFunction(
             self.env.runBullet,
             (

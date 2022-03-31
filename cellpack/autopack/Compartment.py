@@ -70,6 +70,7 @@ from scipy import spatial
 import cellpack.autopack as autopack
 from cellpack.autopack import transformation as tr, binvox_rw
 from cellpack.autopack.BaseGrid import gridPoint
+from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
 from .Recipe import Recipe
 from .ray import (
     makeMarchingCube,
@@ -275,27 +276,6 @@ class Compartment(CompartmentList):
         self.vnormals = self.getVertexNormals(self.vertices, self.faces)
         # self.vnormals = autopack.helper.normal_array(self.vertices,numpy.array(self.faces))
         self.center = pos
-
-    def getDejaVuMesh(self, filename, geomname):
-        """
-        Create a DejaVu polygon mesh object from a filename
-
-        @type  filename: string
-        @param filename: the name of the input file
-        @type  geomname: string
-        @param geomname: the name of the output geometry
-
-        @rtype:   DejaVu.IndexedPolygons
-        @return:  the created dejavu mesh
-        """
-        # filename or URL
-        from mgl_tools.DejaVu.IndexedPolygons import IndexedPolygons
-
-        v = numpy.loadtxt(filename + ".indpolvert", numpy.float32)
-        f = numpy.loadtxt(filename + ".indpolface", numpy.int32)
-        geom = IndexedPolygons(self.name, vertices=v[:, :3], faces=f)
-
-        return geom
 
     def buildSphere(self, radius, geomname):
         geom = None
@@ -568,22 +548,14 @@ class Compartment(CompartmentList):
             if helper is None:
 
                 # need to get the mesh directly. Only possible if dae or dejavu format
-                # get the dejavu heper but without the View, and in nogui mode
-                h = dejavuHelper(vi="nogui")
+                # get the simularium helper but without the View, and in nogui mode
+                h = simulariumHelper(vi="nogui")
                 dgeoms = h.read(filename)
                 v, vn, f = dgeoms.values()[0]["mesh"]
                 vn = helper.normal_array(v, numpy.array(f))
                 # vn = self.getVertexNormals(v,f)
                 return f, v, vn
             else:  # if helper is not None:#neeed the helper
-                if helper.host == "dejavu" and helper.nogui:
-                    dgeoms = helper.read(filename)
-                    v, vn, f = list(dgeoms.values())[0]["mesh"]
-                    # fix the normal Should transform first ?
-                    vn = helper.normal_array(v, numpy.array(f))
-                    v = numpy.array(v) * self.scale
-                    self.mesh = helper.createsNmesh(gname, v, None, f)[0]
-                    return f, v, vn
                 geom = helper.getObject(gname)
                 if geom is None:
                     helper.read(filename)
@@ -615,8 +587,6 @@ class Compartment(CompartmentList):
                 #                    helper.toggleDisplay(p,False)
                 #                return geom
                 #            return None
-        elif fileExtension == "":
-            geom = self.getDejaVuMesh(filename, gname)
         else:  # speficif host file
             if helper is not None:  # neeed the helper
                 geom = helper.getObject(gname)
@@ -1253,9 +1223,7 @@ class Compartment(CompartmentList):
         diag = env.grid.diag
         self.log.info("distance %d", len(distances))
         t1 = time()
-
-        import ipdb; ipdb.set_trace()
-
+        
         # build search tree for off grid surface points
         srfPts = self.ogsurfacePoints
         self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)

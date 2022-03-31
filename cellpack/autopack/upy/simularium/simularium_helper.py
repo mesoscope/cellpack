@@ -1,81 +1,73 @@
 # -*- coding: utf-8 -*-
-
-"""
-    Copyright (C) <2010>  Autin L. TSRI
-    This file git_upy/dejavuTk/dejavuHelper.py is part of upy.
-
-    upy is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    upy is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with upy.  If not, see <http://www.gnu.org/licenses/gpl-3.0.html>.
-"""
-
 # standardmodule
 import os
-import numpy
-from PIL import Image
+import numpy as np
 
-# DejaVu module
+from simulariumio import (
+    TrajectoryConverter,
+    TrajectoryData,
+    AgentData,
+    UnitData,
+    MetaData,
+    CameraData,
+    DisplayData
+)
+from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
+
 from cellpack.autopack.upy import (
     hostHelper,
-)  # its confusing that upy is in three different place
+)
 import collada
 
 
-# Problem instance doesnt really exist as its. Or its instance of mesh/sphere/cylinder directly.
-# check autofill display
-# we need to create a new class of object that will represent an instance...
 class Instance:
-    def __init__(self, name, geom, position=None, matrice=None):
+    def __init__(
+        self,
+        name,
+        unique_id,
+        radius,
+        viz_type,
+        position=None,
+        rotation=None,
+        sub_points=None,
+    ):
         self.name = name
-        self.geom = geom
-        self.id = len(geom.instanceMatricesFortran)
-        self.matrice = [
-            1.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            1.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            1.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            1.0,
-        ]
+        self.radius = radius
+        self.id = unique_id
         self.isinstance = True
-        if matrice is not None:
-            self.matrice = numpy.array(matrice).reshape(
-                (16,)
-            )  # need to beflatten (16,)
-        matrices = geom.instanceMatricesFortran.tolist()
-        matrices.append(self.matrice)
-        m = [numpy.array(mat).reshape((4, 4)) for mat in matrices]
-        geom.Set(instanceMatrices=numpy.array(m))
+        self.is_static = False
+        self.viz_type = viz_type
+        self.positions = [position] if position is not None else []
+        self.rotations = [rotation] if position is not None else []
+        self.time_points = [0] if position is not None else [-1]
+        self.sub_points = [sub_points] if sub_points is not None else []
 
-    def SetTransformation(self, matrice):
-        matrices = self.geom.instanceMatricesFortran.tolist()
-        matrices[self.id] = numpy.array(matrice).reshape((16,))
-        # print (matrices)
-        m = [numpy.array(mat).reshape((4, 4)) for mat in matrices]
-        print("set")
-        self.geom.Set(instanceMatrices=numpy.array(m), visible=1)
+    def set_static(self, is_static):
+        self.is_static = is_static
 
-    def SetTranslation(self, pos):
-        pass
+    def move(self, time_point, position=None, rotation=None, sub_points=None):
+        if self.viz_type == VIZ_TYPE.FIBER:
+            self.time_points.append(len(self.sub_points))  # index to sub_points
+            self.sub_points.append(sub_points)
+            self.n_subpoints.append(len(sub_points))
+        else:
+            self.time_points.append(len(self.positions))  # index to position
+            self.positions.append(position)
+            self.rotations.append(rotation)
+
+    def increment_static(self, time_point):
+        if self.is_static:
+            last_time_point = len(self.time_points) - 1
+            if self.viz_type == VIZ_TYPE.FIBER:
+                self.time_points.append(len(self.sub_point))
+                self.sub_points.append(self.sub_points[last_time_point])
+                self.n_subpoints.append(len(self.sub_points[last_time_point]))
+            else:
+                self.time_points.append(len(self.positions))
+                self.positions.append(self.positions[last_time_point])
+                self.rotations.append(self.rotations[last_time_point])
+        else: 
+            self.time_points.append(-1)
 
 
 class simulariumHelper(hostHelper.Helper):
@@ -99,12 +91,16 @@ class simulariumHelper(hostHelper.Helper):
     DEBUG = 0
     viewer = None
     host = "simularium"
-
+    
     def __init__(self, master=None, vi=None):
         hostHelper.Helper.__init__(self)
         # we can define here some function alias
         self.nogui = False
-
+        self.time_step = 0
+        self.scene = {}  # dict of instances in the scene
+        self.agent_id_counter = 0
+        self.display_data = {}
+        self.scale_factor = 1/100
         if master is not None:
             if type(master) is dict:
                 self.viewer = master["master"]
@@ -112,25 +108,11 @@ class simulariumHelper(hostHelper.Helper):
                 self.viewer = master
             if self.viewer == "nogui":
                 self.nogui = True
-            elif not isinstance(self.viewer, Viewer) or self.viewer is None:
-                self.viewer = Viewer(master)
         if vi is not None:
             self.viewer = vi
             if self.viewer == "nogui":
                 self.nogui = True
-            elif not isinstance(self.viewer, Viewer) or self.viewer is None:
-                print("no Viewer pass")
-        if self.viewer is None:
-            print("no Viewer golboals")
-            dicG = globals()
-            for d in dicG:
-                if isinstance(dicG[d], Viewer):
-                    self.viewer = dicG[d]
-                    break
-        if self.viewer is None:
-            self.viewer = Viewer()
 
-        # self.getCurrentScene = c4d.documents.GetActiveDocument
         if self.viewer is not None and not self.nogui:
             self.AddObject = self.viewer.AddObject
         self.hext = "dae"
@@ -145,22 +127,22 @@ class simulariumHelper(hostHelper.Helper):
         return self.box(*args, **kw)
 
     def Polylines(self, *args, **kw):
-        return simulariumPolylines(*args, **kw)
+        return []
 
     def Spheres(self, *args, **kw):
-        return Spheres(*args, **kw)
+        return self.sphere(*args, **kw)
 
     def Cylinders(self, *args, **kw):
-        return Cylinders(*args, **kw)
+        return self.cylinder(*args, **kw)
 
     def Geom(self, *args, **kw):
-        return Geom(*args, **kw)
+        pass
 
     def Labels(self, *args, **kw):
-        return Labels(*args, **kw)
+        pass
 
     def IndexedPolygons(self, *args, **kw):
-        return IndexedPolygons(*args, **kw)
+        pass
 
     def setViewer(self, vi):
         self.viewer = vi
@@ -168,10 +150,7 @@ class simulariumHelper(hostHelper.Helper):
         self.Labels = self.viewer.Labels
 
     def getCurrentScene(self):
-        # actually return the Viewer instance
-        if self.viewer == "nogui":
-            self.nogui = True
-        return self.viewer
+        return self.scene
 
     def progressBar(self, progress=None, label=None):
         """update the progress bar status by progress value and label string
@@ -187,9 +166,6 @@ class simulariumHelper(hostHelper.Helper):
     def resetProgressBar(self):
         """reset the Progress Bar, using value"""
         return
-        if hasattr(self.viewer, "Bar"):
-            self.viewer.Bar.reset()
-        self.update()
 
     def update(self):
         if self.viewer == "nogui":
@@ -197,8 +173,6 @@ class simulariumHelper(hostHelper.Helper):
         vi = self.getCurrentScene()
         vi.OneRedraw()
         vi.update()
-
-    #        vi.Redraw()
 
     def getType(self, object):
         return object.__module__
@@ -222,25 +196,26 @@ class simulariumHelper(hostHelper.Helper):
             print("getName", o, type(o))
         return o.name
 
+    def increment_static_objects(self):
+        for name in self.scene:
+            if self.scene[name].is_static:
+                self.scene[name].increment_static(self.time_step)
+
+    def set_object_static(self, name):
+        obj = self.getObject(name)
+        obj.set_static(True)
+
+    def increment_time(self):
+        self.time_step += 1
+        self.increment_static_objects()
+
+    def move_object(self, name, position=None, rotation=None, sub_points=None):
+        self.increment_time()
+        obj = self.getObject(name)
+        obj.move(self.time_step, position, rotation, sub_points)
+
     def getObject(self, name):
-        obj = None
-        if type(name) != str and type(name) != str:
-            return name
-        if self.viewer == "nogui":
-            return None
-        try:
-            obj = self.getCurrentScene().findGeomsByName(name)
-            if len(obj) == 0:
-                obj = None
-            else:
-                for o in obj:
-                    if o.name == name:
-                        return o
-                return None
-        except Exception:
-            print("problem get Object", name)
-            obj = None
-        return obj
+        return self.scene.get(name)
 
     def getChilds(self, obj):
         return obj.children
@@ -263,7 +238,7 @@ class simulariumHelper(hostHelper.Helper):
         # if location is not None:
         #     if parentCenter is not None:
         #         location = location - parentCenter
-        #     empty.SetTranslation(numpy.array(location))
+        #     empty.SetTranslation(np.array(location))
         # parent = None
         # if "parent" in kw:
         #     parent = kw["parent"]
@@ -280,103 +255,58 @@ class simulariumHelper(hostHelper.Helper):
         # pop the instance from the instanceMatrice
         # delete the object
         m = instance.geom.instanceMatricesFortran[:]
-        m = numpy.delete(m, instance.id, 0)
+        m = np.delete(m, instance.id, 0)
         m = m.tolist()
         #        m.pop(instance.id)
-        matrice = [numpy.array(mat).reshape((4, 4)) for mat in m]
-        instance.geom.Set(instanceMatrices=numpy.array(matrice))
+        matrice = [np.array(mat).reshape((4, 4)) for mat in m]
+        instance.geom.Set(instanceMatrices=np.array(matrice))
         del instance
 
-    def newInstance(
-        self,
-        name,
-        object,
-        location=None,
-        c4dmatrice=None,
-        matrice=None,
-        parent=None,
-        material=None,
+    def add_new_instance(
+        self, name, ingredient, position=None, rotation=None, sub_points=None
     ):
-        object = self.getObject(object)
-        if isinstance(object, Spheres):
-            # create a sphere
-            c = object.materials[1028].getState()["diffuse"][0][:3]
-            geom = self.Spheres(
-                name + "copy",
-                radii=[object.radius],
-                centers=[[0, 0, 0]],
-                visible=1,
-                inheritMaterial=False,
-            )
-            geom.Set(
-                materials=[
-                    c,
-                ]
-            )
-            self.addObjectToScene(None, geom, parent=parent)
-        elif isinstance(object, IndexedPolygons):
-            geom = IndexedPolygons(
-                name,
-                vertices=object.getVertices(),
-                faces=object.getFaces(),
-                vnormals=object.getVNormals(),
-                inheritMaterial=False,
-            )
-            geom.materials[1028].Set(object.materials[1028].getState())
-            geom.materials[1029].Set(object.materials[1028].getState())
-            self.addObjectToScene(None, geom, parent=parent)
-        else:
-            geom = Instance(name, object, position=location)
-            # currentMatrices = geom.instanceMatricesFortran
-            # currentMatrices.append(numpy.identity)
-        if location is not None:
-            self.setTranslation(geom, pos=location)
-        return geom
+        self.agent_id_counter += 1
+        if ingredient.Type == "Grow" or ingredient.Type == "Actine":
+            viz_type = VIZ_TYPE.FIBER
 
-    def setObjectMatrix(self, object, matrice, c4dmatrice=None, **kw):
+        else: 
+            viz_type = VIZ_TYPE.DEFAULT 
+        new_instance = Instance(
+            name,
+            self.agent_id_counter,
+            ingredient.encapsulatingRadius,
+            viz_type,
+            position,
+            rotation,
+            sub_points,
+        )
+        self.scene[name] = new_instance
+
+    def setObjectMatrix(self, object, matrice, **kw):
         #            print (object, matrice)
         if "transpose" in kw and not hasattr(object, "isinstance"):
             if kw["transpose"]:
-                matrice = numpy.array(matrice).transpose()
+                matrice = np.array(matrice).transpose()
         object.SetTransformation(matrice)
 
-    def concatObjectMatrix(self, object, matrice, c4dmatrice=None, local=True):
+    def concatObjectMatrix(self):
         pass
 
     def GetAbsPosUntilRoot(self, obj):
         return [0, 0.0, 0.0]
 
-    def addObjectToScene(self, doc, obj, parent=None, centerRoot=True, rePos=None):
-        # doc.start_undo()
-        if self.nogui:
-            return
-        if doc is None:
-            if self.viewer is None:
-                print("#ERROR there is no viewer setup")
-                return
-            doc = self.viewer
-        if parent is not None:
-            if type(parent) == str:
-                parent = self.getObject(parent)
-            doc.AddObject(obj, parent=parent)
-            if centerRoot:
-                currentPos = obj.translation
-                if rePos is not None:
-                    parentPos = rePos
-                else:
-                    parentPos = self.GetAbsPosUntilRoot(obj)  # parent.GetAbsPos()
-                obj.SetTranslation(currentPos - parentPos)
-        else:
-            #                print doc,obj
-            doc.AddObject(obj)
-        # verify the viewer
-        if obj.viewer is None:
-            obj.viewer = doc
+    def add_object_to_scene(self, doc, ingredient, position=None, rotation=None, control_points=None):
+        self.display_data[ingredient.name] = DisplayData(
+            name=ingredient.name,
+            display_type=DISPLAY_TYPE.SPHERE
+        )
 
-    def addCameraToScene(self, name, Type, focal, center, sc):
+        self.add_new_instance(ingredient.name, ingredient, position, rotation, control_points)
+
+    def addCameraToScene(self):
         pass
 
-    def addLampToScene(self, name, Type, rgb, dist, energy, soft, shadow, center, sc):
+    def addLampToScene(self):
         pass
 
     def reParent(self, obj, parent):
@@ -385,7 +315,6 @@ class simulariumHelper(hostHelper.Helper):
         vi = self.getCurrentScene()
         if vi == "nogui":
             return
-        print("current hgelper is " + vi)
         parent = self.getObject(parent)
         if parent is None:
             return
@@ -405,7 +334,7 @@ class simulariumHelper(hostHelper.Helper):
                 obj.viewer = vi
             vi.ReparentObject(obj, parent, objectRetainsCurrentPosition=True)
 
-    def setInstance(self, name, object, location=None, c4dmatrice=None, matrice=None):
+    def setInstance(self):
         return None
 
     def getTranslation(self, name):
@@ -431,17 +360,17 @@ class simulariumHelper(hostHelper.Helper):
         if type(sc) is float:
             sc = [sc, sc, sc]
         # obj.scale = sc #SetScale()?
-        #        obj.SetScale(numpy.array(sc))
-        obj.Set(scale=numpy.array(sc))
+        #        obj.SetScale(np.array(sc))
+        obj.Set(scale=np.array(sc))
 
     def rotateObj(self, obj, rot):
         # take radians, give degrees
         mat = self.eulerToMatrix(rot)
-        obj.Set(rotation=numpy.array(mat).flatten())  # obj.rotation
+        obj.Set(rotation=np.array(mat).flatten())  # obj.rotation
 
     def getTransformation(self, geom):
         if self.nogui:
-            return numpy.identity(4)
+            return np.identity(4)
         geom = self.getObject(geom)
         return geom.GetMatrix(geom.LastParentBeforeRoot())
 
@@ -485,11 +414,8 @@ class simulariumHelper(hostHelper.Helper):
     def addMaterial(self, name, color):
         return color
 
-    def createTexturedMaterial(self, name, filename, normal=False, mat=None):
-        footex = Texture()
-        im = Image.open(filename)
-        footex.Set(enable=1, image=im)
-        return footex
+    def createTexturedMaterial(self, filename):
+        pass
 
     def assignMaterial(self, object, mat, texture=False):
         if texture:
@@ -502,7 +428,7 @@ class simulariumHelper(hostHelper.Helper):
             )
 
     def changeObjColorMat(self, obj, color):
-        obj.Set(inheritMaterial=False, materials=[color], redo=1)
+        pass
 
     def getMaterialObject(self, o):
         pass
@@ -538,41 +464,38 @@ class simulariumHelper(hostHelper.Helper):
         name,
         head,
         tail,
-        radius=None,
         instance=None,
-        material=None,
         parent=None,
-        color=None,
     ):
-        if instance is None:
-            stick = self.getObject(name)
-            if stick is None:
-                v = numpy.array([tail, head])
-                f = numpy.arange(len(v))
-                f.shape = (-1, 2)
-                stick = Cylinders(
-                    name, inheritMaterial=False, vertices=v, faces=f, radii=[1]
-                )
-                # stick = self.Cylinder(name,length=lenght,pos =head)
-                self.addObjectToScene(self.getCurrentScene(), stick, parent=parent)
-            else:
-                v = numpy.array([tail, head])
-                f = numpy.arange(len(v))
-                f.shape = (-1, 2)
-                stick.Set(vertices=v, faces=f, redo=1)
-        else:
-            stick = instance
-            v = instance.vertexSet.vertices.array
-            i = len(v)
-            #            v = numpy.concatenate((v,numpy.array([head,tail])))
-            instance.vertexSet.vertices.AddValues([head, tail])
-            instance.faceSet.faces.AddValues([i, i + 1])
-            r = instance.vertexSet.radii.array[0]
-            instance.vertexSet.radii.AddValues(r)
-            instance.Set(redo=1)
-        return stick
+        # if instance is None:
+        #     stick = self.getObject(name)
+        #     if stick is None:
+        #         v = np.array([tail, head])
+        #         f = np.arange(len(v))
+        #         f.shape = (-1, 2)
+        #         stick = Cylinders(
+        #             name, inheritMaterial=False, vertices=v, faces=f, radii=[1]
+        #         )
+        #         # stick = self.Cylinder(name,length=lenght,pos =head)
+        #         self.addObjectToScene(self.getCurrentScene(), stick, parent=parent)
+        #     else:
+        #         v = np.array([tail, head])
+        #         f = np.arange(len(v))
+        #         f.shape = (-1, 2)
+        #         stick.Set(vertices=v, faces=f, redo=1)
+        # else:
+        #     stick = instance
+        #     v = instance.vertexSet.vertices.array
+        #     i = len(v)
+        #     #            v = np.concatenate((v,np.array([head,tail])))
+        #     instance.vertexSet.vertices.AddValues([head, tail])
+        #     instance.faceSet.faces.AddValues([i, i + 1])
+        #     r = instance.vertexSet.radii.array[0]
+        #     instance.vertexSet.radii.AddValues(r)
+        #     instance.Set(redo=1)
+        return None
 
-    def Cylinder(
+    def cylinder(
         self,
         name,
         radius=1.0,
@@ -583,21 +506,21 @@ class simulariumHelper(hostHelper.Helper):
         **kw
     ):
         #        QualitySph={"0":16,"1":3,"2":4,"3":8,"4":16,"5":32}
-        pos = numpy.array(pos)
-        v = numpy.array([pos, pos + numpy.array([0.0, length, 0.0])])
-        f = numpy.arange(len(v))
+        pos = np.array(pos)
+        v = np.array([pos, pos + np.array([0.0, length, 0.0])])
+        f = np.arange(len(v))
         f.shape = (-1, 2)
-        baseCyl = Cylinders(
-            name,
-            inheritMaterial=False,
-            quality=res,
-            vertices=v,
-            faces=f,
-            radii=[radius],
-        )  # , visible=1)
-        # if str(res) not in QualitySph.keys():
-        self.addObjectToScene(self.getCurrentScene(), baseCyl, parent=parent)
-        return [baseCyl, baseCyl]
+        # baseCyl = Cylinders(
+        #     name,
+        #     inheritMaterial=False,
+        #     quality=res,
+        #     vertices=v,
+        #     faces=f,
+        #     radii=[radius],
+        # )  # , visible=1)
+        # # if str(res) not in QualitySph.keys():
+        # self.addObjectToScene(self.getCurrentScene(), baseCyl, parent=parent)
+        return [None, None]
 
     def updateTubeMesh(self, mesh, cradius=1.0, quality=0, **kw):
         # change the radius to cradius
@@ -634,7 +557,7 @@ class simulariumHelper(hostHelper.Helper):
                         color,
                     ]
                 )
-        self.addObjectToScene(None, baseSphere, parent=parent)
+        self.add_object_to_scene(None, baseSphere, parent=parent)
         if pos is not None:
             self.setTranslation(baseSphere, pos)
         return [baseSphere, baseSphere]
@@ -655,9 +578,9 @@ class simulariumHelper(hostHelper.Helper):
         return mesh
 
     def FromVec(self, points, pos=True):
-        return numpy.array(
+        return np.array(
             points
-        )  # numpy.array(float(points[0]),float(points[1]),float(points[2]))
+        )  # np.array(float(points[0]),float(points[1]),float(points[2]))
 
     #
     def ToVec(self, v, pos=True):
@@ -684,7 +607,7 @@ class simulariumHelper(hostHelper.Helper):
         from Simularium.Points import Points
 
         obj = Points(name, **kw)
-        self.addObjectToScene(self.getCurrentScene(), obj, parent=parent)
+        self.add_object_to_scene(self.getCurrentScene(), obj, parent=parent)
         return obj
 
     def updatePoly(self, polygon, faces=None, vertices=None):
@@ -759,63 +682,8 @@ class simulariumHelper(hostHelper.Helper):
         # return [PDBgeometry, PDBgeometry]
         return [None, None]
 
-    def instancePolygon(
-        self,
-        name,
-        matrices=None,
-        mesh=None,
-        parent=None,
-        transpose=False,
-        colors=None,
-        **kw
-    ):
-        if matrices is None:
-            return None
-        if mesh is None:
-            return None
-        geom = None
-        if mesh is None or not isinstance(mesh, IndexedPolygons):
-            print("no mesh???", mesh, isinstance(mesh, Spheres))
-            if isinstance(mesh, Spheres):
-                # need only the tranlation for the matrix
-                centers = [m[:3, 3] for m in matrices]
-                # mesh.Set(centers=centers)
-                if parent is not None:
-                    self.reParent(mesh, parent)
-                    parent.Set(instanceMatrices=matrices, visible=1)
-                else:
-                    mesh.Set(centers=centers)
-                return mesh
-            elif isinstance(mesh, Geom):
-                if parent is not None:
-                    print("instancePolygon", parent, mesh)
-                    if parent != mesh:
-                        self.reParent(mesh, parent)
-                        parent.Set(instanceMatrices=matrices, visible=1)
-                    else:
-                        mesh.Set(instanceMatrices=matrices, visible=1)
-                else:
-                    mesh.Set(instanceMatrices=matrices, visible=1)
-            # justgetthe pass mes
-            geom = self.getObject(mesh)
-            if geom is None:
-                return
-        #            return None
-        else:
-            geom = IndexedPolygons(
-                name,
-                vertices=mesh.getVertices(),
-                faces=mesh.getFaces(),
-                vnormals=mesh.getVNormals(),
-            )
-            geom.materials[1028].prop = mesh.materials[1028].prop
-            geom.materials[1029].prop = mesh.materials[1029].prop
-            self.addObjectToScene(None, geom, parent=parent)
-        print("geom", geom)
-        geom.Set(instanceMatrices=matrices, visible=1)
-        #        if colors is not None :
-        #            geom.Set(materials=colors, inheritMaterial=0)
-        return geom
+    def instancePolygon(self, name, matrices=None, mesh=None, parent=None, **kw):
+        return None
 
     def changeColor(
         self, obj, colors, perVertex=False, proxyObject=False, doc=None, pb=False
@@ -829,16 +697,14 @@ class simulariumHelper(hostHelper.Helper):
         center=[0.0, 0.0, 0.0],
         size=[1.0, 1.0, 1.0],
         cornerPoints=None,
-        visible=1,
-        mat=None,
         **kw
     ):
-        # import numpy
-        box = Box(name, frontPolyMode="fill")  # , cornerPoints=bb, visible=1
+        # import np
+        box = {name: name}
         if cornerPoints is not None:
             for i in range(3):
                 size[i] = cornerPoints[1][i] - cornerPoints[0][i]
-            center = (numpy.array(cornerPoints[0]) + numpy.array(cornerPoints[1])) / 2.0
+            center = (np.array(cornerPoints[0]) + np.array(cornerPoints[1])) / 2.0
             box.Set(cornerPoints=list(cornerPoints))
         else:
             box.Set(center=center, xside=size[0], yside=size[1], zside=size[2])
@@ -847,7 +713,7 @@ class simulariumHelper(hostHelper.Helper):
         parent = None
         if "parent" in kw:
             parent = kw["parent"]
-        self.addObjectToScene(self.getCurrentScene(), box, parent=parent)
+        self.add_object_to_scene(self.getCurrentScene(), box, parent=parent)
         return box, box
 
     def updateBox(
@@ -856,10 +722,8 @@ class simulariumHelper(hostHelper.Helper):
         center=[0.0, 0.0, 0.0],
         size=[1.0, 1.0, 1.0],
         cornerPoints=None,
-        visible=1,
-        mat=None,
     ):
-        # import numpy
+        # import np
         box = self.getObject(box)
         if cornerPoints is not None:
             for i in range(3):
@@ -901,57 +765,7 @@ class simulariumHelper(hostHelper.Helper):
         **kw
     ):
         # plane or grid
-        xres = 2
-        yres = 2
-        if "subdivision" in kw:
-            xres = kw["subdivision"][0]
-            yres = kw["subdivision"][1]
-            if xres == 1:
-                xres = 2
-            if yres == 1:
-                yres = 2
-
-        # need to build vertices/faces for the plane
-        # 4corner points
-        #  *--*
-        #  |\ |
-        #  | \|
-        #  *--*
-        # basic plane, no subdivision
-        # what about subdivision
-        vertices = [
-            (-0.5, 0.5, 0.0),
-            (0.5, 0.5, 0.0),
-            (0.5, -0.5, 0.0),
-            (-0.5, -0.5, 0.0),
-        ]
-        faces = ((2, 1, 0), (3, 2, 0))
-
-        obj = IndexedPolygons(
-            name,
-            vertices=vertices,
-            faces=faces,
-            vnormals=None,
-            shading="flat",
-            materials=[
-                [1, 0, 0],
-            ],
-        )
-
-        if cornerPoints is not None:
-            for i in range(3):
-                size[i] = cornerPoints[1][i] - cornerPoints[0][i]
-            center = (numpy.array(cornerPoints[0]) + numpy.array(cornerPoints[1])) / 2.0
-        obj.translation = (float(center[0]), float(center[1]), float(center[2]))
-        obj.Set(scale=(float(size[0]), float(size[1]), 1.0))
-
-        if "material" in kw:
-            self.addMaterial(name, [1.0, 1.0, 0.0])
-        parent = None
-        if "parent" in kw:
-            parent = kw["parent"]
-        self.addObjectToScene(self.getCurrentScene(), obj, parent=parent)
-        return obj
+        return None
 
     def getFace(self, face):
         return face
@@ -970,15 +784,6 @@ class simulariumHelper(hostHelper.Helper):
     def getMeshFaces(self, poly):
         mesh = self.checkIsMesh(poly)
         return mesh.getFaces()
-
-    def grabAllIndexedPolyonginHierarchy(self, poly, all_mesh=[]):
-        if not isinstance(poly, IndexedPolygons):
-            if isinstance(poly, Geom):
-                for child in self.getChilds(poly):
-                    all_mesh = self.grabAllIndexedPolyonginHierarchy(child, all_mesh)
-        else:
-            all_mesh.append(poly)
-        return all_mesh
 
     def isIndexedPolyon(self, obj):
         if not hasattr(obj, "getFaces"):
@@ -1045,7 +850,7 @@ class simulariumHelper(hostHelper.Helper):
         return mat
 
     def TextureFaceCoordintesToVertexCoordinates(self, v, f, t, ti):
-        textureuv_vertex = numpy.zeros((len(v), 2))
+        textureuv_vertex = np.zeros((len(v), 2))
         for i, indice_verex in enumerate(f):
             for j in range(3):
                 if len(ti) == (len(f) * 3):
@@ -1061,7 +866,7 @@ class simulariumHelper(hostHelper.Helper):
                 return n[ni]
             else:
                 return None
-        normals_vertex = numpy.zeros((len(v), 3))
+        normals_vertex = np.zeros((len(v), 3))
         for i, indice_vertex in enumerate(f):
             if len(f.shape) == 2:
                 for j in range(3):
@@ -1218,7 +1023,7 @@ class simulariumHelper(hostHelper.Helper):
         name = g.name
         if name == "":
             name = g.id
-        v = numpy.array(g.primitives[0].vertex)  # multiple primitive ?
+        v = np.array(g.primitives[0].vertex)  # multiple primitive ?
         print("vertices nb is ", len(v))
         nf = len(g.primitives[0].vertex_index)
         sh = g.primitives[0].vertex_index.shape
@@ -1273,107 +1078,154 @@ class simulariumHelper(hostHelper.Helper):
                 matd.prop[matd.AMBI] = mat.effect.ambient[0:3]
         return onode, mesh
 
-    def buildGeometries(self, col):
-        dicgeoms = {}
-        geoms = col.geometries
-        meshDic = {}
-        for g in geoms:
-            meshDic[g.id] = {}
-            dicgeoms[g.id] = {}
-            dicgeoms[g.id]["geom"] = g
-            dicgeoms[g.id]["id"] = g.id
-            v, vn, f = self.decomposeColladaGeom(g, col)
-            print("vertices nb is ", len(v))
-            if self.nogui:
-                # apply transformation from boundGeom
-                dicgeoms[g.id]["node"] = None
-                dicgeoms[g.id]["mesh"] = v, vn, f
-                mat = self.getColladaMaterial(g, col)
-                # print ("mat type is ",type(mat),mat, mat is not None, type(mat) is not type(None))
-                if mat is not None:
-                    dicgeoms[g.id]["color"] = mat.effect.diffuse[0:3]
-            else:
-                onode, mesh = self.oneColladaGeom(g, col)
-                dicgeoms[g.id]["node"] = onode
-                dicgeoms[g.id]["mesh"] = mesh
-            meshDic[g.id]["mesh"] = v, vn, f
-            dicgeoms[g.id]["instances"] = []
-            dicgeoms[g.id]["parentmesh"] = None
-        return dicgeoms, meshDic
-
     def read(self, filename, **kw):
         fileName, fileExtension = os.path.splitext(filename)
 
-        if fileExtension == ".dae":
-            daeDic = None
-            col = collada.Collada(filename)  # , ignore=[collada.DaeUnsupportedError,
-            # collada.DaeBrokenRefError])
-            dicgeoms, daeDic = self.buildGeometries(col)
-            boundgeoms = list(col.scene.objects("geometry"))
-            for bg in boundgeoms:
-                if bg.original.id in dicgeoms:
-                    node = dicgeoms[bg.original.id]["node"]
-                    dicgeoms[bg.original.id]["instances"].append(bg.matrix)
-            # dicgeoms["col"]=col
-            if self.nogui:
-                return dicgeoms
+        # if fileExtension == ".dae":
+        #     daeDic = None
+        #     col = collada.Collada(filename)  # , ignore=[collada.DaeUnsupportedError,
+        #     # collada.DaeBrokenRefError])
+        #     dicgeoms, daeDic = self.buildGeometries(col)
+        #     boundgeoms = list(col.scene.objects("geometry"))
+        #     for bg in boundgeoms:
+        #         if bg.original.id in dicgeoms:
+        #             node = dicgeoms[bg.original.id]["node"]
+        #             dicgeoms[bg.original.id]["instances"].append(bg.matrix)
+        #     # dicgeoms["col"]=col
+        #     if self.nogui:
+        #         return dicgeoms
 
-            # for each nodein the scene creae an empty
-            # for each primtive in the scene create an indeedPolygins-
-            uniq = False
-            if len(col.scene.nodes) == 1:
-                uniq = True
-            for i, node in enumerate(col.scene.nodes):
-                # node,i,col,nodexml,parentxml=None,parent=None,dicgeoms=None
-                dicgeoms = self.nodeToGeom(
-                    node,
-                    i,
-                    col,
-                    col.scene.xmlnode[i],
-                    parentxml=None,
-                    dicgeoms=dicgeoms,
-                    uniq=uniq,
-                )
-            for g in dicgeoms:
-                node = dicgeoms[g]["node"]
-                i = dicgeoms[g]["instances"]
-                #                print node,g,i
-                if len(i):
-                    if dicgeoms[g]["parentmesh"] is not None:
-                        self.reParent(node, dicgeoms[g]["parentmesh"])
-                        node.Set(instanceMatrices=i)
-            return boundgeoms, dicgeoms, col, daeDic
-        #            for i,node in enumerate(col.scene.nodes) :
-        #                self.transformNode(node,i,col,col.scene.xmlnode[i])
-        else:
-            from Simularium.IndexedPolygons import IndexedPolygonsFromFile
+        #     # for each nodein the scene creae an empty
+        #     # for each primtive in the scene create an indeedPolygins-
+        #     uniq = False
+        #     if len(col.scene.nodes) == 1:
+        #         uniq = True
+        #     for i, node in enumerate(col.scene.nodes):
+        #         # node,i,col,nodexml,parentxml=None,parent=None,dicgeoms=None
+        #         dicgeoms = self.nodeToGeom(
+        #             node,
+        #             i,
+        #             col,
+        #             col.scene.xmlnode[i],
+        #             parentxml=None,
+        #             dicgeoms=dicgeoms,
+        #             uniq=uniq,
+        #         )
+        #     for g in dicgeoms:
+        #         node = dicgeoms[g]["node"]
+        #         i = dicgeoms[g]["instances"]
+        #         #                print node,g,i
+        #         if len(i):
+        #             if dicgeoms[g]["parentmesh"] is not None:
+        #                 self.reParent(node, dicgeoms[g]["parentmesh"])
+        #                 node.Set(instanceMatrices=i)
+        #     return boundgeoms, dicgeoms, col, daeDic
+        # #            for i,node in enumerate(col.scene.nodes) :
+        # #                self.transformNode(node,i,col,col.scene.xmlnode[i])
+        # else:
+        #     from Simularium.IndexedPolygons import IndexedPolygonsFromFile
 
-            geoms = IndexedPolygonsFromFile(filename, fileName)
-            self.AddObject(geoms)
+        #     geoms = IndexedPolygonsFromFile(filename, fileName)
+        #     self.AddObject(geoms)
 
     #        raw_input()
 
     def write(self, listObj, **kw):
         pass
 
-    # Simularium.indexedPolygon have also this function
-
-    def writeToFile(self, polygon, filename):
+    def writeToFile(self, polygon, file_name, max_number_agents):
         """
-        Write the given polygon mesh data (vertices, faces, normal, face normal) in the Simularium format.
-
-        Create two files : filename.indpolvert and filename.indpolface.
-
-        See writeMeshToFile
-
-        @type  polygon: hostObj/hostMesh/String
-        @param polygon: the polygon to export in Simularium format
-        @type  filename: string
-        @param filename: the destinaon filename.
+        Write to simuarium file
         """
-        # get shild ?
-        if isinstance(polygon, IndexedPolygons):
-            polygon.writeToFile(filename)
+        total_steps = self.time_step + 1
+        n_agents = [0 for x in range(total_steps)]
+        print("TOTALS", total_steps, max_number_agents)
+        type_names = [["" for x in range(max_number_agents)] for x in range(total_steps)]
+        print(len(type_names))
+        positions = [[[0, 0, 0] for x in range(max_number_agents)] for x in range(total_steps)]
+        rotations = [[[0, 0, 0] for x in range(max_number_agents)] for x in range(total_steps)]
+        viz_types = [[VIZ_TYPE.DEFAULT for x in range(max_number_agents)] for x in range(total_steps)]
+        unique_ids = [[0 for x in range(max_number_agents)] for x in range(total_steps)]
+        radii = [[1 for x in range(max_number_agents)] for x in range(total_steps)]
+        n_subpoints = [[0 for x in range(max_number_agents)] for x in range(total_steps)]
+        subpoints = [[] for x in range(total_steps)]
+        # stored data for processesing
+        fiber_points = [[] for x in range(total_steps)]
+        max_fiber_length = 0
+        for t in range(self.time_step):
+            n = 0
+            for name in self.scene:
+                obj = self.scene[name]
+                if len(obj.time_points) <= t:
+                    continue
+                
+                index = obj.time_points[t]
+                if index >= 0:
+                    n_agents[t] += 1
+                    type_names[t][n] = obj.name
+                    unique_ids[t][n] = obj.id
+                    radii[t][n] = obj.radius * self.scale_factor
+                    if obj.viz_type == 1001:
+                        curve = obj.sub_points[index]
+                        viz_types[t][n] = obj.viz_type
+                        positions[t][n] = [0, 0, 0]
+                        rotations[t][n] = [0, 0, 0]
+                        scaled_control_points = np.array(curve) * self.scale_factor
+                        fiber_points[t][n] = scaled_control_points.tolist()
+                        n_subpoints[t][n] = len(curve)
+                        if len(curve) > self.max_fiber_length:
+                            max_fiber_length = len(curve)
+                    else:
+                        position = obj.positions[index]
+                        positions[t][n] = (
+                            [
+                                position[0] * self.scale_factor,
+                                position[1] * self.scale_factor,
+                                position[2] * self.scale_factor,
+                            ]
+                        )
+                        rotation = [0, 0, 0]
+                        rotations[t][n] = rotation
+                        viz_types[t][n] =  obj.viz_type
+                        n_subpoints[t][n] = 0
+
+        # for t in range(self.time_step):
+        #     for viz_type in viz_types[t]:
+        #         if viz_type == 1000:
+        #             blank_value = [[0, 0, 0] for x in range(max_fiber_length)]
+        #             subpoints[t].append(blank_value)
+        #         elif viz_type == 1001:
+        #             control_points = self.fiber_points[t].pop(0)
+        #             while len(control_points) < max_fiber_length:
+        #                 control_points.append([0, 0, 0])
+        #             self.subpoints[t].append(control_points)
+                
+        converted_data = TrajectoryData(
+            meta_data=MetaData(
+                box_size=np.array([100, 100, 10]),
+                camera_defaults=CameraData(
+                    position=np.array([10.0, 0.0, 100.0]),
+                    look_at_position=np.array([10.0, 0.0, 0.0]),
+                    fov_degrees=60.0,
+                ),
+            ),
+            agent_data=AgentData(
+                display_data=self.display_data,
+                times=1 * np.array(list(range(total_steps))),
+                n_agents=np.array(n_agents),
+                viz_types=np.array(viz_types),
+                unique_ids=np.array(unique_ids),
+                types=np.array(type_names),
+                positions=np.array(positions),
+                rotations=np.array(rotations),
+                radii=np.array(radii),
+                # subpoints=np.array(subpoints),
+                n_subpoints=np.array(n_subpoints),
+            ),
+            time_units=UnitData("ns"),  # nanoseconds
+            spatial_units=UnitData("nm"),  # nanometers
+        )
+        TrajectoryConverter(converted_data).write_JSON(file_name)
 
     def raycast(self, obj, point, direction, length, **kw):
         intersect = False

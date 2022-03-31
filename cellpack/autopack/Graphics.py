@@ -981,7 +981,7 @@ class AutopackViewer:
                 # pathDeform instance of one turn using snake
                 actine = self.helper.getObject(name)
                 if actine is None:
-                    actine = self.vi.newInstance(name, pobj)
+                    actine = self.vi.new_instance(name, pobj)
                 modifier = self.helper.getObject(name + "pd")
                 if modifier is None:
                     modifier = self.vi.pathDeform(actine, snake)
@@ -1107,7 +1107,7 @@ class AutopackViewer:
                     parent=parent,
                 )
             else:
-                polygon = self.vi.newInstance(
+                polygon = self.vi.new_instance(
                     name, geom, material=material, parent=parent
                 )  # identity?
             if not self.visibleMesh:
