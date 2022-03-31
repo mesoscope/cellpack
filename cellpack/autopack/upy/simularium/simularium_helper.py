@@ -10,7 +10,7 @@ from simulariumio import (
     UnitData,
     MetaData,
     CameraData,
-    DisplayData
+    DisplayData,
 )
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
@@ -24,50 +24,53 @@ class Instance:
     def __init__(
         self,
         name,
+        instance_id,
         unique_id,
         radius,
         viz_type,
-        position=None,
-        rotation=None,
-        sub_points=None,
     ):
         self.name = name
         self.radius = radius
+        self.instance_id = instance_id
         self.id = unique_id
         self.isinstance = True
         self.is_static = False
         self.viz_type = viz_type
-        self.positions = [position] if position is not None else []
-        self.rotations = [rotation] if position is not None else []
-        self.time_points = [0] if position is not None else [-1]
-        self.sub_points = [sub_points] if sub_points is not None else []
+        self.time_mapping = {}
 
-    def set_static(self, is_static):
+    def set_static(self, is_static, position, rotation):
         self.is_static = is_static
+        if is_static == True:
+            self.static_position = position
+            self.static_rotation = rotation
+        else: 
+            self.static_position = None
+            self.static_rotation = None        
 
     def move(self, time_point, position=None, rotation=None, sub_points=None):
         if self.viz_type == VIZ_TYPE.FIBER:
-            self.time_points.append(len(self.sub_points))  # index to sub_points
-            self.sub_points.append(sub_points)
-            self.n_subpoints.append(len(sub_points))
+            self.time_mapping[time_point] = {
+                "sub_points": sub_points,
+                "n_subpoints": len(sub_points)
+            }
         else:
-            self.time_points.append(len(self.positions))  # index to position
-            self.positions.append(position)
-            self.rotations.append(rotation)
+            self.time_mapping[time_point] = {
+                "position": position,
+                "rotation": rotation
+            }
 
     def increment_static(self, time_point):
         if self.is_static:
-            last_time_point = len(self.time_points) - 1
             if self.viz_type == VIZ_TYPE.FIBER:
-                self.time_points.append(len(self.sub_point))
-                self.sub_points.append(self.sub_points[last_time_point])
-                self.n_subpoints.append(len(self.sub_points[last_time_point]))
+                # self.time_mapping[time_point] = {
+                #     "sub_points": self.sub_points[last_time_point].sub_points,
+                #     "n_subpoints": self.n_subpoints[last_time_point].n_subpoints
+                # }
             else:
-                self.time_points.append(len(self.positions))
-                self.positions.append(self.positions[last_time_point])
-                self.rotations.append(self.rotations[last_time_point])
-        else: 
-            self.time_points.append(-1)
+                self.time_mapping[time_point] = {
+                    "position": self.static_position,
+                    "rotation": self.static_rotation
+                }
 
 
 class simulariumHelper(hostHelper.Helper):
@@ -91,7 +94,7 @@ class simulariumHelper(hostHelper.Helper):
     DEBUG = 0
     viewer = None
     host = "simularium"
-    
+
     def __init__(self, master=None, vi=None):
         hostHelper.Helper.__init__(self)
         # we can define here some function alias
@@ -100,7 +103,7 @@ class simulariumHelper(hostHelper.Helper):
         self.scene = {}  # dict of instances in the scene
         self.agent_id_counter = 0
         self.display_data = {}
-        self.scale_factor = 1/100
+        self.scale_factor = 1 / 10.0
         if master is not None:
             if type(master) is dict:
                 self.viewer = master["master"]
@@ -201,9 +204,9 @@ class simulariumHelper(hostHelper.Helper):
             if self.scene[name].is_static:
                 self.scene[name].increment_static(self.time_step)
 
-    def set_object_static(self, name):
+    def set_object_static(self, name, position, rotation):
         obj = self.getObject(name)
-        obj.set_static(True)
+        obj.set_static(True, position, rotation)
 
     def increment_time(self):
         self.time_step += 1
@@ -263,24 +266,23 @@ class simulariumHelper(hostHelper.Helper):
         del instance
 
     def add_new_instance(
-        self, name, ingredient, position=None, rotation=None, sub_points=None
+        self, name, ingredient, instance_id, position=None, rotation=None, sub_points=None
     ):
         self.agent_id_counter += 1
+        self.time_step += 1
         if ingredient.Type == "Grow" or ingredient.Type == "Actine":
             viz_type = VIZ_TYPE.FIBER
-
-        else: 
-            viz_type = VIZ_TYPE.DEFAULT 
+        else:
+            viz_type = VIZ_TYPE.DEFAULT
         new_instance = Instance(
             name,
+            instance_id,
             self.agent_id_counter,
             ingredient.encapsulatingRadius,
             viz_type,
-            position,
-            rotation,
-            sub_points,
         )
-        self.scene[name] = new_instance
+        self.scene[instance_id] = new_instance
+        self.move_object(instance_id, position, rotation, sub_points)
 
     def setObjectMatrix(self, object, matrice, **kw):
         #            print (object, matrice)
@@ -295,13 +297,16 @@ class simulariumHelper(hostHelper.Helper):
     def GetAbsPosUntilRoot(self, obj):
         return [0, 0.0, 0.0]
 
-    def add_object_to_scene(self, doc, ingredient, position=None, rotation=None, control_points=None):
+    def add_object_to_scene(
+        self, doc, ingredient, instance_id, position=None, rotation=None, control_points=None
+    ):
         self.display_data[ingredient.name] = DisplayData(
-            name=ingredient.name,
-            display_type=DISPLAY_TYPE.SPHERE
+            name=ingredient.name, display_type=DISPLAY_TYPE.SPHERE
         )
 
-        self.add_new_instance(ingredient.name, ingredient, position, rotation, control_points)
+        self.add_new_instance(
+            ingredient.name, ingredient, instance_id, position, rotation, control_points
+        )
 
     def addCameraToScene(self):
         pass
@@ -503,7 +508,7 @@ class simulariumHelper(hostHelper.Helper):
         res=0,
         pos=[0.0, 0.0, 0.0],
         parent=None,
-        **kw
+        **kw,
     ):
         #        QualitySph={"0":16,"1":3,"2":4,"3":8,"4":16,"5":32}
         pos = np.array(pos)
@@ -639,7 +644,7 @@ class simulariumHelper(hostHelper.Helper):
         color=[
             [1, 1, 1],
         ],
-        **kw
+        **kw,
     ):
         """
         This is the main function that create a polygonal mesh.
@@ -697,7 +702,7 @@ class simulariumHelper(hostHelper.Helper):
         center=[0.0, 0.0, 0.0],
         size=[1.0, 1.0, 1.0],
         cornerPoints=None,
-        **kw
+        **kw,
     ):
         # import np
         box = {name: name}
@@ -762,7 +767,7 @@ class simulariumHelper(hostHelper.Helper):
         size=[1.0, 1.0],
         cornerPoints=None,
         visible=1,
-        **kw
+        **kw,
     ):
         # plane or grid
         return None
@@ -1138,56 +1143,64 @@ class simulariumHelper(hostHelper.Helper):
         Write to simuarium file
         """
         total_steps = self.time_step + 1
+        max_number_agents = len(self.scene)
         n_agents = [0 for x in range(total_steps)]
-        print("TOTALS", total_steps, max_number_agents)
-        type_names = [["" for x in range(max_number_agents)] for x in range(total_steps)]
-        print(len(type_names))
-        positions = [[[0, 0, 0] for x in range(max_number_agents)] for x in range(total_steps)]
-        rotations = [[[0, 0, 0] for x in range(max_number_agents)] for x in range(total_steps)]
-        viz_types = [[VIZ_TYPE.DEFAULT for x in range(max_number_agents)] for x in range(total_steps)]
+        type_names = [
+            ["" for x in range(max_number_agents)] for x in range(total_steps)
+        ]
+        positions = [
+            [[0, 0, 0] for x in range(max_number_agents)] for x in range(total_steps)
+        ]
+        rotations = [
+            [[0, 0, 0] for x in range(max_number_agents)] for x in range(total_steps)
+        ]
+        viz_types = [
+            [VIZ_TYPE.DEFAULT for x in range(max_number_agents)]
+            for x in range(total_steps)
+        ]
         unique_ids = [[0 for x in range(max_number_agents)] for x in range(total_steps)]
         radii = [[1 for x in range(max_number_agents)] for x in range(total_steps)]
-        n_subpoints = [[0 for x in range(max_number_agents)] for x in range(total_steps)]
+        n_subpoints = [
+            [0 for x in range(max_number_agents)] for x in range(total_steps)
+        ]
         subpoints = [[] for x in range(total_steps)]
         # stored data for processesing
         fiber_points = [[] for x in range(total_steps)]
-        max_fiber_length = 0
         for t in range(self.time_step):
             n = 0
+
             for name in self.scene:
                 obj = self.scene[name]
-                if len(obj.time_points) <= t:
+                if t not in obj.time_mapping:
                     continue
-                
-                index = obj.time_points[t]
-                if index >= 0:
-                    n_agents[t] += 1
-                    type_names[t][n] = obj.name
-                    unique_ids[t][n] = obj.id
-                    radii[t][n] = obj.radius * self.scale_factor
-                    if obj.viz_type == 1001:
-                        curve = obj.sub_points[index]
-                        viz_types[t][n] = obj.viz_type
-                        positions[t][n] = [0, 0, 0]
-                        rotations[t][n] = [0, 0, 0]
-                        scaled_control_points = np.array(curve) * self.scale_factor
-                        fiber_points[t][n] = scaled_control_points.tolist()
-                        n_subpoints[t][n] = len(curve)
-                        if len(curve) > self.max_fiber_length:
-                            max_fiber_length = len(curve)
-                    else:
-                        position = obj.positions[index]
-                        positions[t][n] = (
-                            [
-                                position[0] * self.scale_factor,
-                                position[1] * self.scale_factor,
-                                position[2] * self.scale_factor,
-                            ]
-                        )
-                        rotation = [0, 0, 0]
-                        rotations[t][n] = rotation
-                        viz_types[t][n] =  obj.viz_type
-                        n_subpoints[t][n] = 0
+    
+                data_at_time = obj.time_mapping[t]
+                n_agents[t] += 1
+                type_names[t][n] = obj.name
+                unique_ids[t][n] = obj.id
+                radii[t][n] = obj.radius * self.scale_factor
+                if obj.viz_type == 1001:
+                    curve = data_at_time["sub_points"]
+                    viz_types[t][n] = obj.viz_type
+                    positions[t][n] = [0, 0, 0]
+                    rotations[t][n] = [0, 0, 0]
+                    scaled_control_points = np.array(curve) * self.scale_factor
+                    fiber_points[t][n] = scaled_control_points.tolist()
+                    n_subpoints[t][n] = len(curve)
+                    if len(curve) > self.max_fiber_length:
+                        max_fiber_length = len(curve)
+                else:
+                    position = data_at_time["position"]
+                    positions[t][n] = [
+                        position[0] * self.scale_factor - 100 / 2,
+                        position[1] * self.scale_factor - 100 / 2,
+                        position[2] * self.scale_factor - 10 / 2,
+                    ]
+                    rotation = [0, 0, 0]
+                    rotations[t][n] = rotation
+                    viz_types[t][n] = obj.viz_type
+                    n_subpoints[t][n] = 0
+                n += 1
 
         # for t in range(self.time_step):
         #     for viz_type in viz_types[t]:
@@ -1199,7 +1212,7 @@ class simulariumHelper(hostHelper.Helper):
         #             while len(control_points) < max_fiber_length:
         #                 control_points.append([0, 0, 0])
         #             self.subpoints[t].append(control_points)
-                
+
         converted_data = TrajectoryData(
             meta_data=MetaData(
                 box_size=np.array([100, 100, 10]),

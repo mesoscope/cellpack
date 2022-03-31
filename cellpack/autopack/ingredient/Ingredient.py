@@ -2763,13 +2763,10 @@ class Ingredient(Agent):
             ptInd
         ]  # drop point, surface points.
 
-        moving = None
+        current_visual_instance = None
         if env.runTimeDisplay:
-            moving = self.handle_real_time_visualization(
-               autopack.helper, ptInd, target_grid_point_position, rotation_matrix
-            )
-        is_realtime = moving is not None
-
+            current_visual_instance = self.handle_real_time_visualization(autopack.helper, ptInd, target_grid_point_position, rotation_matrix)
+        is_realtime = current_visual_instance is not None
         # NOTE: move the target point for close partner check.
         # I think this should be done ealier, when we're getting the point indice
         if env.ingrLookForNeighbours and self.packingMode == "closePartner":
@@ -2779,7 +2776,7 @@ class Ingredient(Agent):
                 compartment,
                 env.afviewer,
                 distance,
-                moving,
+                current_visual_instance,
             )
 
         # grow doesnt use panda.......but could use all the geom produce by the grow as rb
@@ -2793,7 +2790,7 @@ class Ingredient(Agent):
                 compartment,
                 target_grid_point_position,
                 rotation_matrix,
-                moving,
+                current_visual_instance,
                 distance,
                 dpad,
                 env.afviewer,
@@ -2811,7 +2808,7 @@ class Ingredient(Agent):
                 ptInd,
                 target_grid_point_position,
                 rotation_matrix,
-                moving,
+                current_visual_instance,
                 distance,
                 dpad,
             )
@@ -2832,7 +2829,7 @@ class Ingredient(Agent):
                 gridPointsCoords,
                 rotation_matrix,
                 target_grid_point_position,
-                moving,
+                current_visual_instance,
                 usePP=usePP,
             )
         elif (
@@ -2853,7 +2850,7 @@ class Ingredient(Agent):
                 rotation_matrix,
                 distance,
                 dpad,
-                moving,
+                current_visual_instance,
                 dpad,
             )
         else:
@@ -2862,13 +2859,13 @@ class Ingredient(Agent):
             return False, {}, {}
         if success:
             if is_realtime:
-                autopack.helper.set_object_static(self.name)
+                autopack.helper.set_object_static(current_visual_instance, jtrans, rotMatj)
             self.place(
                 env, compartment, jtrans, rotMatj, ptInd, insidePoints, newDistPoints
             )
         else:
             if is_realtime:
-                self.remove_from_realtime_display(moving)
+                self.remove_from_realtime_display(current_visual_instance)
             self.reject()
 
         return success, insidePoints, newDistPoints
@@ -2960,10 +2957,10 @@ class Ingredient(Agent):
             jitter_trans = translation
         return jitter_trans
 
-    def update_display_rt(self, moving, translation, rotation):
+    def update_display_rt(self, current_instance, translation, rotation):
         mat = rotation.copy()
         mat[:3, 3] = translation
-        autopack.helper.move_object(self.name, translation, mat)
+        autopack.helper.move_object(current_instance, translation, mat)
 
         autopack.helper.update()
 
@@ -3375,13 +3372,14 @@ class Ingredient(Agent):
 
     def handle_real_time_visualization(self, helper, ptInd, target_point, rot_mat):
         name = self.name
-        obj = helper.getObject(name)
+        instance_id = f"{name}-{ptInd}"  # copy of the ingredient being packed
+        obj = helper.getObject(name)  # parent object of all the instances
         if obj is None:
-            helper.add_object_to_scene(None, self, target_point, rot_mat)
-        else: 
-            helper.add_new_instance(name, self, target_point, rot_mat)
+            helper.add_object_to_scene(None, self, instance_id, target_point, rot_mat)
+        else:
+            helper.add_new_instance(name, self, instance_id, target_point, rot_mat)
 
-        return obj
+        return instance_id 
 
     def pandaBullet_place(
         self,
