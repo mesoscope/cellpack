@@ -38,14 +38,18 @@ class Instance:
         self.viz_type = viz_type
         self.time_mapping = {}
 
-    def set_static(self, is_static, position, rotation):
+    def set_static(self, is_static, position=None, rotation=None, sub_points=None):
         self.is_static = is_static
-        if is_static == True:
-            self.static_position = position
-            self.static_rotation = rotation
-        else: 
+        if is_static is True:
+            if self.viz_type == VIZ_TYPE.FIBER:
+                self.static_sub_points = sub_points
+            else:
+                self.static_position = position
+                self.static_rotation = rotation
+        else:
             self.static_position = None
-            self.static_rotation = None        
+            self.static_rotation = None    
+            self.static_sub_points = None
 
     def move(self, time_point, position=None, rotation=None, sub_points=None):
         if self.viz_type == VIZ_TYPE.FIBER:
@@ -62,10 +66,10 @@ class Instance:
     def increment_static(self, time_point):
         if self.is_static:
             if self.viz_type == VIZ_TYPE.FIBER:
-                # self.time_mapping[time_point] = {
-                #     "sub_points": self.sub_points[last_time_point].sub_points,
-                #     "n_subpoints": self.n_subpoints[last_time_point].n_subpoints
-                # }
+                self.time_mapping[time_point] = {
+                    "sub_points": self.static_sub_points,
+                    "n_subpoints": len(self.static_sub_points)
+                }
             else:
                 self.time_mapping[time_point] = {
                     "position": self.static_position,
@@ -99,26 +103,15 @@ class simulariumHelper(hostHelper.Helper):
         hostHelper.Helper.__init__(self)
         # we can define here some function alias
         self.nogui = False
-        self.time_step = 0
+        self.time = -1
         self.scene = {}  # dict of instances in the scene
         self.agent_id_counter = 0
         self.display_data = {}
         self.scale_factor = 1 / 10.0
-        if master is not None:
-            if type(master) is dict:
-                self.viewer = master["master"]
-            else:
-                self.viewer = master
-            if self.viewer == "nogui":
-                self.nogui = True
-        if vi is not None:
-            self.viewer = vi
-            if self.viewer == "nogui":
-                self.nogui = True
-
-        if self.viewer is not None and not self.nogui:
-            self.AddObject = self.viewer.AddObject
+        self.viewer = "nogui"
+        self.nogui = True
         self.hext = "dae"
+        self.max_fiber_length = 0
 
     def updateAppli(self, *args, **kw):
         return self.update(*args, **kw)
@@ -171,11 +164,7 @@ class simulariumHelper(hostHelper.Helper):
         return
 
     def update(self):
-        if self.viewer == "nogui":
-            return
-        vi = self.getCurrentScene()
-        vi.OneRedraw()
-        vi.update()
+        return
 
     def getType(self, object):
         return object.__module__
@@ -195,27 +184,26 @@ class simulariumHelper(hostHelper.Helper):
             return None
         if type(o) is str:
             o = self.getCurrentScene().findGeomsByName(o)
-        else:
-            print("getName", o, type(o))
+
         return o.name
 
     def increment_static_objects(self):
         for name in self.scene:
             if self.scene[name].is_static:
-                self.scene[name].increment_static(self.time_step)
+                self.scene[name].increment_static(self.time)
 
     def set_object_static(self, name, position, rotation):
         obj = self.getObject(name)
         obj.set_static(True, position, rotation)
 
     def increment_time(self):
-        self.time_step += 1
+        self.time += 1
         self.increment_static_objects()
 
     def move_object(self, name, position=None, rotation=None, sub_points=None):
         self.increment_time()
         obj = self.getObject(name)
-        obj.move(self.time_step, position, rotation, sub_points)
+        obj.move(self.time, position, rotation, sub_points)
 
     def getObject(self, name):
         return self.scene.get(name)
@@ -229,7 +217,6 @@ class simulariumHelper(hostHelper.Helper):
             self.deleteInstance(obj)
             return
         try:
-            #            print obj.name
             vi.RemoveObject(obj)
         except Exception as e:
             print("problem deleting ", obj, e)
@@ -269,7 +256,6 @@ class simulariumHelper(hostHelper.Helper):
         self, name, ingredient, instance_id, position=None, rotation=None, sub_points=None
     ):
         self.agent_id_counter += 1
-        self.time_step += 1
         if ingredient.Type == "Grow" or ingredient.Type == "Actine":
             viz_type = VIZ_TYPE.FIBER
         else:
@@ -285,7 +271,6 @@ class simulariumHelper(hostHelper.Helper):
         self.move_object(instance_id, position, rotation, sub_points)
 
     def setObjectMatrix(self, object, matrice, **kw):
-        #            print (object, matrice)
         if "transpose" in kw and not hasattr(object, "isinstance"):
             if kw["transpose"]:
                 matrice = np.array(matrice).transpose()
@@ -300,8 +285,15 @@ class simulariumHelper(hostHelper.Helper):
     def add_object_to_scene(
         self, doc, ingredient, instance_id, position=None, rotation=None, control_points=None
     ):
+        display_type = DISPLAY_TYPE.SPHERE
+        if ingredient.Type == "Grow" or ingredient.Type == "Actine":
+            if len(control_points) > self.max_fiber_length:
+                self.max_fiber_length = len(control_points)
+            display_type = DISPLAY_TYPE.FIBER
+        elif ingredient.Type == "SingleCube":
+            display_type = DISPLAY_TYPE.CUBE
         self.display_data[ingredient.name] = DisplayData(
-            name=ingredient.name, display_type=DISPLAY_TYPE.SPHERE
+            name=ingredient.name, display_type=display_type
         )
 
         self.add_new_instance(
@@ -353,7 +345,6 @@ class simulariumHelper(hostHelper.Helper):
             c = position[0]
         else:
             c = position
-        # print "upadteObj"
         newPos = self.FromVec(c)
 
         if use_parent:
@@ -846,7 +837,6 @@ class simulariumHelper(hostHelper.Helper):
         mat = None
         boundg = list(col.scene.objects("geometry"))
         for bg in boundg:
-            #            print bg.original,geom
             if bg.original == geom:
                 m = bg.materialnodebysymbol.values()
                 if len(m):
@@ -901,9 +891,7 @@ class simulariumHelper(hostHelper.Helper):
             pname = parentxml.get("name")
             if pname is None or pname == "":
                 pname = parentxml.get("id")
-        #        print "pname",name
         onode = None
-        #        print "nodeToGeom type", type(node)
         if dicgeoms is None:
             dicgeoms = {}
         if type(node) == collada.scene.ExtraNode:
@@ -924,25 +912,18 @@ class simulariumHelper(hostHelper.Helper):
                 if parentxml is not None:
                     dicgeoms[g.id]["parentmesh"] = self.getObject(parentxml.get("id"))
         else:  # collada.scene.Node
-            #            print "else ",len(node.children)
-            #            print "instance_geometry",nodexml.get("instance_geometry")
             # create an empty
-            #            print "else ",name ,type(node),parent
             if len(node.children) == 1 and (
                 type(node.children[0]) == collada.scene.GeometryNode
             ):
                 # no empty just get parent name ?
-                #                    print "ok one children geom ",node.children[0]
                 gname = node.children[0].geometry.id
                 if parentxml is not None:
                     if gname in dicgeoms.keys():
-                        #                            print dicgeoms[gname]["parentmesh"]
                         if dicgeoms[gname]["parentmesh"] is None:
                             dicgeoms[gname]["parentmesh"] = self.getObject(pname)
-                #                            print dicgeoms[gname]["parentmesh"]
                 if uniq:
                     onode = self.newEmpty(name)
-                    #                print "ok new empty name",onode, name
                     rot, trans, scale = self.Decompose4x4(
                         node.matrix.transpose().reshape(16)
                     )
@@ -959,13 +940,10 @@ class simulariumHelper(hostHelper.Helper):
                 gname = node.children[0].node.children[0].geometry.id
                 if parentxml is not None:
                     if gname in dicgeoms.keys():
-                        #                            print dicgeoms[gname]["parentmesh"]
                         if dicgeoms[gname]["parentmesh"] is None:
                             dicgeoms[gname]["parentmesh"] = self.getObject(pname)
-            #                            print dicgeoms[gname]["parentmesh"]
             else:
                 onode = self.newEmpty(name)
-                #                print "ok new empty name",onode, name
                 rot, trans, scale = self.Decompose4x4(
                     node.matrix.transpose().reshape(16)
                 )
@@ -989,11 +967,8 @@ class simulariumHelper(hostHelper.Helper):
 
     def transformNode(self, node, i, col, parentxmlnode, parent=None):
         name = parentxmlnode.get("name")
-        #        print "pname",name
         if name is None:
             name = parentxmlnode.get("id")
-        #        print "transformNode parent",name
-        #        print "transformNode type", type(node)
         if type(node) == collada.scene.GeometryNode:
             pass
         elif type(node) == collada.scene.ExtraNode:
@@ -1007,8 +982,6 @@ class simulariumHelper(hostHelper.Helper):
             #                for i in range(1,4):
             #                    rot.extend([node.transforms[i].x,node.transforms[i].y,node.transforms[i].z,0.0])
             #                rot.extend([0.,0.,0.,1.0])
-            #                print "rotation ",rot
-            #                print "trans ", trans/1000.0
             #                scale = [node.transforms[4].x,node.transforms[4].y,node.transforms[4].z]
             #                onode.Set(translation = trans)#, rotation=rot*0,scale=scale)
             onode.Set(translation=trans)
@@ -1018,10 +991,8 @@ class simulariumHelper(hostHelper.Helper):
             #                onode.ConcatTranslation(trans)
             #                onode.Set(matrix)
             self.update()
-        #                print onode.translation
         if hasattr(node, "children") and len(node.children):
             for j, ch in enumerate(node.children):
-                #                print "children ",ch.xmlnode.get("name")
                 self.transformNode(ch, j, col, ch.xmlnode, parent=onode)
 
     def decomposeColladaGeom(self, g, col):
@@ -1029,7 +1000,6 @@ class simulariumHelper(hostHelper.Helper):
         if name == "":
             name = g.id
         v = np.array(g.primitives[0].vertex)  # multiple primitive ?
-        print("vertices nb is ", len(v))
         nf = len(g.primitives[0].vertex_index)
         sh = g.primitives[0].vertex_index.shape
         if len(sh) == 2 and sh[1] == 3:
@@ -1119,7 +1089,6 @@ class simulariumHelper(hostHelper.Helper):
         #     for g in dicgeoms:
         #         node = dicgeoms[g]["node"]
         #         i = dicgeoms[g]["instances"]
-        #         #                print node,g,i
         #         if len(i):
         #             if dicgeoms[g]["parentmesh"] is not None:
         #                 self.reParent(node, dicgeoms[g]["parentmesh"])
@@ -1138,11 +1107,11 @@ class simulariumHelper(hostHelper.Helper):
     def write(self, listObj, **kw):
         pass
 
-    def writeToFile(self, polygon, file_name, max_number_agents):
+    def writeToFile(self, polygon, file_name):
         """
         Write to simuarium file
         """
-        total_steps = self.time_step + 1
+        total_steps = self.time + 1
         max_number_agents = len(self.scene)
         n_agents = [0 for x in range(total_steps)]
         type_names = [
@@ -1163,12 +1132,9 @@ class simulariumHelper(hostHelper.Helper):
         n_subpoints = [
             [0 for x in range(max_number_agents)] for x in range(total_steps)
         ]
-        subpoints = [[] for x in range(total_steps)]
-        # stored data for processesing
-        fiber_points = [[] for x in range(total_steps)]
-        for t in range(self.time_step):
+        subpoints = [[0 for x in range(self.max_fiber_length)] for x in range(max_number_agents)  for x in range(total_steps)]
+        for t in range(self.time):
             n = 0
-
             for name in self.scene:
                 obj = self.scene[name]
                 if t not in obj.time_mapping:
@@ -1185,10 +1151,8 @@ class simulariumHelper(hostHelper.Helper):
                     positions[t][n] = [0, 0, 0]
                     rotations[t][n] = [0, 0, 0]
                     scaled_control_points = np.array(curve) * self.scale_factor
-                    fiber_points[t][n] = scaled_control_points.tolist()
+                    subpoints[t][n] = scaled_control_points.tolist()
                     n_subpoints[t][n] = len(curve)
-                    if len(curve) > self.max_fiber_length:
-                        max_fiber_length = len(curve)
                 else:
                     position = data_at_time["position"]
                     positions[t][n] = [
@@ -1201,17 +1165,6 @@ class simulariumHelper(hostHelper.Helper):
                     viz_types[t][n] = obj.viz_type
                     n_subpoints[t][n] = 0
                 n += 1
-
-        # for t in range(self.time_step):
-        #     for viz_type in viz_types[t]:
-        #         if viz_type == 1000:
-        #             blank_value = [[0, 0, 0] for x in range(max_fiber_length)]
-        #             subpoints[t].append(blank_value)
-        #         elif viz_type == 1001:
-        #             control_points = self.fiber_points[t].pop(0)
-        #             while len(control_points) < max_fiber_length:
-        #                 control_points.append([0, 0, 0])
-        #             self.subpoints[t].append(control_points)
 
         converted_data = TrajectoryData(
             meta_data=MetaData(
