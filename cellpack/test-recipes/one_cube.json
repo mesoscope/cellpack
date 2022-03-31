@@ -51,8 +51,6 @@
                     0.498,
                     0.498
                 ],
-                "meshFile": null,
-                "sphereFile": null,
                 "weight": 0.2,
                 "orientBiasRotRangeMin": -3.1415927,
                 "radii": [[100, 100, 100]],
@@ -91,7 +89,6 @@
                 "positions": [[[-50.0, -50.0, -50.0]]],
                 "positions2": [[[50.0, 50.0, 50.0]]],
                 "proba_not_binding": 0.5,
-                "use_mesh_rb": false,
                 "pdb": null,
                 "useRotAxis": false
             }
