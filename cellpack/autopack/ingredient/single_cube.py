@@ -51,7 +51,7 @@ class SingleCubeIngr(Ingredient):
         perturbAxisAmplitude=0.1,
         placeType="jitter",
         positions2=[[[0, 0, 0]]],
-        positions=[[[0, 0, 0], [0, 0, 0], [0, 0, 0]]],
+        positions=[[[0, 0, 0]]],
         principalVector=(1, 0, 0),
         proba_binding=0.5,
         proba_not_binding=0.5,  # chance to actually not bind
@@ -112,21 +112,29 @@ class SingleCubeIngr(Ingredient):
         self.singleSphere = False
         self.modelType = "Cube"
         self.collisionLevel = 0
-        self.encapsulatingRadius = max(
-            radii[0]
-        )  # should the sphere that encapsulated the cube
-        self.center = [0.0, 0.0, 0.0]
         radii = numpy.array(radii)
-        self.minRadius = min(
-            radii[0] / 2.0
-        )  # should have three radii sizex,sizey,sizez
-        self.encapsulatingRadius = self.maxRadius = sqrt(
-            max(radii[0] / 2.0) * max(radii[0] / 2.0)
-            + min(radii[0] / 2.0) * min(radii[0] / 2.0)
-        )
+        
+        # self.minRadius = min(
+        #     radii[0] / 2.0
+        # )  # should have three radii sizex,sizey,sizez
+        # self.encapsulatingRadius = self.maxRadius = sqrt(
+        #     max(radii[0] / 2.0) * max(radii[0] / 2.0)
+        #     + min(radii[0] / 2.0) * min(radii[0] / 2.0)
+        # )
+        # import ipdb; ipdb.set_trace()
+        # self.encapsulatingRadius = numpy.linalg.norm(radii[0]/2) # calculate encapsulating radius based on side length
+        self.encapsulatingRadius = max(radii[0]/2)
         self.bb = [-radii[0] / 2.0, radii[0] / 2.0]
+        
+        self.positions = positions # bottom left corner of cuboid
+        self.positions2 = positions2 # top right corner of cuboid
+        positions_ar = numpy.array(self.positions[0][0])
+        positions2_ar = numpy.array(self.positions2[0][0])
+        # import ipdb; ipdb.set_trace()
+        self.center = positions_ar+(positions2_ar-positions_ar)/2 #location of center based on corner points
+        
         # self.positions = [[-radii[0] / 2.0]]
-        self.positions2 = [[[17.66, 17.67, 17.67]]]
+        # self.positions2 = [[[17.66, 17.67, 17.67]]]
         #        if positions2 is not None and positions is not None:
         #            self.bb=[positions[0],positions2[0]]
         #            x1, y1, z1 = self.bb[0]
@@ -166,15 +174,15 @@ class SingleCubeIngr(Ingredient):
         insidePoints = {}
         newDistPoints = {}
 
-        x1, y1, z1 = cent1T
-        x2, y2, z2 = cent2T
-        vx, vy, vz = (x2 - x1, y2 - y1, z2 - z1)
-        lengthsq = vx * vx + vy * vy + vz * vz
-        length = sqrt(lengthsq)
-        posc = center  # x1+vx*.5, y1+vy*.5, z1+vz*.5
-        radt = length / 2.0 + self.encapsulatingRadius + dpad
+        x1, y1, z1 = cent1T #coordinates of 1st corner point in world space
+        x2, y2, z2 = cent2T #coordinates of 2nd corner point in world space
+        vx, vy, vz = (x2 - x1, y2 - y1, z2 - z1) #vector connecting corner points
+        lengthsq = vx * vx + vy * vy + vz * vz #length^2 of diagonal
+        length = sqrt(lengthsq) # length of diagonal
+        posc = center  # x1+vx*.5, y1+vy*.5, z1+vz*.5  # position of center in world space
+        radt = length / 2.0 + self.encapsulatingRadius + dpad 
         x, y, z = posc
-        bb = ([x - radt, y - radt, z - radt], [x + radt, y + radt, z + radt])
+        bb = ([x - radt, y - radt, z - radt], [x + radt, y + radt, z + radt]) #recalculated bounding box in world space
 
         if histoVol.runTimeDisplay:  # > 1:
             box = self.vi.getObject("collBox")

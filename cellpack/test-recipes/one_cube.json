@@ -63,7 +63,6 @@
                 ],
                 "perturbAxisAmplitude": 0.1,
                 "encapsulatingRadius": 100,
-                "positions2": null,
                 "useOrientBias": false,
                 "gradient": "",
                 "isAttractor": false,
