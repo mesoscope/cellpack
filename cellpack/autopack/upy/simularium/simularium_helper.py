@@ -1107,12 +1107,21 @@ class simulariumHelper(hostHelper.Helper):
     def write(self, listObj, **kw):
         pass
 
-    def writeToFile(self, polygon, file_name):
+    def writeToFile(self, polygon, file_name, bb):
         """
         Write to simuarium file
         """
         total_steps = self.time + 1
         max_number_agents = len(self.scene)
+        x_size = bb[1][0] - bb[0][0]
+        y_size = bb[1][1] - bb[0][1]
+        z_size = bb[1][2] - bb[0][2]
+        box_size = [
+            x_size * self.scale_factor,
+            y_size * self.scale_factor,
+            z_size * self.scale_factor,
+        ]
+
         n_agents = [0 for x in range(total_steps)]
         type_names = [
             ["" for x in range(max_number_agents)] for x in range(total_steps)
@@ -1156,9 +1165,9 @@ class simulariumHelper(hostHelper.Helper):
                 else:
                     position = data_at_time["position"]
                     positions[t][n] = [
-                        position[0] * self.scale_factor - 100 / 2,
-                        position[1] * self.scale_factor - 100 / 2,
-                        position[2] * self.scale_factor - 10 / 2,
+                        position[0] * self.scale_factor - box_size[0] / 2,
+                        position[1] * self.scale_factor - box_size[1] / 2,
+                        position[2] * self.scale_factor - box_size[2] / 2,
                     ]
                     rotation = [0, 0, 0]
                     rotations[t][n] = rotation
@@ -1166,11 +1175,13 @@ class simulariumHelper(hostHelper.Helper):
                     n_subpoints[t][n] = 0
                 n += 1
 
+        camera_z_position = box_size[2] if box_size[2] > 10 else 100.0
+
         converted_data = TrajectoryData(
             meta_data=MetaData(
-                box_size=np.array([100, 100, 10]),
+                box_size=np.array(box_size),
                 camera_defaults=CameraData(
-                    position=np.array([10.0, 0.0, 100.0]),
+                    position=np.array([10.0, 0.0, camera_z_position]),
                     look_at_position=np.array([10.0, 0.0, 0.0]),
                     fov_degrees=60.0,
                 ),

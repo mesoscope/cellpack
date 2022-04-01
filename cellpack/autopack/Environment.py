@@ -2666,7 +2666,7 @@ class Environment(CompartmentList):
                 ingredients[ingr.name][1].append(pos)
                 ingredients[ingr.name][2].append(rot)
                 ingredients[ingr.name][3].append(numpy.array(mat))
-        autopack.helper.writeToFile(None, './realtime')
+        autopack.helper.writeToFile(None, './realtime', self.boundingBox)
 
         self.ingr_result = ingredients
 
