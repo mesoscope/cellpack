@@ -52,6 +52,7 @@ import collada
 from scipy.spatial.transform import Rotation as R
 from math import sqrt, pi
 from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
+
 # from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
 from random import uniform, gauss, random
 from time import time
@@ -2007,14 +2008,14 @@ class Ingredient(Agent):
             )
 
             # if histoVol.runTimeDisplay:  # > 1:
-                # box = self.vi.getObject("collBox")
-                # if box is None:
-                #     box = self.vi.Box(
-                #         "collBox", cornerPoints=bb, visible=1
-                #     )  # cornerPoints=bb,visible=1)
-                # else:
-                #     self.vi.updateBox(box, cornerPoints=bb)
-                # self.vi.update()
+            # box = self.vi.getObject("collBox")
+            # if box is None:
+            #     box = self.vi.Box(
+            #         "collBox", cornerPoints=bb, visible=1
+            #     )  # cornerPoints=bb,visible=1)
+            # else:
+            #     self.vi.updateBox(box, cornerPoints=bb)
+            # self.vi.update()
 
             pointsToCheck = histoVol.grid.getPointsInSphere(
                 posc, radius_of_area_to_check
@@ -2465,13 +2466,15 @@ class Ingredient(Agent):
                 continue
             distances, ingr_indexes = compartment.OGsrfPtsBht.query(packing_location)
 
-            # NOTE: this could be optimized by walking down the sphere tree representation 
+            # NOTE: this could be optimized by walking down the sphere tree representation
             # of the instead of going right to the bottom
             if distances < self.encapsulatingRadius + compartment.encapsulatingRadius:
                 pos_of_attempting_ingr = self.get_new_pos(
                     self, packing_location, rotation, self.positions[total_levels - 1]
                 )
-                distances, ingr_indexes = compartment.OGsrfPtsBht.query(pos_of_attempting_ingr)
+                distances, ingr_indexes = compartment.OGsrfPtsBht.query(
+                    pos_of_attempting_ingr
+                )
                 radii = self.radii[total_levels - 1][ingr_indexes]
                 overlap_distance = distances - numpy.array(radii)
                 overlap_indexes = numpy.nonzero(overlap_distance < 0.0)[0]
@@ -2765,7 +2768,9 @@ class Ingredient(Agent):
 
         current_visual_instance = None
         if env.runTimeDisplay:
-            current_visual_instance = self.handle_real_time_visualization(autopack.helper, ptInd, target_grid_point_position, rotation_matrix)
+            current_visual_instance = self.handle_real_time_visualization(
+                autopack.helper, ptInd, target_grid_point_position, rotation_matrix
+            )
         is_realtime = current_visual_instance is not None
         # NOTE: move the target point for close partner check.
         # I think this should be done ealier, when we're getting the point indice
@@ -2859,7 +2864,9 @@ class Ingredient(Agent):
             return False, {}, {}
         if success:
             if is_realtime:
-                autopack.helper.set_object_static(current_visual_instance, jtrans, rotMatj)
+                autopack.helper.set_object_static(
+                    current_visual_instance, jtrans, rotMatj
+                )
             self.place(
                 env, compartment, jtrans, rotMatj, ptInd, insidePoints, newDistPoints
             )
@@ -3379,7 +3386,7 @@ class Ingredient(Agent):
         else:
             helper.add_new_instance(name, self, instance_id, target_point, rot_mat)
 
-        return instance_id 
+        return instance_id
 
     def pandaBullet_place(
         self,

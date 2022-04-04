@@ -65,6 +65,7 @@ import math
 import trimesh
 import trimesh.voxel as Voxel
 from scipy import spatial
+
 # from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
 
 import cellpack.autopack as autopack
@@ -1223,7 +1224,7 @@ class Compartment(CompartmentList):
         diag = env.grid.diag
         self.log.info("distance %d", len(distances))
         t1 = time()
-        
+
         # build search tree for off grid surface points
         srfPts = self.ogsurfacePoints
         self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)

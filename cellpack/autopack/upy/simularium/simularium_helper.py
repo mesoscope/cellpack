@@ -48,32 +48,29 @@ class Instance:
                 self.static_rotation = rotation
         else:
             self.static_position = None
-            self.static_rotation = None    
+            self.static_rotation = None
             self.static_sub_points = None
 
     def move(self, time_point, position=None, rotation=None, sub_points=None):
         if self.viz_type == VIZ_TYPE.FIBER:
             self.time_mapping[time_point] = {
                 "sub_points": sub_points,
-                "n_subpoints": len(sub_points)
+                "n_subpoints": len(sub_points),
             }
         else:
-            self.time_mapping[time_point] = {
-                "position": position,
-                "rotation": rotation
-            }
+            self.time_mapping[time_point] = {"position": position, "rotation": rotation}
 
     def increment_static(self, time_point):
         if self.is_static:
             if self.viz_type == VIZ_TYPE.FIBER:
                 self.time_mapping[time_point] = {
                     "sub_points": self.static_sub_points,
-                    "n_subpoints": len(self.static_sub_points)
+                    "n_subpoints": len(self.static_sub_points),
                 }
             else:
                 self.time_mapping[time_point] = {
                     "position": self.static_position,
-                    "rotation": self.static_rotation
+                    "rotation": self.static_rotation,
                 }
 
 
@@ -253,7 +250,13 @@ class simulariumHelper(hostHelper.Helper):
         del instance
 
     def add_new_instance(
-        self, name, ingredient, instance_id, position=None, rotation=None, sub_points=None
+        self,
+        name,
+        ingredient,
+        instance_id,
+        position=None,
+        rotation=None,
+        sub_points=None,
     ):
         self.agent_id_counter += 1
         if ingredient.Type == "Grow" or ingredient.Type == "Actine":
@@ -283,7 +286,13 @@ class simulariumHelper(hostHelper.Helper):
         return [0, 0.0, 0.0]
 
     def add_object_to_scene(
-        self, doc, ingredient, instance_id, position=None, rotation=None, control_points=None
+        self,
+        doc,
+        ingredient,
+        instance_id,
+        position=None,
+        rotation=None,
+        control_points=None,
     ):
         display_type = DISPLAY_TYPE.SPHERE
         if ingredient.Type == "Grow" or ingredient.Type == "Actine":
@@ -1141,14 +1150,18 @@ class simulariumHelper(hostHelper.Helper):
         n_subpoints = [
             [0 for x in range(max_number_agents)] for x in range(total_steps)
         ]
-        subpoints = [[0 for x in range(self.max_fiber_length)] for x in range(max_number_agents) for x in range(total_steps)]
+        subpoints = [
+            [0 for x in range(self.max_fiber_length)]
+            for x in range(max_number_agents)
+            for x in range(total_steps)
+        ]
         for t in range(self.time):
             n = 0
             for name in self.scene:
                 obj = self.scene[name]
                 if t not in obj.time_mapping:
                     continue
-    
+
                 data_at_time = obj.time_mapping[t]
                 n_agents[t] += 1
                 type_names[t][n] = obj.name
