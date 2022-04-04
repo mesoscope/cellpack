@@ -1141,7 +1141,7 @@ class simulariumHelper(hostHelper.Helper):
         n_subpoints = [
             [0 for x in range(max_number_agents)] for x in range(total_steps)
         ]
-        subpoints = [[0 for x in range(self.max_fiber_length)] for x in range(max_number_agents)  for x in range(total_steps)]
+        subpoints = [[0 for x in range(self.max_fiber_length)] for x in range(max_number_agents) for x in range(total_steps)]
         for t in range(self.time):
             n = 0
             for name in self.scene:
