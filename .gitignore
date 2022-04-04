@@ -109,3 +109,4 @@ ENV/
 .vscode
 
 /out
+*.simularium
