@@ -1994,28 +1994,7 @@ class Ingredient(Agent):
             radius_of_area_to_check = (
                 radius_of_ing_being_packed + dpad
             )  # extends the packing ingredient's bounding box to be large enough to include masked gridpoints of the largest possible ingrdient in the receipe
-            bb = (
-                [
-                    x - radius_of_area_to_check,
-                    y - radius_of_area_to_check,
-                    z - radius_of_area_to_check,
-                ],
-                [
-                    x + radius_of_area_to_check,
-                    y + radius_of_area_to_check,
-                    z + radius_of_area_to_check,
-                ],
-            )
-
-            # if histoVol.runTimeDisplay:  # > 1:
-            # box = self.vi.getObject("collBox")
-            # if box is None:
-            #     box = self.vi.Box(
-            #         "collBox", cornerPoints=bb, visible=1
-            #     )  # cornerPoints=bb,visible=1)
-            # else:
-            #     self.vi.updateBox(box, cornerPoints=bb)
-            # self.vi.update()
+            #  TODO: add realtime render here that shows all the points being checked by the collision
 
             pointsToCheck = histoVol.grid.getPointsInSphere(
                 posc, radius_of_area_to_check
