@@ -26,7 +26,7 @@
             ]
         ],
         "gradients": [],
-        "smallestProteinSize": 15,
+        "smallestProteinSize": 10,
         "computeGridParams": true,
         "freePtsUpdateThreshold": 0,
         "pickWeightedIngr": true,
@@ -41,18 +41,18 @@
     "cytoplasme": {
         "ingredients": {
             "cube_radius_100": {
-                "overwrite_nbMol_value": 100,
+                "overwrite_nbMol_value": 1,
                 "nbJitter": 20,
                 "molarity": 0,
                 "partners_position": [],
-                "rotRange": 6.2831,
+                "rotRange": 0,
                 "color": [
                     0.498,
                     0.498,
                     0.498
                 ],
                 "weight": 0.2,
-                "orientBiasRotRangeMin": -3.1415927,
+                "orientBiasRotRangeMin": 0,
                 "radii": [[100, 100, 100]],
                 "cutoff_boundary": 0,
                 "coordsystem": "left",
@@ -73,9 +73,9 @@
                 ],
                 "properties": {},
                 "partners_name": [],
-                "nbMol": 100,
+                "nbMol": 1,
                 "name": "cube_radius_100",
-                "orientBiasRotRangeMax": -3.1415927,
+                "orientBiasRotRangeMax": 0,
                 "packingMode": "random",
                 "Type": "SingleCube",
                 "excluded_partners_name": [],
@@ -85,8 +85,8 @@
                 "packingPriority": 0,
                 "proba_binding": 0.5,
                 "rotAxis": null,
-                "positions": [[[-50.0, -50.0, -50.0]]],
-                "positions2": [[[50.0, 50.0, 50.0]]],
+                "positions": [[[0.0, 0.0, 0.0]]],
+                "positions2": [[[100.0, 100.0, 100.0]]],
                 "proba_not_binding": 0.5,
                 "pdb": null,
                 "useRotAxis": false

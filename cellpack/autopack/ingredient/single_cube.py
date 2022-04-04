@@ -114,36 +114,19 @@ class SingleCubeIngr(Ingredient):
         self.collisionLevel = 0
         radii = numpy.array(radii)
         
-        # self.minRadius = min(
-        #     radii[0] / 2.0
-        # )  # should have three radii sizex,sizey,sizez
-        # self.encapsulatingRadius = self.maxRadius = sqrt(
-        #     max(radii[0] / 2.0) * max(radii[0] / 2.0)
-        #     + min(radii[0] / 2.0) * min(radii[0] / 2.0)
-        # )
-        # import ipdb; ipdb.set_trace()
-        # self.encapsulatingRadius = numpy.linalg.norm(radii[0]/2) # calculate encapsulating radius based on side length
-        self.encapsulatingRadius = max(radii[0]/2)
+        self.minRadius = min(
+             radii[0] / 2.0
+         )  # should have three radii sizex,sizey,sizez
+        self.maxRadius = self.encapsulatingRadius = numpy.linalg.norm(radii[0]/2) # calculate encapsulating radius based on side length
         self.bb = [-radii[0] / 2.0, radii[0] / 2.0]
         
         self.positions = positions # bottom left corner of cuboid
         self.positions2 = positions2 # top right corner of cuboid
         positions_ar = numpy.array(self.positions[0][0])
         positions2_ar = numpy.array(self.positions2[0][0])
-        # import ipdb; ipdb.set_trace()
+        
         self.center = positions_ar+(positions2_ar-positions_ar)/2 #location of center based on corner points
         
-        # self.positions = [[-radii[0] / 2.0]]
-        # self.positions2 = [[[17.66, 17.67, 17.67]]]
-        #        if positions2 is not None and positions is not None:
-        #            self.bb=[positions[0],positions2[0]]
-        #            x1, y1, z1 = self.bb[0]
-        #            x2, y2, z2 = self.bb[0]
-        #            vx, vy, vz = vect = (x2-x1, y2-y1, z2-z1)
-        #            self.center = x1+vx*.5, y1+vy*.5, z1+vz*.5
-        #            self.positions = positions
-        #            self.positions2 = positions2
-        # position and position2 are the cornerPoints of the cube
         self.radii = radii
 
     def collision_jitter(
