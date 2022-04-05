@@ -589,7 +589,7 @@ class Ingredient(Agent):
         self.vnormals = []
         # self._place = self.place
         children = []
-        self.sphereFile = None
+        self.sphereFile = sphereFile
         # level 0 should be encapsulated sphere ?
         if sphereFile is not None and str(sphereFile) != "None":
             sphereFileo = autopack.retrieveFile(sphereFile, cache="collisionTrees")
@@ -810,7 +810,7 @@ class Ingredient(Agent):
         # positions and radii are passed to the constructor
         # check the format old nested array, new array of dictionary
         nLOD = 0
-
+        print("STTING RADII", radii)
         if positions is not None:
             nLOD = len(positions)
 

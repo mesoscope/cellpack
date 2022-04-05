@@ -71,6 +71,9 @@ class SingleSphereIngr(Ingredient):
         useRotAxis=True,
         weight=0.2,  # use for affinity ie partner.weight
     ):
+        # called through inheritance
+        radii = radii if Type=="MultiSphere" else [[radius]]
+        positions = positions if Type=="MultiSphere" else [[position]]
         super().__init__(
             Type=Type,
             color=color,
@@ -98,26 +101,24 @@ class SingleSphereIngr(Ingredient):
             perturbAxisAmplitude=perturbAxisAmplitude,
             meshFile=meshFile,
             placeType=placeType,
-            positions=[[position]],  # positions2=None,
+            positions=positions,  # positions2=None,
             principalVector=principalVector,
             proba_binding=proba_binding,
             proba_not_binding=proba_not_binding,
             properties=properties,
-            radii=[[radius]],
+            radii=radii,
             rotAxis=rotAxis,
             rotRange=rotRange,
             useRotAxis=useRotAxis,
             weight=weight,
         )
         self.modelType = "Spheres"
-
         if name is None:
             name = "%5.2f_%f" % (radius, molarity)
         self.name = name
         self.singleSphere = True
         # min and max radius for a single sphere should be the same
-        self.minRadius = radius
-        self.encapsulatingRadius = radius
+        self.encapsulatingRadius = encapsulatingRadius or radius 
         # make a sphere ?->rapid ?
         if self.mesh is None and autopack.helper is not None:
             if not autopack.helper.nogui:

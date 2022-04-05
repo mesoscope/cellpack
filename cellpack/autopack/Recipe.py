@@ -171,6 +171,7 @@ class Recipe:
         mini = 9999999.0
         maxi = 0
         for ingr in self.ingredients:
+            print(ingr.name, ingr.encapsulatingRadius, ingr.minRadius)
             if ingr.encapsulatingRadius > maxi:
                 maxi = ingr.encapsulatingRadius
             if ingr.minRadius < mini:
