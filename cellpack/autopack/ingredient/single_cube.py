@@ -30,10 +30,6 @@ class SingleCubeIngr(Ingredient):
         gradient="",
         isAttractor=False,
         jitterMax=(1, 1, 1),
-        # meshFile=None,
-        # meshName=None,
-        # meshObject=None,
-        # meshType='file',
         molarity=0.0,
         name=None,
         nbJitter=5,
@@ -62,7 +58,6 @@ class SingleCubeIngr(Ingredient):
         rotAxis=[0.0,0.0,0.0],
         rotRange=0,
         source=None,
-        # sphereFile=None,
         useOrientBias=False,
         useRotAxis=True,
         weight=0.2,  # use for affinity ie partner.weight
@@ -79,8 +74,6 @@ class SingleCubeIngr(Ingredient):
             gradient=gradient,
             isAttractor=isAttractor,
             jitterMax=jitterMax,
-            # meshFile=meshFile,
-            # meshObject=meshObject,
             molarity=molarity,
             name=name,
             nbJitter=nbJitter,
@@ -101,10 +94,12 @@ class SingleCubeIngr(Ingredient):
             proba_not_binding=proba_not_binding,
             properties=properties,
             radii=radii,
+            rotAxis=rotAxis,
             rotRange=rotRange,
-            # sphereFile=sphereFile,
+            useRotAxis=useRotAxis,
             weight=weight,
         )
+        
         print("MAKING CUBE", positions2)
         if name is None:
             name = "%5.2f_%f" % (radii[0][0], molarity)
@@ -114,11 +109,9 @@ class SingleCubeIngr(Ingredient):
         self.collisionLevel = 0
         radii = numpy.array(radii)
         
-        self.minRadius = min(
-             radii[0] / 2.0
-         )  # should have three radii sizex,sizey,sizez
+        self.minRadius = min(radii[0]/2)  # should have three radii sizex,sizey,sizez
         self.maxRadius = self.encapsulatingRadius = numpy.linalg.norm(radii[0]/2) # calculate encapsulating radius based on side length
-        self.bb = [-radii[0] / 2.0, radii[0] / 2.0]
+        self.bb = [-radii[0]/2, radii[0]/2]
         
         self.positions = positions # bottom left corner of cuboid
         self.positions2 = positions2 # top right corner of cuboid
@@ -128,8 +121,6 @@ class SingleCubeIngr(Ingredient):
         self.center = positions_ar+(positions2_ar-positions_ar)/2 #location of center based on corner points
         
         self.radii = radii
-        self.useRotAxis = True
-        self.rotAxis = [0.0,0.0,0.0]
 
     def collision_jitter(
         self,
@@ -146,27 +137,21 @@ class SingleCubeIngr(Ingredient):
         centers1 and centers2 should be the cornerPoints, so we can do parrallelpiped
         can also use the center plus size (radii), or the position/position2
         """
-        centers1 = self.positions[0]
-        centers2 = self.positions2[0]
-        cent1T = self.transformPoints(jtrans, rotMat, centers1)[0]  # bb1
-        cent2T = self.transformPoints(jtrans, rotMat, centers2)[0]  # bb2
-        posc = self.transformPoints(
-            jtrans,
-            rotMat,
-            [self.center],
-        )[0]
+        corner1 = self.positions[0]
+        corner2 = self.positions2[0]
+        corner1_trans = self.transformPoints(jtrans, rotMat, corner1)[0]  # bb1
+        corner2_trans = self.transformPoints(jtrans, rotMat, corner2)[0]  # bb2
+        center_trans = self.transformPoints(jtrans, rotMat, [self.center])[0]
+
         insidePoints = {}
         newDistPoints = {}
-        x1, y1, z1 = cent1T #coordinates of 1st corner point in world space
-        x2, y2, z2 = cent2T #coordinates of 2nd corner point in world space
-        vx, vy, vz = (x2 - x1, y2 - y1, z2 - z1) #vector connecting corner points
-        lengthsq = vx * vx + vy * vy + vz * vz #length^2 of diagonal
-        length = sqrt(lengthsq) # length of diagonal
 
-        radt = length / 2.0 + self.encapsulatingRadius + dpad 
-        x, y, z = posc
-        bb = ([x - radt, y - radt, z - radt], [x + radt, y + radt, z + radt]) #recalculated bounding box in world space
-        bb_centered = ([-radt,-radt,-radt],[radt,radt,radt])
+        diag_length = numpy.linalg.norm(corner2_trans-corner1_trans)
+
+        search_radius = diag_length / 2.0 + self.encapsulatingRadius + dpad 
+
+        bb = (center_trans-search_radius,center_trans+search_radius) #bounding box in world space
+        
         if histoVol.runTimeDisplay:  # > 1:
             box = self.vi.getObject("collBox")
             if box is None:
@@ -177,43 +162,16 @@ class SingleCubeIngr(Ingredient):
                 self.vi.updateBox(box, cornerPoints=bb)
             self.vi.update()
 
-        # pointsInCube = histoVol.grid.getPointsInCube(bb, posc, radt)
-        points_to_check = histoVol.grid.getPointsInCubeFillBB(bb, posc, radt) #indices of points
-        grid_point_vectors = numpy.take(gridPointsCoords, points_to_check, 0) - posc  # center them ?
-        delta = grid_point_vectors.copy()
-        delta *= delta
-        grid_point_distances = numpy.sqrt(delta.sum(1))
-
-        # m = numpy.matrix(numpy.array(rotMat).reshape(4, 4))  #
-        # mat = m.I
-        # need to apply inverse mat to pd
-        # rpd = ApplyMatrix(pd, mat)
-        # need to check if these point are inside the cube using the dimension of the cube
-        # ptinside_mask = [histoVol.grid.test_points_in_bb(bb_centered, gi) for gi in grid_point_vectors]
-        # print(len(ptinside_mask))
-        # ptinside = numpy.nonzero(ptinside_mask)[0]
-        # # res = numpy.less_equal(numpy.fabs(rpd), numpy.array(radii[0]) / 2.)
-        # # if len(res):
-        # #     c = numpy.average(res, 1)  # .astype(int)
-        # #     d = numpy.equal(c, 1.)
-        # #     ptinside = numpy.nonzero(d)[0]
-        # if not len(ptinside):
-        #     print("something is wrong no grid points inside cube", len(pointsInCube))
-        #     return True, insidePoints, newDistPoints
-        # if self.compareCompartment:
-        #     ptinsideId = numpy.take(pointsInCube, ptinside, 0)
-        #     compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptinsideId, 0)
-        #     if self.compNum <= 0:
-        #         wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
-        #         if len(wrongPt):
-        #             return True, insidePoints, newDistPoints
-        # import ipdb; ipdb.set_trace()
+        points_to_check = histoVol.grid.getPointsInCube(bb, center_trans, search_radius) # indices of all grid points within padded distance from cube center
+        
+        grid_point_vectors = numpy.take(gridPointsCoords, points_to_check, 0) - center_trans  # vectors joining center of cube with grid points
+        grid_point_distances = numpy.linalg.norm(grid_point_vectors,axis=1) # distances of grid points from packing location
+        
         for pti in range(len(points_to_check)):
-            # ptinsideCube:#inside point but have been already computed during the check collision...?
+            # pti = point index
+            
             grid_point_index = points_to_check[pti]
-            # if pti in ptinside:
-            #     if distance[pt] < -0.0001:  # or trigger : # pt is inside cylinder
-            #         return True, insidePoints, newDistPoints
+            
             if grid_point_index in insidePoints:
                 continue
           
@@ -229,10 +187,12 @@ class SingleCubeIngr(Ingredient):
             if(
                 signed_distance_to_cube_surface<=0
             ):
+                # check if grid point lies inside the cube
                 insidePoints[grid_point_index] = signed_distance_to_cube_surface
             elif(
                 signed_distance_to_cube_surface<=current_grid_distances[grid_point_index]
             ):
+                # update grid distances if no collision was detected
                 if grid_point_index in newDistPoints:
                         newDistPoints[grid_point_index] = min(
                             signed_distance_to_cube_surface, newDistPoints[grid_point_index]
@@ -261,7 +221,6 @@ class SingleCubeIngr(Ingredient):
         cent2T = self.transformPoints(jtrans, rotMat, centers2)[0]  # bb2
         center = self.transformPoints(jtrans, rotMat, [self.center])[0]
 
-        #        for radc, p1, p2 in zip(radii, cent1T, cent2T):
         x1, y1, z1 = cent1T
         x2, y2, z2 = cent2T
         vx, vy, vz = (x2 - x1, y2 - y1, z2 - z1)

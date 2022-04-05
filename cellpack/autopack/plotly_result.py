@@ -38,10 +38,10 @@ class PlotlyAnalysis:
             type="rect",
             xref="x",
             yref="y",
-            x0=pos[0] - radius,
-            y0=pos[1] - radius,
-            x1=pos[0] + radius,
-            y1=pos[1] + radius,
+            x0=pos[0] - radius[0][0]/2.0,
+            y0=pos[1] - radius[0][1]/2.0,
+            x1=pos[0] + radius[0][0]/2.0,
+            y1=pos[1] + radius[0][1]/2.0,
             line_color=PlotlyAnalysis.format_color(color),
             opacity=opacity,
         )
@@ -64,7 +64,7 @@ class PlotlyAnalysis:
                 if ingr.modelType == "Spheres":
                     self.add_circle(ingr.encapsulatingRadius, pos, ingr.color)
                 elif ingr.modelType == "Cube":
-                    self.add_square(ingr.encapsulatingRadius, pos, ingr.color)
+                    self.add_square(ingr.radii, pos, ingr.color)
 
     def make_grid_heatmap(self, env):
         ids = []
