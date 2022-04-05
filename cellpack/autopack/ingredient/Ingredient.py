@@ -52,7 +52,6 @@ import collada
 from scipy.spatial.transform import Rotation as R
 from math import sqrt, pi
 from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
-# from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
 from random import uniform, gauss, random
 from time import time
 import math
@@ -1683,7 +1682,7 @@ class Ingredient(Agent):
         rotMat,
         level,
         gridPointsCoords,
-        distance,
+        current_grid_distances,
         histoVol,
         dpad,
     ):
@@ -1739,7 +1738,7 @@ class Ingredient(Agent):
             distA = numpy.sqrt(delta.sum(1))
 
             for pti in range(len(pointsToCheck)):
-                pt = pointsToCheck[
+                grid_point_index = pointsToCheck[
                     pti
                 ]  # index of master grid point that is inside the sphere
                 distance_to_packing_location = distA[
@@ -1747,7 +1746,7 @@ class Ingredient(Agent):
                 ]  # is that point's distance from the center of the sphere (packing location)
                 # distance is an array of distance of closest contact to anything currently in the grid
                 collision = (
-                    distance[pt] + distance_to_packing_location
+                    current_grid_distances[grid_point_index] + distance_to_packing_location
                     <= radius_of_ing_being_packed
                 )
 
@@ -1769,12 +1768,12 @@ class Ingredient(Agent):
                             rotMat,
                             new_level,
                             gridPointsCoords,
-                            distance,
+                            current_grid_distances,
                             histoVol,
                             dpad,
                         )
                     else:
-                        self.log.info("grid point already occupied %f", distance[pt])
+                        self.log.info("grid point already occupied %f", current_grid_distances[grid_point_index])
                         return True, {}, {}
                 if not at_max_level:
                     # we don't want to calculate new distances if we are not
@@ -1791,28 +1790,28 @@ class Ingredient(Agent):
                     signed_distance_to_sphere_surface <= 0
                 ):  # point is inside dropped sphere
                     if (
-                        histoVol.grid.gridPtId[pt] != self.compNum and self.compNum <= 0
+                        histoVol.grid.gridPtId[grid_point_index] != self.compNum and self.compNum <= 0
                     ):  # did this jitter outside of it's compartment
                         # in wrong compartment, reject this packing position
                         self.log.warning("checked pt that is not in container")
                         return True, {}, {}
-                    if pt in insidePoints:
+                    if grid_point_index in insidePoints:
                         if abs(signed_distance_to_sphere_surface) < abs(
-                            insidePoints[pt]
+                            insidePoints[grid_point_index]
                         ):
-                            insidePoints[pt] = signed_distance_to_sphere_surface
+                            insidePoints[grid_point_index] = signed_distance_to_sphere_surface
                     else:
-                        insidePoints[pt] = signed_distance_to_sphere_surface
+                        insidePoints[grid_point_index] = signed_distance_to_sphere_surface
                 elif (
-                    signed_distance_to_sphere_surface < distance[pt]
+                    signed_distance_to_sphere_surface < current_grid_distances[grid_point_index]
                 ):  # point in region of influence
                     # need to update the distances of the master grid with new smaller distance
-                    if pt in newDistPoints:
-                        newDistPoints[pt] = min(
-                            signed_distance_to_sphere_surface, newDistPoints[pt]
+                    if grid_point_index in newDistPoints:
+                        newDistPoints[grid_point_index] = min(
+                            signed_distance_to_sphere_surface, newDistPoints[grid_point_index]
                         )
                     else:
-                        newDistPoints[pt] = signed_distance_to_sphere_surface
+                        newDistPoints[grid_point_index] = signed_distance_to_sphere_surface
             if not at_max_level:
                 # we didn't find any colisions with the this level, but we still want
                 # the inside points to be based on the most detailed geom
@@ -1822,7 +1821,7 @@ class Ingredient(Agent):
                     rotMat,
                     new_level,
                     gridPointsCoords,
-                    distance,
+                    current_grid_distances,
                     histoVol,
                     dpad,
                 )

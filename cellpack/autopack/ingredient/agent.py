@@ -1,4 +1,4 @@
-
+import numpy
 
 class Partner:
     def __init__(self, ingr, weight=0.0, properties=None):
