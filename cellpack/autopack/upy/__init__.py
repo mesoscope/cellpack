@@ -27,14 +27,7 @@ def retrieveHost():
     @return:  the name of the host, ie blender, maya or c4d
     """
     global host
-    host = ""
-
-    try:
-        import cellpack.autopack.upy.simularium
-
-        host = "simularium"
-    except Exception as e:
-        print("host not supported", e)
+    host = "simularium"
     return host
 
 

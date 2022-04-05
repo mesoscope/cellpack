@@ -53,7 +53,6 @@ class ConvertToSimularium(argparse.Namespace):
         self.timestep = 1
         self.box_size = 1000 * self.scale_factor
         self.n_agents = [0 for x in range(total_steps)]
-        self.points_per_fiber = 0
         self.type_names = [[] for x in range(total_steps)]
         self.display_data = {}
         self.positions = [[] for x in range(total_steps)]

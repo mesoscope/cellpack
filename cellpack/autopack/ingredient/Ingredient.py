@@ -53,7 +53,6 @@ from scipy.spatial.transform import Rotation as R
 from math import sqrt, pi
 from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
 
-# from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
 from random import uniform, gauss, random
 from time import time
 import math
@@ -1580,15 +1579,6 @@ class Ingredient(Agent):
                 helper.reParent(geom, p)
                 return geom
             return None
-        elif fileExtension == "":
-            geom = self.getDejaVuMesh(filename, geomname)
-            p = helper.getObject("autopackHider")
-            if p is None:
-                p = helper.newEmpty("autopackHider")
-                if helper.host.find("blender") == -1:
-                    helper.toggleDisplay(p, False)
-            helper.reParent(geom, p)
-            return geom
         else:  # host specific file
             if helper is not None:  # neeed the helper
                 helper.read(
@@ -1633,35 +1623,6 @@ class Ingredient(Agent):
             autopack.cache_geoms + os.sep + geomname + ".obj", self.vertices, self.faces
         )
         # self.saveObjMesh(autopack.cache_geoms + os.sep + geomname + ".obj")
-        return geom
-
-    def getDejaVuMesh(self, filename, geomname):
-        """
-        Create a DejaVu polygon mesh object from a filename
-
-        @type  filename: string
-        @param filename: the name of the input file
-        @type  geomname: string
-        @param geomname: the name of the ouput geometry
-
-        @rtype:   DejaVu.IndexedPolygons
-        @return:  the created dejavu mesh
-        """
-
-        self.vertices = numpy.loadtxt(filename + ".indpolvert", numpy.float32)
-        self.faces = numpy.loadtxt(filename + ".indpolface", numpy.int32)
-
-        # geom = IndexedPolygons(geomname, vertices=v[:,:3], faces=f.tolist())
-
-        geom = autopack.helper.createsNmesh(geomname, self.vertices, None, self.faces)[
-            0
-        ]
-        # from DejaVu.IndexedPolygons import IndexedPolygonsFromFile
-        # seems not ok...when they came from c4d ... some transformation are not occuring.
-        # geom = IndexedPolygonsFromFile(filename, 'mesh_%s' % self.pdb)
-        #        if helper is not None:
-        #            if helper.host != "maya" :
-        #                helper.rotateObj(geom,[0.0,-math.pi/2.0,0.0])
         return geom
 
     def jitterPosition(self, position, spacing, normal=None):
@@ -2032,28 +1993,7 @@ class Ingredient(Agent):
             radius_of_area_to_check = (
                 radius_of_ing_being_packed + dpad
             )  # extends the packing ingredient's bounding box to be large enough to include masked gridpoints of the largest possible ingrdient in the receipe
-            bb = (
-                [
-                    x - radius_of_area_to_check,
-                    y - radius_of_area_to_check,
-                    z - radius_of_area_to_check,
-                ],
-                [
-                    x + radius_of_area_to_check,
-                    y + radius_of_area_to_check,
-                    z + radius_of_area_to_check,
-                ],
-            )
-
-            if histoVol.runTimeDisplay:  # > 1:
-                box = self.vi.getObject("collBox")
-                if box is None:
-                    box = self.vi.Box(
-                        "collBox", cornerPoints=bb, visible=1
-                    )  # cornerPoints=bb,visible=1)
-                else:
-                    self.vi.updateBox(box, cornerPoints=bb)
-                self.vi.update()
+            #  TODO: add realtime render here that shows all the points being checked by the collision
 
             pointsToCheck = histoVol.grid.getPointsInSphere(
                 posc, radius_of_area_to_check
@@ -2725,7 +2665,8 @@ class Ingredient(Agent):
                 )
 
     def remove_from_realtime_display(env, moving):
-        env.afvi.vi.deleteObject(moving)
+        pass
+        # env.afvi.vi.deleteObject(moving)
 
     def reject(
         self,
@@ -2803,13 +2744,12 @@ class Ingredient(Agent):
             ptInd
         ]  # drop point, surface points.
 
-        moving = None
-        if env.runTimeDisplay and self.mesh:
-            moving = self.handle_real_time_visualization(
-                env.afviewer, ptInd, target_grid_point_position, rotation_matrix
+        current_visual_instance = None
+        if env.runTimeDisplay:
+            current_visual_instance = self.handle_real_time_visualization(
+                autopack.helper, ptInd, target_grid_point_position, rotation_matrix
             )
-        is_realtime = moving is not None
-
+        is_realtime = current_visual_instance is not None
         # NOTE: move the target point for close partner check.
         # I think this should be done ealier, when we're getting the point indice
         if env.ingrLookForNeighbours and self.packingMode == "closePartner":
@@ -2819,7 +2759,7 @@ class Ingredient(Agent):
                 compartment,
                 env.afviewer,
                 distance,
-                moving,
+                current_visual_instance,
             )
 
         # grow doesnt use panda.......but could use all the geom produce by the grow as rb
@@ -2833,7 +2773,7 @@ class Ingredient(Agent):
                 compartment,
                 target_grid_point_position,
                 rotation_matrix,
-                moving,
+                current_visual_instance,
                 distance,
                 dpad,
                 env.afviewer,
@@ -2851,7 +2791,7 @@ class Ingredient(Agent):
                 ptInd,
                 target_grid_point_position,
                 rotation_matrix,
-                moving,
+                current_visual_instance,
                 distance,
                 dpad,
             )
@@ -2872,7 +2812,7 @@ class Ingredient(Agent):
                 gridPointsCoords,
                 rotation_matrix,
                 target_grid_point_position,
-                moving,
+                current_visual_instance,
                 usePP=usePP,
             )
         elif (
@@ -2893,7 +2833,7 @@ class Ingredient(Agent):
                 rotation_matrix,
                 distance,
                 dpad,
-                moving,
+                current_visual_instance,
                 dpad,
             )
         else:
@@ -2901,12 +2841,16 @@ class Ingredient(Agent):
             self.reject()
             return False, {}, {}
         if success:
+            if is_realtime:
+                autopack.helper.set_object_static(
+                    current_visual_instance, jtrans, rotMatj
+                )
             self.place(
                 env, compartment, jtrans, rotMatj, ptInd, insidePoints, newDistPoints
             )
         else:
             if is_realtime:
-                self.remove_from_realtime_display(moving)
+                self.remove_from_realtime_display(current_visual_instance)
             self.reject()
 
         return success, insidePoints, newDistPoints
@@ -2998,10 +2942,11 @@ class Ingredient(Agent):
             jitter_trans = translation
         return jitter_trans
 
-    def update_display_rt(self, moving, translation, rotation):
+    def update_display_rt(self, current_instance, translation, rotation):
         mat = rotation.copy()
         mat[:3, 3] = translation
-        autopack.helper.setObjectMatrix(moving, mat, transpose=True)
+        autopack.helper.move_object(current_instance, translation, mat)
+
         autopack.helper.update()
 
     def rigid_place(
@@ -3410,30 +3355,16 @@ class Ingredient(Agent):
                 self.update_display_rt(moving, target_point, rot_matrix)
             return target_point, rot_matrix
 
-    def handle_real_time_visualization(self, afvi, ptInd, target_point, rot_mat):
-        moving = None
+    def handle_real_time_visualization(self, helper, ptInd, target_point, rot_mat):
+        name = self.name
+        instance_id = f"{name}-{ptInd}"  # copy of the ingredient being packed
+        obj = helper.getObject(name)  # parent object of all the instances
+        if obj is None:
+            helper.add_object_to_scene(None, self, instance_id, target_point, rot_mat)
+        else:
+            helper.add_new_instance(name, self, instance_id, target_point, rot_mat)
 
-        if hasattr(self, "mesh_3d"):
-            # create an instance of mesh3d and place it
-            name = self.name + str(ptInd)
-            moving = afvi.vi.getObject(name)
-            if moving is None:
-                if self.mesh_3d is None:
-                    moving = afvi.vi.Sphere(
-                        name, radius=self.radii[0][0], parent=afvi.staticMesh
-                    )[0]
-                    afvi.vi.setTranslation(moving, pos=target_point)
-                else:
-                    moving = afvi.vi.newInstance(
-                        name,
-                        self.mesh_3d,  # .GetDown(),
-                        matrice=rot_mat,
-                        location=target_point,
-                        parent=afvi.staticMesh,
-                    )
-            else:
-                self.update_display_rt(moving, target_point, rot_mat)
-        return moving
+        return instance_id
 
     def pandaBullet_place(
         self,
@@ -3845,7 +3776,6 @@ class Ingredient(Agent):
             ),
         )
         # run he simulation for simulationTimes
-        #        afvi.vi.frameAdvanced(duration = simulationTimes,display = runTimeDisplay)#,
         histoVol.callFunction(
             self.env.runBullet,
             (
