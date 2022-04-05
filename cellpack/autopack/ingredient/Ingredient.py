@@ -53,7 +53,6 @@ from scipy.spatial.transform import Rotation as R
 from math import sqrt, pi
 from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
 
-# from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
 from random import uniform, gauss, random
 from time import time
 import math
