@@ -415,7 +415,6 @@ class IngredientInstanceDrop:
                 self.bb[1][i] = self.bb[1][i] + self.position[i]
 
 
-
 # the ingredient should derive from a class of Agent
 class Ingredient(Agent):
     static_id = 0
@@ -449,6 +448,7 @@ class Ingredient(Agent):
         attempts
 
     """
+
 
     def __init__(
         self,
@@ -2179,7 +2179,7 @@ class Ingredient(Agent):
                 continue
             distances, ingr_indexes = compartment.OGsrfPtsBht.query(packing_location)
 
-            # NOTE: this could be optimized by walking down the sphere tree representation 
+            # NOTE: this could be optimized by walking down the sphere tree representation
             # of the instead of going right to the bottom
             if distances < self.encapsulatingRadius + compartment.encapsulatingRadius:
                 pos_of_attempting_ingr = self.get_new_pos(

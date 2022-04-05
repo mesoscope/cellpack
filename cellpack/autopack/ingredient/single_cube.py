@@ -118,7 +118,7 @@ class SingleCubeIngr(Ingredient):
         positions_ar = numpy.array(self.positions[0][0])
         positions2_ar = numpy.array(self.positions2[0][0])
 
-        self.center = positions_ar+(positions2_ar-positions_ar) / 2  # location of center based on corner points
+        self.center = positions_ar + (positions2_ar - positions_ar) / 2  # location of center based on corner points
 
         self.radii = radii
 
@@ -146,12 +146,12 @@ class SingleCubeIngr(Ingredient):
         insidePoints = {}
         newDistPoints = {}
 
-        diag_length = numpy.linalg.norm(corner2_trans-corner1_trans)
+        diag_length = numpy.linalg.norm(corner2_trans - corner1_trans)
 
-        search_radius = diag_length / 2.0 + self.encapsulatingRadius + dpad 
+        search_radius = diag_length / 2.0 + self.encapsulatingRadius + dpad
 
-        bb = (center_trans-search_radius,center_trans+search_radius) #bounding box in world space
-        
+        bb = (center_trans - search_radius, center_trans + search_radius)  # bounding box in world space
+
         if histoVol.runTimeDisplay:  # > 1:
             box = self.vi.getObject("collBox")
             if box is None:
@@ -165,7 +165,7 @@ class SingleCubeIngr(Ingredient):
         points_to_check = histoVol.grid.getPointsInCube(bb, center_trans, search_radius)  # indices of all grid points within padded distance from cube center
 
         grid_point_vectors = numpy.take(gridPointsCoords, points_to_check, 0) - center_trans  # vectors joining center of cube with grid points
-        grid_point_distances = numpy.linalg.norm(grid_point_vectors,axis=1)  # distances of grid points from packing location
+        grid_point_distances = numpy.linalg.norm(grid_point_vectors, axis=1)  # distances of grid points from packing location
 
         for pti in range(len(points_to_check)):
             # pti = point index
@@ -185,7 +185,7 @@ class SingleCubeIngr(Ingredient):
             # should be updated to distance from cube surface
             signed_distance_to_cube_surface = grid_point_distances[pti] - self.encapsulatingRadius
             if(
-                signed_distance_to_cube_surface<=0
+                signed_distance_to_cube_surface <= 0
             ):
                 # check if grid point lies inside the cube
                 insidePoints[grid_point_index] = signed_distance_to_cube_surface
@@ -194,9 +194,7 @@ class SingleCubeIngr(Ingredient):
             ):
                 # update grid distances if no collision was detected
                 if grid_point_index in newDistPoints:
-                        newDistPoints[grid_point_index] = min(
-                            signed_distance_to_cube_surface, newDistPoints[grid_point_index]
-                        )
+                        newDistPoints[grid_point_index] = min(signed_distance_to_cube_surface, newDistPoints[grid_point_index])
                 else:
                     newDistPoints[grid_point_index] = signed_distance_to_cube_surface
 
