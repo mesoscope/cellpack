@@ -79,6 +79,8 @@ class MultiSphereIngr(SingleSphereIngr):
             positions=positions,  # positions2=None,
             principalVector=principalVector,
             radii=radii,
+            rotAxis=rotAxis,
+            rotRange=rotRange,
             sphereFile=sphereFile,
             Type=Type,
         )

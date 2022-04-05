@@ -810,7 +810,6 @@ class Ingredient(Agent):
         # positions and radii are passed to the constructor
         # check the format old nested array, new array of dictionary
         nLOD = 0
-        print("STTING RADII", radii)
         if positions is not None:
             nLOD = len(positions)
 
@@ -2640,7 +2639,7 @@ class Ingredient(Agent):
             else:
                 if histovol is not None:
                     jitter_rotation = histovol.randomRot.get()
-                    if self.rotRange:
+                    if self.rotRange != 0.0:
                         return jitter_rotation
                     else:
                         return rotation.copy()
