@@ -106,7 +106,7 @@ class SingleCubeIngr(Ingredient):
     ):
         """
         Check cube for collision
-        centers1 and centers2 should be the cornerPoints, so we can do parrallelpiped
+        centers1 and centers2 should be the cornerPoints, so we can do parrallel piped
         can also use the center plus size (radii), or the position/position2
         """
         centers1 = self.positions[0]
