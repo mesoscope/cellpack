@@ -1,6 +1,9 @@
 import numpy
+import math
+
 
 class Partner:
+
     def __init__(self, ingr, weight=0.0, properties=None):
         if type(ingr) is str:
             self.name = ingr
@@ -97,7 +100,7 @@ class Agent:
         if not self.partners_position:
             for i in self.partners_name:
                 self.partners_position.append([numpy.identity(4)])
-        excluded_partners_name=[]
+        excluded_partners_name = []
         self.excluded_partners_name = excluded_partners_name
         assert packingMode in [
             "random",
@@ -110,7 +113,7 @@ class Agent:
             "triangletile",
         ]
         self.packingMode = packingMode
-        partners_weight=0,
+        partners_weight = 0,
         self.partners_weight = partners_weight
         # assert placeType in ['jitter', 'spring','rigid-body']
         self.placeType = placeType
@@ -134,7 +137,7 @@ class Agent:
     def getProbaBinding(self, val=None):
         # get a value between 0.0 and 1.0and return the weight and success ?
         if val is None:
-            val = random()
+            val = numpy.random()
         if self.cb is not None:
             return self.cb(val)
         if val <= self.weight:
@@ -244,7 +247,7 @@ class Agent:
         call returns a uniformly distributed value and larger chunks of
         the total weight will be skipped in the beginning.
         """
-        rnd = random() * sum(weights)
+        rnd = numpy.random() * sum(weights)
         if sum(weights) == 0:
             return None, None
         for i, w in enumerate(weights):
@@ -317,7 +320,7 @@ class Agent:
         # bindingIngr is ingr,(weight,(instances indices))
         #        print "bindingIngr ",bindingIngr,bindingIngr[1]
         if currentPos is None:  # random mode
-            picked_I = random() * len(bindingIngr[1][1])
+            picked_I = numpy.random() * len(bindingIngr[1][1])
             i = bindingIngr[1][1][picked_I]
         else:  # pick closest one
             mind = 99999999.9
@@ -329,4 +332,3 @@ class Agent:
                     mind = d
                     i = ind
         return i
-
