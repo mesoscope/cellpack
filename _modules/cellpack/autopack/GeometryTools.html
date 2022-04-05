@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cellpack.autopack.GeometryTools &mdash; cellPack 0.2.1 documentation</title>
+  <title>cellpack.autopack.GeometryTools &mdash; cellPack 0.2.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../../index.html" class="icon icon-home"> cellPack
           </a>
               <div class="version">
-                0.2.1
+                0.2.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -338,10 +338,10 @@
     <span class="c1"># Require Scipy</span>
     <span class="c1"># square regions</span>
 <div class="viewcode-block" id="GeometryTools.region_1"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_1">[docs]</a>    <span class="k">def</span> <span class="nf">region_1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
-        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">d</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rho</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">d</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rho</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="GeometryTools.region_1_2_theta"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_1_2_theta">[docs]</a>    <span class="k">def</span> <span class="nf">region_1_2_theta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">d</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rho</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">d</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">d</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rho</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span></div>
 
     <span class="c1"># curved square regions</span>
 <div class="viewcode-block" id="GeometryTools.region_2_integrand"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_2_integrand">[docs]</a>    <span class="k">def</span> <span class="nf">region_2_integrand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
@@ -350,13 +350,13 @@
 <div class="viewcode-block" id="GeometryTools.region_2"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_2">[docs]</a>    <span class="k">def</span> <span class="nf">region_2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="c1"># require scipy</span>
         <span class="n">i4</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">d</span> <span class="o">**</span> <span class="mi">3</span>
+            <span class="n">d</span><span class="o">**</span><span class="mi">3</span>
             <span class="o">/</span> <span class="mf">6.0</span>
-            <span class="o">*</span> <span class="p">(</span><span class="n">rho</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">d</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="o">*</span> <span class="p">(</span><span class="n">rho</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">d</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="o">*</span> <span class="p">(</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">region_1_2_theta</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
         <span class="p">)</span>
         <span class="n">i3</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">d</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="n">d</span><span class="o">**</span><span class="mi">2</span>
             <span class="o">*</span> <span class="n">rho</span>
             <span class="o">/</span> <span class="mf">3.0</span>
             <span class="o">*</span> <span class="n">quad</span><span class="p">(</span>
@@ -375,7 +375,7 @@
 <div class="viewcode-block" id="GeometryTools.region_3"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_3">[docs]</a>    <span class="k">def</span> <span class="nf">region_3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
         <span class="c1"># require scipy</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="n">rho</span> <span class="o">**</span> <span class="mi">3</span>
+            <span class="n">rho</span><span class="o">**</span><span class="mi">3</span>
             <span class="o">/</span> <span class="mf">3.0</span>
             <span class="o">*</span> <span class="p">(</span>
                 <span class="n">d</span> <span class="o">/</span> <span class="n">rho</span> <span class="o">*</span> <span class="p">(</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">region_1_2_theta</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
@@ -395,13 +395,13 @@
         <span class="k">if</span> <span class="n">alpha</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">(</span>
                 <span class="mf">4.0</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">rho</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span>
-                <span class="o">-</span> <span class="mf">6.0</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">rho</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">d</span> <span class="o">*</span> <span class="p">(</span><span class="n">rho</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">d</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mf">3.0</span>
+                <span class="o">-</span> <span class="mf">6.0</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">rho</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">d</span> <span class="o">*</span> <span class="p">(</span><span class="n">rho</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">d</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mf">3.0</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
             <span class="k">return</span> <span class="mf">16.0</span> <span class="o">*</span> <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">region_1</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">region_2</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">region_3</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
             <span class="p">)</span>
-        <span class="k">return</span> <span class="mf">8.0</span> <span class="o">*</span> <span class="n">d</span> <span class="o">**</span> <span class="mi">3</span></div></div>
+        <span class="k">return</span> <span class="mf">8.0</span> <span class="o">*</span> <span class="n">d</span><span class="o">**</span><span class="mi">3</span></div></div>
 </pre></div>
 
            </div>

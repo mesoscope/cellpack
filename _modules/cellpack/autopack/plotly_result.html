@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cellpack.autopack.plotly_result &mdash; cellPack 0.2.1 documentation</title>
+  <title>cellpack.autopack.plotly_result &mdash; cellPack 0.2.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../../index.html" class="icon icon-home"> cellPack
           </a>
               <div class="version">
-                0.2.1
+                0.2.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -200,6 +200,8 @@
 
 <div class="viewcode-block" id="PlotlyAnalysis.format_color"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.format_color">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">format_color</span><span class="p">(</span><span class="n">color</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>  <span class="c1"># RED default</span>
         <span class="k">return</span> <span class="s2">&quot;rgb</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="mi">255</span> <span class="o">*</span> <span class="n">color</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">255</span> <span class="o">*</span> <span class="n">color</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">255</span> <span class="o">*</span> <span class="n">color</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span></div>
 
 <div class="viewcode-block" id="PlotlyAnalysis.add_circle"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.add_circle">[docs]</a>    <span class="k">def</span> <span class="nf">add_circle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>

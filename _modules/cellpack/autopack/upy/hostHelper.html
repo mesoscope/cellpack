@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cellpack.autopack.upy.hostHelper &mdash; cellPack 0.2.1 documentation</title>
+  <title>cellpack.autopack.upy.hostHelper &mdash; cellPack 0.2.4 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../../../index.html" class="icon icon-home"> cellPack
           </a>
               <div class="version">
-                0.2.1
+                0.2.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -493,8 +493,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">theta</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
             <span class="n">u</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">u</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">u</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">u</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">u</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">u</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span></div>
 
@@ -2782,7 +2782,6 @@
         <span class="k">if</span> <span class="n">transform</span><span class="p">:</span>
             <span class="n">mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTransformation</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
             <span class="n">vertices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ApplyMatrix</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ToMat</span><span class="p">(</span><span class="n">mat</span><span class="p">))</span>
-        <span class="c1"># bhtree?</span>
         <span class="n">mini</span> <span class="o">=</span> <span class="mf">9999.0</span>
         <span class="n">miniv</span> <span class="o">=</span> <span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">)):</span>
@@ -5120,8 +5119,8 @@
             <span class="n">collada_xml</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">master_node</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">collada_xml</span></div>
 
-    <span class="c1"># DejaVu.indexedPolygon have also this function</span>
-<div class="viewcode-block" id="Helper.writeMeshToFile"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.writeMeshToFile">[docs]</a>    <span class="k">def</span> <span class="nf">writeMeshToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">verts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vnorms</span><span class="o">=</span><span class="p">[],</span> <span class="n">fnorms</span><span class="o">=</span><span class="p">[]):</span>
+<div class="viewcode-block" id="Helper.writeMeshToFile"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.writeMeshToFile">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">writeMeshToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">verts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vnorms</span><span class="o">=</span><span class="p">[],</span> <span class="n">fnorms</span><span class="o">=</span><span class="p">[]):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write the given mesh data (vertices, faces, normal, face normal) in the DejaVu format.</span>
 <span class="sd">        Create two files : filename.indpolvert and filename.indpolface</span>
@@ -5212,6 +5211,26 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">writeMeshToFile</span><span class="p">(</span>
             <span class="n">filename</span><span class="p">,</span> <span class="n">verts</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">faces</span><span class="p">,</span> <span class="n">vnorms</span><span class="o">=</span><span class="n">vnormals</span><span class="p">,</span> <span class="n">fnorms</span><span class="o">=</span><span class="n">fnormals</span>
         <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Helper.saveDejaVuMesh"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.saveDejaVuMesh">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">saveDejaVuMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">verts</span><span class="o">=</span><span class="p">[],</span> <span class="n">faces</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span>
+            <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.indpolvert&quot;</span><span class="p">,</span> <span class="n">verts</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot; &quot;</span>
+        <span class="p">)</span>  <span class="c1"># numpy.hstack([self.vertices, self.vnormals])</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.indpolface&quot;</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Helper.saveObjMesh"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.saveObjMesh">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">saveObjMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="p">[],</span> <span class="n">faces</span><span class="o">=</span><span class="p">[],</span> <span class="n">vnorms</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;save OBJ &quot;</span> <span class="o">+</span> <span class="n">filepath</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;OBJ File: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;v </span><span class="si">%.4f</span><span class="s2"> </span><span class="si">%.4f</span><span class="s2"> </span><span class="si">%.4f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">faces</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;f &quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">p</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Helper.writeDX"><a class="viewcode-back" href="../../../../cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.writeDX">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">writeDX</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">gridvalue</span><span class="p">,</span> <span class="n">gridcenter</span><span class="p">,</span> <span class="n">gridstep</span><span class="p">,</span> <span class="n">grisize</span><span class="p">,</span> <span class="n">commens</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>

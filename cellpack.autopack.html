@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cellpack.autopack package &mdash; cellPack 0.2.1 documentation</title>
+  <title>cellpack.autopack package &mdash; cellPack 0.2.4 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="index.html" class="icon icon-home"> cellPack
           </a>
               <div class="version">
-                0.2.1
+                0.2.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -201,7 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.ingredient.html#cellpack-autopack-ingredient-multi-sphere-module">cellpack.autopack.ingredient.multi_sphere module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.ingredient.html#cellpack-autopack-ingredient-single-cube-module">cellpack.autopack.ingredient.single_cube module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.ingredient.html#cellpack-autopack-ingredient-single-sphere-module">cellpack.autopack.ingredient.single_sphere module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.ingredient.html#cellpack-autopack-ingredient-utils-module">cellpack.autopack.ingredient.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.ingredient.html#module-cellpack.autopack.ingredient.utils">cellpack.autopack.ingredient.utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.ingredient.html#module-contents">Module contents</a></li>
 </ul>
 </li>
@@ -524,8 +524,286 @@ objects : list of object or list of points</p>
 <dd></dd></dl>
 
 </section>
-<section id="cellpack-autopack-basegrid-module">
-<h2>cellpack.autopack.BaseGrid module<a class="headerlink" href="#cellpack-autopack-basegrid-module" title="Permalink to this headline"></a></h2>
+<section id="module-cellpack.autopack.BaseGrid">
+<span id="cellpack-autopack-basegrid-module"></span><h2>cellpack.autopack.BaseGrid module<a class="headerlink" href="#module-cellpack.autopack.BaseGrid" title="Permalink to this headline"></a></h2>
+<p># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
+#   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
+#   with assistance from Mostafa Al-Alusi in 2009 and periodic input
+#   from Arthur Olson’s Molecular Graphics Lab
+#
+# BaseGrid.py Authors: Graham Johnson &amp; Michel Sanner with editing/enhancement from Ludovic Autin
+#
+# Translation to Python initiated March 1, 2010 by Michel Sanner with Graham Johnson
+#
+# Class restructuring and organization: Michel Sanner
+#
+# Copyright: Graham Johnson ©2010
+#
+# This file “BaseGrid.py” is part of autoPACK, cellPACK.
+#
+#    autoPACK is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    autoPACK is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with autoPACK (See “CopyingGNUGPL” in the installation.
+#    If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.
+#
+#
+###############################################################################
+&#64;author: Ludovic Autin, Graham Johnson,  &amp; Michel Sanner</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.BaseGrid.</span></span><span class="sig-name descname"><span class="pre">BaseGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">([0,</span> <span class="pre">0,</span> <span class="pre">0],</span> <span class="pre">[0.1,</span> <span class="pre">0.1,</span> <span class="pre">0.1])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class handle the use of grid to control the packing. The grid keep information of
+3d positions, distances, freePoints and inside/surface points from organelles.
+NOTE : thi class could be completely replace if openvdb is wrapped to python.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.cartesian">
+<span class="sig-name descname"><span class="pre">cartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.cartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.cartesian" title="Permalink to this definition"></a></dt>
+<dd><p>#http://stackoverflow.com/questions/1208118/using-numpy-to-build-an-array-of-all-combinations-of-two-arrays
+Generate a cartesian product of input arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arrays</strong> (<em>list of array-like</em>) – 1-D arrays to form the cartesian product of.</p></li>
+<li><p><strong>out</strong> (<em>ndarray</em>) – Array to place the cartesian product in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – 2-D array of shape (M, len(arrays)) containing cartesian products
+formed of input arrays.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cartesian</span><span class="p">(([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]))</span>
+<span class="go">array([[1, 4, 6],</span>
+<span class="go">       [1, 4, 7],</span>
+<span class="go">       [1, 5, 6],</span>
+<span class="go">       [1, 5, 7],</span>
+<span class="go">       [2, 4, 6],</span>
+<span class="go">       [2, 4, 7],</span>
+<span class="go">       [2, 5, 6],</span>
+<span class="go">       [2, 5, 7],</span>
+<span class="go">       [3, 4, 6],</span>
+<span class="go">       [3, 4, 7],</span>
+<span class="go">       [3, 5, 6],</span>
+<span class="go">       [3, 5, 7]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.checkPointInside">
+<span class="sig-name descname"><span class="pre">checkPointInside</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt3d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jitter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">1,</span> <span class="pre">1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.checkPointInside"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.checkPointInside" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the given 3d points is inside the grid</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.computeExteriorVolume">
+<span class="sig-name descname"><span class="pre">computeExteriorVolume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compartments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbox_bb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.computeExteriorVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.computeExteriorVolume" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.computeGridNumberOfPoint">
+<span class="sig-name descname"><span class="pre">computeGridNumberOfPoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.computeGridNumberOfPoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.computeGridNumberOfPoint" title="Permalink to this definition"></a></dt>
+<dd><p>Return the grid size : total number of point and number of point per axes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.computeVolume">
+<span class="sig-name descname"><span class="pre">computeVolume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbox_bb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.computeVolume"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.computeVolume" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.create3DPointLookup">
+<span class="sig-name descname"><span class="pre">create3DPointLookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.create3DPointLookup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.create3DPointLookup" title="Permalink to this definition"></a></dt>
+<dd><p>Fill the orthogonal bounding box described by two global corners
+with an array of points spaces pGridSpacing apart. Optimized version using
+numpy broadcasting</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.create3DPointLookupCover">
+<span class="sig-name descname"><span class="pre">create3DPointLookupCover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.create3DPointLookupCover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.create3DPointLookupCover" title="Permalink to this definition"></a></dt>
+<dd><p>Fill the orthogonal bounding box described by two global corners
+with an array of points spaces pGridSpacing apart. Optimized version using
+numpy broadcasting</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.create3DPointLookup_loop">
+<span class="sig-name descname"><span class="pre">create3DPointLookup_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.create3DPointLookup_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.create3DPointLookup_loop" title="Permalink to this definition"></a></dt>
+<dd><p>Fill the orthogonal bounding box described by two global corners
+with an array of points spaces pGridSpacing apart.:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.getCenter">
+<span class="sig-name descname"><span class="pre">getCenter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.getCenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.getCenter" title="Permalink to this definition"></a></dt>
+<dd><p>Get the center of the grid</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.getClosestFreeGridPoint">
+<span class="sig-name descname"><span class="pre">getClosestFreeGridPoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt3d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compId</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updateTree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ball</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.getClosestFreeGridPoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.getClosestFreeGridPoint" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.getClosestGridPoint">
+<span class="sig-name descname"><span class="pre">getClosestGridPoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt3d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.getClosestGridPoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.getClosestGridPoint" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.getDiagonal">
+<span class="sig-name descname"><span class="pre">getDiagonal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.getDiagonal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.getDiagonal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.getIJK">
+<span class="sig-name descname"><span class="pre">getIJK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ptInd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.getIJK"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.getIJK" title="Permalink to this definition"></a></dt>
+<dd><p>get i,j,k (3d) indices from u (1d)
+only work for grid point, not compartments points</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.getPointFrom3D">
+<span class="sig-name descname"><span class="pre">getPointFrom3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt3d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.getPointFrom3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.getPointFrom3D" title="Permalink to this definition"></a></dt>
+<dd><p>get point number from 3d coordinates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.getPointsInCube">
+<span class="sig-name descname"><span class="pre">getPointsInCube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">addSP</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.getPointsInCube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.getPointsInCube" title="Permalink to this definition"></a></dt>
+<dd><p>Return all grid points indicesinside the given bounding box.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.getPointsInCubeFillBB">
+<span class="sig-name descname"><span class="pre">getPointsInCubeFillBB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">addSP</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.getPointsInCubeFillBB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.getPointsInCubeFillBB" title="Permalink to this definition"></a></dt>
+<dd><p>Return all grid points indices inside the given bounding box.
+NOTE : need to fix with grid build with numpy arrange</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.getPointsInSphere">
+<span class="sig-name descname"><span class="pre">getPointsInSphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.getPointsInSphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.getPointsInSphere" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.getPositionPeridocity">
+<span class="sig-name descname"><span class="pre">getPositionPeridocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt3d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jitter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.getPositionPeridocity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.getPositionPeridocity" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.getRadius">
+<span class="sig-name descname"><span class="pre">getRadius</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.getRadius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.getRadius" title="Permalink to this definition"></a></dt>
+<dd><p>Get the radius the grid</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.removeFreePoint">
+<span class="sig-name descname"><span class="pre">removeFreePoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pti</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.removeFreePoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.removeFreePoint" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.reorder_free_points">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reorder_free_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freePoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbFreePoints</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.reorder_free_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.reorder_free_points" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.reset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.restore">
+<span class="sig-name descname"><span class="pre">restore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.restore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.restore" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.save" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.set_surfPtsBht">
+<span class="sig-name descname"><span class="pre">set_surfPtsBht</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.set_surfPtsBht"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.set_surfPtsBht" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.set_surfPtscht">
+<span class="sig-name descname"><span class="pre">set_surfPtscht</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.set_surfPtscht"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.set_surfPtscht" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.setup" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.setupBoundaryPeriodicity">
+<span class="sig-name descname"><span class="pre">setupBoundaryPeriodicity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.setupBoundaryPeriodicity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.setupBoundaryPeriodicity" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.test_points_in_bb">
+<span class="sig-name descname"><span class="pre">test_points_in_bb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.test_points_in_bb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.test_points_in_bb" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid.updateDistances">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">updateDistances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">insidePoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newDistPoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freePoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbFreePoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.updateDistances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.updateDistances" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.HaltonGrid">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.BaseGrid.</span></span><span class="sig-name descname"><span class="pre">HaltonGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">([0,</span> <span class="pre">0,</span> <span class="pre">0],</span> <span class="pre">[0.1,</span> <span class="pre">0.1,</span> <span class="pre">0.1])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#HaltonGrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.HaltonGrid" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid" title="cellpack.autopack.BaseGrid.BaseGrid"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.autopack.BaseGrid.BaseGrid</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.HaltonGrid.create3DPointLookup">
+<span class="sig-name descname"><span class="pre">create3DPointLookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#HaltonGrid.create3DPointLookup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.HaltonGrid.create3DPointLookup" title="Permalink to this definition"></a></dt>
+<dd><p>Fill the orthogonal bounding box described by two global corners
+with an array of points spaces pGridSpacing apart. Optimized version using
+numpy broadcasting</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.HaltonGrid.getNBgridPoints">
+<span class="sig-name descname"><span class="pre">getNBgridPoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#HaltonGrid.getNBgridPoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.HaltonGrid.getNBgridPoints" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.HaltonGrid.getPointFrom3D">
+<span class="sig-name descname"><span class="pre">getPointFrom3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt3d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#HaltonGrid.getPointFrom3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.HaltonGrid.getPointFrom3D" title="Permalink to this definition"></a></dt>
+<dd><p>get point number from 3d coordinates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.HaltonGrid.getScale">
+<span class="sig-name descname"><span class="pre">getScale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#HaltonGrid.getScale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.HaltonGrid.getScale" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.gridPoint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.BaseGrid.</span></span><span class="sig-name descname"><span class="pre">gridPoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">globalC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isPolyhedron</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#gridPoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.gridPoint" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
 </section>
 <section id="cellpack-autopack-compartment-module">
 <h2>cellpack.autopack.Compartment module<a class="headerlink" href="#cellpack-autopack-compartment-module" title="Permalink to this headline"></a></h2>
@@ -1280,6 +1558,22 @@ scaling or translation.</p>
 <p>Note that when saving a model in sparse (coordinate) format, it is first
 converted to dense format.</p>
 <p>Doesn’t check if the model is ‘sane’.</p>
+</dd></dl>
+
+</section>
+<section id="module-cellpack.autopack.iotools_simple">
+<span id="cellpack-autopack-iotools-simple-module"></span><h2>cellpack.autopack.iotools_simple module<a class="headerlink" href="#module-cellpack.autopack.iotools_simple" title="Permalink to this headline"></a></h2>
+<p>Created on Sun Jan 27 09:04:10 2013</p>
+<p>&#64;author: Ludovic Autin</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.iotools_simple.RecipeLoader">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.iotools_simple.</span></span><span class="sig-name descname"><span class="pre">RecipeLoader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/iotools_simple.html#RecipeLoader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.iotools_simple.RecipeLoader" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.iotools_simple.RecipeLoader.get_all_ingredients">
+<span class="sig-name descname"><span class="pre">get_all_ingredients</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results_data_in</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/iotools_simple.html#RecipeLoader.get_all_ingredients"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.iotools_simple.RecipeLoader.get_all_ingredients" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>

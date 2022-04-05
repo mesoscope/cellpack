@@ -109,6 +109,14 @@ cellpack.autopack.binvox\_rw module
    :undoc-members:
    :show-inheritance:
 
+cellpack.autopack.iotools\_simple module
+----------------------------------------
+
+.. automodule:: cellpack.autopack.iotools_simple
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.ldSequence module
 -----------------------------------
 

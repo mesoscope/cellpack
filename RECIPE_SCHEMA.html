@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cellpack Recipe Schema 1.0 &mdash; cellPack 0.2.1 documentation</title>
+  <title>Cellpack Recipe Schema 1.0 &mdash; cellPack 0.2.4 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <a href="index.html" class="icon icon-home"> cellPack
           </a>
               <div class="version">
-                0.2.1
+                0.2.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -195,10 +195,10 @@
 <p>Version of the recipe</p>
 <section id="example">
 <h4>example:<a class="headerlink" href="#example" title="Permalink to this headline"></a></h4>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;recipe&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NM_Analysis_FigureA&quot;</span>
-    <span class="p">},</span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;recipe&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NM_Analysis_FigureA&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">},</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -276,9 +276,8 @@
 </section>
 <section id="placemethod">
 <h3>placeMethod<a class="headerlink" href="#placemethod" title="Permalink to this headline"></a></h3>
-<p><a href="#id55"><span class="problematic" id="id56">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">enum</span></code><a href="#id57"><span class="problematic" id="id58">*</span></a>. One of <code class="docutils literal notranslate"><span class="pre">&quot;RAPID&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;spheresBHT&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code>.. Default: <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>.</p>
+<p><a href="#id55"><span class="problematic" id="id56">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">enum</span></code><a href="#id57"><span class="problematic" id="id58">*</span></a>. One of <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;spheresBHT&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code>.. Default: <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>.</p>
 <p>Will be use if placeMethod isn’t in an ingredient setup</p>
-<p><code class="docutils literal notranslate"><span class="pre">&quot;RAPID&quot;</span></code> uses <a class="reference external" href="http://gamma.cs.unc.edu/OBB/">“Robust and Accurate Polygon Interference Detection (RAPID)”</a> to test if the ingredient being placed in the packing loop is colliding with any neighboring objects fed into the list of neighbors.</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code> uses a simple algorithm developed by GJ, M-A-A, MS, and LA to test if a single sphere, sphere-tree, or other primative (box and cylinder) are colliding with masked/unallowed points on the grid… I can’t recall all of the allowed types, but check the input parameters that it accepts. I believe there is also an option to perform simple collisions directly between primatives, e.g. sphere-sphere, sphere-box, sphere-cylinder, cylinder-box, and spheretree-others</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;spheresBHT&quot;</span></code> gets the sphereTrees of the potential colliding neighbors, and does an efficient sphereTree-sphereTree collision detection of the sphereTree for the object being packed against the sphereTrees of each neighbor- returns false if a collision is detected</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code>  Python wrapper for Bullet Physics Engine (popular in ~2010 and used by C4D, Maya, Blender, etc) that provides a variety of object-object collision detection, including collision min/max overlap distance, etc. Allows relaxation in its own loop, springs, rejection, meshes, primitives, etc.</p>
@@ -355,30 +354,30 @@
 <p>no free point update</p>
 <section id="example-options">
 <h4>example <code class="docutils literal notranslate"><span class="pre">Options</span></code>:<a class="headerlink" href="#example-options" title="Permalink to this headline"></a></h4>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;options&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;cancelDialog&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nt">&quot;\_hackFreepts&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nt">&quot;windowsSize&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-    <span class="nt">&quot;use_gradient&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nt">&quot;placeMethod&quot;</span><span class="p">:</span> <span class="s2">&quot;RAPID&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;saveResult&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nt">&quot;runTimeDisplay&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nt">&quot;overwritePlaceMethod&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nt">&quot;innerGridMethod&quot;</span><span class="p">:</span> <span class="s2">&quot;bhtree&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;boundingBox&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span>
-    <span class="nt">&quot;gradients&quot;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="nt">&quot;smallestProteinSize&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nt">&quot;computeGridParams&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nt">&quot;freePtsUpdateThreshold&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nt">&quot;pickWeightedIngr&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="nt">&quot;\_timer&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nt">&quot;ingrLookForNeighbours&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nt">&quot;pickRandPt&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nt">&quot;largestProteinSize&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-    <span class="nt">&quot;resultfile&quot;</span><span class="p">:</span> <span class="s2">&quot;autoPACKserver/results/NM_Analysis_FigureA1.0.apr.json&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;use_periodicity&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nt">&quot;EnviroOnly&quot;</span><span class="p">:</span> <span class="kc">false</span>
-<span class="p">},</span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;options&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;cancelDialog&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;\_hackFreepts&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;windowsSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;use_gradient&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;placeMethod&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;saveResult&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;runTimeDisplay&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;overwritePlaceMethod&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;innerGridMethod&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bhtree&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;boundingBox&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">],[</span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">]],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;gradients&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;smallestProteinSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;computeGridParams&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;freePtsUpdateThreshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;pickWeightedIngr&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;\_timer&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;ingrLookForNeighbours&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;pickRandPt&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;largestProteinSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;resultfile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;autoPACKserver/results/NM_Analysis_FigureA1.0.apr.json&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;use_periodicity&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;EnviroOnly&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"></span>
+<span class="p">},</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -524,23 +523,22 @@
 </section>
 <section id="placetype">
 <h3>placeType<a class="headerlink" href="#placetype" title="Permalink to this headline"></a></h3>
-<p><a href="#id166"><span class="problematic" id="id167">*</span></a>Optional enum. One of <code class="docutils literal notranslate"><span class="pre">&quot;RAPID&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;spheresBHT&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code><a href="#id168"><span class="problematic" id="id169">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">&quot;RAPID&quot;</span></code> uses <a class="reference external" href="http://gamma.cs.unc.edu/OBB/">“Robust and Accurate Polygon Interference Detection (RAPID)”</a> to test if the ingredient being placed in the packing loop is colliding with any neighboring objects fed into the list of neighbors.</p>
+<p><a href="#id166"><span class="problematic" id="id167">*</span></a>Optional enum. One of <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;spheresBHT&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code><a href="#id168"><span class="problematic" id="id169">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code> uses a simple algorithm developed by GJ, M-A-A, MS, and LA to test if a single sphere, sphere-tree, or other primative (box and cylinder) are colliding with masked/unallowed points on the grid… I can’t recall all of the allowed types, but check the input parameters that it accepts. I believe there is also an option to perform simple collisions directly between primatives, e.g. sphere-sphere, sphere-box, sphere-cylinder, cylinder-box, and spheretree-others</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;spheresBHT&quot;</span></code> gets the sphereTrees of the potential colliding neighbors, and does an efficient sphereTree-sphereTree collision detection of the sphereTree for the object being packed against the sphereTrees of each neighbor- returns false if a collision is detected</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code>  Python wrapper for Bullet Physics Engine (popular in ~2010 and used by C4D, Maya, Blender, etc) that provides a variety of object-object collision detection, including collision min/max overlap distance, etc. Allows relaxation in its own loop, springs, rejection, meshes, primitives, etc.</p>
 </section>
 <section id="use-mesh-rb">
 <h3>use_mesh_rb<a class="headerlink" href="#use-mesh-rb" title="Permalink to this headline"></a></h3>
-<p><a href="#id171"><span class="problematic" id="id172">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">boolean</span></code><a href="#id173"><span class="problematic" id="id174">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p><a href="#id170"><span class="problematic" id="id171">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">boolean</span></code><a href="#id172"><span class="problematic" id="id173">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
 </section>
 <section id="rejectionthreshold">
 <h3>rejectionThreshold<a class="headerlink" href="#rejectionthreshold" title="Permalink to this headline"></a></h3>
-<p><a href="#id175"><span class="problematic" id="id176">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id177"><span class="problematic" id="id178">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">30</span></code>.</p>
+<p><a href="#id174"><span class="problematic" id="id175">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id176"><span class="problematic" id="id177">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">30</span></code>.</p>
 </section>
 <section id="packingmode">
 <h3>packingMode<a class="headerlink" href="#packingmode" title="Permalink to this headline"></a></h3>
-<p><a href="#id179"><span class="problematic" id="id180">*</span></a>Optional enum. One of <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;close&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;closePartner&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;randomPartner&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;gradient&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;hexatile&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;squaretile&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;triangletile&quot;</span></code><a href="#id181"><span class="problematic" id="id182">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code>.</p>
+<p><a href="#id178"><span class="problematic" id="id179">*</span></a>Optional enum. One of <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;close&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;closePartner&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;randomPartner&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;gradient&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;hexatile&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;squaretile&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;triangletile&quot;</span></code><a href="#id180"><span class="problematic" id="id181">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code>.</p>
 </section>
 <section id="gradient">
 <h3>gradient<a class="headerlink" href="#gradient" title="Permalink to this headline"></a></h3>
@@ -549,35 +547,35 @@ Gradient name to use if <code class="docutils literal notranslate"><span class="
 </section>
 <section id="proba-binding">
 <h3>proba_binding<a class="headerlink" href="#proba-binding" title="Permalink to this headline"></a></h3>
-<p><a href="#id183"><span class="problematic" id="id184">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code> between <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code><a href="#id185"><span class="problematic" id="id186">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+<p><a href="#id182"><span class="problematic" id="id183">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code> between <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code><a href="#id184"><span class="problematic" id="id185">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
 </section>
 <section id="proba-not-binding">
 <h3>proba_not_binding<a class="headerlink" href="#proba-not-binding" title="Permalink to this headline"></a></h3>
-<p><a href="#id187"><span class="problematic" id="id188">*</span></a><code class="docutils literal notranslate"><span class="pre">number</span></code>*</p>
+<p><a href="#id186"><span class="problematic" id="id187">*</span></a><code class="docutils literal notranslate"><span class="pre">number</span></code>*</p>
 </section>
 <section id="isattractor">
 <h3>isAttractor<a class="headerlink" href="#isattractor" title="Permalink to this headline"></a></h3>
-<p><a href="#id189"><span class="problematic" id="id190">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">boolean</span></code><a href="#id191"><span class="problematic" id="id192">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p><a href="#id188"><span class="problematic" id="id189">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">boolean</span></code><a href="#id190"><span class="problematic" id="id191">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
 </section>
 <section id="weight">
 <h3>weight<a class="headerlink" href="#weight" title="Permalink to this headline"></a></h3>
-<p><a href="#id193"><span class="problematic" id="id194">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id195"><span class="problematic" id="id196">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p>
+<p><a href="#id192"><span class="problematic" id="id193">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id194"><span class="problematic" id="id195">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p>
 </section>
 <section id="partners-name">
 <h3>partners_name<a class="headerlink" href="#partners-name" title="Permalink to this headline"></a></h3>
-<p><a href="#id197"><span class="problematic" id="id198">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string[]</span></code>*</p>
+<p><a href="#id196"><span class="problematic" id="id197">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string[]</span></code>*</p>
 </section>
 <section id="excluded-partners-name">
 <h3>excluded_partners_name<a class="headerlink" href="#excluded-partners-name" title="Permalink to this headline"></a></h3>
-<p><a href="#id199"><span class="problematic" id="id200">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string[]</span></code>*</p>
+<p><a href="#id198"><span class="problematic" id="id199">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string[]</span></code>*</p>
 </section>
 <section id="partners-position">
 <h3>partners_position<a class="headerlink" href="#partners-position" title="Permalink to this headline"></a></h3>
-<p><a href="#id201"><span class="problematic" id="id202">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number[][]</span></code>*</p>
+<p><a href="#id200"><span class="problematic" id="id201">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number[][]</span></code>*</p>
 </section>
 <section id="partners-weight">
 <h3>partners_weight<a class="headerlink" href="#partners-weight" title="Permalink to this headline"></a></h3>
-<p><a href="#id203"><span class="problematic" id="id204">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id205"><span class="problematic" id="id206">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+<p><a href="#id202"><span class="problematic" id="id203">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id204"><span class="problematic" id="id205">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
 </section>
 <section id="properties">
 <h3>properties<a class="headerlink" href="#properties" title="Permalink to this headline"></a></h3>
@@ -585,56 +583,56 @@ Gradient name to use if <code class="docutils literal notranslate"><span class="
 </section>
 <section id="score">
 <h3>score<a class="headerlink" href="#score" title="Permalink to this headline"></a></h3>
-<p><a href="#id207"><span class="problematic" id="id208">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string</span></code>*</p>
+<p><a href="#id206"><span class="problematic" id="id207">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string</span></code>*</p>
 </section>
 <section id="organism">
 <h3>organism<a class="headerlink" href="#organism" title="Permalink to this headline"></a></h3>
-<p><a href="#id209"><span class="problematic" id="id210">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string</span></code>*</p>
+<p><a href="#id208"><span class="problematic" id="id209">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string</span></code>*</p>
 </section>
 <section id="example-ingredient">
 <h3>example ingredient<a class="headerlink" href="#example-ingredient" title="Permalink to this headline"></a></h3>
-<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;Sphere_radius_100&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;overwrite_nbMol_value&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
-    <span class="nt">&quot;nbJitter&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
-    <span class="nt">&quot;molarity&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nt">&quot;partners_position&quot;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="nt">&quot;rotRange&quot;</span><span class="p">:</span> <span class="mf">6.2831</span><span class="p">,</span>
-    <span class="nt">&quot;color&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="mf">0.498</span><span class="p">,</span> <span class="mf">0.498</span><span class="p">,</span> <span class="mf">0.498</span> <span class="p">],</span>
-    <span class="nt">&quot;meshFile&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-    <span class="nt">&quot;sphereFile&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-    <span class="nt">&quot;weight&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
-    <span class="nt">&quot;orientBiasRotRangeMin&quot;</span><span class="p">:</span> <span class="mf">-3.1415927</span><span class="p">,</span>
-    <span class="nt">&quot;radii&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">100</span><span class="p">]],</span>
-    <span class="nt">&quot;cutoff_boundary&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nt">&quot;coordsystem&quot;</span><span class="p">:</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;jitterMax&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-    <span class="nt">&quot;perturbAxisAmplitude&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-    <span class="nt">&quot;encapsulatingRadius&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-    <span class="nt">&quot;positions2&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-    <span class="nt">&quot;useOrientBias&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nt">&quot;gradient&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;isAttractor&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nt">&quot;principalVector&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">],</span>
-    <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{},</span>
-    <span class="nt">&quot;partners_name&quot;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="nt">&quot;nbMol&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
-    <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Sphere_radius_100&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;orientBiasRotRangeMax&quot;</span><span class="p">:</span> <span class="mf">-3.1415927</span><span class="p">,</span>
-    <span class="nt">&quot;packingMode&quot;</span><span class="p">:</span> <span class="s2">&quot;random&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;Type&quot;</span><span class="p">:</span> <span class="s2">&quot;SingleSphere&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;excluded_partners_name&quot;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="nt">&quot;rejectionThreshold&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
-    <span class="nt">&quot;placeType&quot;</span><span class="p">:</span> <span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;cutoff_surface&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-    <span class="nt">&quot;packingPriority&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nt">&quot;proba_binding&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-    <span class="nt">&quot;rotAxis&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-    <span class="nt">&quot;positions&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="p">[</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="p">]</span> <span class="p">],</span>
-    <span class="nt">&quot;proba_not_binding&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-    <span class="nt">&quot;use_mesh_rb&quot;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nt">&quot;pdb&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-    <span class="nt">&quot;useRotAxis&quot;</span><span class="p">:</span> <span class="kc">false</span>
-<span class="p">},</span>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;Sphere_radius_100&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;overwrite_nbMol_value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;nbJitter&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;molarity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;partners_position&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;rotRange&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">6.2831</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="mf">0.498</span><span class="p">,</span><span class="w"> </span><span class="mf">0.498</span><span class="p">,</span><span class="w"> </span><span class="mf">0.498</span><span class="w"> </span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;meshFile&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;sphereFile&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;weight&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.2</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;orientBiasRotRangeMin&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-3.1415927</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;radii&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="mi">100</span><span class="p">]],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;cutoff_boundary&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;coordsystem&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;left&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;jitterMax&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;perturbAxisAmplitude&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;encapsulatingRadius&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;positions2&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;useOrientBias&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;gradient&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;isAttractor&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;principalVector&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;partners_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;nbMol&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sphere_radius_100&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;orientBiasRotRangeMax&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-3.1415927</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;packingMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;random&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;Type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SingleSphere&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;excluded_partners_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;rejectionThreshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;placeType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;cutoff_surface&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;packingPriority&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;proba_binding&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;rotAxis&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;positions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;proba_not_binding&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;use_mesh_rb&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;pdb&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;useRotAxis&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"></span>
+<span class="p">},</span><span class="w"></span>
 </pre></div>
 </div>
 </section>

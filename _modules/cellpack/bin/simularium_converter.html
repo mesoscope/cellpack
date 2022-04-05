@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cellpack.bin.simularium_converter &mdash; cellPack 0.2.1 documentation</title>
+  <title>cellpack.bin.simularium_converter &mdash; cellPack 0.2.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -27,7 +27,7 @@
             <a href="../../../index.html" class="icon icon-home"> cellPack
           </a>
               <div class="version">
-                0.2.1
+                0.2.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -181,14 +181,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for cellpack.bin.simularium_converter</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
-
-<span class="c1"># import cellpack.autopack.transformation as tr</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+
 <span class="kn">from</span> <span class="nn">scipy.spatial.transform</span> <span class="kn">import</span> <span class="n">Rotation</span> <span class="k">as</span> <span class="n">R</span>
 
 <span class="kn">from</span> <span class="nn">simulariumio</span> <span class="kn">import</span> <span class="p">(</span>
@@ -198,7 +198,11 @@
     <span class="n">UnitData</span><span class="p">,</span>
     <span class="n">MetaData</span><span class="p">,</span>
     <span class="n">CameraData</span><span class="p">,</span>
+    <span class="n">DisplayData</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">simulariumio.constants</span> <span class="kn">import</span> <span class="n">DISPLAY_TYPE</span>
+
+<span class="kn">from</span> <span class="nn">cellpack.autopack.iotools_simple</span> <span class="kn">import</span> <span class="n">RecipeLoader</span>
 
 <span class="c1">###############################################################################</span>
 
@@ -214,7 +218,8 @@
     <span class="n">DEFAULT_PACKING_RESULT</span> <span class="o">=</span> <span class="s2">&quot;/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/results_seed_0.json&quot;</span>
     <span class="n">DEFAULT_OUTPUT_DIRECTORY</span> <span class="o">=</span> <span class="s2">&quot;/Users/meganriel-mehan/Dropbox/cellPack/&quot;</span>
     <span class="n">DEFAULT_INPUT_RECIPE</span> <span class="o">=</span> <span class="s2">&quot;/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json&quot;</span>
-    <span class="c1"># @staticmethod</span>
+    <span class="n">DEFAULT_GEO_TYPE</span> <span class="o">=</span> <span class="s2">&quot;PDB&quot;</span>  <span class="c1"># Other options: SPHERE or PDB</span>
+    <span class="n">DEFAULT_SCALE_FACTOR</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">100.0</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total_steps</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="c1"># Arguments that could be passed in through the command line</span>
@@ -222,12 +227,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">packing_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_PACKING_RESULT</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_OUTPUT_DIRECTORY</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">recipe_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_SCALE_FACTOR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geo_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_GEO_TYPE</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__parse</span><span class="p">()</span>
         <span class="c1"># simularium parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">total_steps</span> <span class="o">=</span> <span class="n">total_steps</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">box_size</span> <span class="o">=</span> <span class="mi">1000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">box_size</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_agents</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_steps</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">points_per_fiber</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type_names</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_steps</span><span class="p">)]</span>
@@ -239,12 +246,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">radii</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_steps</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_subpoints</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_steps</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subpoints</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_steps</span><span class="p">)]</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_id_counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1"># stored data for processesing</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fiber_points</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_steps</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1"># defaults for missing data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">default_radius</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_radius</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="k">def</span> <span class="nf">__parse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
@@ -270,6 +277,15 @@
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Full path of the packing result file&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">p</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;-g&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;--geo-type&quot;</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
+            <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;geo_type&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">geo_type</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to use PDB ids or OBJs&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
             <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
             <span class="s2">&quot;--output&quot;</span><span class="p">,</span>
             <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store&quot;</span><span class="p">,</span>
@@ -293,62 +309,98 @@
         <span class="n">x_size</span> <span class="o">=</span> <span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">y_size</span> <span class="o">=</span> <span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">z_size</span> <span class="o">=</span> <span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">box_size</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_size</span><span class="p">,</span> <span class="n">y_size</span><span class="p">,</span> <span class="n">z_size</span><span class="p">]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">box_size</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">x_size</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">,</span>
+            <span class="n">y_size</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">,</span>
+            <span class="n">z_size</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">,</span>
+        <span class="p">]</span></div>
 
-<div class="viewcode-block" id="ConvertToSimularium.get_ingredient_display_data"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_ingredient_display_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_ingredient_display_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_container</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">ingredient_name</span> <span class="o">=</span> <span class="n">ingredient</span>
-            <span class="n">ingredients</span> <span class="o">=</span> <span class="n">main_container</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]</span>
+<div class="viewcode-block" id="ConvertToSimularium.get_mesh_data"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_mesh_data">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_mesh_data</span><span class="p">(</span><span class="n">ingredient_data</span><span class="p">):</span>
+        <span class="n">meshType</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;meshType&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;meshType&quot;</span> <span class="ow">in</span> <span class="n">ingredient_data</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;file&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">meshType</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;meshFile&quot;</span><span class="p">])</span>
+            <span class="n">file_name</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">meshType</span> <span class="o">==</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;display_type&quot;</span><span class="p">:</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">OBJ</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/geometries/</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.obj&quot;</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+<div class="viewcode-block" id="ConvertToSimularium.get_ingredient_display_data"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_ingredient_display_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_ingredient_display_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient_data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">geo_type</span> <span class="o">==</span> <span class="s2">&quot;OBJ&quot;</span> <span class="ow">and</span> <span class="s2">&quot;meshFile&quot;</span> <span class="ow">in</span> <span class="n">ingredient_data</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ConvertToSimularium</span><span class="o">.</span><span class="n">get_mesh_data</span><span class="p">(</span><span class="n">ingredient_data</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">geo_type</span> <span class="o">==</span> <span class="s2">&quot;PDB&quot;</span><span class="p">:</span>
+            <span class="n">pdb_file_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="s2">&quot;source&quot;</span> <span class="ow">in</span> <span class="n">ingredient_data</span><span class="p">:</span>
+                <span class="n">pdb_file_name</span> <span class="o">=</span> <span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">][</span><span class="s2">&quot;pdb&quot;</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="p">(</span>
+                <span class="s2">&quot;pdb&quot;</span> <span class="ow">in</span> <span class="n">ingredient_data</span>
+                <span class="ow">and</span> <span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;pdb&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="ow">and</span> <span class="s2">&quot;.map&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;pdb&quot;</span><span class="p">]</span>
+            <span class="p">):</span>
+                <span class="n">pdb_file_name</span> <span class="o">=</span> <span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;pdb&quot;</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="s2">&quot;meshFile&quot;</span> <span class="ow">in</span> <span class="n">ingredient_data</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ConvertToSimularium</span><span class="o">.</span><span class="n">get_mesh_data</span><span class="p">(</span><span class="n">ingredient_data</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NO PDB&quot;</span><span class="p">,</span> <span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;meshFile&quot;</span><span class="p">])</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;display_type&quot;</span><span class="p">:</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">SPHERE</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+            <span class="k">if</span> <span class="s2">&quot;.pdb&quot;</span> <span class="ow">in</span> <span class="n">pdb_file_name</span><span class="p">:</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0/other/</span><span class="si">{</span><span class="n">pdb_file_name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="n">pdb_file_name</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;display_type&quot;</span><span class="p">:</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">PDB</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">display_type</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">FIBER</span>
+                <span class="k">if</span> <span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span>
+                <span class="k">else</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">SPHERE</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;display_type&quot;</span><span class="p">:</span> <span class="n">display_type</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="ConvertToSimularium.get_ingredient_data"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_ingredient_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_ingredient_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cytoplasm</span><span class="p">,</span> <span class="n">main_container</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">):</span>
+        <span class="n">ingredient_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">cytoplasm_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">container_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">cytoplasm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ingredient_name</span> <span class="o">=</span> <span class="n">ingredient</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+            <span class="n">ingredients</span> <span class="o">=</span> <span class="n">cytoplasm</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">ingredients</span><span class="p">[</span><span class="n">ingredient</span><span class="p">]</span>
+                <span class="n">cytoplasm_data</span> <span class="o">=</span> <span class="n">ingredients</span><span class="p">[</span><span class="n">ingredient_name</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="k">pass</span>
-        <span class="k">elif</span> <span class="n">version</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">main_container</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">ingredient_name</span> <span class="o">=</span> <span class="n">ingredient</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
             <span class="n">compartment</span> <span class="o">=</span> <span class="n">main_container</span><span class="p">[</span><span class="n">ingredient</span><span class="p">[</span><span class="s2">&quot;compartment&quot;</span><span class="p">]]</span>
             <span class="n">position</span> <span class="o">=</span> <span class="n">ingredient</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">compartment</span><span class="p">[</span><span class="n">position</span><span class="p">]</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">compartment</span><span class="p">[</span><span class="n">ingredient</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span>
+                <span class="n">container_data</span> <span class="o">=</span> <span class="n">compartment</span><span class="p">[</span><span class="n">ingredient</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span>
                     <span class="n">ingredient_name</span>
                 <span class="p">]</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="c1"># Ingredient in recipe wasn&#39;t packed</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;include&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;include&quot;</span><span class="p">]:</span>
-            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;rep_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">data</span></div>
-
-<div class="viewcode-block" id="ConvertToSimularium.get_ingredient_data"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_ingredient_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_ingredient_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_container</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">ingredient_name</span> <span class="o">=</span> <span class="n">ingredient</span>
-            <span class="n">ingredients</span> <span class="o">=</span> <span class="n">main_container</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">ingredients</span><span class="p">[</span><span class="n">ingredient</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="k">pass</span>
-        <span class="k">elif</span> <span class="n">version</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">ingredient_name</span> <span class="o">=</span> <span class="n">ingredient</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-            <span class="n">compartment</span> <span class="o">=</span> <span class="n">main_container</span><span class="p">[</span><span class="n">ingredient</span><span class="p">[</span><span class="s2">&quot;compartment&quot;</span><span class="p">]]</span>
-            <span class="n">position</span> <span class="o">=</span> <span class="n">ingredient</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">compartment</span><span class="p">[</span><span class="n">position</span><span class="p">]</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">compartment</span><span class="p">[</span><span class="n">ingredient</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span>
-                    <span class="n">ingredient_name</span>
-                <span class="p">]</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="c1"># Ingredient in recipe wasn&#39;t packed</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">ingredient_name</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">ingredient_name</span><span class="p">,</span> <span class="n">cytoplasm_data</span><span class="p">,</span> <span class="n">container_data</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ConvertToSimularium.get_euler_from_matrix"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_euler_from_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">get_euler_from_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_in</span><span class="p">):</span>
         <span class="n">rotation_matrix</span> <span class="o">=</span> <span class="p">[</span><span class="n">data_in</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">data_in</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">data_in</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]]</span>
-        <span class="k">return</span> <span class="n">R</span><span class="o">.</span><span class="n">from_matrix</span><span class="p">(</span><span class="n">rotation_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="n">euler</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">from_matrix</span><span class="p">(</span><span class="n">rotation_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="s2">&quot;XYZ&quot;</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">euler</span></div>
 
 <div class="viewcode-block" id="ConvertToSimularium.get_euler_from_quat"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_euler_from_quat">[docs]</a>    <span class="k">def</span> <span class="nf">get_euler_from_quat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_in</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">R</span><span class="o">.</span><span class="n">from_quat</span><span class="p">(</span><span class="n">data_in</span><span class="p">)</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="n">euler</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">from_quat</span><span class="p">(</span><span class="n">data_in</span><span class="p">)</span><span class="o">.</span><span class="n">as_euler</span><span class="p">(</span><span class="s2">&quot;ZYX&quot;</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">euler</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">euler</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">euler</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span></div>
 
 <div class="viewcode-block" id="ConvertToSimularium.is_matrix"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.is_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">is_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_in</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_in</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
@@ -356,80 +408,122 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
+<div class="viewcode-block" id="ConvertToSimularium.unpack_curve"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.unpack_curve">[docs]</a>    <span class="k">def</span> <span class="nf">unpack_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">time_step_index</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">):</span>
+        <span class="n">curve</span> <span class="o">=</span> <span class="s2">&quot;curve&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotations</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viz_types</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1001</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_agents</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_agents</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_names</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingredient_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unique_ids</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;encapsulatingRadius&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;encapsulatingRadius&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_radius</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_subpoints</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">curve</span><span class="p">]))</span>
+        <span class="n">scaled_control_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">curve</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fiber_points</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scaled_control_points</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">curve</span><span class="p">])</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;found longer fiber, new max&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">curve</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">curve</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="ConvertToSimularium.unpack_positions"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.unpack_positions">[docs]</a>    <span class="k">def</span> <span class="nf">unpack_positions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">,</span>
+        <span class="n">time_step_index</span><span class="p">,</span>
+        <span class="n">ingredient_name</span><span class="p">,</span>
+        <span class="n">index</span><span class="p">,</span>
+        <span class="n">agent_id</span><span class="p">,</span>
+        <span class="n">comp_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">left_hand</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># TODO : deal with membrane ingredient transformation</span>
+        <span class="c1"># if &quot;source&quot; in data:</span>
+        <span class="c1">#     offset = np.array(data[&quot;source&quot;][&quot;transform&quot;][&quot;offset&quot;])</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     offset = np.array([0, 0, 0])</span>
+        <span class="k">if</span> <span class="n">comp_id</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">rotation_in</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">rotation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_euler</span><span class="p">(</span><span class="n">rotation_in</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotations</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viz_types</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_agents</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_agents</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_names</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingredient_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unique_ids</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;radii&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;radii&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;encapsulatingRadius&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;encapsulatingRadius&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_radius</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_subpoints</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="ConvertToSimularium.get_euler"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_euler">[docs]</a>    <span class="k">def</span> <span class="nf">get_euler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_in</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_matrix</span><span class="p">(</span><span class="n">data_in</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_euler_from_matrix</span><span class="p">(</span><span class="n">data_in</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_euler_from_quat</span><span class="p">(</span><span class="n">data_in</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ConvertToSimularium.loop_through_ingredients"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.loop_through_ingredients">[docs]</a>    <span class="k">def</span> <span class="nf">loop_through_ingredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results_data_in</span><span class="p">,</span> <span class="n">time_step_index</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s2">&quot;cytoplasme&quot;</span> <span class="ow">in</span> <span class="n">results_data_in</span><span class="p">:</span>
-            <span class="n">main_container</span> <span class="o">=</span> <span class="n">results_data_in</span><span class="p">[</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">]</span>
-            <span class="n">recipe_container</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">]</span>
-            <span class="n">version</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">elif</span> <span class="s2">&quot;compartments&quot;</span> <span class="ow">in</span> <span class="n">results_data_in</span><span class="p">:</span>
-            <span class="n">main_container</span> <span class="o">=</span> <span class="n">results_data_in</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">]</span>
-            <span class="n">recipe_container</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">]</span>
-            <span class="n">version</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="nb">id</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unique_ingredient_names</span><span class="p">)):</span>
-            <span class="n">ingredient</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">unique_ingredient_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="p">(</span><span class="n">ingredient_name</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ingredient_data</span><span class="p">(</span>
-                <span class="n">main_container</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">version</span>
-            <span class="p">)</span>
-            <span class="n">display_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ingredient_display_data</span><span class="p">(</span>
-                <span class="n">recipe_container</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">version</span>
-            <span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">display_data</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">display_data</span><span class="p">[</span><span class="n">ingredient_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;display_type&quot;</span><span class="p">:</span> <span class="s2">&quot;OBJ&quot;</span>
-                <span class="k">if</span> <span class="s2">&quot;rep_file&quot;</span> <span class="ow">in</span> <span class="n">display_data</span> <span class="ow">and</span> <span class="n">display_data</span><span class="p">[</span><span class="s2">&quot;rep_file&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                <span class="k">else</span> <span class="s2">&quot;SPHERE&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">display_data</span><span class="p">[</span><span class="s2">&quot;rep_file&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.obj&quot;</span>
-                <span class="k">if</span> <span class="s2">&quot;rep_file&quot;</span> <span class="ow">in</span> <span class="n">display_data</span> <span class="ow">and</span> <span class="n">display_data</span><span class="p">[</span><span class="s2">&quot;rep_file&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="p">}</span>
-            <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">])):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
-                    <span class="n">rotation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_euler</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">rotations</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">viz_types</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">n_agents</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_agents</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">type_names</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingredient_name</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">unique_ids</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="s2">&quot;radii&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;radii&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
-                    <span class="k">elif</span> <span class="s2">&quot;encapsulatingRadius&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;encapsulatingRadius&quot;</span><span class="p">])</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_radius</span><span class="p">)</span>
-
-                    <span class="bp">self</span><span class="o">.</span><span class="n">n_subpoints</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-                    <span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span> <span class="o">+</span> <span class="mi">1</span>
-
-            <span class="k">elif</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;nbCurve&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;nbCurve&quot;</span><span class="p">]):</span>
-                    <span class="n">curve</span> <span class="o">=</span> <span class="s2">&quot;curve&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">rotations</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">viz_types</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1001</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">n_agents</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_agents</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">type_names</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingredient_name</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">unique_ids</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;encapsulatingRadius&quot;</span><span class="p">])</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">n_subpoints</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">curve</span><span class="p">]))</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">fiber_points</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">curve</span><span class="p">])</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">curve</span><span class="p">])</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;found longer fiber, new max&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">curve</span><span class="p">]))</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">curve</span><span class="p">])</span>
-                    <span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span> <span class="o">+</span> <span class="mi">1</span></div>
+<div class="viewcode-block" id="ConvertToSimularium.process_one_ingredient"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.process_one_ingredient">[docs]</a>    <span class="k">def</span> <span class="nf">process_one_ingredient</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ingredient_data</span><span class="p">,</span>
+        <span class="n">time_step_index</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">recipe_data</span> <span class="o">=</span> <span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;recipe_data&quot;</span><span class="p">]</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span>
+        <span class="n">ingredient_key</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="n">display_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ingredient_display_data</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_data</span><span class="p">[</span><span class="n">ingredient_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">DisplayData</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">ingredient_key</span><span class="p">,</span>
+            <span class="n">display_type</span><span class="o">=</span><span class="n">display_data</span><span class="p">[</span><span class="s2">&quot;display_type&quot;</span><span class="p">],</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">display_data</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">left_hand</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="s2">&quot;coordsystem&quot;</span> <span class="ow">in</span> <span class="n">recipe_data</span> <span class="ow">and</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;coordsystem&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;left&quot;</span><span class="p">:</span>
+            <span class="n">left_hand</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">])):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">unpack_positions</span><span class="p">(</span>
+                    <span class="n">results</span><span class="p">,</span>
+                    <span class="n">time_step_index</span><span class="p">,</span>
+                    <span class="n">ingredient_key</span><span class="p">,</span>
+                    <span class="n">j</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">agent_id_counter</span><span class="p">,</span>
+                    <span class="n">left_hand</span><span class="o">=</span><span class="n">left_hand</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">agent_id_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_id_counter</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="s2">&quot;nbCurve&quot;</span> <span class="ow">in</span> <span class="n">results</span> <span class="ow">and</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;nbCurve&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;nbCurve&quot;</span><span class="p">]):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">unpack_curve</span><span class="p">(</span>
+                    <span class="n">results</span><span class="p">,</span>
+                    <span class="n">time_step_index</span><span class="p">,</span>
+                    <span class="n">ingredient_key</span><span class="p">,</span>
+                    <span class="n">i</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">agent_id_counter</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">agent_id_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_id_counter</span> <span class="o">+</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="ConvertToSimularium.get_positions_per_ingredient"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_positions_per_ingredient">[docs]</a>    <span class="k">def</span> <span class="nf">get_positions_per_ingredient</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">results_data_in</span><span class="p">,</span> <span class="n">time_step_index</span><span class="p">,</span> <span class="n">recipe_data</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">all_ingredients</span><span class="p">,</span> <span class="n">results_data_in</span><span class="p">,</span> <span class="n">time_step_index</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">results_data_in</span><span class="p">[</span><span class="s2">&quot;recipe&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe_name</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
@@ -439,12 +533,14 @@
                 <span class="s2">&quot;recipe&quot;</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">recipe_name</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">loop_through_ingredients</span><span class="p">(</span><span class="n">results_data_in</span><span class="p">,</span> <span class="n">time_step_index</span><span class="p">,</span> <span class="n">recipe_data</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_id_counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ingredient_data</span> <span class="ow">in</span> <span class="n">all_ingredients</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_one_ingredient</span><span class="p">(</span><span class="n">ingredient_data</span><span class="p">,</span> <span class="n">time_step_index</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ConvertToSimularium.fill_in_empty_fiber_data"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.fill_in_empty_fiber_data">[docs]</a>    <span class="k">def</span> <span class="nf">fill_in_empty_fiber_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step_index</span><span class="p">):</span>
-        <span class="n">blank_value</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span><span class="p">)]</span>
         <span class="k">for</span> <span class="n">viz_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">viz_types</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">viz_type</span> <span class="o">==</span> <span class="mi">1000</span><span class="p">:</span>
+                <span class="n">blank_value</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span><span class="p">)]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">subpoints</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">blank_value</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">viz_type</span> <span class="o">==</span> <span class="mi">1001</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
@@ -452,38 +548,7 @@
                 <span class="n">control_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fiber_points</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
                 <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">control_points</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span><span class="p">:</span>
                     <span class="n">control_points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">subpoints</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">control_points</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="ConvertToSimularium.get_all_ingredient_names"><a class="viewcode-back" href="../../../cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_all_ingredient_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_ingredient_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe_in</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">recipe_name</span> <span class="o">=</span> <span class="n">recipe_in</span><span class="p">[</span><span class="s2">&quot;recipe&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="s2">&quot;cytoplasme&quot;</span> <span class="ow">in</span> <span class="n">recipe_in</span><span class="p">:</span>
-            <span class="n">container</span> <span class="o">=</span> <span class="n">recipe_in</span><span class="p">[</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">]</span>
-            <span class="n">ingredients</span> <span class="o">=</span> <span class="n">container</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">unique_ingredient_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ingredients</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="s2">&quot;compartments&quot;</span> <span class="ow">in</span> <span class="n">recipe_in</span><span class="p">:</span>
-            <span class="n">ingredients</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="n">recipe_in</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">]:</span>
-                <span class="n">current_compartment</span> <span class="o">=</span> <span class="n">recipe_in</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="n">compartment</span><span class="p">]</span>
-                <span class="k">if</span> <span class="s2">&quot;surface&quot;</span> <span class="ow">in</span> <span class="n">current_compartment</span><span class="p">:</span>
-                    <span class="n">ingredients</span> <span class="o">=</span> <span class="n">ingredients</span> <span class="o">+</span> <span class="p">[</span>
-                        <span class="p">{</span>
-                            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">ingredient</span><span class="p">,</span>
-                            <span class="s2">&quot;compartment&quot;</span><span class="p">:</span> <span class="n">compartment</span><span class="p">,</span>
-                            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="s2">&quot;surface&quot;</span><span class="p">,</span>
-                        <span class="p">}</span>
-                        <span class="k">for</span> <span class="n">ingredient</span> <span class="ow">in</span> <span class="n">current_compartment</span><span class="p">[</span><span class="s2">&quot;surface&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]</span>
-                    <span class="p">]</span>
-                <span class="k">if</span> <span class="s2">&quot;interior&quot;</span> <span class="ow">in</span> <span class="n">current_compartment</span><span class="p">:</span>
-                    <span class="n">ingredients</span> <span class="o">=</span> <span class="n">ingredients</span> <span class="o">+</span> <span class="p">[</span>
-                        <span class="p">{</span>
-                            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">ingredient</span><span class="p">,</span>
-                            <span class="s2">&quot;compartment&quot;</span><span class="p">:</span> <span class="n">compartment</span><span class="p">,</span>
-                            <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="s2">&quot;interior&quot;</span><span class="p">,</span>
-                        <span class="p">}</span>
-                        <span class="k">for</span> <span class="n">ingredient</span> <span class="ow">in</span> <span class="n">current_compartment</span><span class="p">[</span><span class="s2">&quot;interior&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]</span>
-                    <span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">unique_ingredient_names</span> <span class="o">=</span> <span class="n">ingredients</span></div></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">subpoints</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">control_points</span><span class="p">)</span></div></div>
 
 
 <span class="c1">###############################################################################</span>
@@ -494,33 +559,33 @@
     <span class="n">dbg</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">debug</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">time_point_index</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="n">recipe_in</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">input_recipe</span>
         <span class="n">results_in</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">packing_result</span>
-        <span class="n">recipe_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">recipe_in</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span>
-        <span class="n">converter</span><span class="o">.</span><span class="n">get_all_ingredient_names</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">)</span>
-        <span class="n">converter</span><span class="o">.</span><span class="n">get_bounding_box</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">)</span>
-
+        <span class="n">recipe_loader</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">input_recipe</span><span class="p">)</span>
+        <span class="n">recipe_data</span> <span class="o">=</span> <span class="n">recipe_loader</span><span class="o">.</span><span class="n">recipe_data</span>
         <span class="n">packing_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">results_in</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span>
+        <span class="n">all_ingredients</span> <span class="o">=</span> <span class="n">recipe_loader</span><span class="o">.</span><span class="n">get_all_ingredients</span><span class="p">(</span><span class="n">packing_data</span><span class="p">)</span>
+
+        <span class="n">converter</span><span class="o">.</span><span class="n">recipe_name</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;recipe&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="n">converter</span><span class="o">.</span><span class="n">get_bounding_box</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">)</span>
         <span class="n">box_size</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">box_size</span>
         <span class="n">converter</span><span class="o">.</span><span class="n">get_positions_per_ingredient</span><span class="p">(</span>
-            <span class="n">packing_data</span><span class="p">,</span> <span class="n">time_point_index</span><span class="p">,</span> <span class="n">recipe_data</span>
+            <span class="n">all_ingredients</span><span class="p">,</span> <span class="n">packing_data</span><span class="p">,</span> <span class="n">time_point_index</span>
         <span class="p">)</span>
         <span class="n">converter</span><span class="o">.</span><span class="n">fill_in_empty_fiber_data</span><span class="p">(</span><span class="n">time_point_index</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">converter</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SUBPOINTS LENGTH&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">subpoints</span><span class="p">[</span><span class="n">time_point_index</span><span class="p">]))</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;N_SUBPOINTS LENGTH&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">n_subpoints</span><span class="p">[</span><span class="n">time_point_index</span><span class="p">]))</span>
-
+        <span class="n">camera_z_position</span> <span class="o">=</span> <span class="n">box_size</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="n">box_size</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="k">else</span> <span class="mf">100.0</span>
         <span class="n">converted_data</span> <span class="o">=</span> <span class="n">TrajectoryData</span><span class="p">(</span>
             <span class="n">meta_data</span><span class="o">=</span><span class="n">MetaData</span><span class="p">(</span>
                 <span class="n">box_size</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">box_size</span><span class="p">),</span>
                 <span class="n">camera_defaults</span><span class="o">=</span><span class="n">CameraData</span><span class="p">(</span>
-                    <span class="n">position</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">box_size</span><span class="p">[</span><span class="mi">2</span><span class="p">]]),</span>
+                    <span class="n">position</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">camera_z_position</span><span class="p">]),</span>
                     <span class="n">look_at_position</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]),</span>
                     <span class="n">fov_degrees</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span>
                 <span class="p">),</span>
             <span class="p">),</span>
             <span class="n">agent_data</span><span class="o">=</span><span class="n">AgentData</span><span class="p">(</span>
+                <span class="n">display_data</span><span class="o">=</span><span class="n">converter</span><span class="o">.</span><span class="n">display_data</span><span class="p">,</span>
                 <span class="n">times</span><span class="o">=</span><span class="n">converter</span><span class="o">.</span><span class="n">timestep</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">total_steps</span><span class="p">))),</span>
                 <span class="n">n_agents</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">n_agents</span><span class="p">),</span>
                 <span class="n">viz_types</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">viz_types</span><span class="p">),</span>
