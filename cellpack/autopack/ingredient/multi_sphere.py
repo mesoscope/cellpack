@@ -3,7 +3,6 @@ from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
 from math import pi
 
 from cellpack.autopack.ingredient.single_sphere import SingleSphereIngr
-from .Ingredient import Ingredient
 import cellpack.autopack as autopack
 
 helper = autopack.helper
