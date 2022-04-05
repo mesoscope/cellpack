@@ -112,7 +112,7 @@ class Agent:
             "triangletile",
         ]
         self.packingMode = packingMode
-        partners_weight = (0,)
+        partners_weight = 0
         self.partners_weight = partners_weight
         # assert placeType in ['jitter', 'spring','rigid-body']
         self.placeType = placeType
