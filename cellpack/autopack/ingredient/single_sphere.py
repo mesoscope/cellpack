@@ -22,7 +22,7 @@ class SingleSphereIngr(Ingredient):
         self,
         Type="SingleSphere",
         color=None,
-        coordsystem='right',
+        coordsystem="right",
         cutoff_boundary=None,
         cutoff_surface=None,
         distExpression=None,
@@ -63,7 +63,7 @@ class SingleSphereIngr(Ingredient):
         sphereFile=None,
         meshFile=None,
         meshObject=None,
-        rotAxis=[0.0,0.0,0.0],
+        rotAxis=[0.0, 0.0, 0.0],
         rotRange=0,
         source=None,
         use_mesh_rb=False,
@@ -72,8 +72,8 @@ class SingleSphereIngr(Ingredient):
         weight=0.2,  # use for affinity ie partner.weight
     ):
         # called through inheritance
-        radii = radii if Type=="MultiSphere" else [[radius]]
-        positions = positions if Type=="MultiSphere" else [[position]]
+        radii = radii if Type == "MultiSphere" else [[radius]]
+        positions = positions if Type == "MultiSphere" else [[position]]
         super().__init__(
             Type=Type,
             color=color,
@@ -118,7 +118,7 @@ class SingleSphereIngr(Ingredient):
         self.name = name
         self.singleSphere = True
         # min and max radius for a single sphere should be the same
-        self.encapsulatingRadius = encapsulatingRadius or radius 
+        self.encapsulatingRadius = encapsulatingRadius or radius
         # make a sphere ?->rapid ?
         if self.mesh is None and autopack.helper is not None:
             if not autopack.helper.nogui:

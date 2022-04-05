@@ -18,7 +18,7 @@ class MultiSphereIngr(SingleSphereIngr):
     def __init__(
         self,
         color=None,
-        coordsystem='right',
+        coordsystem="right",
         cutoff_boundary=None,
         cutoff_surface=None,
         encapsulatingRadius=0,
@@ -51,7 +51,7 @@ class MultiSphereIngr(SingleSphereIngr):
         properties=None,
         radii=None,
         rejectionThreshold=30,
-        rotAxis=[0.0,0.0,0.0],
+        rotAxis=[0.0, 0.0, 0.0],
         rotRange=0,
         sphereFile=None,
         Type="MultiSphere",
@@ -88,7 +88,7 @@ class MultiSphereIngr(SingleSphereIngr):
         for level in radii:
             if min(level) < min_radius:
                 min_radius = min(level)
-            
+
         self.minRadius = min_radius
         if name is None:
             name = "%s_%f" % (str(radii), molarity)
