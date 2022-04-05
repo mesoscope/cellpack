@@ -449,7 +449,6 @@ class Ingredient(Agent):
 
     """
 
-
     def __init__(
         self,
         Type="MultiSphere",

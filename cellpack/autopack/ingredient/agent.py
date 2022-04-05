@@ -1,7 +1,9 @@
 import numpy
 import math
 
+
 class Partner:
+
     def __init__(self, ingr, weight=0.0, properties=None):
         if type(ingr) is str:
             self.name = ingr
@@ -42,7 +44,6 @@ class Partner:
     def addProperties(self, name, value):
         self.properties[name] = value
 
-
     def getProperties(self, name):
         if name in self.properties:
             # if name == "pt1":
@@ -52,7 +53,6 @@ class Partner:
             return self.properties[name]
         else:
             return None
-
 
     def distanceFunction(self, d, expression=None, function=None):
         # default function that can be overwrite or

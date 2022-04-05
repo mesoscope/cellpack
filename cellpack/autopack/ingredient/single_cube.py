@@ -194,7 +194,7 @@ class SingleCubeIngr(Ingredient):
             ):
                 # update grid distances if no collision was detected
                 if grid_point_index in newDistPoints:
-                        newDistPoints[grid_point_index] = min(signed_distance_to_cube_surface, newDistPoints[grid_point_index])
+                    newDistPoints[grid_point_index] = min(signed_distance_to_cube_surface, newDistPoints[grid_point_index])
                 else:
                     newDistPoints[grid_point_index] = signed_distance_to_cube_surface
 
