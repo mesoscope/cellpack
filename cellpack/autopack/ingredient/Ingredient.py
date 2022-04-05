@@ -2639,6 +2639,10 @@ class Ingredient(Agent):
             else:
                 if histovol is not None:
                     jitter_rotation = histovol.randomRot.get()
+                    if self.rotRange:
+                        return jitter_rotation
+                    else:
+                        return rotation.copy()
                 else:
                     jitter_rotation = rotation.copy()
         return jitter_rotation

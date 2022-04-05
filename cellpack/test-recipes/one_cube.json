@@ -26,22 +26,20 @@
             ]
         ],
         "gradients": [],
-        "smallestProteinSize": 10,
         "computeGridParams": true,
         "freePtsUpdateThreshold": 0,
         "pickWeightedIngr": true,
         "_timer": false,
         "ingrLookForNeighbours": false,
         "pickRandPt": true,
-        "largestProteinSize": 100,
         "resultfile": "autoPACKserver/results/NM_Analysis_FigureB1.0.apr.json",
         "use_periodicity": true,
         "EnviroOnly": false
     },
     "cytoplasme": {
         "ingredients": {
-            "cube_radius_100": {
-                "overwrite_nbMol_value": 1,
+            "cube_radius_10": {
+                "overwrite_nbMol_value": 50,
                 "nbJitter": 20,
                 "molarity": 0,
                 "partners_position": [],
@@ -53,7 +51,7 @@
                 ],
                 "weight": 0.2,
                 "orientBiasRotRangeMin": 0,
-                "radii": [[100, 100, 100]],
+                "radii": [[10, 10, 10]],
                 "cutoff_boundary": 0,
                 "coordsystem": "left",
                 "jitterMax": [
@@ -62,7 +60,7 @@
                     0
                 ],
                 "perturbAxisAmplitude": 0.1,
-                "encapsulatingRadius": 100,
+                "encapsulatingRadius": 10,
                 "useOrientBias": false,
                 "gradient": "",
                 "isAttractor": false,
@@ -73,8 +71,8 @@
                 ],
                 "properties": {},
                 "partners_name": [],
-                "nbMol": 1,
-                "name": "cube_radius_100",
+                "nbMol": 50,
+                "name": "cube_radius_10",
                 "orientBiasRotRangeMax": 0,
                 "packingMode": "random",
                 "Type": "SingleCube",
@@ -84,12 +82,12 @@
                 "cutoff_surface": 0,
                 "packingPriority": 0,
                 "proba_binding": 0.5,
-                "rotAxis": null,
-                "positions": [[[0.0, 0.0, 0.0]]],
-                "positions2": [[[100.0, 100.0, 100.0]]],
+                "rotAxis": [0.0,0.0,1.0],
+                "positions": [[[-5.0, -5.0, -5.0]]],
+                "positions2": [[[5.0, 5.0, 5.0]]],
                 "proba_not_binding": 0.5,
                 "pdb": null,
-                "useRotAxis": false
+                "useRotAxis": true
             }
         }
     }

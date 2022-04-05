@@ -758,12 +758,12 @@ class BaseGrid:
         return ptIndices
 
     def test_points_in_bb(self, bb, pt):
-        # given a bounding box, does the point is contains in it
+        # given a bounding box bb, is point pt inside it
         origin = numpy.array(bb[0])
-        E = numpy.array(bb[1])
-        P = numpy.array(pt)  # *jitter
-        test1 = P < origin
-        test2 = P > E
+        corner = numpy.array(bb[1])
+        point_to_check = numpy.array(pt)  # *jitter
+        test1 = point_to_check < origin
+        test2 = point_to_check > corner
         inside = False
         if True in test1 or True in test2:
             # outside

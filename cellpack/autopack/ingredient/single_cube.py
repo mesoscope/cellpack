@@ -59,12 +59,12 @@ class SingleCubeIngr(Ingredient):
         radii=None,
         rejectionThreshold=30,
         resolution_dictionary=None,
-        rotAxis=None,
-        rotRange=6.2831,
+        rotAxis=[0.0,0.0,0.0],
+        rotRange=0,
         source=None,
         # sphereFile=None,
         useOrientBias=False,
-        useRotAxis=False,
+        useRotAxis=True,
         weight=0.2,  # use for affinity ie partner.weight
     ):
         super().__init__(
@@ -128,6 +128,8 @@ class SingleCubeIngr(Ingredient):
         self.center = positions_ar+(positions2_ar-positions_ar)/2 #location of center based on corner points
         
         self.radii = radii
+        self.useRotAxis = True
+        self.rotAxis = [0.0,0.0,0.0]
 
     def collision_jitter(
         self,
@@ -135,7 +137,7 @@ class SingleCubeIngr(Ingredient):
         rotMat,
         level,
         gridPointsCoords,
-        distance,
+        current_grid_distances,
         histoVol,
         dpad,
     ):
@@ -148,25 +150,23 @@ class SingleCubeIngr(Ingredient):
         centers2 = self.positions2[0]
         cent1T = self.transformPoints(jtrans, rotMat, centers1)[0]  # bb1
         cent2T = self.transformPoints(jtrans, rotMat, centers2)[0]  # bb2
-        center = self.transformPoints(
+        posc = self.transformPoints(
             jtrans,
             rotMat,
             [self.center],
         )[0]
-
         insidePoints = {}
         newDistPoints = {}
-
         x1, y1, z1 = cent1T #coordinates of 1st corner point in world space
         x2, y2, z2 = cent2T #coordinates of 2nd corner point in world space
         vx, vy, vz = (x2 - x1, y2 - y1, z2 - z1) #vector connecting corner points
         lengthsq = vx * vx + vy * vy + vz * vz #length^2 of diagonal
         length = sqrt(lengthsq) # length of diagonal
-        posc = center  # x1+vx*.5, y1+vy*.5, z1+vz*.5  # position of center in world space
+
         radt = length / 2.0 + self.encapsulatingRadius + dpad 
         x, y, z = posc
         bb = ([x - radt, y - radt, z - radt], [x + radt, y + radt, z + radt]) #recalculated bounding box in world space
-
+        bb_centered = ([-radt,-radt,-radt],[radt,radt,radt])
         if histoVol.runTimeDisplay:  # > 1:
             box = self.vi.getObject("collBox")
             if box is None:
@@ -177,58 +177,69 @@ class SingleCubeIngr(Ingredient):
                 self.vi.updateBox(box, cornerPoints=bb)
             self.vi.update()
 
-        pointsInCube = histoVol.grid.getPointsInCube(bb, posc, radt)
-        pd = numpy.take(gridPointsCoords, pointsInCube, 0) - center  # center them ?
-        delta = pd.copy()
+        # pointsInCube = histoVol.grid.getPointsInCube(bb, posc, radt)
+        points_to_check = histoVol.grid.getPointsInCubeFillBB(bb, posc, radt) #indices of points
+        grid_point_vectors = numpy.take(gridPointsCoords, points_to_check, 0) - posc  # center them ?
+        delta = grid_point_vectors.copy()
         delta *= delta
-        distA = numpy.sqrt(delta.sum(1))
+        grid_point_distances = numpy.sqrt(delta.sum(1))
 
         # m = numpy.matrix(numpy.array(rotMat).reshape(4, 4))  #
         # mat = m.I
         # need to apply inverse mat to pd
         # rpd = ApplyMatrix(pd, mat)
         # need to check if these point are inside the cube using the dimension of the cube
-        ptinside_mask = [histoVol.grid.test_points_in_bb(bb, gi) for gi in pd]
-        print(len(ptinside_mask))
-        ptinside = numpy.nonzero(ptinside_mask)[0]
-        # res = numpy.less_equal(numpy.fabs(rpd), numpy.array(radii[0]) / 2.)
-        # if len(res):
-        #     c = numpy.average(res, 1)  # .astype(int)
-        #     d = numpy.equal(c, 1.)
-        #     ptinside = numpy.nonzero(d)[0]
-        if not len(ptinside):
-            print("something is wrong no grid points inside cube", len(pointsInCube))
-            return True, insidePoints, newDistPoints
-        if self.compareCompartment:
-            ptinsideId = numpy.take(pointsInCube, ptinside, 0)
-            compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptinsideId, 0)
-            if self.compNum <= 0:
-                wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
-                if len(wrongPt):
-                    return True, insidePoints, newDistPoints
-        for pti in range(len(pointsInCube)):
+        # ptinside_mask = [histoVol.grid.test_points_in_bb(bb_centered, gi) for gi in grid_point_vectors]
+        # print(len(ptinside_mask))
+        # ptinside = numpy.nonzero(ptinside_mask)[0]
+        # # res = numpy.less_equal(numpy.fabs(rpd), numpy.array(radii[0]) / 2.)
+        # # if len(res):
+        # #     c = numpy.average(res, 1)  # .astype(int)
+        # #     d = numpy.equal(c, 1.)
+        # #     ptinside = numpy.nonzero(d)[0]
+        # if not len(ptinside):
+        #     print("something is wrong no grid points inside cube", len(pointsInCube))
+        #     return True, insidePoints, newDistPoints
+        # if self.compareCompartment:
+        #     ptinsideId = numpy.take(pointsInCube, ptinside, 0)
+        #     compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptinsideId, 0)
+        #     if self.compNum <= 0:
+        #         wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
+        #         if len(wrongPt):
+        #             return True, insidePoints, newDistPoints
+        # import ipdb; ipdb.set_trace()
+        for pti in range(len(points_to_check)):
             # ptinsideCube:#inside point but have been already computed during the check collision...?
-            pt = pointsInCube[pti]
-            if pti in ptinside:
-                if distance[pt] < -0.0001:  # or trigger : # pt is inside cylinder
-                    return True, insidePoints, newDistPoints
-            if pt in insidePoints:
+            grid_point_index = points_to_check[pti]
+            # if pti in ptinside:
+            #     if distance[pt] < -0.0001:  # or trigger : # pt is inside cylinder
+            #         return True, insidePoints, newDistPoints
+            if grid_point_index in insidePoints:
                 continue
-            dist = distA[pti]
-            d = dist - self.encapsulatingRadius
-            # should be distance to the cube, but will use approximation
-            if pti in ptinside:
-                if pt in insidePoints:
-                    if d < insidePoints[pt]:
-                        insidePoints[pt] = d
+          
+            collision = grid_point_distances[pti]+current_grid_distances[grid_point_index]<=self.encapsulatingRadius
+           
+            if collision:
+                self.log.info("grid point already occupied %f", grid_point_index)
+                return True, {}, {}
+                        
+            # currently calculates distance from surface of encapsulating sphere
+            # should be updated to distance from cube surface
+            signed_distance_to_cube_surface = grid_point_distances[pti]-self.encapsulatingRadius
+            if(
+                signed_distance_to_cube_surface<=0
+            ):
+                insidePoints[grid_point_index] = signed_distance_to_cube_surface
+            elif(
+                signed_distance_to_cube_surface<=current_grid_distances[grid_point_index]
+            ):
+                if grid_point_index in newDistPoints:
+                        newDistPoints[grid_point_index] = min(
+                            signed_distance_to_cube_surface, newDistPoints[grid_point_index]
+                        )
                 else:
-                    insidePoints[pt] = d
-            elif d < distance[pt]:  # point in region of influence
-                if pt in newDistPoints:
-                    if d < newDistPoints[pt]:
-                        newDistPoints[pt] = d
-                else:
-                    newDistPoints[pt] = d
+                    newDistPoints[grid_point_index] = signed_distance_to_cube_surface
+
         return False, insidePoints, newDistPoints
 
     def collides_with_compartment(
