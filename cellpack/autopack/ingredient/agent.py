@@ -2,7 +2,6 @@ import numpy
 import math
 
 
-
 class Partner:
     def __init__(self, ingr, weight=0.0, properties=None):
         if type(ingr) is str:
