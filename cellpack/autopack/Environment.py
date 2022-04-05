@@ -65,8 +65,6 @@ import panda3d
 from panda3d.core import Mat3, Mat4, Vec3, BitMask32, NodePath
 from panda3d.bullet import BulletRigidBodyNode
 
-from cellpack.mgl_tools.bhtree import bhtreelib
-
 import cellpack.autopack as autopack
 from .Compartment import CompartmentList
 from .Recipe import Recipe
@@ -420,7 +418,7 @@ class Environment(CompartmentList):
         self.freePtsUpdateThreshold = 0.0
         self.nb_ingredient = 0
         self.totalNbIngr = 0
-        self.treemode = "cKDTree"  # "bhtree"
+        self.treemode = "cKDTree"
         self.close_ingr_bhtree = (
             None  # RBHTree(a.tolist(),range(len(a)),10,10,10,10,10,9999)
         )
@@ -2669,10 +2667,6 @@ class Environment(CompartmentList):
                 ingredients[ingr.name][2].append(rot)
                 ingredients[ingr.name][3].append(numpy.array(mat))
         self.ingr_result = ingredients
-        if self.treemode == "bhtree":
-            bhtreelib.freeBHtree(self.close_ingr_bhtree)
-        #        bhtreelib.FreeRBHTree(self.close_ingr_bhtree)
-        #        del self.close_ingr_bhtree
 
     def displayCancelDialog(self):
         print(
@@ -2754,17 +2748,8 @@ class Environment(CompartmentList):
                 o.molecules = molecules
         # consider that one filling have occured
         if len(self.rTrans) and tree:
-            if self.treemode == "bhtree":  # "cKDTree"
-                if len(self.rTrans) >= 1:
-                    bhtreelib.freeBHtree(self.close_ingr_bhtree)
-                self.close_ingr_bhtree = bhtreelib.BHtree(self.rTrans, None, 10)
-            else:
-                self.close_ingr_bhtree = spatial.cKDTree(self.rTrans, leafsize=10)
+            self.close_ingr_bhtree = spatial.cKDTree(self.rTrans, leafsize=10)
         self.cFill = self.nFill
-        # if name == None :
-        #        name = "F"+str(self.nFill)
-        #        self.FillName.append(name)
-        #        self.nFill+=1
         self.ingr_result = ingredients
         if len(freePoint):
             self.restoreFreePoints(freePoint)

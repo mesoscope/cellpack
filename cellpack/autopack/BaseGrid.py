@@ -43,7 +43,6 @@ from math import ceil, floor
 from random import randrange
 import cellpack.autopack as autopack
 from cellpack.autopack.ldSequence import cHaltonSequence3
-from cellpack.mgl_tools.bhtree import bhtreelib
 
 
 # Kevin Grid point class
@@ -177,7 +176,7 @@ class BaseGrid:
         # this are specific for each compartment
         self.aInteriorGrids = []
         self.aSurfaceGrids = []
-        # bhtree
+        # Treee
         self.surfPtsBht = None
         self.ijkPtIndice = []
         self.filename = None  # used for storing before fill so no need rebuild
@@ -829,7 +828,7 @@ class BaseGrid:
     def set_surfPtsBht(self, verts):
         self.surfPtsBht = None
         if verts is not None and len(verts):
-            self.surfPtsBht = bhtreelib.BHtree(verts, None, 10)
+            self.surfPtsBht = spatial.cKDTree(verts, leafsize=10)
         self.nbSurfacePoints = len(verts)
 
     def set_surfPtscht(self, verts):
@@ -861,7 +860,7 @@ class BaseGrid:
             totalVolume = V * unitVol
         return totalVolume
 
-        # ==============================================================================
+    # ==============================================================================
 
     # TO DO File IO
     # ==============================================================================

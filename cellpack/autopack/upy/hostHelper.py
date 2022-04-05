@@ -2597,7 +2597,6 @@ class Helper:
         if transform:
             mat = self.getTransformation(object)
             vertices = self.ApplyMatrix(vertices, self.ToMat(mat))
-        # bhtree?
         mini = 9999.0
         miniv = vertices[0]
         for v in range(len(vertices)):

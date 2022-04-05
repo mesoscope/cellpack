@@ -68,7 +68,6 @@ from scipy import spatial
 from cellpack.autopack.upy.dejavuTk.dejavuHelper import dejavuHelper
 
 import cellpack.autopack as autopack
-from cellpack.mgl_tools.bhtree import bhtreelib
 from cellpack.autopack import transformation as tr, binvox_rw
 from cellpack.autopack.BaseGrid import gridPoint
 from .Recipe import Recipe
@@ -1235,7 +1234,7 @@ class Compartment(CompartmentList):
         normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
         vSurfaceArea = sum(areas)
 
-        # build a BHTree for the vertices
+        # build a search tree for the vertices
         if self.isBox:
             self.BuildGrid_box(env, vSurfaceArea)
             return self.insidePoints, self.surfacePoints
@@ -1252,13 +1251,8 @@ class Compartment(CompartmentList):
         self.log.info("distance %d", len(distances))
         t1 = time()
 
-        # build BHTree for off grid surface points
-        # or scipy ckdtree ?
-        #        from bhtree import bhtreelib
-        from scipy import spatial
-
+        # build search tree for off grid surface points
         srfPts = self.ogsurfacePoints
-        #        self.OGsrfPtsBht = bht =  bhtreelib.BHtree(tuple(srfPts), None, 10)
         self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)
         # res = numpy.zeros(len(srfPts),'f')
         # dist2 = numpy.zeros(len(srfPts),'f')
@@ -1426,7 +1420,6 @@ class Compartment(CompartmentList):
         normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
         vSurfaceArea = sum(areas)
 
-        # build a BHTree for the vertices
         if self.isBox:
             self.BuildGrid_box(env, vSurfaceArea)
             return self.insidePoints, self.surfacePoints
@@ -1443,13 +1436,8 @@ class Compartment(CompartmentList):
             print("distance ", len(distances), "idarray ", len(idarray))
         t1 = time()
 
-        # build BHTree for off grid surface points
-        # or scipy ckdtree ?
-        #        from bhtree import bhtreelib
-        from scipy import spatial
-
+        # build search tree for off grid surface points
         srfPts = self.ogsurfacePoints
-        #        self.OGsrfPtsBht = bht =  bhtreelib.BHtree(tuple(srfPts), None, 10)
         self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)
         # res = numpy.zeros(len(srfPts),'f')
         # dist2 = numpy.zeros(len(srfPts),'f')
@@ -1540,7 +1528,7 @@ class Compartment(CompartmentList):
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_trimesh(self, env):
-        """Build the compartment grid ie surface and inside point using bhtree"""
+        """Build the compartment grid ie surface and inside points"""
         # create surface points
         if self.ghost:
             return
@@ -1564,8 +1552,6 @@ class Compartment(CompartmentList):
         vSurfaceArea = sum(areas)
         # for gnum in range(len(normalList2)):
         #    vSurfaceArea = vSurfaceArea + areas[gnum]
-
-        # build a BHTree for the vertices
         if self.isBox:
             self.BuildGrid_box(env, vSurfaceArea)
             return self.insidePoints, self.surfacePoints
@@ -1583,12 +1569,7 @@ class Compartment(CompartmentList):
         t1 = time()
 
         # build BHTree for off grid surface points
-        # or scipy ckdtree ?
-        #        from bhtree import bhtreelib
-        from scipy import spatial
-
         srfPts = self.ogsurfacePoints
-        #        self.OGsrfPtsBht = bht =  bhtreelib.BHtree(tuple(srfPts), None, 10)
         self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)
         # res = numpy.zeros(len(srfPts),'f')
         # dist2 = numpy.zeros(len(srfPts),'f')
@@ -1731,8 +1712,6 @@ class Compartment(CompartmentList):
         vSurfaceArea = sum(areas)
         # for gnum in range(len(normalList2)):
         #    vSurfaceArea = vSurfaceArea + areas[gnum]
-
-        # build a BHTree for the vertices
         if self.isBox:
             self.BuildGrid_box(env, vSurfaceArea)
             return self.insidePoints, self.surfacePoints
@@ -1749,13 +1728,8 @@ class Compartment(CompartmentList):
             print("distance ", len(distances), "idarray ", len(idarray))
         t1 = time()
 
-        # build BHTree for off grid surface points
-        # or scipy ckdtree ?
-        #        from bhtree import bhtreelib
-        from scipy import spatial
-
+        # build search tree for off grid surface points
         srfPts = self.ogsurfacePoints
-        #        self.OGsrfPtsBht = bht =  bhtreelib.BHtree(tuple(srfPts), None, 10)
         self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)
         # res = numpy.zeros(len(srfPts),'f')
         # dist2 = numpy.zeros(len(srfPts),'f')
@@ -1915,8 +1889,6 @@ class Compartment(CompartmentList):
         vSurfaceArea = sum(areas)
         # for gnum in range(len(normalList2)):
         #    vSurfaceArea = vSurfaceArea + areas[gnum]
-
-        # build a BHTree for the vertices
         if self.isBox:
             nbGridPoints = len(env.grid.masterGridPositions)
             insidePoints = env.grid.getPointsInCube(self.bb, None, None, addSP=False)
@@ -1959,9 +1931,7 @@ class Compartment(CompartmentList):
         t1 = time()
 
         srfPts = self.ogsurfacePoints
-        # ??why the bhtree behave like this
-        self.OGsrfPtsBht = bht = bhtreelib.BHtree(tuple(srfPts), None, 10)
-        ctree = spatial.cKDTree(srfPts, leafsize=10)
+        self.OGsrfPtsBht = ctree = spatial.cKDTree(srfPts, leafsize=10)
         #        print "nspt",len(srfPts)
         #        print srfPts
         number = self.number
@@ -2085,11 +2055,10 @@ class Compartment(CompartmentList):
         self.computeVolumeAndSetNbMol(
             env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
-        bhtreelib.freeBHtree(bht)
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_bhtree(self, env):
-        """Build the compartment grid ie surface and inside point using bhtree"""
+        """Build the compartment grid ie surface and inside point"""
         # create surface points
         if self.ghost:
             return
@@ -2113,8 +2082,6 @@ class Compartment(CompartmentList):
         vSurfaceArea = sum(areas)
         # for gnum in range(len(normalList2)):
         #    vSurfaceArea = vSurfaceArea + areas[gnum]
-
-        # build a BHTree for the vertices
         if self.isBox:
             nbGridPoints = len(env.grid.masterGridPositions)
             insidePoints = env.grid.getPointsInCube(self.bb, None, None, addSP=False)
@@ -2157,8 +2124,7 @@ class Compartment(CompartmentList):
         t1 = time()
 
         srfPts = self.ogsurfacePoints
-        # ??why the bhtree behave like this
-        self.OGsrfPtsBht = bht = bhtreelib.BHtree(tuple(srfPts), None, 10)
+        self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)
         res = numpy.zeros(len(srfPts), "f")
         dist2 = numpy.zeros(len(srfPts), "f")
         # print "nspt",len(srfPts)
@@ -2289,7 +2255,6 @@ class Compartment(CompartmentList):
         self.computeVolumeAndSetNbMol(
             env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
-        #        bhtreelib.freeBHtree(bht)
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_kevin(self, env, superFine=False):
@@ -2316,7 +2281,6 @@ class Compartment(CompartmentList):
         normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
         vSurfaceArea = sum(areas)
 
-        # build a BHTree for the vertices
         if self.isBox:
             self.BuildGrid_box(env, vSurfaceArea)
             return self.insidePoints, self.surfacePoints
@@ -2334,13 +2298,9 @@ class Compartment(CompartmentList):
             print("distance ", len(distances), "idarray ", len(idarray))
         t1 = time()
 
-        # build BHTree for off grid surface points
-        # or scipy ckdtree ?
-        #        from bhtree import bhtreelib
-        from scipy import spatial
+        # build search tree for off grid surface points
 
         srfPts = self.ogsurfacePoints
-        #        self.OGsrfPtsBht = bht =  bhtreelib.BHtree(tuple(srfPts), None, 10)
         self.OGsrfPtsBht = spatial.cKDTree(tuple(srfPts), leafsize=10)
         # res = numpy.zeros(len(srfPts),'f')
         # dist2 = numpy.zeros(len(srfPts),'f')
@@ -2759,9 +2719,6 @@ class Compartment(CompartmentList):
         )  # Should be able to use self.ogsurfacePoints and collect faces too from above
         normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
         vSurfaceArea = sum(areas)
-
-        # build a BHTree for the vertices
-
         print("time to create surface points", time() - t1, len(self.ogsurfacePoints))
 
         distances = env.grid.distToClosestSurf
@@ -2769,12 +2726,7 @@ class Compartment(CompartmentList):
         #        diag = histoVol.grid.diag
 
         t1 = time()
-
-        # build BHTree for off grid surface points
-        #        from bhtree import bhtreelib
         srfPts = self.ogsurfacePoints
-        #        bht = self.OGsrfPtsBht = bhtreelib.BHtree( srfPts, None, 10)
-
         number = self.number
         ogNormals = self.ogsurfacePointsNormals
         insidePoints = []
@@ -3815,7 +3767,7 @@ class Compartment(CompartmentList):
         #        faces = self.faces[:]
         #        self.createSurfacePoints(maxl=grid.gridSpacing/2.0)
         surfacePoints = srfPts = self.ogsurfacePoints
-        self.OGsrfPtsBht = bht = bhtreelib.BHtree(tuple(srfPts), None, 10)
+        self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)
 
         res = numpy.zeros(len(srfPts), "f")
         dist2 = numpy.zeros(len(srfPts), "f")
@@ -4029,7 +3981,7 @@ class Compartment(CompartmentList):
         #        faces = self.faces[:]
         #        self.createSurfacePoints(maxl=grid.gridSpacing)
         surfacePoints = srfPts = self.ogsurfacePoints
-        self.OGsrfPtsBht = bht = bhtreelib.BHtree(tuple(srfPts), None, 10)
+        self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)
 
         res = numpy.zeros(len(srfPts), "f")
 

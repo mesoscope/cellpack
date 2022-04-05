@@ -40,7 +40,7 @@ Examples:
 
 ### Run conversion code 
 * To convert to simularium and view at https://staging.simularium.allencell.org/viewer
-convert -r [FULL_PATH_TO_INPUT_RECIPE_FILE] -p [FULL_PATH_TO_PACKING_RESULT] -o [OUTPUT_PATH]
+`convert -r [FULL_PATH_TO_INPUT_RECIPE_FILE] -p [FULL_PATH_TO_PACKING_RESULT] -o [OUTPUT_PATH]`
 ## Installation
 
 **Stable Release:** `pip install cellpack`<br>

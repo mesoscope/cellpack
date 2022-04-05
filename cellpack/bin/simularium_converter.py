@@ -36,7 +36,7 @@ class ConvertToSimularium(argparse.Namespace):
     DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
     DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
     DEFAULT_GEO_TYPE = "PDB"  # Other options: SPHERE or PDB
-    DEFAULT_SCALE_FACTOR = 1.0 / 10
+    DEFAULT_SCALE_FACTOR = 1.0 / 100.0
 
     def __init__(self, total_steps=1):
         # Arguments that could be passed in through the command line
