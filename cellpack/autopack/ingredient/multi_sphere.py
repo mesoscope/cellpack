@@ -87,7 +87,6 @@ class MultiSphereIngr(SingleSphereIngr):
         for level in radii:
             if min(level) < min_radius:
                 min_radius = min(level)
-
         self.minRadius = min_radius
         if name is None:
             name = "%s_%f" % (str(radii), molarity)
