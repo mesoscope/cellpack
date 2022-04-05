@@ -51,6 +51,7 @@ import logging
 import collada
 from scipy.spatial.transform import Rotation as R
 from math import sqrt, pi
+
 from cellpack.autopack.upy.simularium.simularium_helper import simulariumHelper
 from random import uniform, gauss, random
 from time import time
@@ -2185,6 +2186,7 @@ class Ingredient(Agent):
                     self, packing_location, rotation, self.positions[total_levels - 1]
                 )
                 distances, ingr_indexes = compartment.OGsrfPtsBht.query(pos_of_attempting_ingr)
+
                 radii = self.radii[total_levels - 1][ingr_indexes]
                 overlap_distance = distances - numpy.array(radii)
                 overlap_indexes = numpy.nonzero(overlap_distance < 0.0)[0]
