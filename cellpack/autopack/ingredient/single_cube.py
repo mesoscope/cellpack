@@ -99,7 +99,7 @@ class SingleCubeIngr(Ingredient):
             useRotAxis=useRotAxis,
             weight=weight,
         )
-
+        
         if name is None:
             name = "%5.2f_%f" % (radii[0][0], molarity)
         self.name = name
