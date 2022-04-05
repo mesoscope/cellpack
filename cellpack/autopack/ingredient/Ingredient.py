@@ -2778,7 +2778,7 @@ class Ingredient(Agent):
                 dpad,
                 env.afviewer,
             )
-        elif self.placeType == "spheresBHT":
+        elif self.placeType == "spheresSST":
             (
                 success,
                 jtrans,
