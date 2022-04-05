@@ -2669,6 +2669,16 @@ class Environment(CompartmentList):
         if self.runTimeDisplay and autopack.helper.host == "simularium":
             autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
 
+        if False:
+            ingr_to_move_name = next(iter(ingredients))
+            ingr_to_move = ingredients[ingr_to_move_name][0]
+            print(ingr_to_move)
+            (new_position, new_rotation) = ingr_to_move.get_new_location_and_rotation
+            
+            # position = ingr_to_move[1][0] 
+            # rotation = ingr_to_move[2][0]
+            ingr_to_move
+
         self.ingr_result = ingredients
 
     def displayCancelDialog(self):
