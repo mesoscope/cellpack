@@ -453,7 +453,7 @@ class Ingredient(Agent):
         self,
         Type="MultiSphere",
         color=None,
-        coordsystem='right',
+        coordsystem="right",
         cutoff_boundary=None,
         cutoff_surface=None,
         distExpression=None,
@@ -467,7 +467,7 @@ class Ingredient(Agent):
         meshFile=None,
         meshName=None,
         meshObject=None,
-        meshType='file',
+        meshType="file",
         molarity=0.0,
         name=None,
         nbJitter=5,
@@ -532,9 +532,7 @@ class Ingredient(Agent):
         )
         if name is None:
             name = "%f" % molarity
-        self.log.info(
-            "CREATE INGREDIENT %s %r", str(name), rejectionThreshold
-        )
+        self.log.info("CREATE INGREDIENT %s %r", str(name), rejectionThreshold)
         self.name = str(name)
         self.o_name = str(name)
         self.Type = Type
@@ -588,7 +586,7 @@ class Ingredient(Agent):
         self.vnormals = []
         # self._place = self.place
         children = []
-        self.sphereFile = None
+        self.sphereFile = sphereFile
         # level 0 should be encapsulated sphere ?
         if sphereFile is not None and str(sphereFile) != "None":
             sphereFileo = autopack.retrieveFile(sphereFile, cache="collisionTrees")
@@ -809,7 +807,6 @@ class Ingredient(Agent):
         # positions and radii are passed to the constructor
         # check the format old nested array, new array of dictionary
         nLOD = 0
-
         if positions is not None:
             nLOD = len(positions)
 
@@ -1746,7 +1743,8 @@ class Ingredient(Agent):
                 ]  # is that point's distance from the center of the sphere (packing location)
                 # distance is an array of distance of closest contact to anything currently in the grid
                 collision = (
-                    current_grid_distances[grid_point_index] + distance_to_packing_location
+                    current_grid_distances[grid_point_index]
+                    + distance_to_packing_location
                     <= radius_of_ing_being_packed
                 )
 
@@ -1773,7 +1771,10 @@ class Ingredient(Agent):
                             dpad,
                         )
                     else:
-                        self.log.info("grid point already occupied %f", current_grid_distances[grid_point_index])
+                        self.log.info(
+                            "grid point already occupied %f",
+                            current_grid_distances[grid_point_index],
+                        )
                         return True, {}, {}
                 if not at_max_level:
                     # we don't want to calculate new distances if we are not
@@ -1790,7 +1791,8 @@ class Ingredient(Agent):
                     signed_distance_to_sphere_surface <= 0
                 ):  # point is inside dropped sphere
                     if (
-                        histoVol.grid.gridPtId[grid_point_index] != self.compNum and self.compNum <= 0
+                        histoVol.grid.gridPtId[grid_point_index] != self.compNum
+                        and self.compNum <= 0
                     ):  # did this jitter outside of it's compartment
                         # in wrong compartment, reject this packing position
                         self.log.warning("checked pt that is not in container")
@@ -1799,19 +1801,27 @@ class Ingredient(Agent):
                         if abs(signed_distance_to_sphere_surface) < abs(
                             insidePoints[grid_point_index]
                         ):
-                            insidePoints[grid_point_index] = signed_distance_to_sphere_surface
+                            insidePoints[
+                                grid_point_index
+                            ] = signed_distance_to_sphere_surface
                     else:
-                        insidePoints[grid_point_index] = signed_distance_to_sphere_surface
+                        insidePoints[
+                            grid_point_index
+                        ] = signed_distance_to_sphere_surface
                 elif (
-                    signed_distance_to_sphere_surface < current_grid_distances[grid_point_index]
+                    signed_distance_to_sphere_surface
+                    < current_grid_distances[grid_point_index]
                 ):  # point in region of influence
                     # need to update the distances of the master grid with new smaller distance
                     if grid_point_index in newDistPoints:
                         newDistPoints[grid_point_index] = min(
-                            signed_distance_to_sphere_surface, newDistPoints[grid_point_index]
+                            signed_distance_to_sphere_surface,
+                            newDistPoints[grid_point_index],
                         )
                     else:
-                        newDistPoints[grid_point_index] = signed_distance_to_sphere_surface
+                        newDistPoints[
+                            grid_point_index
+                        ] = signed_distance_to_sphere_surface
             if not at_max_level:
                 # we didn't find any colisions with the this level, but we still want
                 # the inside points to be based on the most detailed geom
@@ -2184,7 +2194,9 @@ class Ingredient(Agent):
                 pos_of_attempting_ingr = self.get_new_pos(
                     self, packing_location, rotation, self.positions[total_levels - 1]
                 )
-                distances, ingr_indexes = compartment.OGsrfPtsBht.query(pos_of_attempting_ingr)
+                distances, ingr_indexes = compartment.OGsrfPtsBht.query(
+                    pos_of_attempting_ingr
+                )
 
                 radii = self.radii[total_levels - 1][ingr_indexes]
                 overlap_distance = distances - numpy.array(radii)
@@ -2639,7 +2651,7 @@ class Ingredient(Agent):
             else:
                 if histovol is not None:
                     jitter_rotation = histovol.randomRot.get()
-                    if self.rotRange:
+                    if self.rotRange != 0.0:
                         return jitter_rotation
                     else:
                         return rotation.copy()

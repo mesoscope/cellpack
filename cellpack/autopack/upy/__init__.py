@@ -12,6 +12,7 @@ def getHClass(host):
 
     if host == "simularium":
         from .simularium.simularium_helper import simulariumHelper as helper
+
         # from .dejavuTk.dejavuHelper import dejavuHelper as helper
     else:
         helper = None
