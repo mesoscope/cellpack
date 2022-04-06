@@ -2383,6 +2383,7 @@ class Ingredient(Agent):
         env.order[grid_point_index] = env.lastrank
         env.lastrank += 1
         env.nb_ingredient += 1
+        self.rotMat = dropped_rotation
 
         if self.packingMode[-4:] == "tile":
             nexthexa = self.tilling.dropTile(
