@@ -10,8 +10,10 @@ def getHClass(host):
     """
     # print globals()
 
-    if host == "dejavu":
-        from .dejavuTk.dejavuHelper import dejavuHelper as helper
+    if host == "simularium":
+        from .simularium.simularium_helper import simulariumHelper as helper
+
+        # from .dejavuTk.dejavuHelper import dejavuHelper as helper
     else:
         helper = None
     return helper
@@ -25,14 +27,7 @@ def retrieveHost():
     @return:  the name of the host, ie blender, maya or c4d
     """
     global host
-    host = ""
-
-    try:
-        import cellpack.mgl_tools.DejaVu  # noqa: F401
-
-        host = "dejavu"
-    except Exception as e:
-        print("host not supported", e)
+    host = "simularium"
     return host
 
 

@@ -41,7 +41,7 @@ class Args(argparse.Namespace):
         "jitter",
         "pandaBulletRelax",
         "pandaBullet",
-        "spheresBHT",
+        "spheresSST",
     ]
 
     def __init__(self):
@@ -59,7 +59,7 @@ class Args(argparse.Namespace):
 
     def __parse(self):
         p = argparse.ArgumentParser(
-            prog="run_exmaple",
+            prog="run_example",
             description="A simple example of a bin script",
         )
 
@@ -158,8 +158,7 @@ def main():
             args.grid_plot if args.grid_plot is not None else default_should_plot
         )
         output = args.output
-        if os.path.isdir(output) is False:
-            os.mkdir(output)
+        os.makedirs(output, exist_ok=True)
         log.info("Recipe : {}\n".format(args.recipe))
         helperClass = upy.getHelperClass()
         helper = helperClass(vi="nogui")
@@ -196,11 +195,8 @@ def main():
                 analyse.g.Resolution = 1.0
                 env.boundingBox = numpy.array(env.boundingBox)
                 output_folder = os.path.join(args.output, env.name)
-                if os.path.isdir(output_folder) is False:
-                    os.mkdir(output_folder)
                 output = os.path.join(output_folder, place_method)
-                if os.path.isdir(output) is False:
-                    os.mkdir(output)
+                os.makedirs(output, exist_ok=True)
                 log.info(f"saving to {output}")
                 analyse.doloop(
                     1,

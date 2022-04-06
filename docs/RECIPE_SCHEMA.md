@@ -94,13 +94,13 @@ Display packing in realtime (slow)
 
 ### placeMethod
 
-_Optional `enum`_. One of `"jitter"`, `"spheresBHT"`, `"pandaBullet"`.. Default: `"jitter"`.
+_Optional `enum`_. One of `"jitter"`, `"spheresSST"`, `"pandaBullet"`.. Default: `"jitter"`.
 
 Will be use if placeMethod isn't in an ingredient setup
 
 `"jitter"` uses a simple algorithm developed by GJ, M-A-A, MS, and LA to test if a single sphere, sphere-tree, or other primative (box and cylinder) are colliding with masked/unallowed points on the grid... I can't recall all of the allowed types, but check the input parameters that it accepts. I believe there is also an option to perform simple collisions directly between primatives, e.g. sphere-sphere, sphere-box, sphere-cylinder, cylinder-box, and spheretree-others
 
-`"spheresBHT"` gets the sphereTrees of the potential colliding neighbors, and does an efficient sphereTree-sphereTree collision detection of the sphereTree for the object being packed against the sphereTrees of each neighbor- returns false if a collision is detected
+`"spheresSST"` gets the sphereTrees of the potential colliding neighbors, and does an efficient sphereTree-sphereTree collision detection of the sphereTree for the object being packed against the sphereTrees of each neighbor- returns false if a collision is detected
 
 `"pandaBullet"`  Python wrapper for Bullet Physics Engine (popular in ~2010 and used by C4D, Maya, Blender, etc) that provides a variety of object-object collision detection, including collision min/max overlap distance, etc. Allows relaxation in its own loop, springs, rejection, meshes, primitives, etc.
 
@@ -333,12 +333,12 @@ The amount this ingredient can move in x, y and z. If z is set to 0, will be a 2
 _Optional `number`_. Default: `5.0`.
 
 ### placeType
-_Optional enum. One of `"jitter"`, `"spheresBHT"`, `"pandaBullet"`_. Default: `"jitter"`.
+_Optional enum. One of `"jitter"`, `"spheresSST"`, `"pandaBullet"`_. Default: `"jitter"`.
 
 
 `"jitter"` uses a simple algorithm developed by GJ, M-A-A, MS, and LA to test if a single sphere, sphere-tree, or other primative (box and cylinder) are colliding with masked/unallowed points on the grid... I can't recall all of the allowed types, but check the input parameters that it accepts. I believe there is also an option to perform simple collisions directly between primatives, e.g. sphere-sphere, sphere-box, sphere-cylinder, cylinder-box, and spheretree-others
 
-`"spheresBHT"` gets the sphereTrees of the potential colliding neighbors, and does an efficient sphereTree-sphereTree collision detection of the sphereTree for the object being packed against the sphereTrees of each neighbor- returns false if a collision is detected
+`"spheresSST"` gets the sphereTrees of the potential colliding neighbors, and does an efficient sphereTree-sphereTree collision detection of the sphereTree for the object being packed against the sphereTrees of each neighbor- returns false if a collision is detected
 
 `"pandaBullet"`  Python wrapper for Bullet Physics Engine (popular in ~2010 and used by C4D, Maya, Blender, etc) that provides a variety of object-object collision detection, including collision min/max overlap distance, etc. Allows relaxation in its own loop, springs, rejection, meshes, primitives, etc.
 
