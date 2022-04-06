@@ -377,11 +377,32 @@ class SingleCubeIngr(Ingredient):
         # the cube center is located at self.center
         # a rotation matrix rotmat is applied to the cube
 
+        cube_surface_distances = []
         rotMat_inv = numpy.linalg.inv(rotMat)
 
         transformed_points = self.transformPoints(-self.center,numpy.eye(4),points)  # translate points to cube center
         transformed_points = self.transformPoints([0., 0., 0.],rotMat_inv,transformed_points)  # rotate points to align with cube axis
 
-        # run checks on transformed points
-        # 
+        side_lengths = numpy.abs(self.radii[0])/2
+        side_x, side_y, side_z = side_lengths
+
+        # run distance checks on transformed points
+        for point in transformed_points:
+            
+            dist_x, dist_y, dist_z = numpy.abs(point)
+            
+            if dist_x <= side_x:
+                if dist_y <= side_y:
+                    if dist_z <= side_z:
+                        # point is inside the cube
+                        # need to write condition for this case
+                        continue
+                    else:
+                        # z plane is the closest
+                        current_distance = dist_z - side_z
+                        cube_surface_distances.append(current_distance)
+                else:
+                    if dist_z <= side_z:
+                        # y plane is the closest
+                        current_distance = dist_y - side_y
         return 0
