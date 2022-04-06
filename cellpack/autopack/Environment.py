@@ -2285,7 +2285,7 @@ class Environment(CompartmentList):
             if update_partner:
                 self.set_partners_ingredient(ingr)
         return totalNbIngr
-
+    
     def pack_grid(
         self,
         seedNum=14,
@@ -2669,15 +2669,13 @@ class Environment(CompartmentList):
         if self.runTimeDisplay and autopack.helper.host == "simularium":
             autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
 
-        if False:
-            ingr_to_move_name = next(iter(ingredients))
-            ingr_to_move = ingredients[ingr_to_move_name][0]
-            print(ingr_to_move)
-            (new_position, new_rotation) = ingr_to_move.get_new_location_and_rotation
-            
-            # position = ingr_to_move[1][0] 
-            # rotation = ingr_to_move[2][0]
-            ingr_to_move
+        if True:
+            for i in range(300):
+                index = int(random() * len(self.molecules))
+                ingr_to_move = self.rIngr[index]
+                done_num = 300
+                current_try = 0
+                ingr_to_move.update_after_move(self, index, done_num, current_try)
 
         self.ingr_result = ingredients
 

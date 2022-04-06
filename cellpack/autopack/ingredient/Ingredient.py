@@ -1594,6 +1594,45 @@ class Ingredient(Agent):
                 return geom
             return None
 
+    def move_one_jitter(self, env, index, new_position, new_rotation):
+        if index > len(env.molecules):
+            return False, []
+
+        pts_to_check = self.get_all_positions_to_check(new_position)
+        for pt in pts_to_check:
+            (collision, collision_indices) = self.np_check_collision(pt, new_rotation)
+            if collision:
+                return collision, collision_indices
+        return False, []
+
+    def update_after_move(self, env, index, done_num, current_update):
+        current_pos = env.rTrans[index]
+        current_rot = env.rRot[index]
+        (new_position, new_rotation) = self.get_new_jitter_location_and_rotation(env, current_pos, current_rot)
+        (collision, indices) = self.move_one_jitter(env, index, new_position, new_rotation)
+
+        if done_num == current_update:
+            print("GOT TO END")
+            return
+           
+        if not collision:
+            print("MOVED AND NO COLLISION")
+            env.rTrans[index] = new_position
+            env.rRot[index] = new_rotation
+            env.close_ingr_bhtree = spatial.cKDTree(env.rTrans, leafsize=10)
+            env.molecules[index][0] = new_position
+            env.molecules[index][1] = new_rotation
+            return
+        if len(indices) < 2:
+            env.rTrans[index] = new_position
+            env.rRot[index] = new_rotation
+            env.close_ingr_bhtree = spatial.cKDTree(env.rTrans, leafsize=10)
+            env.molecules[index][0] = new_position
+            env.molecules[index][1] = new_rotation
+            for i in indices:
+                current_update += 1
+                return self.update_after_move(env, i, done_num, current_update)
+ 
     def buildMesh(self, data, geomname):
         """
         Create a polygon mesh object from a dictionary verts,faces,normals
@@ -2398,9 +2437,10 @@ class Ingredient(Agent):
 
     def np_check_collision(self, packing_location, rotation):
         has_collision = False
+        collision_indexes = []
         # no ingredients packed yet
         if not len(self.env.rTrans):
-            return has_collision
+            return has_collision, collision_indexes
         else:
             if self.env.close_ingr_bhtree is None:
                 self.env.close_ingr_bhtree = spatial.cKDTree(
@@ -2427,6 +2467,7 @@ class Ingredient(Agent):
             # single sphere ingr will exit here.
             if level == total_levels:
                 has_collision = True
+                collision_indexes = [ingr_indexes[i] for i in overlap_indexes]
             # for each packed ingredient that had a collision, we want to check the more
             # detailed geometry, ie walk down the sphere tree file.
             while level < total_levels:
@@ -2444,12 +2485,13 @@ class Ingredient(Agent):
                         index, level, search_tree_for_new_ingr
                     )
                     if collision_at_this_level:
+                        collision_indexes = [index]
                         break
                 level += 1
                 if collision_at_this_level:
                     if level == total_levels:
                         # found collision at lowest level, break all the way out
-                        return True
+                        return True, collision_indexes
                 del search_tree_for_new_ingr
 
         # the compartment the ingr belongs to
@@ -2478,8 +2520,8 @@ class Ingredient(Agent):
                 overlap_distance = distances - numpy.array(radii)
                 overlap_indexes = numpy.nonzero(overlap_distance < 0.0)[0]
                 if len(overlap_indexes) != 0:
-                    return True
-        return has_collision
+                    return True, [ingr_indexes[i] for i in overlap_indexes]
+        return has_collision, collision_indexes
 
     def checkDistance(self, liste_nodes, point, cutoff):
         for node in liste_nodes:
@@ -3498,10 +3540,6 @@ class Ingredient(Agent):
                 self.env.moving = None
 
                 for pt in points_to_check:
-                    self.env.rTrans.append(pt)
-                    self.env.rRot.append(packing_rotation)
-                    self.env.rIngr.append(self)
-                    self.env.result.append([pt, packing_rotation, self, ptInd])
 
                     new_inside_pts, new_dist_points = self.get_new_distance_values(
                         pt,
@@ -3621,7 +3659,7 @@ class Ingredient(Agent):
             rbnode = self.get_rb_model()
             pts_to_check = self.get_all_positions_to_check(packing_location)
             for pt in pts_to_check:
-                collision = self.np_check_collision(pt, packing_rotation)
+                (collision, _) = self.np_check_collision(pt, packing_rotation)
                 collision_results.extend([collision])
                 if is_realtime:
                     self.update_display_rt(moving, packing_location, packing_rotation)
@@ -3648,12 +3686,8 @@ class Ingredient(Agent):
                 # self.update_data_tree(jtrans,rotMatj,ptInd=ptInd)?
                 self.env.static.append(rbnode)
                 self.env.moving = None
-
                 for pt in pts_to_check:
-                    self.env.rTrans.append(pt)
-                    self.env.rRot.append(packing_rotation)
-                    self.env.rIngr.append(self)
-                    self.env.result.append([pt, packing_rotation, self, ptInd])
+
                     new_inside_pts, new_dist_points = self.get_new_distance_values(
                         pt,
                         packing_rotation,
