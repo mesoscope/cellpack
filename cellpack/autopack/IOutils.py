@@ -916,18 +916,11 @@ def save_Mixed_asJson(
 
         if indent:
             json.dump(
-                env.jsondic,
-                fp,
-                indent=1,
-                separators=(",", ":"),
-                cls=NumpyArrayEncoder
+                env.jsondic, fp, indent=1, separators=(",", ":"), cls=NumpyArrayEncoder
             )  # ,indent=4, separators=(',', ': ')
         else:
             json.dump(
-                env.jsondic,
-                fp,
-                separators=(",", ":"),
-                cls=NumpyArrayEncoder
+                env.jsondic, fp, separators=(",", ":"), cls=NumpyArrayEncoder
             )  # ,indent=4, separators=(',', ': ')
     printoptions("Mixed recipe saved to ", setupfile)
 

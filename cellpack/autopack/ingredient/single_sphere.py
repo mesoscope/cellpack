@@ -1,10 +1,12 @@
 import numpy
+from math import pi
+from panda3d.bullet import BulletRigidBodyNode, BulletSphereShape
 from panda3d.core import Point3, TransformState, Vec3
-from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
 from panda3d.ode import OdeBody, OdeMass, OdeSphereGeom
 
-from .Ingredient import Ingredient
 import cellpack.autopack as autopack
+
+from .Ingredient import Ingredient
 
 helper = autopack.helper
 
@@ -18,58 +20,105 @@ class SingleSphereIngr(Ingredient):
 
     def __init__(
         self,
+        Type="SingleSphere",
+        color=None,
+        coordsystem="right",
+        cutoff_boundary=None,
+        cutoff_surface=None,
+        distExpression=None,
+        distFunction=None,
+        encapsulatingRadius=0,
+        excluded_partners_name=None,
+        force_random=False,  # avoid any binding
+        gradient="",
+        isAttractor=False,
+        jitterMax=(1, 1, 1),
         molarity=0.0,
+        name=None,
+        nbJitter=5,
+        nbMol=0,
+        offset=None,
+        orientBiasRotRangeMax=-pi,
+        orientBiasRotRangeMin=-pi,
+        overwrite_distFunc=True,  # overWrite
+        overwrite_nbMol_value=None,
+        packingMode="random",
+        packingPriority=0,
+        partners_name=None,
+        partners_position=None,
+        pdb=None,
+        perturbAxisAmplitude=0.1,
+        placeType="jitter",
+        positions=[[[0, 0, 0]]],
+        positions2=None,
+        principalVector=(1, 0, 0),
+        proba_binding=0.5,
+        proba_not_binding=0.5,  # chance to actually not bind
+        properties=None,
+        radii=None,
         radius=None,
+        rejectionThreshold=30,
+        resolution_dictionary=None,
         position=None,
         sphereFile=None,
-        packingPriority=0,
-        name=None,
-        pdb=None,
-        color=None,
-        nbJitter=5,
-        jitterMax=(1, 1, 1),
-        perturbAxisAmplitude=0.1,
-        principalVector=(1, 0, 0),
         meshFile=None,
-        packingMode="random",
-        placeType="jitter",
-        Type="SingleSphere",
         meshObject=None,
-        nbMol=0,
-        **kw
+        rotAxis=[0.0, 0.0, 0.0],
+        rotRange=0,
+        source=None,
+        use_mesh_rb=False,
+        useOrientBias=False,
+        useRotAxis=True,
+        weight=0.2,  # use for affinity ie partner.weight
     ):
-
-        Ingredient.__init__(
-            self,
-            molarity=molarity,
-            radii=[[radius]],
-            positions=[[position]],  # positions2=None,
-            sphereFile=sphereFile,
-            packingPriority=packingPriority,
-            name=name,
-            pdb=pdb,
-            color=color,
-            nbJitter=nbJitter,
-            jitterMax=jitterMax,
-            perturbAxisAmplitude=perturbAxisAmplitude,
-            principalVector=principalVector,
-            meshFile=meshFile,
-            packingMode=packingMode,
-            placeType=placeType,
-            meshObject=meshObject,
-            nbMol=nbMol,
+        # called through inheritance
+        radii = radii if Type == "MultiSphere" else [[radius]]
+        positions = positions if Type == "MultiSphere" else [[position]]
+        super().__init__(
             Type=Type,
-            **kw
+            color=color,
+            cutoff_boundary=cutoff_boundary,
+            cutoff_surface=cutoff_surface,
+            distExpression=distExpression,
+            distFunction=distFunction,
+            excluded_partners_name=excluded_partners_name,
+            force_random=force_random,
+            gradient=gradient,
+            isAttractor=isAttractor,
+            jitterMax=jitterMax,
+            molarity=molarity,
+            name=name,
+            nbJitter=nbJitter,
+            nbMol=nbMol,
+            overwrite_distFunc=overwrite_distFunc,
+            overwrite_nbMol_value=overwrite_nbMol_value,
+            packingMode=packingMode,
+            packingPriority=packingPriority,
+            partners_name=partners_name,
+            partners_position=partners_position,
+            pdb=pdb,
+            sphereFile=sphereFile,
+            perturbAxisAmplitude=perturbAxisAmplitude,
+            meshFile=meshFile,
+            placeType=placeType,
+            positions=positions,  # positions2=None,
+            principalVector=principalVector,
+            proba_binding=proba_binding,
+            proba_not_binding=proba_not_binding,
+            properties=properties,
+            radii=radii,
+            rotAxis=rotAxis,
+            rotRange=rotRange,
+            useRotAxis=useRotAxis,
+            weight=weight,
         )
         self.modelType = "Spheres"
-
         if name is None:
             name = "%5.2f_%f" % (radius, molarity)
         self.name = name
         self.singleSphere = True
         # min and max radius for a single sphere should be the same
-        self.minRadius = radius
-        self.encapsulatingRadius = radius
+        self.encapsulatingRadius = encapsulatingRadius or radius
         # make a sphere ?->rapid ?
         if self.mesh is None and autopack.helper is not None:
             if not autopack.helper.nogui:
