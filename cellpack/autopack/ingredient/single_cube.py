@@ -1,3 +1,4 @@
+from ctypes import c_ubyte
 from math import sqrt, pi
 import numpy
 from panda3d.core import Point3, TransformState, Vec3
@@ -122,8 +123,24 @@ class SingleCubeIngr(Ingredient):
         self.center = (
             positions_ar + (positions2_ar - positions_ar) / 2
         )  # location of center based on corner points
+        x0 = -radii[0]/2
+        y0 = -radii[0]/2
+        z0 = -radii[0]/2
+        x1 = radii[0]/2
+        y1 = radii[0]/2
+        z1 = radii[0]/2
 
         self.radii = radii
+        self.vertices = [
+            [x0,y0,z0],
+            [x1,y0,z0],
+            [x1,y1,z0],
+            [x0,y1,z0],
+            [x0,y1,z1],
+            [x1,y1,z1],
+            [x1,y0,z1],
+            [x0,y0,z1]
+        ]
 
     def collision_jitter(
         self,
@@ -172,13 +189,15 @@ class SingleCubeIngr(Ingredient):
             bb, center_trans, search_radius
         )  # indices of all grid points within padded distance from cube center
 
-        grid_point_vectors = (
-            numpy.take(gridPointsCoords, points_to_check, 0) - center_trans
+        grid_point_vectors = numpy.take(gridPointsCoords, points_to_check, 0)
+        centered_grid_point_vectors = (
+            grid_point_vectors - center_trans
         )  # vectors joining center of cube with grid points
         grid_point_distances = numpy.linalg.norm(
-            grid_point_vectors, axis=1
+            centered_grid_point_vectors, axis=1
         )  # distances of grid points from packing location
 
+        # grid_point_distances = cube_surface_distance(grid_point_vectors, rotMat)
         for pti in range(len(points_to_check)):
             # pti = point index
 
@@ -352,3 +371,17 @@ class SingleCubeIngr(Ingredient):
         )  # , pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
         #        spherenp.setPos(-2, 0, 4)
         return inodenp
+
+    def cube_surface_distance(self, points, rotMat):
+        # returns the distance to points in 'points' from the nearest cube surface
+        # the cube center is located at self.center
+        # a rotation matrix rotmat is applied to the cube
+
+        rotMat_inv = numpy.linalg.inv(rotMat)
+
+        transformed_points = self.transformPoints(-self.center,numpy.eye(4),points)  # translate points to cube center
+        transformed_points = self.transformPoints([0., 0., 0.],rotMat_inv,transformed_points)  # rotate points to align with cube axis
+
+        # run checks on transformed points
+        # 
+        return 0
