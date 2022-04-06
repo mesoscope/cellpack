@@ -200,8 +200,6 @@ class SingleCubeIngr(Ingredient):
             grid_point_index = points_to_check[pti]
             signed_distance_to_cube_surface = grid_point_distances[pti]
 
-            # if grid_point_index in insidePoints:
-            #     continue
 
             collision = (
                 signed_distance_to_cube_surface + current_grid_distances[grid_point_index]
@@ -215,7 +213,17 @@ class SingleCubeIngr(Ingredient):
             
             if signed_distance_to_cube_surface <= 0:
                 # check if grid point lies inside the cube
-                insidePoints[grid_point_index] = signed_distance_to_cube_surface
+                if grid_point_index in insidePoints:
+                    if abs(signed_distance_to_cube_surface) < abs(
+                        insidePoints[grid_point_index]
+                    ):
+                        insidePoints[
+                            grid_point_index
+                        ] = signed_distance_to_cube_surface
+                else:
+                    insidePoints[
+                        grid_point_index
+                    ] = signed_distance_to_cube_surface
             elif (
                 signed_distance_to_cube_surface
                 <= current_grid_distances[grid_point_index]

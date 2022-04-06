@@ -58,7 +58,7 @@
                     0
                 ],
                 "molarity": 0,
-                "name": "cube_side_50",
+                "name": "cuboid_25_100_50",
                 "nbJitter": 20,
                 "nbMol": 50,
                 "orientBiasRotRangeMax": 0,
@@ -74,33 +74,33 @@
                 "positions": [
                     [
                         [
-                            -25,
-                            -25,
-                            -25
+                            -12.5,
+                            -50.0,
+                            -25.0
                         ]
                     ]
                 ],
                 "positions2": [
                     [
                         [
-                            25,
-                            25,
-                            25
+                            12.5,
+                            50.0,
+                            25.0
                         ]
                     ]
                 ],
                 "principalVector": [
+                    1,
                     0,
-                    0,
-                    1
+                    0
                 ],
                 "proba_binding": 0.5,
                 "proba_not_binding": 0.5,
                 "properties": {},
                 "radii": [
                     [
-                        50,
-                        50,
+                        25,
+                        100,
                         50
                     ]
                 ],
