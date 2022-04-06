@@ -39,7 +39,7 @@ class PlotlyAnalysis:
         y0 = - radius[0][1] / 2.0
         x1 = radius[0][0] / 2.0
         y1 = radius[0][1] / 2.0
-
+        # corner points of the cube top surface
         point_array = [
                         [x0,y0],
                         [x1,y0],
@@ -47,8 +47,14 @@ class PlotlyAnalysis:
                         [x0,y1]
                     ]
         rotated_pts = self.transformPoints2D(pos,rotMat,point_array)
-        path_str = "M {0[0][0]} {0[0][1]} L {0[1][0]} {0[1][1]} L {0[2][0]} {0[2][1]} L {0[3][0]} {0[3][1]} Z".format(rotated_pts)
-        # import ipdb; ipdb.set_trace();
+        path_str = ""
+        for index, point_to_print in enumerate(rotated_pts):
+            if(index == 0):
+                path_str += "M {0[0]} {0[1]} ".format(point_to_print)
+            else:
+                path_str += "L {0[0]} {0[1]} ".format(point_to_print)
+        path_str += "Z"
+
         self.plot.add_shape(
             type="path",
             path=path_str,
@@ -74,7 +80,7 @@ class PlotlyAnalysis:
                 if ingr.modelType == "Spheres":
                     self.add_circle(ingr.encapsulatingRadius, pos, ingr.color)
                 elif ingr.modelType == "Cube":
-                    self.add_square(ingr.radii, pos, ingr.rotMat, ingr.color)
+                    self.add_square(ingr.radii, pos, rot, ingr.color)
 
     def make_grid_heatmap(self, env):
         ids = []
