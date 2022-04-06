@@ -26,7 +26,7 @@ import PIL as Image
 from pymunk.util import is_clockwise, calc_area
 
 
-from cellpack.mgl_tools.upy import colors
+from cellpack.autopack.upy import colors
 
 if sys.version_info >= (3, 0, 0):
     unicode = str

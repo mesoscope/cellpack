@@ -50,7 +50,7 @@ import numpy
 from random import random
 import bisect
 from math import exp, cos, pow as mathPow
-from cellpack.mgl_tools.upy.hostHelper import vdistance
+from cellpack.autopack.upy.hostHelper import vdistance
 from cellpack.autopack.transformation import angle_between_vectors
 
 
