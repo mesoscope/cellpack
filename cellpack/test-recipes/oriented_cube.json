@@ -90,9 +90,9 @@
                     ]
                 ],
                 "principalVector": [
-                    1,
                     0,
-                    0
+                    0,
+                    1
                 ],
                 "proba_binding": 0.5,
                 "proba_not_binding": 0.5,
@@ -110,9 +110,9 @@
                     0,
                     1
                 ],
-                "rotRange": 6.2831,
+                "rotRange": 0,
                 "useOrientBias": false,
-                "useRotAxis": false,
+                "useRotAxis": true,
                 "weight": 0.2
             }
         }

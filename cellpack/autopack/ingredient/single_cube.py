@@ -190,18 +190,18 @@ class SingleCubeIngr(Ingredient):
         )  # indices of all grid points within padded distance from cube center
 
         grid_point_vectors = numpy.take(gridPointsCoords, points_to_check, 0)
-        
+
         # signed distances of grid points from the cube surface
-        grid_point_distances = self.cube_surface_distance(grid_point_vectors, rotMat) 
-        
+        grid_point_distances = self.cube_surface_distance(grid_point_vectors, rotMat, center_trans) 
+
         for pti in range(len(points_to_check)):
             # pti = point index
 
             grid_point_index = points_to_check[pti]
             signed_distance_to_cube_surface = grid_point_distances[pti]
 
-            if grid_point_index in insidePoints:
-                continue
+            # if grid_point_index in insidePoints:
+            #     continue
 
             collision = (
                 signed_distance_to_cube_surface + current_grid_distances[grid_point_index]
@@ -365,7 +365,7 @@ class SingleCubeIngr(Ingredient):
         #        spherenp.setPos(-2, 0, 4)
         return inodenp
 
-    def cube_surface_distance(self, points, rotMat):
+    def cube_surface_distance(self, points, rotMat, center_pos):
         # returns the distance to points in 'points' from the nearest cube surface
         # the cube center is located at self.center
         # a rotation matrix rotmat is applied to the cube
@@ -373,7 +373,7 @@ class SingleCubeIngr(Ingredient):
         cube_surface_distances = []
         rotMat_inv = numpy.linalg.inv(rotMat)
 
-        transformed_points = points - self.center  # translate points to cube center
+        transformed_points = points - center_pos  # translate points to cube center
         transformed_points = self.transformPoints([0., 0., 0.],rotMat_inv,transformed_points)  # rotate points to align with cube axis
 
         side_lengths = numpy.abs(self.radii[0])/2
@@ -381,13 +381,15 @@ class SingleCubeIngr(Ingredient):
         # run distance checks on transformed points
         for point in transformed_points:
             
-            dist_x, dist_y, dist_z = numpy.abs(point - side_lengths)
+            dist_x, dist_y, dist_z = numpy.abs(point) - side_lengths
             
             if dist_x <= 0:
                 if dist_y <= 0:
                     if dist_z <= 0:
                         # point is inside the cube
-                        current_distance = -numpy.min([dist_x, dist_y, dist_z])
+                        current_distance = -numpy.min(
+                                                numpy.abs([dist_x, dist_y, dist_z])
+                                                )
                     else:
                         # z plane is the closest
                         current_distance = dist_z
