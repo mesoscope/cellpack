@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   cellpack.mgl_tools.DejaVu
    cellpack.mgl_tools.Support
    cellpack.mgl_tools.geomutils
    cellpack.mgl_tools.mglutil

@@ -194,8 +194,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># print globals()</span>
 
-    <span class="k">if</span> <span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;dejavu&quot;</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">.dejavuTk.dejavuHelper</span> <span class="kn">import</span> <span class="n">dejavuHelper</span> <span class="k">as</span> <span class="n">helper</span>
+    <span class="k">if</span> <span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;simularium&quot;</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">.simularium.simularium_helper</span> <span class="kn">import</span> <span class="n">simulariumHelper</span> <span class="k">as</span> <span class="n">helper</span>
+
+        <span class="c1"># from .dejavuTk.dejavuHelper import dejavuHelper as helper</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">helper</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">helper</span></div>
@@ -209,14 +211,7 @@
 <span class="sd">    @return:  the name of the host, ie blender, maya or c4d</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">host</span>
-    <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">cellpack.mgl_tools.DejaVu</span>  <span class="c1"># noqa: F401</span>
-
-        <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;dejavu&quot;</span>
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;host not supported&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;simularium&quot;</span>
     <span class="k">return</span> <span class="n">host</span></div>
 
 

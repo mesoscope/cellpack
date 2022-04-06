@@ -7,7 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   cellpack.autopack.upy.dejavuTk
+   cellpack.autopack.upy.simularium
 
 Submodules
 ----------
