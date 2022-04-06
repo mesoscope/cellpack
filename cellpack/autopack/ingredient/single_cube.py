@@ -190,36 +190,29 @@ class SingleCubeIngr(Ingredient):
         )  # indices of all grid points within padded distance from cube center
 
         grid_point_vectors = numpy.take(gridPointsCoords, points_to_check, 0)
-        centered_grid_point_vectors = (
-            grid_point_vectors - center_trans
-        )  # vectors joining center of cube with grid points
-        grid_point_distances = numpy.linalg.norm(
-            centered_grid_point_vectors, axis=1
-        )  # distances of grid points from packing location
-
-        # grid_point_distances = cube_surface_distance(grid_point_vectors, rotMat)
+        
+        # signed distances of grid points from the cube surface
+        grid_point_distances = self.cube_surface_distance(grid_point_vectors, rotMat) 
+        
         for pti in range(len(points_to_check)):
             # pti = point index
 
             grid_point_index = points_to_check[pti]
+            signed_distance_to_cube_surface = grid_point_distances[pti]
 
             if grid_point_index in insidePoints:
                 continue
 
             collision = (
-                grid_point_distances[pti] + current_grid_distances[grid_point_index]
-                <= self.encapsulatingRadius
+                signed_distance_to_cube_surface + current_grid_distances[grid_point_index]
+                <= 0
             )
 
             if collision:
                 self.log.info("grid point already occupied %f", grid_point_index)
                 return True, {}, {}
-
-            # currently calculates distance from surface of encapsulating sphere
-            # should be updated to distance from cube surface
-            signed_distance_to_cube_surface = (
-                grid_point_distances[pti] - self.encapsulatingRadius
-            )
+            
+            
             if signed_distance_to_cube_surface <= 0:
                 # check if grid point lies inside the cube
                 insidePoints[grid_point_index] = signed_distance_to_cube_surface
@@ -306,7 +299,7 @@ class SingleCubeIngr(Ingredient):
         vx, vy, vz = (x2 - x1, y2 - y1, z2 - z1)
         lengthsq = vx * vx + vy * vy + vz * vz
         length = sqrt(lengthsq)
-        cx, cy, cz = posc = center  # x1+vx*.5, y1+vy*.5, z1+vz*.5
+        posc = center  # x1+vx*.5, y1+vy*.5, z1+vz*.5
         radt = length / 2.0 + self.encapsulatingRadius
 
         bb = [cent2T, cent1T]  # self.correctBB(p1,p2,radc)
@@ -380,29 +373,47 @@ class SingleCubeIngr(Ingredient):
         cube_surface_distances = []
         rotMat_inv = numpy.linalg.inv(rotMat)
 
-        transformed_points = self.transformPoints(-self.center,numpy.eye(4),points)  # translate points to cube center
+        transformed_points = points - self.center  # translate points to cube center
         transformed_points = self.transformPoints([0., 0., 0.],rotMat_inv,transformed_points)  # rotate points to align with cube axis
 
         side_lengths = numpy.abs(self.radii[0])/2
-        side_x, side_y, side_z = side_lengths
 
         # run distance checks on transformed points
         for point in transformed_points:
             
-            dist_x, dist_y, dist_z = numpy.abs(point)
+            dist_x, dist_y, dist_z = numpy.abs(point - side_lengths)
             
-            if dist_x <= side_x:
-                if dist_y <= side_y:
-                    if dist_z <= side_z:
+            if dist_x <= 0:
+                if dist_y <= 0:
+                    if dist_z <= 0:
                         # point is inside the cube
-                        # need to write condition for this case
-                        continue
+                        current_distance = -numpy.min([dist_x, dist_y, dist_z])
                     else:
                         # z plane is the closest
-                        current_distance = dist_z - side_z
-                        cube_surface_distances.append(current_distance)
+                        current_distance = dist_z
                 else:
-                    if dist_z <= side_z:
+                    if dist_z <= 0:
                         # y plane is the closest
-                        current_distance = dist_y - side_y
-        return 0
+                        current_distance = dist_y
+                    else:
+                        # yz edge is the closest
+                        current_distance = numpy.sqrt(dist_y**2 + dist_z**2)
+            else:
+                if dist_y <= 0:
+                    if dist_z <= 0:
+                        # x plane is closest
+                        current_distance = dist_x
+                    else:
+                        # xz edge is the closest
+                        current_distance = numpy.sqrt(dist_x**2 + dist_z**2)
+                else:
+                    if dist_z <= 0:
+                        # xy edge is the closest
+                        current_distance = numpy.sqrt(dist_x**2 + dist_y**2)
+                    else:
+                        # vertex is the closest
+                        current_distance = numpy.sqrt(dist_x**2 + dist_y**2 + dist_z**2)
+
+            cube_surface_distances.append(current_distance)
+
+        return cube_surface_distances
