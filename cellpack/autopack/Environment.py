@@ -2669,13 +2669,20 @@ class Environment(CompartmentList):
         if self.runTimeDisplay and autopack.helper.host == "simularium":
             autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
 
-        if True:
+        animate = True  # TODO: make this an input param
+        if animate:
+
+            autopack.helper.init_scene_with_objects(self.molecules)
+            
             for i in range(300):
-                index = int(random() * len(self.molecules))
-                ingr_to_move = self.rIngr[index]
-                done_num = 300
-                current_try = 0
-                ingr_to_move.update_after_move(self, index, done_num, current_try)
+                for index in range(len(self.molecules)):
+                    ingr_to_move = self.rIngr[index]
+                    done_num = 5
+                    current_try = 0
+                    ingr_to_move.move_one_jitter(self, index, done_num, current_try)
+                autopack.helper.update()
+                autopack.helper.update_instance_positions_and_rotations(self.molecules)
+            autopack.helper.writeToFile(None, "./jitter", self.boundingBox)
 
         self.ingr_result = ingredients
 

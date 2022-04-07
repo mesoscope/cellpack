@@ -1594,7 +1594,7 @@ class Ingredient(Agent):
                 return geom
             return None
 
-    def move_one_jitter(self, env, index, new_position, new_rotation):
+    def check_collisions(self, env, index, new_position, new_rotation):
         if index > len(env.molecules):
             return False, []
 
@@ -1605,25 +1605,28 @@ class Ingredient(Agent):
                 return collision, collision_indices
         return False, []
 
-    def update_after_move(self, env, index, done_num, current_update):
+    def move_one_jitter(self, env, index, done_num, current_update):
+        if current_update > done_num:
+            return
         current_pos = env.rTrans[index]
         current_rot = env.rRot[index]
+        
         (new_position, new_rotation) = self.get_new_jitter_location_and_rotation(env, current_pos, current_rot)
-        (collision, indices) = self.move_one_jitter(env, index, new_position, new_rotation)
+        
+        # checks if the point is outside the bounding box
+        if self.point_is_not_available(new_position):
+            current_update += 1
+            return self.move_one_jitter(env, index, done_num, current_update)
 
-        if done_num == current_update:
-            print("GOT TO END")
-            return
-           
+        (collision, indices) = self.check_collisions(env, index, new_position, new_rotation)
         if not collision:
-            print("MOVED AND NO COLLISION")
             env.rTrans[index] = new_position
             env.rRot[index] = new_rotation
             env.close_ingr_bhtree = spatial.cKDTree(env.rTrans, leafsize=10)
             env.molecules[index][0] = new_position
             env.molecules[index][1] = new_rotation
             return
-        if len(indices) < 2:
+        elif len(indices) < 2:
             env.rTrans[index] = new_position
             env.rRot[index] = new_rotation
             env.close_ingr_bhtree = spatial.cKDTree(env.rTrans, leafsize=10)
@@ -1631,8 +1634,10 @@ class Ingredient(Agent):
             env.molecules[index][1] = new_rotation
             for i in indices:
                 current_update += 1
-                return self.update_after_move(env, i, done_num, current_update)
- 
+                return self.move_one_jitter(env, i, done_num, current_update)
+        current_update += 1
+        return self.move_one_jitter(env, index, done_num, current_update)
+
     def buildMesh(self, data, geomname):
         """
         Create a polygon mesh object from a dictionary verts,faces,normals
