@@ -32,6 +32,7 @@
         "resultfile": "autoPACKserver/results/NM_Analysis_FigureB1.0.apr.json",
         "runTimeDisplay": false,
         "saveResult": false,
+        "smallestProteinSize": 10.0,
         "use_gradient": false,
         "use_periodicity": true,
         "windowsSize": 10
@@ -60,10 +61,10 @@
                 "molarity": 0,
                 "name": "cuboid_25_100_50",
                 "nbJitter": 20,
-                "nbMol": 50,
+                "nbMol": 100,
                 "orientBiasRotRangeMax": 0,
                 "orientBiasRotRangeMin": 0,
-                "overwrite_nbMol_value": 50,
+                "overwrite_nbMol_value": 100,
                 "packingMode": "random",
                 "packingPriority": 0,
                 "partners_name": [],
@@ -90,18 +91,18 @@
                     ]
                 ],
                 "principalVector": [
-                    1,
                     0,
-                    0
+                    0,
+                    1
                 ],
                 "proba_binding": 0.5,
                 "proba_not_binding": 0.5,
                 "properties": {},
                 "radii": [
                     [
-                        25,
-                        100,
-                        50
+                        25.0,
+                        100.0,
+                        50.0
                     ]
                 ],
                 "rejectionThreshold": 100,

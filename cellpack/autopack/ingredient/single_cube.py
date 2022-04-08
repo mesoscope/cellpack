@@ -384,7 +384,7 @@ class SingleCubeIngr(Ingredient):
         transformed_points = points - center_pos  # translate points to cube center
         transformed_points = self.transformPoints([0., 0., 0.],rotMat_inv,transformed_points)  # rotate points to align with cube axis
 
-        side_lengths = numpy.abs(self.radii[0])/2
+        side_lengths = numpy.abs(self.radii[0]) / 2.0
 
         # run distance checks on transformed points
         for point in transformed_points:
@@ -395,7 +395,7 @@ class SingleCubeIngr(Ingredient):
                 if dist_y <= 0:
                     if dist_z <= 0:
                         # point is inside the cube
-                        current_distance = -numpy.min(
+                        current_distance = - numpy.min(
                                                 numpy.abs([dist_x, dist_y, dist_z])
                                                 )
                     else:
