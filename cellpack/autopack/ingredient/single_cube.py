@@ -1,4 +1,3 @@
-from ctypes import c_ubyte
 from math import sqrt, pi
 import numpy
 from panda3d.core import Point3, TransformState, Vec3
@@ -395,7 +394,7 @@ class SingleCubeIngr(Ingredient):
                         # point is inside the cube
                         current_distance = - numpy.min(
                             numpy.abs([dist_x, dist_y, dist_z])
-                            )
+                        )
                     else:
                         # z plane is the closest
                         current_distance = dist_z

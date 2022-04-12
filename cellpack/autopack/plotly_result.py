@@ -45,7 +45,7 @@ class PlotlyAnalysis:
             [x1, y0],
             [x1, y1],
             [x0, y1]
-                       ]
+        ]
         rotated_pts = self.transformPoints2D(pos, rotMat, point_array)
         path_str = ""
         for index, point_to_print in enumerate(rotated_pts):
