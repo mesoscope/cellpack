@@ -123,23 +123,23 @@ class SingleCubeIngr(Ingredient):
         self.center = (
             positions_ar + (positions2_ar - positions_ar) / 2
         )  # location of center based on corner points
-        x0 = -radii[0]/2
-        y0 = -radii[0]/2
-        z0 = -radii[0]/2
-        x1 = radii[0]/2
-        y1 = radii[0]/2
-        z1 = radii[0]/2
+        x0 = -radii[0] / 2.0
+        y0 = -radii[0] / 2.0
+        z0 = -radii[0] / 2.0
+        x1 = radii[0] / 2.0
+        y1 = radii[0] / 2.0
+        z1 = radii[0] / 2.0
 
         self.radii = radii
         self.vertices = [
-            [x0,y0,z0],
-            [x1,y0,z0],
-            [x1,y1,z0],
-            [x0,y1,z0],
-            [x0,y1,z1],
-            [x1,y1,z1],
-            [x1,y0,z1],
-            [x0,y0,z1]
+            [x0, y0, z0],
+            [x1, y0, z0],
+            [x1, y1, z0],
+            [x0, y1, z0],
+            [x0, y1, z1],
+            [x1, y1, z1],
+            [x1, y0, z1],
+            [x0, y0, z1]
         ]
 
     def collision_jitter(
@@ -192,14 +192,13 @@ class SingleCubeIngr(Ingredient):
         grid_point_vectors = numpy.take(gridPointsCoords, points_to_check, 0)
 
         # signed distances of grid points from the cube surface
-        grid_point_distances = self.cube_surface_distance(grid_point_vectors, rotMat, center_trans) 
+        grid_point_distances = self.cube_surface_distance(grid_point_vectors, rotMat, center_trans)
 
         for pti in range(len(points_to_check)):
             # pti = point index
 
             grid_point_index = points_to_check[pti]
             signed_distance_to_cube_surface = grid_point_distances[pti]
-
 
             collision = (
                 signed_distance_to_cube_surface + current_grid_distances[grid_point_index]
@@ -209,8 +208,7 @@ class SingleCubeIngr(Ingredient):
             if collision:
                 self.log.info("grid point already occupied %f", grid_point_index)
                 return True, {}, {}
-            
-            
+
             if signed_distance_to_cube_surface <= 0:
                 # check if grid point lies inside the cube
                 if grid_point_index in insidePoints:
@@ -382,22 +380,22 @@ class SingleCubeIngr(Ingredient):
         rotMat_inv = numpy.linalg.inv(rotMat)
 
         transformed_points = points - center_pos  # translate points to cube center
-        transformed_points = self.transformPoints([0., 0., 0.],rotMat_inv,transformed_points)  # rotate points to align with cube axis
+        transformed_points = self.transformPoints([0., 0., 0.], rotMat_inv, transformed_points)  # rotate points to align with cube axis
 
         side_lengths = numpy.abs(self.radii[0]) / 2.0
 
         # run distance checks on transformed points
         for point in transformed_points:
-            
+
             dist_x, dist_y, dist_z = numpy.abs(point) - side_lengths
-            
+
             if dist_x <= 0:
                 if dist_y <= 0:
                     if dist_z <= 0:
                         # point is inside the cube
                         current_distance = - numpy.min(
-                                                numpy.abs([dist_x, dist_y, dist_z])
-                                                )
+                            numpy.abs([dist_x, dist_y, dist_z])
+                            )
                     else:
                         # z plane is the closest
                         current_distance = dist_z
