@@ -1,0 +1,120 @@
+{
+    "recipe": {
+        "name": "cuboid",
+        "version": "1.0"
+    },
+    "options": {
+        "EnviroOnly": false,
+        "_hackFreepts": false,
+        "_timer": false,
+        "boundingBox": [
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                1000,
+                1000,
+                1
+            ]
+        ],
+        "cancelDialog": false,
+        "computeGridParams": true,
+        "freePtsUpdateThreshold": 0,
+        "gradients": [],
+        "ingrLookForNeighbours": false,
+        "innerGridMethod": "bhtree",
+        "overwritePlaceMethod": true,
+        "pickRandPt": true,
+        "pickWeightedIngr": true,
+        "placeMethod": "jitter",
+        "resultfile": "autoPACKserver/results/NM_Analysis_FigureB1.0.apr.json",
+        "runTimeDisplay": false,
+        "saveResult": false,
+        "use_gradient": false,
+        "use_periodicity": true,
+        "windowsSize": 10
+    },
+    "cytoplasme": {
+        "ingredients": {
+            "cuboid_25_100_50": {
+                "Type": "SingleCube",
+                "color": [
+                    0.498,
+                    0.498,
+                    0.498
+                ],
+                "coordsystem": "left",
+                "cutoff_boundary": 0,
+                "cutoff_surface": 0,
+                "encapsulatingRadius": 10,
+                "excluded_partners_name": [],
+                "gradient": "",
+                "isAttractor": false,
+                "jitterMax": [
+                    1,
+                    1,
+                    0
+                ],
+                "molarity": 0,
+                "name": "cuboid_25_100_50",
+                "nbJitter": 20,
+                "nbMol": 100,
+                "orientBiasRotRangeMax": 0,
+                "orientBiasRotRangeMin": 0,
+                "overwrite_nbMol_value": 100,
+                "packingMode": "random",
+                "packingPriority": 0,
+                "partners_name": [],
+                "partners_position": [],
+                "pdb": null,
+                "perturbAxisAmplitude": 0.1,
+                "placeType": "jitter",
+                "positions": [
+                    [
+                        [
+                            -12.5,
+                            -50.0,
+                            -25.0
+                        ]
+                    ]
+                ],
+                "positions2": [
+                    [
+                        [
+                            12.5,
+                            50.0,
+                            25.0
+                        ]
+                    ]
+                ],
+                "principalVector": [
+                    1,
+                    0,
+                    0
+                ],
+                "proba_binding": 0.5,
+                "proba_not_binding": 0.5,
+                "properties": {},
+                "radii": [
+                    [
+                        25,
+                        100,
+                        50
+                    ]
+                ],
+                "rejectionThreshold": 100,
+                "rotAxis": [
+                    0,
+                    0,
+                    1
+                ],
+                "rotRange": 6.2831,
+                "useOrientBias": false,
+                "useRotAxis": false,
+                "weight": 0.2
+            }
+        }
+    }
+}

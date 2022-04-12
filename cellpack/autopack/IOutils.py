@@ -10,6 +10,7 @@ import pickle
 import numpy
 from xml.dom.minidom import getDOMImplementation
 import json
+from json import JSONEncoder
 from json import encoder
 from collections import OrderedDict
 
@@ -36,6 +37,13 @@ from .ingredient import (
 )
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
+
+
+class NumpyArrayEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, numpy.ndarray):
+            return obj.tolist()
+        return JSONEncoder.default(self, obj)
 
 
 def getValueToXMLNode(vtype, node, attrname):
@@ -424,8 +432,8 @@ class IOingredientTool(object):
         elif kw["Type"] == "MultiCylinder":
             ingr = MultiCylindersIngr(**kw)
         elif kw["Type"] == "SingleCube":
-            kw["positions"] = [[[0, 0, 0], [0, 0, 0], [0, 0, 0]]]
-            kw["positions2"] = None
+            # kw["positions"] = [[[0, 0, 0], [0, 0, 0], [0, 0, 0]]]
+            # kw["positions2"] = None
             ingr = SingleCubeIngr(**kw)
         elif kw["Type"] == "Grow":
             ingr = GrowIngredient(**kw)
@@ -905,13 +913,14 @@ def save_Mixed_asJson(
                         ingr.o_name
                     ]["name"] = ingr.o_name
     with open(setupfile, "w") as fp:  # doesnt work with symbol link ?
+
         if indent:
             json.dump(
-                env.jsondic, fp, indent=1, separators=(",", ":")
+                env.jsondic, fp, indent=1, separators=(",", ":"), cls=NumpyArrayEncoder
             )  # ,indent=4, separators=(',', ': ')
         else:
             json.dump(
-                env.jsondic, fp, separators=(",", ":")
+                env.jsondic, fp, separators=(",", ":"), cls=NumpyArrayEncoder
             )  # ,indent=4, separators=(',', ': ')
     printoptions("Mixed recipe saved to ", setupfile)
 
