@@ -138,7 +138,7 @@ class SingleCubeIngr(Ingredient):
             [x0, y1, z1],
             [x1, y1, z1],
             [x1, y0, z1],
-            [x0, y0, z1]
+            [x0, y0, z1],
         ]
 
     def collision_jitter(
@@ -191,7 +191,9 @@ class SingleCubeIngr(Ingredient):
         grid_point_vectors = numpy.take(gridPointsCoords, points_to_check, 0)
 
         # signed distances of grid points from the cube surface
-        grid_point_distances = self.cube_surface_distance(grid_point_vectors, rotMat, center_trans)
+        grid_point_distances = self.cube_surface_distance(
+            grid_point_vectors, rotMat, center_trans
+        )
 
         for pti in range(len(points_to_check)):
             # pti = point index
@@ -200,7 +202,8 @@ class SingleCubeIngr(Ingredient):
             signed_distance_to_cube_surface = grid_point_distances[pti]
 
             collision = (
-                signed_distance_to_cube_surface + current_grid_distances[grid_point_index]
+                signed_distance_to_cube_surface
+                + current_grid_distances[grid_point_index]
                 <= 0
             )
 
@@ -214,13 +217,9 @@ class SingleCubeIngr(Ingredient):
                     if abs(signed_distance_to_cube_surface) < abs(
                         insidePoints[grid_point_index]
                     ):
-                        insidePoints[
-                            grid_point_index
-                        ] = signed_distance_to_cube_surface
+                        insidePoints[grid_point_index] = signed_distance_to_cube_surface
                 else:
-                    insidePoints[
-                        grid_point_index
-                    ] = signed_distance_to_cube_surface
+                    insidePoints[grid_point_index] = signed_distance_to_cube_surface
             elif (
                 signed_distance_to_cube_surface
                 <= current_grid_distances[grid_point_index]
@@ -379,7 +378,9 @@ class SingleCubeIngr(Ingredient):
         rotMat_inv = numpy.linalg.inv(rotMat)
 
         transformed_points = points - center_pos  # translate points to cube center
-        transformed_points = self.transformPoints([0., 0., 0.], rotMat_inv, transformed_points)  # rotate points to align with cube axis
+        transformed_points = self.transformPoints(
+            [0.0, 0.0, 0.0], rotMat_inv, transformed_points
+        )  # rotate points to align with cube axis
 
         side_lengths = numpy.abs(self.radii[0]) / 2.0
 
@@ -392,7 +393,7 @@ class SingleCubeIngr(Ingredient):
                 if dist_y <= 0:
                     if dist_z <= 0:
                         # point is inside the cube
-                        current_distance = - numpy.min(
+                        current_distance = -numpy.min(
                             numpy.abs([dist_x, dist_y, dist_z])
                         )
                     else:
@@ -419,7 +420,9 @@ class SingleCubeIngr(Ingredient):
                         current_distance = numpy.sqrt(dist_x**2 + dist_y**2)
                     else:
                         # vertex is the closest
-                        current_distance = numpy.sqrt(dist_x**2 + dist_y**2 + dist_z**2)
+                        current_distance = numpy.sqrt(
+                            dist_x**2 + dist_y**2 + dist_z**2
+                        )
 
             cube_surface_distances.append(current_distance)
 

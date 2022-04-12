@@ -35,21 +35,16 @@ class PlotlyAnalysis:
         )
 
     def add_square(self, radius, pos, rotMat, color, opacity=1):
-        x0 = - radius[0][0] / 2.0
-        y0 = - radius[0][1] / 2.0
+        x0 = -radius[0][0] / 2.0
+        y0 = -radius[0][1] / 2.0
         x1 = radius[0][0] / 2.0
         y1 = radius[0][1] / 2.0
         # corner points of the cube top surface
-        point_array = [
-            [x0, y0],
-            [x1, y0],
-            [x1, y1],
-            [x0, y1]
-        ]
+        point_array = [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]
         rotated_pts = self.transformPoints2D(pos, rotMat, point_array)
         path_str = ""
         for index, point_to_print in enumerate(rotated_pts):
-            if(index == 0):
+            if index == 0:
                 path_str += "M {0[0]} {0[1]} ".format(point_to_print)
             else:
                 path_str += "L {0[0]} {0[1]} ".format(point_to_print)
