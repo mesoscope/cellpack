@@ -1,6 +1,6 @@
 {
     "recipe": {
-        "name": "one_cube",
+        "name": "rotated_cuboid",
         "version": "1.0"
     },
     "options": {

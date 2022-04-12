@@ -1,6 +1,6 @@
 {
     "recipe": {
-        "name": "one_cube",
+        "name": "oriented_cube",
         "version": "1.0"
     },
     "options": {
