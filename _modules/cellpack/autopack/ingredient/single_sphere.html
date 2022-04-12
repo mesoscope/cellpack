@@ -183,12 +183,14 @@
              
   <h1>Source code for cellpack.autopack.ingredient.single_sphere</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
+<span class="kn">from</span> <span class="nn">panda3d.bullet</span> <span class="kn">import</span> <span class="n">BulletRigidBodyNode</span><span class="p">,</span> <span class="n">BulletSphereShape</span>
 <span class="kn">from</span> <span class="nn">panda3d.core</span> <span class="kn">import</span> <span class="n">Point3</span><span class="p">,</span> <span class="n">TransformState</span><span class="p">,</span> <span class="n">Vec3</span>
-<span class="kn">from</span> <span class="nn">panda3d.bullet</span> <span class="kn">import</span> <span class="n">BulletSphereShape</span><span class="p">,</span> <span class="n">BulletRigidBodyNode</span>
 <span class="kn">from</span> <span class="nn">panda3d.ode</span> <span class="kn">import</span> <span class="n">OdeBody</span><span class="p">,</span> <span class="n">OdeMass</span><span class="p">,</span> <span class="n">OdeSphereGeom</span>
 
-<span class="kn">from</span> <span class="nn">.Ingredient</span> <span class="kn">import</span> <span class="n">Ingredient</span>
 <span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
+
+<span class="kn">from</span> <span class="nn">.Ingredient</span> <span class="kn">import</span> <span class="n">Ingredient</span>
 
 <span class="n">helper</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span>
 
@@ -202,58 +204,105 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;SingleSphere&quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">coordsystem</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+        <span class="n">cutoff_boundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">cutoff_surface</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">distExpression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">distFunction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">encapsulatingRadius</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">excluded_partners_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">force_random</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># avoid any binding</span>
+        <span class="n">gradient</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">isAttractor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">jitterMax</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
         <span class="n">molarity</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">nbJitter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">nbMol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">orientBiasRotRangeMax</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
+        <span class="n">orientBiasRotRangeMin</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
+        <span class="n">overwrite_distFunc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># overWrite</span>
+        <span class="n">overwrite_nbMol_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">packingMode</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
+        <span class="n">packingPriority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">partners_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">partners_position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">pdb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">perturbAxisAmplitude</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">placeType</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
+        <span class="n">positions</span><span class="o">=</span><span class="p">[[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]],</span>
+        <span class="n">positions2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">principalVector</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">proba_binding</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">proba_not_binding</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># chance to actually not bind</span>
+        <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">radii</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">rejectionThreshold</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">resolution_dictionary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">sphereFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">packingPriority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">pdb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">nbJitter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-        <span class="n">jitterMax</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="n">perturbAxisAmplitude</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-        <span class="n">principalVector</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
         <span class="n">meshFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">packingMode</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
-        <span class="n">placeType</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
-        <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;SingleSphere&quot;</span><span class="p">,</span>
         <span class="n">meshObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">nbMol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kw</span>
+        <span class="n">rotAxis</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+        <span class="n">rotRange</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">use_mesh_rb</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">useOrientBias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">useRotAxis</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">weight</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>  <span class="c1"># use for affinity ie partner.weight</span>
     <span class="p">):</span>
-
-        <span class="n">Ingredient</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">molarity</span><span class="o">=</span><span class="n">molarity</span><span class="p">,</span>
-            <span class="n">radii</span><span class="o">=</span><span class="p">[[</span><span class="n">radius</span><span class="p">]],</span>
-            <span class="n">positions</span><span class="o">=</span><span class="p">[[</span><span class="n">position</span><span class="p">]],</span>  <span class="c1"># positions2=None,</span>
-            <span class="n">sphereFile</span><span class="o">=</span><span class="n">sphereFile</span><span class="p">,</span>
-            <span class="n">packingPriority</span><span class="o">=</span><span class="n">packingPriority</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">pdb</span><span class="o">=</span><span class="n">pdb</span><span class="p">,</span>
-            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
-            <span class="n">nbJitter</span><span class="o">=</span><span class="n">nbJitter</span><span class="p">,</span>
-            <span class="n">jitterMax</span><span class="o">=</span><span class="n">jitterMax</span><span class="p">,</span>
-            <span class="n">perturbAxisAmplitude</span><span class="o">=</span><span class="n">perturbAxisAmplitude</span><span class="p">,</span>
-            <span class="n">principalVector</span><span class="o">=</span><span class="n">principalVector</span><span class="p">,</span>
-            <span class="n">meshFile</span><span class="o">=</span><span class="n">meshFile</span><span class="p">,</span>
-            <span class="n">packingMode</span><span class="o">=</span><span class="n">packingMode</span><span class="p">,</span>
-            <span class="n">placeType</span><span class="o">=</span><span class="n">placeType</span><span class="p">,</span>
-            <span class="n">meshObject</span><span class="o">=</span><span class="n">meshObject</span><span class="p">,</span>
-            <span class="n">nbMol</span><span class="o">=</span><span class="n">nbMol</span><span class="p">,</span>
+        <span class="c1"># called through inheritance</span>
+        <span class="n">radii</span> <span class="o">=</span> <span class="n">radii</span> <span class="k">if</span> <span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;MultiSphere&quot;</span> <span class="k">else</span> <span class="p">[[</span><span class="n">radius</span><span class="p">]]</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="n">positions</span> <span class="k">if</span> <span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;MultiSphere&quot;</span> <span class="k">else</span> <span class="p">[[</span><span class="n">position</span><span class="p">]]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">Type</span><span class="o">=</span><span class="n">Type</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kw</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+            <span class="n">cutoff_boundary</span><span class="o">=</span><span class="n">cutoff_boundary</span><span class="p">,</span>
+            <span class="n">cutoff_surface</span><span class="o">=</span><span class="n">cutoff_surface</span><span class="p">,</span>
+            <span class="n">distExpression</span><span class="o">=</span><span class="n">distExpression</span><span class="p">,</span>
+            <span class="n">distFunction</span><span class="o">=</span><span class="n">distFunction</span><span class="p">,</span>
+            <span class="n">excluded_partners_name</span><span class="o">=</span><span class="n">excluded_partners_name</span><span class="p">,</span>
+            <span class="n">force_random</span><span class="o">=</span><span class="n">force_random</span><span class="p">,</span>
+            <span class="n">gradient</span><span class="o">=</span><span class="n">gradient</span><span class="p">,</span>
+            <span class="n">isAttractor</span><span class="o">=</span><span class="n">isAttractor</span><span class="p">,</span>
+            <span class="n">jitterMax</span><span class="o">=</span><span class="n">jitterMax</span><span class="p">,</span>
+            <span class="n">molarity</span><span class="o">=</span><span class="n">molarity</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">nbJitter</span><span class="o">=</span><span class="n">nbJitter</span><span class="p">,</span>
+            <span class="n">nbMol</span><span class="o">=</span><span class="n">nbMol</span><span class="p">,</span>
+            <span class="n">overwrite_distFunc</span><span class="o">=</span><span class="n">overwrite_distFunc</span><span class="p">,</span>
+            <span class="n">overwrite_nbMol_value</span><span class="o">=</span><span class="n">overwrite_nbMol_value</span><span class="p">,</span>
+            <span class="n">packingMode</span><span class="o">=</span><span class="n">packingMode</span><span class="p">,</span>
+            <span class="n">packingPriority</span><span class="o">=</span><span class="n">packingPriority</span><span class="p">,</span>
+            <span class="n">partners_name</span><span class="o">=</span><span class="n">partners_name</span><span class="p">,</span>
+            <span class="n">partners_position</span><span class="o">=</span><span class="n">partners_position</span><span class="p">,</span>
+            <span class="n">pdb</span><span class="o">=</span><span class="n">pdb</span><span class="p">,</span>
+            <span class="n">sphereFile</span><span class="o">=</span><span class="n">sphereFile</span><span class="p">,</span>
+            <span class="n">perturbAxisAmplitude</span><span class="o">=</span><span class="n">perturbAxisAmplitude</span><span class="p">,</span>
+            <span class="n">meshFile</span><span class="o">=</span><span class="n">meshFile</span><span class="p">,</span>
+            <span class="n">placeType</span><span class="o">=</span><span class="n">placeType</span><span class="p">,</span>
+            <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span>  <span class="c1"># positions2=None,</span>
+            <span class="n">principalVector</span><span class="o">=</span><span class="n">principalVector</span><span class="p">,</span>
+            <span class="n">proba_binding</span><span class="o">=</span><span class="n">proba_binding</span><span class="p">,</span>
+            <span class="n">proba_not_binding</span><span class="o">=</span><span class="n">proba_not_binding</span><span class="p">,</span>
+            <span class="n">properties</span><span class="o">=</span><span class="n">properties</span><span class="p">,</span>
+            <span class="n">radii</span><span class="o">=</span><span class="n">radii</span><span class="p">,</span>
+            <span class="n">rotAxis</span><span class="o">=</span><span class="n">rotAxis</span><span class="p">,</span>
+            <span class="n">rotRange</span><span class="o">=</span><span class="n">rotRange</span><span class="p">,</span>
+            <span class="n">useRotAxis</span><span class="o">=</span><span class="n">useRotAxis</span><span class="p">,</span>
+            <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modelType</span> <span class="o">=</span> <span class="s2">&quot;Spheres&quot;</span>
-
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%5.2f</span><span class="s2">_</span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">molarity</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">singleSphere</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="c1"># min and max radius for a single sphere should be the same</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">minRadius</span> <span class="o">=</span> <span class="n">radius</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">=</span> <span class="n">radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">=</span> <span class="n">encapsulatingRadius</span> <span class="ow">or</span> <span class="n">radius</span>
         <span class="c1"># make a sphere ?-&gt;rapid ?</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">nogui</span><span class="p">:</span>

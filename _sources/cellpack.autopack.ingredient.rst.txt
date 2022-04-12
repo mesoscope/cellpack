@@ -12,6 +12,14 @@ cellpack.autopack.ingredient.Ingredient module
    :undoc-members:
    :show-inheritance:
 
+cellpack.autopack.ingredient.agent module
+-----------------------------------------
+
+.. automodule:: cellpack.autopack.ingredient.agent
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.ingredient.grow module
 ----------------------------------------
 

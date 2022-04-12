@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cellpack.autopack.ingredient.agent &mdash; cellPack 0.2.4 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> cellPack
+          </a>
+              <div class="version">
+                0.2.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../recipe-schema.html">Cellpack Recipe Schema 1.0</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../recipe-schema.html#recipe-definition-properties">Recipe definition properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#name">name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#version">version</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../recipe-schema.html#example">example:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../recipe-schema.html#options-properties">Options properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#saveresult">saveResult</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#resultfile">resultfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#enviroonly">EnviroOnly</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#canceldialog">cancelDialog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#pickrandpt">pickRandPt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#ingrlookforneighbours">ingrLookForNeighbours</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#overwriteplacemethod">overwritePlaceMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#boundingbox">boundingBox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#smallestproteinsize">smallestProteinSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#largestproteinsize">largestProteinSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#computegridparams">computeGridParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#windowssize">windowsSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#placemethod">placeMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-gradient">use_gradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradients">gradients</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#innergridmethod">innerGridMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#freeptsupdatethreshold">freePtsUpdateThreshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-periodicity">use_periodicity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#timer">_timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#hackfreepts">_hackFreepts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../recipe-schema.html#example-options">example <code class="docutils literal notranslate"><span class="pre">Options</span></code>:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#id81">name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#molarity">molarity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#nbmol">nbMol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#radii">radii</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#positions">positions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#positions2">positions2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#spherefile">sphereFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#pdb">pdb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#color">color</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#meshfile">meshFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#meshname">meshName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#coordsystem">coordsystem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#principalvector">principalVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#offset">offset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#jittermax">jitterMax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#nbjitter">nbJitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#userotaxis">useRotAxis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rotaxis">rotAxis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rotrange">rotRange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#placetype">placeType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradient">gradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#proba-binding">proba_binding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#weight">weight</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#partners-name">partners_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#partners-position">partners_position</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#partners-weight">partners_weight</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#properties">properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#score">score</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#organism">organism</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#example-ingredient">example ingredient</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">cellPack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../../cellpack.html">cellpack</a> &raquo;</li>
+          <li><a href="../../autopack.html">cellpack.autopack</a> &raquo;</li>
+      <li>cellpack.autopack.ingredient.agent</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cellpack.autopack.ingredient.agent</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+
+<div class="viewcode-block" id="Partner"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Partner">[docs]</a><span class="k">class</span> <span class="nc">Partner</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">ingr</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ingr</span> <span class="o">=</span> <span class="n">ingr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distExpression</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">properties</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">properties</span>
+
+    <span class="c1"># def setup(</span>
+    <span class="c1">#     self,</span>
+    <span class="c1"># ):</span>
+    <span class="c1"># QUESTION: why is this commented out?</span>
+    <span class="c1"># # setup the marge according the pt properties</span>
+    <span class="c1"># pt1 = numpy.array(self.getProperties(&quot;pt1&quot;))</span>
+    <span class="c1"># pt2 = numpy.array(self.getProperties(&quot;pt2&quot;))</span>
+    <span class="c1"># pt3 = numpy.array(self.getProperties(&quot;pt3&quot;))</span>
+    <span class="c1"># pt4 = numpy.array(self.getProperties(&quot;pt4&quot;))</span>
+
+    <span class="c1"># # length = autopack.helper.measure_distance(pt2,pt3)#length</span>
+    <span class="c1"># margein = math.degrees(</span>
+    <span class="c1">#     autopack.helper.angle_between_vectors(pt2 - pt1, pt3 - pt2)</span>
+    <span class="c1"># )  # 4</span>
+    <span class="c1"># margeout = math.degrees(</span>
+    <span class="c1">#     autopack.helper.angle_between_vectors(pt3 - pt2, pt4 - pt3)</span>
+    <span class="c1"># )  # 113</span>
+    <span class="c1"># dihedral = math.degrees(</span>
+    <span class="c1">#     autopack.helper.angle_between_vectors(pt2 - pt1, pt4 - pt2)</span>
+    <span class="c1"># )  # 79</span>
+    <span class="c1"># dihedral = autopack.helper.dihedral(pt1, pt2, pt3, pt4)</span>
+    <span class="c1"># self.properties[&quot;marge_in&quot;] = [margein - 1, margein + 1]</span>
+    <span class="c1"># self.properties[&quot;marge_out&quot;] = [margeout - 1, margeout + 1]</span>
+    <span class="c1"># self.properties[&quot;diehdral&quot;] = [dihedral - 1, dihedral + 1]</span>
+
+<div class="viewcode-block" id="Partner.addProperties"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Partner.addProperties">[docs]</a>    <span class="k">def</span> <span class="nf">addProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="Partner.getProperties"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Partner.getProperties">[docs]</a>    <span class="k">def</span> <span class="nf">getProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
+            <span class="c1"># if name == &quot;pt1&quot;:</span>
+            <span class="c1">#    return [0,0,0]</span>
+            <span class="c1"># if name == &quot;pt2&quot;:</span>
+            <span class="c1">#    return [0,0,0]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Partner.distanceFunction"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Partner.distanceFunction">[docs]</a>    <span class="k">def</span> <span class="nf">distanceFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">expression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># default function that can be overwrite or</span>
+        <span class="c1"># can provide an experssion which 1/d or 1/d^2 or d^2etc.w*expression</span>
+        <span class="c1"># can provide directly a function that take as</span>
+        <span class="c1"># arguments the w and the distance</span>
+        <span class="k">if</span> <span class="n">expression</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">*</span> <span class="n">expression</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">function</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">d</span>
+        <span class="k">return</span> <span class="n">val</span></div></div>
+
+
+<div class="viewcode-block" id="Agent"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent">[docs]</a><span class="k">class</span> <span class="nc">Agent</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">,</span>
+        <span class="n">concentration</span><span class="p">,</span>
+        <span class="n">distExpression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">distFunction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">excluded_partners_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">force_random</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># avoid any binding</span>
+        <span class="n">gradient</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">isAttractor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">overwrite_distFunc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># overWrite</span>
+        <span class="n">packingMode</span><span class="o">=</span><span class="s2">&quot;close&quot;</span><span class="p">,</span>
+        <span class="n">partners_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">partners_position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">placeType</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
+        <span class="n">proba_binding</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">proba_not_binding</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># chance to actually not bind</span>
+        <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">weight</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>  <span class="c1"># use for affinity ie partner.weight</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">concentration</span> <span class="o">=</span> <span class="n">concentration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">partners</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">excluded_partners</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># the partner position is the local position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">partners_position</span> <span class="o">=</span> <span class="n">partners_position</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">partners_name</span> <span class="o">=</span> <span class="n">partners_name</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">properties</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners_position</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners_name</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">partners_position</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">numpy</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
+        <span class="n">excluded_partners_name</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">excluded_partners_name</span> <span class="o">=</span> <span class="n">excluded_partners_name</span>
+        <span class="k">assert</span> <span class="n">packingMode</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">&quot;random&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;close&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;closePartner&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;randomPartner&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;gradient&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;hexatile&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;squaretile&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;triangletile&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">packingMode</span> <span class="o">=</span> <span class="n">packingMode</span>
+        <span class="n">partners_weight</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">partners_weight</span> <span class="o">=</span> <span class="n">partners_weight</span>
+        <span class="c1"># assert placeType in [&#39;jitter&#39;, &#39;spring&#39;,&#39;rigid-body&#39;]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">placeType</span> <span class="o">=</span> <span class="n">placeType</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_3d</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isAttractor</span> <span class="o">=</span> <span class="n">isAttractor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proba_not_binding</span> <span class="o">=</span> <span class="n">proba_not_binding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">proba_binding</span> <span class="o">=</span> <span class="n">proba_binding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">force_random</span> <span class="o">=</span> <span class="n">force_random</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distFunction</span> <span class="o">=</span> <span class="n">distFunction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distExpression</span> <span class="o">=</span> <span class="n">distExpression</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_distFunc</span> <span class="o">=</span> <span class="n">overwrite_distFunc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_distFunc</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># chance to actually bind to any partner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gradient</span> <span class="o">=</span> <span class="n">gradient</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cb</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radii</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recipe</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># weak ref to recipe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tilling</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Agent.getProbaBinding"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.getProbaBinding">[docs]</a>    <span class="k">def</span> <span class="nf">getProbaBinding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># get a value between 0.0 and 1.0and return the weight and success ?</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cb</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">val</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">val</span></div>
+
+<div class="viewcode-block" id="Agent.getPartnerweight"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.getPartnerweight">[docs]</a>    <span class="k">def</span> <span class="nf">getPartnerweight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Deprecated use self.weight&quot;</span><span class="p">)</span>
+        <span class="n">partner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPartner</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">partner</span><span class="o">.</span><span class="n">getProperties</span><span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">w</span></div>
+
+<div class="viewcode-block" id="Agent.getPartnersName"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.getPartnersName">[docs]</a>    <span class="k">def</span> <span class="nf">getPartnersName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Agent.getPartner"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.getPartner">[docs]</a>    <span class="k">def</span> <span class="nf">getPartner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Agent.addPartner"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.addPartner">[docs]</a>    <span class="k">def</span> <span class="nf">addPartner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Partner</span><span class="p">(</span>
+                <span class="n">ingr</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="n">properties</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">properties</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Agent.getExcludedPartnersName"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.getExcludedPartnersName">[docs]</a>    <span class="k">def</span> <span class="nf">getExcludedPartnersName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">excluded_partners</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Agent.getExcludedPartner"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.getExcludedPartner">[docs]</a>    <span class="k">def</span> <span class="nf">getExcludedPartner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">excluded_partners</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">excluded_partners</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Agent.addExcludedPartner"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.addExcludedPartner">[docs]</a>    <span class="k">def</span> <span class="nf">addExcludedPartner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">excluded_partners</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Partner</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="n">properties</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Agent.sortPartner"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.sortPartner">[docs]</a>    <span class="k">def</span> <span class="nf">sortPartner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listeP</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">listeP</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">listeP</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="n">listeP</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">ingr</span><span class="p">])</span>
+        <span class="c1"># extract ing name unic</span>
+        <span class="n">listeIngrInstance</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">listeP</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">listeIngrInstance</span><span class="p">:</span>
+                <span class="n">listeIngrInstance</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="p">[]]</span>
+            <span class="n">listeIngrInstance</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="c1"># sort according ingredient binding weight (proba to bind)</span>
+        <span class="n">sortedListe</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">listeIngrInstance</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">elem</span><span class="p">:</span> <span class="n">elem</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="c1"># sortedListe is [ingr,(weight,(instances indices))]</span>
+        <span class="c1"># sort by weight/min-&gt;max</span>
+        <span class="c1"># wIngrList = []</span>
+        <span class="c1"># for i,ingr in listeP:</span>
+        <span class="c1"># need to sort by ingr.weight</span>
+        <span class="c1">#    wIngrList.append([i,ingr,ingr.weight])</span>
+        <span class="c1"># sortedListe = sorted(wIngrList, key=lambda elem: elem[2])   # sort by weight/min-&gt;max</span>
+        <span class="c1">#        print sortedListe</span>
+        <span class="k">return</span> <span class="n">sortedListe</span></div>
+
+<div class="viewcode-block" id="Agent.weightListByDistance"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.weightListByDistance">[docs]</a>    <span class="k">def</span> <span class="nf">weightListByDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listePartner</span><span class="p">):</span>
+        <span class="n">probaArray</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span> <span class="n">dist</span> <span class="ow">in</span> <span class="n">listePartner</span><span class="p">:</span>
+            <span class="c1"># print (&quot;i&quot;,part,dist,w,part.weight)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_distFunc</span><span class="p">:</span>
+                <span class="n">wd</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">weight</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">wd</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">distanceFunction</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">expression</span><span class="o">=</span><span class="n">part</span><span class="o">.</span><span class="n">distExpression</span><span class="p">)</span>
+            <span class="c1"># print &quot;calc &quot;,dist, wd</span>
+            <span class="n">probaArray</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wd</span><span class="p">)</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">+</span> <span class="n">wd</span>
+        <span class="c1"># probaArray.append(self.proba_not_binding)</span>
+        <span class="c1"># w=w+self.proba_not_binding</span>
+        <span class="k">return</span> <span class="n">probaArray</span><span class="p">,</span> <span class="n">w</span></div>
+
+<div class="viewcode-block" id="Agent.getProbaArray"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.getProbaArray">[docs]</a>    <span class="k">def</span> <span class="nf">getProbaArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weightD</span><span class="p">,</span> <span class="n">total</span><span class="p">):</span>
+        <span class="n">probaArray</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">final</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">weightD</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">w</span> <span class="o">/</span> <span class="n">total</span>
+            <span class="c1">#            print &quot;norma &quot;,w,total,p</span>
+            <span class="n">final</span> <span class="o">=</span> <span class="n">final</span> <span class="o">+</span> <span class="n">p</span>
+            <span class="n">probaArray</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">final</span><span class="p">)</span>
+        <span class="n">probaArray</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">return</span> <span class="n">probaArray</span></div>
+
+<div class="viewcode-block" id="Agent.getSubWeighted"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.getSubWeighted">[docs]</a>    <span class="k">def</span> <span class="nf">getSubWeighted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        From http://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/</span>
+<span class="sd">        This method is about twice as fast as the binary-search technique,</span>
+<span class="sd">        although it has the same complexity overall. Building the temporary</span>
+<span class="sd">        list of totals turns out to be a major part of the functions runtime.</span>
+<span class="sd">        This approach has another interesting property. If we manage to sort</span>
+<span class="sd">        the weights in descending order before passing them to</span>
+<span class="sd">        weighted_choice_sub, it will run even faster since the random</span>
+<span class="sd">        call returns a uniformly distributed value and larger chunks of</span>
+<span class="sd">        the total weight will be skipped in the beginning.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rnd</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">weights</span><span class="p">):</span>
+            <span class="n">rnd</span> <span class="o">-=</span> <span class="n">w</span>
+            <span class="k">if</span> <span class="n">rnd</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">i</span><span class="p">,</span> <span class="n">rnd</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Agent.pickPartner"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.pickPartner">[docs]</a>    <span class="k">def</span> <span class="nf">pickPartner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mingrs</span><span class="p">,</span> <span class="n">listePartner</span><span class="p">,</span> <span class="n">currentPos</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]):</span>
+        <span class="c1"># listePartner is (i,partner,d)</span>
+        <span class="c1"># wieght using the distance function</span>
+        <span class="c1">#        print &quot;len&quot;,len(listePartner)</span>
+        <span class="n">targetPoint</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">weightD</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightListByDistance</span><span class="p">(</span><span class="n">listePartner</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;w </span><span class="si">%r</span><span class="s2"> </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">weightD</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
+        <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSubWeighted</span><span class="p">(</span><span class="n">weightD</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="c1"># probaArray = self.getProbaArray(weightD,total)</span>
+        <span class="c1">#        print &quot;p&quot;,probaArray</span>
+        <span class="c1">#        probaArray=numpy.array(probaArray)</span>
+        <span class="c1">#        #where is random in probaArray-&gt;index-&gt;ingr</span>
+        <span class="c1">#        b = random()</span>
+        <span class="c1">#        test = b &lt; probaArray</span>
+        <span class="c1">#        i = test.tolist().index(True)</span>
+        <span class="c1">#        print &quot;proba&quot;,i,test,(len(probaArray)-1)</span>
+        <span class="c1">#        if i == (len(probaArray)-1) :</span>
+        <span class="c1">#            #no binding due to proba not binding....</span>
+        <span class="c1">#            print (&quot;no binding due to proba&quot;)</span>
+        <span class="c1">#            return None,b</span>
+
+        <span class="n">ing_indice</span> <span class="o">=</span> <span class="n">listePartner</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># i,part,dist</span>
+        <span class="n">ing</span> <span class="o">=</span> <span class="n">mingrs</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">ing_indice</span><span class="p">]</span>  <span class="c1"># [2]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;binding to </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">ing</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">targetPoint</span> <span class="o">=</span> <span class="n">mingrs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">ing_indice</span><span class="p">]</span>  <span class="c1"># [0]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1">#            organelle = self.env.compartments[abs(self.compNum)-1]</span>
+            <span class="c1">#            dist,ind = organelle.OGsrfPtsBht.query(targetPoint)</span>
+            <span class="c1">#            organelle.ogsurfacePoints[]</span>
+            <span class="n">targetPoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getClosestFreeGridPoint</span><span class="p">(</span>
+                <span class="n">targetPoint</span><span class="p">,</span>
+                <span class="n">compId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">,</span>
+                <span class="n">ball</span><span class="o">=</span><span class="p">(</span><span class="n">ing</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span><span class="p">),</span>
+                <span class="n">distance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;target point free tree is </span><span class="si">%r</span><span class="s2"> </span><span class="si">%r</span><span class="s2"> </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">targetPoint</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span><span class="p">,</span>
+                <span class="n">ing</span><span class="o">.</span><span class="n">encapsulatingRadius</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># get closestFreePoint using freePoint and masterGridPosition</span>
+            <span class="c1"># if self.placeType == &quot;rigid-body&quot; or self.placeType == &quot;jitter&quot;:</span>
+            <span class="c1"># the new point is actually tPt -normalise(tPt-current)*radius</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;tP </span><span class="si">%r</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%r</span><span class="s2"> </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ing_indice</span><span class="p">,</span> <span class="n">ing</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">targetPoint</span><span class="p">,</span> <span class="n">ing</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="c1"># what I need it the closest free point from the target ingredient</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">targetPoint</span><span class="p">)</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">currentPos</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="n">v</span><span class="p">)</span>
+            <span class="n">factor</span> <span class="o">=</span> <span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span>
+                <span class="n">ing</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span>
+            <span class="p">)</span>  <span class="c1"># encapsulating radus ?</span>
+            <span class="n">targetPoint</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">targetPoint</span><span class="p">)</span> <span class="o">-</span> <span class="n">factor</span>
+
+        <span class="k">return</span> <span class="n">targetPoint</span><span class="p">,</span> <span class="n">b</span></div>
+
+<div class="viewcode-block" id="Agent.pickPartnerInstance"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.pickPartnerInstance">[docs]</a>    <span class="k">def</span> <span class="nf">pickPartnerInstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bindingIngr</span><span class="p">,</span> <span class="n">mingrs</span><span class="p">,</span> <span class="n">currentPos</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># bindingIngr is ingr,(weight,(instances indices))</span>
+        <span class="c1">#        print &quot;bindingIngr &quot;,bindingIngr,bindingIngr[1]</span>
+        <span class="k">if</span> <span class="n">currentPos</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># random mode</span>
+            <span class="n">picked_I</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">bindingIngr</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">bindingIngr</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">picked_I</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># pick closest one</span>
+            <span class="n">mind</span> <span class="o">=</span> <span class="mf">99999999.9</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">bindingIngr</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mingrs</span><span class="p">[</span><span class="n">ind</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">currentPos</span><span class="p">)</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="n">v</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">mind</span><span class="p">:</span>
+                    <span class="n">mind</span> <span class="o">=</span> <span class="n">d</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="n">ind</span>
+        <span class="k">return</span> <span class="n">i</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Megan Riel-Mehan.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

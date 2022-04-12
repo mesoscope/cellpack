@@ -194,6 +194,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">from</span> <span class="nn">xml.dom.minidom</span> <span class="kn">import</span> <span class="n">getDOMImplementation</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">JSONEncoder</span>
 <span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">encoder</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 
@@ -220,6 +221,13 @@
 <span class="p">)</span>
 
 <span class="n">encoder</span><span class="o">.</span><span class="n">FLOAT_REPR</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s2">&quot;.8g&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="NumpyArrayEncoder"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.NumpyArrayEncoder">[docs]</a><span class="k">class</span> <span class="nc">NumpyArrayEncoder</span><span class="p">(</span><span class="n">JSONEncoder</span><span class="p">):</span>
+<div class="viewcode-block" id="NumpyArrayEncoder.default"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.NumpyArrayEncoder.default">[docs]</a>    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">JSONEncoder</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="getValueToXMLNode"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.getValueToXMLNode">[docs]</a><span class="k">def</span> <span class="nf">getValueToXMLNode</span><span class="p">(</span><span class="n">vtype</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">attrname</span><span class="p">):</span>
@@ -608,8 +616,8 @@
         <span class="k">elif</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;MultiCylinder&quot;</span><span class="p">:</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">MultiCylindersIngr</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;SingleCube&quot;</span><span class="p">:</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;positions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]]</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;positions2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="c1"># kw[&quot;positions&quot;] = [[[0, 0, 0], [0, 0, 0], [0, 0, 0]]]</span>
+            <span class="c1"># kw[&quot;positions2&quot;] = None</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleCubeIngr</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">GrowIngredient</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
@@ -1089,13 +1097,14 @@
                         <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
                     <span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">setupfile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>  <span class="c1"># doesnt work with symbol link ?</span>
+
         <span class="k">if</span> <span class="n">indent</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
+                <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">),</span> <span class="bp">cls</span><span class="o">=</span><span class="n">NumpyArrayEncoder</span>
             <span class="p">)</span>  <span class="c1"># ,indent=4, separators=(&#39;,&#39;, &#39;: &#39;)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
+                <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">),</span> <span class="bp">cls</span><span class="o">=</span><span class="n">NumpyArrayEncoder</span>
             <span class="p">)</span>  <span class="c1"># ,indent=4, separators=(&#39;,&#39;, &#39;: &#39;)</span>
     <span class="n">printoptions</span><span class="p">(</span><span class="s2">&quot;Mixed recipe saved to &quot;</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">)</span></div>
 

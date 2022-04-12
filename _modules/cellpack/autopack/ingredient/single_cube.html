@@ -182,7 +182,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for cellpack.autopack.ingredient.single_cube</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+<span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">pi</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">from</span> <span class="nn">panda3d.core</span> <span class="kn">import</span> <span class="n">Point3</span><span class="p">,</span> <span class="n">TransformState</span><span class="p">,</span> <span class="n">Vec3</span>
 <span class="kn">from</span> <span class="nn">panda3d.bullet</span> <span class="kn">import</span> <span class="n">BulletBoxShape</span><span class="p">,</span> <span class="n">BulletRigidBodyNode</span>
@@ -201,81 +201,112 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">molarity</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-        <span class="n">radii</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">positions</span><span class="o">=</span><span class="p">[[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]],</span>
-        <span class="n">positions2</span><span class="o">=</span><span class="p">[[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]],</span>
-        <span class="n">sphereFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">packingPriority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">pdb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">nbJitter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-        <span class="n">jitterMax</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="n">perturbAxisAmplitude</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-        <span class="n">principalVector</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-        <span class="n">meshFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">packingMode</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
-        <span class="n">placeType</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
         <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;SingleCube&quot;</span><span class="p">,</span>
-        <span class="n">meshObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">coordsystem</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
+        <span class="n">cutoff_boundary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">cutoff_surface</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">distExpression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">distFunction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">encapsulatingRadius</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">excluded_partners_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">force_random</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># avoid any binding</span>
+        <span class="n">gradient</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">isAttractor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">jitterMax</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">molarity</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">nbJitter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">nbMol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kw</span>
+        <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">orientBiasRotRangeMax</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
+        <span class="n">orientBiasRotRangeMin</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
+        <span class="n">overwrite_distFunc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># overWrite</span>
+        <span class="n">overwrite_nbMol_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">packingMode</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
+        <span class="n">packingPriority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">partners_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">partners_position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">pdb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">perturbAxisAmplitude</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">placeType</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
+        <span class="n">positions2</span><span class="o">=</span><span class="p">[[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]],</span>
+        <span class="n">positions</span><span class="o">=</span><span class="p">[[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]],</span>
+        <span class="n">principalVector</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="n">proba_binding</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">proba_not_binding</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># chance to actually not bind</span>
+        <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">radii</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">rejectionThreshold</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">resolution_dictionary</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">rotAxis</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+        <span class="n">rotRange</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">useOrientBias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">useRotAxis</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">weight</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>  <span class="c1"># use for affinity ie partner.weight</span>
     <span class="p">):</span>
-        <span class="n">Ingredient</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">molarity</span><span class="o">=</span><span class="n">molarity</span><span class="p">,</span>
-            <span class="n">radii</span><span class="o">=</span><span class="n">radii</span><span class="p">,</span>
-            <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span>
-            <span class="n">positions2</span><span class="o">=</span><span class="n">positions2</span><span class="p">,</span>
-            <span class="n">sphereFile</span><span class="o">=</span><span class="n">sphereFile</span><span class="p">,</span>
-            <span class="n">packingPriority</span><span class="o">=</span><span class="n">packingPriority</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">pdb</span><span class="o">=</span><span class="n">pdb</span><span class="p">,</span>
-            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
-            <span class="n">nbJitter</span><span class="o">=</span><span class="n">nbJitter</span><span class="p">,</span>
-            <span class="n">jitterMax</span><span class="o">=</span><span class="n">jitterMax</span><span class="p">,</span>
-            <span class="n">perturbAxisAmplitude</span><span class="o">=</span><span class="n">perturbAxisAmplitude</span><span class="p">,</span>
-            <span class="n">principalVector</span><span class="o">=</span><span class="n">principalVector</span><span class="p">,</span>
-            <span class="n">meshFile</span><span class="o">=</span><span class="n">meshFile</span><span class="p">,</span>
-            <span class="n">packingMode</span><span class="o">=</span><span class="n">packingMode</span><span class="p">,</span>
-            <span class="n">placeType</span><span class="o">=</span><span class="n">placeType</span><span class="p">,</span>
-            <span class="n">meshObject</span><span class="o">=</span><span class="n">meshObject</span><span class="p">,</span>
-            <span class="n">nbMol</span><span class="o">=</span><span class="n">nbMol</span><span class="p">,</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">Type</span><span class="o">=</span><span class="n">Type</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kw</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+            <span class="n">cutoff_boundary</span><span class="o">=</span><span class="n">cutoff_boundary</span><span class="p">,</span>
+            <span class="n">cutoff_surface</span><span class="o">=</span><span class="n">cutoff_surface</span><span class="p">,</span>
+            <span class="n">distExpression</span><span class="o">=</span><span class="n">distExpression</span><span class="p">,</span>
+            <span class="n">distFunction</span><span class="o">=</span><span class="n">distFunction</span><span class="p">,</span>
+            <span class="n">excluded_partners_name</span><span class="o">=</span><span class="n">excluded_partners_name</span><span class="p">,</span>
+            <span class="n">force_random</span><span class="o">=</span><span class="n">force_random</span><span class="p">,</span>
+            <span class="n">gradient</span><span class="o">=</span><span class="n">gradient</span><span class="p">,</span>
+            <span class="n">isAttractor</span><span class="o">=</span><span class="n">isAttractor</span><span class="p">,</span>
+            <span class="n">jitterMax</span><span class="o">=</span><span class="n">jitterMax</span><span class="p">,</span>
+            <span class="n">molarity</span><span class="o">=</span><span class="n">molarity</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">nbJitter</span><span class="o">=</span><span class="n">nbJitter</span><span class="p">,</span>
+            <span class="n">nbMol</span><span class="o">=</span><span class="n">nbMol</span><span class="p">,</span>
+            <span class="n">overwrite_distFunc</span><span class="o">=</span><span class="n">overwrite_distFunc</span><span class="p">,</span>
+            <span class="n">overwrite_nbMol_value</span><span class="o">=</span><span class="n">overwrite_nbMol_value</span><span class="p">,</span>
+            <span class="n">packingMode</span><span class="o">=</span><span class="n">packingMode</span><span class="p">,</span>
+            <span class="n">packingPriority</span><span class="o">=</span><span class="n">packingPriority</span><span class="p">,</span>
+            <span class="n">partners_name</span><span class="o">=</span><span class="n">partners_name</span><span class="p">,</span>
+            <span class="n">partners_position</span><span class="o">=</span><span class="n">partners_position</span><span class="p">,</span>
+            <span class="n">pdb</span><span class="o">=</span><span class="n">pdb</span><span class="p">,</span>
+            <span class="n">perturbAxisAmplitude</span><span class="o">=</span><span class="n">perturbAxisAmplitude</span><span class="p">,</span>
+            <span class="n">placeType</span><span class="o">=</span><span class="n">placeType</span><span class="p">,</span>
+            <span class="n">positions2</span><span class="o">=</span><span class="n">positions2</span><span class="p">,</span>
+            <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span>
+            <span class="n">principalVector</span><span class="o">=</span><span class="n">principalVector</span><span class="p">,</span>
+            <span class="n">proba_binding</span><span class="o">=</span><span class="n">proba_binding</span><span class="p">,</span>
+            <span class="n">proba_not_binding</span><span class="o">=</span><span class="n">proba_not_binding</span><span class="p">,</span>
+            <span class="n">properties</span><span class="o">=</span><span class="n">properties</span><span class="p">,</span>
+            <span class="n">radii</span><span class="o">=</span><span class="n">radii</span><span class="p">,</span>
+            <span class="n">rotAxis</span><span class="o">=</span><span class="n">rotAxis</span><span class="p">,</span>
+            <span class="n">rotRange</span><span class="o">=</span><span class="n">rotRange</span><span class="p">,</span>
+            <span class="n">useRotAxis</span><span class="o">=</span><span class="n">useRotAxis</span><span class="p">,</span>
+            <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MAKING CUBE&quot;</span><span class="p">,</span> <span class="n">positions2</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%5.2f</span><span class="s2">_</span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">molarity</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">singleSphere</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modelType</span> <span class="o">=</span> <span class="s2">&quot;Cube&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">collisionLevel</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
-            <span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="p">)</span>  <span class="c1"># should the sphere that encapsulated the cube</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
         <span class="n">radii</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">radii</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">minRadius</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
-            <span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span>
-        <span class="p">)</span>  <span class="c1"># should have three radii sizex,sizey,sizez</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span>
-            <span class="nb">max</span><span class="p">(</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
-            <span class="o">+</span> <span class="nb">min</span><span class="p">(</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">bb</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]</span>
-        <span class="c1"># self.positions = [[-radii[0] / 2.0]]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">positions2</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">17.66</span><span class="p">,</span> <span class="mf">17.67</span><span class="p">,</span> <span class="mf">17.67</span><span class="p">]]]</span>
-        <span class="c1">#        if positions2 is not None and positions is not None:</span>
-        <span class="c1">#            self.bb=[positions[0],positions2[0]]</span>
-        <span class="c1">#            x1, y1, z1 = self.bb[0]</span>
-        <span class="c1">#            x2, y2, z2 = self.bb[0]</span>
-        <span class="c1">#            vx, vy, vz = vect = (x2-x1, y2-y1, z2-z1)</span>
-        <span class="c1">#            self.center = x1+vx*.5, y1+vy*.5, z1+vz*.5</span>
-        <span class="c1">#            self.positions = positions</span>
-        <span class="c1">#            self.positions2 = positions2</span>
-        <span class="c1"># position and position2 are the cornerPoints of the cube</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">minRadius</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># should have three radii sizex,sizey,sizez</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxRadius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+            <span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="p">)</span>  <span class="c1"># calculate encapsulating radius based on side length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bb</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">positions</span> <span class="o">=</span> <span class="n">positions</span>  <span class="c1"># bottom left corner of cuboid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">positions2</span> <span class="o">=</span> <span class="n">positions2</span>  <span class="c1"># top right corner of cuboid</span>
+        <span class="n">positions_ar</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">positions2_ar</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">positions_ar</span> <span class="o">+</span> <span class="p">(</span><span class="n">positions2_ar</span> <span class="o">-</span> <span class="n">positions_ar</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="p">)</span>  <span class="c1"># location of center based on corner points</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">radii</span> <span class="o">=</span> <span class="n">radii</span>
 
 <div class="viewcode-block" id="SingleCubeIngr.collision_jitter"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.collision_jitter">[docs]</a>    <span class="k">def</span> <span class="nf">collision_jitter</span><span class="p">(</span>
@@ -284,7 +315,7 @@
         <span class="n">rotMat</span><span class="p">,</span>
         <span class="n">level</span><span class="p">,</span>
         <span class="n">gridPointsCoords</span><span class="p">,</span>
-        <span class="n">distance</span><span class="p">,</span>
+        <span class="n">current_grid_distances</span><span class="p">,</span>
         <span class="n">histoVol</span><span class="p">,</span>
         <span class="n">dpad</span><span class="p">,</span>
     <span class="p">):</span>
@@ -293,28 +324,23 @@
 <span class="sd">        centers1 and centers2 should be the cornerPoints, so we can do parrallelpiped</span>
 <span class="sd">        can also use the center plus size (radii), or the position/position2</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">centers1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">centers2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">cent1T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">centers1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># bb1</span>
-        <span class="n">cent2T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">centers2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># bb2</span>
-        <span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span>
-            <span class="n">jtrans</span><span class="p">,</span>
-            <span class="n">rotMat</span><span class="p">,</span>
-            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">],</span>
-        <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">corner1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">corner2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">corner1_trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">corner1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># bb1</span>
+        <span class="n">corner2_trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">corner2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># bb2</span>
+        <span class="n">center_trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="n">insidePoints</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">newDistPoints</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">cent1T</span>
-        <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">cent2T</span>
-        <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">,</span> <span class="n">vz</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">-</span> <span class="n">z1</span><span class="p">)</span>
-        <span class="n">lengthsq</span> <span class="o">=</span> <span class="n">vx</span> <span class="o">*</span> <span class="n">vx</span> <span class="o">+</span> <span class="n">vy</span> <span class="o">*</span> <span class="n">vy</span> <span class="o">+</span> <span class="n">vz</span> <span class="o">*</span> <span class="n">vz</span>
-        <span class="n">length</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">lengthsq</span><span class="p">)</span>
-        <span class="n">posc</span> <span class="o">=</span> <span class="n">center</span>  <span class="c1"># x1+vx*.5, y1+vy*.5, z1+vz*.5</span>
-        <span class="n">radt</span> <span class="o">=</span> <span class="n">length</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">+</span> <span class="n">dpad</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">posc</span>
-        <span class="n">bb</span> <span class="o">=</span> <span class="p">([</span><span class="n">x</span> <span class="o">-</span> <span class="n">radt</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="n">radt</span><span class="p">,</span> <span class="n">z</span> <span class="o">-</span> <span class="n">radt</span><span class="p">],</span> <span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">radt</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">radt</span><span class="p">,</span> <span class="n">z</span> <span class="o">+</span> <span class="n">radt</span><span class="p">])</span>
+        <span class="n">diag_length</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">corner2_trans</span> <span class="o">-</span> <span class="n">corner1_trans</span><span class="p">)</span>
+
+        <span class="n">search_radius</span> <span class="o">=</span> <span class="n">diag_length</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">+</span> <span class="n">dpad</span>
+
+        <span class="n">bb</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">center_trans</span> <span class="o">-</span> <span class="n">search_radius</span><span class="p">,</span>
+            <span class="n">center_trans</span> <span class="o">+</span> <span class="n">search_radius</span><span class="p">,</span>
+        <span class="p">)</span>  <span class="c1"># bounding box in world space</span>
 
         <span class="k">if</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">runTimeDisplay</span><span class="p">:</span>  <span class="c1"># &gt; 1:</span>
             <span class="n">box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="s2">&quot;collBox&quot;</span><span class="p">)</span>
@@ -326,58 +352,54 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">updateBox</span><span class="p">(</span><span class="n">box</span><span class="p">,</span> <span class="n">cornerPoints</span><span class="o">=</span><span class="n">bb</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
 
-        <span class="n">pointsInCube</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInCube</span><span class="p">(</span><span class="n">bb</span><span class="p">,</span> <span class="n">posc</span><span class="p">,</span> <span class="n">radt</span><span class="p">)</span>
-        <span class="n">pd</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">pointsInCube</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">center</span>  <span class="c1"># center them ?</span>
-        <span class="n">delta</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">delta</span> <span class="o">*=</span> <span class="n">delta</span>
-        <span class="n">distA</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">points_to_check</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInCube</span><span class="p">(</span>
+            <span class="n">bb</span><span class="p">,</span> <span class="n">center_trans</span><span class="p">,</span> <span class="n">search_radius</span>
+        <span class="p">)</span>  <span class="c1"># indices of all grid points within padded distance from cube center</span>
 
-        <span class="c1"># m = numpy.matrix(numpy.array(rotMat).reshape(4, 4))  #</span>
-        <span class="c1"># mat = m.I</span>
-        <span class="c1"># need to apply inverse mat to pd</span>
-        <span class="c1"># rpd = ApplyMatrix(pd, mat)</span>
-        <span class="c1"># need to check if these point are inside the cube using the dimension of the cube</span>
-        <span class="n">ptinside_mask</span> <span class="o">=</span> <span class="p">[</span><span class="n">histoVol</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">test_points_in_bb</span><span class="p">(</span><span class="n">bb</span><span class="p">,</span> <span class="n">gi</span><span class="p">)</span> <span class="k">for</span> <span class="n">gi</span> <span class="ow">in</span> <span class="n">pd</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ptinside_mask</span><span class="p">))</span>
-        <span class="n">ptinside</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">ptinside_mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="c1"># res = numpy.less_equal(numpy.fabs(rpd), numpy.array(radii[0]) / 2.)</span>
-        <span class="c1"># if len(res):</span>
-        <span class="c1">#     c = numpy.average(res, 1)  # .astype(int)</span>
-        <span class="c1">#     d = numpy.equal(c, 1.)</span>
-        <span class="c1">#     ptinside = numpy.nonzero(d)[0]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">ptinside</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;something is wrong no grid points inside cube&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pointsInCube</span><span class="p">))</span>
-            <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compareCompartment</span><span class="p">:</span>
-            <span class="n">ptinsideId</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">pointsInCube</span><span class="p">,</span> <span class="n">ptinside</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="n">compIdsSphere</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">histoVol</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span><span class="p">,</span> <span class="n">ptinsideId</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">wrongPt</span> <span class="o">=</span> <span class="p">[</span><span class="n">cid</span> <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">compIdsSphere</span> <span class="k">if</span> <span class="n">cid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">]</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrongPt</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span>
-        <span class="k">for</span> <span class="n">pti</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pointsInCube</span><span class="p">)):</span>
-            <span class="c1"># ptinsideCube:#inside point but have been already computed during the check collision...?</span>
-            <span class="n">pt</span> <span class="o">=</span> <span class="n">pointsInCube</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">pti</span> <span class="ow">in</span> <span class="n">ptinside</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">distance</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.0001</span><span class="p">:</span>  <span class="c1"># or trigger : # pt is inside cylinder</span>
-                    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span>
-            <span class="k">if</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">insidePoints</span><span class="p">:</span>
+        <span class="n">grid_point_vectors</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">points_to_check</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">center_trans</span>
+        <span class="p">)</span>  <span class="c1"># vectors joining center of cube with grid points</span>
+        <span class="n">grid_point_distances</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+            <span class="n">grid_point_vectors</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>  <span class="c1"># distances of grid points from packing location</span>
+
+        <span class="k">for</span> <span class="n">pti</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points_to_check</span><span class="p">)):</span>
+            <span class="c1"># pti = point index</span>
+
+            <span class="n">grid_point_index</span> <span class="o">=</span> <span class="n">points_to_check</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">grid_point_index</span> <span class="ow">in</span> <span class="n">insidePoints</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="n">dist</span> <span class="o">=</span> <span class="n">distA</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span>
-            <span class="n">d</span> <span class="o">=</span> <span class="n">dist</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span>
-            <span class="c1"># should be distance to the cube, but will use approximation</span>
-            <span class="k">if</span> <span class="n">pti</span> <span class="ow">in</span> <span class="n">ptinside</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">insidePoints</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">insidePoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]:</span>
-                        <span class="n">insidePoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
+
+            <span class="n">collision</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">grid_point_distances</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span> <span class="o">+</span> <span class="n">current_grid_distances</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]</span>
+                <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">collision</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;grid point already occupied </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">grid_point_index</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{}</span>
+
+            <span class="c1"># currently calculates distance from surface of encapsulating sphere</span>
+            <span class="c1"># should be updated to distance from cube surface</span>
+            <span class="n">signed_distance_to_cube_surface</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">grid_point_distances</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">signed_distance_to_cube_surface</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># check if grid point lies inside the cube</span>
+                <span class="n">insidePoints</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">signed_distance_to_cube_surface</span>
+            <span class="k">elif</span> <span class="p">(</span>
+                <span class="n">signed_distance_to_cube_surface</span>
+                <span class="o">&lt;=</span> <span class="n">current_grid_distances</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]</span>
+            <span class="p">):</span>
+                <span class="c1"># update grid distances if no collision was detected</span>
+                <span class="k">if</span> <span class="n">grid_point_index</span> <span class="ow">in</span> <span class="n">newDistPoints</span><span class="p">:</span>
+                    <span class="n">newDistPoints</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+                        <span class="n">signed_distance_to_cube_surface</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]</span>
+                    <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">insidePoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
-            <span class="k">elif</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">distance</span><span class="p">[</span><span class="n">pt</span><span class="p">]:</span>  <span class="c1"># point in region of influence</span>
-                <span class="k">if</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">newDistPoints</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">newDistPoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]:</span>
-                        <span class="n">newDistPoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">newDistPoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
+                    <span class="n">newDistPoints</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">signed_distance_to_cube_surface</span>
+
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span></div>
 
 <div class="viewcode-block" id="SingleCubeIngr.collides_with_compartment"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.collides_with_compartment">[docs]</a>    <span class="k">def</span> <span class="nf">collides_with_compartment</span><span class="p">(</span>
@@ -399,7 +421,6 @@
         <span class="n">cent2T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">centers2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># bb2</span>
         <span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="c1">#        for radc, p1, p2 in zip(radii, cent1T, cent2T):</span>
         <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">cent1T</span>
         <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">cent2T</span>
         <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">,</span> <span class="n">vz</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">-</span> <span class="n">z1</span><span class="p">)</span>
