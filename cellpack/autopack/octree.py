@@ -29,6 +29,7 @@ DIRLOOKUP = {"3": 0, "2": 1, "-2": 2, "-1": 3, "1": 4, "0": 5, "-4": 6, "-3": 7}
 
 # End Globals ####
 
+
 class OctNode:
     # New Octnode Class, can be appended to as well i think
     def __init__(self, position, size, data):
