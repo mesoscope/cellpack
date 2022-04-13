@@ -17,8 +17,6 @@
 # Then the cube has to subdivide itself, and arrange its objects in the new child nodes.
 # The new octNode itself contains no objects, but its children should.
 
-# Psyco may well speed this script up considerably, but results seem to vary.
-
 # TODO: Add support for multi-threading for node insertion and/or searching
 
 # Global Variables ####
@@ -30,15 +28,6 @@ MAX_OBJECTS_PER_CUBE = 10
 DIRLOOKUP = {"3": 0, "2": 1, "-2": 2, "-1": 3, "1": 4, "0": 5, "-4": 6, "-3": 7}
 
 # End Globals ####
-
-# Try importing psyco, in case it makes any speed difference
-# ( Speed increase seems to vary depending on system ).
-try:
-    import psyco
-
-    psyco.full()
-except Exception:
-    print("Could not import psyco, speed may suffer :)")
 
 
 class OctNode:
