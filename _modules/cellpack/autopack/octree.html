@@ -201,8 +201,6 @@
 <span class="c1"># Then the cube has to subdivide itself, and arrange its objects in the new child nodes.</span>
 <span class="c1"># The new octNode itself contains no objects, but its children should.</span>
 
-<span class="c1"># Psyco may well speed this script up considerably, but results seem to vary.</span>
-
 <span class="c1"># TODO: Add support for multi-threading for node insertion and/or searching</span>
 
 <span class="c1"># Global Variables ####</span>
@@ -214,15 +212,6 @@
 <span class="n">DIRLOOKUP</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;3&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;-2&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;-1&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;-4&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;-3&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">}</span>
 
 <span class="c1"># End Globals ####</span>
-
-<span class="c1"># Try importing psyco, in case it makes any speed difference</span>
-<span class="c1"># ( Speed increase seems to vary depending on system ).</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">psyco</span>
-
-    <span class="n">psyco</span><span class="o">.</span><span class="n">full</span><span class="p">()</span>
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Could not import psyco, speed may suffer :)&quot;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="OctNode"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.octree.OctNode">[docs]</a><span class="k">class</span> <span class="nc">OctNode</span><span class="p">:</span>
