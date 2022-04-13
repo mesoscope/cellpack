@@ -6,24 +6,6 @@
 
 algorithm to pack molecular recipes
 
----
-
-## Features
-
--   Store values and retain the prior value in memory
--   ... some other functionality
-
-## Quick Start
-
-```python
-from cellpack import Example
-
-a = Example()
-a.get_value()  # 10
-
-```
-
-in terminal:
 
 ### Setup 
 1. create a virtual env: `conda create -n autopack`
