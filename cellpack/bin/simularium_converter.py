@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 import argparse
@@ -32,9 +35,9 @@ logging.basicConfig(
 
 
 class ConvertToSimularium(argparse.Namespace):
-    DEFAULT_PACKING_RESULT = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/results_seed_0.json"
-    DEFAULT_OUTPUT_DIRECTORY = "/Users/meganriel-mehan/Dropbox/cellPack/"
-    DEFAULT_INPUT_RECIPE = "/Users/meganriel-mehan/dev/allen-inst/cellPack/cellpack/cellpack/test-recipes/NM_Analysis_FigureC1.json"
+    DEFAULT_PACKING_RESULT = "out/NM_Analysis_FigureB/jitter/results_seed_0.json"
+    DEFAULT_OUTPUT_DIRECTORY = "out/simularium/"
+    DEFAULT_INPUT_RECIPE = "cellpack/test-recipes/NM_Analysis_FigureB1.0.json"
     DEFAULT_GEO_TYPE = "PDB"  # Other options: SPHERE or PDB
     DEFAULT_SCALE_FACTOR = 1.0 / 100.0
 

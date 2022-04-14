@@ -2444,7 +2444,7 @@ class Ingredient(Agent):
         has_collision = False
         collision_indexes = []
         # no ingredients packed yet
-        if not len(self.env.rTrans):
+        if not len(self.env.rTrans) or self.env.totalNbIngr == 1:
             return has_collision, collision_indexes
         else:
             if self.env.close_ingr_bhtree is None:
@@ -2458,6 +2458,7 @@ class Ingredient(Agent):
             distances_from_packing_location_to_all_ingr,
             ingr_indexes,
         ) = self.env.close_ingr_bhtree.query(packing_location, len(self.env.rTrans))
+        
         radii_of_placed_ingr = numpy.array(
             [ing.encapsulatingRadius for ing in self.env.rIngr]
         )[ingr_indexes]

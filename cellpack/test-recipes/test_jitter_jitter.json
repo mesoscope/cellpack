@@ -1,6 +1,6 @@
 {
     "recipe": {
-        "name": "NM_Analysis_FigureB",
+        "name": "test_jitter_jitter",
         "version": "1.0"
     },
     "options": {
@@ -63,10 +63,10 @@
                 "molarity": 0,
                 "name": "Sphere_radius_100",
                 "nbJitter": 20,
-                "nbMol": 6,
+                "nbMol": 2,
                 "orientBiasRotRangeMax": -3.1415927,
                 "orientBiasRotRangeMin": -3.1415927,
-                "overwrite_nbMol_value": 6,
+                "overwrite_nbMol_value": 2,
                 "packingMode": "random",
                 "packingPriority": 0,
                 "partners_name": [],
@@ -129,10 +129,10 @@
                 "molarity": 0,
                 "name": "Sphere_radius_200",
                 "nbJitter": 20,
-                "nbMol": 2,
+                "nbMol": 1,
                 "orientBiasRotRangeMax": -3.1415927,
                 "orientBiasRotRangeMin": -3.1415927,
-                "overwrite_nbMol_value": 2,
+                "overwrite_nbMol_value": 1,
                 "packingMode": "random",
                 "packingPriority": 0,
                 "partners_name": [],
@@ -195,10 +195,10 @@
                 "molarity": 0,
                 "name": "Sphere_radius_25p",
                 "nbJitter": 20,
-                "nbMol": 40,
+                "nbMol": 3,
                 "orientBiasRotRangeMax": -3.1415927,
                 "orientBiasRotRangeMin": -3.1415927,
-                "overwrite_nbMol_value": 40,
+                "overwrite_nbMol_value": 3,
                 "packingMode": "random",
                 "packingPriority": 0,
                 "partners_name": [],
@@ -261,10 +261,10 @@
                 "molarity": 0,
                 "name": "Sphere_radius_25r",
                 "nbJitter": 20,
-                "nbMol": 40,
+                "nbMol": 4,
                 "orientBiasRotRangeMax": -3.1415927,
                 "orientBiasRotRangeMin": -3.1415927,
-                "overwrite_nbMol_value": 40,
+                "overwrite_nbMol_value": 4,
                 "packingMode": "random",
                 "packingPriority": 0,
                 "partners_name": [],
@@ -293,72 +293,6 @@
                 "radii": [
                     [
                         12.5
-                    ]
-                ],
-                "rejectionThreshold": 100,
-                "rotAxis": null,
-                "rotRange": 6.2831,
-                "sphereFile": null,
-                "useOrientBias": false,
-                "useRotAxis": false,
-                "use_mesh_rb": false,
-                "weight": 0.2
-            },
-            "Sphere_radius_50": {
-                "Type": "SingleSphere",
-                "color": [
-                    0.306,
-                    0.45100001,
-                    0.81599998
-                ],
-                "coordsystem": "left",
-                "cutoff_boundary": 0,
-                "cutoff_surface": 50,
-                "encapsulatingRadius": 50,
-                "excluded_partners_name": [],
-                "gradient": "",
-                "isAttractor": false,
-                "jitterMax": [
-                    1,
-                    1,
-                    0
-                ],
-                "meshFile": null,
-                "molarity": 0,
-                "name": "Sphere_radius_50",
-                "nbJitter": 20,
-                "nbMol": 15,
-                "orientBiasRotRangeMax": -3.1415927,
-                "orientBiasRotRangeMin": -3.1415927,
-                "overwrite_nbMol_value": 15,
-                "packingMode": "random",
-                "packingPriority": 0,
-                "partners_name": [],
-                "partners_position": [],
-                "pdb": null,
-                "perturbAxisAmplitude": 0.1,
-                "placeType": "jitter",
-                "positions": [
-                    [
-                        [
-                            0,
-                            0,
-                            0
-                        ]
-                    ]
-                ],
-                "positions2": null,
-                "principalVector": [
-                    1,
-                    0,
-                    0
-                ],
-                "proba_binding": 0.5,
-                "proba_not_binding": 0.5,
-                "properties": {},
-                "radii": [
-                    [
-                        50
                     ]
                 ],
                 "rejectionThreshold": 100,

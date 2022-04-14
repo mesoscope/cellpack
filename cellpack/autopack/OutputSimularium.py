@@ -196,7 +196,7 @@ def oneModel():
         [-1.0, -1.0, -1.0],
     ]
 
-    wdir = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid"
+    wdir = "out/NM_Analysis_C_rapid"
     file_in = wdir + "results_seed_0.json"  # recipe.json
     model_in = wdir + "model.bin"  # bin or traj
     tree = json.load(open(file_in, "r"), object_pairs_hook=OrderedDict)
@@ -292,7 +292,7 @@ proteins_beads = []
 proteins_beads_radii = []
 lodproxy_to_use = 0
 
-wdir = "/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_rapid/"
+wdir = "out/"
 file_in = wdir + "results_seed_0.json"  # recipe.json
 model_in = wdir + "model.bin"  # bin or traj
 tree = json.load(open(file_in, "r"), object_pairs_hook=OrderedDict)
