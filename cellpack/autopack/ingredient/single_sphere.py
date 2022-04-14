@@ -184,6 +184,12 @@ class SingleSphereIngr(Ingredient):
                     print("OK false compartment", len(wrongPt))
                     return True
         return False
+    
+    def get_signed_distance(self, location_of_packing, grid_point_location):
+        radius = self.radii[0][0]
+        distance_to_packing_location = numpy.linalg.norm(location_of_packing - grid_point_location)
+        signed_distance_to_sphere_surface = distance_to_packing_location - radius
+        return signed_distance_to_sphere_surface
 
     def get_new_distance_values(
         self, jtrans, rotMatj, gridPointsCoords, distance, dpad, level=0
