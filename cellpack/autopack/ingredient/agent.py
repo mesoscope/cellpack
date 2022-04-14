@@ -246,7 +246,7 @@ class Agent:
         call returns a uniformly distributed value and larger chunks of
         the total weight will be skipped in the beginning.
         """
-        rnd = numpy.random() * sum(weights)
+        rnd = numpy.random.random() * sum(weights)
         if sum(weights) == 0:
             return None, None
         for i, w in enumerate(weights):
