@@ -1648,7 +1648,9 @@ class Ingredient(Agent):
     ):
         if signed_distance_to_surface is None:
             grid_point_location = env.grid.masterGridPositions[grid_point_index]
-            signed_distance_to_surface = self.get_signed_distance(packing_location, grid_point_location)
+            signed_distance_to_surface = self.get_signed_distance(
+                packing_location, grid_point_location
+            )
 
         if signed_distance_to_surface <= 0:  # point is inside dropped sphere
             if (
@@ -1765,15 +1767,23 @@ class Ingredient(Agent):
                     # but getting here means there was no collision detected
                     # so the loop can continue
                     continue
-                signed_distance_to_sphere_surface = distance_to_packing_location - radius_of_ing_being_packed
+                signed_distance_to_sphere_surface = (
+                    distance_to_packing_location - radius_of_ing_being_packed
+                )
 
                 (
-                    new_inside_points,
-                    new_dist_points,
+                    insidePoints,
+                    newDistPoints,
                 ) = self.get_new_distances_and_inside_points(
-                    env, jtrans, grid_point_index, current_grid_distances, newDistPoints, insidePoints, signed_distance_to_sphere_surface)
-                insidePoints = self.merge_place_results(new_inside_points, insidePoints)
-                newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
+                    env,
+                    jtrans,
+                    grid_point_index,
+                    current_grid_distances,
+                    newDistPoints,
+                    insidePoints,
+                    signed_distance_to_sphere_surface,
+                )
+
             if not at_max_level:
                 # we didn't find any colisions with the this level, but we still want
                 # the inside points to be based on the most detailed geom
@@ -2412,7 +2422,14 @@ class Ingredient(Agent):
         self.update_data_tree(dropped_position, dropped_rotation, grid_point_index)
 
     def attempt_to_pack_at_grid_location(
-        self, env, ptInd, distance, max_radius, spacing, usePP, collision_possible
+        self,
+        env,
+        ptInd,
+        grid_point_distances,
+        max_radius,
+        spacing,
+        usePP,
+        collision_possible,
     ):
         success = False
         jitter = self.getMaxJitter(spacing)
@@ -2461,16 +2478,27 @@ class Ingredient(Agent):
             # grow doesnt use panda.......but could use all the geom produce by the grow as rb
             if self.Type == "Grow" or self.Type == "Actine":
                 success, jtrans, rotMatj, insidePoints, newDistPoints = self.grow_place(
-                    env, ptInd, env.grid.freePoints, env.grid.nbFreePoints, distance, dpad
+                    env,
+                    ptInd,
+                    env.grid.freePoints,
+                    env.grid.nbFreePoints,
+                    grid_point_distances,
+                    dpad,
                 )
             elif self.placeType == "jitter":
-                success, jtrans, rotMatj, insidePoints, newDistPoints = self.jitter_place(
+                (
+                    success,
+                    jtrans,
+                    rotMatj,
+                    insidePoints,
+                    newDistPoints,
+                ) = self.jitter_place(
                     env,
                     compartment,
                     target_grid_point_position,
                     rotation_matrix,
                     current_visual_instance,
-                    distance,
+                    grid_point_distances,
                     dpad,
                     env.afviewer,
                 )
@@ -2488,7 +2516,7 @@ class Ingredient(Agent):
                     target_grid_point_position,
                     rotation_matrix,
                     current_visual_instance,
-                    distance,
+                    grid_point_distances,
                     dpad,
                 )
             elif self.placeType == "pandaBullet":
@@ -2501,7 +2529,7 @@ class Ingredient(Agent):
                 ) = self.pandaBullet_place(
                     env,
                     ptInd,
-                    distance,
+                    grid_point_distances,
                     dpad,
                     env.afviewer,
                     compartment,
@@ -2527,7 +2555,7 @@ class Ingredient(Agent):
                     compartment,
                     target_grid_point_position,
                     rotation_matrix,
-                    distance,
+                    grid_point_distances,
                     dpad,
                     current_visual_instance,
                     dpad,
@@ -2537,11 +2565,44 @@ class Ingredient(Agent):
                 self.reject()
                 return False, {}, {}
         else:
-            new_dist_points = {}
-            inside_points = {}
+            # blind packing without further collision checks
             # TODO: make this work for ingredients other than single spheres
-            (insidePoints, newDistPoints) = self.get_new_distances_and_inside_points(env, ptInd, distance, new_dist_points, inside_points)
+
             success = True
+            newDistPoints = {}
+            insidePoints = {}
+
+            (jtrans, rotMatj,) = self.get_new_jitter_location_and_rotation(
+                env, target_grid_point_position, rotation_matrix
+            )
+
+            packing_location = jtrans
+            spacing = env.grid.gridSpacing
+            radius_of_area_to_check = (
+                self.encapsulatingRadius + self.getMaxJitter(spacing) + max_radius
+            )
+
+            bounding_points_to_check = self.get_all_positions_to_check(packing_location)
+
+            for bounding_point_position in bounding_points_to_check:
+
+                grid_points_to_update = env.grid.getPointsInSphere(
+                    bounding_point_position, radius_of_area_to_check
+                )
+
+                for grid_point_index in grid_points_to_update:
+                    (
+                        insidePoints,
+                        newDistPoints,
+                    ) = self.get_new_distances_and_inside_points(
+                        env,
+                        jtrans,
+                        grid_point_index,
+                        grid_point_distances,
+                        newDistPoints,
+                        insidePoints,
+                    )
+
         if success:
             if is_realtime:
                 autopack.helper.set_object_static(
@@ -2632,10 +2693,10 @@ class Ingredient(Agent):
 
         if jitter_sq > 0.0:
             found = False
-            # NOTE: making sure it hasn't picked a jitter point outside of the 
+            # NOTE: making sure it hasn't picked a jitter point outside of the
             # sphere created by the half way point to the next grid points
-            # TODO: Try seeing if this can be calculated more efficently using 
-            # polar coordinates 
+            # TODO: Try seeing if this can be calculated more efficently using
+            # polar coordinates
             while not found:
                 dx = jx * jitter * uniform(-1.0, 1.0)
                 dy = jy * jitter * uniform(-1.0, 1.0)
@@ -2933,12 +2994,16 @@ class Ingredient(Agent):
                     # found a collision, break this loop
                     break
                 else:
-                    insidePoints = self.merge_place_results(
-                        new_inside_points, insidePoints
-                    )
-                    newDistPoints = self.merge_place_results(
-                        new_dist_points, newDistPoints
-                    )
+                    if len(new_inside_points):
+                        insidePoints = self.merge_place_results(
+                            new_inside_points,
+                            insidePoints,
+                        )
+                    if len(new_dist_points):
+                        newDistPoints = self.merge_place_results(
+                            new_dist_points,
+                            newDistPoints,
+                        )
 
             if is_realtime:
                 box = self.vi.getObject("collBox")
@@ -3190,7 +3255,7 @@ class Ingredient(Agent):
                     self.env.rIngr.append(self)
                     self.env.result.append([pt, packing_rotation, self, ptInd])
 
-                    new_inside_pts, new_dist_points = self.get_new_distance_values(
+                    new_inside_points, new_dist_points = self.get_new_distance_values(
                         pt,
                         packing_rotation,
                         gridPointsCoords,
@@ -3198,12 +3263,16 @@ class Ingredient(Agent):
                         dpad,
                         self.deepest_level,
                     )
-                    insidePoints = self.merge_place_results(
-                        new_inside_pts, insidePoints
-                    )
-                    newDistPoints = self.merge_place_results(
-                        new_dist_points, newDistPoints
-                    )
+                    if len(new_inside_points):
+                        insidePoints = self.merge_place_results(
+                            new_inside_points,
+                            insidePoints,
+                        )
+                    if len(new_dist_points):
+                        newDistPoints = self.merge_place_results(
+                            new_dist_points,
+                            newDistPoints,
+                        )
                 self.log.info("compute distance loop %d", time() - t3)
 
                 # rebuild kdtree
@@ -3349,12 +3418,14 @@ class Ingredient(Agent):
                         dpad,
                         self.deepest_level,
                     )
-                    insidePoints = self.merge_place_results(
-                        new_inside_pts, insidePoints
-                    )
-                    newDistPoints = self.merge_place_results(
-                        new_dist_points, newDistPoints
-                    )
+                    if len(new_inside_pts):
+                        insidePoints = self.merge_place_results(
+                            new_inside_pts, insidePoints
+                        )
+                    if len(new_dist_points):
+                        newDistPoints = self.merge_place_results(
+                            new_dist_points, newDistPoints
+                        )
                 # rebuild kdtree
                 if len(self.env.rTrans) >= 1:
                     del self.env.close_ingr_bhtree

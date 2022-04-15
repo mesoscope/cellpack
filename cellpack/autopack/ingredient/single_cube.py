@@ -369,7 +369,7 @@ class SingleCubeIngr(Ingredient):
         #        spherenp.setPos(-2, 0, 4)
         return inodenp
 
-    #  TODO: 
+    #  TODO: set up distance function similar to single_sphere
     def get_signed_distance(self, point):
         side_lengths = numpy.abs(self.radii[0]) / 2.0
 
@@ -379,9 +379,7 @@ class SingleCubeIngr(Ingredient):
             if dist_y <= 0:
                 if dist_z <= 0:
                     # point is inside the cube
-                    current_distance = -numpy.min(
-                        numpy.abs([dist_x, dist_y, dist_z])
-                    )
+                    current_distance = -numpy.min(numpy.abs([dist_x, dist_y, dist_z]))
                 else:
                     # z plane is the closest
                     current_distance = dist_z

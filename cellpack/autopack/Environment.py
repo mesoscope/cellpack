@@ -2502,7 +2502,10 @@ class Environment(CompartmentList):
             if res[0]:
                 ptInd = res[1]
                 if ptInd > len(distances):
-                    self.log.warning("point index outside of grid length, should never be true ", ptInd)
+                    self.log.warning(
+                        "point index outside of grid length, should never be true ",
+                        ptInd,
+                    )
                     continue
             else:
                 self.log.info("vRangeStart coninue ", res)
@@ -2521,7 +2524,9 @@ class Environment(CompartmentList):
                 self.grid.masterGridPositions[ptInd],
             )
             collision_possible = True
-            if distances[ptInd] >= ingr.encapsulatingRadius + ingr.getMaxJitter(spacing):
+            if distances[ptInd] >= ingr.encapsulatingRadius + ingr.getMaxJitter(
+                spacing
+            ):
                 # there is no possible collision here
                 collision_possible = False
             (
@@ -2529,13 +2534,7 @@ class Environment(CompartmentList):
                 insidePoints,
                 newDistPoints,
             ) = ingr.attempt_to_pack_at_grid_location(
-                self,
-                ptInd,
-                distances,
-                max_radius,
-                spacing,
-                usePP,
-                collision_possible
+                self, ptInd, distances, max_radius, spacing, usePP, collision_possible
             )
             self.log.info(
                 "after place attempt, placed: %r, number of free points:%d, length of free points=%d",

@@ -184,12 +184,57 @@ class SingleSphereIngr(Ingredient):
                     print("OK false compartment", len(wrongPt))
                     return True
         return False
-    
+
     def get_signed_distance(self, location_of_packing, grid_point_location):
         radius = self.radii[0][0]
-        distance_to_packing_location = numpy.linalg.norm(location_of_packing - grid_point_location)
+        distance_to_packing_location = numpy.linalg.norm(
+            location_of_packing - grid_point_location
+        )
         signed_distance_to_sphere_surface = distance_to_packing_location - radius
         return signed_distance_to_sphere_surface
+
+    def get_new_distances_and_inside_points(
+        self,
+        env,
+        packing_location,
+        grid_point_index,
+        grid_distance_values,
+        new_dist_points,
+        inside_points,
+        signed_distance_to_surface=None,
+    ):
+        if signed_distance_to_surface is None:
+            grid_point_location = env.grid.masterGridPositions[grid_point_index]
+            signed_distance_to_surface = self.get_signed_distance(
+                packing_location, grid_point_location
+            )
+
+        if signed_distance_to_surface <= 0:  # point is inside dropped sphere
+            if (
+                env.grid.gridPtId[grid_point_index] != self.compNum
+                and self.compNum <= 0
+            ):  # did this jitter outside of it's compartment
+                # in wrong compartment, reject this packing position
+                self.log.warning("checked pt that is not in container")
+                return True, {}, {}
+            if grid_point_index in inside_points:
+                if abs(signed_distance_to_surface) < abs(
+                    inside_points[grid_point_index]
+                ):
+                    inside_points[grid_point_index] = signed_distance_to_surface
+            else:
+                inside_points[grid_point_index] = signed_distance_to_surface
+        elif (
+            signed_distance_to_surface < grid_distance_values[grid_point_index]
+        ):  # point in region of influence
+            # need to update the distances of the master grid with new smaller distance
+            if grid_point_index in new_dist_points:
+                new_dist_points[grid_point_index] = min(
+                    signed_distance_to_surface, new_dist_points[grid_point_index]
+                )
+            else:
+                new_dist_points[grid_point_index] = signed_distance_to_surface
+        return inside_points, new_dist_points
 
     def get_new_distance_values(
         self, jtrans, rotMatj, gridPointsCoords, distance, dpad, level=0
