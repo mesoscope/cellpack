@@ -369,11 +369,52 @@ class SingleCubeIngr(Ingredient):
         #        spherenp.setPos(-2, 0, 4)
         return inodenp
 
+    #  TODO: 
+    def get_signed_distance(self, point):
+        side_lengths = numpy.abs(self.radii[0]) / 2.0
+
+        dist_x, dist_y, dist_z = numpy.abs(point) - side_lengths
+
+        if dist_x <= 0:
+            if dist_y <= 0:
+                if dist_z <= 0:
+                    # point is inside the cube
+                    current_distance = -numpy.min(
+                        numpy.abs([dist_x, dist_y, dist_z])
+                    )
+                else:
+                    # z plane is the closest
+                    current_distance = dist_z
+            else:
+                if dist_z <= 0:
+                    # y plane is the closest
+                    current_distance = dist_y
+                else:
+                    # yz edge is the closest
+                    current_distance = numpy.sqrt(dist_y**2 + dist_z**2)
+        else:
+            if dist_y <= 0:
+                if dist_z <= 0:
+                    # x plane is closest
+                    current_distance = dist_x
+                else:
+                    # xz edge is the closest
+                    current_distance = numpy.sqrt(dist_x**2 + dist_z**2)
+            else:
+                if dist_z <= 0:
+                    # xy edge is the closest
+                    current_distance = numpy.sqrt(dist_x**2 + dist_y**2)
+                else:
+                    # vertex is the closest
+                    current_distance = numpy.sqrt(
+                        dist_x**2 + dist_y**2 + dist_z**2
+                    )
+        return current_distance
+
     def cube_surface_distance(self, points, rotMat, center_pos):
         # returns the distance to points in 'points' from the nearest cube surface
         # the cube center is located at self.center
         # a rotation matrix rotmat is applied to the cube
-
         cube_surface_distances = []
         rotMat_inv = numpy.linalg.inv(rotMat)
 
@@ -381,49 +422,10 @@ class SingleCubeIngr(Ingredient):
         transformed_points = self.transformPoints(
             [0.0, 0.0, 0.0], rotMat_inv, transformed_points
         )  # rotate points to align with cube axis
-
-        side_lengths = numpy.abs(self.radii[0]) / 2.0
-
         # run distance checks on transformed points
         for point in transformed_points:
 
-            dist_x, dist_y, dist_z = numpy.abs(point) - side_lengths
-
-            if dist_x <= 0:
-                if dist_y <= 0:
-                    if dist_z <= 0:
-                        # point is inside the cube
-                        current_distance = -numpy.min(
-                            numpy.abs([dist_x, dist_y, dist_z])
-                        )
-                    else:
-                        # z plane is the closest
-                        current_distance = dist_z
-                else:
-                    if dist_z <= 0:
-                        # y plane is the closest
-                        current_distance = dist_y
-                    else:
-                        # yz edge is the closest
-                        current_distance = numpy.sqrt(dist_y**2 + dist_z**2)
-            else:
-                if dist_y <= 0:
-                    if dist_z <= 0:
-                        # x plane is closest
-                        current_distance = dist_x
-                    else:
-                        # xz edge is the closest
-                        current_distance = numpy.sqrt(dist_x**2 + dist_z**2)
-                else:
-                    if dist_z <= 0:
-                        # xy edge is the closest
-                        current_distance = numpy.sqrt(dist_x**2 + dist_y**2)
-                    else:
-                        # vertex is the closest
-                        current_distance = numpy.sqrt(
-                            dist_x**2 + dist_y**2 + dist_z**2
-                        )
-
+            current_distance = self.get_signed_distance(point)
             cube_surface_distances.append(current_distance)
 
         return cube_surface_distances

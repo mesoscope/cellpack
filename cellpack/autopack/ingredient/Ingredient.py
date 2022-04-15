@@ -1639,6 +1639,7 @@ class Ingredient(Agent):
     def get_new_distances_and_inside_points(
         self,
         env,
+        packing_location,
         grid_point_index,
         grid_distance_values,
         new_dist_points,
@@ -1646,7 +1647,8 @@ class Ingredient(Agent):
         signed_distance_to_surface=None,
     ):
         if signed_distance_to_surface is None:
-            signed_distance_to_surface = self.get_signed_distance()
+            grid_point_location = env.grid.masterGridPositions[grid_point_index]
+            signed_distance_to_surface = self.get_signed_distance(packing_location, grid_point_location)
 
         if signed_distance_to_surface <= 0:  # point is inside dropped sphere
             if (
@@ -1769,7 +1771,7 @@ class Ingredient(Agent):
                     new_inside_points,
                     new_dist_points,
                 ) = self.get_new_distances_and_inside_points(
-                    env, grid_point_index, current_grid_distances, newDistPoints, insidePoints, signed_distance_to_sphere_surface)
+                    env, jtrans, grid_point_index, current_grid_distances, newDistPoints, insidePoints, signed_distance_to_sphere_surface)
                 insidePoints = self.merge_place_results(new_inside_points, insidePoints)
                 newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
             if not at_max_level:
@@ -2455,85 +2457,91 @@ class Ingredient(Agent):
                 env.afviewer,
                 current_visual_instance,
             )
-
-        # grow doesnt use panda.......but could use all the geom produce by the grow as rb
-        if self.Type == "Grow" or self.Type == "Actine":
-            success, jtrans, rotMatj, insidePoints, newDistPoints = self.grow_place(
-                env, ptInd, env.grid.freePoints, env.grid.nbFreePoints, distance, dpad
-            )
-        elif self.placeType == "jitter":
-            success, jtrans, rotMatj, insidePoints, newDistPoints = self.jitter_place(
-                env,
-                compartment,
-                target_grid_point_position,
-                rotation_matrix,
-                current_visual_instance,
-                distance,
-                dpad,
-                env.afviewer,
-            )
-        elif self.placeType == "spheresSST":
-            (
-                success,
-                jtrans,
-                rotMatj,
-                insidePoints,
-                newDistPoints,
-            ) = self.pandaBullet_placeBHT(
-                env,
-                compartment,
-                ptInd,
-                target_grid_point_position,
-                rotation_matrix,
-                current_visual_instance,
-                distance,
-                dpad,
-            )
-        elif self.placeType == "pandaBullet":
-            (
-                success,
-                jtrans,
-                rotMatj,
-                insidePoints,
-                newDistPoints,
-            ) = self.pandaBullet_place(
-                env,
-                ptInd,
-                distance,
-                dpad,
-                env.afviewer,
-                compartment,
-                gridPointsCoords,
-                rotation_matrix,
-                target_grid_point_position,
-                current_visual_instance,
-                usePP=usePP,
-            )
-        elif (
-            self.placeType == "pandaBulletRelax"
-            or self.placeType == "pandaBulletSpring"
-        ):
-            (
-                success,
-                jtrans,
-                rotMatj,
-                insidePoints,
-                newDistPoints,
-            ) = self.pandaBullet_relax(
-                env,
-                ptInd,
-                compartment,
-                target_grid_point_position,
-                rotation_matrix,
-                distance,
-                dpad,
-                current_visual_instance,
-                dpad,
-            )
+        if collision_possible:
+            # grow doesnt use panda.......but could use all the geom produce by the grow as rb
+            if self.Type == "Grow" or self.Type == "Actine":
+                success, jtrans, rotMatj, insidePoints, newDistPoints = self.grow_place(
+                    env, ptInd, env.grid.freePoints, env.grid.nbFreePoints, distance, dpad
+                )
+            elif self.placeType == "jitter":
+                success, jtrans, rotMatj, insidePoints, newDistPoints = self.jitter_place(
+                    env,
+                    compartment,
+                    target_grid_point_position,
+                    rotation_matrix,
+                    current_visual_instance,
+                    distance,
+                    dpad,
+                    env.afviewer,
+                )
+            elif self.placeType == "spheresSST":
+                (
+                    success,
+                    jtrans,
+                    rotMatj,
+                    insidePoints,
+                    newDistPoints,
+                ) = self.pandaBullet_placeBHT(
+                    env,
+                    compartment,
+                    ptInd,
+                    target_grid_point_position,
+                    rotation_matrix,
+                    current_visual_instance,
+                    distance,
+                    dpad,
+                )
+            elif self.placeType == "pandaBullet":
+                (
+                    success,
+                    jtrans,
+                    rotMatj,
+                    insidePoints,
+                    newDistPoints,
+                ) = self.pandaBullet_place(
+                    env,
+                    ptInd,
+                    distance,
+                    dpad,
+                    env.afviewer,
+                    compartment,
+                    gridPointsCoords,
+                    rotation_matrix,
+                    target_grid_point_position,
+                    current_visual_instance,
+                    usePP=usePP,
+                )
+            elif (
+                self.placeType == "pandaBulletRelax"
+                or self.placeType == "pandaBulletSpring"
+            ):
+                (
+                    success,
+                    jtrans,
+                    rotMatj,
+                    insidePoints,
+                    newDistPoints,
+                ) = self.pandaBullet_relax(
+                    env,
+                    ptInd,
+                    compartment,
+                    target_grid_point_position,
+                    rotation_matrix,
+                    distance,
+                    dpad,
+                    current_visual_instance,
+                    dpad,
+                )
+            else:
+                self.log.error("Can't pack using this method %s", self.placeType)
+                self.reject()
+                return False, {}, {}
         else:
-            self.log.error("Can't pack using this method %s", self.placeType)
-            self.reject()
-            return False, {}, {}
+            new_dist_points = {}
+            inside_points = {}
+            # TODO: make this work for ingredients other than single spheres
+            (insidePoints, newDistPoints) = self.get_new_distances_and_inside_points(env, ptInd, distance, new_dist_points, inside_points)
+            success = True
         if success:
             if is_realtime:
                 autopack.helper.set_object_static(
