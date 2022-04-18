@@ -185,18 +185,24 @@ class SingleSphereIngr(Ingredient):
                     return True
         return False
 
-    def get_signed_distance(self, location_of_packing, grid_point_location):
+    def get_signed_distance(
+        self,
+        packing_location,
+        grid_point_location,
+        rotation_matrix=None,
+    ):
         radius = self.radii[0][0]
         distance_to_packing_location = numpy.linalg.norm(
-            location_of_packing - grid_point_location
+            packing_location - grid_point_location
         )
-        signed_distance_to_sphere_surface = distance_to_packing_location - radius
-        return signed_distance_to_sphere_surface
+        signed_distance_to_surface = distance_to_packing_location - radius
+        return signed_distance_to_surface
 
     def get_new_distances_and_inside_points(
         self,
         env,
         packing_location,
+        rotation_matrix,
         grid_point_index,
         grid_distance_values,
         new_dist_points,
@@ -206,7 +212,9 @@ class SingleSphereIngr(Ingredient):
         if signed_distance_to_surface is None:
             grid_point_location = env.grid.masterGridPositions[grid_point_index]
             signed_distance_to_surface = self.get_signed_distance(
-                packing_location, grid_point_location
+                packing_location,
+                grid_point_location,
+                rotation_matrix,
             )
 
         if signed_distance_to_surface <= 0:  # point is inside dropped sphere

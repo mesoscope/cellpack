@@ -191,9 +191,14 @@ class SingleCubeIngr(Ingredient):
         grid_point_vectors = numpy.take(gridPointsCoords, points_to_check, 0)
 
         # signed distances of grid points from the cube surface
-        grid_point_distances = self.cube_surface_distance(
-            grid_point_vectors, rotMat, center_trans
-        )
+        grid_point_distances = []
+        for grid_point in grid_point_vectors:
+            grid_point_distance = self.get_signed_distance(
+                center_trans,
+                grid_point,
+                rotMat,
+            )
+            grid_point_distances.append(grid_point_distance)
 
         for pti in range(len(points_to_check)):
             # pti = point index
@@ -369,8 +374,57 @@ class SingleCubeIngr(Ingredient):
         #        spherenp.setPos(-2, 0, 4)
         return inodenp
 
-    #  TODO: set up distance function similar to single_sphere
-    def get_signed_distance(self, point):
+    def get_new_distances_and_inside_points(
+        self,
+        env,
+        packing_location,
+        rotation_matrix,
+        grid_point_index,
+        grid_distance_values,
+        new_dist_points,
+        inside_points,
+        signed_distance_to_surface=None,
+    ):
+        if signed_distance_to_surface is None:
+            grid_point_location = env.grid.masterGridPositions[grid_point_index]
+            signed_distance_to_surface = self.get_signed_distance(
+                packing_location,
+                grid_point_location,
+                rotation_matrix,
+            )
+        if signed_distance_to_surface <= 0:  # point is inside dropped sphere
+            if (
+                env.grid.gridPtId[grid_point_index] != self.compNum
+                and self.compNum <= 0
+            ):  # did this jitter outside of it's compartment
+                # in wrong compartment, reject this packing position
+                self.log.warning("checked pt that is not in container")
+                return True, {}, {}
+            if grid_point_index in inside_points:
+                if abs(signed_distance_to_surface) < abs(
+                    inside_points[grid_point_index]
+                ):
+                    inside_points[grid_point_index] = signed_distance_to_surface
+            else:
+                inside_points[grid_point_index] = signed_distance_to_surface
+        elif (
+            signed_distance_to_surface < grid_distance_values[grid_point_index]
+        ):  # point in region of influence
+            # need to update the distances of the master grid with new smaller distance
+            if grid_point_index in new_dist_points:
+                new_dist_points[grid_point_index] = min(
+                    signed_distance_to_surface, new_dist_points[grid_point_index]
+                )
+            else:
+                new_dist_points[grid_point_index] = signed_distance_to_surface
+
+        return inside_points, new_dist_points
+
+    def cube_surface_distance(
+        self,
+        point,
+    ):
+        # returns the distance to the closest cube surface from point
         side_lengths = numpy.abs(self.radii[0]) / 2.0
 
         dist_x, dist_y, dist_z = numpy.abs(point) - side_lengths
@@ -409,21 +463,25 @@ class SingleCubeIngr(Ingredient):
                     )
         return current_distance
 
-    def cube_surface_distance(self, points, rotMat, center_pos):
-        # returns the distance to points in 'points' from the nearest cube surface
-        # the cube center is located at self.center
-        # a rotation matrix rotmat is applied to the cube
-        cube_surface_distances = []
-        rotMat_inv = numpy.linalg.inv(rotMat)
+    def get_signed_distance(
+        self,
+        packing_location,
+        grid_point_location,
+        rotation_matrix,
+    ):
+        # returns the distance to 'grid_point_location' from the nearest cube surface
+        # the cube center is located at packing_location
+        # a rotation matrix rotation_matrix is applied to the cube
+        signed_distance_to_surface = []
+        inv_rotation_matrix = numpy.linalg.inv(rotation_matrix)
 
-        transformed_points = points - center_pos  # translate points to cube center
-        transformed_points = self.transformPoints(
-            [0.0, 0.0, 0.0], rotMat_inv, transformed_points
+        transformed_point = [
+            (grid_point_location - packing_location)
+        ]  # translate points to cube center
+        transformed_point = self.transformPoints(
+            self.center, inv_rotation_matrix, transformed_point
         )  # rotate points to align with cube axis
         # run distance checks on transformed points
-        for point in transformed_points:
+        signed_distance_to_surface = self.cube_surface_distance(transformed_point[0])
 
-            current_distance = self.get_signed_distance(point)
-            cube_surface_distances.append(current_distance)
-
-        return cube_surface_distances
+        return signed_distance_to_surface

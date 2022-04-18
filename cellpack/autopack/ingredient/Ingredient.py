@@ -1640,6 +1640,7 @@ class Ingredient(Agent):
         self,
         env,
         packing_location,
+        rotation_matrix,
         grid_point_index,
         grid_distance_values,
         new_dist_points,
@@ -1649,7 +1650,9 @@ class Ingredient(Agent):
         if signed_distance_to_surface is None:
             grid_point_location = env.grid.masterGridPositions[grid_point_index]
             signed_distance_to_surface = self.get_signed_distance(
-                packing_location, grid_point_location
+                packing_location,
+                grid_point_location,
+                rotation_matrix,
             )
 
         if signed_distance_to_surface <= 0:  # point is inside dropped sphere
@@ -1772,25 +1775,18 @@ class Ingredient(Agent):
                 )
 
                 (
-                    new_inside_points,
-                    new_dist_points,
+                    insidePoints,
+                    newDistPoints,
                 ) = self.get_new_distances_and_inside_points(
                     env,
                     jtrans,
+                    rotMat,
                     grid_point_index,
                     current_grid_distances,
                     newDistPoints,
                     insidePoints,
                     signed_distance_to_sphere_surface,
                 )
-                if len(new_inside_points):
-                    insidePoints = self.merge_place_results(
-                        new_inside_points, insidePoints
-                    )
-                if len(new_dist_points):
-                    newDistPoints = self.merge_place_results(
-                        new_dist_points, newDistPoints
-                    )
 
             if not at_max_level:
                 # we didn't find any colisions with the this level, but we still want
@@ -2603,6 +2599,7 @@ class Ingredient(Agent):
                     ) = self.get_new_distances_and_inside_points(
                         env,
                         bounding_point_position,
+                        rotation_matrix,
                         grid_point_index,
                         grid_point_distances,
                         newDistPoints,
@@ -3009,7 +3006,7 @@ class Ingredient(Agent):
                         newDistPoints = self.merge_place_results(
                             new_dist_points,
                             newDistPoints,
-                         )
+                        )
 
             if is_realtime:
                 box = self.vi.getObject("collBox")
