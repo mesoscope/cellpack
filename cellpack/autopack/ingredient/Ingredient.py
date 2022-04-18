@@ -1772,8 +1772,8 @@ class Ingredient(Agent):
                 )
 
                 (
-                    insidePoints,
-                    newDistPoints,
+                    new_inside_points,
+                    new_dist_points,
                 ) = self.get_new_distances_and_inside_points(
                     env,
                     jtrans,
@@ -1783,6 +1783,14 @@ class Ingredient(Agent):
                     insidePoints,
                     signed_distance_to_sphere_surface,
                 )
+                if len(new_inside_points):
+                    insidePoints = self.merge_place_results(
+                        new_inside_points, insidePoints
+                    )
+                if len(new_dist_points):
+                    newDistPoints = self.merge_place_results(
+                        new_dist_points, newDistPoints
+                    )
 
             if not at_max_level:
                 # we didn't find any colisions with the this level, but we still want
