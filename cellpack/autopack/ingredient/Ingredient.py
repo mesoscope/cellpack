@@ -1772,8 +1772,8 @@ class Ingredient(Agent):
                 )
 
                 (
-                    insidePoints,
-                    newDistPoints,
+                    new_inside_points,
+                    new_dist_points,
                 ) = self.get_new_distances_and_inside_points(
                     env,
                     jtrans,
@@ -1783,6 +1783,14 @@ class Ingredient(Agent):
                     insidePoints,
                     signed_distance_to_sphere_surface,
                 )
+                if len(new_inside_points):
+                    insidePoints = self.merge_place_results(
+                        new_inside_points, insidePoints
+                    )
+                if len(new_dist_points):
+                    newDistPoints = self.merge_place_results(
+                        new_dist_points, newDistPoints
+                    )
 
             if not at_max_level:
                 # we didn't find any colisions with the this level, but we still want
@@ -2578,9 +2586,7 @@ class Ingredient(Agent):
 
             packing_location = jtrans
             spacing = env.grid.gridSpacing
-            radius_of_area_to_check = (
-                self.encapsulatingRadius + self.getMaxJitter(spacing) + max_radius
-            )
+            radius_of_area_to_check = self.encapsulatingRadius + dpad
 
             bounding_points_to_check = self.get_all_positions_to_check(packing_location)
 
@@ -2596,7 +2602,7 @@ class Ingredient(Agent):
                         newDistPoints,
                     ) = self.get_new_distances_and_inside_points(
                         env,
-                        jtrans,
+                        bounding_point_position,
                         grid_point_index,
                         grid_point_distances,
                         newDistPoints,
