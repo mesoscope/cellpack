@@ -1471,6 +1471,12 @@ class Ingredient(Agent):
         return (x + dx, y + dy, z + dz)
 
     def transformPoints(self, trans, rot, points):
+        output = []
+        for point in points:
+            output.append(numpy.matmul(rot[:-1,:-1], point) + trans)
+        return output
+
+    def transformPoints_mult(self, trans, rot, points):
         tx, ty, tz = trans
         pos = []
         for xs, ys, zs in points:
