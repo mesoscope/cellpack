@@ -1473,7 +1473,7 @@ class Ingredient(Agent):
     def transformPoints(self, trans, rot, points):
         output = []
         for point in points:
-            output.append(numpy.matmul(rot[0:3,0:3], point) + trans)
+            output.append(numpy.matmul(rot[0:3, 0:3], point) + trans)
         return output
 
     def transformPoints_mult(self, trans, rot, points):
@@ -2587,7 +2587,6 @@ class Ingredient(Agent):
             )
 
             packing_location = jtrans
-            spacing = env.grid.gridSpacing
             radius_of_area_to_check = self.encapsulatingRadius + dpad
 
             bounding_points_to_check = self.get_all_positions_to_check(packing_location)
@@ -2605,7 +2604,7 @@ class Ingredient(Agent):
                     ) = self.get_new_distances_and_inside_points(
                         env,
                         bounding_point_position,
-                        rotation_matrix,
+                        rotMatj,
                         grid_point_index,
                         grid_point_distances,
                         newDistPoints,
