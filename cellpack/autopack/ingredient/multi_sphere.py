@@ -91,8 +91,8 @@ class MultiSphereIngr(SingleSphereIngr):
         )
         min_radius = float(encapsulatingRadius)
         for level in radii:
-            if min(level['radii']) < min_radius:
-                min_radius = min(level['radii'])
+            if min(level["radii"]) < min_radius:
+                min_radius = min(level["radii"])
         self.minRadius = min_radius
         if name is None:
             name = "%s_%f" % (str(radii), molarity)

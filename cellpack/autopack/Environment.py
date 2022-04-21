@@ -763,7 +763,9 @@ class Environment(CompartmentList):
     def loadRecipeString(self, astring):
         return IOutils.load_JsonString(self, astring)
 
-    def save_result(self, freePoints, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array):
+    def save_result(
+        self, freePoints, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array
+    ):
         self.grid.freePoints = freePoints[:]
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
@@ -783,7 +785,7 @@ class Environment(CompartmentList):
             kwds=["compNum"],
             result=True,
             quaternion=True,
-            all_ingr_as_array=all_ingr_as_array
+            all_ingr_as_array=all_ingr_as_array,
         )  # pdb ?
         self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
@@ -2629,7 +2631,7 @@ class Environment(CompartmentList):
                 vAnalysis=vAnalysis,
                 vTestid=vTestid,
                 seedNum=seedNum,
-                all_ingr_as_array=all_ingr_as_array
+                all_ingr_as_array=all_ingr_as_array,
             )
 
     def displayCancelDialog(self):
