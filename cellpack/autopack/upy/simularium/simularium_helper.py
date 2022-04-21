@@ -110,6 +110,10 @@ class simulariumHelper(hostHelper.Helper):
         self.hext = "dae"
         self.max_fiber_length = 0
 
+    def clear(self):
+        self.scene = {}
+        self.time = -1
+
     def updateAppli(self, *args, **kw):
         return self.update(*args, **kw)
 
@@ -161,7 +165,7 @@ class simulariumHelper(hostHelper.Helper):
         return
 
     def update(self):
-        return
+        self.increment_time()
 
     def getType(self, object):
         return object.__module__
@@ -199,6 +203,10 @@ class simulariumHelper(hostHelper.Helper):
 
     def move_object(self, name, position=None, rotation=None, sub_points=None):
         self.increment_time()
+        obj = self.getObject(name)
+        obj.move(self.time, position, rotation, sub_points)
+
+    def place_object(self, name, position=None, rotation=None, sub_points=None):
         obj = self.getObject(name)
         obj.move(self.time, position, rotation, sub_points)
 
@@ -249,7 +257,7 @@ class simulariumHelper(hostHelper.Helper):
         instance.geom.Set(instanceMatrices=np.array(matrice))
         del instance
 
-    def add_new_instance(
+    def add_new_instance_and_update_time(
         self,
         name,
         ingredient,
@@ -272,6 +280,30 @@ class simulariumHelper(hostHelper.Helper):
         )
         self.scene[instance_id] = new_instance
         self.move_object(instance_id, position, rotation, sub_points)
+
+    def add_instance(
+        self,
+        name,
+        ingredient,
+        instance_id,
+        position=None,
+        rotation=None,
+        sub_points=None,
+    ):
+        self.agent_id_counter += 1
+        if ingredient.Type == "Grow" or ingredient.Type == "Actine":
+            viz_type = VIZ_TYPE.FIBER
+        else:
+            viz_type = VIZ_TYPE.DEFAULT
+        new_instance = Instance(
+            name,
+            instance_id,
+            self.agent_id_counter,
+            ingredient.encapsulatingRadius,
+            viz_type,
+        )
+        self.scene[instance_id] = new_instance
+        self.place_object(instance_id, position, rotation, sub_points)
 
     def setObjectMatrix(self, object, matrice, **kw):
         if "transpose" in kw and not hasattr(object, "isinstance"):
@@ -305,9 +337,35 @@ class simulariumHelper(hostHelper.Helper):
             name=ingredient.name, display_type=display_type
         )
 
-        self.add_new_instance(
+        self.add_new_instance_and_update_time(
             ingredient.name, ingredient, instance_id, position, rotation, control_points
         )
+
+    def update_instance_positions_and_rotations(
+        self,
+        objects,
+    ):
+        for position, rotation, ingredient, ptInd in objects:
+            instance_id = f"{ingredient.name}-{ptInd}"
+            self.place_object(instance_id, position, rotation)
+
+    def init_scene_with_objects(
+        self,
+        objects,
+    ):
+        self.time = 0
+        for position, rotation, ingredient, ptInd in objects:
+            ingr_name = ingredient.name
+            display_type = DISPLAY_TYPE.SPHERE
+   
+            if ingredient.Type == "SingleCube":
+                display_type = DISPLAY_TYPE.CUBE
+            self.display_data[ingredient.name] = DisplayData(
+                name=ingredient.name, display_type=display_type
+            )
+            self.add_instance(
+                ingredient.name, ingredient, f"{ingr_name}-{ptInd}", position, rotation, None
+            )
 
     def addCameraToScene(self):
         pass
@@ -1155,7 +1213,7 @@ class simulariumHelper(hostHelper.Helper):
             for x in range(max_number_agents)
             for x in range(total_steps)
         ]
-        for t in range(self.time):
+        for t in range(total_steps):
             n = 0
             for name in self.scene:
                 obj = self.scene[name]
@@ -1167,7 +1225,7 @@ class simulariumHelper(hostHelper.Helper):
                 type_names[t][n] = obj.name
                 unique_ids[t][n] = obj.id
                 radii[t][n] = obj.radius * self.scale_factor
-                if obj.viz_type == 1001:
+                if obj.viz_type == VIZ_TYPE.FIBER:
                     curve = data_at_time["sub_points"]
                     viz_types[t][n] = obj.viz_type
                     positions[t][n] = [0, 0, 0]
