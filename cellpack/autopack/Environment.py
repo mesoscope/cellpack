@@ -774,10 +774,12 @@ class Environment(CompartmentList):
         self.store()
         self.store_asTxt()
         #            self.store_asJson(resultfilename=self.resultfile+".json")
-        self.saveRecipe(
+
+        IOutils.save(
+            self,
             self.resultfile + ".json",
             useXref=False,
-            mixed=True,
+            format_output="simularium",
             kwds=["compNum"],
             result=True,
             quaternion=True,
@@ -955,49 +957,6 @@ class Environment(CompartmentList):
 
             #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
         self.log.info("time to save end %d", time() - t0)
-
-    def saveRecipe(
-        self,
-        setupfile,
-        useXref=None,
-        format_output="json",
-        mixed=False,
-        kwds=None,
-        result=False,
-        grid=False,
-        packing_options=False,
-        indent=False,
-        quaternion=False,
-        transpose=False,
-    ):
-        #        if result :
-        #            self.collectResultPerIngredient()
-        if useXref is None:
-            useXref = self.useXref
-        if format_output == "json":
-            if mixed:
-                IOutils.save_Mixed_asJson(
-                    self,
-                    setupfile,
-                    useXref=useXref,
-                    kwds=kwds,
-                    result=result,
-                    indent=indent,
-                    grid=grid,
-                    packing_options=packing_options,
-                    quaternion=quaternion,
-                    transpose=transpose,
-                )
-            else:
-                IOutils.save_asJson(self, setupfile, useXref=useXref, indent=indent)
-        elif format_output == "xml":
-            IOutils.save_asXML(self, setupfile, useXref=useXref)
-        elif format_output == "python":
-            IOutils.save_asPython(self, setupfile, useXref=useXref)
-        else:
-            print(
-                "format output " + format_output + " not recognized (json,xml,python)"
-            )
 
     def saveNewRecipe(self, filename):
         djson, all_pos, all_rot = IOutils.serializedRecipe(
@@ -2609,18 +2568,18 @@ class Environment(CompartmentList):
             if dump and ((time() - stime) > dump_freq):
                 self.collectResultPerIngredient()
                 print("SAVING", self.resultfile)
-                self.saveRecipe(
+                IOutils.save(
+                    self,
                     self.resultfile + "_temporaray.json",
                     useXref=True,
-                    mixed=True,
                     kwds=["source", "name", "positions", "radii"],
                     result=True,
                     quaternion=True,
                 )
-                self.saveRecipe(
+                IOutils.save(
+                    self,
                     self.resultfile + "_temporaray_transpose.json",
                     useXref=True,
-                    mixed=True,
                     kwds=["source", "name", "positions", "radii"],
                     result=True,
                     quaternion=True,
