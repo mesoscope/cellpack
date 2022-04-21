@@ -26,11 +26,13 @@ class MultiSphereIngr(SingleSphereIngr):
         isAttractor=False,
         jitterMax=(1, 1, 1),
         meshFile=None,
+        meshType="file",
         meshObject=None,
         molarity=0.0,
         name=None,
         nbJitter=5,
         nbMol=0,
+        offset=None,
         orientBiasRotRangeMax=-pi,
         orientBiasRotRangeMin=-pi,
         overwrite_distFunc=True,  # overWrite
@@ -52,6 +54,7 @@ class MultiSphereIngr(SingleSphereIngr):
         rejectionThreshold=30,
         rotAxis=[0.0, 0.0, 0.0],
         rotRange=0,
+        source=None,
         sphereFile=None,
         Type="MultiSphere",
         useOrientBias=False,
@@ -66,10 +69,12 @@ class MultiSphereIngr(SingleSphereIngr):
             jitterMax=jitterMax,
             meshFile=meshFile,
             meshObject=meshObject,
+            meshType=meshType,
             molarity=molarity,
             name=name,
             nbJitter=nbJitter,
             nbMol=nbMol,
+            offset=offset,
             packingMode=packingMode,
             packingPriority=packingPriority,
             pdb=pdb,
@@ -80,14 +85,14 @@ class MultiSphereIngr(SingleSphereIngr):
             radii=radii,
             rotAxis=rotAxis,
             rotRange=rotRange,
+            source=source,
             sphereFile=sphereFile,
             Type=Type,
         )
-        min_radius = encapsulatingRadius
+        min_radius = float(encapsulatingRadius)
         for level in radii:
-            if min(level) < min_radius:
-                min_radius = min(level)
-
+            if min(level['radii']) < min_radius:
+                min_radius = min(level['radii'])
         self.minRadius = min_radius
         if name is None:
             name = "%s_%f" % (str(radii), molarity)
