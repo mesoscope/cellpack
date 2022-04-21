@@ -2593,7 +2593,8 @@ class Environment(CompartmentList):
         self.distanceAfterFill = distances[:]
         t2 = time()
         self.log.info("time to fill %d", t2 - t1)
-
+        if self.runTimeDisplay and autopack.helper.host == "simularium":
+            autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
         if self.saveResult:
             self.save_result(
                 freePoints,
@@ -2625,8 +2626,7 @@ class Environment(CompartmentList):
                 ingredients[ingr.name][1].append(pos)
                 ingredients[ingr.name][2].append(rot)
                 ingredients[ingr.name][3].append(numpy.array(mat))
-        if self.runTimeDisplay and autopack.helper.host == "simularium":
-            autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
+
 
         self.ingr_result = ingredients
 
