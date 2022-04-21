@@ -763,7 +763,7 @@ class Environment(CompartmentList):
     def loadRecipeString(self, astring):
         return IOutils.load_JsonString(self, astring)
 
-    def save_result(self, freePoints, distances, t0, vAnalysis, vTestid, seedNum):
+    def save_result(self, freePoints, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array):
         self.grid.freePoints = freePoints[:]
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
@@ -783,6 +783,7 @@ class Environment(CompartmentList):
             kwds=["compNum"],
             result=True,
             quaternion=True,
+            all_ingr_as_array=all_ingr_as_array
         )  # pdb ?
         self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
@@ -2595,20 +2596,12 @@ class Environment(CompartmentList):
         self.log.info("time to fill %d", t2 - t1)
         if self.runTimeDisplay and autopack.helper.host == "simularium":
             autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
-        if self.saveResult:
-            self.save_result(
-                freePoints,
-                distances=distances,
-                t0=t2,
-                vAnalysis=vAnalysis,
-                vTestid=vTestid,
-                seedNum=seedNum,
-            )
 
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):
             self.afviewer.vi.progressBar(label="Filling Complete")
             self.afviewer.vi.resetProgressBar()
         ingredients = {}
+        all_ingr_as_array = self.molecules
         for pos, rot, ingr, ptInd in self.molecules:
             if ingr.name not in ingredients:
                 ingredients[ingr.name] = [ingr, [], [], []]
@@ -2626,8 +2619,18 @@ class Environment(CompartmentList):
                 ingredients[ingr.name][1].append(pos)
                 ingredients[ingr.name][2].append(rot)
                 ingredients[ingr.name][3].append(numpy.array(mat))
-
+                all_ingr_as_array.append([pos, rot, ingr, ptInd])
         self.ingr_result = ingredients
+        if self.saveResult:
+            self.save_result(
+                freePoints,
+                distances=distances,
+                t0=t2,
+                vAnalysis=vAnalysis,
+                vTestid=vTestid,
+                seedNum=seedNum,
+                all_ingr_as_array=all_ingr_as_array
+            )
 
     def displayCancelDialog(self):
         print(

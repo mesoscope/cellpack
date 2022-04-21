@@ -6,6 +6,7 @@ Created on Sun Jan 27 09:04:10 2013
 """
 import os
 import pickle
+import webbrowser
 
 import numpy
 from xml.dom.minidom import getDOMImplementation
@@ -568,10 +569,11 @@ def addCompartments(env, compdic, i, io_ingr):
                     o.setInnerRecipe(rMatrix)
 
 
-def save_as_simularium(env, setupfile):
+def save_as_simularium(env, setupfile, all_ingr_as_array):
     autopack.helper.clear()
-    autopack.helper.init_scene_with_objects(env.molecules)
+    autopack.helper.init_scene_with_objects(all_ingr_as_array)
     autopack.helper.writeToFile(None, f"{setupfile}_results", env.boundingBox)
+    webbrowser.open("https://simularium.allencell.org/viewer")
 
 
 def save_Mixed_asJson(
@@ -2144,6 +2146,7 @@ def save(
     indent=False,
     quaternion=False,
     transpose=False,
+    all_ingr_as_array=None,
 ):
     if useXref is None:
         useXref = env.useXref
@@ -2162,7 +2165,7 @@ def save(
         )
 
     elif format_output == "simularium":
-        save_as_simularium(env, setupfile)
+        save_as_simularium(env, setupfile, all_ingr_as_array)
     elif format_output == "xml":
         save_asXML(env, setupfile, useXref=useXref)
     elif format_output == "python":
