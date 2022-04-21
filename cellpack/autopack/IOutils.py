@@ -2143,7 +2143,7 @@ def save(
     packing_options=False,
     indent=False,
     quaternion=False,
-    transpose=False
+    transpose=False,
 ):
     if useXref is None:
         useXref = env.useXref
@@ -2168,6 +2168,4 @@ def save(
     elif format_output == "python":
         save_asPython(env, setupfile, useXref=useXref)
     else:
-        print(
-            "format output " + format_output + " not recognized (json,xml,python)"
-        )
+        print("format output " + format_output + " not recognized (json,xml,python)")

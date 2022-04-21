@@ -2627,7 +2627,6 @@ class Environment(CompartmentList):
                 ingredients[ingr.name][2].append(rot)
                 ingredients[ingr.name][3].append(numpy.array(mat))
 
-
         self.ingr_result = ingredients
 
     def displayCancelDialog(self):

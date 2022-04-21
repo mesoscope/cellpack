@@ -357,14 +357,19 @@ class simulariumHelper(hostHelper.Helper):
         for position, rotation, ingredient, ptInd in objects:
             ingr_name = ingredient.name
             display_type = DISPLAY_TYPE.SPHERE
-   
+
             if ingredient.Type == "SingleCube":
                 display_type = DISPLAY_TYPE.CUBE
             self.display_data[ingredient.name] = DisplayData(
                 name=ingredient.name, display_type=display_type
             )
             self.add_instance(
-                ingredient.name, ingredient, f"{ingr_name}-{ptInd}", position, rotation, None
+                ingredient.name,
+                ingredient,
+                f"{ingr_name}-{ptInd}",
+                position,
+                rotation,
+                None,
             )
 
     def addCameraToScene(self):
