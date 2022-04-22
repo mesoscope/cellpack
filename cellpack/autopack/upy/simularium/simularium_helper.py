@@ -2,6 +2,7 @@
 # standardmodule
 import os
 import numpy as np
+import trimesh
 
 from simulariumio import (
     TrajectoryConverter,
@@ -28,6 +29,7 @@ class Instance:
         unique_id,
         radius,
         viz_type,
+        mesh=None
     ):
         self.name = name
         self.radius = radius
@@ -37,6 +39,7 @@ class Instance:
         self.is_static = False
         self.viz_type = viz_type
         self.time_mapping = {}
+        self.mesh = mesh
 
     def set_static(self, is_static, position=None, rotation=None, sub_points=None):
         self.is_static = is_static
@@ -289,20 +292,26 @@ class simulariumHelper(hostHelper.Helper):
         position=None,
         rotation=None,
         sub_points=None,
+        mesh=None,
     ):
         self.agent_id_counter += 1
-        if ingredient.Type == "Grow" or ingredient.Type == "Actine":
+        if (ingredient and ingredient.Type == "Grow") or (ingredient and ingredient.Type == "Actine"):
             viz_type = VIZ_TYPE.FIBER
         else:
             viz_type = VIZ_TYPE.DEFAULT
+
+        radius = ingredient.encapsulatingRadius if ingredient is not None else 1
         new_instance = Instance(
             name,
             instance_id,
             self.agent_id_counter,
-            ingredient.encapsulatingRadius,
+            radius,
             viz_type,
+            mesh,
         )
         self.scene[instance_id] = new_instance
+        if position is None and sub_points is None:
+            return
         self.place_object(instance_id, position, rotation, sub_points)
 
     def setObjectMatrix(self, object, matrice, **kw):
@@ -336,7 +345,8 @@ class simulariumHelper(hostHelper.Helper):
         self.display_data[ingredient.name] = DisplayData(
             name=ingredient.name, display_type=display_type
         )
-
+        if position is None and control_points is None:
+            return
         self.add_new_instance_and_update_time(
             ingredient.name, ingredient, instance_id, position, rotation, control_points
         )
@@ -359,7 +369,7 @@ class simulariumHelper(hostHelper.Helper):
             display_type = DISPLAY_TYPE.SPHERE
 
             if ingredient.Type == "SingleCube":
-                display_type = DISPLAY_TYPE.CUBE
+                display_type = "CUBE"
             self.display_data[ingredient.name] = DisplayData(
                 name=ingredient.name, display_type=display_type
             )
@@ -407,7 +417,8 @@ class simulariumHelper(hostHelper.Helper):
         return None
 
     def getTranslation(self, name):
-        return self.getObject(name).translation  # or getCumulatedTranslation
+
+        return self.getObject(name).mesh.centroid  # or getCumulatedTranslation
 
     def setTranslation(self, name, pos=[0.0, 0.0, 0.0]):
         self.getObject(name).SetTranslation(self.FromVec(pos))
@@ -732,23 +743,9 @@ class simulariumHelper(hostHelper.Helper):
         @rtype:   hostApp obj
         @return:  the polygon object
         """
-        # shading = "flat"
-        # if smooth:
-        #     shading = "smooth"
-        # PDBgeometry = IndexedPolygons(
-        #     name,
-        #     vertices=vertices,
-        #     faces=faces,
-        #     vnormals=vnormals,
-        #     materials=color,
-        #     shading=shading,
-        # )
-        # parent = None
-        # if "parent" in kw:
-        #     parent = kw["parent"]
-        # self.addObjectToScene(None, PDBgeometry, parent=parent)
-        # return [PDBgeometry, PDBgeometry]
-        return [None, None]
+        mesh = trimesh.Trimesh(vertices=vertices, faces=faces)
+        self.add_instance(name, None, name, mesh=mesh)
+        return [mesh, mesh]
 
     def instancePolygon(self, name, matrices=None, mesh=None, parent=None, **kw):
         return None
@@ -864,30 +861,9 @@ class simulariumHelper(hostHelper.Helper):
             return obj, True
 
     def DecomposeMesh(self, poly, edit=True, copy=True, tri=True, transform=True):
-        # get infos
-        # if not isinstance(poly, IndexedPolygons):
-        #     if isinstance(poly, Cylinders):
-        #         poly = poly.asIndexedPolygons()
-        #     elif isinstance(poly, Geom):
-        #         # getfirst child mesh recursively
-        #         child = self.getChilds(poly)
-        #         if len(child):
-        #             poly, isit = self.isIndexedPolyon(poly)
-        #         elif isinstance(poly, Cylinders):
-        #             poly = poly.asIndexedPolygons()
-        #         else:
-        #             return [], [], []
-        #     else:
-        #         return [], [], []
-        # faces = poly.getFaces()
-        # vertices = poly.getVertices()
-        # vnormals = poly.getVNormals()
-        # if transform and not self.nogui:
-        #     mat = poly.GetMatrix(poly.LastParentBeforeRoot())
-        #     vertices = self.ApplyMatrix(vertices, mat)
-        # return faces, vertices, vnormals
-
-        return [], [], []
+        if not isinstance(poly, trimesh.Trimesh):
+            return [], [], []
+        return poly.faces, poly.vertices, poly.vertex_normals
 
     def changeColorO(self, object, colors):
         object.Set(materials=colors)
