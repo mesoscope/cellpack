@@ -285,7 +285,6 @@ class Compartment(CompartmentList):
                 geom = autopack.helper.unitSphere(geomname, 4, radius=radius)[0]
             self.filename = geomname
             self.ref_obj = geomname
-            print("GEOM", geom)
             self.faces, self.vertices, self.vnormals = autopack.helper.DecomposeMesh(
                 geom, edit=False, copy=False, tri=True
             )
@@ -1046,12 +1045,11 @@ class Compartment(CompartmentList):
             helper = autopack.helper
             if helper.host == "dejavu":
                 return insideBB
-            # geom = helper.getObject(self.gname)
             geom = self.mesh
             if self.mesh is None:
-                self.gname = "%s_Mesh" % self.name
-                self.mesh = geom = helper.getObject(self.gname)
-            center = helper.getTranslation(geom)
+                self.gname = self.name
+                self.mesh = geom = helper.getObject(self.gname).mesh
+            center = helper.getTranslation(self.gname)
             intersect, count = helper.raycast(geom, point, center, diag, count=True)
             r = (count % 2) == 1
             if ray == 3:
@@ -1358,7 +1356,6 @@ class Compartment(CompartmentList):
         number = self.number
         # build trimer mesh
         mesh = trimesh.Trimesh(vertices=self.vertices, faces=self.faces)
-        # get the volume ? mesh.volume
         # voxelized
 
         trimesh_grid = Voxel(mesh, env.grid.gridSpacing / 1.1547, size_max=numpy.inf)
