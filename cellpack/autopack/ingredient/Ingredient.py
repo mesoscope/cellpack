@@ -1661,7 +1661,7 @@ class Ingredient(Agent):
                 rotation_matrix,
             )
 
-        if signed_distance_to_surface <= 0:  # point is inside dropped sphere
+        if signed_distance_to_surface <= 0:  # point is inside dropped ingredient
             if (
                 env.grid.gridPtId[grid_point_index] != self.compNum
                 and self.compNum <= 0
