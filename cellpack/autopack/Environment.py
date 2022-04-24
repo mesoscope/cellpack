@@ -742,7 +742,170 @@ class Environment(CompartmentList):
                 print("PROBLEM creating ingredient from ", ingrnode)
             # look for overwritten attribute
 
+    def load_dict(self, recipe):
+        self.current_path = os.path.dirname(os.path.abspath(self.setupfile))
+        io_ingr = IOingredientTool(env=env)
+        self.name = recipe["recipe"]["name"]
+        self.version = recipe["recipe"]["version"]
+        # is there any cutoms paths
+        if "paths" in recipe["recipe"]:
+            self.custom_paths = recipe["recipe"][
+                "paths"
+            ]  # list(recipe["recipe"]["paths"].items())
+            #        autopack.replace_path.extend(self.custom_paths)#keyWordPAth,valuePath
+            autopack.updateReplacePath(self.custom_paths)
+        autopack.current_recipe_path = self.current_path
+        options = recipe["options"]
+        if len(options):
+            for k in self.OPTIONS:
+                if k == "gradients":
+                    continue
+                if k in options:
+                    setattr(env, k, options[k])
+            self.boundingBox = options["boundingBox"]
+            if None in self.boundingBox[0] or None in self.boundingBox[1]:
+                self.boundingBox = ([0, 0, 0], [1000, 1000, 1000])
+        if "gradients" in recipe:
+            self.gradients = {}
+            gradientsnode = recipe["gradients"]
+            if len(gradientsnode):  # number of gradients defined
+                for g_name in gradientsnode:
+                    g_dic = gradientsnode[g_name]
+                    self.setGradient(
+                        name=g_name,
+                        mode=g_dic["mode"],
+                        direction=g_dic["direction"],
+                        weight_mode=g_dic["weight_mode"],
+                        description=g_dic["description"],
+                        pick_mode=g_dic["pick_mode"],
+                        radius=g_dic["radius"],
+                    )
+
+        if "grid" in recipe:
+            gridnode = recipe["grid"]
+            if len(gridnode):
+                self.grid_filename = str(gridnode["grid_storage"])
+                self.grid_result_filename = str(gridnode["grid_result"])
+
+        sortkey = str.lower
+
+        if "cytoplasme" in recipe:
+            ingrs_dic = recipe["cytoplasme"]["ingredients"]
+            if len(ingrs_dic):
+                rCyto = Recipe()
+                for ing_name in sorted(ingrs_dic, key=sortkey):  # ingrs_dic:
+                    # either xref or defined
+                    ing_dic = ingrs_dic[ing_name]
+                    ingr = io_ingr.makeIngredientFromJson(inode=ing_dic, recipe=self.name)
+                    rCyto.addIngredient(ingr)
+                    # setup recipe
+                self.setExteriorRecipe(rCyto)
+
+        if "compartments" in recipe:
+            # use some include ?
+            if len(recipe["compartments"]):
+                # if "include" in recipe["compartments"]:
+                # include all compartments from given filename.
+                # transform the geometry of the compartment packing rep
+                for cname in recipe["compartments"]:
+                    if cname == "include":
+                        for i, ncompart in enumerate(
+                            recipe["compartments"]["include"]
+                        ):
+                            addCompartments(env, ncompart, i, io_ingr)
+                        continue
+                    comp_dic = recipe["compartments"][cname]
+                    name = str(comp_dic["name"])
+                    geom = comp_dic["geom"]
+                    gname = name
+                    mtype = "file"
+                    if "meshType" in comp_dic:
+                        mtype = comp_dic["meshType"]
+                    elif "geom_type" in comp_dic:
+                        mtype = comp_dic["geom_type"]
+                    if "gname" in comp_dic:
+                        gname = str(comp_dic["gname"])
+                    rep = ""
+                    if "rep" in comp_dic:
+                        rep = str(comp_dic["rep"])
+                    rep_file = ""
+                    if "rep_file" in comp_dic:
+                        rep_file = str(comp_dic["rep_file"])
+                    # print(
+                    #     "rep ?",
+                    #     name,
+                    #     geom,
+                    #     gname,
+                    #     rep,
+                    #     rep_file,
+                    #     (rep != "None" and len(rep) != 0 and rep != "" and rep == ""),
+                    # )
+                    #                print (len(rep),rep == '',rep=="",rep != "None",rep != "None" or len(rep) != 0)
+                    if rep != "None" and len(rep) != 0 and rep != "" and rep != "":
+                        rname = rep_file.split("/")[-1]
+                        fileName, fileExtension = os.path.splitext(rname)
+                        if fileExtension == "":
+                            fileExtension = autopack.helper.hext
+                            if fileExtension == "":
+                                rep_file = rep_file + fileExtension
+                            else:
+                                rep_file = rep_file + "." + fileExtension
+                    else:
+                        rep = None
+                        rep_file = None
+                    o = Compartment(
+                        name,
+                        None,
+                        None,
+                        None,
+                        gname=gname,
+                        filename=geom,
+                        object_name=rep,
+                        object_filename=rep_file,
+                        meshType=mtype,
+                    )
+                    print("added compartment ", name)
+                    self.addCompartment(o)
+                    if "surface" in comp_dic:
+                        snode = comp_dic["surface"]
+                        ingrs_dic = snode["ingredients"]
+                        if len(ingrs_dic):
+                            rSurf = Recipe(name="surf_" + str(len(self.compartments) - 1))
+                            #                        rSurf = Recipe(name=o.name+"_surf")
+                            for ing_name in sorted(ingrs_dic, key=sortkey):  # ingrs_dic:
+                                # either xref or defined
+                                ing_dic = ingrs_dic[ing_name]
+                                ingr = io_ingr.makeIngredientFromJson(
+                                    inode=ing_dic, recipe=self.name
+                                )
+                                rSurf.addIngredient(ingr)
+                                # setup recipe
+                            o.setSurfaceRecipe(rSurf)
+                    if "interior" in comp_dic:
+                        snode = comp_dic["interior"]
+                        ingrs_dic = snode["ingredients"]
+                        if len(ingrs_dic):
+                            #                        rMatrix = Recipe(name=o.name+"_int")
+                            rMatrix = Recipe(name="int_" + str(len(self.compartments) - 1))
+                            for ing_name in sorted(ingrs_dic, key=sortkey):  # ingrs_dic:
+                                # either xref or defined
+                                ing_dic = ingrs_dic[ing_name]
+                                ingr = io_ingr.makeIngredientFromJson(
+                                    inode=ing_dic, recipe=self.name
+                                )
+                                rMatrix.addIngredient(ingr)
+                                # setup recipe
+                            o.setInnerRecipe(rMatrix)
+                        # Go through all ingredient and setup the partner
+        self.loopThroughIngr(self.set_partners_ingredient)
+        # restore self.molecules if any resuylt was loaded
+        self.loopThroughIngr(self.restore_molecules_array)
+
+        pass
+
     def load_recipe(self, setupfile):
+        if isinstance(setupfile, dict):
+            self.load_dict(setupfile)
         if setupfile is None:
             setupfile = self.setupfile
         else:
@@ -764,6 +927,10 @@ class Environment(CompartmentList):
         return IOutils.load_JsonString(self, astring)
 
     def save_result(self, freePoints, distances, t0, vAnalysis, vTestid, seedNum):
+        # TODO: create new function that
+        #   pulls results (grid, recipe) out as python
+        #   data structures and returns them without saving
+
         self.grid.freePoints = freePoints[:]
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
@@ -2669,6 +2836,7 @@ class Environment(CompartmentList):
         if self.runTimeDisplay and autopack.helper.host == "simularium":
             autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
 
+        # TODO: this is the output of the packing algorithm
         self.ingr_result = ingredients
 
     def displayCancelDialog(self):

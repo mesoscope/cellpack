@@ -10,8 +10,8 @@ import pickle
 import numpy
 from xml.dom.minidom import getDOMImplementation
 import json
-from json import JSONEncoder
 from json import encoder
+from json import JSONEncoder
 from collections import OrderedDict
 
 from numpy.core.arrayprint import printoptions
@@ -913,7 +913,6 @@ def save_Mixed_asJson(
                         ingr.o_name
                     ]["name"] = ingr.o_name
     with open(setupfile, "w") as fp:  # doesnt work with symbol link ?
-
         if indent:
             json.dump(
                 env.jsondic, fp, indent=1, separators=(",", ":"), cls=NumpyArrayEncoder
@@ -1779,6 +1778,13 @@ def load_XML(env, setupfile):
     io_ingr = IOingredientTool(env=env)
     from xml.dom.minidom import parse
 
+    # TODO: convert XML recipes to json?
+
+    # env.xmldoc = parse(setupfile)  # parse an XML file by name
+    # recipe = xml_to_dict(env.xmldoc)
+    # env.load_dict(recipe)
+
+
     env.xmldoc = parse(setupfile)  # parse an XML file by name
     root = env.xmldoc.documentElement
     env.name = str(root.getAttribute("name"))
@@ -1960,6 +1966,7 @@ def load_Json(env, setupfile):
     setupFromJsonDic(
         env,
     )
+
 
 
 def setupFromJsonDic(
@@ -2299,3 +2306,4 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
     except:  # noqa: E722
         pass
     return result, orgaresult, freePoint
+
