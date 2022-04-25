@@ -70,6 +70,7 @@ from .Compartment import CompartmentList
 from .Recipe import Recipe
 from .ingredient import GrowIngredient, ActinIngredient
 from cellpack.autopack import IOutils
+from cellpack.autopack.IOutils import IOingredientTool
 from .octree import Octree
 from .Gradient import Gradient
 from .transformation import euler_from_matrix
@@ -642,6 +643,7 @@ class Environment(CompartmentList):
         # 2-recipe
         # use XML with tag description of the setup:
         # filling name root
+
         # Environment option
         # cytoplasme recipe if any and its ingredient
         # compartment name= mesh ?
@@ -722,29 +724,9 @@ class Environment(CompartmentList):
                 ingr.addExcludedPartner(iname)
         ingr.env = self
 
-    def set_recipe_ingredient(self, xmlnode, recipe, io_ingr):
-        # get the defined ingredient
-        ingrnodes = xmlnode.getElementsByTagName("ingredient")
-        for ingrnode in ingrnodes:
-            ingre = io_ingr.makeIngredientFromXml(inode=ingrnode, recipe=self.name)
-            if ingre:
-                recipe.addIngredient(ingre)
-            else:
-                print("PROBLEM creating ingredient from ", ingrnode)
-            # check for includes
-        ingrnodes_include = xmlnode.getElementsByTagName("include")
-        for inclnode in ingrnodes_include:
-            xmlfile = str(inclnode.getAttribute("filename"))
-            ingre = io_ingr.makeIngredientFromXml(filename=xmlfile, recipe=self.name)
-            if ingre:
-                recipe.addIngredient(ingre)
-            else:
-                print("PROBLEM creating ingredient from ", ingrnode)
-            # look for overwritten attribute
-
     def load_dict(self, recipe):
         self.current_path = os.path.dirname(os.path.abspath(self.setupfile))
-        io_ingr = IOingredientTool(env=env)
+        io_ingr = IOingredientTool(env=self)
         self.name = recipe["recipe"]["name"]
         self.version = recipe["recipe"]["version"]
         # is there any cutoms paths
@@ -761,7 +743,7 @@ class Environment(CompartmentList):
                 if k == "gradients":
                     continue
                 if k in options:
-                    setattr(env, k, options[k])
+                    setattr(self, k, options[k])
             self.boundingBox = options["boundingBox"]
             if None in self.boundingBox[0] or None in self.boundingBox[1]:
                 self.boundingBox = ([0, 0, 0], [1000, 1000, 1000])
@@ -796,6 +778,7 @@ class Environment(CompartmentList):
                 for ing_name in sorted(ingrs_dic, key=sortkey):  # ingrs_dic:
                     # either xref or defined
                     ing_dic = ingrs_dic[ing_name]
+
                     ingr = io_ingr.makeIngredientFromJson(inode=ing_dic, recipe=self.name)
                     rCyto.addIngredient(ingr)
                     # setup recipe
@@ -812,7 +795,7 @@ class Environment(CompartmentList):
                         for i, ncompart in enumerate(
                             recipe["compartments"]["include"]
                         ):
-                            addCompartments(env, ncompart, i, io_ingr)
+                            addCompartments(self, ncompart, i, io_ingr)
                         continue
                     comp_dic = recipe["compartments"][cname]
                     name = str(comp_dic["name"])
@@ -901,8 +884,6 @@ class Environment(CompartmentList):
         # restore self.molecules if any resuylt was loaded
         self.loopThroughIngr(self.restore_molecules_array)
 
-        pass
-
     def load_recipe(self, setupfile):
         if isinstance(setupfile, dict):
             self.load_dict(setupfile)
@@ -917,14 +898,10 @@ class Environment(CompartmentList):
         elif fileExtension == ".py":  # execute ?
             return IOutils.load_Python(self, setupfile)
         elif fileExtension == ".json":
-            return IOutils.load_Json(self, setupfile)
+            config = IOutils.load_json(setupfile or env.setupfile)
+            self.load_dict(config)
         else:
             print("can't read or recognize " + setupfile)
-            return None
-        return None
-
-    def loadRecipeString(self, astring):
-        return IOutils.load_JsonString(self, astring)
 
     def save_result(self, freePoints, distances, t0, vAnalysis, vTestid, seedNum):
         # TODO: create new function that
@@ -940,7 +917,6 @@ class Environment(CompartmentList):
         self.collectResultPerIngredient()
         self.store()
         self.store_asTxt()
-        #            self.store_asJson(resultfilename=self.resultfile+".json")
         self.saveRecipe(
             self.resultfile + ".json",
             useXref=False,
@@ -1178,87 +1154,6 @@ class Environment(CompartmentList):
         IOutils.saveResultBinary(
             self, filename + "_serialized_tr.bin", True, True, lefthand=True
         )  # transpose, quaternio, left hand
-
-    def loadResult(
-        self, resultfilename=None, restore_grid=True, backward=False, transpose=True
-    ):
-        result = [], [], []
-        if resultfilename is None:
-            resultfilename = self.resultfile
-            # check the extension of the filename none, txt or json
-            # resultfilename = autopack.retrieveFile(resultfilename,cache="results")
-        fileName, fileExtension = os.path.splitext(resultfilename)
-        if fileExtension == "":
-            try:
-                result = pickle.load(open(resultfilename, "rb"))
-            except:  # noqa: E722
-                print("can't read " + resultfilename)
-                return [], [], []
-        elif fileExtension == ".apr":
-            try:
-                result = pickle.load(open(resultfilename, "rb"))
-            except:  # noqa: E722
-                return self.load_asTxt(resultfilename=resultfilename)
-        elif fileExtension == ".txt":
-            return self.load_asTxt(resultfilename=resultfilename)
-        elif fileExtension == ".json":
-            if backward:
-                return self.load_asJson(resultfilename=resultfilename)
-            else:
-                return IOutils.load_MixedasJson(
-                    self, resultfilename=resultfilename, transpose=transpose
-                )
-        else:
-            print("can't read or recognize " + resultfilename)
-            return [], [], []
-        return result
-
-    def includeIngrRecipes(self, ingrname, include):
-        """
-        Include or Exclude the given ingredient from the recipe.
-        (similar to an active state toggle)
-        """
-        r = self.exteriorRecipe
-        if self.includeIngrRecipe(ingrname, include, r):
-            return
-        for o in self.compartments:
-            rs = o.surfaceRecipe
-            if self.includeIngrRecipe(ingrname, include, rs):
-                return
-            ri = o.innerRecipe
-            if self.includeIngrRecipe(ingrname, include, ri):
-                return
-
-    def includeIngrRecipe(self, ingrname, include, rs):
-        """
-        Include or Exclude the given ingredient from the given recipe.
-        (similar to an active state toggle)
-        """
-        for ingr in rs.exclude:
-            if ingr.name == ingrname:
-                if not include:
-                    return True
-                else:
-                    rs.addIngredient(ingr)
-                    return True
-        for ingr in rs.ingredients:
-            if ingrname == ingr.name:
-                if not include:
-                    rs.delIngredients(ingr)
-                    return True
-                else:
-                    return True
-
-    def includeIngredientRecipe(self, ingr, include):
-        """lue
-        Include or Exclude the given ingredient from the recipe.
-        (similar to an active state toggle)
-        """
-        r = ingr.recipe  # ()
-        if include:
-            r.addIngredient(ingr)
-        else:
-            r.delIngredient(ingr)
 
     def sortIngredient(self, reset=False):
         # make sure all recipes are sorted from large to small radius
@@ -2844,19 +2739,6 @@ class Environment(CompartmentList):
             "Popup CancelBox: if Cancel Box is up for more than 10 sec, close box and continue loop from here"
         )
 
-    #        from pyubic.cinema4d.c4dUI import TimerDialog
-    #        dialog = TimerDialog()
-    #        dialog.init()
-    #        dialog.Open(async=True, pluginid=25555589, width=120, height=100)
-    #        tt=time()
-    # while dialog.IsOpen():
-    #    if time()-tt > 5.:
-    #        print "time()-tt = ", time()-tt
-    #        dialog.Close()
-    #        cancel = dialog._cancel
-    #        cancel=c4d.gui.QuestionDialog('WannaCancel?') # Removed by Graham on July 10, 2012 because it may no longer be needed, but test it TODO
-    #        return cancel
-
     def restore_molecules_array(self, ingr):
         if len(ingr.results):
             for elem in ingr.results:
@@ -2985,74 +2867,6 @@ class Environment(CompartmentList):
         ptInd = eval(elem[6].split(">")[0])
         return pos, rot, ingrname, ingrcompNum, ptInd, rad
 
-    #    @classmethod
-    def getOneIngrJson(self, ingr, ingrdic):
-        #        name_ingr = ingr.name
-        #        if name_ingr not in ingrdic:
-        #            name_ingr = ingr.o_name
-        #        for r in ingr.results:
-        #            ingrdic[name_ingr]["results"].append([r[0]],r[1],)
-        #        print ("growingr?",ingr,ingr.name,isinstance(ingr, GrowIngredient))
-        if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
-            ingr.nbCurve = ingrdic["nbCurve"]
-            ingr.listePtLinear = []
-            for i in range(ingr.nbCurve):
-                ingr.listePtLinear.append(ingrdic["curve" + str(i)])
-            #            print ("nbCurve?",ingr.nbCurve,ingrdic["nbCurve"])
-        return (
-            ingrdic["results"],
-            ingr.o_name,
-            ingr.compNum,
-            1,
-            ingr.encapsulatingRadius,
-        )  # ingrdic["compNum"],1,ingrdic["encapsulatingRadius"]
-
-    def load_asTxt(self, resultfilename=None):
-        if resultfilename is None:
-            resultfilename = self.resultfile
-        rfile = open(resultfilename, "r")
-        # needto parse
-        result = []
-        orgaresult = []  # [[],]*len(self.compartments)
-        for i in range(len(self.compartments)):
-            orgaresult.append([])
-        #        mry90 = helper.rotation_matrix(-math.pi/2.0, [0.0,1.0,0.0])
-        #        numpy.array([[0.0, 1.0, 0.0, 0.0],
-        #                 [-1., 0.0, 0.0, 0.0],
-        #                 [0.0, 0.0, 1.0, 0.0],
-        #                 [0.0, 0.0, 0.0, 1.0]])
-        lines = rfile.readlines()
-        for line in lines:
-            if not len(line) or len(line) < 6:
-                continue
-            pos, rot, ingrname, ingrcompNum, ptInd, rad = self.getOneIngr(line)
-            # should I multiply here
-            r = numpy.array(rot).reshape(
-                4, 4
-            )  # numpy.matrix(mry90)*numpy.matrix(numpy.array(rot).reshape(4,4))
-            if ingrcompNum == 0:
-                result.append(
-                    [numpy.array(pos), numpy.array(r), ingrname, ingrcompNum, ptInd]
-                )
-            else:
-                orgaresult[abs(ingrcompNum) - 1].append(
-                    [numpy.array(pos), numpy.array(r), ingrname, ingrcompNum, ptInd]
-                )
-            #        for i, orga in enumerate(self.compartments):
-            #            orfile = open(resultfilename+"ogra"+str(i),'rb')
-            #            orgaresult.append(pickle.load(orfile))
-            #            orfile.close()
-            #        rfile.close()
-            #        rfile = open(resultfilename+"freePoints",'rb')
-        freePoint = []  # pickle.load(rfile)
-        try:
-            rfile = open(resultfilename + "freePoints", "rb")
-            freePoint = pickle.load(rfile)
-            rfile.close()
-        except:  # noqa: E722
-            pass
-        return result, orgaresult, freePoint
-
     def collectResultPerIngredient(self):
         def cb(ingr):
             ingr.results = []
@@ -3072,216 +2886,6 @@ class Environment(CompartmentList):
                 else:
                     ingr.results.append([pos, rot])
 
-    def load_asJson(self, resultfilename=None):
-        if resultfilename is None:
-            resultfilename = self.resultfile
-        with open(resultfilename, "r") as fp:  # doesnt work with symbol link ?
-            if autopack.use_json_hook:
-                self.result_json = json.load(
-                    fp, object_pairs_hook=OrderedDict
-                )  # ,indent=4, separators=(',', ': ')
-            else:
-                self.result_json = json.load(fp)
-            # needto parse
-        result = []
-        orgaresult = []
-        r = self.exteriorRecipe
-        if r:
-            if "exteriorRecipe" in self.result_json:
-                for ingr in r.ingredients:
-                    name_ingr = ingr.name
-                    if name_ingr not in self.result_json["exteriorRecipe"]:
-                        # backward compatiblity
-                        if ingr.o_name not in self.result_json["exteriorRecipe"]:
-                            continue
-                        else:
-                            name_ingr = ingr.o_name
-                    iresults, ingrname, ingrcompNum, ptInd, rad = self.getOneIngrJson(
-                        ingr, self.result_json["exteriorRecipe"][name_ingr]
-                    )
-                    #                    print ("rlen ",len(iresults),name_ingr)
-                    ingr.results = []
-                    for r in iresults:
-                        rot = numpy.array(r[1]).reshape(
-                            4, 4
-                        )  # numpy.matrix(mry90)*numpy.matrix(numpy.array(rot).reshape(4,4))
-                        ingr.results.append([numpy.array(r[0]), rot])
-                        result.append(
-                            [numpy.array(r[0]), rot, ingrname, ingrcompNum, 1]
-                        )
-                    # organelle ingr
-        for i, orga in enumerate(self.compartments):
-            orgaresult.append([])
-            # organelle surface ingr
-            rs = orga.surfaceRecipe
-            if rs:
-                if orga.name + "_surfaceRecipe" in self.result_json:
-                    for ingr in rs.ingredients:
-                        name_ingr = ingr.name
-                        # replace number by name ?
-                        if (
-                            orga.name + "_surf__" + ingr.o_name
-                            in self.result_json[orga.name + "_surfaceRecipe"]
-                        ):
-                            name_ingr = orga.name + "_surf__" + ingr.o_name
-                        if (
-                            name_ingr
-                            not in self.result_json[orga.name + "_surfaceRecipe"]
-                        ):
-                            # backward compatiblity
-                            if (
-                                ingr.o_name
-                                not in self.result_json[orga.name + "_surfaceRecipe"]
-                            ):
-                                continue
-                            else:
-                                name_ingr = ingr.o_name
-                        (
-                            iresults,
-                            ingrname,
-                            ingrcompNum,
-                            ptInd,
-                            rad,
-                        ) = self.getOneIngrJson(
-                            ingr,
-                            self.result_json[orga.name + "_surfaceRecipe"][name_ingr],
-                        )
-                        #                        print ("rlen ",len(iresults),name_ingr)
-                        ingr.results = []
-                        for r in iresults:
-                            rot = numpy.array(r[1]).reshape(
-                                4, 4
-                            )  # numpy.matrix(mry90)*numpy.matrix(numpy.array(rot).reshape(4,4))
-                            ingr.results.append([numpy.array(r[0]), rot])
-                            orgaresult[abs(ingrcompNum) - 1].append(
-                                [numpy.array(r[0]), rot, ingrname, ingrcompNum, 1]
-                            )
-            # organelle matrix ingr
-            ri = orga.innerRecipe
-            if ri:
-                if orga.name + "_innerRecipe" in self.result_json:
-                    for ingr in ri.ingredients:
-                        name_ingr = ingr.name
-                        if (
-                            orga.name + "_int__" + ingr.o_name
-                            in self.result_json[orga.name + "_innerRecipe"]
-                        ):
-                            name_ingr = orga.name + "_int__" + ingr.o_name
-                        if (
-                            name_ingr
-                            not in self.result_json[orga.name + "_innerRecipe"]
-                        ):
-                            # backward compatiblity
-                            if (
-                                ingr.o_name
-                                not in self.result_json[orga.name + "_innerRecipe"]
-                            ):
-                                continue
-                            else:
-                                name_ingr = ingr.o_name
-                        (
-                            iresults,
-                            ingrname,
-                            ingrcompNum,
-                            ptInd,
-                            rad,
-                        ) = self.getOneIngrJson(
-                            ingr,
-                            self.result_json[orga.name + "_innerRecipe"][name_ingr],
-                        )
-                        #                        print ("rlen ",len(iresults),name_ingr)
-                        ingr.results = []
-                        for r in iresults:
-                            rot = numpy.array(r[1]).reshape(
-                                4, 4
-                            )  # numpy.matrix(mry90)*numpy.matrix(numpy.array(rot).reshape(4,4))
-                            ingr.results.append([numpy.array(r[0]), rot])
-                            orgaresult[abs(ingrcompNum) - 1].append(
-                                [numpy.array(r[0]), rot, ingrname, ingrcompNum, 1]
-                            )
-        freePoint = []  # pickle.load(rfile)
-        try:
-            rfile = open(resultfilename + "freePoints", "rb")
-            freePoint = pickle.load(rfile)
-            rfile.close()
-        except:  # noqa: E722
-            pass
-        return result, orgaresult, freePoint
-
-    def dropOneIngrJson(self, ingr, rdic):
-        adic = OrderedDict()  # [ingr.name]
-        adic["compNum"] = ingr.compNum
-        adic["encapsulatingRadius"] = float(ingr.encapsulatingRadius)
-        adic["results"] = []
-        #        print ("dropi ",ingr.name,len(ingr.results))
-        for r in ingr.results:
-            if hasattr(r[0], "tolist"):
-                r[0] = r[0].tolist()
-            if hasattr(r[1], "tolist"):
-                r[1] = r[1].tolist()
-            adic["results"].append([r[0], r[1]])
-        if isinstance(ingr, GrowIngredient) or isinstance(ingr, ActinIngredient):
-            adic["nbCurve"] = ingr.nbCurve
-            for i in range(ingr.nbCurve):
-                lp = numpy.array(ingr.listePtLinear[i])
-                ingr.listePtLinear[i] = lp.tolist()
-                adic["curve" + str(i)] = ingr.listePtLinear[i]
-            #        print adic
-        return adic
-
-    def store_asJson(self, resultfilename=None, indent=True):
-        if resultfilename is None:
-            resultfilename = self.resultfile
-            resultfilename = autopack.fixOnePath(resultfilename)  # retireve?
-        # if result file_name start with http?
-        if resultfilename.find("http") != -1 or resultfilename.find("ftp") != -1:
-            print(
-                "please provide a correct file name for the result file ",
-                resultfilename,
-            )
-        self.collectResultPerIngredient()
-        self.result_json = OrderedDict()
-        self.result_json["recipe"] = self.setupfile  # replace server?
-        r = self.exteriorRecipe
-        if r:
-            self.result_json["exteriorRecipe"] = OrderedDict()
-            for ingr in r.ingredients:
-                self.result_json["exteriorRecipe"][ingr.o_name] = self.dropOneIngrJson(
-                    ingr, self.result_json["exteriorRecipe"]
-                )
-
-        # compartment ingr
-        for orga in self.compartments:
-            # compartment surface ingr
-            rs = orga.surfaceRecipe
-            if rs:
-                self.result_json[orga.name + "_surfaceRecipe"] = OrderedDict()
-                for ingr in rs.ingredients:
-                    self.result_json[orga.name + "_surfaceRecipe"][
-                        ingr.o_name
-                    ] = self.dropOneIngrJson(
-                        ingr, self.result_json[orga.name + "_surfaceRecipe"]
-                    )
-            # compartment matrix ingr
-            ri = orga.innerRecipe
-            if ri:
-                self.result_json[orga.name + "_innerRecipe"] = OrderedDict()
-                for ingr in ri.ingredients:
-                    self.result_json[orga.name + "_innerRecipe"][
-                        ingr.o_name
-                    ] = self.dropOneIngrJson(
-                        ingr, self.result_json[orga.name + "_innerRecipe"]
-                    )
-        with open(resultfilename, "w") as fp:  # doesnt work with symbol link ?
-            if indent:
-                json.dump(
-                    self.result_json, fp, indent=1, separators=(",", ":")
-                )  # ,indent=4, separators=(',', ': ')
-            else:
-                json.dump(
-                    self.result_json, fp, separators=(",", ":")
-                )  # ,indent=4, separators=(',', ': ')
-        print("ok dump", resultfilename)
 
     def store_asTxt(self, resultfilename=None):
         if resultfilename is None:
@@ -3319,38 +2923,6 @@ class Environment(CompartmentList):
         #        rfile = open(resultfilename+"freePoints", 'w')
         #        pickle.dump(self.freePoints, rfile)
         #        rfile.close()
-
-    @classmethod
-    def convertPickleToText(self, resultfilename=None, norga=0):
-        if resultfilename is None:
-            resultfilename = self.resultfile
-        rfile = open(resultfilename)
-        result = pickle.load(rfile)
-        orgaresult = []
-        for i in range(norga):
-            orfile = open(resultfilename + "ogra" + str(i))
-            orgaresult.append(pickle.load(orfile))
-            orfile.close()
-        rfile.close()
-        rfile = open(resultfilename + "freePoints")
-        rfile.close()
-        rfile = open(resultfilename + ".txt", "w")
-        line = ""
-        for pos, rot, ingrName, compNum, ptInd in result:
-            line += self.dropOneIngr(pos, rot, ingrName, compNum, ptInd)
-            # result.append([pos,rot,ingr.name,ingr.compNum,ptInd])
-        rfile.write(line)
-        rfile.close()
-        for i in range(norga):
-            orfile = open(resultfilename + "ogra" + str(i) + ".txt", "w")
-            result = []
-            line = ""
-            for pos, rot, ingrName, compNum, ptInd in orgaresult[i]:
-                line += self.dropOneIngr(pos, rot, ingrName, compNum, ptInd)
-            orfile.write(line)
-            #            pickle.dump(orga.molecules, orfile)
-            orfile.close()
-            # freepoint
 
     def printFillInfo(self):
         r = self.exteriorRecipe

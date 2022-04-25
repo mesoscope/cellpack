@@ -587,6 +587,7 @@ class Ingredient(Agent):
         self.sphereFile = sphereFile
         # level 0 should be encapsulated sphere ?
         if sphereFile is not None and str(sphereFile) != "None":
+            import ipdb; ipdb.set_trace()
             sphereFileo = autopack.retrieveFile(sphereFile, cache="collisionTrees")
             fileName, fileExtension = os.path.splitext(sphereFile)
             self.log.info("sphereTree %r", sphereFileo)

@@ -1784,7 +1784,6 @@ def load_XML(env, setupfile):
     # recipe = xml_to_dict(env.xmldoc)
     # env.load_dict(recipe)
 
-
     env.xmldoc = parse(setupfile)  # parse an XML file by name
     root = env.xmldoc.documentElement
     env.name = str(root.getAttribute("name"))
@@ -1938,35 +1937,23 @@ def load_XML(env, setupfile):
     env.loopThroughIngr(env.set_partners_ingredient)
 
 
-def load_JsonString(env, astring):
-    """
-    Setup the environment according the given json file.
-    """
-    env.jsondic = json.loads(astring, object_pairs_hook=OrderedDict)
-    setupFromJsonDic(
-        env,
-    )
-
-
-def load_Json(env, setupfile):
+def load_json(setupfile):
     """
     Setup the environment according the given json file.
     """
 
-    if setupfile is None:
-        setupfile = env.setupfile
-    if env.jsondic is None:
-        with open(setupfile, "r") as fp:  # doesnt work with symbol link ?
-            if autopack.use_json_hook:
-                env.jsondic = json.load(
-                    fp, object_pairs_hook=OrderedDict
-                )  # ,indent=4, separators=(',', ': ')
-            else:
-                env.jsondic = json.load(fp)
+    with open(setupfile, "r") as fp:  # doesnt work with symbol link ?
+        if autopack.use_json_hook:
+            config = json.load(
+                fp, object_pairs_hook=OrderedDict)  # ,indent=4, separators=(',', ': ')
+        else:
+            config = json.load(fp)
+
+    return config
+
     setupFromJsonDic(
         env,
     )
-
 
 
 def setupFromJsonDic(
@@ -2131,179 +2118,4 @@ def setupFromJsonDic(
     # restore env.molecules if any resuylt was loaded
     env.loopThroughIngr(env.restore_molecules_array)
 
-
-#        if env.placeMethod.find("panda") != -1 :
-#            env.setupPanda()
-
-
-def load_MixedasJson(env, resultfilename=None, transpose=True):
-    #        from upy.hostHelper import Helper as helper
-    if resultfilename is None:
-        resultfilename = env.resultfile
-    # use the current dictionary ?jsondic
-    with open(resultfilename, "r") as fp:  # doesnt work with symbol link ?
-        if autopack.use_json_hook:
-            env.result_json = json.load(
-                fp, object_pairs_hook=OrderedDict
-            )  # ,indent=4, separators=(',', ': ')
-        else:
-            env.result_json = json.load(fp)
-        # needto parse
-    result = []
-    orgaresult = []
-    r = env.exteriorRecipe
-    if r:
-        if "cytoplasme" in env.result_json:
-            if "ingredients" in env.result_json["cytoplasme"]:
-                for ingr in r.ingredients:
-                    name_ingr = ingr.name
-                    if name_ingr not in env.result_json["cytoplasme"]["ingredients"]:
-                        # backward compatiblity
-                        if (
-                            ingr.o_name
-                            not in env.result_json["cytoplasme"]["ingredients"]
-                        ):
-                            continue
-                        else:
-                            name_ingr = ingr.o_name
-                    iresults, ingrname, ingrcompNum, ptInd, rad = env.getOneIngrJson(
-                        ingr, env.result_json["cytoplasme"]["ingredients"][name_ingr]
-                    )
-                    for r in iresults:  # what if quaternion ?
-                        if len(r[1]) == 4:  # quaternion
-                            if type(r[1][0]) == float:
-                                if transpose:
-                                    rot = tr.quaternion_matrix(
-                                        r[1]
-                                    ).transpose()  # transpose ?
-                                else:
-                                    rot = tr.quaternion_matrix(r[1])  # transpose ?
-                                    #                        ingr.results.append([numpy.array(r[0]),rot])
-                            else:
-                                rot = numpy.array(r[1]).reshape(4, 4)
-                        else:
-                            rot = numpy.array(r[1]).reshape(4, 4)
-                        result.append(
-                            [numpy.array(r[0]), rot, ingrname, ingrcompNum, 1]
-                        )
-                    # organelle ingr
-    for i, orga in enumerate(env.compartments):
-        orgaresult.append([])
-        # organelle surface ingr
-        if orga.name not in env.result_json["compartments"]:
-            continue
-        rs = orga.surfaceRecipe
-        if rs:
-            if "surface" in env.result_json["compartments"][orga.name]:
-                for ingr in rs.ingredients:
-                    name_ingr = ingr.name
-                    # replace number by name ?
-                    if (
-                        orga.name + "_surf__" + ingr.o_name
-                        in env.result_json["compartments"][orga.name]["surface"][
-                            "ingredients"
-                        ]
-                    ):
-                        name_ingr = orga.name + "_surf__" + ingr.o_name
-                    if (
-                        name_ingr
-                        not in env.result_json["compartments"][orga.name]["surface"][
-                            "ingredients"
-                        ]
-                    ):
-                        # backward compatiblity
-                        if (
-                            ingr.o_name
-                            not in env.result_json["compartments"][orga.name][
-                                "surface"
-                            ]["ingredients"]
-                        ):
-                            continue
-                        else:
-                            name_ingr = ingr.o_name
-                    iresults, ingrname, ingrcompNum, ptInd, rad = env.getOneIngrJson(
-                        ingr,
-                        env.result_json["compartments"][orga.name]["surface"][
-                            "ingredients"
-                        ][name_ingr],
-                    )
-                    for r in iresults:
-                        rot = numpy.identity(4)
-                        if len(r[1]) == 4:  # quaternion
-                            if type(r[1][0]) == float:
-                                if transpose:
-                                    rot = tr.quaternion_matrix(
-                                        r[1]
-                                    ).transpose()  # transpose ?
-                                else:
-                                    rot = tr.quaternion_matrix(r[1])  # transpose ?
-                            else:
-                                rot = numpy.array(r[1]).reshape(4, 4)
-                            #                        ingr.results.append([numpy.array(r[0]),rot])
-                        else:
-                            rot = numpy.array(r[1]).reshape(4, 4)
-                        orgaresult[abs(ingrcompNum) - 1].append(
-                            [numpy.array(r[0]), rot, ingrname, ingrcompNum, 1]
-                        )
-        # organelle matrix ingr
-        ri = orga.innerRecipe
-        if ri:
-            if "interior" in env.result_json["compartments"][orga.name]:
-                for ingr in ri.ingredients:
-                    name_ingr = ingr.name
-                    if (
-                        orga.name + "_int__" + ingr.o_name
-                        in env.result_json["compartments"][orga.name]["interior"][
-                            "ingredients"
-                        ]
-                    ):
-                        name_ingr = orga.name + "_int__" + ingr.o_name
-                    if (
-                        name_ingr
-                        not in env.result_json["compartments"][orga.name]["interior"][
-                            "ingredients"
-                        ]
-                    ):
-                        # backward compatiblity
-                        if (
-                            ingr.o_name
-                            not in env.result_json["compartments"][orga.name][
-                                "interior"
-                            ]["ingredients"]
-                        ):
-                            continue
-                        else:
-                            name_ingr = ingr.o_name
-                    iresults, ingrname, ingrcompNum, ptInd, rad = env.getOneIngrJson(
-                        ingr,
-                        env.result_json["compartments"][orga.name]["interior"][
-                            "ingredients"
-                        ][name_ingr],
-                    )
-                    for r in iresults:
-                        rot = numpy.identity(4)
-                        if len(r[1]) == 4:  # quaternion
-                            if type(r[1][0]) == float:
-                                if transpose:
-                                    rot = tr.quaternion_matrix(
-                                        r[1]
-                                    ).transpose()  # transpose ?
-                                else:
-                                    rot = tr.quaternion_matrix(r[1])  # transpose ?
-                            else:
-                                rot = numpy.array(r[1]).reshape(4, 4)
-                            #                        ingr.results.append([numpy.array(r[0]),rot])
-                        else:
-                            rot = numpy.array(r[1]).reshape(4, 4)
-                        orgaresult[abs(ingrcompNum) - 1].append(
-                            [numpy.array(r[0]), rot, ingrname, ingrcompNum, 1]
-                        )
-    freePoint = []  # pickle.load(rfile)
-    try:
-        rfile = open(resultfilename + "freePoints", "rb")
-        freePoint = pickle.load(rfile)
-        rfile.close()
-    except:  # noqa: E722
-        pass
-    return result, orgaresult, freePoint
 
