@@ -37,6 +37,7 @@ class Args(argparse.Namespace):
     DEFAULT_ANALYSIS = True
     DEFAULT_RECIPE_FILE = "cellpack/test-recipes/NM_Analysis_FigureB1.0.json"
     DEFAULT_OUTPUT_FOLDER = "/Users/meganriel-mehan/Dropbox/cellPack/"
+    DEFAULT_FORMAT = "simularium"
     DEFAULT_PLACE_METHODS = [
         "jitter",
         "pandaBulletRelax",
@@ -51,6 +52,7 @@ class Args(argparse.Namespace):
         self.recipe = self.DEFAULT_RECIPE_FILE
         self.output = self.DEFAULT_OUTPUT_FOLDER
         self.place_methods = self.DEFAULT_PLACE_METHODS
+        self.format = self.DEFAULT_FORMAT
         self.save_analysis_plot = None
         self.grid_plot = None
         self.debug = True
@@ -114,6 +116,15 @@ class Args(argparse.Namespace):
             help="The place methods to test, can be an array",
         )
         p.add_argument(
+            "-f",
+            "--format",
+            action="store",
+            dest="format",
+            type=str,
+            default=self.format,
+            help="Format to save the recipe in",
+        )
+        p.add_argument(
             "-np",
             "--no-plot",
             action="store_false",
@@ -166,7 +177,7 @@ def main():
         autopack.helper = helper
 
         fileName = os.path.basename(recipe_path)
-        env = Environment(name=fileName)
+        env = Environment(name=fileName, format_output=args.format)
 
         env.helper = helper
         env.load_recipe(recipe_path)

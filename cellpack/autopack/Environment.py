@@ -302,13 +302,14 @@ class Environment(CompartmentList):
         each recipe are made of a list of ingredients
     """
 
-    def __init__(self, name="H"):
+    def __init__(self, name="H", format_output="simularium"):
         CompartmentList.__init__(self)
 
         self.log = logging.getLogger("env")
         self.log.propagate = False
         self.timeUpDistLoopTotal = 0
         self.name = name
+        self.format_output = format_output
         self.exteriorRecipe = None
         self.hgrid = []
         self.world = None  # panda world for collision
@@ -776,12 +777,11 @@ class Environment(CompartmentList):
         self.store()
         self.store_asTxt()
         #            self.store_asJson(resultfilename=self.resultfile+".json")
-
         IOutils.save(
             self,
             self.resultfile + ".json",
             useXref=False,
-            format_output="simularium",
+            format_output=self.format_output,
             kwds=["compNum"],
             result=True,
             quaternion=True,

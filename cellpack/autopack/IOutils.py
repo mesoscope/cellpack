@@ -2148,6 +2148,7 @@ def save(
     transpose=False,
     all_ingr_as_array=None,
 ):
+    print(format_output)
     if useXref is None:
         useXref = env.useXref
     if format_output == "json":
