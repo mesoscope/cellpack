@@ -236,7 +236,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.ingredient.Ingredient.Ingredient.attempt_to_pack_at_grid_location">
-<span class="sig-name descname"><span class="pre">attempt_to_pack_at_grid_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ptInd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usePP</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/Ingredient.html#Ingredient.attempt_to_pack_at_grid_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.attempt_to_pack_at_grid_location" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">attempt_to_pack_at_grid_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ptInd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_point_distances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usePP</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collision_possible</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/Ingredient.html#Ingredient.attempt_to_pack_at_grid_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.attempt_to_pack_at_grid_location" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -288,7 +288,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.ingredient.Ingredient.Ingredient.collision_jitter">
-<span class="sig-name descname"><span class="pre">collision_jitter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jtrans</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotMat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridPointsCoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_grid_distances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">histoVol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpad</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/Ingredient.html#Ingredient.collision_jitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.collision_jitter" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">collision_jitter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jtrans</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotMat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridPointsCoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_grid_distances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpad</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/Ingredient.html#Ingredient.collision_jitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.collision_jitter" title="Permalink to this definition"></a></dt>
 <dd><p>Check spheres for collision</p>
 </dd></dl>
 
@@ -423,6 +423,11 @@ per ingredient once the jitter is set.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.ingredient.Ingredient.Ingredient.get_list_of_free_indices">
 <span class="sig-name descname"><span class="pre">get_list_of_free_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">free_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbFreePoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/Ingredient.html#Ingredient.get_list_of_free_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.get_list_of_free_indices" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.ingredient.Ingredient.Ingredient.get_new_distances_and_inside_points">
+<span class="sig-name descname"><span class="pre">get_new_distances_and_inside_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">packing_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_point_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_distance_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_dist_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inside_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signed_distance_to_surface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/Ingredient.html#Ingredient.get_new_distances_and_inside_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.get_new_distances_and_inside_points" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -627,6 +632,11 @@ attempts</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.ingredient.Ingredient.Ingredient.transformPoints">
 <span class="sig-name descname"><span class="pre">transformPoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trans</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/Ingredient.html#Ingredient.transformPoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.transformPoints" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.ingredient.Ingredient.Ingredient.transformPoints_mult">
+<span class="sig-name descname"><span class="pre">transformPoints_mult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trans</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/Ingredient.html#Ingredient.transformPoints_mult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.Ingredient.Ingredient.transformPoints_mult" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1044,6 +1054,11 @@ and positions. The principal Vector will be used to align the ingredient</p>
 <span class="sig-name descname"><span class="pre">add_rb_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worldNP</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/multi_sphere.html#MultiSphereIngr.add_rb_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.add_rb_node" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.get_signed_distance">
+<span class="sig-name descname"><span class="pre">get_signed_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">packing_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_point_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/multi_sphere.html#MultiSphereIngr.get_signed_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.get_signed_distance" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -1076,8 +1091,18 @@ can also use the center plus size (radii), or the position/position2</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.ingredient.single_cube.SingleCubeIngr.cube_surface_distance">
+<span class="sig-name descname"><span class="pre">cube_surface_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/single_cube.html#SingleCubeIngr.cube_surface_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.cube_surface_distance" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.ingredient.single_cube.SingleCubeIngr.get_new_distance_values">
 <span class="sig-name descname"><span class="pre">get_new_distance_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jtrans</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotMat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridPointsCoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/single_cube.html#SingleCubeIngr.get_new_distance_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.get_new_distance_values" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.ingredient.single_cube.SingleCubeIngr.get_signed_distance">
+<span class="sig-name descname"><span class="pre">get_signed_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">packing_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_point_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/single_cube.html#SingleCubeIngr.get_signed_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.get_signed_distance" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1112,6 +1137,11 @@ TODO improve the testwhen grid stepSize is larger that size of the ingredient</p
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_new_distance_values">
 <span class="sig-name descname"><span class="pre">get_new_distance_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jtrans</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotMatj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridPointsCoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/single_sphere.html#SingleSphereIngr.get_new_distance_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_new_distance_values" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_signed_distance">
+<span class="sig-name descname"><span class="pre">get_signed_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">packing_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_point_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ingredient/single_sphere.html#SingleSphereIngr.get_signed_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_signed_distance" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

@@ -2677,7 +2677,7 @@
                 <span class="n">compartment_ids</span><span class="p">,</span>
                 <span class="n">vRangeStart</span><span class="p">,</span>
                 <span class="n">vThreshStart</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="p">)</span>  <span class="c1"># (Bool, ptInd)</span>
             <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">allSrfpts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">compNum</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">surfacePointsNormals</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -2686,12 +2686,16 @@
             <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                 <span class="n">ptInd</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">ptInd</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">distances</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;problem &quot;</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s2">&quot;point index outside of grid length, should never be true &quot;</span><span class="p">,</span>
+                        <span class="n">ptInd</span><span class="p">,</span>
+                    <span class="p">)</span>
                     <span class="k">continue</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;vRangeStart coninue &quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
                 <span class="n">vRangeStart</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="k">continue</span>
+            <span class="c1"># NOTE: should we do the close partner check here instead of in the place functions?</span>
             <span class="c1"># place the ingredient</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwritePlaceMethod</span><span class="p">:</span>
                 <span class="n">ingr</span><span class="o">.</span><span class="n">placeType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">placeMethod</span>
@@ -2703,17 +2707,18 @@
                 <span class="n">ptInd</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">ptInd</span><span class="p">],</span>
             <span class="p">)</span>
+            <span class="n">collision_possible</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">distances</span><span class="p">[</span><span class="n">ptInd</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">getMaxJitter</span><span class="p">(</span>
+                <span class="n">spacing</span>
+            <span class="p">):</span>
+                <span class="c1"># there is no possible collision here</span>
+                <span class="n">collision_possible</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="p">(</span>
                 <span class="n">success</span><span class="p">,</span>
                 <span class="n">insidePoints</span><span class="p">,</span>
                 <span class="n">newDistPoints</span><span class="p">,</span>
             <span class="p">)</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">attempt_to_pack_at_grid_location</span><span class="p">(</span>
-                <span class="bp">self</span><span class="p">,</span>
-                <span class="n">ptInd</span><span class="p">,</span>
-                <span class="n">distances</span><span class="p">,</span>
-                <span class="n">max_radius</span><span class="p">,</span>
-                <span class="n">spacing</span><span class="p">,</span>
-                <span class="n">usePP</span><span class="p">,</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">max_radius</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">usePP</span><span class="p">,</span> <span class="n">collision_possible</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="s2">&quot;after place attempt, placed: </span><span class="si">%r</span><span class="s2">, number of free points:</span><span class="si">%d</span><span class="s2">, length of free points=</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>

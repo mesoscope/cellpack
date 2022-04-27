@@ -185,6 +185,7 @@
 <span></span><span class="kn">from</span> <span class="nn">panda3d.core</span> <span class="kn">import</span> <span class="n">Point3</span><span class="p">,</span> <span class="n">TransformState</span>
 <span class="kn">from</span> <span class="nn">panda3d.bullet</span> <span class="kn">import</span> <span class="n">BulletSphereShape</span><span class="p">,</span> <span class="n">BulletRigidBodyNode</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="kn">from</span> <span class="nn">cellpack.autopack.ingredient.single_sphere</span> <span class="kn">import</span> <span class="n">SingleSphereIngr</span>
 <span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
@@ -268,10 +269,9 @@
             <span class="n">Type</span><span class="o">=</span><span class="n">Type</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">min_radius</span> <span class="o">=</span> <span class="n">encapsulatingRadius</span>
-        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">radii</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">level</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_radius</span><span class="p">:</span>
                 <span class="n">min_radius</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">minRadius</span> <span class="o">=</span> <span class="n">min_radius</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">radii</span><span class="p">),</span> <span class="n">molarity</span><span class="p">)</span>
@@ -289,7 +289,31 @@
             <span class="n">inodenp</span><span class="o">.</span><span class="n">node</span><span class="p">()</span><span class="o">.</span><span class="n">addShape</span><span class="p">(</span>
                 <span class="n">shape</span><span class="p">,</span> <span class="n">TransformState</span><span class="o">.</span><span class="n">makePos</span><span class="p">(</span><span class="n">Point3</span><span class="p">(</span><span class="n">posc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">posc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">posc</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
             <span class="p">)</span>  <span class="c1">#</span>
-        <span class="k">return</span> <span class="n">inodenp</span></div></div>
+        <span class="k">return</span> <span class="n">inodenp</span></div>
+
+<div class="viewcode-block" id="MultiSphereIngr.get_signed_distance"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.get_signed_distance">[docs]</a>    <span class="k">def</span> <span class="nf">get_signed_distance</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">packing_location</span><span class="p">,</span>
+        <span class="n">grid_point_location</span><span class="p">,</span>
+        <span class="n">rotation_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deepest_level</span>
+        <span class="n">centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
+        <span class="n">radii</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
+        <span class="n">centers_trans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span>
+            <span class="n">packing_location</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">centers</span>
+        <span class="p">)</span>  <span class="c1"># centers)</span>
+
+        <span class="n">closest_distance</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">for</span> <span class="n">current_radius</span><span class="p">,</span> <span class="n">center_position</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">centers_trans</span><span class="p">):</span>
+            <span class="n">distance_to_packing_location</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+                <span class="n">center_position</span> <span class="o">-</span> <span class="n">grid_point_location</span>
+            <span class="p">)</span>
+            <span class="n">signed_distance_to_surface</span> <span class="o">=</span> <span class="n">distance_to_packing_location</span> <span class="o">-</span> <span class="n">current_radius</span>
+            <span class="k">if</span> <span class="n">signed_distance_to_surface</span> <span class="o">&lt;</span> <span class="n">closest_distance</span><span class="p">:</span>
+                <span class="n">closest_distance</span> <span class="o">=</span> <span class="n">signed_distance_to_surface</span>
+
+        <span class="k">return</span> <span class="n">closest_distance</span></div></div>
 </pre></div>
 
            </div>

@@ -369,6 +369,19 @@
                     <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
+<div class="viewcode-block" id="SingleSphereIngr.get_signed_distance"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_signed_distance">[docs]</a>    <span class="k">def</span> <span class="nf">get_signed_distance</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">packing_location</span><span class="p">,</span>
+        <span class="n">grid_point_location</span><span class="p">,</span>
+        <span class="n">rotation_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">distance_to_packing_location</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+            <span class="n">packing_location</span> <span class="o">-</span> <span class="n">grid_point_location</span>
+        <span class="p">)</span>
+        <span class="n">signed_distance_to_surface</span> <span class="o">=</span> <span class="n">distance_to_packing_location</span> <span class="o">-</span> <span class="n">radius</span>
+        <span class="k">return</span> <span class="n">signed_distance_to_surface</span></div>
+
 <div class="viewcode-block" id="SingleSphereIngr.get_new_distance_values"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_new_distance_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_new_distance_values</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">dpad</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span>
     <span class="p">):</span>

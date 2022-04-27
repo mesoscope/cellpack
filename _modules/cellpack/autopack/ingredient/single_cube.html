@@ -307,7 +307,19 @@
             <span class="n">positions_ar</span> <span class="o">+</span> <span class="p">(</span><span class="n">positions2_ar</span> <span class="o">-</span> <span class="n">positions_ar</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
         <span class="p">)</span>  <span class="c1"># location of center based on corner points</span>
 
+        <span class="n">d</span> <span class="o">=</span> <span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">radii</span> <span class="o">=</span> <span class="n">radii</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">d</span><span class="p">,</span> <span class="o">-</span><span class="n">d</span><span class="p">,</span> <span class="o">-</span><span class="n">d</span><span class="p">],</span>  <span class="c1"># [x0, y0, z0],</span>
+            <span class="p">[</span><span class="n">d</span><span class="p">,</span> <span class="o">-</span><span class="n">d</span><span class="p">,</span> <span class="o">-</span><span class="n">d</span><span class="p">],</span>  <span class="c1"># [x1, y0, z0],</span>
+            <span class="p">[</span><span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="o">-</span><span class="n">d</span><span class="p">],</span>  <span class="c1"># [x1, y1, z0],</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="o">-</span><span class="n">d</span><span class="p">],</span>  <span class="c1"># [x0, y1, z0],</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">],</span>  <span class="c1"># [x0, y1, z1],</span>
+            <span class="p">[</span><span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">],</span>  <span class="c1"># [x1, y1, z1],</span>
+            <span class="p">[</span><span class="n">d</span><span class="p">,</span> <span class="o">-</span><span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">],</span>  <span class="c1"># [x1, y0, z1],</span>
+            <span class="p">[</span><span class="o">-</span><span class="n">d</span><span class="p">,</span> <span class="o">-</span><span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">],</span>  <span class="c1"># [x0, y0, z1],</span>
+        <span class="p">]</span>
 
 <div class="viewcode-block" id="SingleCubeIngr.collision_jitter"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.collision_jitter">[docs]</a>    <span class="k">def</span> <span class="nf">collision_jitter</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -356,38 +368,40 @@
             <span class="n">bb</span><span class="p">,</span> <span class="n">center_trans</span><span class="p">,</span> <span class="n">search_radius</span>
         <span class="p">)</span>  <span class="c1"># indices of all grid points within padded distance from cube center</span>
 
-        <span class="n">grid_point_vectors</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">points_to_check</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">center_trans</span>
-        <span class="p">)</span>  <span class="c1"># vectors joining center of cube with grid points</span>
-        <span class="n">grid_point_distances</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
-            <span class="n">grid_point_vectors</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
-        <span class="p">)</span>  <span class="c1"># distances of grid points from packing location</span>
+        <span class="n">grid_point_vectors</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">points_to_check</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># signed distances of grid points from the cube surface</span>
+        <span class="n">grid_point_distances</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">grid_point</span> <span class="ow">in</span> <span class="n">grid_point_vectors</span><span class="p">:</span>
+            <span class="n">grid_point_distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_signed_distance</span><span class="p">(</span>
+                <span class="n">center_trans</span><span class="p">,</span>
+                <span class="n">grid_point</span><span class="p">,</span>
+                <span class="n">rotMat</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">grid_point_distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">grid_point_distance</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">pti</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points_to_check</span><span class="p">)):</span>
             <span class="c1"># pti = point index</span>
 
             <span class="n">grid_point_index</span> <span class="o">=</span> <span class="n">points_to_check</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span>
-
-            <span class="k">if</span> <span class="n">grid_point_index</span> <span class="ow">in</span> <span class="n">insidePoints</span><span class="p">:</span>
-                <span class="k">continue</span>
+            <span class="n">signed_distance_to_cube_surface</span> <span class="o">=</span> <span class="n">grid_point_distances</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span>
 
             <span class="n">collision</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">grid_point_distances</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span> <span class="o">+</span> <span class="n">current_grid_distances</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]</span>
-                <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span>
+                <span class="n">signed_distance_to_cube_surface</span>
+                <span class="o">+</span> <span class="n">current_grid_distances</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]</span>
+                <span class="o">&lt;=</span> <span class="mi">0</span>
             <span class="p">)</span>
 
             <span class="k">if</span> <span class="n">collision</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;grid point already occupied </span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">grid_point_index</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{}</span>
 
-            <span class="c1"># currently calculates distance from surface of encapsulating sphere</span>
-            <span class="c1"># should be updated to distance from cube surface</span>
-            <span class="n">signed_distance_to_cube_surface</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">grid_point_distances</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span>
-            <span class="p">)</span>
+            <span class="c1"># check if grid point lies inside the cube</span>
             <span class="k">if</span> <span class="n">signed_distance_to_cube_surface</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="c1"># check if grid point lies inside the cube</span>
-                <span class="n">insidePoints</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">signed_distance_to_cube_surface</span>
+                <span class="k">if</span> <span class="n">grid_point_index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">insidePoints</span> <span class="ow">or</span> <span class="nb">abs</span><span class="p">(</span>
+                    <span class="n">signed_distance_to_cube_surface</span>
+                <span class="p">)</span> <span class="o">&lt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">insidePoints</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]):</span>
+                    <span class="n">insidePoints</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">signed_distance_to_cube_surface</span>
             <span class="k">elif</span> <span class="p">(</span>
                 <span class="n">signed_distance_to_cube_surface</span>
                 <span class="o">&lt;=</span> <span class="n">current_grid_distances</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]</span>
@@ -471,7 +485,7 @@
         <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">,</span> <span class="n">vz</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">-</span> <span class="n">z1</span><span class="p">)</span>
         <span class="n">lengthsq</span> <span class="o">=</span> <span class="n">vx</span> <span class="o">*</span> <span class="n">vx</span> <span class="o">+</span> <span class="n">vy</span> <span class="o">*</span> <span class="n">vy</span> <span class="o">+</span> <span class="n">vz</span> <span class="o">*</span> <span class="n">vz</span>
         <span class="n">length</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">lengthsq</span><span class="p">)</span>
-        <span class="n">cx</span><span class="p">,</span> <span class="n">cy</span><span class="p">,</span> <span class="n">cz</span> <span class="o">=</span> <span class="n">posc</span> <span class="o">=</span> <span class="n">center</span>  <span class="c1"># x1+vx*.5, y1+vy*.5, z1+vz*.5</span>
+        <span class="n">posc</span> <span class="o">=</span> <span class="n">center</span>  <span class="c1"># x1+vx*.5, y1+vy*.5, z1+vz*.5</span>
         <span class="n">radt</span> <span class="o">=</span> <span class="n">length</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span>
 
         <span class="n">bb</span> <span class="o">=</span> <span class="p">[</span><span class="n">cent2T</span><span class="p">,</span> <span class="n">cent1T</span><span class="p">]</span>  <span class="c1"># self.correctBB(p1,p2,radc)</span>
@@ -535,7 +549,73 @@
             <span class="n">shape</span><span class="p">,</span> <span class="n">TransformState</span><span class="o">.</span><span class="n">makePos</span><span class="p">(</span><span class="n">Point3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
         <span class="p">)</span>  <span class="c1"># , pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?</span>
         <span class="c1">#        spherenp.setPos(-2, 0, 4)</span>
-        <span class="k">return</span> <span class="n">inodenp</span></div></div>
+        <span class="k">return</span> <span class="n">inodenp</span></div>
+
+<div class="viewcode-block" id="SingleCubeIngr.cube_surface_distance"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.cube_surface_distance">[docs]</a>    <span class="k">def</span> <span class="nf">cube_surface_distance</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">point</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1"># returns the distance to the closest cube surface from point</span>
+        <span class="n">side_lengths</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span>
+
+        <span class="n">dist_x</span><span class="p">,</span> <span class="n">dist_y</span><span class="p">,</span> <span class="n">dist_z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">point</span><span class="p">)</span> <span class="o">-</span> <span class="n">side_lengths</span>
+
+        <span class="k">if</span> <span class="n">dist_x</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dist_y</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">dist_z</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># point is inside the cube</span>
+                    <span class="n">current_distance</span> <span class="o">=</span> <span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">([</span><span class="n">dist_x</span><span class="p">,</span> <span class="n">dist_y</span><span class="p">,</span> <span class="n">dist_z</span><span class="p">]))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># z plane is the closest</span>
+                    <span class="n">current_distance</span> <span class="o">=</span> <span class="n">dist_z</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">dist_z</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># y plane is the closest</span>
+                    <span class="n">current_distance</span> <span class="o">=</span> <span class="n">dist_y</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># yz edge is the closest</span>
+                    <span class="n">current_distance</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dist_y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dist_z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dist_y</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">dist_z</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># x plane is closest</span>
+                    <span class="n">current_distance</span> <span class="o">=</span> <span class="n">dist_x</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># xz edge is the closest</span>
+                    <span class="n">current_distance</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dist_x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dist_z</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">dist_z</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># xy edge is the closest</span>
+                    <span class="n">current_distance</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dist_x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dist_y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># vertex is the closest</span>
+                    <span class="n">current_distance</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                        <span class="n">dist_x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dist_y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dist_z</span><span class="o">**</span><span class="mi">2</span>
+                    <span class="p">)</span>
+        <span class="k">return</span> <span class="n">current_distance</span></div>
+
+<div class="viewcode-block" id="SingleCubeIngr.get_signed_distance"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.get_signed_distance">[docs]</a>    <span class="k">def</span> <span class="nf">get_signed_distance</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">packing_location</span><span class="p">,</span>
+        <span class="n">grid_point_location</span><span class="p">,</span>
+        <span class="n">rotation_matrix</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1"># returns the distance to &#39;grid_point_location&#39; from the nearest cube surface</span>
+        <span class="c1"># the cube center is located at packing_location</span>
+        <span class="c1"># a rotation matrix rotation_matrix is applied to the cube</span>
+        <span class="n">signed_distance_to_surface</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">inv_rotation_matrix</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">rotation_matrix</span><span class="p">)</span>
+
+        <span class="n">transformed_point</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">grid_point_location</span> <span class="o">-</span> <span class="n">packing_location</span><span class="p">)</span>
+        <span class="p">]</span>  <span class="c1"># translate points to cube center</span>
+        <span class="n">transformed_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="p">,</span> <span class="n">inv_rotation_matrix</span><span class="p">,</span> <span class="n">transformed_point</span>
+        <span class="p">)</span>  <span class="c1"># rotate points to align with cube axis</span>
+        <span class="c1"># run distance checks on transformed points</span>
+        <span class="n">signed_distance_to_surface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cube_surface_distance</span><span class="p">(</span><span class="n">transformed_point</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">signed_distance_to_surface</span></div></div>
 </pre></div>
 
            </div>
