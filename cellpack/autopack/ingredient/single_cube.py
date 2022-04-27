@@ -122,23 +122,19 @@ class SingleCubeIngr(Ingredient):
         self.center = (
             positions_ar + (positions2_ar - positions_ar) / 2
         )  # location of center based on corner points
-        x0 = -radii[0] / 2.0
-        y0 = -radii[0] / 2.0
-        z0 = -radii[0] / 2.0
-        x1 = radii[0] / 2.0
-        y1 = radii[0] / 2.0
-        z1 = radii[0] / 2.0
+
+        d = radii[0] / 2.0
 
         self.radii = radii
         self.vertices = [
-            [x0, y0, z0],
-            [x1, y0, z0],
-            [x1, y1, z0],
-            [x0, y1, z0],
-            [x0, y1, z1],
-            [x1, y1, z1],
-            [x1, y0, z1],
-            [x0, y0, z1],
+            [-d, -d, -d],  # [x0, y0, z0],
+            [d, -d, -d],  # [x1, y0, z0],
+            [d, d, -d],  # [x1, y1, z0],
+            [-d, d, -d],  # [x0, y1, z0],
+            [-d, d, d],  # [x0, y1, z1],
+            [d, d, d],  # [x1, y1, z1],
+            [d, -d, d],  # [x1, y0, z1],
+            [-d, -d, d],  # [x0, y0, z1],
         ]
 
     def collision_jitter(
@@ -216,14 +212,11 @@ class SingleCubeIngr(Ingredient):
                 self.log.info("grid point already occupied %f", grid_point_index)
                 return True, {}, {}
 
+            # check if grid point lies inside the cube
             if signed_distance_to_cube_surface <= 0:
-                # check if grid point lies inside the cube
-                if grid_point_index in insidePoints:
-                    if abs(signed_distance_to_cube_surface) < abs(
-                        insidePoints[grid_point_index]
-                    ):
-                        insidePoints[grid_point_index] = signed_distance_to_cube_surface
-                else:
+                if grid_point_index not in insidePoints or abs(
+                    signed_distance_to_cube_surface
+                ) < abs(insidePoints[grid_point_index]):
                     insidePoints[grid_point_index] = signed_distance_to_cube_surface
             elif (
                 signed_distance_to_cube_surface
@@ -373,52 +366,6 @@ class SingleCubeIngr(Ingredient):
         )  # , pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
         #        spherenp.setPos(-2, 0, 4)
         return inodenp
-
-    def get_new_distances_and_inside_points(
-        self,
-        env,
-        packing_location,
-        rotation_matrix,
-        grid_point_index,
-        grid_distance_values,
-        new_dist_points,
-        inside_points,
-        signed_distance_to_surface=None,
-    ):
-        if signed_distance_to_surface is None:
-            grid_point_location = env.grid.masterGridPositions[grid_point_index]
-            signed_distance_to_surface = self.get_signed_distance(
-                packing_location,
-                grid_point_location,
-                rotation_matrix,
-            )
-        if signed_distance_to_surface <= 0:  # point is inside dropped sphere
-            if (
-                env.grid.gridPtId[grid_point_index] != self.compNum
-                and self.compNum <= 0
-            ):  # did this jitter outside of it's compartment
-                # in wrong compartment, reject this packing position
-                self.log.warning("checked pt that is not in container")
-                return True, {}, {}
-            if grid_point_index in inside_points:
-                if abs(signed_distance_to_surface) < abs(
-                    inside_points[grid_point_index]
-                ):
-                    inside_points[grid_point_index] = signed_distance_to_surface
-            else:
-                inside_points[grid_point_index] = signed_distance_to_surface
-        elif (
-            signed_distance_to_surface < grid_distance_values[grid_point_index]
-        ):  # point in region of influence
-            # need to update the distances of the master grid with new smaller distance
-            if grid_point_index in new_dist_points:
-                new_dist_points[grid_point_index] = min(
-                    signed_distance_to_surface, new_dist_points[grid_point_index]
-                )
-            else:
-                new_dist_points[grid_point_index] = signed_distance_to_surface
-
-        return inside_points, new_dist_points
 
     def cube_surface_distance(
         self,

@@ -1669,12 +1669,9 @@ class Ingredient(Agent):
                 # in wrong compartment, reject this packing position
                 self.log.warning("checked pt that is not in container")
                 return True, {}, {}
-            if grid_point_index in inside_points:
-                if abs(signed_distance_to_surface) < abs(
-                    inside_points[grid_point_index]
-                ):
-                    inside_points[grid_point_index] = signed_distance_to_surface
-            else:
+            if grid_point_index not in inside_points or abs(
+                signed_distance_to_surface
+            ) < abs(inside_points[grid_point_index]):
                 inside_points[grid_point_index] = signed_distance_to_surface
         elif (
             signed_distance_to_surface < grid_distance_values[grid_point_index]
