@@ -2999,16 +2999,14 @@ class Ingredient(Agent):
                     # found a collision, break this loop
                     break
                 else:
-                    if len(new_inside_points):
-                        insidePoints = self.merge_place_results(
-                            new_inside_points,
-                            insidePoints,
-                        )
-                    if len(new_dist_points):
-                        newDistPoints = self.merge_place_results(
-                            new_dist_points,
-                            newDistPoints,
-                        )
+                    insidePoints = self.merge_place_results(
+                        new_inside_points,
+                        insidePoints,
+                    )
+                    newDistPoints = self.merge_place_results(
+                        new_dist_points,
+                        newDistPoints,
+                    )
 
             if is_realtime:
                 box = self.vi.getObject("collBox")
@@ -3268,16 +3266,14 @@ class Ingredient(Agent):
                         dpad,
                         self.deepest_level,
                     )
-                    if len(new_inside_points):
-                        insidePoints = self.merge_place_results(
-                            new_inside_points,
-                            insidePoints,
-                        )
-                    if len(new_dist_points):
-                        newDistPoints = self.merge_place_results(
-                            new_dist_points,
-                            newDistPoints,
-                        )
+                    insidePoints = self.merge_place_results(
+                        new_inside_points,
+                        insidePoints,
+                    )
+                    newDistPoints = self.merge_place_results(
+                        new_dist_points,
+                        newDistPoints,
+                    )
                 self.log.info("compute distance loop %d", time() - t3)
 
                 # rebuild kdtree
@@ -3423,14 +3419,12 @@ class Ingredient(Agent):
                         dpad,
                         self.deepest_level,
                     )
-                    if len(new_inside_pts):
-                        insidePoints = self.merge_place_results(
-                            new_inside_pts, insidePoints
-                        )
-                    if len(new_dist_points):
-                        newDistPoints = self.merge_place_results(
-                            new_dist_points, newDistPoints
-                        )
+                    insidePoints = self.merge_place_results(
+                        new_inside_pts, insidePoints
+                    )
+                    newDistPoints = self.merge_place_results(
+                        new_dist_points, newDistPoints
+                    )
                 # rebuild kdtree
                 if len(self.env.rTrans) >= 1:
                     del self.env.close_ingr_bhtree

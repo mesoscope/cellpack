@@ -1,10 +1,10 @@
 from panda3d.core import Point3, TransformState
 from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
 from math import pi
+import numpy
 
 from cellpack.autopack.ingredient.single_sphere import SingleSphereIngr
 import cellpack.autopack as autopack
-import numpy
 
 helper = autopack.helper
 
