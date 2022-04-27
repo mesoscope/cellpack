@@ -35,8 +35,7 @@ class simularium_agent:
         # calculates brute force MSD
         positions = numpy.array(self.position, dtype=object, copy=False)
         time_shift = numpy.arange(len(positions))
-        MSD = numpy.zeros_like(time_shift)
-        import ipdb; ipdb.set_trace()
+        MSD = numpy.zeros(len(time_shift))
         for index, shift in enumerate(time_shift):
             displacements = positions[:-shift if shift else None] - positions[shift:]
             sq_disp = numpy.square(displacements).sum(axis=1)
