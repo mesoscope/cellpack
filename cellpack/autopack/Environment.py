@@ -2493,7 +2493,7 @@ class Environment(CompartmentList):
                 compartment_ids,
                 vRangeStart,
                 vThreshStart,
-            )
+            )  # (Bool, ptInd)
             if ingr.compNum > 0:
                 allSrfpts = list(
                     self.compartments[ingr.compNum - 1].surfacePointsNormals.keys()
@@ -2502,12 +2502,16 @@ class Environment(CompartmentList):
             if res[0]:
                 ptInd = res[1]
                 if ptInd > len(distances):
-                    self.log.warning("problem ", ptInd)
+                    self.log.warning(
+                        "point index outside of grid length, should never be true ",
+                        ptInd,
+                    )
                     continue
             else:
                 self.log.info("vRangeStart coninue ", res)
                 vRangeStart = res[1]
                 continue
+            # NOTE: should we do the close partner check here instead of in the place functions?
             # place the ingredient
             if self.overwritePlaceMethod:
                 ingr.placeType = self.placeMethod
@@ -2519,17 +2523,18 @@ class Environment(CompartmentList):
                 ptInd,
                 self.grid.masterGridPositions[ptInd],
             )
+            collision_possible = True
+            if distances[ptInd] >= ingr.encapsulatingRadius + ingr.getMaxJitter(
+                spacing
+            ):
+                # there is no possible collision here
+                collision_possible = False
             (
                 success,
                 insidePoints,
                 newDistPoints,
             ) = ingr.attempt_to_pack_at_grid_location(
-                self,
-                ptInd,
-                distances,
-                max_radius,
-                spacing,
-                usePP,
+                self, ptInd, distances, max_radius, spacing, usePP, collision_possible
             )
             self.log.info(
                 "after place attempt, placed: %r, number of free points:%d, length of free points=%d",

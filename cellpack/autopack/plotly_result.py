@@ -1,6 +1,7 @@
 from cellpack.autopack.upy.colors import create_divergent_color_map_with_scaled_values
 import plotly.graph_objects as go
 import plotly.colors as pcolors
+import numpy
 
 
 class PlotlyAnalysis:
@@ -33,15 +34,25 @@ class PlotlyAnalysis:
             opacity=opacity,
         )
 
-    def add_square(self, radius, pos, color, opacity=1):
+    def add_square(self, radius, pos, rotMat, color, opacity=1):
+        x0 = -radius[0][0] / 2.0
+        y0 = -radius[0][1] / 2.0
+        x1 = radius[0][0] / 2.0
+        y1 = radius[0][1] / 2.0
+        # corner points of the cube top surface
+        point_array = [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]
+        rotated_pts = self.transformPoints2D(pos, rotMat, point_array)
+        path_str = ""
+        for index, point_to_print in enumerate(rotated_pts):
+            if index == 0:
+                path_str += "M {0[0]} {0[1]} ".format(point_to_print)
+            else:
+                path_str += "L {0[0]} {0[1]} ".format(point_to_print)
+        path_str += "Z"
+
         self.plot.add_shape(
-            type="rect",
-            xref="x",
-            yref="y",
-            x0=pos[0] - radius[0][0] / 2.0,
-            y0=pos[1] - radius[0][1] / 2.0,
-            x1=pos[0] + radius[0][0] / 2.0,
-            y1=pos[1] + radius[0][1] / 2.0,
+            type="path",
+            path=path_str,
             line_color=PlotlyAnalysis.format_color(color),
             opacity=opacity,
         )
@@ -64,7 +75,7 @@ class PlotlyAnalysis:
                 if ingr.modelType == "Spheres":
                     self.add_circle(ingr.encapsulatingRadius, pos, ingr.color)
                 elif ingr.modelType == "Cube":
-                    self.add_square(ingr.radii, pos, ingr.color)
+                    self.add_square(ingr.radii, pos, rot, ingr.color)
 
     def make_grid_heatmap(self, env):
         ids = []
@@ -111,3 +122,12 @@ class PlotlyAnalysis:
 
     def show(self):
         self.plot.show()
+
+    def transformPoints2D(self, trans, rot, points):
+        tx, ty = trans[0:2]
+        pos = []
+        for xs, ys in points:
+            x = rot[0][0] * xs + rot[0][1] * ys + tx
+            y = rot[1][0] * xs + rot[1][1] * ys + ty
+            pos.append([x, y])
+        return numpy.array(pos)
