@@ -22,15 +22,7 @@ import collada
 
 
 class Instance:
-    def __init__(
-        self,
-        name,
-        instance_id,
-        unique_id,
-        radius,
-        viz_type,
-        mesh=None
-    ):
+    def __init__(self, name, instance_id, unique_id, radius, viz_type, mesh=None):
         self.name = name
         self.radius = radius
         self.instance_id = instance_id
@@ -295,7 +287,9 @@ class simulariumHelper(hostHelper.Helper):
         mesh=None,
     ):
         self.agent_id_counter += 1
-        if (ingredient and ingredient.Type == "Grow") or (ingredient and ingredient.Type == "Actine"):
+        if (ingredient and ingredient.Type == "Grow") or (
+            ingredient and ingredient.Type == "Actine"
+        ):
             viz_type = VIZ_TYPE.FIBER
         else:
             viz_type = VIZ_TYPE.DEFAULT
