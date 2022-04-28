@@ -1,6 +1,7 @@
 from panda3d.core import Point3, TransformState
 from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
 from math import pi
+import numpy
 
 from cellpack.autopack.ingredient.single_sphere import SingleSphereIngr
 import cellpack.autopack as autopack
@@ -89,7 +90,7 @@ class MultiSphereIngr(SingleSphereIngr):
             sphereFile=sphereFile,
             Type=Type,
         )
-        min_radius = float(encapsulatingRadius)
+        min_radius = encapsulatingRadius
         for level in radii:
             if min(level["radii"]) < min_radius:
                 min_radius = min(level["radii"])
@@ -111,3 +112,27 @@ class MultiSphereIngr(SingleSphereIngr):
                 shape, TransformState.makePos(Point3(posc[0], posc[1], posc[2]))
             )  #
         return inodenp
+
+    def get_signed_distance(
+        self,
+        packing_location,
+        grid_point_location,
+        rotation_matrix=None,
+    ):
+        level = self.deepest_level
+        centers = self.positions[level]
+        radii = self.radii[level]
+        centers_trans = self.transformPoints(
+            packing_location, rotation_matrix, centers
+        )  # centers)
+
+        closest_distance = numpy.inf
+        for current_radius, center_position in zip(radii, centers_trans):
+            distance_to_packing_location = numpy.linalg.norm(
+                center_position - grid_point_location
+            )
+            signed_distance_to_surface = distance_to_packing_location - current_radius
+            if signed_distance_to_surface < closest_distance:
+                closest_distance = signed_distance_to_surface
+
+        return closest_distance

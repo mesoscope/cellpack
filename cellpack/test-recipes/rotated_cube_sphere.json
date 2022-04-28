@@ -1,6 +1,6 @@
 {
     "recipe": {
-        "name": "oriented_cube_sphere",
+        "name": "rotated_cube_sphere",
         "version": "1.0"
     },
     "options": {
@@ -156,9 +156,9 @@
                     ]
                 ],
                 "principalVector": [
-                    1,
                     0,
-                    0
+                    0,
+                    1
                 ],
                 "proba_binding": 0.5,
                 "proba_not_binding": 0.5,
@@ -178,7 +178,7 @@
                 ],
                 "rotRange": 6.2831,
                 "useOrientBias": false,
-                "useRotAxis": false,
+                "useRotAxis": true,
                 "weight": 0.2
             }
         }

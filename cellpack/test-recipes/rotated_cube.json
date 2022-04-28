@@ -1,7 +1,7 @@
 {
     "recipe": {
-        "name": "test_sphere_tree",
-        "version": "1.1"
+        "name": "rotated_cube",
+        "version": "1.0"
     },
     "options": {
         "EnviroOnly": false,
@@ -23,9 +23,8 @@
         "computeGridParams": true,
         "freePtsUpdateThreshold": 0,
         "gradients": [],
-        "ingrLookForNeighbours": true,
+        "ingrLookForNeighbours": false,
         "innerGridMethod": "bhtree",
-        "largestProteinSize": 100,
         "overwritePlaceMethod": true,
         "pickRandPt": true,
         "pickWeightedIngr": true,
@@ -33,24 +32,23 @@
         "resultfile": "autoPACKserver/results/NM_Analysis_FigureB1.0.apr.json",
         "runTimeDisplay": false,
         "saveResult": false,
-        "smallestProteinSize": 10,
         "use_gradient": false,
         "use_periodicity": true,
         "windowsSize": 10
     },
     "cytoplasme": {
         "ingredients": {
-            "Sphere_radius_100": {
-                "Type": "MultiSphere",
+            "cube_side_50": {
+                "Type": "SingleCube",
                 "color": [
-                    0.467,
-                    0.23899999,
-                    0.972
+                    0.498,
+                    0.498,
+                    0.498
                 ],
                 "coordsystem": "left",
                 "cutoff_boundary": 0,
-                "cutoff_surface": 25,
-                "encapsulatingRadius": 100,
+                "cutoff_surface": 0,
+                "encapsulatingRadius": 10,
                 "excluded_partners_name": [],
                 "gradient": "",
                 "isAttractor": false,
@@ -59,14 +57,13 @@
                     1,
                     0
                 ],
-                "meshFile": null,
                 "molarity": 0,
-                "name": "Sphere_radius_25",
-                "nbJitter": 60,
-                "nbMol": 80,
-                "orientBiasRotRangeMax": -3.1415927,
-                "orientBiasRotRangeMin": -3.1415927,
-                "overwrite_nbMol_value": 80,
+                "name": "cube_side_50",
+                "nbJitter": 20,
+                "nbMol": 50,
+                "orientBiasRotRangeMax": 0,
+                "orientBiasRotRangeMin": 0,
+                "overwrite_nbMol_value": 50,
                 "packingMode": "random",
                 "packingPriority": 0,
                 "partners_name": [],
@@ -77,37 +74,45 @@
                 "positions": [
                     [
                         [
-                            0,
-                            0,
-                            0
+                            -25,
+                            -25,
+                            -25
                         ]
                     ]
                 ],
-                "positions2": null,
+                "positions2": [
+                    [
+                        [
+                            25,
+                            25,
+                            25
+                        ]
+                    ]
+                ],
                 "principalVector": [
-                    1,
                     0,
-                    0
+                    0,
+                    1
                 ],
                 "proba_binding": 0.5,
                 "proba_not_binding": 0.5,
                 "properties": {},
                 "radii": [
                     [
-                        100
+                        50,
+                        50,
+                        50
                     ]
                 ],
-                "rejectionThreshold": 1000,
+                "rejectionThreshold": 100,
                 "rotAxis": [
                     0,
                     0,
                     1
                 ],
                 "rotRange": 6.2831,
-                "sphereFile": "test.sph",
                 "useOrientBias": false,
                 "useRotAxis": true,
-                "use_mesh_rb": false,
                 "weight": 0.2
             }
         }

@@ -187,6 +187,19 @@ class SingleSphereIngr(Ingredient):
                     return True
         return False
 
+    def get_signed_distance(
+        self,
+        packing_location,
+        grid_point_location,
+        rotation_matrix=None,
+    ):
+        radius = self.radii[0][0]
+        distance_to_packing_location = numpy.linalg.norm(
+            packing_location - grid_point_location
+        )
+        signed_distance_to_surface = distance_to_packing_location - radius
+        return signed_distance_to_surface
+
     def get_new_distance_values(
         self, jtrans, rotMatj, gridPointsCoords, distance, dpad, level=0
     ):

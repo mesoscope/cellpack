@@ -1327,6 +1327,9 @@ class Ingredient(Agent):
         return position
 
     def getMaxJitter(self, spacing):
+        # self.jitterMax: each value is the max it can move
+        # along that axis, but not cocurrently, ie, can't move
+        # in the max x AND max y direction at the same time
         return max(self.jitterMax) * spacing
 
     def swap(self, d, n):
@@ -1468,6 +1471,12 @@ class Ingredient(Agent):
         return (x + dx, y + dy, z + dz)
 
     def transformPoints(self, trans, rot, points):
+        output = []
+        for point in points:
+            output.append(numpy.matmul(rot[0:3, 0:3], point) + trans)
+        return output
+
+    def transformPoints_mult(self, trans, rot, points):
         tx, ty, tz = trans
         pos = []
         for xs, ys, zs in points:
@@ -1633,6 +1642,49 @@ class Ingredient(Agent):
                 # reject the ingr
         return trigger, False
 
+    def get_new_distances_and_inside_points(
+        self,
+        env,
+        packing_location,
+        rotation_matrix,
+        grid_point_index,
+        grid_distance_values,
+        new_dist_points,
+        inside_points,
+        signed_distance_to_surface=None,
+    ):
+        if signed_distance_to_surface is None:
+            grid_point_location = env.grid.masterGridPositions[grid_point_index]
+            signed_distance_to_surface = self.get_signed_distance(
+                packing_location,
+                grid_point_location,
+                rotation_matrix,
+            )
+
+        if signed_distance_to_surface <= 0:  # point is inside dropped ingredient
+            if (
+                env.grid.gridPtId[grid_point_index] != self.compNum
+                and self.compNum <= 0
+            ):  # did this jitter outside of it's compartment
+                # in wrong compartment, reject this packing position
+                self.log.warning("checked pt that is not in container")
+                return True, {}, {}
+            if grid_point_index not in inside_points or abs(
+                signed_distance_to_surface
+            ) < abs(inside_points[grid_point_index]):
+                inside_points[grid_point_index] = signed_distance_to_surface
+        elif (
+            signed_distance_to_surface < grid_distance_values[grid_point_index]
+        ):  # point in region of influence
+            # need to update the distances of the master grid with new smaller distance
+            if grid_point_index in new_dist_points:
+                new_dist_points[grid_point_index] = min(
+                    signed_distance_to_surface, new_dist_points[grid_point_index]
+                )
+            else:
+                new_dist_points[grid_point_index] = signed_distance_to_surface
+        return inside_points, new_dist_points
+
     def collision_jitter(
         self,
         jtrans,
@@ -1640,7 +1692,7 @@ class Ingredient(Agent):
         level,
         gridPointsCoords,
         current_grid_distances,
-        histoVol,
+        env,
         dpad,
     ):
         """
@@ -1665,7 +1717,7 @@ class Ingredient(Agent):
             )  # extends the packing ingredient's bounding box to be large enough to include masked gridpoints of the largest possible ingrdient in the receipe
             #  TODO: add realtime render here that shows all the points being checked by the collision
 
-            pointsToCheck = histoVol.grid.getPointsInSphere(
+            pointsToCheck = env.grid.getPointsInSphere(
                 posc, radius_of_area_to_check
             )  # indices
             # check for collisions by looking at grid points in the sphere of radius radc
@@ -1706,7 +1758,7 @@ class Ingredient(Agent):
                             new_level,
                             gridPointsCoords,
                             current_grid_distances,
-                            histoVol,
+                            env,
                             dpad,
                         )
                     else:
@@ -1721,46 +1773,24 @@ class Ingredient(Agent):
                     # but getting here means there was no collision detected
                     # so the loop can continue
                     continue
-
                 signed_distance_to_sphere_surface = (
                     distance_to_packing_location - radius_of_ing_being_packed
                 )
 
-                if (
-                    signed_distance_to_sphere_surface <= 0
-                ):  # point is inside dropped sphere
-                    if (
-                        histoVol.grid.gridPtId[grid_point_index] != self.compNum
-                        and self.compNum <= 0
-                    ):  # did this jitter outside of it's compartment
-                        # in wrong compartment, reject this packing position
-                        self.log.warning("checked pt that is not in container")
-                        return True, {}, {}
-                    if grid_point_index in insidePoints:
-                        if abs(signed_distance_to_sphere_surface) < abs(
-                            insidePoints[grid_point_index]
-                        ):
-                            insidePoints[
-                                grid_point_index
-                            ] = signed_distance_to_sphere_surface
-                    else:
-                        insidePoints[
-                            grid_point_index
-                        ] = signed_distance_to_sphere_surface
-                elif (
-                    signed_distance_to_sphere_surface
-                    < current_grid_distances[grid_point_index]
-                ):  # point in region of influence
-                    # need to update the distances of the master grid with new smaller distance
-                    if grid_point_index in newDistPoints:
-                        newDistPoints[grid_point_index] = min(
-                            signed_distance_to_sphere_surface,
-                            newDistPoints[grid_point_index],
-                        )
-                    else:
-                        newDistPoints[
-                            grid_point_index
-                        ] = signed_distance_to_sphere_surface
+                (
+                    insidePoints,
+                    newDistPoints,
+                ) = self.get_new_distances_and_inside_points(
+                    env,
+                    jtrans,
+                    rotMat,
+                    grid_point_index,
+                    current_grid_distances,
+                    newDistPoints,
+                    insidePoints,
+                    signed_distance_to_sphere_surface,
+                )
+
             if not at_max_level:
                 # we didn't find any colisions with the this level, but we still want
                 # the inside points to be based on the most detailed geom
@@ -1771,7 +1801,7 @@ class Ingredient(Agent):
                     new_level,
                     gridPointsCoords,
                     current_grid_distances,
-                    histoVol,
+                    env,
                     dpad,
                 )
         return False, insidePoints, newDistPoints
@@ -2399,7 +2429,14 @@ class Ingredient(Agent):
         self.update_data_tree(dropped_position, dropped_rotation, grid_point_index)
 
     def attempt_to_pack_at_grid_location(
-        self, env, ptInd, distance, max_radius, spacing, usePP
+        self,
+        env,
+        ptInd,
+        grid_point_distances,
+        max_radius,
+        spacing,
+        usePP,
+        collision_possible,
     ):
         success = False
         jitter = self.getMaxJitter(spacing)
@@ -2435,95 +2472,142 @@ class Ingredient(Agent):
             )
         is_realtime = current_visual_instance is not None
         # NOTE: move the target point for close partner check.
-        # I think this should be done ealier, when we're getting the point indice
+        # I think this should be done ealier, when we're getting the point index
         if env.ingrLookForNeighbours and self.packingMode == "closePartner":
             target_grid_point_position, rotation_matrix = self.close_partner_check(
                 target_grid_point_position,
                 rotation_matrix,
                 compartment,
                 env.afviewer,
-                distance,
                 current_visual_instance,
+            )
+        if collision_possible:
+            # grow doesnt use panda.......but could use all the geom produce by the grow as rb
+            if self.Type == "Grow" or self.Type == "Actine":
+                success, jtrans, rotMatj, insidePoints, newDistPoints = self.grow_place(
+                    env,
+                    ptInd,
+                    env.grid.freePoints,
+                    env.grid.nbFreePoints,
+                    grid_point_distances,
+                    dpad,
+                )
+            elif self.placeType == "jitter":
+                (
+                    success,
+                    jtrans,
+                    rotMatj,
+                    insidePoints,
+                    newDistPoints,
+                ) = self.jitter_place(
+                    env,
+                    compartment,
+                    target_grid_point_position,
+                    rotation_matrix,
+                    current_visual_instance,
+                    grid_point_distances,
+                    dpad,
+                    env.afviewer,
+                )
+            elif self.placeType == "spheresSST":
+                (
+                    success,
+                    jtrans,
+                    rotMatj,
+                    insidePoints,
+                    newDistPoints,
+                ) = self.pandaBullet_placeBHT(
+                    env,
+                    compartment,
+                    ptInd,
+                    target_grid_point_position,
+                    rotation_matrix,
+                    current_visual_instance,
+                    grid_point_distances,
+                    dpad,
+                )
+            elif self.placeType == "pandaBullet":
+                (
+                    success,
+                    jtrans,
+                    rotMatj,
+                    insidePoints,
+                    newDistPoints,
+                ) = self.pandaBullet_place(
+                    env,
+                    ptInd,
+                    grid_point_distances,
+                    dpad,
+                    env.afviewer,
+                    compartment,
+                    gridPointsCoords,
+                    rotation_matrix,
+                    target_grid_point_position,
+                    current_visual_instance,
+                    usePP=usePP,
+                )
+            elif (
+                self.placeType == "pandaBulletRelax"
+                or self.placeType == "pandaBulletSpring"
+            ):
+                (
+                    success,
+                    jtrans,
+                    rotMatj,
+                    insidePoints,
+                    newDistPoints,
+                ) = self.pandaBullet_relax(
+                    env,
+                    ptInd,
+                    compartment,
+                    target_grid_point_position,
+                    rotation_matrix,
+                    grid_point_distances,
+                    dpad,
+                    current_visual_instance,
+                    dpad,
+                )
+            else:
+                self.log.error("Can't pack using this method %s", self.placeType)
+                self.reject()
+                return False, {}, {}
+        else:
+            # blind packing without further collision checks
+            # TODO: make this work for ingredients other than single spheres
+
+            success = True
+            newDistPoints = {}
+            insidePoints = {}
+
+            (jtrans, rotMatj,) = self.get_new_jitter_location_and_rotation(
+                env, target_grid_point_position, rotation_matrix
             )
 
-        # grow doesnt use panda.......but could use all the geom produce by the grow as rb
-        if self.Type == "Grow" or self.Type == "Actine":
-            success, jtrans, rotMatj, insidePoints, newDistPoints = self.grow_place(
-                env, ptInd, env.grid.freePoints, env.grid.nbFreePoints, distance, dpad
-            )
-        elif self.placeType == "jitter":
-            success, jtrans, rotMatj, insidePoints, newDistPoints = self.jitter_place(
-                env,
-                compartment,
-                target_grid_point_position,
-                rotation_matrix,
-                current_visual_instance,
-                distance,
-                dpad,
-                env.afviewer,
-            )
-        elif self.placeType == "spheresSST":
-            (
-                success,
-                jtrans,
-                rotMatj,
-                insidePoints,
-                newDistPoints,
-            ) = self.pandaBullet_placeBHT(
-                env,
-                compartment,
-                ptInd,
-                target_grid_point_position,
-                rotation_matrix,
-                current_visual_instance,
-                distance,
-                dpad,
-            )
-        elif self.placeType == "pandaBullet":
-            (
-                success,
-                jtrans,
-                rotMatj,
-                insidePoints,
-                newDistPoints,
-            ) = self.pandaBullet_place(
-                env,
-                ptInd,
-                distance,
-                dpad,
-                env.afviewer,
-                compartment,
-                gridPointsCoords,
-                rotation_matrix,
-                target_grid_point_position,
-                current_visual_instance,
-                usePP=usePP,
-            )
-        elif (
-            self.placeType == "pandaBulletRelax"
-            or self.placeType == "pandaBulletSpring"
-        ):
-            (
-                success,
-                jtrans,
-                rotMatj,
-                insidePoints,
-                newDistPoints,
-            ) = self.pandaBullet_relax(
-                env,
-                ptInd,
-                compartment,
-                target_grid_point_position,
-                rotation_matrix,
-                distance,
-                dpad,
-                current_visual_instance,
-                dpad,
-            )
-        else:
-            self.log.error("Can't pack using this method %s", self.placeType)
-            self.reject()
-            return False, {}, {}
+            packing_location = jtrans
+            radius_of_area_to_check = self.encapsulatingRadius + dpad
+
+            bounding_points_to_check = self.get_all_positions_to_check(packing_location)
+
+            for bounding_point_position in bounding_points_to_check:
+
+                grid_points_to_update = env.grid.getPointsInSphere(
+                    bounding_point_position, radius_of_area_to_check
+                )
+
+                for grid_point_index in grid_points_to_update:
+                    (
+                        insidePoints,
+                        newDistPoints,
+                    ) = self.get_new_distances_and_inside_points(
+                        env,
+                        bounding_point_position,
+                        rotMatj,
+                        grid_point_index,
+                        grid_point_distances,
+                        newDistPoints,
+                        insidePoints,
+                    )
+
         if success:
             if is_realtime:
                 autopack.helper.set_object_static(
@@ -2614,6 +2698,10 @@ class Ingredient(Agent):
 
         if jitter_sq > 0.0:
             found = False
+            # NOTE: making sure it hasn't picked a jitter point outside of the
+            # sphere created by the half way point to the next grid points
+            # TODO: Try seeing if this can be calculated more efficently using
+            # polar coordinates
             while not found:
                 dx = jx * jitter * uniform(-1.0, 1.0)
                 dy = jy * jitter * uniform(-1.0, 1.0)
@@ -2624,8 +2712,6 @@ class Ingredient(Agent):
                         dx, dy, dz, _ = numpy.dot(rotation, (dx, dy, dz, 0))
                     jitter_trans = (tx + dx, ty + dy, tz + dz)
                     found = True
-                # else:
-                # self.log.info("JITTER REJECTED %d %d", d2, jitter_sq)
         else:
             jitter_trans = translation
         return jitter_trans
@@ -2914,10 +3000,12 @@ class Ingredient(Agent):
                     break
                 else:
                     insidePoints = self.merge_place_results(
-                        new_inside_points, insidePoints
+                        new_inside_points,
+                        insidePoints,
                     )
                     newDistPoints = self.merge_place_results(
-                        new_dist_points, newDistPoints
+                        new_dist_points,
+                        newDistPoints,
                     )
 
             if is_realtime:
@@ -3172,7 +3260,7 @@ class Ingredient(Agent):
                     self.env.rIngr.append(self)
                     self.env.result.append([pt, packing_rotation, self, ptInd])
 
-                    new_inside_pts, new_dist_points = self.get_new_distance_values(
+                    new_inside_points, new_dist_points = self.get_new_distance_values(
                         pt,
                         packing_rotation,
                         gridPointsCoords,
@@ -3181,10 +3269,12 @@ class Ingredient(Agent):
                         self.deepest_level,
                     )
                     insidePoints = self.merge_place_results(
-                        new_inside_pts, insidePoints
+                        new_inside_points,
+                        insidePoints,
                     )
                     newDistPoints = self.merge_place_results(
-                        new_dist_points, newDistPoints
+                        new_dist_points,
+                        newDistPoints,
                     )
                 self.log.info("compute distance loop %d", time() - t3)
 
