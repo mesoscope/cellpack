@@ -2285,7 +2285,7 @@ class Environment(CompartmentList):
             if update_partner:
                 self.set_partners_ingredient(ingr)
         return totalNbIngr
-    
+
     def pack_grid(
         self,
         seedNum=14,
@@ -2294,6 +2294,7 @@ class Environment(CompartmentList):
         name=None,
         vTestid=3,
         vAnalysis=0,
+        animate=0,
         **kw,
     ):
         """
@@ -2669,12 +2670,11 @@ class Environment(CompartmentList):
         if self.runTimeDisplay and autopack.helper.host == "simularium":
             autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
 
-        animate = True  # TODO: make this an input param
-        if animate:
+        if animate > 0:
 
             autopack.helper.init_scene_with_objects(self.molecules)
-            
-            for i in range(300):
+
+            for i in range(animate):
                 for index in range(len(self.molecules)):
                     ingr_to_move = self.rIngr[index]
                     done_num = 5

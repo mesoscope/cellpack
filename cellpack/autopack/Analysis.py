@@ -982,14 +982,24 @@ class AnalyseAP:
         print("time to Build Grid", gridTime)
 
     def pack(
-        self, seed=20, vTestid=3, vAnalysis=0, fbox_bb=None, show_plotly_plot=True
+        self,
+        seed=20,
+        vTestid=3,
+        vAnalysis=0,
+        fbox_bb=None,
+        show_plotly_plot=True,
+        animate=0,
     ):
         if show_plotly_plot:
             self.plotly.update_title(self.env.placeMethod)
 
         t1 = time()
         self.env.pack_grid(
-            seedNum=seed, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb
+            seedNum=seed,
+            vTestid=vTestid,
+            vAnalysis=vAnalysis,
+            fbox=fbox_bb,
+            animate=animate,
         )
         t2 = time()
         print("time to run pack_grid", self.env.placeMethod, t2 - t1)
@@ -1135,6 +1145,7 @@ class AnalyseAP:
         fbox_bb=None,
         use_file=True,
         seeds_i=None,
+        animate=0,
     ):
         # doLoop automatically produces result files, images, and documents from the recipe while adjusting parameters
         # To run doLoop, 1) in your host's python console type:
@@ -1182,6 +1193,7 @@ class AnalyseAP:
                 vAnalysis=1,
                 fbox_bb=fbox_bb,
                 show_plotly_plot=show_plotly_plot,
+                animate=animate,
             )
             self.center = self.env.grid.getCenter()
             if render:

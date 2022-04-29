@@ -1610,15 +1610,19 @@ class Ingredient(Agent):
             return
         current_pos = env.rTrans[index]
         current_rot = env.rRot[index]
-        
-        (new_position, new_rotation) = self.get_new_jitter_location_and_rotation(env, current_pos, current_rot)
-        
+
+        (new_position, new_rotation) = self.get_new_jitter_location_and_rotation(
+            env, current_pos, current_rot
+        )
+
         # checks if the point is outside the bounding box
         if self.point_is_not_available(new_position):
             current_update += 1
             return self.move_one_jitter(env, index, done_num, current_update)
 
-        (collision, indices) = self.check_collisions(env, index, new_position, new_rotation)
+        (collision, indices) = self.check_collisions(
+            env, index, new_position, new_rotation
+        )
         if not collision:
             env.rTrans[index] = new_position
             env.rRot[index] = new_rotation

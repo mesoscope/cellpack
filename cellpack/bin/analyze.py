@@ -43,6 +43,7 @@ class Args(argparse.Namespace):
         "pandaBullet",
         "spheresBHT",
     ]
+    DEFAULT_ANIMATION_FRAMES = 0
 
     def __init__(self):
         # Arguments that could be passed in through the command line
@@ -54,6 +55,7 @@ class Args(argparse.Namespace):
         self.save_analysis_plot = None
         self.grid_plot = None
         self.debug = True
+        self.animate = self.DEFAULT_ANIMATION_FRAMES
         #
         self.__parse()
 
@@ -130,6 +132,15 @@ class Args(argparse.Namespace):
             help="Turn off plotly plot, defaults to True if analysis is True and 2D",
         )
         p.add_argument(
+            "-a",
+            "--animate",
+            action="store",
+            dest="animate",
+            type=int,
+            default=self.animate,
+            help="Animates a given packing by allowing ingredients to jitter for the specified number of time points",
+        )
+        p.add_argument(
             "--debug",
             action="store_true",
             dest="debug",
@@ -148,6 +159,7 @@ def main():
         recipe_path = os.path.join(os.getcwd(), args.recipe)
         do_analysis = args.analysis
         dim = args.dim
+        animate = args.animate
         default_should_plot = args.dim == 2 and do_analysis
         save_plot = (
             args.save_analysis_plot
@@ -205,6 +217,7 @@ def main():
                     plot=save_plot,
                     show_plotly_plot=show_plotly_plot,
                     twod=(dim == 2),
+                    animate=animate,
                 )
         else:
             for place_method in args.place_methods:
