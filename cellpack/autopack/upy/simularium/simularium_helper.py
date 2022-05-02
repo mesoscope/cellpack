@@ -13,6 +13,7 @@ from simulariumio import (
     CameraData,
     DisplayData,
 )
+from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
 from cellpack.autopack.upy import (
@@ -53,7 +54,8 @@ class Instance:
                 "n_subpoints": len(sub_points),
             }
         else:
-            self.time_mapping[time_point] = {"position": position, "rotation": rotation}
+            euler = CellpackConverter._get_euler_from_matrix(rotation, HAND_TYPE.RIGHT)
+            self.time_mapping[time_point] = {"position": position, "rotation": euler}
 
     def increment_static(self, time_point):
         if self.is_static:
@@ -361,7 +363,6 @@ class simulariumHelper(hostHelper.Helper):
         for position, rotation, ingredient, ptInd in objects:
             ingr_name = ingredient.name
             display_type = DISPLAY_TYPE.SPHERE
-
             if ingredient.Type == "SingleCube":
                 display_type = "CUBE"
             self.display_data[ingredient.name] = DisplayData(
@@ -1151,7 +1152,7 @@ class simulariumHelper(hostHelper.Helper):
 
     def writeToFile(self, polygon, file_name, bb):
         """
-        Write to simuarium file
+        Write to simularium file
         """
         total_steps = self.time + 1
         max_number_agents = len(self.scene)
@@ -1215,14 +1216,13 @@ class simulariumHelper(hostHelper.Helper):
                         position[1] * self.scale_factor - box_size[1] / 2,
                         position[2] * self.scale_factor - box_size[2] / 2,
                     ]
-                    rotation = [0, 0, 0]
+                    rotation = data_at_time["rotation"]
                     rotations[t][n] = rotation
                     viz_types[t][n] = obj.viz_type
                     n_subpoints[t][n] = 0
                 n += 1
 
         camera_z_position = box_size[2] if box_size[2] > 10 else 100.0
-
         converted_data = TrajectoryData(
             meta_data=MetaData(
                 box_size=np.array(box_size),
