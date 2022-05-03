@@ -38,7 +38,6 @@ class SingleCubeIngr(Ingredient):
         orientBiasRotRangeMax=-pi,
         orientBiasRotRangeMin=-pi,
         overwrite_distFunc=True,  # overWrite
-        overwrite_nbMol_value=None,
         packingMode="random",
         packingPriority=0,
         partners_name=None,
@@ -79,7 +78,6 @@ class SingleCubeIngr(Ingredient):
             nbJitter=nbJitter,
             nbMol=nbMol,
             overwrite_distFunc=overwrite_distFunc,
-            overwrite_nbMol_value=overwrite_nbMol_value,
             packingMode=packingMode,
             packingPriority=packingPriority,
             partners_name=partners_name,

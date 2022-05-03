@@ -89,15 +89,6 @@ KWDS = {
         "max": 50000,
         "description": "nbMol",
     },
-    "overwrite_nbMol_value": {
-        "type": "int",
-        "name": "overwrite_nbMol_value",
-        "default": 0,
-        "value": 0,
-        "min": 0,
-        "max": 50000,
-        "description": "nbMol",
-    },
     "encapsulatingRadius": {
         "type": "float",
         "name": "encapsulatingRadius",
@@ -126,15 +117,6 @@ KWDS = {
     },
     "meshFile": {"type": "string"},
     "meshName": {"type": "string"},
-    "use_mesh_rb": {
-        "name": "use_mesh_rb",
-        "value": False,
-        "default": False,
-        "type": "bool",
-        "min": 0.0,
-        "max": 0.0,
-        "description": "use mesh for collision",
-    },
     "coordsystem": {
         "name": "coordsystem",
         "type": "string",
@@ -474,7 +456,6 @@ class Ingredient(Agent):
         orientBiasRotRangeMax=-pi,
         orientBiasRotRangeMin=-pi,
         overwrite_distFunc=True,  # overWrite
-        overwrite_nbMol_value=0,
         packingMode="random",
         packingPriority=0,
         partners_name=None,
@@ -649,15 +630,8 @@ class Ingredient(Agent):
         # should be self.compNum per default
         # will be set when recipe is added to HistoVol
         # added to a compartment
-        self.overwrite_nbMol = False
-        self.overwrite_nbMol_value = nbMol
         self.nbMol = nbMol
         self.vol_nbmol = 0
-        # used by fill() to count placed molecules,overwrite if !=0
-        #        if nbMol != 0:
-        #            self.overwrite_nbMol = True
-        #            self.overwrite_nbMol_value = nMol
-        #            self.nbMol = nMol
 
         # Packing tracking values
         self.nbJitter = nbJitter  # number of jitter attempts for translation
@@ -721,7 +695,6 @@ class Ingredient(Agent):
             self.getEncapsulatingRadius()
 
         # need to build the basic shape if one provided
-        self.use_mesh_rb = False
         self.current_resolution = "Low"  # should come from data
         self.available_resolution = ["Low", "Med", "High"]  # 0,1,2
 
@@ -999,21 +972,11 @@ class Ingredient(Agent):
     def SetKw(self, **kw):
         for k in kw:
             setattr(self, k, kw[k])
-            if k == "nbMol":
-                self.overwrite_nbMol_value = int(kw[k])
 
     def Set(self, **kw):
         self.nbMol = 0
         if "nbMol" in kw:
             nbMol = int(kw["nbMol"])
-            #            if nbMol != 0:
-            #                self.overwrite_nbMol = True
-            #                self.overwrite_nbMol_value = nbMol
-            #                self.nbMol = nbMol
-            #            else :
-            #                self.overwrite_nbMol =False
-            self.overwrite_nbMol_value = nbMol
-            # self.nbMol = nbMol
         if "molarity" in kw:
             self.molarity = kw["molarity"]
         if "priority" in kw:
@@ -1195,7 +1158,7 @@ class Ingredient(Agent):
                             # need to get the mesh directly. Only possible if dae or dejavu format
                             # get the dejavu heper but without the View, and in nogui mode
                             h = simulariumHelper(vi="nogui")
-                            dgeoms = h.read(filename)
+                            dgeoms = h.read_mesh_file(filename)
                             # should combine both
                             self.vertices, vnormals, self.faces = h.combineDaeMeshData(
                                 dgeoms.values()
@@ -1350,15 +1313,7 @@ class Ingredient(Agent):
         jitter = self.getMaxJitter(spacing)
 
         if self.packingMode == "close":
-            if self.modelType == "Cylinders" and self.useLength:
-                cut = self.length - jitter
-            #            if ingr.modelType=='Cube' : #radius iactually the size
-            #                cut = min(self.radii[0]/2.)-jitter
-            #            elif ingr.cutoff_boundary is not None :
-            #                #this mueay work if we have the distance from the border
-            #                cut  = radius+ingr.cutoff_boundary-jitter
-            else:
-                cut = radius - jitter
+            cut = radius - jitter
         else:
             cut = radius - jitter
         self.min_distance = cut

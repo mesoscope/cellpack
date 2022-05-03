@@ -3,7 +3,7 @@
 import numpy
 from scipy import spatial
 from numpy import matrix
-from math import sqrt
+from math import pi, sqrt
 from panda3d.core import Point3, TransformState
 from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
 from random import uniform, gauss, random
@@ -24,57 +24,100 @@ helper = autopack.helper
 class GrowIngredient(MultiCylindersIngr):
     def __init__(
         self,
+        Type="Grow",
+        biased=1.0,
+        closed=False,
+        color=None,
+        compMask=None,
+        constraintMarge=False,
+        coordsystem="right",
+        cutoff_boundary=1.0,
+        cutoff_surface=0.5,
+        encapsulatingRadius=0,
+        excluded_partners_name=None,
+        gradient="",
+        isAttractor=False,
+        jitterMax=(1, 1, 1),
+        length=10.0,
+        marge=20.0,
+        meshFile=None,
+        meshObject=None,
+        modelType="Cylinders",
         molarity=0.0,
-        radii=None,
+        name=None,
+        nbJitter=5,
+        nbMol=0,
+        orientation=(1, 0, 0),
+        orientBiasRotRangeMax=-pi,
+        orientBiasRotRangeMin=-pi,
+        packingMode="random",
+        packingPriority=0,
+        partners_name=None,
+        partners_position=None,
+        pdb=None,
+        perturbAxisAmplitude=0.1,
+        placeType="jitter",
         positions=None,
         positions2=None,
-        sphereFile=None,
-        packingPriority=0,
-        name=None,
-        pdb=None,
-        color=None,
-        nbJitter=5,
-        jitterMax=(1, 1, 1),
-        perturbAxisAmplitude=0.1,
-        length=10.0,
-        closed=False,
-        modelType="Cylinders",
-        biased=1.0,
         principalVector=(1, 0, 0),
-        meshFile=None,
-        packingMode="random",
-        placeType="jitter",
-        marge=20.0,
-        meshObject=None,
-        orientation=(1, 0, 0),
-        nbMol=0,
-        Type="Grow",
+        proba_binding=0.5,
+        proba_not_binding=0.5,
+        properties=None,
+        radii=None,
+        rejectionThreshold=30,
+        rotAxis=[0.0, 0.0, 0.0],
+        rotRange=6.2831,
+        sphereFile=None,
+        uLength=0,
+        use_rbsphere=False,
+        useHalton=True,
+        useLength=False,
+        useOrientBias=False,
+        useRotAxis=True,
         walkingMode="sphere",
-        **kw
+        weight=0.2
     ):
 
-        MultiCylindersIngr.__init__(
-            self,
+        super().__init__(
+            Type=Type,
+            color=color,
+            coordsystem=coordsystem,
+            cutoff_surface=cutoff_surface,
+            encapsulatingRadius=encapsulatingRadius,
+            excluded_partners_name=excluded_partners_name,
+            gradient=gradient,
+            isAttractor=isAttractor,
+            jitterMax=jitterMax,
+            meshFile=meshFile,
+            meshObject=meshObject,
             molarity=molarity,
-            radii=radii,
+            name=name,
+            nbJitter=nbJitter,
+            nbMol=nbMol,
+            orientBiasRotRangeMin=orientBiasRotRangeMin,
+            packingMode=packingMode,
+            packingPriority=packingPriority,
+            partners_name=partners_name,
+            partners_position=partners_position,
+            pdb=pdb,
+            perturbAxisAmplitude=perturbAxisAmplitude,
+            placeType=placeType,
             positions=positions,
             positions2=positions2,
-            sphereFile=sphereFile,
-            packingPriority=packingPriority,
-            name=name,
-            pdb=pdb,
-            color=color,
-            nbJitter=nbJitter,
-            jitterMax=jitterMax,
-            perturbAxisAmplitude=perturbAxisAmplitude,
             principalVector=principalVector,
-            meshFile=meshFile,
-            packingMode=packingMode,
-            placeType=placeType,
-            meshObject=meshObject,
-            nbMol=nbMol,
-            Type=Type,
-            **kw
+            proba_binding=proba_binding,
+            proba_not_binding=proba_not_binding,
+            properties=properties,
+            radii=radii,
+            rejectionThreshold=rejectionThreshold,
+            rotAxis=rotAxis,
+            rotRange=rotRange,
+            sphereFile=sphereFile,
+            uLength=uLength,
+            useLength=useLength,
+            useOrientBias=useOrientBias,
+            useRotAxis=useRotAxis,
+            weight=weight,
         )
         if name is None:
             name = "%s_%f" % (str(radii), molarity)
@@ -83,7 +126,6 @@ class GrowIngredient(MultiCylindersIngr):
         self.modelType = modelType
         self.collisionLevel = 0
         self.minRadius = self.radii[0][0]
-        self.encapsulatingRadius = self.radii[0][0]
         self.marge = marge
         self.length = length
         self.closed = closed
@@ -98,9 +140,8 @@ class GrowIngredient(MultiCylindersIngr):
         self.direction = None  # direction of growing
         # can be place either using grid point/jittering or dynamics
         #        self.uLength = 0. #length of the cylinder or averall radius for sphere, this is the lenght of one unit
-        self.uLength = 0
-        if "uLength" in kw:
-            self.uLength = kw["uLength"]
+        self.uLength = uLength
+
         if self.positions2 is None:
             if self.uLength == 0:
                 self.uLength = self.radii[0][0]
@@ -138,25 +179,11 @@ class GrowIngredient(MultiCylindersIngr):
         # (this could be a rotation matrix to make a helix, or just a formula,
         # like the precession algorithm Michel and I already put in
         # for surface ingredients.
-        self.constraintMarge = False
-        self.cutoff_boundary = 1.0
-        self.cutoff_surface = 5.0
-        self.useHalton = True
-        self.use_rbsphere = (
-            False  # use sphere instead of cylinder or collision with bullet
-        )
-        if "useHalton" in kw:
-            self.useHalton = kw["useHalton"]
-        if "constraintMarge" in kw:
-            self.constraintMarge = kw["constraintMarge"]
-        if "cutoff_boundary" in kw:
-            self.cutoff_boundary = kw["cutoff_boundary"]
-        if "cutoff_surface" in kw:
-            self.cutoff_surface = kw["cutoff_surface"]
-        if "use_rbsphere" in kw:
-            self.use_rbsphere = kw["use_rbsphere"]
-        if "encapsulatingRadius" in kw:
-            self.use_rbsphere = kw["encapsulatingRadius"]
+        self.use_rbsphere = use_rbsphere
+        self.useHalton = useHalton
+        self.constraintMarge = constraintMarge
+        self.cutoff_boundary = cutoff_boundary
+        self.cutoff_surface = cutoff_surface
         # mesh object representing one uLength? or a certain length
         self.unitParent = None
         self.unitParentLength = 0.0
@@ -164,12 +191,11 @@ class GrowIngredient(MultiCylindersIngr):
         self.walkingType = "stepbystep"  # or atonce
         self.compMask = []
         self.prev_v3 = []
-        # default should be compId
-        if "compMask" in kw:
-            if type(kw["compMask"]) is str:
-                self.compMask = eval(kw["compMask"])
+        if compMask is not None:
+            if type(compMask) is str:
+                self.compMask = eval(compMask)
             else:
-                self.compMask = kw["compMask"]
+                self.compMask = compMask
         # create a simple geom if none pass?
         # self.compMask=[]
         if self.mesh is None and autopack.helper is not None:
@@ -202,14 +228,11 @@ class GrowIngredient(MultiCylindersIngr):
         # Every nth place alternative repesentation
         # name proba is this for ingredient in general ?
         self.alternates_names = []
-        if "alternates_names" in kw:
-            self.alternates_names = kw["alternates_names"]
+
         self.alternates_proba = []
-        if "alternates_proba" in kw:
-            self.alternates_proba = kw["alternates_proba"]
+
         self.alternates_weight = []
-        if "alternates_weight" in kw:
-            self.alternates_weight = kw["alternates_weight"]
+
         self.prev_alt = None
         self.prev_was_alternate = False
         self.prev_alt_pt = None
