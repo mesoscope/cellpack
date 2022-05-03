@@ -211,11 +211,6 @@ _Required `string`_
 
 Name of the ingredient.
 
-### overwrite_nbMol_value 
-_Optional `number`_. Default: `0`.
-
-A complete override of concentration and nbMol, not additive with molarity.
-
 ### molarity
 _Optional `number`_. Default: `0`.
 
@@ -342,9 +337,6 @@ _Optional enum. One of `"jitter"`, `"spheresSST"`, `"pandaBullet"`_. Default: `"
 
 `"pandaBullet"`  Python wrapper for Bullet Physics Engine (popular in ~2010 and used by C4D, Maya, Blender, etc) that provides a variety of object-object collision detection, including collision min/max overlap distance, etc. Allows relaxation in its own loop, springs, rejection, meshes, primitives, etc.
 
-### use_mesh_rb
-_Optional `boolean`_. Default: `false`.
-
 ### rejectionThreshold
 _Optional `number`_. Default: `30`.
 
@@ -391,7 +383,6 @@ _Optional `string`_
 ### example ingredient
 ```JSON
 "Sphere_radius_100": {
-    "overwrite_nbMol_value": 6, 
     "nbJitter": 6, 
     "molarity": 0,
     "partners_position": [],
@@ -428,7 +419,6 @@ _Optional `string`_
     "rotAxis": null,
     "positions": [ [ [ 0, 0, 0] ] ],
     "proba_not_binding": 0.5,
-    "use_mesh_rb": false,
     "pdb": null,
     "useRotAxis": false
 },

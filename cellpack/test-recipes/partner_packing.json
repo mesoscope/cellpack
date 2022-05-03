@@ -101,12 +101,10 @@
                         ]
                     ]
                 ],
-                "use_mesh_rb": false,
                 "pdb": null,
                 "useRotAxis": false
             },
             "Sphere_radius_25r": {
-                "overwrite_nbMol_value": 40,
                 "nbJitter": 10,
                 "molarity": 0,
                 "partners_position": [],
@@ -169,7 +167,6 @@
                         ]
                     ]
                 ],
-                "use_mesh_rb": false,
                 "pdb": null,
                 "useRotAxis": false
             }
