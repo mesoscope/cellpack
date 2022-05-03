@@ -1605,6 +1605,32 @@ class Ingredient(Agent):
                 return collision, collision_indices
         return False, []
 
+    def get_reflected_point(self, new_position, boundingBox):
+        # returns the reflection of a point across a bounding box
+        if boundingBox is None:
+            boundingBox = self.env.grid.boundingBox
+
+        # distance from origin
+        dist_o = new_position - boundingBox[0]
+        ref_inds_o = dist_o < 0
+
+        # distance from edge
+        dist_e = boundingBox[1] - new_position
+        ref_inds_e = dist_e < 0
+
+        while True in ref_inds_o or True in ref_inds_e:
+            # reflect around origin
+            new_position[ref_inds_o] = boundingBox[1][ref_inds_o] + dist_o[ref_inds_o]
+            dist_o = new_position - boundingBox[0]
+            ref_inds_o = dist_o < 0
+
+            # reflect around edge
+            new_position[ref_inds_e] = boundingBox[0][ref_inds_e] - dist_e[ref_inds_e]
+            dist_e = boundingBox[1] - new_position
+            ref_inds_e = dist_e < 0
+
+        return new_position
+
     def move_one_jitter(self, env, index, done_num, current_update):
         if current_update > done_num:
             return
@@ -1615,30 +1641,24 @@ class Ingredient(Agent):
             env, current_pos, current_rot
         )
 
+        new_position = self.get_reflected_point(new_position, env.grid.boundingBox)
+
         # checks if the point is outside the bounding box
         if self.point_is_not_available(new_position):
             current_update += 1
             return self.move_one_jitter(env, index, done_num, current_update)
 
+        # check for possible collisions
         (collision, indices) = self.check_collisions(
             env, index, new_position, new_rotation
         )
-        if not collision:
+        if not collision or (len(indices) < 2 and index in indices):
             env.rTrans[index] = new_position
             env.rRot[index] = new_rotation
             env.close_ingr_bhtree = spatial.cKDTree(env.rTrans, leafsize=10)
             env.molecules[index][0] = new_position
             env.molecules[index][1] = new_rotation
             return
-        elif len(indices) < 2:
-            env.rTrans[index] = new_position
-            env.rRot[index] = new_rotation
-            env.close_ingr_bhtree = spatial.cKDTree(env.rTrans, leafsize=10)
-            env.molecules[index][0] = new_position
-            env.molecules[index][1] = new_rotation
-            for i in indices:
-                current_update += 1
-                return self.move_one_jitter(env, i, done_num, current_update)
         current_update += 1
         return self.move_one_jitter(env, index, done_num, current_update)
 
@@ -2252,6 +2272,7 @@ class Ingredient(Agent):
         inside = self.env.grid.checkPointInside(
             newPt, dist=self.cutoff_boundary, jitter=getNormedVectorOnes(self.jitterMax)
         )
+
         if inside:
             inComp = self.checkPointComp(newPt)
             if inComp:
@@ -3012,7 +3033,7 @@ class Ingredient(Agent):
                 # self.log.info("JITTER REJECTED %d %d", d2, jitter_sq)
         else:
             jitter_trans = translation
-        return jitter_trans
+        return numpy.array(jitter_trans)
 
     def update_display_rt(self, current_instance, translation, rotation):
         mat = rotation.copy()

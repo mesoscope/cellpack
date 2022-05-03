@@ -51,6 +51,7 @@ from time import time
 from random import random, uniform, seed
 from scipy import spatial
 import numpy
+import sys
 import pickle
 import math
 from math import pi
@@ -2674,7 +2675,7 @@ class Environment(CompartmentList):
 
             autopack.helper.init_scene_with_objects(self.molecules)
 
-            for i in range(animate):
+            for i in self.progressbar(range(animate), "Animating frame: "):
                 for index in range(len(self.molecules)):
                     ingr_to_move = self.rIngr[index]
                     done_num = 5
@@ -2685,6 +2686,25 @@ class Environment(CompartmentList):
             autopack.helper.writeToFile(None, "./jitter", self.boundingBox)
 
         self.ingr_result = ingredients
+
+    @staticmethod
+    def progressbar(it, prefix="", size=60, out=sys.stdout):  # Python3.3+
+        count = len(it)
+
+        def show(j):
+            x = int(size * j / count)
+            print(
+                "{}[{}{}] {}/{}".format(prefix, "#" * x, "." * (size - x), j, count),
+                end="\r",
+                file=out,
+                flush=True,
+            )
+
+        show(0)
+        for i, item in enumerate(it):
+            yield item
+            show(i + 1)
+        print("\n", flush=True, file=out)
 
     def displayCancelDialog(self):
         print(
