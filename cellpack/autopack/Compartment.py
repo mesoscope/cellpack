@@ -143,7 +143,7 @@ class Compartment(CompartmentList):
         isBox=False,
         isOrthogonalBoundingBox=None,
         stype="mesh",
-        radius=0.0,
+        radius=200.0,
         height=0.0,
         axis=[0, 1, 0],
     ):
@@ -185,13 +185,13 @@ class Compartment(CompartmentList):
                 self.buildMesh(filename, gname)
         if self.meshType == "sphere":
             # one sphere, geom is a dictionary
-            aradius = 200
+            aradius = radius
             if filename is not None:
                 aradius = float(filename["radius"])
             self.buildSphere(aradius, gname)
         if self.meshType == "mb":
             # one sphere, geom is a dictionary
-            aradius = 200
+            aradius = radius
             # if "filename" in kw :
             #        aradius = float(kw["filename"]["radii"][0])
             self.buildSphere(aradius, gname)
