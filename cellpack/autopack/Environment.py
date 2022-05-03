@@ -2675,9 +2675,10 @@ class Environment(CompartmentList):
             autopack.helper.init_scene_with_objects(self.molecules)
 
             for i in range(animate):
+
                 for index in range(len(self.molecules)):
                     ingr_to_move = self.rIngr[index]
-                    done_num = 5
+                    done_num = 10
                     current_try = 0
                     ingr_to_move.move_one_jitter(self, index, done_num, current_try)
                 autopack.helper.update()
