@@ -1,6 +1,6 @@
 {
     "recipe": {
-        "name": "NM_Analysis_FigureB",
+        "name": "test_jitter_jitter",
         "version": "1.0"
     },
     "options": {
@@ -62,72 +62,6 @@
                 "meshFile": null,
                 "molarity": 0,
                 "name": "Sphere_radius_100",
-                "nbJitter": 20,
-                "nbMol": 6,
-                "orientBiasRotRangeMax": -3.1415927,
-                "orientBiasRotRangeMin": -3.1415927,
-                "overwrite_nbMol_value": 6,
-                "packingMode": "random",
-                "packingPriority": 0,
-                "partners_name": [],
-                "partners_position": [],
-                "pdb": null,
-                "perturbAxisAmplitude": 0.1,
-                "placeType": "jitter",
-                "positions": [
-                    [
-                        [
-                            0,
-                            0,
-                            0
-                        ]
-                    ]
-                ],
-                "positions2": null,
-                "principalVector": [
-                    1,
-                    0,
-                    0
-                ],
-                "proba_binding": 0.5,
-                "proba_not_binding": 0.5,
-                "properties": {},
-                "radii": [
-                    [
-                        100
-                    ]
-                ],
-                "rejectionThreshold": 100,
-                "rotAxis": null,
-                "rotRange": 6.2831,
-                "sphereFile": null,
-                "useOrientBias": false,
-                "useRotAxis": false,
-                "use_mesh_rb": false,
-                "weight": 0.2
-            },
-            "Sphere_radius_200": {
-                "Type": "SingleSphere",
-                "color": [
-                    0.827,
-                    0.82700002,
-                    0.82700002
-                ],
-                "coordsystem": "left",
-                "cutoff_boundary": 0,
-                "cutoff_surface": 200,
-                "encapsulatingRadius": 200,
-                "excluded_partners_name": [],
-                "gradient": "",
-                "isAttractor": false,
-                "jitterMax": [
-                    1,
-                    1,
-                    0
-                ],
-                "meshFile": null,
-                "molarity": 0,
-                "name": "Sphere_radius_200",
                 "nbJitter": 20,
                 "nbMol": 2,
                 "orientBiasRotRangeMax": -3.1415927,
