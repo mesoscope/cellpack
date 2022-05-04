@@ -44,6 +44,7 @@
 
 # TODO: Describe Ingredient class here at high level
 import os
+import pstats
 from scipy import spatial
 from panda3d.bullet import BulletRigidBodyNode
 import numpy
@@ -1594,13 +1595,15 @@ class Ingredient(Agent):
                 return geom
             return None
 
-    def check_collisions(self, env, index, new_position, new_rotation):
+    def check_collisions(self, env, index, new_position, new_rotation, cutoff=None):
         if index > len(env.molecules):
             return False, []
 
-        pts_to_check = self.get_all_positions_to_check(new_position)
+        pts_to_check = self.get_all_positions_to_check(new_position, cutoff)
         for pt in pts_to_check:
-            (collision, collision_indices) = self.np_check_collision(pt, new_rotation)
+            (collision, collision_indices) = self.np_check_collision(
+                pt, new_rotation, index
+            )
             if collision:
                 return collision, collision_indices
         return False, []
@@ -1631,7 +1634,7 @@ class Ingredient(Agent):
 
         return new_position
 
-    def move_one_jitter(self, env, index, done_num, current_update):
+    def move_one_jitter(self, env, index, done_num, current_update, cutoff=None):
         if current_update > done_num:
             return
         current_pos = env.rTrans[index]
@@ -1646,13 +1649,17 @@ class Ingredient(Agent):
         # checks if the point is outside the bounding box
         if self.point_is_not_available(new_position):
             current_update += 1
-            return self.move_one_jitter(env, index, done_num, current_update)
+            return self.move_one_jitter(env, index, done_num, current_update, cutoff)
 
         # check for possible collisions
         (collision, indices) = self.check_collisions(
-            env, index, new_position, new_rotation
+            env,
+            index,
+            new_position,
+            new_rotation,
+            cutoff,
         )
-        if not collision or (len(indices) < 2 and index in indices):
+        if not collision:  # or (len(indices) < 2 and index in indices):
             env.rTrans[index] = new_position
             env.rRot[index] = new_rotation
             env.close_ingr_bhtree = spatial.cKDTree(env.rTrans, leafsize=10)
@@ -1660,7 +1667,7 @@ class Ingredient(Agent):
             env.molecules[index][1] = new_rotation
             return
         current_update += 1
-        return self.move_one_jitter(env, index, done_num, current_update)
+        return self.move_one_jitter(env, index, done_num, current_update, cutoff)
 
     def buildMesh(self, data, geomname):
         """
@@ -2465,7 +2472,7 @@ class Ingredient(Agent):
         sD = dist_from_packed_spheres_to_new_spheres - sumradii
         return len(numpy.nonzero(sD < 0.0)[0]) != 0
 
-    def np_check_collision(self, packing_location, rotation):
+    def np_check_collision(self, packing_location, rotation, index=None):
         has_collision = False
         collision_indexes = []
         # no ingredients packed yet
@@ -2483,6 +2490,14 @@ class Ingredient(Agent):
             distances_from_packing_location_to_all_ingr,
             ingr_indexes,
         ) = self.env.close_ingr_bhtree.query(packing_location, len(self.env.rTrans))
+        if index is not None:
+            # remove self collisions while animating
+            if index in ingr_indexes:
+                index_pos = numpy.where(ingr_indexes == index)
+                distances_from_packing_location_to_all_ingr = numpy.delete(
+                    distances_from_packing_location_to_all_ingr, index_pos
+                )
+                ingr_indexes = numpy.delete(ingr_indexes, index_pos)
         radii_of_placed_ingr = numpy.array(
             [ing.encapsulatingRadius for ing in self.env.rIngr]
         )[ingr_indexes]
@@ -3226,7 +3241,7 @@ class Ingredient(Agent):
 
         return accum_results
 
-    def get_all_positions_to_check(self, packing_location):
+    def get_all_positions_to_check(self, packing_location, cutoff=None):
         """Takes a starting position in the packing space, and returns all the points that
         need to be tested for a collision as an array.
 
@@ -3235,13 +3250,15 @@ class Ingredient(Agent):
             If the point is close to an edge of the bb (which is a "corner" in 2D), will return an array of 3.
             If the point is close to a corner in 3D will return an array of 8.
         """
+        if cutoff is None:
+            cutoff = self.encapsulatingRadius
         points_to_check = [packing_location]
         # periodicity check
         if self.packingMode != "graident":
             periodic_pos = self.env.grid.getPositionPeridocity(
                 packing_location,
                 getNormedVectorOnes(self.jitterMax),
-                self.encapsulatingRadius,
+                cutoff,
             )
             points_to_check.extend(periodic_pos)
         return points_to_check

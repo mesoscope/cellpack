@@ -2675,12 +2675,25 @@ class Environment(CompartmentList):
 
             autopack.helper.init_scene_with_objects(self.molecules)
 
+            max_radius = -1.0
+            for ingr in self.rIngr:
+                current_radius = ingr.encapsulatingRadius
+                if current_radius > max_radius:
+                    max_radius = current_radius
+
             for i in self.progressbar(range(animate), "Animating frame: "):
                 for index in range(len(self.molecules)):
                     ingr_to_move = self.rIngr[index]
-                    done_num = 10
+                    cutoff = (
+                        max_radius
+                        + ingr_to_move.minRadius
+                        + max(ingr_to_move.jitterMax) * self.gridSpacing
+                    )
+                    done_num = 50
                     current_try = 0
-                    ingr_to_move.move_one_jitter(self, index, done_num, current_try)
+                    ingr_to_move.move_one_jitter(
+                        self, index, done_num, current_try, cutoff
+                    )
                 autopack.helper.update()
                 autopack.helper.update_instance_positions_and_rotations(self.molecules)
             autopack.helper.writeToFile(None, "./jitter", self.boundingBox)

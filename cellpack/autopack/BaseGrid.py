@@ -265,7 +265,8 @@ class BaseGrid:
         """
         if boundingBox is None:
             boundingBox = self.boundingBox
-        xl, yl, zl = boundingBox[0]
+        x1, y1, z1 = boundingBox[0]
+        x2, y2, z2 = boundingBox[1]
         self.gridVolume, self.nbGridPoints = self.computeGridNumberOfPoint(
             boundingBox, self.gridSpacing
         )
@@ -280,9 +281,15 @@ class BaseGrid:
             for yi in range(ny):
                 for xi in range(nx):
 
-                    x = xl + xi * space + padding
-                    y = yl + yi * space + padding
-                    z = zl + zi * space + padding
+                    x = x1 + xi * space + padding
+                    if x > x2:
+                        x = (x1 + x2) / 2.0
+                    y = y1 + yi * space + padding
+                    if y > y2:
+                        y = (y1 + y2) / 2.0
+                    z = z1 + zi * space + padding
+                    if z > z2:
+                        z = (z1 + z2) / 2.0
                     pointArrayRaw[i] = (x, y, z)
                     self.ijkPtIndice[i] = (xi, yi, zi)
                     i += 1
