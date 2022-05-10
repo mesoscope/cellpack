@@ -190,6 +190,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">webbrowser</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">from</span> <span class="nn">xml.dom.minidom</span> <span class="kn">import</span> <span class="n">getDOMImplementation</span>
@@ -751,180 +752,12 @@
                         <span class="c1"># setup recipe</span>
                     <span class="n">o</span><span class="o">.</span><span class="n">setInnerRecipe</span><span class="p">(</span><span class="n">rMatrix</span><span class="p">)</span></div>
 
-                    <span class="c1"># put here the export/import ?</span>
 
-
-<div class="viewcode-block" id="save_asJson"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.save_asJson">[docs]</a><span class="k">def</span> <span class="nf">save_asJson</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">useXref</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Save the current environment setup as an json file.</span>
-<span class="sd">    env is the environment / recipe to be exported.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">io_ingr</span> <span class="o">=</span> <span class="n">IOingredientTool</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">)</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">setupfile</span> <span class="o">=</span> <span class="n">setupfile</span>  <span class="c1"># +&quot;.json&quot;provide the server?</span>
-    <span class="c1"># the output path for this recipes files</span>
-    <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">setupfile</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">env</span><span class="o">.</span><span class="n">setupfile</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;ftp&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-        <span class="n">pathout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">autopack</span><span class="o">.</span><span class="n">retrieveFile</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">setupfile</span><span class="p">)))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">pathout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">setupfile</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">version</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;1.0&quot;</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;recipe&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;recipe&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">name</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;recipe&quot;</span><span class="p">][</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">version</span>
-    <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">custom_paths</span><span class="p">:</span>
-        <span class="c1"># this was the used path at loading time</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;recipe&quot;</span><span class="p">][</span><span class="s2">&quot;paths&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">custom_paths</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">OPTIONS</span><span class="p">:</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;gradients&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">gradients</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
-                <span class="n">v</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">gradients</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="c1">#            elif k == &quot;runTimeDisplay&quot;</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">setValueToJsonNode</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)))</span>
-    <span class="c1"># add the boundin box</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;options&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">setValueToJsonNode</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">,</span> <span class="s2">&quot;boundingBox&quot;</span><span class="p">))</span>
-
-    <span class="c1"># grid path information</span>
-    <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">result_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-            <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">][</span><span class="s2">&quot;grid_storage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
-            <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">][</span><span class="s2">&quot;grid_result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">result_filename</span><span class="p">)</span>
-
-    <span class="c1"># gradient information</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">gradients</span><span class="p">):</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">gname</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">gradients</span><span class="p">:</span>
-            <span class="n">g</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">gradients</span><span class="p">[</span><span class="n">gname</span><span class="p">]</span>
-            <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">OPTIONS</span><span class="p">:</span>
-                <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;gradients&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                    <span class="n">setValueToJsonNode</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
-                <span class="p">)</span>
-
-    <span class="n">r</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">exteriorRecipe</span>
-    <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">useXref</span><span class="p">:</span>
-                <span class="c1"># write the json file for this ingredient</span>
-                <span class="n">io_ingr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">pathout</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">,</span> <span class="n">ingr_format</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
-                <span class="c1"># use reference file : str(pathout+os.sep+ingr.o_name+&quot;.json&quot;)</span>
-                <span class="n">ing_filename</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span>
-                <span class="p">)</span>  <span class="c1"># autopack.revertOnePath(pathout+os.sep+ingr.o_name+&quot;.json&quot;)</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span><span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span><span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">][</span>
-                    <span class="s2">&quot;name&quot;</span>
-                <span class="p">]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span><span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">][</span>
-                    <span class="s2">&quot;include&quot;</span>
-                <span class="p">]</span> <span class="o">=</span> <span class="n">ing_filename</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span>
-                    <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-                <span class="p">]</span> <span class="o">=</span> <span class="n">io_ingr</span><span class="o">.</span><span class="n">ingrJsonNode</span><span class="p">(</span>
-                    <span class="n">ingr</span>
-                <span class="p">)</span>  <span class="c1"># {&quot;name&quot;:ingr.o_name}</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span><span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">][</span>
-                    <span class="s2">&quot;name&quot;</span>
-                <span class="p">]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">):</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;geom&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
-            <span class="n">o</span><span class="o">.</span><span class="n">filename</span>
-        <span class="p">)</span>  <span class="c1"># should point to the used filename</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">ref_obj</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">representation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">fileName</span><span class="p">,</span> <span class="n">fileExtension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">representation_file</span><span class="p">)</span>
-            <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;rep&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
-                <span class="n">o</span><span class="o">.</span><span class="n">representation</span>
-            <span class="p">)</span>  <span class="c1"># None</span>
-            <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;rep_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
-        <span class="c1">#            else :</span>
-        <span class="c1">#                fileName = None</span>
-        <span class="n">rs</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">surfaceRecipe</span>
-        <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
-            <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;surface&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-            <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;surface&quot;</span><span class="p">][</span>
-                <span class="s2">&quot;ingredients&quot;</span>
-            <span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">useXref</span><span class="p">:</span>
-                    <span class="c1"># write the json file for this ingredient</span>
-                    <span class="n">io_ingr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
-                        <span class="n">ingr</span><span class="p">,</span> <span class="n">pathout</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">,</span> <span class="n">ingr_format</span><span class="o">=</span><span class="s2">&quot;json&quot;</span>
-                    <span class="p">)</span>
-                    <span class="c1"># use reference file</span>
-                    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;surface&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span>
-                        <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-                    <span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-                    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;surface&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span>
-                        <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-                    <span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-                    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;surface&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span>
-                        <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-                    <span class="p">][</span><span class="s2">&quot;include&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;surface&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span>
-                        <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-                    <span class="p">]</span> <span class="o">=</span> <span class="n">io_ingr</span><span class="o">.</span><span class="n">ingrJsonNode</span><span class="p">(</span>
-                        <span class="n">ingr</span>
-                    <span class="p">)</span>  <span class="c1"># {&quot;name&quot;:ingr.o_name}</span>
-                    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;surface&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span>
-                        <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-                    <span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-        <span class="n">ri</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">innerRecipe</span>
-        <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
-            <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;interior&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-            <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;interior&quot;</span><span class="p">][</span>
-                <span class="s2">&quot;ingredients&quot;</span>
-            <span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">useXref</span><span class="p">:</span>
-                    <span class="c1"># write the json file for this ingredient</span>
-                    <span class="n">io_ingr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
-                        <span class="n">ingr</span><span class="p">,</span> <span class="n">pathout</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">,</span> <span class="n">ingr_format</span><span class="o">=</span><span class="s2">&quot;json&quot;</span>
-                    <span class="p">)</span>
-                    <span class="c1"># use reference file</span>
-                    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;interior&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span>
-                        <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-                    <span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-                    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;interior&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span>
-                        <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-                    <span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-                    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;interior&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span>
-                        <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-                    <span class="p">][</span><span class="s2">&quot;include&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;interior&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span>
-                        <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-                    <span class="p">]</span> <span class="o">=</span> <span class="n">io_ingr</span><span class="o">.</span><span class="n">ingrJsonNode</span><span class="p">(</span>
-                        <span class="n">ingr</span>
-                    <span class="p">)</span>  <span class="c1"># {&quot;name&quot;:ingr.o_name}</span>
-                    <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)][</span><span class="s2">&quot;interior&quot;</span><span class="p">][</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span>
-                        <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-                    <span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
-
-    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; is not JSON serializable &quot;</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">))</span>
-
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">setupfile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>  <span class="c1"># doesnt work with symbol link ?</span>
-        <span class="k">if</span> <span class="n">indent</span><span class="p">:</span>
-            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span>
-            <span class="p">)</span>  <span class="c1"># ,indent=4, separators=(&#39;,&#39;, &#39;: &#39;)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span>
-            <span class="p">)</span>  <span class="c1"># ,indent=4, separators=(&#39;,&#39;, &#39;: &#39;)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;recipe saved to &quot;</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">)</span></div>
+<div class="viewcode-block" id="save_as_simularium"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.save_as_simularium">[docs]</a><span class="k">def</span> <span class="nf">save_as_simularium</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">all_ingr_as_array</span><span class="p">):</span>
+    <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">init_scene_with_objects</span><span class="p">(</span><span class="n">all_ingr_as_array</span><span class="p">)</span>
+    <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">writeToFile</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">setupfile</span><span class="si">}</span><span class="s2">_results&quot;</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">)</span>
+    <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;https://simularium.allencell.org/viewer&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="save_Mixed_asJson"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.save_Mixed_asJson">[docs]</a><span class="k">def</span> <span class="nf">save_Mixed_asJson</span><span class="p">(</span>
@@ -2483,6 +2316,46 @@
     <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
         <span class="k">pass</span>
     <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">orgaresult</span><span class="p">,</span> <span class="n">freePoint</span></div>
+
+
+<div class="viewcode-block" id="save"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.save">[docs]</a><span class="k">def</span> <span class="nf">save</span><span class="p">(</span>
+    <span class="n">env</span><span class="p">,</span>
+    <span class="n">setupfile</span><span class="p">,</span>
+    <span class="n">useXref</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">format_output</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span>
+    <span class="n">kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">packing_options</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">indent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">quaternion</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">all_ingr_as_array</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">useXref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">useXref</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">useXref</span>
+    <span class="k">if</span> <span class="n">format_output</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
+        <span class="n">save_Mixed_asJson</span><span class="p">(</span>
+            <span class="n">env</span><span class="p">,</span>
+            <span class="n">setupfile</span><span class="p">,</span>
+            <span class="n">useXref</span><span class="o">=</span><span class="n">useXref</span><span class="p">,</span>
+            <span class="n">kwds</span><span class="o">=</span><span class="n">kwds</span><span class="p">,</span>
+            <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
+            <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">,</span>
+            <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
+            <span class="n">packing_options</span><span class="o">=</span><span class="n">packing_options</span><span class="p">,</span>
+            <span class="n">quaternion</span><span class="o">=</span><span class="n">quaternion</span><span class="p">,</span>
+            <span class="n">transpose</span><span class="o">=</span><span class="n">transpose</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">format_output</span> <span class="o">==</span> <span class="s2">&quot;simularium&quot;</span><span class="p">:</span>
+        <span class="n">save_as_simularium</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">all_ingr_as_array</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">format_output</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
+        <span class="n">save_asXML</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">useXref</span><span class="o">=</span><span class="n">useXref</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">format_output</span> <span class="o">==</span> <span class="s2">&quot;python&quot;</span><span class="p">:</span>
+        <span class="n">save_asPython</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">useXref</span><span class="o">=</span><span class="n">useXref</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;format output &quot;</span> <span class="o">+</span> <span class="n">format_output</span> <span class="o">+</span> <span class="s2">&quot; not recognized (json,xml,python)&quot;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

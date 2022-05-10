@@ -486,13 +486,14 @@
 <span class="sd">        each recipe are made of a list of ingredients</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;H&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="n">format_output</span><span class="o">=</span><span class="s2">&quot;simularium&quot;</span><span class="p">):</span>
         <span class="n">CompartmentList</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;env&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timeUpDistLoopTotal</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format_output</span> <span class="o">=</span> <span class="n">format_output</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exteriorRecipe</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hgrid</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># panda world for collision</span>
@@ -947,7 +948,9 @@
 <div class="viewcode-block" id="Environment.loadRecipeString"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.loadRecipeString">[docs]</a>    <span class="k">def</span> <span class="nf">loadRecipeString</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">astring</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">load_JsonString</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">astring</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Environment.save_result"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.save_result">[docs]</a>    <span class="k">def</span> <span class="nf">save_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freePoints</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">vAnalysis</span><span class="p">,</span> <span class="n">vTestid</span><span class="p">,</span> <span class="n">seedNum</span><span class="p">):</span>
+<div class="viewcode-block" id="Environment.save_result"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.save_result">[docs]</a>    <span class="k">def</span> <span class="nf">save_result</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">freePoints</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">vAnalysis</span><span class="p">,</span> <span class="n">vTestid</span><span class="p">,</span> <span class="n">seedNum</span><span class="p">,</span> <span class="n">all_ingr_as_array</span>
+    <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">freePoints</span> <span class="o">=</span> <span class="n">freePoints</span><span class="p">[:]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:]</span>
         <span class="c1"># should check extension filename for type of saved file</span>
@@ -958,13 +961,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_asTxt</span><span class="p">()</span>
         <span class="c1">#            self.store_asJson(resultfilename=self.resultfile+&quot;.json&quot;)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">saveRecipe</span><span class="p">(</span>
+        <span class="n">IOutils</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span> <span class="o">+</span> <span class="s2">&quot;.json&quot;</span><span class="p">,</span>
             <span class="n">useXref</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">mixed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">format_output</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">format_output</span><span class="p">,</span>
             <span class="n">kwds</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;compNum&quot;</span><span class="p">],</span>
             <span class="n">result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">quaternion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">all_ingr_as_array</span><span class="o">=</span><span class="n">all_ingr_as_array</span><span class="p">,</span>
         <span class="p">)</span>  <span class="c1"># pdb ?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;time to save result file </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">vAnalysis</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -1139,49 +1144,6 @@
 
             <span class="c1">#    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;time to save end </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="Environment.saveRecipe"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.saveRecipe">[docs]</a>    <span class="k">def</span> <span class="nf">saveRecipe</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">setupfile</span><span class="p">,</span>
-        <span class="n">useXref</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">format_output</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span>
-        <span class="n">mixed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">packing_options</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">indent</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">quaternion</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="c1">#        if result :</span>
-        <span class="c1">#            self.collectResultPerIngredient()</span>
-        <span class="k">if</span> <span class="n">useXref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">useXref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">useXref</span>
-        <span class="k">if</span> <span class="n">format_output</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">mixed</span><span class="p">:</span>
-                <span class="n">IOutils</span><span class="o">.</span><span class="n">save_Mixed_asJson</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="p">,</span>
-                    <span class="n">setupfile</span><span class="p">,</span>
-                    <span class="n">useXref</span><span class="o">=</span><span class="n">useXref</span><span class="p">,</span>
-                    <span class="n">kwds</span><span class="o">=</span><span class="n">kwds</span><span class="p">,</span>
-                    <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
-                    <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">,</span>
-                    <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span>
-                    <span class="n">packing_options</span><span class="o">=</span><span class="n">packing_options</span><span class="p">,</span>
-                    <span class="n">quaternion</span><span class="o">=</span><span class="n">quaternion</span><span class="p">,</span>
-                    <span class="n">transpose</span><span class="o">=</span><span class="n">transpose</span><span class="p">,</span>
-                <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">IOutils</span><span class="o">.</span><span class="n">save_asJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">useXref</span><span class="o">=</span><span class="n">useXref</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">format_output</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
-            <span class="n">IOutils</span><span class="o">.</span><span class="n">save_asXML</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">useXref</span><span class="o">=</span><span class="n">useXref</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">format_output</span> <span class="o">==</span> <span class="s2">&quot;python&quot;</span><span class="p">:</span>
-            <span class="n">IOutils</span><span class="o">.</span><span class="n">save_asPython</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">useXref</span><span class="o">=</span><span class="n">useXref</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">&quot;format output &quot;</span> <span class="o">+</span> <span class="n">format_output</span> <span class="o">+</span> <span class="s2">&quot; not recognized (json,xml,python)&quot;</span>
-            <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Environment.saveNewRecipe"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.saveNewRecipe">[docs]</a>    <span class="k">def</span> <span class="nf">saveNewRecipe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="n">djson</span><span class="p">,</span> <span class="n">all_pos</span><span class="p">,</span> <span class="n">all_rot</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">serializedRecipe</span><span class="p">(</span>
@@ -2798,18 +2760,18 @@
             <span class="k">if</span> <span class="n">dump</span> <span class="ow">and</span> <span class="p">((</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">stime</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">dump_freq</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">collectResultPerIngredient</span><span class="p">()</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SAVING&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">saveRecipe</span><span class="p">(</span>
+                <span class="n">IOutils</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span> <span class="o">+</span> <span class="s2">&quot;_temporaray.json&quot;</span><span class="p">,</span>
                     <span class="n">useXref</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                    <span class="n">mixed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="n">kwds</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;positions&quot;</span><span class="p">,</span> <span class="s2">&quot;radii&quot;</span><span class="p">],</span>
                     <span class="n">result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="n">quaternion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">saveRecipe</span><span class="p">(</span>
+                <span class="n">IOutils</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span> <span class="o">+</span> <span class="s2">&quot;_temporaray_transpose.json&quot;</span><span class="p">,</span>
                     <span class="n">useXref</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                    <span class="n">mixed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="n">kwds</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;positions&quot;</span><span class="p">,</span> <span class="s2">&quot;radii&quot;</span><span class="p">],</span>
                     <span class="n">result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="n">quaternion</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -2823,21 +2785,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">distanceAfterFill</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:]</span>
         <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;time to fill </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveResult</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">save_result</span><span class="p">(</span>
-                <span class="n">freePoints</span><span class="p">,</span>
-                <span class="n">distances</span><span class="o">=</span><span class="n">distances</span><span class="p">,</span>
-                <span class="n">t0</span><span class="o">=</span><span class="n">t2</span><span class="p">,</span>
-                <span class="n">vAnalysis</span><span class="o">=</span><span class="n">vAnalysis</span><span class="p">,</span>
-                <span class="n">vTestid</span><span class="o">=</span><span class="n">vTestid</span><span class="p">,</span>
-                <span class="n">seedNum</span><span class="o">=</span><span class="n">seedNum</span><span class="p">,</span>
-            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runTimeDisplay</span> <span class="ow">and</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;simularium&quot;</span><span class="p">:</span>
+            <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">writeToFile</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;./realtime&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="p">,</span> <span class="s2">&quot;vi&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">progressBar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Filling Complete&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">resetProgressBar</span><span class="p">()</span>
         <span class="n">ingredients</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">all_ingr_as_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">molecules</span>
         <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">molecules</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ingredients</span><span class="p">:</span>
                 <span class="n">ingredients</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">ingr</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]]</span>
@@ -2855,10 +2810,18 @@
                 <span class="n">ingredients</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
                 <span class="n">ingredients</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span>
                 <span class="n">ingredients</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mat</span><span class="p">))</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runTimeDisplay</span> <span class="ow">and</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;simularium&quot;</span><span class="p">:</span>
-            <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">writeToFile</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;./realtime&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">ingr_result</span> <span class="o">=</span> <span class="n">ingredients</span></div>
+                <span class="n">all_ingr_as_array</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ingr_result</span> <span class="o">=</span> <span class="n">ingredients</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveResult</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save_result</span><span class="p">(</span>
+                <span class="n">freePoints</span><span class="p">,</span>
+                <span class="n">distances</span><span class="o">=</span><span class="n">distances</span><span class="p">,</span>
+                <span class="n">t0</span><span class="o">=</span><span class="n">t2</span><span class="p">,</span>
+                <span class="n">vAnalysis</span><span class="o">=</span><span class="n">vAnalysis</span><span class="p">,</span>
+                <span class="n">vTestid</span><span class="o">=</span><span class="n">vTestid</span><span class="p">,</span>
+                <span class="n">seedNum</span><span class="o">=</span><span class="n">seedNum</span><span class="p">,</span>
+                <span class="n">all_ingr_as_array</span><span class="o">=</span><span class="n">all_ingr_as_array</span><span class="p">,</span>
+            <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Environment.displayCancelDialog"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.displayCancelDialog">[docs]</a>    <span class="k">def</span> <span class="nf">displayCancelDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span>

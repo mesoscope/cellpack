@@ -3322,7 +3322,9 @@
         <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">helper</span><span class="o">.</span><span class="n">add_object_to_scene</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">target_point</span><span class="p">,</span> <span class="n">rot_mat</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">helper</span><span class="o">.</span><span class="n">add_new_instance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">target_point</span><span class="p">,</span> <span class="n">rot_mat</span><span class="p">)</span>
+            <span class="n">helper</span><span class="o">.</span><span class="n">add_new_instance_and_update_time</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">target_point</span><span class="p">,</span> <span class="n">rot_mat</span>
+            <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">instance_id</span></div>
 

@@ -211,11 +211,13 @@
         <span class="n">isAttractor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">jitterMax</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
         <span class="n">meshFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">meshType</span><span class="o">=</span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
         <span class="n">meshObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">molarity</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
         <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">nbJitter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">nbMol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">orientBiasRotRangeMax</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
         <span class="n">orientBiasRotRangeMin</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
         <span class="n">overwrite_distFunc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># overWrite</span>
@@ -237,6 +239,7 @@
         <span class="n">rejectionThreshold</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
         <span class="n">rotAxis</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
         <span class="n">rotRange</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">sphereFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;MultiSphere&quot;</span><span class="p">,</span>
         <span class="n">useOrientBias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -251,10 +254,12 @@
             <span class="n">jitterMax</span><span class="o">=</span><span class="n">jitterMax</span><span class="p">,</span>
             <span class="n">meshFile</span><span class="o">=</span><span class="n">meshFile</span><span class="p">,</span>
             <span class="n">meshObject</span><span class="o">=</span><span class="n">meshObject</span><span class="p">,</span>
+            <span class="n">meshType</span><span class="o">=</span><span class="n">meshType</span><span class="p">,</span>
             <span class="n">molarity</span><span class="o">=</span><span class="n">molarity</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
             <span class="n">nbJitter</span><span class="o">=</span><span class="n">nbJitter</span><span class="p">,</span>
             <span class="n">nbMol</span><span class="o">=</span><span class="n">nbMol</span><span class="p">,</span>
+            <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
             <span class="n">packingMode</span><span class="o">=</span><span class="n">packingMode</span><span class="p">,</span>
             <span class="n">packingPriority</span><span class="o">=</span><span class="n">packingPriority</span><span class="p">,</span>
             <span class="n">pdb</span><span class="o">=</span><span class="n">pdb</span><span class="p">,</span>
@@ -265,13 +270,14 @@
             <span class="n">radii</span><span class="o">=</span><span class="n">radii</span><span class="p">,</span>
             <span class="n">rotAxis</span><span class="o">=</span><span class="n">rotAxis</span><span class="p">,</span>
             <span class="n">rotRange</span><span class="o">=</span><span class="n">rotRange</span><span class="p">,</span>
+            <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
             <span class="n">sphereFile</span><span class="o">=</span><span class="n">sphereFile</span><span class="p">,</span>
             <span class="n">Type</span><span class="o">=</span><span class="n">Type</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">min_radius</span> <span class="o">=</span> <span class="n">encapsulatingRadius</span>
-        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">level</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_radius</span><span class="p">:</span>
-                <span class="n">min_radius</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">radii</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">level</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">min_radius</span><span class="p">:</span>
+                <span class="n">min_radius</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">level</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">minRadius</span> <span class="o">=</span> <span class="n">min_radius</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">radii</span><span class="p">),</span> <span class="n">molarity</span><span class="p">)</span>
