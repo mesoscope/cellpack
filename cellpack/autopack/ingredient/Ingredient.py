@@ -3138,7 +3138,9 @@ class Ingredient(Agent):
         if obj is None:
             helper.add_object_to_scene(None, self, instance_id, target_point, rot_mat)
         else:
-            helper.add_new_instance(name, self, instance_id, target_point, rot_mat)
+            helper.add_new_instance_and_update_time(
+                name, self, instance_id, target_point, rot_mat
+            )
 
         return instance_id
 
