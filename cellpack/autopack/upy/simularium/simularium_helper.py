@@ -81,6 +81,7 @@ class simulariumHelper(hostHelper.Helper):
 
     # this id can probably found in c4d.symbols
     # TAG ID
+    DATABASE = "https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0"
     SPLINE = "kNurbsCurve"
     INSTANCE = "Simularium.Geom"
     EMPTY = "Simularium.Geom"
@@ -355,6 +356,39 @@ class simulariumHelper(hostHelper.Helper):
             instance_id = f"{ingredient.name}-{ptInd}"
             self.place_object(instance_id, position, rotation)
 
+    def get_display_data(self, ingredient):
+        ingr_name = ingredient.name
+        display_type = DISPLAY_TYPE.SPHERE
+        url = ""
+        if ingredient.Type == "SingleCube":
+            display_type = "CUBE"
+        elif ingredient.Type == "Grow" or ingredient.Type == "MultiCylinder":
+            display_type = DISPLAY_TYPE.FIBER
+        else:
+            pdb_file_name = ""
+            display_type = DISPLAY_TYPE.PDB
+            if ingredient.source is not None:
+                pdb_file_name = ingredient.source["pdb"]
+            elif ingredient.pdb is not None and ".map" not in ingredient.pdb:
+                pdb_file_name = ingredient.pdb
+            elif "meshFile" in ingredient:
+                meshType = (
+                    ingredient.meshType if ingredient.meshType is not None else "file"
+                )
+                if meshType == "file":
+                    file_path = os.path.basename(ingredient.meshFile)
+                    file_name, _ = os.path.splitext(file_path)
+
+                elif meshType == "raw":
+                    file_name = ingr_name
+                url = f"{simulariumHelper.DATABASE}/geometries/{file_name}.obj"
+                display_type = DISPLAY_TYPE.OBJ
+            if ".pdb" in pdb_file_name:
+                url = f"{simulariumHelper.DATABASE}/other/{pdb_file_name}"
+            else:
+                url = pdb_file_name
+        return display_type, url
+
     def init_scene_with_objects(
         self,
         objects,
@@ -362,12 +396,16 @@ class simulariumHelper(hostHelper.Helper):
         self.time = 0
         for position, rotation, ingredient, ptInd in objects:
             ingr_name = ingredient.name
-            display_type = DISPLAY_TYPE.SPHERE
-            if ingredient.Type == "SingleCube":
-                display_type = "CUBE"
-            self.display_data[ingredient.name] = DisplayData(
-                name=ingredient.name, display_type=display_type
-            )
+            if ingredient.Type == "Grow" or ingredient.Type == "MultiCylinder":
+                if ingredient.nbCurve == 0:
+                    continue
+
+            if ingr_name not in self.display_data:
+                display_type, url = self.get_display_data(ingredient)
+                self.display_data[ingredient.name] = DisplayData(
+                    name=ingr_name, display_type=display_type, url=url
+                )
+
             self.add_instance(
                 ingredient.name,
                 ingredient,
@@ -1163,7 +1201,7 @@ class simulariumHelper(hostHelper.Helper):
                         self.reParent(node, dicgeoms[g]["parentmesh"])
                         node.Set(instanceMatrices=i)
             return boundgeoms, dicgeoms, col, daeDic
-  
+
     def write(self, listObj, **kw):
         pass
 

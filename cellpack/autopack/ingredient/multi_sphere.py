@@ -102,12 +102,17 @@ class MultiSphereIngr(SingleSphereIngr):
             Type=Type,
             useOrientBias=useOrientBias,
             useRotAxis=useRotAxis,
+            weight=weight
         )
         min_radius = encapsulatingRadius
         if radii is not None:
             for level in radii:
-                if min(level["radii"]) < min_radius:
-                    min_radius = min(level["radii"])
+                if isinstance(level, dict):
+                    if min(level["radii"]) < min_radius:
+                        min_radius = min(level["radii"])
+                else:
+                    if min(level) < min_radius:
+                        min_radius = min(level)
         self.minRadius = min_radius
         if name is None:
             name = "%s_%f" % (str(radii), molarity)

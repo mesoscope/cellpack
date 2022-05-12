@@ -8,6 +8,7 @@ from panda3d.core import Point3, TransformState
 from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
 from random import uniform, gauss, random
 import math
+from cellpack.autopack.ingredient.Ingredient import Ingredient
 
 from cellpack.autopack.transformation import angle_between_vectors
 from cellpack.autopack.ldSequence import SphereHalton
@@ -22,6 +23,23 @@ helper = autopack.helper
 
 
 class GrowIngredient(MultiCylindersIngr):
+    ARGUMENTS = Ingredient.ARGUMENTS
+    ARGUMENTS.extend(
+        [
+            "length",
+            "closed",
+            "uLength",
+            "biased",
+            "marge",
+            "orientation",
+            "walkignMode",
+            "constraintMarge",
+            "useHalton",
+            "compMask",
+            "use_rbsphere",
+        ]
+    )
+
     def __init__(
         self,
         Type="Grow",
@@ -75,7 +93,7 @@ class GrowIngredient(MultiCylindersIngr):
         useOrientBias=False,
         useRotAxis=True,
         walkingMode="sphere",
-        weight=0.2
+        weight=0.2,
     ):
 
         super().__init__(
@@ -242,119 +260,41 @@ class GrowIngredient(MultiCylindersIngr):
         # representation according.
         self.safetycutoff = 10
 
-        self.KWDS["length"] = {}
-        self.KWDS["closed"] = {}
-        self.KWDS["uLength"] = {}
-        self.KWDS["biased"] = {}
-        self.KWDS["marge"] = {}
-        self.KWDS["orientation"] = {}
-        self.KWDS["walkingMode"] = {}
-        self.KWDS["constraintMarge"] = {}
-        self.KWDS["useHalton"] = {}
-        self.KWDS["compMask"] = {}
-        self.KWDS["use_rbsphere"] = {}
+    def get_signed_distance(
+        self,
+        packing_location,
+        grid_point_location,
+        rotation_matrix,
+    ):
+        cent1T = self.transformPoints(
+            packing_location, rotation_matrix, self.positions[-1]
+        )
+        cent2T = self.transformPoints(
+            packing_location, rotation_matrix, self.positions2[-1]
+        )
 
-        self.OPTIONS["length"] = {
-            "name": "length",
-            "value": self.length,
-            "default": self.length,
-            "type": "float",
-            "min": 0,
-            "max": 10000,
-            "description": "snake total length",
-        }
-        self.OPTIONS["uLength"] = {
-            "name": "uLength",
-            "value": self.uLength,
-            "default": self.uLength,
-            "type": "float",
-            "min": 0,
-            "max": 10000,
-            "description": "snake unit length",
-        }
-        self.OPTIONS["closed"] = {
-            "name": "closed",
-            "value": False,
-            "default": False,
-            "type": "bool",
-            "min": 0.0,
-            "max": 0.0,
-            "description": "closed snake",
-        }
-        self.OPTIONS["biased"] = {
-            "name": "biased",
-            "value": 0.0,
-            "default": 0.0,
-            "type": "float",
-            "min": 0,
-            "max": 10,
-            "description": "snake biased",
-        }
-        self.OPTIONS["marge"] = {
-            "name": "marge",
-            "value": 10.0,
-            "default": 10.0,
-            "type": "float",
-            "min": 0,
-            "max": 10000,
-            "description": "snake angle marge",
-        }
-        self.OPTIONS["constraintMarge"] = {
-            "name": "constraintMarge",
-            "value": False,
-            "default": False,
-            "type": "bool",
-            "min": 0.0,
-            "max": 0.0,
-            "description": "lock the marge",
-        }
-        self.OPTIONS["orientation"] = {
-            "name": "orientation",
-            "value": [0.0, 1.0, 0.0],
-            "default": [0.0, 1.0, 0.0],
-            "min": 0,
-            "max": 1,
-            "type": "vector",
-            "description": "snake orientation",
-        }
-        self.OPTIONS["walkingMode"] = {
-            "name": "walkingMode",
-            "value": "random",
-            "values": ["sphere", "lattice"],
-            "min": 0.0,
-            "max": 0.0,
-            "default": "sphere",
-            "type": "liste",
-            "description": "snake mode",
-        }
-        self.OPTIONS["useHalton"] = {
-            "name": "useHalton",
-            "value": True,
-            "default": True,
-            "type": "bool",
-            "min": 0.0,
-            "max": 0.0,
-            "description": "use spherica halton distribution",
-        }
-        self.OPTIONS["compMask"] = {
-            "name": "compMask",
-            "value": "0",
-            "values": "0",
-            "min": 0.0,
-            "max": 0.0,
-            "default": "0",
-            "type": "string",
-            "description": "allowed compartments",
-        }
-        self.OPTIONS["use_rbsphere"] = {
-            "name": "use_rbsphere",
-            "value": False,
-            "default": False,
-            "type": "bool",
-            "min": 0.0,
-            "max": 0.0,
-            "description": "use sphere instead of cylinder wih bullet",
-        }
+        for radc, p1, p2 in zip(self.radii[-1], cent1T, cent2T):
+
+            x1, y1, z1 = p1
+            x2, y2, z2 = p2
+            vx, vy, vz = vector_along_ingredient = (x2 - x1, y2 - y1, z2 - z1)
+            lengthsq = vx * vx + vy * vy + vz * vz
+            pd = grid_point_location - p1
+            pd2 = grid_point_location - p2
+
+            dot_product = numpy.dot(grid_point_location, vector_along_ingredient)
+            d2toP1 = numpy.sum(pd * pd)
+            dsq = d2toP1 - dot_product * dot_product / lengthsq
+
+            d2toP2 = numpy.sum(pd2 * pd2)
+            if dot_product < 0.0:  # outside 1st cap
+                signed_distance = d2toP1
+
+            elif dot_product > lengthsq:
+                signed_distance = d2toP2
+            else:
+                signed_distance = dsq - radc
+        return signed_distance
 
     def get_new_distance_values(
         self, jtrans, rotMatj, gridPointsCoords, distance, dpad, level=0
