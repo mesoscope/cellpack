@@ -77,6 +77,7 @@ class SingleSphereIngr(Ingredient):
         super().__init__(
             Type=Type,
             color=color,
+            coordsystem=coordsystem,
             cutoff_boundary=cutoff_boundary,
             cutoff_surface=cutoff_surface,
             distExpression=distExpression,
@@ -120,47 +121,7 @@ class SingleSphereIngr(Ingredient):
         self.singleSphere = True
         # min and max radius for a single sphere should be the same
         self.encapsulatingRadius = encapsulatingRadius or radius
-        # make a sphere ?->rapid ?
-        if self.mesh is None and autopack.helper is not None:
-            if not autopack.helper.nogui:
-                #            if not autopack.helper.nogui :
-                # build a cylinder and make it length uLength, radius radii[0]
-                # this mesh is used bu RAPID for collision
-                p = autopack.helper.getObject("autopackHider")
-                if p is None:
-                    p = autopack.helper.newEmpty("autopackHider")
-                    if autopack.helper.host.find("blender") == -1:
-                        autopack.helper.toggleDisplay(p, False)
-                self.mesh = autopack.helper.Sphere(
-                    self.name + "_basic",
-                    radius=self.radii[0][0],
-                    color=self.color,
-                    parent=p,
-                    res=24,
-                )[0]
-            else:
-                self.mesh = autopack.helper.unitSphere(
-                    self.name + "_basic", 5, radius=self.radii[0][0]
-                )[0]
-                self.getData()
-        # should do that for all ingredient type
-        if self.representation is None and not hasattr(
-            self.mesh, "getFaces"
-        ):  # this is not working with dejavu
-            # and should go in the graphics.
-            if not autopack.helper.nogui:
-                self.representation = autopack.helper.Sphere(
-                    self.name + "_rep",
-                    radius=self.radii[0][0],
-                    color=self.color,
-                    parent=self.mesh,
-                    res=24,
-                )[0]
-            else:
-                self.representation = autopack.helper.Icosahedron(
-                    self.name + "_rep", radius=self.radii[0][0]
-                )[0]
-
+    
     def collides_with_compartment(
         self,
         jtrans,
