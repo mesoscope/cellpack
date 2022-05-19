@@ -253,9 +253,8 @@ class BaseGrid:
     def getDiagonal(self, boundingBox=None):
         if boundingBox is None:
             boundingBox = self.boundingBox
-        self.diag = numpy.sqrt(
-            (numpy.array(boundingBox[0]) - numpy.array(boundingBox[1])) ** 2
-        ).sum()
+        self.diag = numpy.linalg.norm(
+            (numpy.array(boundingBox[0]) - numpy.array(boundingBox[1]))) 
         return self.diag
 
     def create3DPointLookup_loop(self, boundingBox=None):
