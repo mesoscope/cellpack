@@ -27,8 +27,9 @@ class MultiSphereIngr(SingleSphereIngr):
         isAttractor=False,
         jitterMax=(1, 1, 1),
         meshFile=None,
-        meshType="file",
+        meshName="",
         meshObject=None,
+        meshType="file",
         molarity=0.0,
         name=None,
         nbJitter=5,
@@ -37,7 +38,6 @@ class MultiSphereIngr(SingleSphereIngr):
         orientBiasRotRangeMax=-pi,
         orientBiasRotRangeMin=-pi,
         overwrite_distFunc=True,  # overWrite
-        overwrite_nbMol_value=None,
         packingMode="random",
         packingPriority=0,
         partners_name=None,
@@ -49,7 +49,7 @@ class MultiSphereIngr(SingleSphereIngr):
         positions2=None,
         principalVector=(1, 0, 0),
         proba_binding=0.5,
-        proba_not_binding=0.5,  # chance to actually not bind
+        proba_not_binding=0.5,
         properties=None,
         radii=None,
         rejectionThreshold=30,
@@ -59,16 +59,20 @@ class MultiSphereIngr(SingleSphereIngr):
         sphereFile=None,
         Type="MultiSphere",
         useOrientBias=False,
-        use_mesh_rb=False,
         useRotAxis=True,
         weight=0.2,  # use for affinity ie partner.weight
     ):
         super().__init__(
             color=color,
+            coordsystem=coordsystem,
             cutoff_surface=cutoff_surface,
             encapsulatingRadius=encapsulatingRadius,
+            excluded_partners_name=excluded_partners_name,
+            gradient=gradient,
+            isAttractor=isAttractor,
             jitterMax=jitterMax,
             meshFile=meshFile,
+            meshName=meshName,
             meshObject=meshObject,
             meshType=meshType,
             molarity=molarity,
@@ -76,24 +80,39 @@ class MultiSphereIngr(SingleSphereIngr):
             nbJitter=nbJitter,
             nbMol=nbMol,
             offset=offset,
+            orientBiasRotRangeMax=orientBiasRotRangeMax,
+            orientBiasRotRangeMin=orientBiasRotRangeMin,
             packingMode=packingMode,
             packingPriority=packingPriority,
+            partners_name=partners_name,
+            partners_position=partners_position,
             pdb=pdb,
             perturbAxisAmplitude=perturbAxisAmplitude,
             placeType=placeType,
-            positions=positions,  # positions2=None,
+            positions=positions,
             principalVector=principalVector,
+            proba_binding=proba_binding,
+            proba_not_binding=proba_not_binding,  # chance to actually not bind
+            properties=properties,
             radii=radii,
             rotAxis=rotAxis,
             rotRange=rotRange,
             source=source,
             sphereFile=sphereFile,
             Type=Type,
+            useOrientBias=useOrientBias,
+            useRotAxis=useRotAxis,
+            weight=weight
         )
         min_radius = encapsulatingRadius
-        for level in radii:
-            if min(level["radii"]) < min_radius:
-                min_radius = min(level["radii"])
+        if radii is not None:
+            for level in radii:
+                if isinstance(level, dict):
+                    if min(level["radii"]) < min_radius:
+                        min_radius = min(level["radii"])
+                else:
+                    if min(level) < min_radius:
+                        min_radius = min(level)
         self.minRadius = min_radius
         if name is None:
             name = "%s_%f" % (str(radii), molarity)

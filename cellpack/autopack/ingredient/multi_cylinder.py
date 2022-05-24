@@ -1,6 +1,6 @@
 import numpy
 import math
-from math import sqrt
+from math import pi, sqrt
 from panda3d.core import Point3, TransformState
 from panda3d.bullet import BulletCylinderShape, BulletRigidBodyNode
 
@@ -20,50 +20,99 @@ class MultiCylindersIngr(Ingredient):
 
     def __init__(
         self,
+        Type="MultiCylinder",
+        color=None,
+        coordsystem="right",
+        cutoff_boundary=None,
+        cutoff_surface=None,
+        distExpression=None,
+        distFunction=None,
+        encapsulatingRadius=0,
+        excluded_partners_name=None,
+        force_random=False,  # avoid any binding
+        gradient="",
+        isAttractor=False,
+        jitterMax=(1, 1, 1),
+        meshFile=None,
+        meshName=None,
+        meshObject=None,
+        meshType="file",
         molarity=0.0,
-        radii=None,
+        name=None,
+        nbJitter=5,
+        nbMol=0,
+        orientBiasRotRangeMax=-pi,
+        orientBiasRotRangeMin=-pi,
+        packingMode="random",
+        packingPriority=0,
+        partners_position=None,
+        partners_name=None,
+        pdb=None,
+        perturbAxisAmplitude=0.1,
+        placeType="jitter",
         positions=None,
         positions2=None,
-        sphereFile=None,
-        packingPriority=0,
-        name=None,
-        pdb=None,
-        color=None,
-        nbJitter=5,
-        jitterMax=(1, 1, 1),
-        perturbAxisAmplitude=0.1,
         principalVector=(1, 0, 0),
-        meshFile=None,
-        packingMode="random",
-        placeType="jitter",
-        Type="MultiCylinder",
-        meshObject=None,
-        nbMol=0,
-        **kw
+        proba_binding=0.5,
+        proba_not_binding=0.5,
+        properties=None,
+        radii=None,
+        rotAxis=[0.0, 0.0, 0.0],
+        rotRange=6.2831,
+        rejectionThreshold=30,
+        source=None,
+        sphereFile=None,
+        uLength=0,
+        useLength=False,
+        useOrientBias=False,
+        useRotAxis=True,
+        weight=0.2,  # use for affinity ie partner.weight
     ):
 
-        Ingredient.__init__(
-            self,
+        super().__init__(
+            Type=Type,
+            color=color,
+            coordsystem=coordsystem,
+            cutoff_boundary=cutoff_boundary,
+            cutoff_surface=cutoff_surface,
+            distExpression=distExpression,
+            distFunction=distFunction,
+            encapsulatingRadius=encapsulatingRadius,
+            excluded_partners_name=excluded_partners_name,
+            force_random=force_random,  # avoid any binding
+            gradient=gradient,
+            isAttractor=isAttractor,
+            jitterMax=jitterMax,
+            meshFile=meshFile,
+            meshName=meshName,
+            meshObject=meshObject,
+            meshType="file",
             molarity=molarity,
-            radii=radii,
+            name=name,
+            nbJitter=nbJitter,
+            nbMol=nbMol,
+            packingMode=packingMode,
+            packingPriority=packingPriority,
+            partners_name=partners_name,
+            partners_position=partners_position,
+            pdb=pdb,
+            perturbAxisAmplitude=perturbAxisAmplitude,
+            placeType=placeType,
             positions=positions,
             positions2=positions2,
-            sphereFile=sphereFile,
-            packingPriority=packingPriority,
-            name=name,
-            pdb=pdb,
-            color=color,
-            nbJitter=nbJitter,
-            jitterMax=jitterMax,
-            perturbAxisAmplitude=perturbAxisAmplitude,
             principalVector=principalVector,
-            meshFile=meshFile,
-            packingMode=packingMode,
-            placeType=placeType,
-            meshObject=meshObject,
-            nbMol=nbMol,
-            Type=Type,
-            **kw
+            proba_binding=proba_binding,
+            proba_not_binding=proba_not_binding,
+            properties=properties,
+            radii=radii,
+            rejectionThreshold=rejectionThreshold,
+            rotAxis=rotAxis,
+            rotRange=rotRange,
+            source=source,
+            sphereFile=sphereFile,
+            useOrientBias=useOrientBias,
+            useRotAxis=useRotAxis,
+            weight=weight,
         )
 
         if name is None:
@@ -76,9 +125,8 @@ class MultiCylindersIngr(Ingredient):
         #        self.encapsulatingRadius = radii[0][0]  #Graham worry: 9/8/11 This is incorrect... shoudl be max(radii[0]) or radii[0][1]
         #        self.encapsulatingRadius = radii[0][0]#nope should be  half length ?
         self.length = 1.0
-        self.useLength = False
-        if "useLength" in kw:
-            self.useLength = kw["useLength"]
+        self.useLength = useLength
+        self.uLength = uLength
         if self.positions2 is not None and self.positions is not None:
             # shoulde the overall length of the object from bottom to top
             bb = self.getBigBB()
@@ -123,7 +171,27 @@ class MultiCylindersIngr(Ingredient):
         #                                parent = p,color=self.color)
         #            self.getData()
 
-        self.KWDS["useLength"] = {}
+    def get_cuttoff_value(self, spacing):
+        """Returns the min value a grid point needs to be away from a surfance
+        in order for this ingredient to pack. Only needs to be calculated once
+        per ingredient once the jitter is set."""
+        if self.min_distance > 0:
+            return self.min_distance
+        radius = self.minRadius
+        jitter = self.getMaxJitter(spacing)
+
+        if self.packingMode == "close":
+            cut = self.length - jitter
+        #            if ingr.modelType=='Cube' : #radius iactually the size
+        #                cut = min(self.radii[0]/2.)-jitter
+        #            elif ingr.cutoff_boundary is not None :
+        #                #this mueay work if we have the distance from the border
+        #                cut  = radius+ingr.cutoff_boundary-jitter
+
+        else:
+            cut = radius - jitter
+        self.min_distance = cut
+        return cut
 
     def getBigBB(self):
         # one level for cylinder

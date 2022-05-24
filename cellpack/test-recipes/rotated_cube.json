@@ -63,7 +63,6 @@
                 "nbMol": 50,
                 "orientBiasRotRangeMax": 0,
                 "orientBiasRotRangeMin": 0,
-                "overwrite_nbMol_value": 50,
                 "packingMode": "random",
                 "packingPriority": 0,
                 "partners_name": [],

@@ -81,6 +81,7 @@ class simulariumHelper(hostHelper.Helper):
 
     # this id can probably found in c4d.symbols
     # TAG ID
+    DATABASE = "https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0"
     SPLINE = "kNurbsCurve"
     INSTANCE = "Simularium.Geom"
     EMPTY = "Simularium.Geom"
@@ -355,6 +356,39 @@ class simulariumHelper(hostHelper.Helper):
             instance_id = f"{ingredient.name}-{ptInd}"
             self.place_object(instance_id, position, rotation)
 
+    def get_display_data(self, ingredient):
+        ingr_name = ingredient.name
+        display_type = DISPLAY_TYPE.SPHERE
+        url = ""
+        if ingredient.Type == "SingleCube":
+            display_type = "CUBE"
+        elif ingredient.Type == "Grow" or ingredient.Type == "MultiCylinder":
+            display_type = DISPLAY_TYPE.FIBER
+        else:
+            pdb_file_name = ""
+            display_type = DISPLAY_TYPE.PDB
+            if ingredient.source is not None:
+                pdb_file_name = ingredient.source["pdb"]
+            elif ingredient.pdb is not None and ".map" not in ingredient.pdb:
+                pdb_file_name = ingredient.pdb
+            elif "meshFile" in ingredient:
+                meshType = (
+                    ingredient.meshType if ingredient.meshType is not None else "file"
+                )
+                if meshType == "file":
+                    file_path = os.path.basename(ingredient.meshFile)
+                    file_name, _ = os.path.splitext(file_path)
+
+                elif meshType == "raw":
+                    file_name = ingr_name
+                url = f"{simulariumHelper.DATABASE}/geometries/{file_name}.obj"
+                display_type = DISPLAY_TYPE.OBJ
+            if ".pdb" in pdb_file_name:
+                url = f"{simulariumHelper.DATABASE}/other/{pdb_file_name}"
+            else:
+                url = pdb_file_name
+        return display_type, url
+
     def init_scene_with_objects(
         self,
         objects,
@@ -362,12 +396,17 @@ class simulariumHelper(hostHelper.Helper):
         self.time = 0
         for position, rotation, ingredient, ptInd in objects:
             ingr_name = ingredient.name
-            display_type = DISPLAY_TYPE.SPHERE
-            if ingredient.Type == "SingleCube":
-                display_type = "CUBE"
-            self.display_data[ingredient.name] = DisplayData(
-                name=ingredient.name, display_type=display_type
-            )
+
+            if ingredient.Type == "Grow" or ingredient.Type == "MultiCylinder":
+                if ingredient.nbCurve == 0:
+                    continue
+
+            if ingr_name not in self.display_data:
+                display_type, url = self.get_display_data(ingredient)
+                self.display_data[ingredient.name] = DisplayData(
+                    name=ingr_name, display_type=display_type, url=url
+                )
+
             self.add_instance(
                 ingredient.name,
                 ingredient,
@@ -1096,56 +1135,73 @@ class simulariumHelper(hostHelper.Helper):
                 matd.prop[matd.AMBI] = mat.effect.ambient[0:3]
         return onode, mesh
 
-    def read(self, filename, **kw):
+    def buildGeometries(self, col):
+        dicgeoms = {}
+        geoms = col.geometries
+        meshDic = {}
+        for g in geoms:
+            meshDic[g.id] = {}
+            dicgeoms[g.id] = {}
+            dicgeoms[g.id]["geom"] = g
+            dicgeoms[g.id]["id"] = g.id
+            v, vn, f = self.decomposeColladaGeom(g, col)
+            if self.nogui:
+                # apply transformation from boundGeom
+                dicgeoms[g.id]["node"] = None
+                dicgeoms[g.id]["mesh"] = v, vn, f
+                mat = self.getColladaMaterial(g, col)
+                # print ("mat type is ",type(mat),mat, mat is not None, type(mat) is not type(None))
+                if mat is not None:
+                    dicgeoms[g.id]["color"] = mat.effect.diffuse[0:3]
+            else:
+                onode, mesh = self.oneColladaGeom(g, col)
+                dicgeoms[g.id]["node"] = onode
+                dicgeoms[g.id]["mesh"] = mesh
+            meshDic[g.id]["mesh"] = v, vn, f
+            dicgeoms[g.id]["instances"] = []
+            dicgeoms[g.id]["parentmesh"] = None
+        return dicgeoms, meshDic
+
+    def read_mesh_file(self, filename, **kw):
         fileName, fileExtension = os.path.splitext(filename)
 
-        # if fileExtension == ".dae":
-        #     daeDic = None
-        #     col = collada.Collada(filename)  # , ignore=[collada.DaeUnsupportedError,
-        #     # collada.DaeBrokenRefError])
-        #     dicgeoms, daeDic = self.buildGeometries(col)
-        #     boundgeoms = list(col.scene.objects("geometry"))
-        #     for bg in boundgeoms:
-        #         if bg.original.id in dicgeoms:
-        #             node = dicgeoms[bg.original.id]["node"]
-        #             dicgeoms[bg.original.id]["instances"].append(bg.matrix)
-        #     # dicgeoms["col"]=col
-        #     if self.nogui:
-        #         return dicgeoms
+        if fileExtension == ".dae":
+            daeDic = None
+            col = collada.Collada(filename)  # , ignore=[collada.DaeUnsupportedError,
+            # collada.DaeBrokenRefError])
+            dicgeoms, daeDic = self.buildGeometries(col)
+            boundgeoms = list(col.scene.objects("geometry"))
+            for bg in boundgeoms:
+                if bg.original.id in dicgeoms:
+                    node = dicgeoms[bg.original.id]["node"]
+                    dicgeoms[bg.original.id]["instances"].append(bg.matrix)
+            if self.nogui:
+                return dicgeoms
 
-        #     # for each nodein the scene creae an empty
-        #     # for each primtive in the scene create an indeedPolygins-
-        #     uniq = False
-        #     if len(col.scene.nodes) == 1:
-        #         uniq = True
-        #     for i, node in enumerate(col.scene.nodes):
-        #         # node,i,col,nodexml,parentxml=None,parent=None,dicgeoms=None
-        #         dicgeoms = self.nodeToGeom(
-        #             node,
-        #             i,
-        #             col,
-        #             col.scene.xmlnode[i],
-        #             parentxml=None,
-        #             dicgeoms=dicgeoms,
-        #             uniq=uniq,
-        #         )
-        #     for g in dicgeoms:
-        #         node = dicgeoms[g]["node"]
-        #         i = dicgeoms[g]["instances"]
-        #         if len(i):
-        #             if dicgeoms[g]["parentmesh"] is not None:
-        #                 self.reParent(node, dicgeoms[g]["parentmesh"])
-        #                 node.Set(instanceMatrices=i)
-        #     return boundgeoms, dicgeoms, col, daeDic
-        # #            for i,node in enumerate(col.scene.nodes) :
-        # #                self.transformNode(node,i,col,col.scene.xmlnode[i])
-        # else:
-        #     from Simularium.IndexedPolygons import IndexedPolygonsFromFile
-
-        #     geoms = IndexedPolygonsFromFile(filename, fileName)
-        #     self.AddObject(geoms)
-
-    #        raw_input()
+            # for each nodein the scene creae an empty
+            # for each primtive in the scene create an indeedPolygins-
+            uniq = False
+            if len(col.scene.nodes) == 1:
+                uniq = True
+            for i, node in enumerate(col.scene.nodes):
+                # node,i,col,nodexml,parentxml=None,parent=None,dicgeoms=None
+                dicgeoms = self.nodeToGeom(
+                    node,
+                    i,
+                    col,
+                    col.scene.xmlnode[i],
+                    parentxml=None,
+                    dicgeoms=dicgeoms,
+                    uniq=uniq,
+                )
+            for g in dicgeoms:
+                node = dicgeoms[g]["node"]
+                i = dicgeoms[g]["instances"]
+                if len(i):
+                    if dicgeoms[g]["parentmesh"] is not None:
+                        self.reParent(node, dicgeoms[g]["parentmesh"])
+                        node.Set(instanceMatrices=i)
+            return boundgeoms, dicgeoms, col, daeDic
 
     def write(self, listObj, **kw):
         pass

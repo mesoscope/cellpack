@@ -145,11 +145,8 @@ class Recipe:
             if nbmod >= randval:  # Mod by Graham 8/18/11
                 nbi = int(nbi + 1)  # Mod by Graham 8/18/11
             nb = nbi  # Mod by Graham 8/18/11
-            if ingr.overwrite_nbMol:  # DEPRECATED
-                ingr.vol_nbmol = nb
-                ingr.nbMol = ingr.overwrite_nbMol_value
-            else:
-                ingr.vol_nbmol = ingr.nbMol = nb + ingr.overwrite_nbMol_value
+
+            ingr.vol_nbmol = ingr.nbMol = nb + ingr.nbMol
 
             if ingr.nbMol == 0:
                 self.log.warning(

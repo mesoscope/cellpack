@@ -4786,13 +4786,13 @@ class Helper:
         vertices = []
         faces = []
         vnormal = []
-        for i in range(len(data)):
-            v, vn, f = data[i]["mesh"]
+        for value in data:
+            v, vn, f = value["mesh"]
             f = numpy.array(f, int)
             faces.extend((f + len(vertices)).tolist())
 
-            if transform and len(data[i]["instances"]):
-                v = self.ApplyMatrix(v, data[i]["instances"][0])
+            if transform and value["instances"]:
+                v = self.ApplyMatrix(v, value["instances"][0])
             vertices.extend(v)
             if vn is not None:
                 vnormal.extend(vn)

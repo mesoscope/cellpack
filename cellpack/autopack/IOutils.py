@@ -19,7 +19,7 @@ from numpy.core.arrayprint import printoptions
 
 import cellpack.autopack as autopack
 import cellpack.autopack.transformation as tr
-from .ingredient.Ingredient import KWDS
+from .ingredient.Ingredient import Ingredient
 from cellpack.autopack.Serializable import (
     sCompartment,
     sIngredientGroup,
@@ -273,24 +273,10 @@ class IOingredientTool(object):
         else:
             print("filename is None")
             return None
-        kw = self.parseIngrXmlNode(ingrnode)
-        # check for overwritten parameter
-        overwrite_node = inode.getElementsByTagName("overwrite")
-        if len(overwrite_node):
-            kwo = self.parseIngrXmlNode(overwrite_node[0])
-            kw.update(kwo)
+
         name = str(ingrnode.getAttribute("name"))
-        kw.update({"name": name})
         ingre = self.makeIngredient(**kw)
         return ingre
-
-    def parseIngrXmlNode(self, ingrnode):
-        kw = {}
-        for k in KWDS:
-            v = getValueToXMLNode(KWDS[k]["type"], ingrnode, k)
-            if v is not None:
-                kw[k] = v
-        return kw
 
     def ingrXmlNode(self, ingr, xmldoc=None):
         rxmldoc = False
@@ -418,28 +404,39 @@ class IOingredientTool(object):
         inrStr += ")\n"
         inrStr += recipe + ".addIngredient(" + ingr.name + ")\n"
         return inrStr
+    
+    @staticmethod
+    def clean_arguments(arguments_to_include, **arguments):
+        new_arguments = {}
+        for index, name in enumerate(arguments):
+            if (name in arguments_to_include):
+                new_arguments[name] = arguments[name]
+        return new_arguments
 
     def makeIngredient(self, **kw):
-
         ingr = None
-        if kw["Type"] == "SingleSphere":
+        ingredient_type = kw["Type"]
+        if ingredient_type == "Grow" or ingredient_type == "Actine" or ingredient_type == "MultiCylinder":
+            arguments = IOingredientTool.clean_arguments(GrowIngredient.ARGUMENTS, **kw)
+        else:
+            arguments = IOingredientTool.clean_arguments(Ingredient.ARGUMENTS, **kw)
+
+        if ingredient_type == "SingleSphere":
             kw["position"] = kw["positions"][0][0]
             kw["radius"] = kw["radii"][0][0]
             del kw["positions"]
             del kw["radii"]
-            ingr = SingleSphereIngr(**kw)
-        elif kw["Type"] == "MultiSphere":
-            ingr = MultiSphereIngr(**kw)
-        elif kw["Type"] == "MultiCylinder":
-            ingr = MultiCylindersIngr(**kw)
-        elif kw["Type"] == "SingleCube":
-            # kw["positions"] = [[[0, 0, 0], [0, 0, 0], [0, 0, 0]]]
-            # kw["positions2"] = None
-            ingr = SingleCubeIngr(**kw)
-        elif kw["Type"] == "Grow":
-            ingr = GrowIngredient(**kw)
-        elif kw["Type"] == "Actine":
-            ingr = ActinIngredient(**kw)
+            ingr = SingleSphereIngr(**arguments)
+        elif ingredient_type == "MultiSphere":
+            ingr = MultiSphereIngr(**arguments)
+        elif ingredient_type == "MultiCylinder":
+            ingr = MultiCylindersIngr(**arguments)
+        elif ingredient_type == "SingleCube":
+            ingr = SingleCubeIngr(**arguments)
+        elif ingredient_type == "Grow":
+            ingr = GrowIngredient(**arguments)
+        elif ingredient_type == "Actine":
+            ingr = ActinIngredient(**arguments)
         if "gradient" in kw and kw["gradient"] != "" and kw["gradient"] != "None":
             ingr.gradient = kw["gradient"]
         if "results" in kw:

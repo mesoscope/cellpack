@@ -36,7 +36,7 @@ class Args(argparse.Namespace):
     DEFAULT_DIM = 2
     DEFAULT_ANALYSIS = True
     DEFAULT_RECIPE_FILE = "cellpack/test-recipes/NM_Analysis_FigureB1.0.json"
-    DEFAULT_FORMAT = "simularium"
+    DEFAULT_FORMAT = "json"
     DEFAULT_OUTPUT_FOLDER = "out/"
     DEFAULT_PLACE_METHODS = [
         "jitter",

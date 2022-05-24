@@ -41,7 +41,6 @@
     "cytoplasme": {
         "ingredients": {
             "Sphere_radius_100": {
-                "overwrite_nbMol_value": 6,
                 "nbJitter": 20,
                 "molarity": 0,
                 "partners_position": [],
@@ -102,12 +101,10 @@
                     ]
                 ],
                 "proba_not_binding": 0.5,
-                "use_mesh_rb": false,
                 "pdb": null,
                 "useRotAxis": false
             },
             "Sphere_radius_200": {
-                "overwrite_nbMol_value": 2,
                 "nbJitter": 20,
                 "molarity": 0,
                 "partners_position": [],
@@ -168,12 +165,10 @@
                     ]
                 ],
                 "proba_not_binding": 0.5,
-                "use_mesh_rb": false,
                 "pdb": null,
                 "useRotAxis": false
             },
             "Sphere_radius_50": {
-                "overwrite_nbMol_value": 15,
                 "nbJitter": 20,
                 "molarity": 0,
                 "partners_position": [],
@@ -234,12 +229,10 @@
                     ]
                 ],
                 "proba_not_binding": 0.5,
-                "use_mesh_rb": false,
                 "pdb": null,
                 "useRotAxis": false
             },
             "Sphere_radius_25p": {
-                "overwrite_nbMol_value": 40,
                 "nbJitter": 20,
                 "molarity": 0,
                 "partners_position": [],
@@ -300,12 +293,10 @@
                     ]
                 ],
                 "proba_not_binding": 0.5,
-                "use_mesh_rb": false,
                 "pdb": null,
                 "useRotAxis": false
             },
             "Sphere_radius_25r": {
-                "overwrite_nbMol_value": 40,
                 "nbJitter": 20,
                 "molarity": 0,
                 "partners_position": [],
@@ -366,7 +357,6 @@
                     ]
                 ],
                 "proba_not_binding": 0.5,
-                "use_mesh_rb": false,
                 "pdb": null,
                 "useRotAxis": false
             }
