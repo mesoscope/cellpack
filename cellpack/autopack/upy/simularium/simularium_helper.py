@@ -739,47 +739,6 @@ class simulariumHelper(hostHelper.Helper):
             return
         self.updatePoly(obj, faces=faces, vertices=vertices)
 
-    def createsNmesh(
-        self,
-        name,
-        vertices,
-        vnormals,
-        faces,
-        smooth=False,
-        material=None,
-        proxyCol=False,
-        color=[
-            [1, 1, 1],
-        ],
-        **kw,
-    ):
-        """
-        This is the main function that create a polygonal mesh.
-
-        @type  name: string
-        @param name: name of the pointCloud
-        @type  vertices: array
-        @param vertices: list of x,y,z vertices points
-        @type  vnormals: array
-        @param vnormals: list of x,y,z vertex normals vector
-        @type  faces: array
-        @param faces: list of i,j,k indice of vertex by face
-        @type  smooth: boolean
-        @param smooth: smooth the mesh
-        @type  material: hostApp obj
-        @param material: material to apply to the mesh
-        @type  proxyCol: booelan
-        @param proxyCol: do we need a special object for color by vertex (ie C4D)
-        @type  color: array
-        @param color: r,g,b value to color the mesh
-
-        @rtype:   hostApp obj
-        @return:  the polygon object
-        """
-        mesh = trimesh.Trimesh(vertices=vertices, faces=faces)
-        self.add_instance(name, None, name, mesh=mesh)
-        return [mesh, mesh]
-
     def instancePolygon(self, name, matrices=None, mesh=None, parent=None, **kw):
         return None
 
@@ -1134,74 +1093,6 @@ class simulariumHelper(hostHelper.Helper):
                 matd.prop[matd.AMBI] = mat.effect.ambient[0:3]
         return onode, mesh
 
-    def buildGeometries(self, col):
-        dicgeoms = {}
-        geoms = col.geometries
-        meshDic = {}
-        for g in geoms:
-            meshDic[g.id] = {}
-            dicgeoms[g.id] = {}
-            dicgeoms[g.id]["geom"] = g
-            dicgeoms[g.id]["id"] = g.id
-            v, vn, f = self.decomposeColladaGeom(g, col)
-            if self.nogui:
-                # apply transformation from boundGeom
-                dicgeoms[g.id]["node"] = None
-                dicgeoms[g.id]["mesh"] = v, vn, f
-                mat = self.getColladaMaterial(g, col)
-                # print ("mat type is ",type(mat),mat, mat is not None, type(mat) is not type(None))
-                if mat is not None:
-                    dicgeoms[g.id]["color"] = mat.effect.diffuse[0:3]
-            else:
-                onode, mesh = self.oneColladaGeom(g, col)
-                dicgeoms[g.id]["node"] = onode
-                dicgeoms[g.id]["mesh"] = mesh
-            meshDic[g.id]["mesh"] = v, vn, f
-            dicgeoms[g.id]["instances"] = []
-            dicgeoms[g.id]["parentmesh"] = None
-        return dicgeoms, meshDic
-
-    def read_mesh_file(self, filename, **kw):
-        fileName, fileExtension = os.path.splitext(filename)
-
-        if fileExtension == ".dae":
-            daeDic = None
-            col = collada.Collada(filename)  # , ignore=[collada.DaeUnsupportedError,
-            # collada.DaeBrokenRefError])
-            dicgeoms, daeDic = self.buildGeometries(col)
-            boundgeoms = list(col.scene.objects("geometry"))
-            for bg in boundgeoms:
-                if bg.original.id in dicgeoms:
-                    node = dicgeoms[bg.original.id]["node"]
-                    dicgeoms[bg.original.id]["instances"].append(bg.matrix)
-            if self.nogui:
-                return dicgeoms
-
-            # for each nodein the scene creae an empty
-            # for each primtive in the scene create an indeedPolygins-
-            uniq = False
-            if len(col.scene.nodes) == 1:
-                uniq = True
-            for i, node in enumerate(col.scene.nodes):
-                # node,i,col,nodexml,parentxml=None,parent=None,dicgeoms=None
-                dicgeoms = self.nodeToGeom(
-                    node,
-                    i,
-                    col,
-                    col.scene.xmlnode[i],
-                    parentxml=None,
-                    dicgeoms=dicgeoms,
-                    uniq=uniq,
-                )
-            for g in dicgeoms:
-                node = dicgeoms[g]["node"]
-                i = dicgeoms[g]["instances"]
-                if len(i):
-                    if dicgeoms[g]["parentmesh"] is not None:
-                        self.reParent(node, dicgeoms[g]["parentmesh"])
-                        node.Set(instanceMatrices=i)
-            return boundgeoms, dicgeoms, col, daeDic
-
     def write(self, listObj, **kw):
         pass
 
@@ -1305,7 +1196,7 @@ class simulariumHelper(hostHelper.Helper):
         )
         TrajectoryConverter(converted_data).write_JSON(file_name)
 
-    def raycast(self, obj, point, direction, length, **kw):
+    def raycast(self, **kw):
         intersect = False
         if "count" in kw:
             return intersect, 0

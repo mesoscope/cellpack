@@ -46,6 +46,7 @@ requirements = [
     "simulariumio>=1.2.0",
     "plotly>=5.3.1",
     "pycollada==0.7.2",
+    "pyembree==0.2.11",
     "pymunk>=6.2.0",
     "trimesh>=3.9.34",
 ]

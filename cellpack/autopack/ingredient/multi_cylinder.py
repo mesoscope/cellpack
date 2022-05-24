@@ -158,23 +158,9 @@ class MultiCylindersIngr(Ingredient):
             d = numpy.array(bb[1]) - numpy.array(bb[0])
             s = numpy.sum(d * d)
             self.length = math.sqrt(s)  # diagonal
-        # if self.mesh is None and autopack.helper is not None :
-        #            #build a cylinder and make it length uLength, radius radii[0]
-        #            self.mesh = autopack.helper.Cylinder(self.name+"_basic",radius=self.radii[0][0],
-        #                                       length=self.uLength,parent="autopackHider")[0]
+
+    def initialize_mesh(self, mesh_store):
         if self.mesh is None and autopack.helper is not None:
-            p = None
-            if not autopack.helper.nogui:
-                # build a cylinder and make it length uLength, radius radii[0]
-                # this mesh is used bu RAPID for collision
-                p = autopack.helper.getObject("autopackHider")
-                if p is None:
-                    p = autopack.helper.newEmpty("autopackHider")
-                    if autopack.helper.host.find("blender") == -1:
-                        autopack.helper.toggleDisplay(p, False)
-                        #                self.mesh = autopack.helper.Cylinder(self.name+"_basic",
-                        #                                radius=self.radii[0][0]*1.24, length=self.uLength,
-                        #                                res= 5, parent="autopackHider",axis="+X")[0]
             length = 1
             if self.positions2 is not None and self.positions is not None:
                 d = numpy.array(self.positions2[0][0]) - numpy.array(
@@ -190,11 +176,6 @@ class MultiCylindersIngr(Ingredient):
                 parent="autopackHider",
                 axis=self.principalVector,
             )[0]
-        # self.mesh = autopack.helper.oneCylinder(self.name+"_basic",
-        #                                self.positions[0][0],self.positions2[0][0],
-        #                                radius=self.radii[0][0]*1.24,
-        #                                parent = p,color=self.color)
-        #            self.getData()
 
     def get_cuttoff_value(self, spacing):
         """Returns the min value a grid point needs to be away from a surfance

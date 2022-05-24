@@ -89,6 +89,7 @@ class SingleSphereIngr(Ingredient):
             jitterMax=jitterMax,
             meshName=meshName,
             meshType=meshType,
+            meshObject=meshObject,
             molarity=molarity,
             name=name,
             nbJitter=nbJitter,
@@ -119,6 +120,7 @@ class SingleSphereIngr(Ingredient):
             name = "%5.2f_%f" % (radius, molarity)
         self.name = name
         self.singleSphere = True
+        self.mesh = None
         # min and max radius for a single sphere should be the same
         self.encapsulatingRadius = encapsulatingRadius or radius
     
@@ -215,3 +217,19 @@ class SingleSphereIngr(Ingredient):
         geom = OdeSphereGeom(self.ode_space, self.encapsulatingRadius)
         geom.setBody(body)
         return geom
+
+    def initialize_mesh(self, mesh_store):
+        if self.mesh is None:
+            self.mesh = mesh_store.create_sphere(
+                self.name + "_basic", 5, radius=self.radii[0][0]
+            )
+
+            self.getData()
+        # should do that for all ingredient type
+        # if self.representation is None and not hasattr(
+        #     self.mesh, "getFaces"
+        # ):  # this is not working with dejavu
+        #     # and should go in the graphics.
+        #     self.representation = autopack.helper.Icosahedron(
+        #         self.name + "_rep", radius=self.radii[0][0]
+        #     )[0]

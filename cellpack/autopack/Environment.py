@@ -66,7 +66,8 @@ from panda3d.core import Mat3, Mat4, Vec3, BitMask32, NodePath
 from panda3d.bullet import BulletRigidBodyNode
 
 import cellpack.autopack as autopack
-from .Compartment import CompartmentList
+from cellpack.autopack.MeshStore import MeshStore
+from .Compartment import CompartmentList, Compartment
 from .Recipe import Recipe
 from .ingredient import GrowIngredient, ActinIngredient
 from cellpack.autopack import IOutils
@@ -444,6 +445,7 @@ class Environment(CompartmentList):
         self.freePointsAfterFill = []
         self.nbFreePointsAfterFill = []
         self.distanceAfterFill = []
+        self.mesh_store = MeshStore()
         self.OPTIONS = {
             "smallestProteinSize": {
                 "name": "smallestProteinSize",
@@ -1374,6 +1376,41 @@ class Environment(CompartmentList):
                 filename=ref_obj, vertices=vertices, faces=faces, vnormals=vnormals
             )
 
+    def create_ingredient(self, **arguments):
+        ingredient_type = arguments["Type"]
+        if ingredient_type == "SingleSphere":
+            ingr = SingleSphereIngr(**arguments)
+        elif ingredient_type == "MultiSphere":
+            ingr = MultiSphereIngr(**arguments)
+        elif ingredient_type == "MultiCylinder":
+            ingr = MultiCylindersIngr(**arguments)
+        elif ingredient_type == "SingleCube":
+            ingr = SingleCubeIngr(**arguments)
+        elif ingredient_type == "Grow":
+            ingr = GrowIngredient(**arguments)
+        elif ingredient_type == "Actine":
+            ingr = ActinIngredient(**arguments)
+        if "gradient" in arguments and arguments["gradient"] != "" and arguments["gradient"] != "None":
+            ingr.gradient = arguments["gradient"]
+        if "results" in arguments:
+            ingr.results = arguments["results"]
+        ingr.initialize_mesh(self.mesh_store)
+        return ingr
+
+    def create_compartment(self, name, filename, gname, object_name, object_filename, meshType=None):
+        compartment = Compartment(
+            name,
+            None,
+            None,
+            None,
+            filename=filename,
+            gname=gname,
+            object_name=object_name,
+            object_filename=object_filename,
+        )
+        compartment.initialize_mesh(self.mesh_store)
+        return compartment
+
     def addCompartment(self, compartment):
         """
         Add the given compartment to the environment.
@@ -1525,18 +1562,17 @@ class Environment(CompartmentList):
         # thread ?
         for compartment in self.compartments:
             self.log.info(
-                "in Environment, compartment.isOrthogonalBoundingBox =",
-                compartment.isOrthogonalBoundingBox,
+                f"in Environment, compartment.isOrthogonalBoundingBox={compartment.isOrthogonalBoundingBox}"
             )
-            a, b = compartment.BuildGrid(self)  # return inside and surface point
-            aInteriorGrids.append(a)
-            aSurfaceGrids.append(b)
+            points_inside_compartments, points_on_compartment_surfaces = compartment.BuildGrid(self, self.mesh_store)  # return inside and surface point
+            aInteriorGrids.append(points_inside_compartments)
+            aSurfaceGrids.append(points_on_compartment_surfaces)
 
         self.grid.aInteriorGrids = aInteriorGrids
         self.grid.aSurfaceGrids = aSurfaceGrids
         self.log.info("I'm out of the loop and have build my grid with inside points")
         self.log.info(
-            "build Grids %r %d", self.innerGridMethod, len(self.grid.aSurfaceGrids)
+            f"build Grids {self.innerGridMethod}, {len(self.grid.aSurfaceGrids)}"
         )
 
     def buildGrid(
@@ -1596,9 +1632,6 @@ class Environment(CompartmentList):
             self.grid.reset()
             nbPoints = len(self.grid.freePoints)
             self.log.info("$$$$$$$$  reset the grid")
-        self.log.info(
-            "nbPoints = %d, grid.nbGridPoints = %d", nbPoints, self.grid.nbGridPoints
-        )
 
         if gridFileIn is not None:  # and not rebuild:
             self.log.warning("file in for building grid but it doesnt work well")
@@ -1669,23 +1702,23 @@ class Environment(CompartmentList):
         """
         aInteriorGrids = []
         aSurfaceGrids = []
-        a = []
-        b = []
+        points_inside_compartments = []
+        points_on_surfaces = []
         for compartment in self.compartments:
             print(
                 "in Environment, compartment.isOrthogonalBoundingBox =",
                 compartment.isOrthogonalBoundingBox,
             )
-            b = []
+            points_on_surfaces = []
             if compartment.isOrthogonalBoundingBox == 1:
                 self.EnviroOnly = True
                 print(
                     ">>>>>>>>>>>>>>>>>>>>>>>>> Not building a grid because I'm an Orthogonal Bounding Box"
                 )
-                a = self.grid.getPointsInCube(
+                points_inside_compartments = self.grid.getPointsInCube(
                     compartment.bb, None, None
                 )  # This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.
-                self.grid.gridPtId[a] = -compartment.number
+                self.grid.gridPtId[points_inside_compartments] = -compartment.number
                 compartment.surfacePointsCoords = None
                 bb0x, bb0y, bb0z = compartment.bb[0]
                 bb1x, bb1y, bb1z = compartment.bb[1]
@@ -1696,21 +1729,21 @@ class Environment(CompartmentList):
                     abs(AreaXplane) * 2 + abs(AreaYplane) * 2 + abs(AreaZplane) * 2
                 )
                 print("vSurfaceArea = ", vSurfaceArea)
-                compartment.insidePoints = a
-                compartment.surfacePoints = b
+                compartment.insidePoints = points_inside_compartments
+                compartment.surfacePoints = points_on_surfaces
                 compartment.surfacePointsCoords = []
                 compartment.surfacePointsNormals = []
                 print(
                     " %d inside pts, %d tot grid pts, %d master grid"
-                    % (len(a), len(a), len(self.grid.masterGridPositions))
+                    % (len(points_inside_compartments), len(points_inside_compartments), len(self.grid.masterGridPositions))
                 )
-                compartment.computeVolumeAndSetNbMol(self, b, a, areas=vSurfaceArea)
-                print("The size of the grid I build = ", len(a))
+                compartment.computeVolumeAndSetNbMol(self, points_on_surfaces, points_inside_compartments, areas=vSurfaceArea)
+                print("The size of the grid I build = ", len(points_inside_compartments))
             else:
-                a, b = compartment.BuildGrid(self)
+                points_inside_compartments, points_on_surfaces = compartment.BuildGrid(self)
 
-            aInteriorGrids.append(a)
-            aSurfaceGrids.append(b)
+            aInteriorGrids.append(points_inside_compartments)
+            aSurfaceGrids.append(points_on_surfaces)
 
         self.grid.aInteriorGrids = aInteriorGrids
         print("I'm out of the loop and have build my grid with inside points")
@@ -2438,9 +2471,7 @@ class Environment(CompartmentList):
             max_radius = self.get_dpad(current_ingr_compartment)
 
             self.log.info(
-                "picked Ingr radius compNum dpad %d %s %d",
-                ingr.minRadius,
-                current_ingr_compartment,
+                f"picked Ingr radius {ingr.minRadius}, compNum {current_ingr_compartment}"
             )
 
             # find the points that can be used for this ingredient
@@ -2617,8 +2648,9 @@ class Environment(CompartmentList):
             ingredients[ingr.name][1].append(pos)
             ingredients[ingr.name][2].append(rot)
             ingredients[ingr.name][3].append(numpy.array(mat))
-        for o in self.compartments:
-            for pos, rot, ingr, ptInd in o.molecules:
+        for compartment in self.compartments:
+            print(compartment.name, compartment.center, compartment.radius, compartment.printFillInfo())
+            for pos, rot, ingr, ptInd in compartment.molecules:
                 if ingr.name not in ingredients:
                     ingredients[ingr.name] = [ingr, [], [], []]
                 mat = rot.copy()
@@ -2679,7 +2711,6 @@ class Environment(CompartmentList):
             pos, rot, name, compNum, ptInd = elem
             # needto check the name if it got the comp rule
             ingr = self.getIngrFromName(name, compNum)
-            #            print ("inr,name,compNum",ingr.name,name,compNum)
             if ingr is not None:
                 molecules.append([pos, numpy.array(rot), ingr, ptInd])
                 if name not in ingredients:
@@ -2702,7 +2733,6 @@ class Environment(CompartmentList):
                 for elem in orgaresult[i]:
                     pos, rot, name, compNum, ptInd = elem
                     ingr = self.getIngrFromName(name, compNum)
-                    # print ("inr,name,compNum",name,compNum,i,o.name,ingr)
                     if ingr is not None:
                         molecules.append([pos, numpy.array(rot), ingr, ptInd])
                         if name not in ingredients:
@@ -2899,7 +2929,6 @@ class Environment(CompartmentList):
                     iresults, ingrname, ingrcompNum, ptInd, rad = self.getOneIngrJson(
                         ingr, self.result_json["exteriorRecipe"][name_ingr]
                     )
-                    #                    print ("rlen ",len(iresults),name_ingr)
                     ingr.results = []
                     for r in iresults:
                         rot = numpy.array(r[1]).reshape(
@@ -2946,7 +2975,6 @@ class Environment(CompartmentList):
                             ingr,
                             self.result_json[orga.name + "_surfaceRecipe"][name_ingr],
                         )
-                        #                        print ("rlen ",len(iresults),name_ingr)
                         ingr.results = []
                         for r in iresults:
                             rot = numpy.array(r[1]).reshape(
@@ -2989,7 +3017,6 @@ class Environment(CompartmentList):
                             ingr,
                             self.result_json[orga.name + "_innerRecipe"][name_ingr],
                         )
-                        #                        print ("rlen ",len(iresults),name_ingr)
                         ingr.results = []
                         for r in iresults:
                             rot = numpy.array(r[1]).reshape(
@@ -3013,7 +3040,6 @@ class Environment(CompartmentList):
         adic["compNum"] = ingr.compNum
         adic["encapsulatingRadius"] = float(ingr.encapsulatingRadius)
         adic["results"] = []
-        #        print ("dropi ",ingr.name,len(ingr.results))
         for r in ingr.results:
             if hasattr(r[0], "tolist"):
                 r[0] = r[0].tolist()
