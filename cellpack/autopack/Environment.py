@@ -1421,8 +1421,8 @@ class Environment(CompartmentList):
 
         fits, bb = compartment.inBox(self.boundingBox)
 
-        if not fits:
-            self.boundingBox = bb
+        # if not fits:
+        #     self.boundingBox = bb
         CompartmentList.addCompartment(self, compartment)
 
     def getPointCompartmentId(self, point, ray=3):
@@ -2043,7 +2043,7 @@ class Environment(CompartmentList):
         if r:
             for ingr in r.ingredients:
                 ingr.counter = 0  # counter of placed molecules
-                if ingr.nbMol > 0:  # I DONT GET IT !
+                if ingr.left_to_place > 0:  # I DONT GET IT !
                     ingr.completion = 0.0
                     allIngredients.append(ingr)
                 else:
@@ -2056,7 +2056,7 @@ class Environment(CompartmentList):
             if r:
                 for ingr in r.ingredients:
                     ingr.counter = 0  # counter of placed molecules
-                    if ingr.nbMol > 0:
+                    if ingr.left_to_place > 0:
                         ingr.completion = 0.0
                         allIngredients.append(ingr)
                     else:
@@ -2066,8 +2066,7 @@ class Environment(CompartmentList):
             if r:
                 for ingr in r.ingredients:
                     ingr.counter = 0  # counter of placed molecules
-                    #                    print "nbMol",ingr.nbMol
-                    if ingr.nbMol > 0:
+                    if ingr.left_to_place > 0:
                         ingr.completion = 0.0
                         allIngredients.append(ingr)
                     else:
@@ -2274,9 +2273,9 @@ class Environment(CompartmentList):
         totalNbIngr = 0
         for ingr in allIngredients:
             if ingr.Type == "Grow":
-                totalNbIngr += int(ingr.nbMol * (ingr.length / ingr.uLength))
+                totalNbIngr += int(ingr.left_to_place * (ingr.length / ingr.uLength))
             else:
-                totalNbIngr += ingr.nbMol
+                totalNbIngr += ingr.left_to_place
             if update_partner:
                 self.set_partners_ingredient(ingr)
         return totalNbIngr
@@ -2387,18 +2386,18 @@ class Environment(CompartmentList):
         self.totalNbIngr = self.getTotalNbObject(allIngredients, update_partner=True)
         if len(self.thresholdPriorities) == 0:
             for ingr in allIngredients:
-                totalNumMols += ingr.nbMol
+                totalNumMols += ingr.left_to_place
             self.log.info("totalNumMols pack_grid if = %d", totalNumMols)
         else:
             for threshProb in self.thresholdPriorities:
                 nameMe = self.activeIngr[nls]
-                totalNumMols += nameMe.nbMol
+                totalNumMols += nameMe.left_to_place
                 self.log.info(
                     "threshprop pack_grid else is %f for ingredient: %s %s %d",
                     threshProb,
                     nameMe,
                     nameMe.name,
-                    nameMe.nbMol,
+                    nameMe.left_to_place,
                 )
                 self.log.info("totalNumMols pack_grid else = %d", totalNumMols)
                 nls += 1
@@ -2477,21 +2476,22 @@ class Environment(CompartmentList):
             # find the points that can be used for this ingredient
             ##
 
-            res = self.getPointToDrop(
-                ingr,
-                freePoints,
-                nbFreePoints,
-                distances,
-                spacing,
-                compartment_ids,
-                vRangeStart,
-                vThreshStart,
-            )  # (Bool, ptInd)
             if ingr.compNum > 0:
                 allSrfpts = list(
                     self.compartments[ingr.compNum - 1].surfacePointsNormals.keys()
                 )
                 res = [True, allSrfpts[int(random() * len(allSrfpts))]]
+            else:
+                res = self.getPointToDrop(
+                    ingr,
+                    freePoints,
+                    nbFreePoints,
+                    distances,
+                    spacing,
+                    compartment_ids,
+                    vRangeStart,
+                    vThreshStart,
+                )  # (Bool, ptInd)
             if res[0]:
                 ptInd = res[1]
                 if ptInd > len(distances):

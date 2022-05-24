@@ -72,8 +72,10 @@ class SingleSphereIngr(Ingredient):
         weight=0.2,  # use for affinity ie partner.weight
     ):
         # called through inheritance
-        radii = radii if Type == "MultiSphere" else [[radius]]
-        positions = positions if Type == "MultiSphere" else [[position]]
+        if radii is None and radius is not None:
+            radii = [[radius]]
+        if positions is None and position is not None:
+            positions = [[position]]
         super().__init__(
             Type=Type,
             color=color,

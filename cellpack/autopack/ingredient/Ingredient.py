@@ -384,6 +384,7 @@ class Ingredient(Agent):
         # will be set when recipe is added to HistoVol
         # added to a compartment
         self.nbMol = nbMol
+        self.left_to_place = nbMol
         self.vol_nbmol = 0
 
         # Packing tracking values
@@ -502,7 +503,7 @@ class Ingredient(Agent):
     def reset(self):
         """reset the states of an ingredient"""
         self.counter = 0
-        self.nbMol = 0
+        self.left_to_place = 0.0
         self.completion = 0.0
 
     def setTilling(self, comp):
@@ -1012,11 +1013,10 @@ class Ingredient(Agent):
                 # Only return points that aren't so close to a surface that we know the
                 # ingredient won't fit
                 for i in range(array_length):
-                    pt = starting_array[i]
-                    d = distances[pt]
-                    if comp_ids[pt] == current_comp_id and d >= cuttoff:
-                        allIngrPts.append(pt)
-
+                    pt_index = starting_array[i]
+                    d = distances[pt_index]
+                    if comp_ids[pt_index] == current_comp_id and d >= cuttoff:
+                        allIngrPts.append(pt_index)
                 self.allIngrPts = allIngrPts
             else:
                 if len(self.allIngrPts) > 0:
@@ -1992,7 +1992,7 @@ class Ingredient(Agent):
             self.log.info("drop next hexa %s", nexthexa.name)
         # add one to molecule counter for this ingredient
         self.counter += 1
-        self.completion = float(self.counter) / float(self.nbMol)
+        self.completion = float(self.counter) / float(self.left_to_place)
         self.rejectionCounter = 0
         self.update_data_tree(dropped_position, dropped_rotation, grid_point_index)
 

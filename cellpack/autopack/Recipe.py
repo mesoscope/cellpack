@@ -135,20 +135,16 @@ class Recipe:
             # specific for M (mol / L) in a volume in Angstrom
             #            nbr = ingr.molarity * (volume/10e6) * 1000 * 0.000602
             #            nbi = int(nbr)              #Mod by Graham 8/18/11
-            nbr = ingr.molarity * 0.0006022 * volume
-            nbi = int(nbr)  # Mod by Graham 8/18/11
-            if nbi == 0:
-                nbmod = nbr
-            else:
-                nbmod = nbr % nbi  # Mod by Graham 8/18/11
-            randval = random()  # Mod by Graham 8/18/11
-            if nbmod >= randval:  # Mod by Graham 8/18/11
-                nbi = int(nbi + 1)  # Mod by Graham 8/18/11
-            nb = nbi  # Mod by Graham 8/18/11
+            num_to_place_float = ingr.molarity * 0.0006022 * volume
+            num_to_place_int = int(num_to_place_float)  # Mod by Graham 8/18/11
 
-            ingr.vol_nbmol = ingr.nbMol = nb + ingr.nbMol
+            randval = random()
+            if num_to_place_int == 0 and num_to_place_float >= randval:  # Mod by Graham 8/18/11
+                num_to_place_int = 1
 
-            if ingr.nbMol == 0:
+            ingr.vol_nbmol = ingr.left_to_place = num_to_place_int + ingr.nbMol
+            print(ingr.name, ingr.nbMol)
+            if ingr.left_to_place == 0:
                 self.log.warning(
                     "WARNING GRAHAM: recipe ingredient %s has 0 molecules as target",
                     ingr.name,
@@ -185,5 +181,5 @@ class Recipe:
             print(
                 indent
                 + "ingr: %s target: %3d placed %3d %s"
-                % (ingr.pdb, ingr.nbMol, ingr.counter, ingr.name)
+                % (ingr.pdb, ingr.left_to_place, ingr.counter, ingr.name)
             )

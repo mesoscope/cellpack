@@ -1256,7 +1256,7 @@ class GrowIngredient(MultiCylindersIngr):
                                 numpy.array(pt2).flatten(), newPt, alternate
                             )
                             start_ingr.start_positions.append([newPts[0], newPts[1]])
-                            start_ingr.nbMol += 1
+                            start_ingr.left_to_place += 1
                             # add a mol
                         # we need to store
                         self.alternate_interval = 0
@@ -1786,7 +1786,7 @@ class GrowIngredient(MultiCylindersIngr):
                         + " "
                         + str(self.nbCurve)
                         + "/"
-                        + str(self.nbMol),
+                        + str(self.left_to_place),
                     )
                 else:
                     autopack.helper.progressBar(
@@ -1796,7 +1796,7 @@ class GrowIngredient(MultiCylindersIngr):
                         + " "
                         + str(self.nbCurve)
                         + "/"
-                        + str(self.nbMol),
+                        + str(self.left_to_place),
                     )
 
                     # Start Graham on 5/16/12 This progress bar doesn't work properly... compare with my version in HistoVol
@@ -2065,8 +2065,8 @@ class GrowIngredient(MultiCylindersIngr):
         self.listePtCurve.append(listePtCurve)
         self.listePtLinear.append(listePtLinear)
         self.nbCurve += 1
-        self.completion = float(self.nbCurve) / float(self.nbMol)
-        self.log.info("completion %r %r %r", self.completion, self.nbCurve, self.nbMol)
+        self.completion = float(self.nbCurve) / float(self.left_to_place)
+        self.log.info("completion %r %r %r", self.completion, self.nbCurve, self.left_to_place)
         return success, jtrans, rotMatj, insidePoints, newDistPoints
 
     def prepare_alternates(

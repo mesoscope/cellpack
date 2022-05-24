@@ -483,7 +483,6 @@ def addCompartments(env, compdic, i, io_ingr):
             else:
                 rep = None
                 rep_file = None
-                print("NONENE")
             print("add compartment ", name, geom, rep, rep_file)
             compartment = env.create_compartment(name, geom, str(comp_dic["name"]), rep, rep_file)
             # need to transform the v,f,n to the new rotation and position

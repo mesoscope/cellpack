@@ -149,7 +149,7 @@ class Compartment(CompartmentList):
         super().__init__()
         gname = gname or name
         self.name = name
-        self.center = None
+        self.center = [0, 0, 0]
         self.vertices = vertices
         self.faces = faces
         self.vnormals = vnormals
@@ -1044,9 +1044,7 @@ class Compartment(CompartmentList):
         insidePoints = []
 
         number = self.number
-        print("number", self.number)
         # now check if point inside
-        # the main loop
         inside = mesh_store.contains_points(self.gname, grdPos)
         for index in range(len(inside)):
             if inside[index]:
@@ -1274,7 +1272,6 @@ class Compartment(CompartmentList):
     def BuildGrid_pyray(
         self, env, ctree, distances, grdPos, diag, vSurfaceArea, srfPts, idarray, ray=1
     ):
-        """Build the compartment grid ie surface and inside point using bhtree"""
 
         if self.isBox:
             nbGridPoints = len(env.grid.masterGridPositions)

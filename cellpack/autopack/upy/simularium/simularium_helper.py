@@ -362,6 +362,9 @@ class simulariumHelper(hostHelper.Helper):
         url = ""
         if ingredient.Type == "SingleCube":
             display_type = "CUBE"
+        elif ingredient.Type == "SingleSphere":
+            display_type = DISPLAY_TYPE.SPHERE
+
         elif ingredient.Type == "Grow" or ingredient.Type == "MultiCylinder":
             display_type = DISPLAY_TYPE.FIBER
         else:
@@ -1105,6 +1108,7 @@ class simulariumHelper(hostHelper.Helper):
         x_size = bb[1][0] - bb[0][0]
         y_size = bb[1][1] - bb[0][1]
         z_size = bb[1][2] - bb[0][2]
+        box_adjustment = np.array(bb[0]) + np.array(bb[1])
         box_size = [
             x_size * self.scale_factor,
             y_size * self.scale_factor,
@@ -1158,9 +1162,9 @@ class simulariumHelper(hostHelper.Helper):
                 else:
                     position = data_at_time["position"]
                     positions[t][n] = [
-                        position[0] * self.scale_factor - box_size[0] / 2,
-                        position[1] * self.scale_factor - box_size[1] / 2,
-                        position[2] * self.scale_factor - box_size[2] / 2,
+                        position[0] * self.scale_factor - box_adjustment[0] / 2,
+                        position[1] * self.scale_factor - box_adjustment[1] / 2,
+                        position[2] * self.scale_factor - box_adjustment[2] / 2,
                     ]
                     rotation = data_at_time["rotation"]
                     rotations[t][n] = rotation
