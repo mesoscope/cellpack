@@ -1174,7 +1174,7 @@ class Ingredient(Agent):
     def isInGoodComp(self, pId, nbs=None):
         # cID ie [-2,-1,-2,0...], ptsinsph = [519,300,etc]
         current = self.compNum
-        cId = self.env.grid.gridPtId[pId]
+        cId = self.env.grid.compartment_ids[pId]
         if current <= 0:  # inside
             if current != cId:
                 return False
@@ -1198,7 +1198,7 @@ class Ingredient(Agent):
         trigger = False
         if self.compareCompartment:
             cId = numpy.take(
-                self.env.grid.gridPtId, ptsInSphere, 0
+                self.env.grid.compartment_ids, ptsInSphere, 0
             )  # shoud be the same ?
             if nbs is not None:
                 if self.compNum <= 0 and nbs != 0:
@@ -1385,7 +1385,6 @@ class Ingredient(Agent):
         # ptID = self.env.grid.getPointFrom3D(point)
         cID = self.env.getPointCompartmentId(point)  # offset ?
         # dist,ptID = self.env.grid.getClosestGridPoint(point)
-        # cID = self.env.grid.gridPtId[ptID]
         if self.compNum == 0:
             organelle = self.env
         else:

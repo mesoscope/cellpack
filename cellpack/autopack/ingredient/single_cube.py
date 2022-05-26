@@ -235,7 +235,7 @@ class SingleCubeIngr(Ingredient):
         jtrans,
         rotMat,
         gridPointsCoords,
-        histoVol,
+        env,
     ):
         """
         Check cube for collision
@@ -259,7 +259,7 @@ class SingleCubeIngr(Ingredient):
         x, y, z = posc
         bb = ([x - radt, y - radt, z - radt], [x + radt, y + radt, z + radt])
 
-        pointsInCube = histoVol.grid.getPointsInCube(bb, posc, radt)
+        pointsInCube = env.grid.getPointsInCube(bb, posc, radt)
 
         pd = numpy.take(gridPointsCoords, pointsInCube, 0) - center
         m = numpy.matrix(numpy.array(rotMat).reshape(4, 4))  #
@@ -270,7 +270,7 @@ class SingleCubeIngr(Ingredient):
         d = numpy.equal(c, 1.0)
         ptinside = numpy.nonzero(d)[0]
         ptinsideId = numpy.take(pointsInCube, ptinside, 0)
-        compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptinsideId, 0)
+        compIdsSphere = numpy.take(env.grid.compartment_ids, ptinsideId, 0)
         #        print "compId",compIdsSphere
         if self.compNum <= 0:
             wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]

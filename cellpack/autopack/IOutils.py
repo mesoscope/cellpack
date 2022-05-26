@@ -526,7 +526,7 @@ def addCompartments(env, compdic, i, io_ingr):
 
 def save_as_simularium(env, setupfile, all_ingr_as_array):
     autopack.helper.clear()
-    autopack.helper.init_scene_with_objects(all_ingr_as_array)
+    autopack.helper.init_scene_with_objects(all_ingr_as_array, env.grid.masterGridPositions, env.grid.compartment_ids)
     autopack.helper.writeToFile(None, f"{setupfile}_results", env.boundingBox)
     webbrowser.open("https://simularium.allencell.org/viewer")
 

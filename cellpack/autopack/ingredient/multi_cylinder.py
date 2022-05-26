@@ -227,7 +227,7 @@ class MultiCylindersIngr(Ingredient):
         rotMat,
         level,
         gridPointsCoords,
-        histoVol,
+        env,
     ):
         """
         Check cylinders for collision
@@ -249,7 +249,7 @@ class MultiCylindersIngr(Ingredient):
             radt = length + radc
 
             bb = self.correctBB(p1, p2, radc)
-            pointsInCube = histoVol.grid.getPointsInCube(bb, posc, radt, info=True)
+            pointsInCube = env.grid.getPointsInCube(bb, posc, radt, info=True)
 
             # check for collisions with cylinder
             pd = numpy.take(gridPointsCoords, pointsInCube, 0) - p1
@@ -263,7 +263,7 @@ class MultiCylindersIngr(Ingredient):
             )
 
             ptsInSphereId = numpy.take(pointsInCube, ptsWithinCaps[0], 0)
-            compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptsInSphereId, 0)
+            compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphereId, 0)
             if self.compNum <= 0:
                 wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
                 if len(wrongPt):
@@ -334,7 +334,7 @@ class MultiCylindersIngr(Ingredient):
         rotMat,
         gridPointsCoords,
         distance,
-        histoVol,
+        env,
         dpad,
     ):
         """
@@ -348,7 +348,7 @@ class MultiCylindersIngr(Ingredient):
 
         cylNum = 0
         for radc, p1, p2 in zip(radii, cent1T, cent2T):
-            if histoVol.runTimeDisplay > 1:
+            if env.runTimeDisplay > 1:
                 name = "cyl"
                 cyl = self.vi.getObject("cyl")
                 if cyl is None:
@@ -381,7 +381,7 @@ class MultiCylindersIngr(Ingredient):
 
             bb = self.correctBB(p1, p2, radc)
             #            bb = self.correctBB(posc,posc,radt)
-            if histoVol.runTimeDisplay > 1:
+            if env.runTimeDisplay > 1:
                 box = self.vi.getObject("collBox")
                 if box is None:
                     box = self.vi.Box("collBox", cornerPoints=bb, visible=1)
@@ -390,7 +390,7 @@ class MultiCylindersIngr(Ingredient):
                     self.vi.updateBox(box, cornerPoints=bb)
                     self.vi.update()
                     #                 sleep(1.0)
-            pointsInCube = histoVol.grid.getPointsInCube(bb, posc, radt, info=True)
+            pointsInCube = env.grid.getPointsInCube(bb, posc, radt, info=True)
 
             # check for collisions with cylinder
             pd = numpy.take(gridPointsCoords, pointsInCube, 0) - p1
@@ -408,7 +408,7 @@ class MultiCylindersIngr(Ingredient):
                 return False, insidePoints, newDistPoints
             if self.compareCompartment:
                 ptsInSphereId = numpy.take(pointsInCube, ptsWithinCaps[0], 0)
-                compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptsInSphereId, 0)
+                compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphereId, 0)
                 #                print "compId",compIdsSphere
                 if self.compNum <= 0:
                     wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]

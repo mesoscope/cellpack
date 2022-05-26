@@ -132,7 +132,7 @@ class SingleSphereIngr(Ingredient):
         rotMat,
         level,
         gridPointsCoords,
-        histoVol,
+        env,
     ):
         """
         Check spheres for collision
@@ -142,8 +142,8 @@ class SingleSphereIngr(Ingredient):
         radii = (self.radii[level],)
         centT = self.transformPoints(jtrans, rotMat, centers)  # this should be jtrans
         for radc, posc in zip(radii, centT):
-            ptsInSphere = histoVol.grid.getPointsInSphere(posc, radc[0])  # indices
-            compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptsInSphere, 0)
+            ptsInSphere = env.grid.getPointsInSphere(posc, radc[0])  # indices
+            compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphere, 0)
             if self.compNum <= 0:
                 wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
                 if len(wrongPt):

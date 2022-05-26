@@ -220,9 +220,9 @@ class Grid(BaseGrid):
     NOTE : this class could be completely replaced if openvdb is wrapped to python.
     """
 
-    def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=10.0):
+    def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=10.0, lookup=0):
         # a grid is attached to an environement
-        BaseGrid.__init__(self, boundingBox=boundingBox, space=space, setup=False)
+        BaseGrid.__init__(self, boundingBox=boundingBox, space=space, setup=False, lookup=lookup)
 
         self.gridSpacing = space * 1.1547
         self.encapsulatingGrid = 1
@@ -767,7 +767,7 @@ class Environment(CompartmentList):
         return IOutils.load_JsonString(self, astring)
 
     def save_result(
-        self, freePoints, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array
+        self, freePoints, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array, grid_point_compartment_ids
     ):
         self.grid.freePoints = freePoints[:]
         self.grid.distToClosestSurf = distances[:]
@@ -808,7 +808,7 @@ class Environment(CompartmentList):
                 unUsedPts = 0
                 vDistanceString = ""
                 insidepointindce = numpy.nonzero(
-                    numpy.equal(self.grid.gridPtId, -o.number)
+                    numpy.equal(self.grid.compartment_ids, -o.number)
                 )[0]
                 for i in insidepointindce:  # xrange(innerPointNum):
                     #                        pt = o.insidePoints[i] #fpts[i]
@@ -1197,22 +1197,20 @@ class Environment(CompartmentList):
         self.dynamicOptions["surface"]["rotMassClamp"] = 1
 
     def writeArraysToFile(self, f):
-        """write self.gridPtId and self.distToClosestSurf to file. (pickle)"""
+        """write self.compartment_ids and self.distToClosestSurf to file. (pickle)"""
         pickle.dump(self.grid.masterGridPositions, f)
-        pickle.dump(self.grid.gridPtId, f)
+        pickle.dump(self.grid.compartment_ids, f)
         pickle.dump(self.grid.distToClosestSurf, f)
 
     def readArraysFromFile(self, f):
-        """write self.gridPtId and self.distToClosestSurf to file. (pickle)"""
+        """write self.compartment_ids and self.distToClosestSurf to file. (pickle)"""
         pos = pickle.load(f)
         self.grid.masterGridPositions = pos
 
         id = pickle.load(f)
-        # assert len(id)==len(self.gridPtId)
-        self.grid.gridPtId = id
+        self.grid.compartment_ids = id
 
         dist = pickle.load(f)
-        # assert len(dist)==len(self.distToClosestSurf)
         self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
         if len(dist):
             self.grid.distToClosestSurf = dist  # grid+organelle+surf
@@ -1227,7 +1225,7 @@ class Environment(CompartmentList):
             print("gridfilename path problem", gridFileOut)
             return
         f = open(gridFileOut, "wb")  # 'w'
-        self.writeArraysToFile(f)  # save self.gridPtId and self.distToClosestSurf
+        self.writeArraysToFile(f)
 
         for compartment in self.compartments:
             compartment.saveGridToFile(f)
@@ -1266,7 +1264,7 @@ class Environment(CompartmentList):
         aInteriorGrids = []
         aSurfaceGrids = []
         f = open(gridFileName, "rb")
-        self.readArraysFromFile(f)  # read gridPtId and distToClosestSurf
+        self.readArraysFromFile(f) 
         for compartment in self.compartments:
             compartment.readGridFromFile(f)
             aInteriorGrids.append(compartment.insidePoints)
@@ -1429,7 +1427,7 @@ class Environment(CompartmentList):
         # check if point inside  of the compartments
         # closest grid point is
         d, pid = self.grid.getClosestGridPoint(point)
-        cid = self.grid.gridPtId[pid]
+        cid = self.grid.compartment_ids[pid]
         return cid
 
     def longestIngrdientName(self):
@@ -1718,7 +1716,7 @@ class Environment(CompartmentList):
                 points_inside_compartments = self.grid.getPointsInCube(
                     compartment.bb, None, None
                 )  # This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.
-                self.grid.gridPtId[points_inside_compartments] = -compartment.number
+                self.grid.compartment_ids[points_inside_compartments] = -compartment.number
                 compartment.surfacePointsCoords = None
                 bb0x, bb0y, bb0z = compartment.bb[0]
                 bb1x, bb1y, bb1z = compartment.bb[1]
@@ -1842,7 +1840,7 @@ class Environment(CompartmentList):
         """
         self.getPointsInCube = self.grid.getPointsInCube
         self.boundingBox = self.grid.boundingBox
-        self.gridPtId = self.grid.gridPtId
+        self.compartment_ids = self.grid.compartment_ids
         self.freePoints = self.grid.freePoints
         self.diag = self.grid.diag
         self.gridSpacing = self.grid.gridSpacing
@@ -1855,7 +1853,7 @@ class Environment(CompartmentList):
         self.aInteriorGrids = self.grid.aInteriorGrids
         self.aSurfaceGrids = self.grid.aSurfaceGrids
         self.surfPtsBht = self.grid.surfPtsBht
-        self.gridPtId = self.grid.gridPtId = numpy.array(self.grid.gridPtId, int)
+        self.compartment_ids = self.grid.compartment_ids = numpy.array(self.grid.compartment_ids, int)
 
     def getSortedActiveIngredients(self, allIngredients):
         """
@@ -2330,8 +2328,8 @@ class Environment(CompartmentList):
             bb_insidepoint = self.grid.getPointsInCube(self.fbox, [0, 0, 0], 1.0)[:]
             self.freePointMask[bb_insidepoint] = 0
             bb_outside = numpy.nonzero(self.freePointMask)
-            self.grid.gridPtId[bb_outside] = 99999
-        compartment_ids = self.grid.gridPtId
+            self.grid.compartment_ids[bb_outside] = 99999
+        compartment_ids = self.grid.compartment_ids
         # why a copy? --> can we split ?
         distances = self.grid.distToClosestSurf[:]
         spacing = self.smallestProteinSize

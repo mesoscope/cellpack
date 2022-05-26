@@ -556,7 +556,7 @@ class AutopackViewer:
             self.vi.toggleDisplay(p, True)
             if hasattr(self.histo, "distToClosestSurf"):
                 for i, value in enumerate(self.histo.distToClosestSurf):
-                    if self.histo.gridPtId[i] == 1:
+                    if self.histo.compartment_ids[i] == 1:
                         verts.append(self.histo.masterGridPositions[i])
                         labels.append("%.2f" % value)
                 lab = self.vi.Labels(
