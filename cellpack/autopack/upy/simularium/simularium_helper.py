@@ -2,6 +2,7 @@
 # standardmodule
 import os
 import numpy as np
+import trimesh
 
 from simulariumio import (
     TrajectoryConverter,
@@ -12,6 +13,7 @@ from simulariumio import (
     CameraData,
     DisplayData,
 )
+from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
 
 from cellpack.autopack.upy import (
@@ -21,14 +23,7 @@ import collada
 
 
 class Instance:
-    def __init__(
-        self,
-        name,
-        instance_id,
-        unique_id,
-        radius,
-        viz_type,
-    ):
+    def __init__(self, name, instance_id, unique_id, radius, viz_type, mesh=None):
         self.name = name
         self.radius = radius
         self.instance_id = instance_id
@@ -37,6 +32,7 @@ class Instance:
         self.is_static = False
         self.viz_type = viz_type
         self.time_mapping = {}
+        self.mesh = mesh
 
     def set_static(self, is_static, position=None, rotation=None, sub_points=None):
         self.is_static = is_static
@@ -58,7 +54,8 @@ class Instance:
                 "n_subpoints": len(sub_points),
             }
         else:
-            self.time_mapping[time_point] = {"position": position, "rotation": rotation}
+            euler = CellpackConverter._get_euler_from_matrix(rotation, HAND_TYPE.RIGHT)
+            self.time_mapping[time_point] = {"position": position, "rotation": euler}
 
     def increment_static(self, time_point):
         if self.is_static:
@@ -109,6 +106,10 @@ class simulariumHelper(hostHelper.Helper):
         self.nogui = True
         self.hext = "dae"
         self.max_fiber_length = 0
+
+    def clear(self):
+        self.scene = {}
+        self.time = -1
 
     def updateAppli(self, *args, **kw):
         return self.update(*args, **kw)
@@ -161,7 +162,7 @@ class simulariumHelper(hostHelper.Helper):
         return
 
     def update(self):
-        return
+        self.increment_time()
 
     def getType(self, object):
         return object.__module__
@@ -199,6 +200,10 @@ class simulariumHelper(hostHelper.Helper):
 
     def move_object(self, name, position=None, rotation=None, sub_points=None):
         self.increment_time()
+        obj = self.getObject(name)
+        obj.move(self.time, position, rotation, sub_points)
+
+    def place_object(self, name, position=None, rotation=None, sub_points=None):
         obj = self.getObject(name)
         obj.move(self.time, position, rotation, sub_points)
 
@@ -249,7 +254,7 @@ class simulariumHelper(hostHelper.Helper):
         instance.geom.Set(instanceMatrices=np.array(matrice))
         del instance
 
-    def add_new_instance(
+    def add_new_instance_and_update_time(
         self,
         name,
         ingredient,
@@ -272,6 +277,38 @@ class simulariumHelper(hostHelper.Helper):
         )
         self.scene[instance_id] = new_instance
         self.move_object(instance_id, position, rotation, sub_points)
+
+    def add_instance(
+        self,
+        name,
+        ingredient,
+        instance_id,
+        position=None,
+        rotation=None,
+        sub_points=None,
+        mesh=None,
+    ):
+        self.agent_id_counter += 1
+        if (ingredient and ingredient.Type == "Grow") or (
+            ingredient and ingredient.Type == "Actine"
+        ):
+            viz_type = VIZ_TYPE.FIBER
+        else:
+            viz_type = VIZ_TYPE.DEFAULT
+
+        radius = ingredient.encapsulatingRadius if ingredient is not None else 1
+        new_instance = Instance(
+            name,
+            instance_id,
+            self.agent_id_counter,
+            radius,
+            viz_type,
+            mesh,
+        )
+        self.scene[instance_id] = new_instance
+        if position is None and sub_points is None:
+            return
+        self.place_object(instance_id, position, rotation, sub_points)
 
     def setObjectMatrix(self, object, matrice, **kw):
         if "transpose" in kw and not hasattr(object, "isinstance"):
@@ -304,10 +341,41 @@ class simulariumHelper(hostHelper.Helper):
         self.display_data[ingredient.name] = DisplayData(
             name=ingredient.name, display_type=display_type
         )
-
-        self.add_new_instance(
+        if position is None and control_points is None:
+            return
+        self.add_new_instance_and_update_time(
             ingredient.name, ingredient, instance_id, position, rotation, control_points
         )
+
+    def update_instance_positions_and_rotations(
+        self,
+        objects,
+    ):
+        for position, rotation, ingredient, ptInd in objects:
+            instance_id = f"{ingredient.name}-{ptInd}"
+            self.place_object(instance_id, position, rotation)
+
+    def init_scene_with_objects(
+        self,
+        objects,
+    ):
+        self.time = 0
+        for position, rotation, ingredient, ptInd in objects:
+            ingr_name = ingredient.name
+            display_type = DISPLAY_TYPE.SPHERE
+            if ingredient.Type == "SingleCube":
+                display_type = "CUBE"
+            self.display_data[ingredient.name] = DisplayData(
+                name=ingredient.name, display_type=display_type
+            )
+            self.add_instance(
+                ingredient.name,
+                ingredient,
+                f"{ingr_name}-{ptInd}",
+                position,
+                rotation,
+                None,
+            )
 
     def addCameraToScene(self):
         pass
@@ -344,7 +412,8 @@ class simulariumHelper(hostHelper.Helper):
         return None
 
     def getTranslation(self, name):
-        return self.getObject(name).translation  # or getCumulatedTranslation
+
+        return self.getObject(name).mesh.centroid  # or getCumulatedTranslation
 
     def setTranslation(self, name, pos=[0.0, 0.0, 0.0]):
         self.getObject(name).SetTranslation(self.FromVec(pos))
@@ -669,23 +738,9 @@ class simulariumHelper(hostHelper.Helper):
         @rtype:   hostApp obj
         @return:  the polygon object
         """
-        # shading = "flat"
-        # if smooth:
-        #     shading = "smooth"
-        # PDBgeometry = IndexedPolygons(
-        #     name,
-        #     vertices=vertices,
-        #     faces=faces,
-        #     vnormals=vnormals,
-        #     materials=color,
-        #     shading=shading,
-        # )
-        # parent = None
-        # if "parent" in kw:
-        #     parent = kw["parent"]
-        # self.addObjectToScene(None, PDBgeometry, parent=parent)
-        # return [PDBgeometry, PDBgeometry]
-        return [None, None]
+        mesh = trimesh.Trimesh(vertices=vertices, faces=faces)
+        self.add_instance(name, None, name, mesh=mesh)
+        return [mesh, mesh]
 
     def instancePolygon(self, name, matrices=None, mesh=None, parent=None, **kw):
         return None
@@ -801,30 +856,9 @@ class simulariumHelper(hostHelper.Helper):
             return obj, True
 
     def DecomposeMesh(self, poly, edit=True, copy=True, tri=True, transform=True):
-        # get infos
-        # if not isinstance(poly, IndexedPolygons):
-        #     if isinstance(poly, Cylinders):
-        #         poly = poly.asIndexedPolygons()
-        #     elif isinstance(poly, Geom):
-        #         # getfirst child mesh recursively
-        #         child = self.getChilds(poly)
-        #         if len(child):
-        #             poly, isit = self.isIndexedPolyon(poly)
-        #         elif isinstance(poly, Cylinders):
-        #             poly = poly.asIndexedPolygons()
-        #         else:
-        #             return [], [], []
-        #     else:
-        #         return [], [], []
-        # faces = poly.getFaces()
-        # vertices = poly.getVertices()
-        # vnormals = poly.getVNormals()
-        # if transform and not self.nogui:
-        #     mat = poly.GetMatrix(poly.LastParentBeforeRoot())
-        #     vertices = self.ApplyMatrix(vertices, mat)
-        # return faces, vertices, vnormals
-
-        return [], [], []
+        if not isinstance(poly, trimesh.Trimesh):
+            return [], [], []
+        return poly.faces, poly.vertices, poly.vertex_normals
 
     def changeColorO(self, object, colors):
         object.Set(materials=colors)
@@ -1118,7 +1152,7 @@ class simulariumHelper(hostHelper.Helper):
 
     def writeToFile(self, polygon, file_name, bb):
         """
-        Write to simuarium file
+        Write to simularium file
         """
         total_steps = self.time + 1
         max_number_agents = len(self.scene)
@@ -1155,7 +1189,7 @@ class simulariumHelper(hostHelper.Helper):
             for x in range(max_number_agents)
             for x in range(total_steps)
         ]
-        for t in range(self.time):
+        for t in range(total_steps):
             n = 0
             for name in self.scene:
                 obj = self.scene[name]
@@ -1167,7 +1201,7 @@ class simulariumHelper(hostHelper.Helper):
                 type_names[t][n] = obj.name
                 unique_ids[t][n] = obj.id
                 radii[t][n] = obj.radius * self.scale_factor
-                if obj.viz_type == 1001:
+                if obj.viz_type == VIZ_TYPE.FIBER:
                     curve = data_at_time["sub_points"]
                     viz_types[t][n] = obj.viz_type
                     positions[t][n] = [0, 0, 0]
@@ -1182,14 +1216,13 @@ class simulariumHelper(hostHelper.Helper):
                         position[1] * self.scale_factor - box_size[1] / 2,
                         position[2] * self.scale_factor - box_size[2] / 2,
                     ]
-                    rotation = [0, 0, 0]
+                    rotation = data_at_time["rotation"]
                     rotations[t][n] = rotation
                     viz_types[t][n] = obj.viz_type
                     n_subpoints[t][n] = 0
                 n += 1
 
         camera_z_position = box_size[2] if box_size[2] > 10 else 100.0
-
         converted_data = TrajectoryData(
             meta_data=MetaData(
                 box_size=np.array(box_size),

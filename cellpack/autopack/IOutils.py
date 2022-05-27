@@ -2118,4 +2118,3 @@ def setupFromJsonDic(
     # restore env.molecules if any resuylt was loaded
     env.loopThroughIngr(env.restore_molecules_array)
 
-

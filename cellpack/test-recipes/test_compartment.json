@@ -57,7 +57,6 @@
                 },
                 "nbMol": 10,
                 "molarity": 0,
-                "molecularweight": 0,
                 "meshFile": {
                     "verts": [
                         5.875770568847656,
@@ -9377,7 +9376,6 @@
                     0,
                     0
                 ],
-                "label": "protein_label",
                 "Type": "MultiSphere",
                 "positions": [
                     {
@@ -9438,7 +9436,6 @@
                         },
                         "nbMol": 10,
                         "molarity": 0,
-                        "molecularweight": 0,
                         "meshFile": {
                             "verts": [
                                 -51.43170166015625,
@@ -21326,7 +21323,6 @@
                             9.68e-16,
                             -15
                         ],
-                        "label": "protein_label",
                         "Type": "MultiSphere",
                         "positions": [
                             {
@@ -21397,7 +21393,6 @@
                         },
                         "nbMol": 10,
                         "molarity": 0,
-                        "molecularweight": 0,
                         "meshFile": {
                             "verts": [
                                 -56.77115249633789,
@@ -31077,7 +31072,6 @@
                             0,
                             0
                         ],
-                        "label": "protein_label",
                         "Type": "MultiSphere",
                         "positions": [
                             {

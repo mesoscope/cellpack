@@ -123,7 +123,19 @@ class SingleCubeIngr(Ingredient):
             positions_ar + (positions2_ar - positions_ar) / 2
         )  # location of center based on corner points
 
+        d = radii[0] / 2.0
+
         self.radii = radii
+        self.vertices = [
+            [-d, -d, -d],  # [x0, y0, z0],
+            [d, -d, -d],  # [x1, y0, z0],
+            [d, d, -d],  # [x1, y1, z0],
+            [-d, d, -d],  # [x0, y1, z0],
+            [-d, d, d],  # [x0, y1, z1],
+            [d, d, d],  # [x1, y1, z1],
+            [d, -d, d],  # [x1, y0, z1],
+            [-d, -d, d],  # [x0, y0, z1],
+        ]
 
     def collision_jitter(
         self,
@@ -172,38 +184,40 @@ class SingleCubeIngr(Ingredient):
             bb, center_trans, search_radius
         )  # indices of all grid points within padded distance from cube center
 
-        grid_point_vectors = (
-            numpy.take(gridPointsCoords, points_to_check, 0) - center_trans
-        )  # vectors joining center of cube with grid points
-        grid_point_distances = numpy.linalg.norm(
-            grid_point_vectors, axis=1
-        )  # distances of grid points from packing location
+        grid_point_vectors = numpy.take(gridPointsCoords, points_to_check, 0)
+
+        # signed distances of grid points from the cube surface
+        grid_point_distances = []
+        for grid_point in grid_point_vectors:
+            grid_point_distance = self.get_signed_distance(
+                center_trans,
+                grid_point,
+                rotMat,
+            )
+            grid_point_distances.append(grid_point_distance)
 
         for pti in range(len(points_to_check)):
             # pti = point index
 
             grid_point_index = points_to_check[pti]
-
-            if grid_point_index in insidePoints:
-                continue
+            signed_distance_to_cube_surface = grid_point_distances[pti]
 
             collision = (
-                grid_point_distances[pti] + current_grid_distances[grid_point_index]
-                <= self.encapsulatingRadius
+                signed_distance_to_cube_surface
+                + current_grid_distances[grid_point_index]
+                <= 0
             )
 
             if collision:
                 self.log.info("grid point already occupied %f", grid_point_index)
                 return True, {}, {}
 
-            # currently calculates distance from surface of encapsulating sphere
-            # should be updated to distance from cube surface
-            signed_distance_to_cube_surface = (
-                grid_point_distances[pti] - self.encapsulatingRadius
-            )
+            # check if grid point lies inside the cube
             if signed_distance_to_cube_surface <= 0:
-                # check if grid point lies inside the cube
-                insidePoints[grid_point_index] = signed_distance_to_cube_surface
+                if grid_point_index not in insidePoints or abs(
+                    signed_distance_to_cube_surface
+                ) < abs(insidePoints[grid_point_index]):
+                    insidePoints[grid_point_index] = signed_distance_to_cube_surface
             elif (
                 signed_distance_to_cube_surface
                 <= current_grid_distances[grid_point_index]
@@ -287,7 +301,7 @@ class SingleCubeIngr(Ingredient):
         vx, vy, vz = (x2 - x1, y2 - y1, z2 - z1)
         lengthsq = vx * vx + vy * vy + vz * vz
         length = sqrt(lengthsq)
-        cx, cy, cz = posc = center  # x1+vx*.5, y1+vy*.5, z1+vz*.5
+        posc = center  # x1+vx*.5, y1+vy*.5, z1+vz*.5
         radt = length / 2.0 + self.encapsulatingRadius
 
         bb = [cent2T, cent1T]  # self.correctBB(p1,p2,radc)
@@ -352,3 +366,69 @@ class SingleCubeIngr(Ingredient):
         )  # , pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
         #        spherenp.setPos(-2, 0, 4)
         return inodenp
+
+    def cube_surface_distance(
+        self,
+        point,
+    ):
+        # returns the distance to the closest cube surface from point
+        side_lengths = numpy.abs(self.radii[0]) / 2.0
+
+        dist_x, dist_y, dist_z = numpy.abs(point) - side_lengths
+
+        if dist_x <= 0:
+            if dist_y <= 0:
+                if dist_z <= 0:
+                    # point is inside the cube
+                    current_distance = -numpy.min(numpy.abs([dist_x, dist_y, dist_z]))
+                else:
+                    # z plane is the closest
+                    current_distance = dist_z
+            else:
+                if dist_z <= 0:
+                    # y plane is the closest
+                    current_distance = dist_y
+                else:
+                    # yz edge is the closest
+                    current_distance = numpy.sqrt(dist_y**2 + dist_z**2)
+        else:
+            if dist_y <= 0:
+                if dist_z <= 0:
+                    # x plane is closest
+                    current_distance = dist_x
+                else:
+                    # xz edge is the closest
+                    current_distance = numpy.sqrt(dist_x**2 + dist_z**2)
+            else:
+                if dist_z <= 0:
+                    # xy edge is the closest
+                    current_distance = numpy.sqrt(dist_x**2 + dist_y**2)
+                else:
+                    # vertex is the closest
+                    current_distance = numpy.sqrt(
+                        dist_x**2 + dist_y**2 + dist_z**2
+                    )
+        return current_distance
+
+    def get_signed_distance(
+        self,
+        packing_location,
+        grid_point_location,
+        rotation_matrix,
+    ):
+        # returns the distance to 'grid_point_location' from the nearest cube surface
+        # the cube center is located at packing_location
+        # a rotation matrix rotation_matrix is applied to the cube
+        signed_distance_to_surface = []
+        inv_rotation_matrix = numpy.linalg.inv(rotation_matrix)
+
+        transformed_point = [
+            (grid_point_location - packing_location)
+        ]  # translate points to cube center
+        transformed_point = self.transformPoints(
+            self.center, inv_rotation_matrix, transformed_point
+        )  # rotate points to align with cube axis
+        # run distance checks on transformed points
+        signed_distance_to_surface = self.cube_surface_distance(transformed_point[0])
+
+        return signed_distance_to_surface

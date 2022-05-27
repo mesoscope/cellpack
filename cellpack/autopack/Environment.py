@@ -303,13 +303,14 @@ class Environment(CompartmentList):
         each recipe are made of a list of ingredients
     """
 
-    def __init__(self, name="H"):
+    def __init__(self, name="H", format_output="simularium"):
         CompartmentList.__init__(self)
 
         self.log = logging.getLogger("env")
         self.log.propagate = False
         self.timeUpDistLoopTotal = 0
         self.name = name
+        self.format_output = format_output
         self.exteriorRecipe = None
         self.hgrid = []
         self.world = None  # panda world for collision
@@ -903,11 +904,12 @@ class Environment(CompartmentList):
         else:
             print("can't read or recognize " + setupfile)
 
-    def save_result(self, freePoints, distances, t0, vAnalysis, vTestid, seedNum):
+    def save_result(
+        self, freePoints, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array
+    ):
         # TODO: create new function that
         #   pulls results (grid, recipe) out as python
         #   data structures and returns them without saving
-
         self.grid.freePoints = freePoints[:]
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
@@ -917,13 +919,16 @@ class Environment(CompartmentList):
         self.collectResultPerIngredient()
         self.store()
         self.store_asTxt()
-        self.saveRecipe(
+        #            self.store_asJson(resultfilename=self.resultfile+".json")
+        IOutils.save(
+            self,
             self.resultfile + ".json",
             useXref=False,
-            mixed=True,
+            format_output=self.format_output,
             kwds=["compNum"],
             result=True,
             quaternion=True,
+            all_ingr_as_array=all_ingr_as_array,
         )  # pdb ?
         self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
@@ -1098,49 +1103,6 @@ class Environment(CompartmentList):
 
             #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
         self.log.info("time to save end %d", time() - t0)
-
-    def saveRecipe(
-        self,
-        setupfile,
-        useXref=None,
-        format_output="json",
-        mixed=False,
-        kwds=None,
-        result=False,
-        grid=False,
-        packing_options=False,
-        indent=False,
-        quaternion=False,
-        transpose=False,
-    ):
-        #        if result :
-        #            self.collectResultPerIngredient()
-        if useXref is None:
-            useXref = self.useXref
-        if format_output == "json":
-            if mixed:
-                IOutils.save_Mixed_asJson(
-                    self,
-                    setupfile,
-                    useXref=useXref,
-                    kwds=kwds,
-                    result=result,
-                    indent=indent,
-                    grid=grid,
-                    packing_options=packing_options,
-                    quaternion=quaternion,
-                    transpose=transpose,
-                )
-            else:
-                IOutils.save_asJson(self, setupfile, useXref=useXref, indent=indent)
-        elif format_output == "xml":
-            IOutils.save_asXML(self, setupfile, useXref=useXref)
-        elif format_output == "python":
-            IOutils.save_asPython(self, setupfile, useXref=useXref)
-        else:
-            print(
-                "format output " + format_output + " not recognized (json,xml,python)"
-            )
 
     def saveNewRecipe(self, filename):
         djson, all_pos, all_rot = IOutils.serializedRecipe(
@@ -2555,7 +2517,7 @@ class Environment(CompartmentList):
                 compartment_ids,
                 vRangeStart,
                 vThreshStart,
-            )
+            )  # (Bool, ptInd)
             if ingr.compNum > 0:
                 allSrfpts = list(
                     self.compartments[ingr.compNum - 1].surfacePointsNormals.keys()
@@ -2564,12 +2526,16 @@ class Environment(CompartmentList):
             if res[0]:
                 ptInd = res[1]
                 if ptInd > len(distances):
-                    self.log.warning("problem ", ptInd)
+                    self.log.warning(
+                        "point index outside of grid length, should never be true ",
+                        ptInd,
+                    )
                     continue
             else:
                 self.log.info("vRangeStart coninue ", res)
                 vRangeStart = res[1]
                 continue
+            # NOTE: should we do the close partner check here instead of in the place functions?
             # place the ingredient
             if self.overwritePlaceMethod:
                 ingr.placeType = self.placeMethod
@@ -2581,17 +2547,18 @@ class Environment(CompartmentList):
                 ptInd,
                 self.grid.masterGridPositions[ptInd],
             )
+            collision_possible = True
+            if distances[ptInd] >= ingr.encapsulatingRadius + ingr.getMaxJitter(
+                spacing
+            ):
+                # there is no possible collision here
+                collision_possible = False
             (
                 success,
                 insidePoints,
                 newDistPoints,
             ) = ingr.attempt_to_pack_at_grid_location(
-                self,
-                ptInd,
-                distances,
-                max_radius,
-                spacing,
-                usePP,
+                self, ptInd, distances, max_radius, spacing, usePP, collision_possible
             )
             self.log.info(
                 "after place attempt, placed: %r, number of free points:%d, length of free points=%d",
@@ -2671,18 +2638,18 @@ class Environment(CompartmentList):
             if dump and ((time() - stime) > dump_freq):
                 self.collectResultPerIngredient()
                 print("SAVING", self.resultfile)
-                self.saveRecipe(
+                IOutils.save(
+                    self,
                     self.resultfile + "_temporaray.json",
                     useXref=True,
-                    mixed=True,
                     kwds=["source", "name", "positions", "radii"],
                     result=True,
                     quaternion=True,
                 )
-                self.saveRecipe(
+                IOutils.save(
+                    self,
                     self.resultfile + "_temporaray_transpose.json",
                     useXref=True,
-                    mixed=True,
                     kwds=["source", "name", "positions", "radii"],
                     result=True,
                     quaternion=True,
@@ -2696,21 +2663,14 @@ class Environment(CompartmentList):
         self.distanceAfterFill = distances[:]
         t2 = time()
         self.log.info("time to fill %d", t2 - t1)
-
-        if self.saveResult:
-            self.save_result(
-                freePoints,
-                distances=distances,
-                t0=t2,
-                vAnalysis=vAnalysis,
-                vTestid=vTestid,
-                seedNum=seedNum,
-            )
+        if self.runTimeDisplay and autopack.helper.host == "simularium":
+            autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
 
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):
             self.afviewer.vi.progressBar(label="Filling Complete")
             self.afviewer.vi.resetProgressBar()
         ingredients = {}
+        all_ingr_as_array = self.molecules
         for pos, rot, ingr, ptInd in self.molecules:
             if ingr.name not in ingredients:
                 ingredients[ingr.name] = [ingr, [], [], []]
@@ -2728,11 +2688,25 @@ class Environment(CompartmentList):
                 ingredients[ingr.name][1].append(pos)
                 ingredients[ingr.name][2].append(rot)
                 ingredients[ingr.name][3].append(numpy.array(mat))
+<<<<<<< HEAD
         if self.runTimeDisplay and autopack.helper.host == "simularium":
             autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
 
         # TODO: this is the output of the packing algorithm
+=======
+                all_ingr_as_array.append([pos, rot, ingr, ptInd])
+>>>>>>> 2ab4f0085a93ec9b5c330c7d18b2eb90016eb065
         self.ingr_result = ingredients
+        if self.saveResult:
+            self.save_result(
+                freePoints,
+                distances=distances,
+                t0=t2,
+                vAnalysis=vAnalysis,
+                vTestid=vTestid,
+                seedNum=seedNum,
+                all_ingr_as_array=all_ingr_as_array,
+            )
 
     def displayCancelDialog(self):
         print(

@@ -1,6 +1,6 @@
 {
     "recipe": {
-        "name": "one_cube",
+        "name": "oriented_cube",
         "version": "1.0"
     },
     "options": {
@@ -60,10 +60,10 @@
                 "molarity": 0,
                 "name": "cube_side_50",
                 "nbJitter": 20,
-                "nbMol": 100,
+                "nbMol": 1000,
                 "orientBiasRotRangeMax": 0,
                 "orientBiasRotRangeMin": 0,
-                "overwrite_nbMol_value": 100,
+                "overwrite_nbMol_value": 1000,
                 "packingMode": "random",
                 "packingPriority": 0,
                 "partners_name": [],
@@ -90,9 +90,9 @@
                     ]
                 ],
                 "principalVector": [
-                    1,
                     0,
-                    0
+                    0,
+                    1
                 ],
                 "proba_binding": 0.5,
                 "proba_not_binding": 0.5,
@@ -110,9 +110,9 @@
                     0,
                     1
                 ],
-                "rotRange": 6.2831,
+                "rotRange": 0,
                 "useOrientBias": false,
-                "useRotAxis": false,
+                "useRotAxis": true,
                 "weight": 0.2
             }
         }
