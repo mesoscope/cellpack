@@ -297,7 +297,7 @@ class simulariumHelper(hostHelper.Helper):
         else:
             viz_type = VIZ_TYPE.DEFAULT
 
-        radius = ingredient.encapsulatingRadius if ingredient is not None else 1
+        radius = ingredient.encapsulatingRadius if ingredient is not None else 10
         new_instance = Instance(
             name,
             instance_id,
@@ -395,6 +395,8 @@ class simulariumHelper(hostHelper.Helper):
     def init_scene_with_objects(
         self,
         objects,
+        grid_point_positions,
+        grid_point_compartment_ids,
     ):
         self.time = 0
         for position, rotation, ingredient, ptInd in objects:
@@ -417,6 +419,29 @@ class simulariumHelper(hostHelper.Helper):
                 rotation,
                 None,
             )
+        if grid_point_compartment_ids is not None:
+            for index in range(len(grid_point_compartment_ids)):
+                if index % 1 == 0:
+                    compartment_id = grid_point_compartment_ids[index]
+                    point_pos = grid_point_positions[index]
+                    if compartment_id < 0:
+                        name = "inside"
+                    elif compartment_id > 0:
+                        name = "surface"
+                    else:
+                        name = "outside"
+                    self.display_data[name] = DisplayData(
+                        name=name, display_type=DISPLAY_TYPE.SPHERE, url=""
+                    )
+        
+                    self.add_instance(
+                        name,
+                        None,
+                        f"{name}-{index}",
+                        point_pos,
+                        [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, ], [0, 0, 0, 0, ]],
+                        None,
+                    )
 
     def addCameraToScene(self):
         pass
