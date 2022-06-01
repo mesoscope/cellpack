@@ -273,9 +273,10 @@ class Compartment(CompartmentList):
         if self.vertices is not None and len(self.vertices):
             # can be dae/fbx file, object name that have to be in the scene or dejaVu indexedpolygon file
             self.bb = self.getBoundingBox()
-            v = numpy.array(self.vertices, "f")
-            length = numpy.sqrt((v * v).sum(axis=1))
-            self.encapsulatingRadius = max(length)
+            center, radius = mesh_store.get_nsphere(self.gname)
+            self.center = center
+            self.encapsulatingRadius = radius
+            self.radius = mesh_store.get_smallest_radius(self.gname, center)
 
     def addShapeRB(self):
         # in case our shape is a regular primitive
@@ -905,22 +906,23 @@ class Compartment(CompartmentList):
             self.createSurfacePoints(maxl=env.grid.gridSpacing)
         # Graham Sum the SurfaceArea for each polyhedron
         distances = env.grid.distToClosestSurf
-        idarray = env.grid.gridPtId
+        compartment_ids = env.grid.compartment_ids
         diag = env.grid.diag
         self.log.info("distance %d", len(distances))
 
         # build search tree for off grid surface points
-        srfPts = self.ogsurfacePoints
-        self.OGsrfPtsBht = ctree = spatial.cKDTree(tuple(srfPts), leafsize=10)
+        off_grid_surface_points = self.ogsurfacePoints
+        self.OGsrfPtsBht = ctree = spatial.cKDTree(tuple(off_grid_surface_points), leafsize=10)
         # res = numpy.zeros(len(srfPts),'f')
         # dist2 = numpy.zeros(len(srfPts),'f')
 
-        grdPos = env.grid.masterGridPositions
-        closest = ctree.query(tuple(grdPos))  # return both indices and distances
+        master_grid_positions = env.grid.masterGridPositions
+        closest = ctree.query(tuple(master_grid_positions))  # return both indices and distances
 
         self.closestId = closest[1]
         new_distances = closest[0]
-        mask = distances[: len(grdPos)] > new_distances
+        import ipdb; ipdb.set_trace()
+        mask = distances[: len(master_grid_positions)] > new_distances
         nindices = numpy.nonzero(mask)
         distances[nindices] = new_distances[nindices]
         if (
@@ -935,31 +937,31 @@ class Compartment(CompartmentList):
             inside_points, surface_points = self.BuildGrid_bhtree(
                 env,
                 ctree,
-                grdPos,
+                master_grid_positions,
                 new_distances,
                 diag,
                 vSurfaceArea,
-                srfPts,
-                idarray,
+                off_grid_surface_points,
+                compartment_ids,
                 distances,
             )
         elif (
             env.innerGridMethod == "jordan" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_jordan(
-                env, grdPos, new_distances, diag, vSurfaceArea, srfPts, idarray, mesh_store
+                env, master_grid_positions, new_distances, diag, vSurfaceArea, off_grid_surface_points, compartment_ids, mesh_store
             )
         elif (
             env.innerGridMethod == "jordan3" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_jordan(
-                env, grdPos, new_distances, diag, vSurfaceArea, srfPts, idarray, mesh_store, ray=3
+                env, master_grid_positions, new_distances, diag, vSurfaceArea, off_grid_surface_points, compartment_ids, mesh_store, ray=3
             )
         elif (
             env.innerGridMethod == "pyray" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_pyray(
-                env, ctree, distances, grdPos, diag, vSurfaceArea, srfPts, idarray
+                env, ctree, distances, master_grid_positions, diag, vSurfaceArea, off_grid_surface_points, compartment_ids
             )
         elif (
             env.innerGridMethod == "floodfill" and self.isOrthogonalBoundingBox != 1
@@ -968,18 +970,18 @@ class Compartment(CompartmentList):
         elif (
             env.innerGridMethod == "binvox" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
-            inside_points, surface_points = self.BuildGrid_binvox(env, grdPos, vSurfaceArea, srfPts, idarray)
+            inside_points, surface_points = self.BuildGrid_binvox(env, master_grid_positions, vSurfaceArea, off_grid_surface_points, compartment_ids)
         elif (
             env.innerGridMethod == "trimesh" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_trimesh(
-                env, grdPos, new_distances, vSurfaceArea, srfPts, idarray
+                env, master_grid_positions, new_distances, vSurfaceArea, off_grid_surface_points, compartment_ids
             )
         elif (
             env.innerGridMethod == "scanline" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_scanline(
-                env, grdPos, new_distances, diag, vSurfaceArea, srfPts, idarray
+                env, master_grid_positions, new_distances, diag, vSurfaceArea, off_grid_surface_points, compartment_ids
             )
         return inside_points, surface_points
 
@@ -988,7 +990,7 @@ class Compartment(CompartmentList):
             self.bb, None, None
         )  # This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.
         b = []
-        env.grid.gridPtId[a] = -self.number
+        env.grid.compartment_ids[a] = -self.number
         self.surfacePointsCoords = None
         bb0x, bb0y, bb0z = self.bb[0]
         bb1x, bb1y, bb1z = self.bb[1]
@@ -1015,7 +1017,7 @@ class Compartment(CompartmentList):
         nbGridPoints = len(env.grid.masterGridPositions)
         insidePoints = env.grid.getPointsInCube(self.bb, None, None, addSP=False)
         for p in insidePoints:
-            env.grid.gridPtId[p] = -self.number
+            env.grid.compartment_ids[p] = -self.number
         surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(self.ogsurfacePoints, env)
         srfPts = surfPtsBB
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
@@ -1043,13 +1045,41 @@ class Compartment(CompartmentList):
 
         insidePoints = []
 
-        number = self.number
+        compartment_id = self.number
+        spacing = numpy.linalg.norm(numpy.array(grdPos[1]) - numpy.array(grdPos[0]))
+        variation = self.encapsulatingRadius - self.radius
+        is_sphere = variation < spacing
         # now check if point inside
-        inside = mesh_store.contains_points(self.gname, grdPos)
+        tree = spatial.cKDTree(grdPos, leafsize=10)
+        points_in_encap_sphere = tree.query_ball_point(self.center, self.encapsulatingRadius, return_sorted=True)
+        if is_sphere:
+            inside = points_in_encap_sphere
+        else:
+            positions = grdPos[points_in_encap_sphere]
+            inside = mesh_store.contains_points_slow(self.gname, positions)
+        # inside_indexes = points_in_encap_sphere[inside]
+        # print(len(inside_indexes), len(points_in_encap_sphere))
         for index in range(len(inside)):
+
+            grid_point_index = points_in_encap_sphere[index]
+            next_point = index + 1
+            next_grid_point_index = points_in_encap_sphere[next_point] if len(points_in_encap_sphere) > next_point else grid_point_index
             if inside[index]:
-                insidePoints.append(index)
-                idarray.itemset(index, -number)
+                if index == 0:
+                    # first inside point, should be a surface point
+                    idarray.itemset(grid_point_index, compartment_id)
+                elif idarray[grid_point_index - 1] == 0:
+                    idarray.itemset(grid_point_index, compartment_id)
+                elif next_grid_point_index - grid_point_index > 1:
+                    idarray.itemset(grid_point_index, compartment_id)  
+                else:
+                    # if it's inside, and the point previous is surface pt
+                    idarray.itemset(grid_point_index, -compartment_id)
+                    insidePoints.append(grid_point_index)
+
+            else:
+                if idarray[grid_point_index + 1] == -compartment_id:
+                    idarray.itemset(grid_point_index - 1, compartment_id)  
             if (index % 100) == 0:
                 self.log.info("%s inside %s", str(index) + str(len(grdPos)), str(inside[index]))
         nbGridPoints = len(env.grid.masterGridPositions)
@@ -1277,7 +1307,7 @@ class Compartment(CompartmentList):
             nbGridPoints = len(env.grid.masterGridPositions)
             insidePoints = env.grid.getPointsInCube(self.bb, None, None, addSP=False)
             for p in insidePoints:
-                env.grid.gridPtId[p] = -self.number
+                env.grid.compartment_ids[p] = -self.number
             surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(self.ogsurfacePoints, env)
             srfPts = surfPtsBB
             surfacePoints, surfacePointsNormals = self.extendGridArrays(
@@ -1497,7 +1527,7 @@ class Compartment(CompartmentList):
 
         # find closest off grid surface point for each grid point
         # FIXME sould be diag of compartment BB inside fillBB
-        points = env.grid.masterGridPositions
+        grid_point_positions = env.grid.masterGridPositions
         gridPtsPerEdge = env.grid.nbGridPoints
         gridSpacing = env.grid.gridSpacing
         radius = gridSpacing
@@ -1510,10 +1540,10 @@ class Compartment(CompartmentList):
         # Pre-allocates a gridPoint object for every single point we have in our grid.
         gridPoints = []
         i = 0
-        for point in points:
+        for point in grid_point_positions:
             gridPoints.append(gridPoint(i, point, isPolyhedron=False))
             i += 1
-        assert len(gridPoints) == len(points)
+        assert len(gridPoints) == len(grid_point_positions)
 
         # Make a precomputed cube of coordinates and corresponding distances
         distanceCube, distX, distY, distZ = makeMarchingCube(gridSpacing, radius)
@@ -1806,8 +1836,7 @@ class Compartment(CompartmentList):
                     (numpy.ones(length) * env.grid.diag).tolist()
                 )
             ptId = numpy.ones(length, "i") * self.number  # surface point
-            env.grid.gridPtId = numpy.hstack((env.grid.gridPtId, ptId))
-            # histoVol.grid.gridPtId=numpy.append(numpy.array(histoVol.grid.gridPtId), [self.number]*length ,axis=0)#surface point ID
+            env.grid.compartment_ids = numpy.hstack((env.grid.compartment_ids, ptId))
             env.grid.freePoints = numpy.arange(nbGridPoints + length)
             surfacePoints = list(range(nbGridPoints, nbGridPoints + length))
             # histoVol.grid.freePoints.extend(surfacePoints)
@@ -1868,7 +1897,7 @@ class Compartment(CompartmentList):
         print("time to create surface points", time() - t1, len(self.ogsurfacePoints))
 
         distances = env.grid.distToClosestSurf
-        idarray = env.grid.gridPtId
+        idarray = env.grid.compartment_ids
         #        diag = histoVol.grid.diag
 
         t1 = time()
@@ -1967,7 +1996,7 @@ class Compartment(CompartmentList):
         env.grid.masterGridPositions = pointArrayRaw
         env.grid.distToClosestSurf.extend([env.grid.diag] * length)
 
-        env.grid.gridPtId.extend([number] * length)
+        env.grid.compartment_ids.extend([number] * length)
         surfacePoints = list(range(nbGridPoints, nbGridPoints + length))
         env.grid.freePoints.extend(surfacePoints)
 
@@ -2070,12 +2099,12 @@ class Compartment(CompartmentList):
             indice = indice[0]
         if len(pointinside) == 1 and len(pointinside[0]) != 1:
             pointinside = pointinside[0]
-        env.grid.gridPtId[indice] = -self.number
+        env.grid.compartment_ids[indice] = -self.number
         print(
             "sdf pointID N ",
             self.number,
-            len(env.grid.gridPtId[indice]),
-            env.grid.gridPtId[indice],
+            len(env.grid.compartment_ids[indice]),
+            env.grid.compartment_ids[indice],
         )
         t1 = time()
         nbGridPoints = len(env.grid.masterGridPositions)
@@ -2214,7 +2243,7 @@ class Compartment(CompartmentList):
         insidePoints = []
         surfacePoints = []
         allNormals = {}
-        idarray = histoVol.gridPtId
+        idarray = histoVol.compartment_ids
         # surfaceCutOff = histoVol.gridSpacing*.5
         # print 'BBBBBBBBBBBBBB', surfaceCutOff, min(distFromSurf), max(distFromSurf)
         # print 'We should get', len(filter(lambda x:fabs(x)<surfaceCutOff, distance))
@@ -2430,7 +2459,7 @@ class Compartment(CompartmentList):
         )
         grid.create3DPointLookup()
         nbPoints = grid.gridVolume
-        grid.gridPtId = [0] * nbPoints
+        grid.compartment_ids = [0] * nbPoints
         xl, yl, zl = boundingBox[0]
         xr, yr, zr = boundingBox[1]
         # distToClosestSurf is set to self.diag initially
@@ -2819,7 +2848,7 @@ class Compartment(CompartmentList):
         )
         grid.create3DPointLookup()
         nbPoints = grid.gridVolume
-        grid.gridPtId = [0] * nbPoints
+        grid.compartment_ids = [0] * nbPoints
         xl, yl, zl = boundingBox[0]
         xr, yr, zr = boundingBox[1]
         # distToClosestSurf is set to self.diag initially
@@ -2862,7 +2891,7 @@ class Compartment(CompartmentList):
             if distance[i] > d:
                 distance[i] = d
         self.grid_distances = distance
-        #        idarray = histoVol.gridPtId
+        #        idarray = histoVol.compartment_ids
         indice = numpy.nonzero(numpy.less(distance, 0.0))
         pointinside = numpy.take(grid.masterGridPositions, indice, 0)
         # need to update the surface. need to create a aligned grid
@@ -2884,14 +2913,14 @@ class Compartment(CompartmentList):
         )
         grid.create3DPointLookup()
         nbPoints = grid.gridVolume
-        grid.gridPtId = [0] * nbPoints
+        grid.compartment_ids = [0] * nbPoints
         xl, yl, zl = boundingBox[0]
         xr, yr, zr = boundingBox[1]
         # distToClosestSurf is set to self.diag initially
         grid.diag = diag = vlen(vdiff((xr, yr, zr), (xl, yl, zl)))
         grid.distToClosestSurf = [diag] * nbPoints
         distances = grid.distToClosestSurf
-        idarray = grid.gridPtId
+        idarray = grid.compartment_ids
         diag = grid.diag
 
         self.ogsurfacePoints = self.vertices[:]
@@ -3097,14 +3126,14 @@ class Compartment(CompartmentList):
         )
         grid.create3DPointLookup()
         nbPoints = grid.gridVolume
-        grid.gridPtId = [0] * nbPoints
+        grid.compartment_ids = [0] * nbPoints
         xl, yl, zl = boundingBox[0]
         xr, yr, zr = boundingBox[1]
         # distToClosestSurf is set to self.diag initially
         #        grid.diag = diag = vlen( vdiff((xr,yr,zr), (xl,yl,zl) ) )
         #        grid.distToClosestSurf = [diag]*nbPoints
         #        distances = grid.distToClosestSurf
-        #        idarray = grid.gridPtId
+        #        idarray = grid.compartment_ids
         #        diag = grid.diag
         grdPos = grid.masterGridPositions
         insidePoints = []
@@ -3114,7 +3143,7 @@ class Compartment(CompartmentList):
         # distance ? dot ? angle
         grid.diag = diag = vlen(vdiff((xr, yr, zr), (xl, yl, zl)))
         grid.distToClosestSurf = [diag] * nbPoints
-        idarray = grid.gridPtId
+        idarray = grid.compartment_ids
         diag = grid.diag
 
         self.ogsurfacePoints = self.vertices[:]
@@ -3245,14 +3274,14 @@ class Compartment(CompartmentList):
         )
         grid.create3DPointLookup()
         nbPoints = grid.gridVolume
-        grid.gridPtId = [0] * nbPoints
+        grid.compartment_ids = [0] * nbPoints
         xl, yl, zl = boundingBox[0]
         xr, yr, zr = boundingBox[1]
         # distToClosestSurf is set to self.diag initially
         #        grid.diag = diag = vlen( vdiff((xr,yr,zr), (xl,yl,zl) ) )
         #        grid.distToClosestSurf = [diag]*nbPoints
         #        distances = grid.distToClosestSurf
-        #        idarray = grid.gridPtId
+        #        idarray = grid.compartment_ids
         #        diag = grid.diag
         grdPos = grid.masterGridPositions
         insidePoints = []
