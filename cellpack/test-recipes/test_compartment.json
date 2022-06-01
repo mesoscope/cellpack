@@ -15,34 +15,34 @@
         "innerGridMethod": "jordan3",
         "boundingBox": [
             [
-                -150,
                 -600,
-                -1100
+                -1100,
+                -150
             ],
             [
-                150,
                 600,
-                1100
+                1100,
+                150
             ]
         ],
         "gradients": [],
-        "smallestProteinSize": 10,
+        "smallestProteinSize": 0,
         "computeGridParams": true,
         "freePtsUpdateThrehod": 0,
         "pickWeightedIngr": true,
         "_timer": false,
         "ingrLookForNeighbours": false,
         "pickRandPt": true,
-        "largestProteinSize": 50,
+        "largestProteinSize": 0,
         "resultfile": "autoPACKserver/results/BloodPlasma1.0.apr.json",
         "use_periodicity": false,
         "EnviroOnly": false
     },
     "cytoplasme": {
         "ingredients": {
-            "Sphere_radius_10": {
+            "Sphere_radius_50": {
                 "nbJitter": 20,
-                "molarity": 3.23e-20,
+                "molarity": 0,
                 "partners_position": [],
                 "rotRange": 6.2831,
                 "color": [
@@ -56,7 +56,7 @@
                 "orientBiasRotRangeMin": -3.1415927,
                 "radii": [
                     [
-                        10
+                        50
                     ]
                 ],
                 "cutoff_boundary": 0,
@@ -67,7 +67,7 @@
                     0
                 ],
                 "perturbAxisAmplitude": 0.1,
-                "encapsulatingRadius": 10,
+                "encapsulatingRadius": 50,
                 "positions2": null,
                 "useOrientBias": false,
                 "gradient": "",
@@ -79,7 +79,7 @@
                 ],
                 "properties": {},
                 "partners_name": [],
-                "nbMol": 30,
+                "nbMol": 1,
                 "name": "Sphere_radius_100",
                 "orientBiasRotRangeMax": -3.1415927,
                 "packingMode": "random",
@@ -116,7 +116,7 @@
                 "ingredients": {
                     "Sphere_radius_50": {
                         "nbJitter": 20,
-                        "molarity": 3.23e-20,
+                        "molarity": 0,
                         "partners_position": [],
                         "rotRange": 6.2831,
                         "color": [
@@ -153,7 +153,7 @@
                         ],
                         "properties": {},
                         "partners_name": [],
-                        "nbMol": 15,
+                        "nbMol": 1,
                         "name": "Sphere_radius_50",
                         "orientBiasRotRangeMax": -3.1415927,
                         "packingMode": "random",
