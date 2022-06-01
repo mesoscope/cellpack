@@ -767,7 +767,7 @@ class Environment(CompartmentList):
         return IOutils.load_JsonString(self, astring)
 
     def save_result(
-        self, freePoints, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array, grid_point_compartment_ids
+        self, freePoints, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array
     ):
         self.grid.freePoints = freePoints[:]
         self.grid.distToClosestSurf = distances[:]

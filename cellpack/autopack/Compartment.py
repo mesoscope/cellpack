@@ -917,14 +917,15 @@ class Compartment(CompartmentList):
         # dist2 = numpy.zeros(len(srfPts),'f')
 
         master_grid_positions = env.grid.masterGridPositions
-        closest = ctree.query(tuple(master_grid_positions))  # return both indices and distances
+        new_distances, indexes = ctree.query(tuple(master_grid_positions))  # return both indices and distances
 
-        self.closestId = closest[1]
-        new_distances = closest[0]
-        import ipdb; ipdb.set_trace()
+        self.closestId = indexes
         mask = distances[: len(master_grid_positions)] > new_distances
-        nindices = numpy.nonzero(mask)
-        distances[nindices] = new_distances[nindices]
+        grid_point_indexes = numpy.nonzero(mask)
+        distances[grid_point_indexes] = new_distances[grid_point_indexes]
+        # set all grid points close to the surface as surface points
+        indexes_of_grid_surface_points = numpy.nonzero(new_distances < env.grid.gridSpacing)
+        compartment_ids[indexes_of_grid_surface_points] = self.number
         if (
             env.innerGridMethod == "sdf" and self.isOrthogonalBoundingBox != 1
         ):  # A fillSelection can now be a mesh too... it can use either of these methods
@@ -1057,31 +1058,33 @@ class Compartment(CompartmentList):
         else:
             positions = grdPos[points_in_encap_sphere]
             inside = mesh_store.contains_points_slow(self.gname, positions)
-        # inside_indexes = points_in_encap_sphere[inside]
+        inside_indexes = numpy.array(points_in_encap_sphere)[numpy.nonzero(inside)]
         # print(len(inside_indexes), len(points_in_encap_sphere))
-        for index in range(len(inside)):
+        insidePoints.extend(inside_indexes)
+        idarray[inside_indexes] = -compartment_id
+        # import ipdb; ipdb.set_trace()
+        # for index in range(len(inside)):
 
-            grid_point_index = points_in_encap_sphere[index]
-            next_point = index + 1
-            next_grid_point_index = points_in_encap_sphere[next_point] if len(points_in_encap_sphere) > next_point else grid_point_index
-            if inside[index]:
-                if index == 0:
-                    # first inside point, should be a surface point
-                    idarray.itemset(grid_point_index, compartment_id)
-                elif idarray[grid_point_index - 1] == 0:
-                    idarray.itemset(grid_point_index, compartment_id)
-                elif next_grid_point_index - grid_point_index > 1:
-                    idarray.itemset(grid_point_index, compartment_id)  
-                else:
-                    # if it's inside, and the point previous is surface pt
-                    idarray.itemset(grid_point_index, -compartment_id)
-                    insidePoints.append(grid_point_index)
+        #     grid_point_index = points_in_encap_sphere[index]
+        #     next_point = index + 1
+        #     if inside[index]:
+        #         # if index == 0:
+        #         #     # first inside point, should be a surface point
+        #         #     idarray.itemset(grid_point_index, compartment_id)
+        #         # elif idarray[grid_point_index - 1] == 0:
+        #         #     idarray.itemset(grid_point_index, compartment_id)
+        #         # elif next_grid_point_index - grid_point_index > 1:
+        #         #     idarray.itemset(grid_point_index, compartment_id)  
+        #         # else:
+        #             # if it's inside, and the point previous is surface pt
+        #         idarray.itemset(grid_point_index, -compartment_id)
+        #         insidePoints.append(grid_point_index)
 
-            else:
-                if idarray[grid_point_index + 1] == -compartment_id:
-                    idarray.itemset(grid_point_index - 1, compartment_id)  
-            if (index % 100) == 0:
-                self.log.info("%s inside %s", str(index) + str(len(grdPos)), str(inside[index]))
+        #     # else:
+        #     #     if idarray[grid_point_index + 1] == -compartment_id:
+        #     #         idarray.itemset(grid_point_index - 1, compartment_id)  
+        #     if (index % 100) == 0:
+        #         self.log.info("%s inside %s", str(index) + str(len(grdPos)), str(inside[index]))
         nbGridPoints = len(env.grid.masterGridPositions)
 
         surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, env)
