@@ -198,6 +198,11 @@ class MeshStore:
         vertices = [MeshStore.normalize(v) for v in vertices]
         return vertices, facets
 
+    def get_nsphere(self, geomname):
+        mesh = self.get_object(geomname)
+        if mesh is not None:
+            return trimesh.nsphere.minimum_nsphere(mesh)
+
     def create_sphere(self, name, iterations, radius):
         """
         Create the mesh data and the mesh object of a Sphere of a given radius
@@ -229,6 +234,20 @@ class MeshStore:
             intersector = trimesh.ray.ray_pyembree.RayMeshIntersector(mesh)
             return intersector.contains_points(points)
         return [False]
+
+    def contains_points_slow(self, geomname, points):
+        mesh = self.get_object(geomname)
+        if mesh is not None:
+            intersector = trimesh.ray.ray_triangle.RayMeshIntersector(mesh)
+            return intersector.contains_points(points)
+        return [False]
+
+    def get_smallest_radius(self, geomname, center):
+        mesh = self.get_object(geomname)
+        if mesh is not None:
+            query = trimesh.proximity.ProximityQuery(mesh)
+            (closet_point, distance, triangle_id) = query.on_surface([center])
+            return distance[0]
 
     def get_centroid(self, geomname):
         mesh = self.get_object(geomname)
