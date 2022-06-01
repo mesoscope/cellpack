@@ -1419,8 +1419,8 @@ class Environment(CompartmentList):
 
         fits, bb = compartment.inBox(self.boundingBox)
 
-        # if not fits:
-        #     self.boundingBox = bb
+        if not fits:
+            self.boundingBox = bb
         CompartmentList.addCompartment(self, compartment)
 
     def getPointCompartmentId(self, point, ray=3):

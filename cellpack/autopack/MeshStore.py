@@ -120,6 +120,8 @@ class MeshStore:
     def read_mesh_file(self, filename):
         file_name, file_extension = MeshStore.get_mesh_filepath_and_extension(filename)
         scene = trimesh.exchange.load.load(f"{file_name}{file_extension}")  # , ignore=[collada.DaeUnsupportedError,
+        if type(scene) == trimesh.base.Trimesh:
+            return scene
         for key in scene.geometry:
             return scene.geometry[key]
 

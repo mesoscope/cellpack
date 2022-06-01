@@ -527,7 +527,7 @@ def addCompartments(env, compdic, i, io_ingr):
 def save_as_simularium(env, setupfile, all_ingr_as_array):
     autopack.helper.clear()
     length_original_grid_points = len(env.grid.masterGridPositions) - env.grid.nbSurfacePoints
-    autopack.helper.init_scene_with_objects(all_ingr_as_array, env.grid.masterGridPositions[:length_original_grid_points], env.grid.compartment_ids[:length_original_grid_points])
+    autopack.helper.init_scene_with_objects(all_ingr_as_array, env.grid.masterGridPositions, env.grid.compartment_ids)
     autopack.helper.writeToFile(None, f"{setupfile}_results", env.boundingBox)
     webbrowser.open("https://simularium.allencell.org/viewer")
 

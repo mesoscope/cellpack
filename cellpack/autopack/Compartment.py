@@ -912,19 +912,25 @@ class Compartment(CompartmentList):
 
         # build search tree for off grid surface points
         off_grid_surface_points = self.ogsurfacePoints
-        self.OGsrfPtsBht = ctree = spatial.cKDTree(tuple(off_grid_surface_points), leafsize=10)
+        self.OGsrfPtsBht = ctree = spatial.cKDTree(
+            tuple(off_grid_surface_points), leafsize=10
+        )
         # res = numpy.zeros(len(srfPts),'f')
         # dist2 = numpy.zeros(len(srfPts),'f')
 
         master_grid_positions = env.grid.masterGridPositions
-        new_distances, indexes = ctree.query(tuple(master_grid_positions))  # return both indices and distances
+        new_distances, indexes = ctree.query(
+            tuple(master_grid_positions)
+        )  # return both indices and distances
 
         self.closestId = indexes
         mask = distances[: len(master_grid_positions)] > new_distances
         grid_point_indexes = numpy.nonzero(mask)
         distances[grid_point_indexes] = new_distances[grid_point_indexes]
         # set all grid points close to the surface as surface points
-        indexes_of_grid_surface_points = numpy.nonzero(new_distances < env.grid.gridSpacing)
+        indexes_of_grid_surface_points = numpy.nonzero(
+            new_distances < env.grid.gridSpacing
+        )
         compartment_ids[indexes_of_grid_surface_points] = self.number
         if (
             env.innerGridMethod == "sdf" and self.isOrthogonalBoundingBox != 1
@@ -950,19 +956,41 @@ class Compartment(CompartmentList):
             env.innerGridMethod == "jordan" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_jordan(
-                env, master_grid_positions, new_distances, diag, vSurfaceArea, off_grid_surface_points, compartment_ids, mesh_store
+                env,
+                master_grid_positions,
+                new_distances,
+                diag,
+                vSurfaceArea,
+                off_grid_surface_points,
+                compartment_ids,
+                mesh_store,
             )
         elif (
             env.innerGridMethod == "jordan3" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_jordan(
-                env, master_grid_positions, new_distances, diag, vSurfaceArea, off_grid_surface_points, compartment_ids, mesh_store, ray=3
+                env,
+                master_grid_positions,
+                new_distances,
+                diag,
+                vSurfaceArea,
+                off_grid_surface_points,
+                compartment_ids,
+                mesh_store,
+                ray=3,
             )
         elif (
             env.innerGridMethod == "pyray" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_pyray(
-                env, ctree, distances, master_grid_positions, diag, vSurfaceArea, off_grid_surface_points, compartment_ids
+                env,
+                ctree,
+                distances,
+                master_grid_positions,
+                diag,
+                vSurfaceArea,
+                off_grid_surface_points,
+                compartment_ids,
             )
         elif (
             env.innerGridMethod == "floodfill" and self.isOrthogonalBoundingBox != 1
@@ -971,18 +999,35 @@ class Compartment(CompartmentList):
         elif (
             env.innerGridMethod == "binvox" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
-            inside_points, surface_points = self.BuildGrid_binvox(env, master_grid_positions, vSurfaceArea, off_grid_surface_points, compartment_ids)
+            inside_points, surface_points = self.BuildGrid_binvox(
+                env,
+                master_grid_positions,
+                vSurfaceArea,
+                off_grid_surface_points,
+                compartment_ids,
+            )
         elif (
             env.innerGridMethod == "trimesh" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_trimesh(
-                env, master_grid_positions, new_distances, vSurfaceArea, off_grid_surface_points, compartment_ids
+                env,
+                master_grid_positions,
+                new_distances,
+                vSurfaceArea,
+                off_grid_surface_points,
+                compartment_ids,
             )
         elif (
             env.innerGridMethod == "scanline" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_scanline(
-                env, master_grid_positions, new_distances, diag, vSurfaceArea, off_grid_surface_points, compartment_ids
+                env,
+                master_grid_positions,
+                new_distances,
+                diag,
+                vSurfaceArea,
+                off_grid_surface_points,
+                compartment_ids,
             )
         return inside_points, surface_points
 
@@ -1040,51 +1085,52 @@ class Compartment(CompartmentList):
         )
 
     def BuildGrid_jordan(
-        self, env, grdPos, new_distances, diag, vSurfaceArea, srfPts, idarray, mesh_store, ray=1
+        self,
+        env,
+        grdPos,
+        new_distances,
+        diag,
+        vSurfaceArea,
+        srfPts,
+        idarray,
+        mesh_store,
+        ray=1,
     ):
         """Build the compartment grid ie surface and inside point using jordan theorem and host raycast"""
 
         insidePoints = []
 
         compartment_id = self.number
-        spacing = numpy.linalg.norm(numpy.array(grdPos[1]) - numpy.array(grdPos[0]))
+        spacing = env.grid.gridSpacing
         variation = self.encapsulatingRadius - self.radius
         is_sphere = variation < spacing
         # now check if point inside
         tree = spatial.cKDTree(grdPos, leafsize=10)
-        points_in_encap_sphere = tree.query_ball_point(self.center, self.encapsulatingRadius, return_sorted=True)
+        points_in_encap_sphere = tree.query_ball_point(
+            self.center, self.encapsulatingRadius, return_sorted=True
+        )
         if is_sphere:
             inside = points_in_encap_sphere
         else:
             positions = grdPos[points_in_encap_sphere]
             inside = mesh_store.contains_points_slow(self.gname, positions)
+        
+        # set inside points in data
         inside_indexes = numpy.array(points_in_encap_sphere)[numpy.nonzero(inside)]
-        # print(len(inside_indexes), len(points_in_encap_sphere))
         insidePoints.extend(inside_indexes)
         idarray[inside_indexes] = -compartment_id
-        # import ipdb; ipdb.set_trace()
-        # for index in range(len(inside)):
 
-        #     grid_point_index = points_in_encap_sphere[index]
-        #     next_point = index + 1
-        #     if inside[index]:
-        #         # if index == 0:
-        #         #     # first inside point, should be a surface point
-        #         #     idarray.itemset(grid_point_index, compartment_id)
-        #         # elif idarray[grid_point_index - 1] == 0:
-        #         #     idarray.itemset(grid_point_index, compartment_id)
-        #         # elif next_grid_point_index - grid_point_index > 1:
-        #         #     idarray.itemset(grid_point_index, compartment_id)  
-        #         # else:
-        #             # if it's inside, and the point previous is surface pt
-        #         idarray.itemset(grid_point_index, -compartment_id)
-        #         insidePoints.append(grid_point_index)
+        # find missing surface points 
+        outside_points_positions = grdPos[numpy.nonzero(idarray != -compartment_id)]
+        inside_points_positions = grdPos[inside_indexes]
+        inside_tree = spatial.cKDTree(inside_points_positions, leafsize=10)
+        surface_i = inside_tree.query_ball_point(outside_points_positions, env.grid.gridSpacing)
+        for i in surface_i:
+            if len(i) > 0:
+                surface_indexes = inside_indexes[i]
+                idarray[surface_indexes] = compartment_id
 
-        #     # else:
-        #     #     if idarray[grid_point_index + 1] == -compartment_id:
-        #     #         idarray.itemset(grid_point_index - 1, compartment_id)  
-        #     if (index % 100) == 0:
-        #         self.log.info("%s inside %s", str(index) + str(len(grdPos)), str(inside[index]))
+
         nbGridPoints = len(env.grid.masterGridPositions)
 
         surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, env)
