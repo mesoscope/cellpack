@@ -137,10 +137,12 @@ class Recipe:
             #            nbi = int(nbr)              #Mod by Graham 8/18/11
             num_to_place_float = ingr.molarity * 0.0006022 * volume
             num_to_place_int = int(num_to_place_float)  # Mod by Graham 8/18/11
+            remainder = num_to_place_float % num_to_place_int if num_to_place_int != 0 else num_to_place_float
 
+            # some chance that the fraction over the integer will result in another ingr being placed
             randval = random()
-            if num_to_place_int == 0 and num_to_place_float >= randval:  # Mod by Graham 8/18/11
-                num_to_place_int = 1
+            if remainder >= randval:  # Mod by Graham 8/18/11
+                num_to_place_int = num_to_place_int + 1
 
             ingr.vol_nbmol = ingr.left_to_place = num_to_place_int + ingr.nbMol
             print(ingr.name, ingr.nbMol)
