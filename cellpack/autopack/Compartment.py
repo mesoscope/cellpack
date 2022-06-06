@@ -1091,7 +1091,7 @@ class Compartment(CompartmentList):
         new_distances,
         diag,
         vSurfaceArea,
-        srfPts,
+        vertex_points,
         idarray,
         mesh_store,
         ray=1,
@@ -1120,7 +1120,7 @@ class Compartment(CompartmentList):
         insidePoints.extend(inside_indexes)
         idarray[inside_indexes] = -compartment_id
 
-        # find missing surface points 
+        # find missing surface points
         outside_points_positions = grdPos[numpy.nonzero(idarray != -compartment_id)]
         inside_points_positions = grdPos[inside_indexes]
         inside_tree = spatial.cKDTree(inside_points_positions, leafsize=10)
@@ -1130,14 +1130,11 @@ class Compartment(CompartmentList):
                 surface_indexes = inside_indexes[i]
                 idarray[surface_indexes] = compartment_id
 
-
         nbGridPoints = len(env.grid.masterGridPositions)
-
-        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, env)
-        srfPts = surfPtsBB
+        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(vertex_points, env)
         ex = True  # True if nbGridPoints == len(idarray) else False
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
-            nbGridPoints, srfPts, surfPtsBBNorms, env, extended=ex
+            nbGridPoints, surfPtsBB, surfPtsBBNorms, env, extended=ex
         )
 
         self.insidePoints = insidePoints
@@ -1908,9 +1905,9 @@ class Compartment(CompartmentList):
         """get the bounding box from the environment grid that encapsulated the mesh"""
         surfPtsBB = []
         surfPtsBBNorms = []
-        mini, maxi = env.fillBB
-        mx, my, mz = mini
-        Mx, My, Mz = maxi
+        bottom_corner, top_corner = env.fillBB
+        mx, my, mz = bottom_corner
+        Mx, My, Mz = top_corner
         ogNorms = self.ogsurfacePointsNormals
         for i, p in enumerate(srfPts):
             x, y, z = p
