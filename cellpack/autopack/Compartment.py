@@ -489,9 +489,6 @@ class Compartment(CompartmentList):
         self.surfacePointsNormals = surfacePointsNormals = pickle.load(f)
         self.surfacePointsCoords = surfacePointsCoords = pickle.load(f)
         return surfacePoints, insidePoints, surfacePointsNormals, surfacePointsCoords
-        # surfacePointscoords = pickle.load(f)
-        # return surfacePoints, insidePoints, surfacePointsNormals, \
-        #       surfacePointscoords
 
     def setNumber(self, num):
         """set compartment uniq id"""
@@ -636,6 +633,14 @@ class Compartment(CompartmentList):
             return True
         else:
             return False
+
+    def get_normal_for_point(self, pt, pos, mesh_store):
+        if pt not in self.surfacePointsNormals:
+            normal = mesh_store.get_normal(self.gname, pos)
+            self.surfacePointsNormals[pt] = normal
+            return normal
+        else:
+            return self.surfacePointsNormals[pt]
 
     def getMinMaxProteinSize(self):
         """retrieve minimum and maximum ingredient size for inner and surface recipe ingredients"""
@@ -1064,7 +1069,7 @@ class Compartment(CompartmentList):
         insidePoints = env.grid.getPointsInCube(self.bb, None, None, addSP=False)
         for p in insidePoints:
             env.grid.compartment_ids[p] = -self.number
-        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(self.ogsurfacePoints, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(self.ogsurfacePoints, env)
         srfPts = surfPtsBB
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
             nbGridPoints, srfPts, surfPtsBBNorms, env
@@ -1125,21 +1130,26 @@ class Compartment(CompartmentList):
         inside_points_positions = grdPos[inside_indexes]
         inside_tree = spatial.cKDTree(inside_points_positions, leafsize=10)
         surface_i = inside_tree.query_ball_point(outside_points_positions, env.grid.gridSpacing)
+        on_grid_surface_point_positions = []
         for i in surface_i:
             if len(i) > 0:
                 surface_indexes = inside_indexes[i]
+                on_grid_surface_point_positions.extend(grdPos[surface_indexes])
                 idarray[surface_indexes] = compartment_id
-
-        nbGridPoints = len(env.grid.masterGridPositions)
-        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(vertex_points, env)
+        number_of_base_grid_points = len(env.grid.masterGridPositions)
+        off_grid_surface_pt_pos, filtered_surface_pt_normals = self.filter_surface_pts_to_fill_box(vertex_points, env)
         ex = True  # True if nbGridPoints == len(idarray) else False
-        surfacePoints, surfacePointsNormals = self.extendGridArrays(
-            nbGridPoints, surfPtsBB, surfPtsBBNorms, env, extended=ex
+        surface_point_ids, surfacePointsNormals = self.extendGridArrays(
+            number_of_base_grid_points, off_grid_surface_pt_pos, filtered_surface_pt_normals, env, self.surfacePointsNormals, extended=ex
         )
+        all_surface_pt_pos = on_grid_surface_point_positions
+        all_surface_pt_pos.extend(off_grid_surface_pt_pos)
 
+        all_surface_pt_ids = numpy.nonzero(idarray == compartment_id)[0].tolist()
+        all_surface_pt_ids.extend(surface_point_ids)
         self.insidePoints = insidePoints
-        self.surfacePoints = surfacePoints
-        self.surfacePointsCoords = surfPtsBB
+        self.surfacePoints = all_surface_pt_ids
+        self.surfacePointsCoords = all_surface_pt_pos
         self.surfacePointsNormals = surfacePointsNormals
 
         self.computeVolumeAndSetNbMol(
@@ -1148,7 +1158,6 @@ class Compartment(CompartmentList):
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_binvox(self, env, grdPos, vSurfaceArea, srfPts, idarray, ray=1):
-        """Build the compartment grid ie surface and inside point using jordan theorem and host raycast"""
         # create surface points
         # check if file already exist, otherwise rebuild it
         number = self.number
@@ -1206,7 +1215,7 @@ class Compartment(CompartmentList):
         idarray[inside_points] = -number
         nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
         srfPts = surfPtsBB
 
         ex = True  # True if nbGridPoints == len(idarray) else False
@@ -1258,7 +1267,7 @@ class Compartment(CompartmentList):
 
         nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
         srfPts = surfPtsBB
 
         ex = True  # True if nbGridPoints == len(idarray) else False
@@ -1328,7 +1337,7 @@ class Compartment(CompartmentList):
                         )
         nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
         srfPts = surfPtsBB
 
         ex = True  # True if nbGridPoints == len(idarray) else False
@@ -1354,7 +1363,7 @@ class Compartment(CompartmentList):
             insidePoints = env.grid.getPointsInCube(self.bb, None, None, addSP=False)
             for p in insidePoints:
                 env.grid.compartment_ids[p] = -self.number
-            surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(self.ogsurfacePoints, env)
+            surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(self.ogsurfacePoints, env)
             srfPts = surfPtsBB
             surfacePoints, surfacePointsNormals = self.extendGridArrays(
                 nbGridPoints, srfPts, surfPtsBBNorms, env
@@ -1440,7 +1449,7 @@ class Compartment(CompartmentList):
 
         nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
         srfPts = surfPtsBB
         ex = True  # True if nbGridPoints == len(idarray) else False
         # back to list type
@@ -1535,7 +1544,7 @@ class Compartment(CompartmentList):
 
         nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
         srfPts = surfPtsBB
         ex = True  # True if nbGridPoints == len(idarray) else False
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
@@ -1843,7 +1852,7 @@ class Compartment(CompartmentList):
 
         nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(self.ogsurfacePoints, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(self.ogsurfacePoints, env)
         srfPts = surfPtsBB
 
         ex = True  # True if nbGridPoints == len(idarray) else False
@@ -1860,70 +1869,57 @@ class Compartment(CompartmentList):
         return self.insidePoints, self.surfacePoints
 
     def extendGridArrays(
-        self, nbGridPoints, srfPts, surfPtsBBNorms, env, extended=True
+        self, nbGridPoints, off_grid_surface_pts, surfPtsBBNorms, env, surfacePointsNormals, extended=True
     ):
         """Extend the environment grd using the compartment point"""
         if extended:
-            length = len(srfPts)
-            pointArrayRaw = numpy.zeros((nbGridPoints + length, 3), "f")
+            number_off_grid_pts = len(off_grid_surface_pts)
+            pointArrayRaw = numpy.zeros((nbGridPoints + number_off_grid_pts, 3), "f")
             pointArrayRaw[:nbGridPoints] = env.grid.masterGridPositions
-            pointArrayRaw[nbGridPoints:] = srfPts
-            self.surfacePointscoords = srfPts
-            env.grid.nbSurfacePoints += length
+            pointArrayRaw[nbGridPoints:] = off_grid_surface_pts
+            env.grid.nbSurfacePoints += number_off_grid_pts
             env.grid.masterGridPositions = pointArrayRaw
             if type(env.grid.distToClosestSurf) == numpy.ndarray:
                 # histoVol.grid.distToClosestSurf = numpy.append(histoVol.grid.distToClosestSurf,numpy.array([histoVol.grid.diag,]*length ))
-                distCS = numpy.ones(length) * env.grid.diag
+                distCS = numpy.ones(number_off_grid_pts) * env.grid.diag
                 env.grid.distToClosestSurf = numpy.hstack(
                     (env.grid.distToClosestSurf, distCS)
                 )
             else:
                 env.grid.distToClosestSurf.extend(
-                    (numpy.ones(length) * env.grid.diag).tolist()
+                    (numpy.ones(number_off_grid_pts) * env.grid.diag).tolist()
                 )
-            ptId = numpy.ones(length, "i") * self.number  # surface point
+            ptId = numpy.ones(number_off_grid_pts, "i") * self.number  # surface point
             env.grid.compartment_ids = numpy.hstack((env.grid.compartment_ids, ptId))
-            env.grid.freePoints = numpy.arange(nbGridPoints + length)
-            surfacePoints = list(range(nbGridPoints, nbGridPoints + length))
-            # histoVol.grid.freePoints.extend(surfacePoints)
-
-            surfacePointsNormals = {}
+            env.grid.freePoints = numpy.arange(nbGridPoints + number_off_grid_pts)
+            surfacePoints = list(range(nbGridPoints, nbGridPoints + number_off_grid_pts))
             for i, n in enumerate(surfPtsBBNorms):
                 surfacePointsNormals[nbGridPoints + i] = n
         else:
-            length = len(srfPts)
+            number_off_grid_pts = len(off_grid_surface_pts)
             pointArrayRaw = env.grid.masterGridPositions
-            self.surfacePointscoords = srfPts
-            env.grid.nbSurfacePoints += length
-            surfacePoints = list(range(nbGridPoints - length, nbGridPoints))
-            surfacePointsNormals = {}
+            env.grid.nbSurfacePoints += number_off_grid_pts
+            surfacePoints = list(range(nbGridPoints - number_off_grid_pts, nbGridPoints))
             for i, n in enumerate(surfPtsBBNorms):
-                surfacePointsNormals[nbGridPoints - length + i] = n
+                surfacePointsNormals[nbGridPoints - number_off_grid_pts + i] = n
         return surfacePoints, surfacePointsNormals
 
-    def getSurfaceBB(self, srfPts, env):
+    def filter_surface_pts_to_fill_box(self, off_grid_pos, env):
         """get the bounding box from the environment grid that encapsulated the mesh"""
-        surfPtsBB = []
+        if self.highresVertices is not None:
+            off_grid_pos = self.highresVertices
+        surface_points_positions = []
         surfPtsBBNorms = []
         bottom_corner, top_corner = env.fillBB
         mx, my, mz = bottom_corner
         Mx, My, Mz = top_corner
-        ogNorms = self.ogsurfacePointsNormals
-        for i, p in enumerate(srfPts):
+        off_grid_normals = self.ogsurfacePointsNormals
+        for i, p in enumerate(off_grid_pos):
             x, y, z = p
             if x >= mx and x <= Mx and y >= my and y <= My and z >= mz and z <= Mz:
-                surfPtsBB.append(p)
-                surfPtsBBNorms.append(ogNorms[i])
-        if self.highresVertices is not None:
-            srfPts = self.highresVertices
-            surfPtsBB = []
-            for i, p in enumerate(srfPts):
-                x, y, z = p
-                if x >= mx and x <= Mx and y >= my and y <= My and z >= mz and z <= Mz:
-                    surfPtsBB.append(p)
-        self.log.info("surf points going from to %d %d", len(srfPts), len(surfPtsBB))
-        srfPts = surfPtsBB
-        return surfPtsBB, surfPtsBBNorms
+                surface_points_positions.append(p)
+                surfPtsBBNorms.append(off_grid_normals[i])
+        return surface_points_positions, surfPtsBBNorms
 
     def BuildGridEnviroOnly(self, env, location=None):
         """Build the compartment grid ie surface and inside only environment"""
@@ -2037,7 +2033,7 @@ class Compartment(CompartmentList):
         pointArrayRaw = numpy.zeros((nbGridPoints + length, 3), "f")
         pointArrayRaw[:nbGridPoints] = env.grid.masterGridPositions
         pointArrayRaw[nbGridPoints:] = srfPts
-        self.surfacePointsCoords = srfPts  # surfacePointscoords ?
+        self.surfacePointsCoords = srfPts
         env.grid.nbSurfacePoints += length
         env.grid.masterGridPositions = pointArrayRaw
         env.grid.distToClosestSurf.extend([env.grid.diag] * length)
@@ -2155,7 +2151,7 @@ class Compartment(CompartmentList):
         t1 = time()
         nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.getSurfaceBB(srfPts, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
         srfPts = surfPtsBB
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
             nbGridPoints, srfPts, surfPtsBBNorms, env
@@ -2982,8 +2978,6 @@ class Compartment(CompartmentList):
         self.ogsurfacePointsNormals = helper.ApplyMatrix(
             numpy.array(self.normals), helper.ToMat(mat)
         )
-        #        faces = self.faces[:]
-        #        self.createSurfacePoints(maxl=grid.gridSpacing/2.0)
         surfacePoints = srfPts = self.ogsurfacePoints
         self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)
 
@@ -3196,8 +3190,6 @@ class Compartment(CompartmentList):
         self.ogsurfacePointsNormals = helper.FixNormals(
             self.vertices, self.faces, self.vnormals, fn=self.fnormals
         )
-        #        faces = self.faces[:]
-        #        self.createSurfacePoints(maxl=grid.gridSpacing)
         surfacePoints = srfPts = self.ogsurfacePoints
         self.OGsrfPtsBht = bht = spatial.cKDTree(tuple(srfPts), leafsize=10)
 

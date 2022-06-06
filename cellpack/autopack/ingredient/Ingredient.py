@@ -2189,7 +2189,7 @@ class Ingredient(Agent):
 
         return success, insidePoints, newDistPoints
 
-    def get_rotation(self, pt_ind, histovol, compartment):
+    def get_rotation(self, pt_ind, env, compartment):
         # compute rotation matrix rotMat
         comp_num = self.compNum
 
@@ -2198,7 +2198,7 @@ class Ingredient(Agent):
             # for surface points we compute the rotation which
             # aligns the principalVector with the surface normal
             v1 = self.principalVector
-            v2 = compartment.surfacePointsNormals[pt_ind]
+            v2 = compartment.get_normal_for_point(pt_ind, env.masterGridPositions[pt_ind], env.mesh_store)
             try:
                 rot_mat = numpy.array(rotVectToVect(v1, v2), "f")
             except Exception:
@@ -2212,14 +2212,14 @@ class Ingredient(Agent):
                 elif (
                     self.useOrientBias and self.packingMode == "gradient"
                 ):  # you need a gradient here
-                    rot_mat = self.alignRotation(histovol.masterGridPositions[pt_ind])
+                    rot_mat = self.alignRotation(env.masterGridPositions[pt_ind])
                 else:
                     rot_mat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
             # for other points we get a random rotation
             else:
-                rot_mat = histovol.randomRot.get()
+                rot_mat = env.randomRot.get()
         return rot_mat
 
     def randomize_rotation(self, rotation, histovol):

@@ -2475,10 +2475,9 @@ class Environment(CompartmentList):
             ##
 
             if ingr.compNum > 0:
-                allSrfpts = list(
-                    self.compartments[ingr.compNum - 1].surfacePointsNormals.keys()
-                )
-                res = [True, allSrfpts[int(random() * len(allSrfpts))]]
+                compartment = self.compartments[ingr.compNum - 1]
+                surface_points = compartment.surfacePoints
+                res = [True, surface_points[int(random() * len(surface_points))]]
             else:
                 res = self.getPointToDrop(
                     ingr,

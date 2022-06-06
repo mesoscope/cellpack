@@ -251,6 +251,14 @@ class MeshStore:
             (closet_point, distance, triangle_id) = query.on_surface([center])
             return distance[0]
 
+    def get_normal(self, geomname, point_pos):
+        mesh = self.get_object(geomname)
+        if mesh is not None:
+            query = trimesh.proximity.ProximityQuery(mesh)
+            (distance, triangle_ids) = query.vertex([point_pos])
+            triangle_id = triangle_ids[0]
+            return mesh.vertex_normals[triangle_id]
+
     def get_centroid(self, geomname):
         mesh = self.get_object(geomname)
         if mesh is not None:
