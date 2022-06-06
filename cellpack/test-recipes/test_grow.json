@@ -28,7 +28,7 @@
                     0.1,
                     0.1
                 ],
-                "length": 8000,
+                "length": 1000,
                 "marge": 40,
                 "molarity": 3.7787372e-7,
                 "name": "snake",
@@ -61,22 +61,22 @@
                     [
                         [
                             0,
-                            20,
+                            100,
                             0
                         ]
                     ]
                 ],
                 "principalVector": [
                     0,
-                    1,
-                    0
+                    0,
+                    1
                 ],
                 "proba_binding": 0.5,
                 "proba_not_binding": 0.5,
                 "properties": {},
                 "radii": [
                     [
-                        25
+                        10
                     ]
                 ],
                 "rejectionThreshold": 30,
@@ -87,7 +87,7 @@
                         "center": true
                     }
                 },
-                "uLength": 5,
+                "uLength": 50,
                 "useHalton": true,
                 "useLength": false,
                 "useOrientBias": false,

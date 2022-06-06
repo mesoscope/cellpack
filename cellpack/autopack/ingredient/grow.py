@@ -13,7 +13,7 @@ from cellpack.autopack.ingredient.Ingredient import Ingredient
 from cellpack.autopack.transformation import angle_between_vectors
 from cellpack.autopack.ldSequence import SphereHalton
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
-from .utils import rotVectToVect
+from .utils import rotVectToVect, get_reflected_point
 
 import cellpack.autopack as autopack
 
@@ -799,6 +799,7 @@ class GrowIngredient(MultiCylindersIngr):
             )  # *numpy.array(self.jitterMax)
             # the new position is the previous point (pt2) plus the random point
             newPt = numpy.array(pt2).flatten() + numpy.array(pt)
+
             if self.runTimeDisplay >= 2:
                 self.vi.setTranslation(sp, newPt)
                 self.vi.update()
@@ -845,7 +846,7 @@ class GrowIngredient(MultiCylindersIngr):
                         )
                         if not collision:
                             found = True
-                            return numpy.array(pt2).flatten() + numpy.array(pt), True
+                            return newPt, True
                         else:  # increment the range
                             if not self.constraintMarge:
                                 if marge >= 180:
@@ -856,13 +857,13 @@ class GrowIngredient(MultiCylindersIngr):
                             continue
                 else:
                     found = True
-                    return numpy.array(pt2).flatten() + numpy.array(pt), True
+                    return newPt, True
                     #                attempted += 1
             else:
                 attempted += 1
                 continue
             attempted += 1
-        return numpy.array(pt2).flatten() + numpy.array(pt), True
+        return newPt, True
 
     def getInterpolatedSphere(self, pt1, pt2):
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
@@ -1684,7 +1685,8 @@ class GrowIngredient(MultiCylindersIngr):
                 startingPoint = secondPoint[0]
                 secondPoint = secondPoint[1]
             v, d = self.vi.measure_distance(startingPoint, secondPoint, vec=True)
-
+            startingPoint = get_reflected_point(self, startingPoint)
+            secondPoint = get_reflected_point(self, secondPoint)
             rotMatj, jtrans = self.getJtransRot(startingPoint, secondPoint)
             if r:
                 # reverse mode
@@ -1693,8 +1695,9 @@ class GrowIngredient(MultiCylindersIngr):
             cent2T = self.transformPoints(jtrans, rotMatj, self.positions2[-1])
             print(
                 "here is output of walk",
-                secondPoint,
                 startingPoint,
+                secondPoint,
+                d,
                 success,
                 alternate,
                 len(secondPoint),
@@ -1855,7 +1858,8 @@ class GrowIngredient(MultiCylindersIngr):
             v = self.vi.rotate_about_axis(
                 numpy.array(self.orientation),
                 random() * math.radians(self.marge),  # or marge ?
-                axis=list(self.orientation).index(0),
+                # axis=list(self.orientation).index(0),
+                axis=2, # TODO: revert to original implementation for 3D packing
             )
             self.vector = (
                 numpy.array(v).flatten() * self.uLength * self.jitterMax
@@ -1970,6 +1974,7 @@ class GrowIngredient(MultiCylindersIngr):
         self.compartment = compartment
 
         secondPoint = self.getFirstPoint(ptInd)
+
         # check collision ?
         # if we have starting position available use it
         if self.nbCurve < len(self.start_positions):
@@ -1979,6 +1984,12 @@ class GrowIngredient(MultiCylindersIngr):
             secondPoint = self.start_positions[self.nbCurve][1]
         if secondPoint is None:
             return success, nbFreePoints
+        
+        # reflect points back in-plane (useful for 2D packing)
+        previousPoint = get_reflected_point(self, previousPoint)
+        startingPoint = get_reflected_point(self, startingPoint)
+        secondPoint = get_reflected_point(self, secondPoint)
+
         rotMatj, jtrans = self.getJtransRot(startingPoint, secondPoint)
         # test for collision
         # return success, nbFreePoints

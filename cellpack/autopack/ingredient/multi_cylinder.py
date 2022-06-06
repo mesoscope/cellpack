@@ -122,49 +122,51 @@ class MultiCylindersIngr(Ingredient):
         self.modelType = "Cylinders"
         self.collisionLevel = 0
         self.minRadius = self.radii[0][0]
-        #        self.encapsulatingRadius = radii[0][0]  #Graham worry: 9/8/11 This is incorrect... shoudl be max(radii[0]) or radii[0][1]
-        #        self.encapsulatingRadius = radii[0][0]#nope should be  half length ?
-        self.length = 1.0
         self.useLength = useLength
         self.uLength = uLength
+        self.encapsulatingRadius = radii[0][0]
         if self.positions2 is not None and self.positions is not None:
             # shoulde the overall length of the object from bottom to top
             bb = self.getBigBB()
             d = numpy.array(bb[1]) - numpy.array(bb[0])
             s = numpy.sum(d * d)
             self.length = math.sqrt(s)  # diagonal
+            self.encapsulatingRadius = self.length / 2
+        
         # if self.mesh is None and autopack.helper is not None :
         #            #build a cylinder and make it length uLength, radius radii[0]
         #            self.mesh = autopack.helper.Cylinder(self.name+"_basic",radius=self.radii[0][0],
         #                                       length=self.uLength,parent="autopackHider")[0]
-        if self.mesh is None and autopack.helper is not None:
-            p = None
-            if not autopack.helper.nogui:
-                # build a cylinder and make it length uLength, radius radii[0]
-                # this mesh is used bu RAPID for collision
-                p = autopack.helper.getObject("autopackHider")
-                if p is None:
-                    p = autopack.helper.newEmpty("autopackHider")
-                    if autopack.helper.host.find("blender") == -1:
-                        autopack.helper.toggleDisplay(p, False)
-                        #                self.mesh = autopack.helper.Cylinder(self.name+"_basic",
-                        #                                radius=self.radii[0][0]*1.24, length=self.uLength,
-                        #                                res= 5, parent="autopackHider",axis="+X")[0]
-            length = 1
-            if self.positions2 is not None and self.positions is not None:
-                d = numpy.array(self.positions2[0][0]) - numpy.array(
-                    self.positions[0][0]
-                )
-                s = numpy.sum(d * d)
-                length = math.sqrt(s)  # diagonal
-            self.mesh = autopack.helper.Cylinder(
-                self.name + "_basic",
-                radius=self.radii[0][0] * 1.24,
-                length=length,
-                res=5,
-                parent="autopackHider",
-                axis=self.principalVector,
-            )[0]
+
+        # if self.mesh is None and autopack.helper is not None:
+        #     p = None
+        #     if not autopack.helper.nogui:
+        #         # build a cylinder and make it length uLength, radius radii[0]
+        #         # this mesh is used bu RAPID for collision
+        #         p = autopack.helper.getObject("autopackHider")
+        #         if p is None:
+        #             p = autopack.helper.newEmpty("autopackHider")
+        #             if autopack.helper.host.find("blender") == -1:
+        #                 autopack.helper.toggleDisplay(p, False)
+        #                 #                self.mesh = autopack.helper.Cylinder(self.name+"_basic",
+        #                 #                                radius=self.radii[0][0]*1.24, length=self.uLength,
+        #                 #                                res= 5, parent="autopackHider",axis="+X")[0]
+        #     length = 1
+        #     if self.positions2 is not None and self.positions is not None:
+        #         d = numpy.array(self.positions2[0][0]) - numpy.array(
+        #             self.positions[0][0]
+        #         )
+        #         s = numpy.sum(d * d)
+        #         length = math.sqrt(s)  # diagonal
+        #     self.mesh = autopack.helper.Cylinder(
+        #         self.name + "_basic",
+        #         radius=self.radii[0][0] * 1.24, # why is this multiplied?
+        #         length=length,
+        #         res=5,
+        #         parent="autopackHider",
+        #         axis=self.principalVector,
+        #     )[0]
+        
         # self.mesh = autopack.helper.oneCylinder(self.name+"_basic",
         #                                self.positions[0][0],self.positions2[0][0],
         #                                radius=self.radii[0][0]*1.24,
@@ -365,16 +367,18 @@ class MultiCylindersIngr(Ingredient):
                 self.vi.setTranslation(sph2, p2)
 
                 self.vi.update()
+            
             x1, y1, z1 = p1
             x2, y2, z2 = p2
             vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
             lengthsq = vx * vx + vy * vy + vz * vz
             length = sqrt(lengthsq)
             cx, cy, cz = posc = x1 + vx * 0.5, y1 + vy * 0.5, z1 + vz * 0.5
-            radt = length + radc
+            # radt = length + radc
+            radt = sqrt(lengthsq + radc**2)
 
             bb = self.correctBB(p1, p2, radc)
-            #            bb = self.correctBB(posc,posc,radt)
+
             if histoVol.runTimeDisplay > 1:
                 box = self.vi.getObject("collBox")
                 if box is None:
@@ -384,13 +388,15 @@ class MultiCylindersIngr(Ingredient):
                     self.vi.updateBox(box, cornerPoints=bb)
                     self.vi.update()
                     #                 sleep(1.0)
+            
             pointsInCube = histoVol.grid.getPointsInCube(bb, posc, radt, info=True)
 
             # check for collisions with cylinder
             pd = numpy.take(gridPointsCoords, pointsInCube, 0) - p1
             dotp = numpy.dot(pd, vect)
             rad2 = radc * radc
-            dsq = numpy.sum(pd * pd, 1) - dotp * dotp / lengthsq
+            d2toP1 = numpy.sum(pd * pd, 1)
+            dsq = d2toP1 - dotp * dotp / lengthsq # perpendicular distance to cylinder axis
 
             ptsWithinCaps = numpy.nonzero(
                 numpy.logical_and(
@@ -408,21 +414,7 @@ class MultiCylindersIngr(Ingredient):
                     wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
                     if len(wrongPt):
                         return True, insidePoints, newDistPoints
-            # for pti in ptsWithinCaps[0]:
-            #     pt = pointsInCube[pti]
-            #     dist = dsq[pti]
-            #     if dist > rad2:
-            #         continue  # outside radius
-            #     elif distance[pt] < -0.0001:  # or trigger: # pt is inside cylinder
-            #         # changeObjColorMat
-            #         if histoVol.runTimeDisplay > 1:
-            #             self.vi.changeObjColorMat(cyl, (1., 0., 0.))
-            #             self.vi.update()
-            #         #                        sleep(1.0)
-            #         # reject
-            #         return True
-            d2toP1 = numpy.sum(pd * pd, 1)
-            dsq = d2toP1 - dotp * dotp / lengthsq
+            
             pd2 = numpy.take(gridPointsCoords, pointsInCube, 0) - p2
             d2toP2 = numpy.sum(pd2 * pd2, 1)
 
@@ -430,20 +422,22 @@ class MultiCylindersIngr(Ingredient):
                 dist = dsq[pti]
                 if dist > rad2:
                     continue  # outside radius
-                elif distance[pt] < -0.0001:
+                elif distance[pt] < 0:
                     return True, insidePoints, newDistPoints
+
                 if pt in insidePoints:
                     continue
-                if dotp[pti] < 0.0:  # outside 1st cap
-                    d = sqrt(d2toP1[pti])
+
+                if dotp[pti] < 0.0:  # outside 1st cap, p1 is closer
+                    d = sqrt(d2toP1[pti]) - radc
                     if d < distance[pt]:  # point in region of influence
                         if pt in newDistPoints:
                             if d < newDistPoints[pt]:
                                 newDistPoints[pt] = d
                         else:
                             newDistPoints[pt] = d
-                elif dotp[pti] > lengthsq:
-                    d = sqrt(d2toP2[pti])
+                elif dotp[pti] > lengthsq: # p2 is closer
+                    d = sqrt(d2toP2[pti]) - radc
                     if d < distance[pt]:  # point in region of influence
                         if pt in newDistPoints:
                             if d < newDistPoints[pt]:
@@ -452,7 +446,7 @@ class MultiCylindersIngr(Ingredient):
                             newDistPoints[pt] = d
                 else:
                     d = sqrt(dsq[pti]) - radc
-                    if d < 0.0:  # point is inside dropped sphere
+                    if d < 0.0:  # point is inside curved region
                         if pt in insidePoints:
                             if d < insidePoints[pt]:
                                 insidePoints[pt] = d

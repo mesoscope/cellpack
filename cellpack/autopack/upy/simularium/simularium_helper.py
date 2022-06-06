@@ -396,10 +396,13 @@ class simulariumHelper(hostHelper.Helper):
         self.time = 0
         for position, rotation, ingredient, ptInd in objects:
             ingr_name = ingredient.name
+            sub_points = None
 
             if ingredient.Type == "Grow" or ingredient.Type == "MultiCylinder":
                 if ingredient.nbCurve == 0:
                     continue
+                # TODO: get sub_points accurately
+                sub_points = ingredient.listePtLinear
 
             if ingr_name not in self.display_data:
                 display_type, url = self.get_display_data(ingredient)
@@ -413,7 +416,7 @@ class simulariumHelper(hostHelper.Helper):
                 f"{ingr_name}-{ptInd}",
                 position,
                 rotation,
-                None,
+                sub_points,
             )
 
     def addCameraToScene(self):

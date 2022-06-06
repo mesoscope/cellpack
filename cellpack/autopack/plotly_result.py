@@ -76,6 +76,13 @@ class PlotlyAnalysis:
                     self.add_circle(ingr.encapsulatingRadius, pos, ingr.color)
                 elif ingr.modelType == "Cube":
                     self.add_square(ingr.radii, pos, rot, ingr.color)
+                elif ingr.modelType == "Cylinders":
+                    length = max(ingr.positions2[0][0])
+                    height = ingr.radii[0][0]
+                    radius = [
+                        [height, length, 1.0]
+                        ]
+                    self.add_square(radius, pos, rot, ingr.color)
 
     def make_grid_heatmap(self, env):
         ids = []

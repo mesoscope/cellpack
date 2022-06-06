@@ -228,3 +228,29 @@ def pandaMatrice(mat):
         mat[15],
     )
     return pMat
+
+def get_reflected_point(self, new_position, boundingBox=None):
+    # returns the reflection of a point across a bounding box
+    if boundingBox is None:
+        boundingBox = self.env.grid.boundingBox
+
+    # distance from origin
+    dist_o = new_position - boundingBox[0]
+    ref_inds_o = dist_o < 0
+
+    # distance from edge
+    dist_e = boundingBox[1] - new_position
+    ref_inds_e = dist_e < 0
+
+    while True in ref_inds_o or True in ref_inds_e:
+        # reflect around origin
+        new_position[ref_inds_o] = boundingBox[1][ref_inds_o] + dist_o[ref_inds_o]
+        dist_o = new_position - boundingBox[0]
+        ref_inds_o = dist_o < 0
+
+        # reflect around edge
+        new_position[ref_inds_e] = boundingBox[0][ref_inds_e] - dist_e[ref_inds_e]
+        dist_e = boundingBox[1] - new_position
+        ref_inds_e = dist_e < 0
+
+    return new_position

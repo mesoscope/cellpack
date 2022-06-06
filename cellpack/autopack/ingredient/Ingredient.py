@@ -997,7 +997,7 @@ class Ingredient(Agent):
         position[0] += dx
         position[1] += dy
         position[2] += dz
-        return position
+        return numpy.array(position)
 
     def getMaxJitter(self, spacing):
         # self.jitterMax: each value is the max it can move

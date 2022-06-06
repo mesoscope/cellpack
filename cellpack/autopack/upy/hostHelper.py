@@ -4250,7 +4250,7 @@ class Helper:
         vx, vy, vz = v
         offset = numpy.array(
             [float(x1 + x2) / 2, float(y1 + y2) / 2, float(z1 + z2) / 2]
-        )
+        )  # center of the line joining two points
         v_2 = self.unit_vector(v, axis=1)
         v_1 = numpy.array([float(0.0), float(1.0), float(2.0)])
         v_3 = numpy.cross(v_1, v_2)
