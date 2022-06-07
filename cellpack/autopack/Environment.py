@@ -2002,13 +2002,14 @@ class Environment(CompartmentList):
 
     def getActiveIng(self):
         """Return all remaining active ingredients"""
+        import ipdb; ipdb.set_trace()
         allIngredients = []
-        r = self.exteriorRecipe
-        if r is not None:
-            if not hasattr(r, "molecules"):
-                r.molecules = []
-        if r:
-            for ingr in r.ingredients:
+        recipe = self.exteriorRecipe
+        if recipe is not None:
+            if not hasattr(recipe, "molecules"):
+                recipe.molecules = []
+        if recipe:
+            for ingr in recipe.ingredients:
                 ingr.counter = 0  # counter of placed molecules
                 if ingr.nbMol > 0:  # I DONT GET IT !
                     ingr.completion = 0.0
@@ -2016,12 +2017,12 @@ class Environment(CompartmentList):
                 else:
                     ingr.completion = 1.0
 
-        for o in self.compartments:
-            if not hasattr(o, "molecules"):
-                o.molecules = []
-            r = o.surfaceRecipe
-            if r:
-                for ingr in r.ingredients:
+        for compartment in self.compartments:
+            if not hasattr(compartment, "molecules"):
+                compartment.molecules = []
+            recipe = compartment.surfaceRecipe
+            if recipe:
+                for ingr in recipe.ingredients:
                     ingr.counter = 0  # counter of placed molecules
                     if ingr.nbMol > 0:
                         ingr.completion = 0.0
@@ -2029,9 +2030,9 @@ class Environment(CompartmentList):
                     else:
                         ingr.completion = 1.0
 
-            r = o.innerRecipe
-            if r:
-                for ingr in r.ingredients:
+            recipe = compartment.innerRecipe
+            if recipe:
+                for ingr in recipe.ingredients:
                     ingr.counter = 0  # counter of placed molecules
                     #                    print "nbMol",ingr.nbMol
                     if ingr.nbMol > 0:

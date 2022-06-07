@@ -1,18 +1,12 @@
 {
     "recipe": {
-        "version": "1.0",
-        "name": "one_sphere"
+        "name": "one_sphere",
+        "version": "1.0"
     },
     "options": {
-        "cancelDialog": false,
+        "EnviroOnly": false,
         "_hackFreepts": false,
-        "windowsSize": 10,
-        "use_gradient": false,
-        "placeMethod": "jitter",
-        "saveResult": false,
-        "runTimeDisplay": false,
-        "overwritePlaceMethod": true,
-        "innerGridMethod": "bhtree",
+        "_timer": false,
         "boundingBox": [
             [
                 0,
@@ -25,72 +19,60 @@
                 1
             ]
         ],
-        "gradients": [],
-        "smallestProteinSize": 0,
+        "cancelDialog": false,
         "computeGridParams": true,
         "freePtsUpdateThreshold": 0,
-        "pickWeightedIngr": true,
-        "_timer": false,
+        "gradients": [],
         "ingrLookForNeighbours": false,
-        "pickRandPt": true,
+        "innerGridMethod": "bhtree",
         "largestProteinSize": 200,
+        "overwritePlaceMethod": true,
+        "pickRandPt": true,
+        "pickWeightedIngr": true,
+        "placeMethod": "jitter",
         "resultfile": "autoPACKserver/results/NM_Analysis_FigureB1.0.apr.json",
+        "runTimeDisplay": false,
+        "saveResult": false,
+        "smallestProteinSize": 0,
+        "use_gradient": false,
         "use_periodicity": true,
-        "EnviroOnly": false
+        "windowsSize": 10
     },
     "cytoplasme": {
         "ingredients": {
             "Sphere_radius_100": {
-                "nbJitter": 20,
-                "molarity": 0,
-                "partners_position": [],
-                "rotRange": 6.2831,
+                "Type": "SingleSphere",
                 "color": [
                     0.498,
                     0.498,
                     0.498
                 ],
-                "meshFile": null,
-                "sphereFile": null,
-                "weight": 0.2,
-                "orientBiasRotRangeMin": -3.1415927,
-                "radii": [
-                    [
-                        100
-                    ]
-                ],
-                "cutoff_boundary": 0,
                 "coordsystem": "left",
+                "cutoff_boundary": 0,
+                "cutoff_surface": 100,
+                "encapsulatingRadius": 100,
+                "excluded_partners_name": [],
+                "gradient": "",
+                "isAttractor": false,
                 "jitterMax": [
                     1,
                     1,
                     0
                 ],
-                "perturbAxisAmplitude": 0.1,
-                "encapsulatingRadius": 100,
-                "positions2": null,
-                "useOrientBias": false,
-                "gradient": "",
-                "isAttractor": false,
-                "principalVector": [
-                    1,
-                    0,
-                    0
-                ],
-                "properties": {},
-                "partners_name": [],
-                "nbMol": 1,
+                "meshFile": null,
+                "molarity": 0,
                 "name": "Sphere_radius_100",
+                "nbJitter": 20,
+                "nbMol": 1,
                 "orientBiasRotRangeMax": -3.1415927,
+                "orientBiasRotRangeMin": -3.1415927,
                 "packingMode": "random",
-                "Type": "SingleSphere",
-                "excluded_partners_name": [],
-                "rejectionThreshold": 100,
-                "placeType": "jitter",
-                "cutoff_surface": 100,
                 "packingPriority": 0,
-                "proba_binding": 0.5,
-                "rotAxis": null,
+                "partners_name": [],
+                "partners_position": [],
+                "pdb": null,
+                "perturbAxisAmplitude": 0.1,
+                "placeType": "jitter",
                 "positions": [
                     [
                         [
@@ -100,9 +82,27 @@
                         ]
                     ]
                 ],
+                "positions2": null,
+                "principalVector": [
+                    1,
+                    0,
+                    0
+                ],
+                "proba_binding": 0.5,
                 "proba_not_binding": 0.5,
-                "pdb": null,
-                "useRotAxis": false
+                "properties": {},
+                "radii": [
+                    [
+                        100
+                    ]
+                ],
+                "rejectionThreshold": 100,
+                "rotAxis": null,
+                "rotRange": 6.2831,
+                "sphereFile": null,
+                "useOrientBias": false,
+                "useRotAxis": false,
+                "weight": 0.2
             }
         }
     }
