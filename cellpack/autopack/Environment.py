@@ -788,6 +788,7 @@ class Environment(CompartmentList):
             result=True,
             quaternion=True,
             all_ingr_as_array=all_ingr_as_array,
+            compartments=self.compartments
         )  # pdb ?
         self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
@@ -1420,6 +1421,7 @@ class Environment(CompartmentList):
         fits, bb = compartment.inBox(self.boundingBox)
 
         if not fits:
+            print("NEED NEW BB", bb, self.boundingBox)
             self.boundingBox = bb
         CompartmentList.addCompartment(self, compartment)
 
@@ -2646,7 +2648,6 @@ class Environment(CompartmentList):
             ingredients[ingr.name][2].append(rot)
             ingredients[ingr.name][3].append(numpy.array(mat))
         for compartment in self.compartments:
-            print(compartment.name, compartment.center, compartment.radius, compartment.printFillInfo())
             for pos, rot, ingr, ptInd in compartment.molecules:
                 if ingr.name not in ingredients:
                     ingredients[ingr.name] = [ingr, [], [], []]

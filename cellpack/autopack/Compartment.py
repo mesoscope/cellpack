@@ -63,7 +63,7 @@ import numpy
 from time import time
 import math
 import trimesh
-import trimesh.voxel as Voxel
+from trimesh.voxel import creation
 from scipy import spatial
 
 import cellpack.autopack as autopack
@@ -149,7 +149,8 @@ class Compartment(CompartmentList):
         super().__init__()
         gname = gname or name
         self.name = name
-        self.center = [0, 0, 0]
+        self.center = [0, 0, 0]  # calculated centroid of the mesh
+        self.position = [0, 0, 0]  # where the object is placed
         self.vertices = vertices
         self.faces = faces
         self.vnormals = vnormals
@@ -164,14 +165,13 @@ class Compartment(CompartmentList):
         self.bb = None
         self.diag = 9999.9
         self.ghost = ghost
-        self.ref_obj = None
         self.filename = filename
         self.ref_obj = ref_obj
         self.meshType = meshType
         self.representation = object_name
         self.representation_file = object_filename
-
         self.encapsulatingRadius = 9999.9
+        self.path = autopack.fixOnePath(filename)
 
         self.checkinside = True
         self.innerRecipe = None
@@ -933,10 +933,10 @@ class Compartment(CompartmentList):
         grid_point_indexes = numpy.nonzero(mask)
         distances[grid_point_indexes] = new_distances[grid_point_indexes]
         # set all grid points close to the surface as surface points
-        indexes_of_grid_surface_points = numpy.nonzero(
-            new_distances < env.grid.gridSpacing
-        )
-        compartment_ids[indexes_of_grid_surface_points] = self.number
+        # indexes_of_grid_surface_points = numpy.nonzero(
+        #     new_distances < env.grid.gridSpacing
+        # )
+        # compartment_ids[indexes_of_grid_surface_points] = self.number
         if (
             env.innerGridMethod == "sdf" and self.isOrthogonalBoundingBox != 1
         ):  # A fillSelection can now be a mesh too... it can use either of these methods
@@ -1033,6 +1033,7 @@ class Compartment(CompartmentList):
                 vSurfaceArea,
                 off_grid_surface_points,
                 compartment_ids,
+                mesh_store
             )
         return inside_points, surface_points
 
@@ -1243,9 +1244,8 @@ class Compartment(CompartmentList):
         mesh = trimesh.Trimesh(vertices=self.vertices, faces=self.faces)
         # voxelized
 
-        trimesh_grid = Voxel(mesh, env.grid.gridSpacing / 1.1547, size_max=numpy.inf)
+        trimesh_grid = creation.voxelize(mesh, pitch=env.grid.gridSpacing).hollow()
 
-        helper.resetProgressBar()
         # the main loop
 
         for ptInd in range(len(grdPos)):  # len(grdPos)):
@@ -1255,15 +1255,12 @@ class Compartment(CompartmentList):
                 grdPos.item((ptInd, 2)),
             ]
             insideBB = self.checkPointInsideBB(coord, dist=new_distances.item(ptInd))
-            r = False
             if insideBB:
-                r = trimesh_grid.is_filled(coord)
-            if r:  # odd inside
-                # filter a little to be really inside ?
-                if new_distances.item(ptInd) > env.grid.gridSpacing * 1.1547:
+                if trimesh_grid.is_filled(coord):
+                    idarray.itemset(ptInd, number)
+                elif mesh.contains([coord]):
                     insidePoints.append(ptInd)
                     idarray.itemset(ptInd, -number)
-                # idarray[ptInd] = -number
 
         nbGridPoints = len(env.grid.masterGridPositions)
 
@@ -1272,7 +1269,7 @@ class Compartment(CompartmentList):
 
         ex = True  # True if nbGridPoints == len(idarray) else False
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
-            nbGridPoints, srfPts, surfPtsBBNorms, env, extended=ex
+            nbGridPoints, srfPts, surfPtsBBNorms, env, surfacePointsNormals=self.surfacePointsNormals, extended=ex
         )
 
         self.insidePoints = insidePoints
@@ -1286,7 +1283,7 @@ class Compartment(CompartmentList):
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_scanline(
-        self, env, grdPos, new_distances, vSurfaceArea, diag, srfPts, idarray
+        self, env, grdPos, new_distances, vSurfaceArea, diag, srfPts, idarray, mesh_store
     ):
         """Build the compartment grid ie surface and inside point using scanline"""
         insidePoints = []
@@ -1302,7 +1299,7 @@ class Compartment(CompartmentList):
             grdPos.item((ptInd, 2)),
         ]
         # is this point inside
-        inside = self.checkPointInside(coord, diag, ray=3)
+        inside = self.checkPointInside(coord, diag, mesh_store, ray=3)
         for k in range(NZ):
             for i in range(NX):
                 for j in range(NY):
@@ -1321,7 +1318,7 @@ class Compartment(CompartmentList):
                             new_distances.item(ptInd)
                             < env.grid.gridSpacing * 1.1547 * 2.0
                         ):
-                            inside = self.checkPointInside(coord, diag, ray=3)
+                            inside = self.checkPointInside(coord, diag, mesh_store, ray=3)
                         if inside:
                             insidePoints.append(ptInd)
                             idarray.itemset(ptInd, -number)
@@ -1342,7 +1339,7 @@ class Compartment(CompartmentList):
 
         ex = True  # True if nbGridPoints == len(idarray) else False
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
-            nbGridPoints, srfPts, surfPtsBBNorms, env, extended=ex
+            nbGridPoints, srfPts, surfPtsBBNorms, env, surfacePointsNormals=self.surfacePointsNormals, extended=ex
         )
 
         self.insidePoints = insidePoints
@@ -1548,7 +1545,7 @@ class Compartment(CompartmentList):
         srfPts = surfPtsBB
         ex = True  # True if nbGridPoints == len(idarray) else False
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
-            nbGridPoints, srfPts, surfPtsBBNorms, env, extended=ex
+            nbGridPoints, srfPts, surfPtsBBNorms, env, self.surfacePointsNormals, extended=ex
         )
         self.insidePoints = insidePoints
         self.surfacePoints = surfacePoints

@@ -524,10 +524,13 @@ def addCompartments(env, compdic, i, io_ingr):
                     compartment.setInnerRecipe(rMatrix)
 
 
-def save_as_simularium(env, setupfile, all_ingr_as_array):
+def save_as_simularium(env, setupfile, all_ingr_as_array, compartments):
     autopack.helper.clear()
     length_original_grid_points = len(env.grid.masterGridPositions) - env.grid.nbSurfacePoints
     autopack.helper.init_scene_with_objects(all_ingr_as_array, env.grid.masterGridPositions, env.grid.compartment_ids)
+    if compartments is not None:
+        for compartment in compartments:
+            autopack.helper.add_compartment_to_scene(compartment)
     autopack.helper.writeToFile(None, f"{setupfile}_results", env.boundingBox)
     webbrowser.open("https://simularium.allencell.org/viewer")
 
@@ -1875,6 +1878,7 @@ def setupFromJsonDic(
                             # either xref or defined
                             ing_dic = ingrs_dic[ing_name]
                             ingr = io_ingr.makeIngredientFromJson(
+                                env=env,
                                 inode=ing_dic, recipe=env.name
                             )
                             rMatrix.addIngredient(ingr)
@@ -2075,6 +2079,7 @@ def save(
     quaternion=False,
     transpose=False,
     all_ingr_as_array=None,
+    compartments=None,
 ):
     if useXref is None:
         useXref = env.useXref
@@ -2093,7 +2098,7 @@ def save(
         )
 
     elif format_output == "simularium":
-        save_as_simularium(env, setupfile, all_ingr_as_array)
+        save_as_simularium(env, setupfile, all_ingr_as_array, compartments)
     elif format_output == "xml":
         save_asXML(env, setupfile, useXref=useXref)
     elif format_output == "python":

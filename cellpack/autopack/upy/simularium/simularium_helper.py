@@ -102,7 +102,7 @@ class simulariumHelper(hostHelper.Helper):
         self.scene = {}  # dict of instances in the scene
         self.agent_id_counter = 0
         self.display_data = {}
-        self.scale_factor = 1 / 10.0
+        self.scale_factor = 1
         self.viewer = "nogui"
         self.nogui = True
         self.hext = "dae"
@@ -284,6 +284,7 @@ class simulariumHelper(hostHelper.Helper):
         name,
         ingredient,
         instance_id,
+        radius,
         position=None,
         rotation=None,
         sub_points=None,
@@ -297,7 +298,6 @@ class simulariumHelper(hostHelper.Helper):
         else:
             viz_type = VIZ_TYPE.DEFAULT
 
-        radius = ingredient.encapsulatingRadius if ingredient is not None else 10
         new_instance = Instance(
             name,
             instance_id,
@@ -322,6 +322,31 @@ class simulariumHelper(hostHelper.Helper):
 
     def GetAbsPosUntilRoot(self, obj):
         return [0, 0.0, 0.0]
+
+    def add_compartment_to_scene(
+        self,
+        compartment,
+    ):
+        display_type = DISPLAY_TYPE.SPHERE
+        url = ""
+        radius = compartment.encapsulatingRadius
+        if compartment.meshType == "file":
+            _, extension = os.path.splitext(compartment.path)
+            if extension == ".obj":
+                display_type = DISPLAY_TYPE.OBJ
+                url = compartment.path if not os.path.isfile(compartment.path) else os.path.basename(compartment.path)
+                radius = self.scale_factor
+        self.display_data[compartment.name] = DisplayData(
+            name=compartment.name, display_type=display_type, url=url
+        )
+        self.add_instance(
+            compartment.name,
+            None,
+            compartment.number,
+            radius,
+            compartment.position,
+            np.identity(4),
+        )
 
     def add_object_to_scene(
         self,
@@ -410,11 +435,13 @@ class simulariumHelper(hostHelper.Helper):
                 self.display_data[ingredient.name] = DisplayData(
                     name=ingr_name, display_type=display_type, url=url
                 )
+            radius = ingredient.encapsulatingRadius if ingredient is not None else 10
 
             self.add_instance(
                 ingredient.name,
                 ingredient,
                 f"{ingr_name}-{ptInd}",
+                radius,
                 position,
                 rotation,
                 None,
@@ -433,13 +460,14 @@ class simulariumHelper(hostHelper.Helper):
                     self.display_data[name] = DisplayData(
                         name=name, display_type=DISPLAY_TYPE.SPHERE, url=""
                     )
-        
+
                     self.add_instance(
                         name,
                         None,
                         f"{name}-{index}",
+                        0.1,
                         point_pos,
-                        [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, ], [0, 0, 0, 0, ]],
+                        np.identity(4),
                         None,
                     )
 
@@ -1133,13 +1161,14 @@ class simulariumHelper(hostHelper.Helper):
         x_size = bb[1][0] - bb[0][0]
         y_size = bb[1][1] - bb[0][1]
         z_size = bb[1][2] - bb[0][2]
-        box_adjustment = np.array(bb[0]) + np.array(bb[1])
+        box_adjustment = (np.array(bb[0]) + np.array(bb[1])) * self.scale_factor / 2
         box_size = [
             x_size * self.scale_factor,
             y_size * self.scale_factor,
             z_size * self.scale_factor,
         ]
 
+        print(box_adjustment, box_size)
         n_agents = [0 for x in range(total_steps)]
         type_names = [
             ["" for x in range(max_number_agents)] for x in range(total_steps)
@@ -1187,9 +1216,9 @@ class simulariumHelper(hostHelper.Helper):
                 else:
                     position = data_at_time["position"]
                     positions[t][n] = [
-                        position[0] * self.scale_factor - box_adjustment[0] / 2,
-                        position[1] * self.scale_factor - box_adjustment[1] / 2,
-                        position[2] * self.scale_factor - box_adjustment[2] / 2,
+                        position[0] * self.scale_factor - box_adjustment[0],
+                        position[1] * self.scale_factor - box_adjustment[1],
+                        position[2] * self.scale_factor - box_adjustment[2],
                     ]
                     rotation = data_at_time["rotation"]
                     rotations[t][n] = rotation
@@ -1203,7 +1232,7 @@ class simulariumHelper(hostHelper.Helper):
                 box_size=np.array(box_size),
                 camera_defaults=CameraData(
                     position=np.array([10.0, 0.0, camera_z_position]),
-                    look_at_position=np.array([10.0, 0.0, 0.0]),
+                    look_at_position=np.array([0.0, 0.0, 0.0]),
                     fov_degrees=60.0,
                 ),
             ),
