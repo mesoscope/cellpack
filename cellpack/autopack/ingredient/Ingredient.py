@@ -124,56 +124,56 @@ class Ingredient(Agent):
         attempts
 
     """
+
     ARGUMENTS = [
-            "color",
-            "coordsystem",
-            "cutoff_boundary",
-            "cutoff_surface",
-            "distExpression",
-            "distFunction",
-            "encapsulatingRadius",
-            "excluded_partners_name",
-            "force_randoom"
-            "isAttractor",
-            "jitterMax",
-            "meshFile",
-            "meshName",
-            "meshObject",
-            "molarity",
-            "name",
-            "nbJitter",
-            "nbMol",
-            "offset",
-            "orientBiasRotRangeMax",
-            "orientBiasRotRangeMin",
-            "overwrite_distFunc",
-            "packingMode",
-            "packingPriority",
-            "partners_name",
-            "partners_position",
-            "partners_weight",
-            "pdb",
-            "perturbAxisAmplitude",
-            "placeType",
-            "positions",
-            "positions2",
-            "principalVector",
-            "proba_binding",
-            "proba_not_binding",
-            "properties",
-            "radii",
-            "radius",
-            "rejectionThreshold",
-            "resolution_dictionary",
-            "rotAxis",
-            "rotRange",
-            "source",
-            "sphereFile",
-            "Type",
-            "useOrientBias",
-            "useRotAxis",
-            "weight"
-        ]
+        "color",
+        "coordsystem",
+        "cutoff_boundary",
+        "cutoff_surface",
+        "distExpression",
+        "distFunction",
+        "encapsulatingRadius",
+        "excluded_partners_name",
+        "force_randoom" "isAttractor",
+        "jitterMax",
+        "meshFile",
+        "meshName",
+        "meshObject",
+        "molarity",
+        "name",
+        "nbJitter",
+        "nbMol",
+        "offset",
+        "orientBiasRotRangeMax",
+        "orientBiasRotRangeMin",
+        "overwrite_distFunc",
+        "packingMode",
+        "packingPriority",
+        "partners_name",
+        "partners_position",
+        "partners_weight",
+        "pdb",
+        "perturbAxisAmplitude",
+        "placeType",
+        "positions",
+        "positions2",
+        "principalVector",
+        "proba_binding",
+        "proba_not_binding",
+        "properties",
+        "radii",
+        "radius",
+        "rejectionThreshold",
+        "resolution_dictionary",
+        "rotAxis",
+        "rotRange",
+        "source",
+        "sphereFile",
+        "Type",
+        "useOrientBias",
+        "useRotAxis",
+        "weight",
+    ]
 
     def __init__(
         self,
@@ -264,6 +264,13 @@ class Ingredient(Agent):
         self.pdb = pdb  # pmv ?
         self.transform_sources = None
         self.source = None
+        self.mesh = None
+        self.mesh_info = {
+            "file": meshFile,
+            "name": meshName,
+            "type": meshType,
+            "object": meshObject,
+        }
 
         self.offset = [0, 0, 0]  # offset to apply for membrane binding
         if offset:
@@ -377,6 +384,7 @@ class Ingredient(Agent):
         # will be set when recipe is added to HistoVol
         # added to a compartment
         self.nbMol = nbMol
+        self.left_to_place = nbMol
         self.vol_nbmol = 0
 
         # Packing tracking values
@@ -406,39 +414,6 @@ class Ingredient(Agent):
         if coordsystem:
             self.coordsystem = coordsystem
         self.rejectionThreshold = rejectionThreshold
-
-        # get the collision mesh
-        self.meshFile = None
-        self.meshName = meshName
-        self.mesh = None
-        self.meshObject = None
-        self.meshType = meshType
-        if meshFile is not None:
-            self.log.debug(
-                "OK, meshFile is not none, it is = ",
-                meshFile,
-                self.name,
-                self.coordsystem,
-            )
-            gname = self.name
-            if self.meshName is not None:
-                gname = self.meshName
-            if self.meshType == "file":
-                self.mesh = self.getMesh(meshFile, gname)  # self.name)
-                self.log.info("OK got", self.mesh)
-                if self.mesh is None:
-                    # display a message ?
-                    self.log.warning("no geometries for ingredient " + self.name)
-                # should we reparent it ?
-                self.meshFile = meshFile
-            elif self.meshType == "raw":
-                # need to build the mesh from v,f,n
-                self.buildMesh(meshFile, gname)
-        elif meshObject is not None:
-            self.mesh = meshObject
-
-        if self.mesh is not None:
-            self.getEncapsulatingRadius()
 
         # need to build the basic shape if one provided
         self.current_resolution = "Low"  # should come from data
@@ -476,8 +451,7 @@ class Ingredient(Agent):
         self.distances_temp = []
         self.centT = None  # transformed position
         self.results = []
-        #        if self.mesh is not None :
-        #            self.getData()
+
         self.unique_id = Ingredient.static_id
         Ingredient.static_id += 1
         self.score = ""
@@ -529,7 +503,7 @@ class Ingredient(Agent):
     def reset(self):
         """reset the states of an ingredient"""
         self.counter = 0
-        self.nbMol = 0
+        self.left_to_place = 0.0
         self.completion = 0.0
 
     def setTilling(self, comp):
@@ -551,6 +525,30 @@ class Ingredient(Agent):
             self.tilling = tileTriangleIngredient(
                 self, comp, self.encapsulatingRadius, init_seed=self.env.seed_used
             )
+
+    def initialize_mesh(self, mesh_store):
+        # get the collision mesh
+        meshFile = self.mesh_info["file"]
+        meshName = self.mesh_info["name"]
+        meshObject = self.mesh_info["object"]
+        meshType = self.mesh_info["type"]
+        self.mesh = None
+        if meshFile is not None:
+            if meshType == "file":
+                self.mesh = self.getMesh(meshFile, meshName)  # self.name)
+                self.log.info("OK got", self.mesh)
+                if self.mesh is None:
+                    # display a message ?
+                    self.log.warning("no geometries for ingredient " + self.name)
+                # should we reparent it ?
+            elif meshType == "raw":
+                # need to build the mesh from v,f,n
+                self.buildMesh(mesh_store)
+        elif meshObject is not None:
+            self.mesh = meshObject
+
+        if self.mesh is not None:
+            self.getEncapsulatingRadius()
 
     def DecomposeMesh(self, poly, edit=True, copy=False, tri=True, transform=True):
         helper = autopack.helper
@@ -722,18 +720,11 @@ class Ingredient(Agent):
             self.encapsulatingRadius = r
         except Exception:
             pass
-            #        if r != self.encapsulatingRadius:
-            #            self.encapsulatingRadius = r
 
     def getData(self):
         if self.vertices is None or not len(self.vertices):
             if self.mesh:
-                helper = autopack.helper
-                if helper.host == "3dsmax":
-                    return
-                self.faces, self.vertices, self.vnormals = self.DecomposeMesh(
-                    self.mesh, edit=True, copy=False, tri=True
-                )
+                return self.mesh.faces, self.mesh.vertices, self.mesh.vertex_normals
 
     def get_rb_model(self, alt=False):
         ret = 0
@@ -745,7 +736,7 @@ class Ingredient(Agent):
             )
         return self.bullet_nodes[ret]
 
-    def getMesh(self, filename, geomname):
+    def getMesh(self, filename, geomname, mesh_store):
         """
         Create a mesh representation from a filename for the ingredient
 
@@ -759,73 +750,19 @@ class Ingredient(Agent):
         """
         # depending the extension of the filename, can be eitherdejaVu file, fbx or wavefront
         # no extension is DejaVu
-        helper = autopack.helper
         # should we try to see if it already exist in the scene
-        if helper is not None and not helper.nogui:
-            o = helper.getObject(geomname)
-            self.log.info("retrieve %s %r", geomname, o)
-            if o is not None:
-                return o
+        mesh = mesh_store.get_object(geomname)
+        if mesh is not None:
+            self.log.info("retrieve %s %r", geomname, mesh)
+            return mesh
         # identify extension
-        name = filename.split("/")[-1]
-        fileName, fileExtension = os.path.splitext(name)
-        self.log.info("retrieve %s %r", filename, fileExtension)
-        if fileExtension == "":
-            tmpFileName1 = autopack.retrieveFile(
-                filename + ".indpolface", cache="geometries"
-            )
-            filename = os.path.splitext(tmpFileName1)[0]
-        else:
-            filename = autopack.retrieveFile(filename, cache="geometries")
-        if filename is None:
-            return None
-        if not os.path.isfile(filename) and fileExtension != "":
-            self.log.error("problem with %s %s", filename, fileExtension)
-            return None
-        fileName, fileExtension = os.path.splitext(filename)
-        self.log.info("found fileName %s", fileName)
-        if fileExtension.lower() == ".fbx":
+        file_name, file_extension = mesh_store.get_mesh_filepath_and_extension(filename)
+        if file_extension.lower() == ".fbx":
             # use the host helper if any to read
             if helper is not None:  # neeed the helper
                 helper.read(filename)
-                geom = helper.getObject(geomname)
-                self.log.info("geom %r %s %s", geom, geomname, helper.getName(geom))
-                # reparent to the fill parent
-                if helper.host == "3dsmax" or helper.host.find("blender") != -1:
-                    helper.resetTransformation(
-                        geom
-                    )  # remove rotation and scale from importing
-                    # helper.rotateObj(geom,[0.0,0.0,-math.pi/2.0])
-                    # m = geom.GetNodeTM()
-                    # m.PreRotateY(-math.pi/2.0)
-                    # geom.SetNodeTM(m)
-                if (
-                    helper.host != "c4d"
-                    and self.coordsystem == "left"
-                    and helper.host != "softimage"
-                ):
-                    # need to rotate the transform that carry the shape
-                    helper.rotateObj(geom, [0.0, -math.pi / 2.0, 0.0])
-                if helper.host == "softimage" and self.coordsystem == "left":
-                    helper.rotateObj(
-                        geom, [0.0, -math.pi / 2.0, 0.0], primitive=True
-                    )  # need to rotate the primitive
-                if helper.host == "c4d" and self.coordsystem == "right":
-                    helper.resetTransformation(geom)
-                    helper.rotateObj(
-                        geom, [0.0, math.pi / 2.0, math.pi / 2.0], primitive=True
-                    )
-                # oldv = self.principalVector[:]
-                #                    self.principalVector = [oldv[2],oldv[1],oldv[0]]
-                p = helper.getObject("autopackHider")
-                if p is None:
-                    p = helper.newEmpty("autopackHider")
-                    if helper.host.find("blender") == -1:
-                        helper.toggleDisplay(p, False)
-                helper.reParent(geom, p)
-                return geom
-            return None
-        elif fileExtension == ".dae":
+
+        elif file_extension == ".dae":
             self.log.info("read dae withHelper", filename, helper, autopack.helper)
             # use the host helper if any to read
             if helper is None:
@@ -877,10 +814,7 @@ class Ingredient(Agent):
                                 self.vertices, numpy.array(self.faces)
                             )
                 helper.read(filename)
-                #                helper.update()
                 geom = helper.getObject(geomname)
-                # if geom is None, the name was probably wring lets try to use the default name which is
-                # pdbNAme+_cms
                 if geom is None:
                     geom = helper.getObject(self.pdb.split(".")[0])
                     # rename it
@@ -937,35 +871,16 @@ class Ingredient(Agent):
                 return geom
             return None
 
-    def buildMesh(self, data, geomname):
+    def buildMesh(self, mesh_store):
         """
         Create a polygon mesh object from a dictionary verts,faces,normals
         """
-        nv = int(len(data["verts"]) / 3)
-        nf = int(len(data["faces"]) / 3)
-        self.vertices = numpy.array(data["verts"]).reshape((nv, 3))
-        self.faces = numpy.array(data["faces"]).reshape((nf, 3))
-        # self.normals = data.normals
-        geom = autopack.helper.createsNmesh(geomname, self.vertices, None, self.faces)[
-            0
-        ]
-        p = autopack.helper.getObject("autopackHider")
-        if p is None:
-            p = autopack.helper.newEmpty("autopackHider")
-            if autopack.helper.host.find("blender") == -1:
-                autopack.helper.toggleDisplay(p, False)
-        autopack.helper.reParent(geom, p)
-        self.meshFile = geomname
-        self.meshName = geomname
-        self.meshType = "file"
+        geom, vertices, faces, vnormals = mesh_store.build_mesh(
+            self.mesh_info["file"], self.mesh_info["name"]
+        )
+        self.vertices = vertices
+        self.faces = faces
         self.mesh = geom
-        autopack.helper.saveDejaVuMesh(
-            autopack.cache_geoms + os.sep + geomname, self.vertices, self.faces
-        )
-        autopack.helper.saveObjMesh(
-            autopack.cache_geoms + os.sep + geomname + ".obj", self.vertices, self.faces
-        )
-        # self.saveObjMesh(autopack.cache_geoms + os.sep + geomname + ".obj")
         return geom
 
     def jitterPosition(self, position, spacing, normal=None):
@@ -1098,11 +1013,10 @@ class Ingredient(Agent):
                 # Only return points that aren't so close to a surface that we know the
                 # ingredient won't fit
                 for i in range(array_length):
-                    pt = starting_array[i]
-                    d = distances[pt]
-                    if comp_ids[pt] == current_comp_id and d >= cuttoff:
-                        allIngrPts.append(pt)
-
+                    pt_index = starting_array[i]
+                    d = distances[pt_index]
+                    if comp_ids[pt_index] == current_comp_id and d >= cuttoff:
+                        allIngrPts.append(pt_index)
                 self.allIngrPts = allIngrPts
             else:
                 if len(self.allIngrPts) > 0:
@@ -1137,6 +1051,7 @@ class Ingredient(Agent):
 
     def transformPoints(self, trans, rot, points):
         output = []
+        rot = numpy.array(rot)
         for point in points:
             output.append(numpy.matmul(rot[0:3, 0:3], point) + trans)
         return output
@@ -1259,7 +1174,7 @@ class Ingredient(Agent):
     def isInGoodComp(self, pId, nbs=None):
         # cID ie [-2,-1,-2,0...], ptsinsph = [519,300,etc]
         current = self.compNum
-        cId = self.env.grid.gridPtId[pId]
+        cId = self.env.grid.compartment_ids[pId]
         if current <= 0:  # inside
             if current != cId:
                 return False
@@ -1283,7 +1198,7 @@ class Ingredient(Agent):
         trigger = False
         if self.compareCompartment:
             cId = numpy.take(
-                self.env.grid.gridPtId, ptsInSphere, 0
+                self.env.grid.compartment_ids, ptsInSphere, 0
             )  # shoud be the same ?
             if nbs is not None:
                 if self.compNum <= 0 and nbs != 0:
@@ -1327,13 +1242,7 @@ class Ingredient(Agent):
             )
 
         if signed_distance_to_surface <= 0:  # point is inside dropped ingredient
-            if (
-                env.grid.gridPtId[grid_point_index] != self.compNum
-                and self.compNum <= 0
-            ):  # did this jitter outside of it's compartment
-                # in wrong compartment, reject this packing position
-                self.log.warning("checked pt that is not in container")
-                return True, {}, {}
+
             if grid_point_index not in inside_points or abs(
                 signed_distance_to_surface
             ) < abs(inside_points[grid_point_index]):
@@ -1476,13 +1385,11 @@ class Ingredient(Agent):
         # ptID = self.env.grid.getPointFrom3D(point)
         cID = self.env.getPointCompartmentId(point)  # offset ?
         # dist,ptID = self.env.grid.getClosestGridPoint(point)
-        # cID = self.env.grid.gridPtId[ptID]
         if self.compNum == 0:
             organelle = self.env
         else:
             organelle = self.env.compartments[abs(self.compNum) - 1]
         if self.compNum > 0:  # surface ingredient
-            # print ("surface ingr of type ",self.Type)
             if self.Type == "Grow":
                 # need a list of accepted compNum
                 check = False
@@ -1506,7 +1413,7 @@ class Ingredient(Agent):
         #        else :
         #            return True
         if self.compNum < 0:
-            inside = organelle.checkPointInside(point, self.env.grid.diag, ray=3)
+            inside = organelle.checkPointInside(point, self.env.grid.diag, self.env.mesh_store, ray=3)
             if inside:  # and cID < 0:
                 return True
             else:
@@ -1517,7 +1424,7 @@ class Ingredient(Agent):
                 #                return False
         if self.compNum == 0:  # shouldnt be in any compartments
             for o in self.env.compartments:
-                inside = o.checkPointInside(point, self.env.grid.diag, ray=3)
+                inside = o.checkPointInside(point, self.env.grid.diag, self.env.mesh_store, ray=3)
                 if inside:
                     return False
         if self.compNum != cID:
@@ -1544,11 +1451,10 @@ class Ingredient(Agent):
                 self.log.info(
                     "distance is %r %r", d, cutoff
                 )  # d can be wrond for some reason,
-                # d = autopack.helper.measure_distance(point,o.vertices[pt])
                 if d < cutoff:
                     return True
                 if compNum < 0 and o.name == compartment.name:
-                    inside = o.checkPointInside(numpy.array(point), self.env.grid.diag)
+                    inside = o.checkPointInside(numpy.array(point), self.env.grid.diag, self.env.mesh_store)
                     self.log.info("inside ? %r", inside)
                     if not inside:
                         return True
@@ -1687,7 +1593,6 @@ class Ingredient(Agent):
             t = mingrs[0][i]
             if self.packingMode == "closePartner":
                 if ing.o_name in self.partners_name or ing.name in self.partners_name:
-                    #                    print ("is a partner of"+self.name)
                     listePartner.append([i, self.partners[ing.name], mingrs[3][i]])
                     #                                         autopack.helper.measure_distance(jtrans,mingrs[0][i])])
             if (
@@ -1704,7 +1609,6 @@ class Ingredient(Agent):
                         part = self.addPartner(ing, weight=ing.weight)
                     if ing.distExpression is not None:
                         part.distExpression = ing.distExpression
-                    # print "new Partner", part,part.name,part.weight
                     d = afvi.vi.measure_distance(jtrans, t)
                     listePartner.append([i, part, d])
         if not listePartner:
@@ -1909,7 +1813,6 @@ class Ingredient(Agent):
                 nodes.append([rbnode, jtrans, rotMat, ingr])
             else:
                 nodes.append(rbnode)
-                #            print "get",ingr.name,self.name,rbnode,distances[nid],(ingr.encapsulatingRadius+self.encapsulatingRadius)
         # append organelle rb nodes
         for o in self.env.compartments:
             if self.compNum > 0 and o.name == organelle.name:
@@ -1937,7 +1840,6 @@ class Ingredient(Agent):
                             #                if o.rbnode is not None :
                             #                    if not getInfo :
                             #                        nodes.append(o.rbnode)
-                            #        print ("GetNode ",len(nodes),nodes)
         self.env.nodes = nodes
         return nodes
 
@@ -2089,7 +1991,7 @@ class Ingredient(Agent):
             self.log.info("drop next hexa %s", nexthexa.name)
         # add one to molecule counter for this ingredient
         self.counter += 1
-        self.completion = float(self.counter) / float(self.nbMol)
+        self.completion = float(self.counter) / float(self.left_to_place)
         self.rejectionCounter = 0
         self.update_data_tree(dropped_position, dropped_rotation, grid_point_index)
 
@@ -2259,7 +2161,6 @@ class Ingredient(Agent):
                 grid_points_to_update = env.grid.getPointsInSphere(
                     bounding_point_position, radius_of_area_to_check
                 )
-
                 for grid_point_index in grid_points_to_update:
                     (
                         insidePoints,
@@ -2289,7 +2190,7 @@ class Ingredient(Agent):
 
         return success, insidePoints, newDistPoints
 
-    def get_rotation(self, pt_ind, histovol, compartment):
+    def get_rotation(self, pt_ind, env, compartment):
         # compute rotation matrix rotMat
         comp_num = self.compNum
 
@@ -2298,7 +2199,7 @@ class Ingredient(Agent):
             # for surface points we compute the rotation which
             # aligns the principalVector with the surface normal
             v1 = self.principalVector
-            v2 = compartment.surfacePointsNormals[pt_ind]
+            v2 = compartment.get_normal_for_point(pt_ind, env.masterGridPositions[pt_ind], env.mesh_store)
             try:
                 rot_mat = numpy.array(rotVectToVect(v1, v2), "f")
             except Exception:
@@ -2312,14 +2213,14 @@ class Ingredient(Agent):
                 elif (
                     self.useOrientBias and self.packingMode == "gradient"
                 ):  # you need a gradient here
-                    rot_mat = self.alignRotation(histovol.masterGridPositions[pt_ind])
+                    rot_mat = self.alignRotation(env.masterGridPositions[pt_ind])
                 else:
                     rot_mat = autopack.helper.rotation_matrix(
                         random() * self.rotRange, self.rotAxis
                     )
             # for other points we get a random rotation
             else:
-                rot_mat = histovol.randomRot.get()
+                rot_mat = env.randomRot.get()
         return rot_mat
 
     def randomize_rotation(self, rotation, histovol):
@@ -2404,7 +2305,6 @@ class Ingredient(Agent):
         """
         drop the ingredient on grid point ptInd
         """
-        # print "rigid",self.placeType
         afvi = histoVol.afviewer
         simulationTimes = histoVol.simulationTimes
         runTimeDisplay = histoVol.runTimeDisplay
@@ -2706,7 +2606,6 @@ class Ingredient(Agent):
                         mingrs, listePartner, currentPos=trans
                     )
                     if targetPoint is not None:
-                        # print "found ",jitterPos
                         break
                 if targetPoint is None:
                     targetPoint = trans
@@ -3168,7 +3067,6 @@ class Ingredient(Agent):
                 t = elem[0]
                 r = elem[1]
                 ind = elem[3]
-                # print "neighbour",ing.name
                 if hasattr(ing, "mesh_3d"):
                     # create an instance of mesh3d and place it
                     name = ing.name + str(ind)
@@ -3201,7 +3099,6 @@ class Ingredient(Agent):
                         targetPoint = jtrans
                 else:
                     targetPoint = jtrans
-                    #        print "targetPt",len(targetPoint),targetPoint
                     #       should be panda util
                     #        add the rigid body
         self.env.moving = rbnode = self.env.callFunction(

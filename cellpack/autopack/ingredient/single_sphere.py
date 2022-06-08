@@ -72,11 +72,14 @@ class SingleSphereIngr(Ingredient):
         weight=0.2,  # use for affinity ie partner.weight
     ):
         # called through inheritance
-        radii = radii if Type == "MultiSphere" else [[radius]]
-        positions = positions if Type == "MultiSphere" else [[position]]
+        if radii is None and radius is not None:
+            radii = [[radius]]
+        if positions is None and position is not None:
+            positions = [[position]]
         super().__init__(
             Type=Type,
             color=color,
+            coordsystem=coordsystem,
             cutoff_boundary=cutoff_boundary,
             cutoff_surface=cutoff_surface,
             distExpression=distExpression,
@@ -88,6 +91,7 @@ class SingleSphereIngr(Ingredient):
             jitterMax=jitterMax,
             meshName=meshName,
             meshType=meshType,
+            meshObject=meshObject,
             molarity=molarity,
             name=name,
             nbJitter=nbJitter,
@@ -118,56 +122,17 @@ class SingleSphereIngr(Ingredient):
             name = "%5.2f_%f" % (radius, molarity)
         self.name = name
         self.singleSphere = True
+        self.mesh = None
         # min and max radius for a single sphere should be the same
         self.encapsulatingRadius = encapsulatingRadius or radius
-        # make a sphere ?->rapid ?
-        if self.mesh is None and autopack.helper is not None:
-            if not autopack.helper.nogui:
-                #            if not autopack.helper.nogui :
-                # build a cylinder and make it length uLength, radius radii[0]
-                # this mesh is used bu RAPID for collision
-                p = autopack.helper.getObject("autopackHider")
-                if p is None:
-                    p = autopack.helper.newEmpty("autopackHider")
-                    if autopack.helper.host.find("blender") == -1:
-                        autopack.helper.toggleDisplay(p, False)
-                self.mesh = autopack.helper.Sphere(
-                    self.name + "_basic",
-                    radius=self.radii[0][0],
-                    color=self.color,
-                    parent=p,
-                    res=24,
-                )[0]
-            else:
-                self.mesh = autopack.helper.unitSphere(
-                    self.name + "_basic", 5, radius=self.radii[0][0]
-                )[0]
-                self.getData()
-        # should do that for all ingredient type
-        if self.representation is None and not hasattr(
-            self.mesh, "getFaces"
-        ):  # this is not working with dejavu
-            # and should go in the graphics.
-            if not autopack.helper.nogui:
-                self.representation = autopack.helper.Sphere(
-                    self.name + "_rep",
-                    radius=self.radii[0][0],
-                    color=self.color,
-                    parent=self.mesh,
-                    res=24,
-                )[0]
-            else:
-                self.representation = autopack.helper.Icosahedron(
-                    self.name + "_rep", radius=self.radii[0][0]
-                )[0]
-
+    
     def collides_with_compartment(
         self,
         jtrans,
         rotMat,
         level,
         gridPointsCoords,
-        histoVol,
+        env,
     ):
         """
         Check spheres for collision
@@ -177,8 +142,8 @@ class SingleSphereIngr(Ingredient):
         radii = (self.radii[level],)
         centT = self.transformPoints(jtrans, rotMat, centers)  # this should be jtrans
         for radc, posc in zip(radii, centT):
-            ptsInSphere = histoVol.grid.getPointsInSphere(posc, radc[0])  # indices
-            compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptsInSphere, 0)
+            ptsInSphere = env.grid.getPointsInSphere(posc, radc[0])  # indices
+            compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphere, 0)
             if self.compNum <= 0:
                 wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
                 if len(wrongPt):
@@ -254,3 +219,19 @@ class SingleSphereIngr(Ingredient):
         geom = OdeSphereGeom(self.ode_space, self.encapsulatingRadius)
         geom.setBody(body)
         return geom
+
+    def initialize_mesh(self, mesh_store):
+        if self.mesh is None:
+            self.mesh = mesh_store.create_sphere(
+                self.name + "_basic", 5, radius=self.radii[0][0]
+            )
+
+            self.getData()
+        # should do that for all ingredient type
+        # if self.representation is None and not hasattr(
+        #     self.mesh, "getFaces"
+        # ):  # this is not working with dejavu
+        #     # and should go in the graphics.
+        #     self.representation = autopack.helper.Icosahedron(
+        #         self.name + "_rep", radius=self.radii[0][0]
+        #     )[0]

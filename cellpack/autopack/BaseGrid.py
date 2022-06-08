@@ -149,7 +149,7 @@ class BaseGrid:
         # to. The id is an integer where 0 is the Histological Volume, and +i is
         # the surface of compartment i and -i is the interior of compartment i
         # in the list self. compartments
-        self.gridPtId = []
+        self.compartment_ids = []
         # will be a list of indices into 3D of compartment
         # of points that have not yet been used by the fill algorithm
         # entries are removed from this list as grid points are used up
@@ -212,7 +212,7 @@ class BaseGrid:
         self.getDiagonal()
         self.nbSurfacePoints = 0
         self.log.info("SETUP BASE GRID %d %d", self.gridVolume, self.gridSpacing)
-        self.gridPtId = numpy.zeros(self.gridVolume, "i")  # [0]*nbPoints
+        self.compartment_ids = numpy.zeros(self.gridVolume, "i")  # [0]*nbPoints
         # self.distToClosestSurf = [self.diag]*self.gridVolume#surface point too?
         self.distToClosestSurf = (
             numpy.ones(self.gridVolume) * self.diag
@@ -220,11 +220,11 @@ class BaseGrid:
         self.freePoints = list(range(self.gridVolume))
         self.nbFreePoints = len(self.freePoints)
         self.log.info(
-            "Lookup: %d, bounding box: %r, gridSpacing %r, length gridPtId %r",
+            "Lookup: %d, bounding box: %r, gridSpacing %r, length compartment_ids %r",
             self.lookup,
             boundingBox,
             self.gridSpacing,
-            len(self.gridPtId),
+            len(self.compartment_ids),
         )
         self.setupBoundaryPeriodicity()
         return self.gridSpacing
@@ -234,8 +234,6 @@ class BaseGrid:
     ):
         # reset the  distToClosestSurf and the freePoints
         # boundingBox should be the same otherwise why keeping the grid
-        # self.gridPtId = numpy.zeros(self.gridVolume,'i')
-        # self.distToClosestSurf = numpy.ones(self.gridVolume)*self.diag#(self.distToClosestSurf)
         self.log.info("reset Grid distance to closest surface and freePoints")
         self.distToClosestSurf = (
             numpy.array(self.distToClosestSurf[:]) * 0.0
@@ -406,7 +404,7 @@ class BaseGrid:
     ):
         free_indices = self.freePoints[: self.nbFreePoints]
         arr = numpy.array(self.masterGridPositions[free_indices])
-        indices = numpy.nonzero(numpy.equal(self.gridPtId[free_indices], compId))
+        indices = numpy.nonzero(numpy.equal(self.compartment_ids[free_indices], compId))
         distances = self.distToClosestSurf[free_indices]
         if not len(indices):
             return None
@@ -438,7 +436,7 @@ class BaseGrid:
             if compId is not None:
                 arr = numpy.array(self.masterGridPositions[free_indices])
                 indices = numpy.nonzero(
-                    numpy.equal(self.gridPtId[free_indices], compId)
+                    numpy.equal(self.compartment_ids[free_indices], compId)
                 )
                 self.tree_free = spatial.cKDTree(arr[indices], leafsize=10)
                 arr = arr[indices]

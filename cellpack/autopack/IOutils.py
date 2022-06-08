@@ -27,13 +27,8 @@ from cellpack.autopack.Serializable import (
     sIngredientFiber,
 )
 from cellpack.autopack.Recipe import Recipe
-from cellpack.autopack.Compartment import Compartment
 from .ingredient import (
     ActinIngredient,
-    SingleSphereIngr,
-    MultiSphereIngr,
-    SingleCubeIngr,
-    MultiCylindersIngr,
     GrowIngredient,
 )
 
@@ -298,7 +293,7 @@ class IOingredientTool(object):
         else:
             return ingrnode
 
-    def makeIngredientFromJson(self, inode=None, filename=None, recipe="Generic"):
+    def makeIngredientFromJson(self, env, inode=None, filename=None, recipe="Generic"):
         overwrite_dic = {}
         ingr_dic = {}
         if filename is None and inode is not None:
@@ -323,7 +318,7 @@ class IOingredientTool(object):
         # check for overwritten parameter
         if len(overwrite_dic):
             kw.update(overwrite_dic)
-        ingre = self.makeIngredient(**kw)
+        ingre = self.makeIngredient(env, **kw)
         return ingre
 
     def ingrJsonNode(self, ingr, result=False, kwds=None, transpose=False):
@@ -413,35 +408,14 @@ class IOingredientTool(object):
                 new_arguments[name] = arguments[name]
         return new_arguments
 
-    def makeIngredient(self, **kw):
+    def makeIngredient(self, env, **kw):
         ingr = None
         ingredient_type = kw["Type"]
         if ingredient_type == "Grow" or ingredient_type == "Actine" or ingredient_type == "MultiCylinder":
             arguments = IOingredientTool.clean_arguments(GrowIngredient.ARGUMENTS, **kw)
         else:
             arguments = IOingredientTool.clean_arguments(Ingredient.ARGUMENTS, **kw)
-
-        if ingredient_type == "SingleSphere":
-            kw["position"] = kw["positions"][0][0]
-            kw["radius"] = kw["radii"][0][0]
-            del kw["positions"]
-            del kw["radii"]
-            ingr = SingleSphereIngr(**arguments)
-        elif ingredient_type == "MultiSphere":
-            ingr = MultiSphereIngr(**arguments)
-        elif ingredient_type == "MultiCylinder":
-            ingr = MultiCylindersIngr(**arguments)
-        elif ingredient_type == "SingleCube":
-            ingr = SingleCubeIngr(**arguments)
-        elif ingredient_type == "Grow":
-            ingr = GrowIngredient(**arguments)
-        elif ingredient_type == "Actine":
-            ingr = ActinIngredient(**arguments)
-        if "gradient" in kw and kw["gradient"] != "" and kw["gradient"] != "None":
-            ingr.gradient = kw["gradient"]
-        if "results" in kw:
-            ingr.results = kw["results"]
-            # flag as previously loaded ?
+        ingr = env.create_ingredient(**arguments)
         return ingr
 
     def set_recipe_ingredient(self, xmlnode, recipe):
@@ -497,15 +471,6 @@ def addCompartments(env, compdic, i, io_ingr):
             rep_file = ""
             if "rep_file" in comp_dic:
                 rep_file = str(comp_dic["rep_file"])
-            # print(
-            #    "rep ?",
-            #    name,
-            #    geom,
-            #    rep,
-            #    rep_file,
-            #    (rep != "None" and len(rep) != 0 and rep != "" and rep == ""),
-            # )
-            #                print (len(rep),rep == '',rep=="",rep != "None",rep != "None" or len(rep) != 0)
             if rep != "None" and len(rep) != 0 and rep != "" and rep != "":
                 rname = rep_file.split("/")[-1]
                 fileName, fileExtension = os.path.splitext(rname)
@@ -518,22 +483,13 @@ def addCompartments(env, compdic, i, io_ingr):
             else:
                 rep = None
                 rep_file = None
-                print("NONENE")
             print("add compartment ", name, geom, rep, rep_file)
-            o = Compartment(
-                name,
-                None,
-                None,
-                None,
-                filename=geom,
-                gname=str(comp_dic["name"]),
-                object_name=rep,
-                object_filename=rep_file,
-            )
-            print("added compartment ", name)
+            compartment = env.create_compartment(name, geom, str(comp_dic["name"]), rep, rep_file)
             # need to transform the v,f,n to the new rotation and position
-            o.transformMesh(pos, rot)
-            env.addCompartment(o)
+            # NOTE: we could initialize compartments with pos and rot instead
+            # of transforming it every time we make a new one
+            compartment.transformMesh(pos, rot)
+            env.addCompartment(compartment)
             if "surface" in comp_dic:
                 snode = comp_dic["surface"]
                 ingrs_dic = snode["ingredients"]
@@ -544,11 +500,12 @@ def addCompartments(env, compdic, i, io_ingr):
                         # either xref or defined
                         ing_dic = ingrs_dic[ing_name]
                         ingr = io_ingr.makeIngredientFromJson(
+                            env=env,
                             inode=ing_dic, recipe=env.name
                         )
                         rSurf.addIngredient(ingr)
                         # setup recipe
-                    o.setSurfaceRecipe(rSurf)
+                    compartment.setSurfaceRecipe(rSurf)
             if "interior" in comp_dic:
                 snode = comp_dic["interior"]
                 ingrs_dic = snode["ingredients"]
@@ -559,16 +516,18 @@ def addCompartments(env, compdic, i, io_ingr):
                         # either xref or defined
                         ing_dic = ingrs_dic[ing_name]
                         ingr = io_ingr.makeIngredientFromJson(
+                            env=env,
                             inode=ing_dic, recipe=env.name
                         )
                         rMatrix.addIngredient(ingr)
                         # setup recipe
-                    o.setInnerRecipe(rMatrix)
+                    compartment.setInnerRecipe(rMatrix)
 
 
 def save_as_simularium(env, setupfile, all_ingr_as_array):
     autopack.helper.clear()
-    autopack.helper.init_scene_with_objects(all_ingr_as_array)
+    length_original_grid_points = len(env.grid.masterGridPositions) - env.grid.nbSurfacePoints
+    autopack.helper.init_scene_with_objects(all_ingr_as_array, env.grid.masterGridPositions, env.grid.compartment_ids)
     autopack.helper.writeToFile(None, f"{setupfile}_results", env.boundingBox)
     webbrowser.open("https://simularium.allencell.org/viewer")
 
@@ -1707,21 +1666,12 @@ def load_XML(env, setupfile):
             rep_file = None
             print("no representation found")
         print("add compartment ", name, geom, rep, rep_file)
-        o = Compartment(
-            name,
-            None,
-            None,
-            None,
-            filename=geom,
-            object_name=rep,
-            object_filename=rep_file,
-        )
-        print("added compartment ", name)
-        env.addCompartment(o)
+        compartment = env.create_compartment(name, geom, name, rep, rep_file)
+        env.addCompartment(compartment)
         rsnodes = onode.getElementsByTagName("surface")
 
         if len(rsnodes):
-            rSurf = Recipe(name=o.name + "_surf")
+            rSurf = Recipe(name=compartment.name + "_surf")
             rsnodes = rsnodes[0]
             ingredients_xmlfile = str(rsnodes.getAttribute("include"))
             if ingredients_xmlfile:  # open the file and parse the ingredient:
@@ -1737,11 +1687,11 @@ def load_XML(env, setupfile):
                         xmlinclude = parse(xmlfile).documentElement
                         io_ingr.set_recipe_ingredient(xmlinclude, rSurf)
             io_ingr.set_recipe_ingredient(rsnodes, rSurf)
-            o.setSurfaceRecipe(rSurf)
+            compartment.setSurfaceRecipe(rSurf)
         rinodes = onode.getElementsByTagName("interior")
 
         if len(rinodes):
-            rMatrix = Recipe(name=o.name + "_int")
+            rMatrix = Recipe(name=compartment.name + "_int")
             rinodes = rinodes[0]
             ingredients_xmlfile = str(rinodes.getAttribute("include"))
             if ingredients_xmlfile:  # open the file and parse the ingredient:
@@ -1757,7 +1707,7 @@ def load_XML(env, setupfile):
                         xmlinclude = parse(xmlfile).documentElement
                         io_ingr.set_recipe_ingredient(xmlinclude, rMatrix)
             io_ingr.set_recipe_ingredient(rinodes, rMatrix)
-            o.setInnerRecipe(rMatrix)
+            compartment.setInnerRecipe(rMatrix)
     # Go through all ingredient and setup the partner
     env.loopThroughIngr(env.set_partners_ingredient)
 
@@ -1849,7 +1799,7 @@ def setupFromJsonDic(
             for ing_name in sorted(ingrs_dic, key=sortkey):  # ingrs_dic:
                 # either xref or defined
                 ing_dic = ingrs_dic[ing_name]
-                ingr = io_ingr.makeIngredientFromJson(inode=ing_dic, recipe=env.name)
+                ingr = io_ingr.makeIngredientFromJson(env, inode=ing_dic, recipe=env.name)
                 rCyto.addIngredient(ingr)
                 # setup recipe
             env.setExteriorRecipe(rCyto)
@@ -1884,16 +1834,6 @@ def setupFromJsonDic(
                 rep_file = ""
                 if "rep_file" in comp_dic:
                     rep_file = str(comp_dic["rep_file"])
-                # print(
-                #     "rep ?",
-                #     name,
-                #     geom,
-                #     gname,
-                #     rep,
-                #     rep_file,
-                #     (rep != "None" and len(rep) != 0 and rep != "" and rep == ""),
-                # )
-                #                print (len(rep),rep == '',rep=="",rep != "None",rep != "None" or len(rep) != 0)
                 if rep != "None" and len(rep) != 0 and rep != "" and rep != "":
                     rname = rep_file.split("/")[-1]
                     fileName, fileExtension = os.path.splitext(rname)
@@ -1906,19 +1846,9 @@ def setupFromJsonDic(
                 else:
                     rep = None
                     rep_file = None
-                o = Compartment(
-                    name,
-                    None,
-                    None,
-                    None,
-                    gname=gname,
-                    filename=geom,
-                    object_name=rep,
-                    object_filename=rep_file,
-                    meshType=mtype,
-                )
+                compartment = env.create_compartment(name, geom, gname, rep, rep_file, mtype)
                 print("added compartment ", name)
-                env.addCompartment(o)
+                env.addCompartment(compartment)
                 if "surface" in comp_dic:
                     snode = comp_dic["surface"]
                     ingrs_dic = snode["ingredients"]
@@ -1929,11 +1859,12 @@ def setupFromJsonDic(
                             # either xref or defined
                             ing_dic = ingrs_dic[ing_name]
                             ingr = io_ingr.makeIngredientFromJson(
+                                env=env,
                                 inode=ing_dic, recipe=env.name
                             )
                             rSurf.addIngredient(ingr)
                             # setup recipe
-                        o.setSurfaceRecipe(rSurf)
+                        compartment.setSurfaceRecipe(rSurf)
                 if "interior" in comp_dic:
                     snode = comp_dic["interior"]
                     ingrs_dic = snode["ingredients"]
@@ -1948,7 +1879,7 @@ def setupFromJsonDic(
                             )
                             rMatrix.addIngredient(ingr)
                             # setup recipe
-                        o.setInnerRecipe(rMatrix)
+                        compartment.setInnerRecipe(rMatrix)
                     # Go through all ingredient and setup the partner
     env.loopThroughIngr(env.set_partners_ingredient)
     # restore env.molecules if any resuylt was loaded

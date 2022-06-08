@@ -131,47 +131,24 @@ class MultiCylindersIngr(Ingredient):
             d = numpy.array(bb[1]) - numpy.array(bb[0])
             s = numpy.sum(d * d)
             self.length = math.sqrt(s)  # diagonal
-            self.encapsulatingRadius = self.length / 2
-        
-        # if self.mesh is None and autopack.helper is not None :
-        #            #build a cylinder and make it length uLength, radius radii[0]
-        #            self.mesh = autopack.helper.Cylinder(self.name+"_basic",radius=self.radii[0][0],
-        #                                       length=self.uLength,parent="autopackHider")[0]
 
-        # if self.mesh is None and autopack.helper is not None:
-        #     p = None
-        #     if not autopack.helper.nogui:
-        #         # build a cylinder and make it length uLength, radius radii[0]
-        #         # this mesh is used bu RAPID for collision
-        #         p = autopack.helper.getObject("autopackHider")
-        #         if p is None:
-        #             p = autopack.helper.newEmpty("autopackHider")
-        #             if autopack.helper.host.find("blender") == -1:
-        #                 autopack.helper.toggleDisplay(p, False)
-        #                 #                self.mesh = autopack.helper.Cylinder(self.name+"_basic",
-        #                 #                                radius=self.radii[0][0]*1.24, length=self.uLength,
-        #                 #                                res= 5, parent="autopackHider",axis="+X")[0]
-        #     length = 1
-        #     if self.positions2 is not None and self.positions is not None:
-        #         d = numpy.array(self.positions2[0][0]) - numpy.array(
-        #             self.positions[0][0]
-        #         )
-        #         s = numpy.sum(d * d)
-        #         length = math.sqrt(s)  # diagonal
-        #     self.mesh = autopack.helper.Cylinder(
-        #         self.name + "_basic",
-        #         radius=self.radii[0][0] * 1.24, # why is this multiplied?
-        #         length=length,
-        #         res=5,
-        #         parent="autopackHider",
-        #         axis=self.principalVector,
-        #     )[0]
-        
-        # self.mesh = autopack.helper.oneCylinder(self.name+"_basic",
-        #                                self.positions[0][0],self.positions2[0][0],
-        #                                radius=self.radii[0][0]*1.24,
-        #                                parent = p,color=self.color)
-        #            self.getData()
+    def initialize_mesh(self, mesh_store):
+        if self.mesh is None and autopack.helper is not None:
+            length = 1
+            if self.positions2 is not None and self.positions is not None:
+                d = numpy.array(self.positions2[0][0]) - numpy.array(
+                    self.positions[0][0]
+                )
+                s = numpy.sum(d * d)
+                length = math.sqrt(s)  # diagonal
+            self.mesh = autopack.helper.Cylinder(
+                self.name + "_basic",
+                radius=self.radii[0][0] * 1.24,
+                length=length,
+                res=5,
+                parent="autopackHider",
+                axis=self.principalVector,
+            )[0]
 
     def get_cuttoff_value(self, spacing):
         """Returns the min value a grid point needs to be away from a surfance
@@ -223,7 +200,7 @@ class MultiCylindersIngr(Ingredient):
         rotMat,
         level,
         gridPointsCoords,
-        histoVol,
+        env,
     ):
         """
         Check cylinders for collision
@@ -245,7 +222,7 @@ class MultiCylindersIngr(Ingredient):
             radt = length + radc
 
             bb = self.correctBB(p1, p2, radc)
-            pointsInCube = histoVol.grid.getPointsInCube(bb, posc, radt, info=True)
+            pointsInCube = env.grid.getPointsInCube(bb, posc, radt, info=True)
 
             # check for collisions with cylinder
             pd = numpy.take(gridPointsCoords, pointsInCube, 0) - p1
@@ -259,7 +236,7 @@ class MultiCylindersIngr(Ingredient):
             )
 
             ptsInSphereId = numpy.take(pointsInCube, ptsWithinCaps[0], 0)
-            compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptsInSphereId, 0)
+            compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphereId, 0)
             if self.compNum <= 0:
                 wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
                 if len(wrongPt):
@@ -330,7 +307,7 @@ class MultiCylindersIngr(Ingredient):
         rotMat,
         gridPointsCoords,
         distance,
-        histoVol,
+        env,
         dpad,
     ):
         """
@@ -344,7 +321,7 @@ class MultiCylindersIngr(Ingredient):
 
         cylNum = 0
         for radc, p1, p2 in zip(radii, cent1T, cent2T):
-            if histoVol.runTimeDisplay > 1:
+            if env.runTimeDisplay > 1:
                 name = "cyl"
                 cyl = self.vi.getObject("cyl")
                 if cyl is None:
@@ -378,8 +355,8 @@ class MultiCylindersIngr(Ingredient):
             radt = sqrt(lengthsq + radc**2)
 
             bb = self.correctBB(p1, p2, radc)
-
-            if histoVol.runTimeDisplay > 1:
+            #            bb = self.correctBB(posc,posc,radt)
+            if env.runTimeDisplay > 1:
                 box = self.vi.getObject("collBox")
                 if box is None:
                     box = self.vi.Box("collBox", cornerPoints=bb, visible=1)
@@ -388,8 +365,7 @@ class MultiCylindersIngr(Ingredient):
                     self.vi.updateBox(box, cornerPoints=bb)
                     self.vi.update()
                     #                 sleep(1.0)
-            
-            pointsInCube = histoVol.grid.getPointsInCube(bb, posc, radt, info=True)
+            pointsInCube = env.grid.getPointsInCube(bb, posc, radt, info=True)
 
             # check for collisions with cylinder
             pd = numpy.take(gridPointsCoords, pointsInCube, 0) - p1
@@ -408,7 +384,7 @@ class MultiCylindersIngr(Ingredient):
                 return False, insidePoints, newDistPoints
             if self.compareCompartment:
                 ptsInSphereId = numpy.take(pointsInCube, ptsWithinCaps[0], 0)
-                compIdsSphere = numpy.take(histoVol.grid.gridPtId, ptsInSphereId, 0)
+                compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphereId, 0)
                 #                print "compId",compIdsSphere
                 if self.compNum <= 0:
                     wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
