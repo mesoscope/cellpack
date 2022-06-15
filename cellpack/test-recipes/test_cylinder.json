@@ -41,7 +41,7 @@
     "cytoplasme": {
         "ingredients": {
             "cylinder_r_50_l_200": {
-                "Type": "MultiCylinder",
+                "Type": "SingleCylinder",
                 "color": [
                     0.498,
                     0.498,
@@ -64,8 +64,8 @@
                 "name": "cylinder_r_50_l_200",
                 "nbJitter": 20,
                 "nbMol": 1,
-                "orientBiasRotRangeMax": 3.1415927,
-                "orientBiasRotRangeMin": -3.1415927,
+                "orientBiasRotRangeMax": 3.14159,
+                "orientBiasRotRangeMin": -3.14159,
                 "packingMode": "random",
                 "packingPriority": 0,
                 "partners_name": [],
@@ -86,15 +86,15 @@
                     [
                         [
                             0,
-                            0,
-                            200
+                            200,
+                            0
                         ]
                     ]
                 ],
                 "principalVector": [
                     0,
-                    0,
-                    1
+                    1,
+                    0
                 ],
                 "proba_binding": 0.5,
                 "proba_not_binding": 0.5,
@@ -105,11 +105,15 @@
                     ]
                 ],
                 "rejectionThreshold": 100,
-                "rotAxis": null,
-                "rotRange": 6.2831,
+                "rotAxis": [
+                    0,
+                    0,
+                    1
+                ],
+                "rotRange": 6.28318,
                 "sphereFile": null,
                 "useOrientBias": false,
-                "useRotAxis": false,
+                "useRotAxis": true,
                 "weight": 0.2
             }
         }

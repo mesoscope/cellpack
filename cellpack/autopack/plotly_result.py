@@ -34,11 +34,12 @@ class PlotlyAnalysis:
             opacity=opacity,
         )
 
-    def add_square(self, radius, pos, rotMat, color, opacity=1):
-        x0 = -radius[0][0] / 2.0
-        y0 = -radius[0][1] / 2.0
-        x1 = radius[0][0] / 2.0
-        y1 = radius[0][1] / 2.0
+    def add_square(self, side_length, pos, rotMat, color, opacity=1):
+        # side_length is the length of each side
+        x0 = -side_length[0][0] / 2.0
+        y0 = -side_length[0][1] / 2.0
+        x1 = side_length[0][0] / 2.0
+        y1 = side_length[0][1] / 2.0
         # corner points of the cube top surface
         point_array = [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]
         rotated_pts = self.transformPoints2D(pos, rotMat, point_array)
@@ -77,12 +78,12 @@ class PlotlyAnalysis:
                 elif ingr.modelType == "Cube":
                     self.add_square(ingr.radii, pos, rot, ingr.color)
                 elif ingr.modelType == "Cylinders":
-                    length = max(ingr.positions2[0][0])
-                    height = ingr.radii[0][0]
-                    radius = [
-                        [height, length, 1.0]
+                    length = ingr.length
+                    width = 2*ingr.radii[0][0]
+                    side_lengths = [
+                        [width, length, 1.0]
                         ]
-                    self.add_square(radius, pos, rot, ingr.color)
+                    self.add_square(side_lengths, pos, rot, ingr.color)
 
     def make_grid_heatmap(self, env):
         ids = []
@@ -131,10 +132,8 @@ class PlotlyAnalysis:
         self.plot.show()
 
     def transformPoints2D(self, trans, rot, points):
-        tx, ty = trans[0:2]
-        pos = []
-        for xs, ys in points:
-            x = rot[0][0] * xs + rot[0][1] * ys + tx
-            y = rot[1][0] * xs + rot[1][1] * ys + ty
-            pos.append([x, y])
-        return numpy.array(pos)
+        output = []
+        rot = numpy.array(rot)
+        for point in points:
+            output.append(numpy.matmul(rot[0:2, 0:2], point) + trans[0:2])
+        return output
