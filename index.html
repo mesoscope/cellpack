@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -101,7 +102,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbmol">nbMol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
@@ -130,7 +130,6 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingmode">packingMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
@@ -184,18 +183,18 @@
            <div itemprop="articleBody">
              
   <section id="welcome-to-cellpack-s-documentation">
-<h1>Welcome to cellPack’s documentation!<a class="headerlink" href="#welcome-to-cellpack-s-documentation" title="Permalink to this headline"></a></h1>
+<h1>Welcome to cellPack’s documentation!<a class="headerlink" href="#welcome-to-cellpack-s-documentation" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 </div>
 </section>
 <section id="cellpack">
-<h1>cellPack<a class="headerlink" href="#cellpack" title="Permalink to this headline"></a></h1>
+<h1>cellPack<a class="headerlink" href="#cellpack" title="Permalink to this heading"></a></h1>
 <a class="reference external image-reference" href="https://github.com/mesoscope/cellpack/actions"><img alt="Build Status" src="https://github.com/mesoscope/cellpack/workflows/Build%20Main/badge.svg" /></a>
 <a class="reference external image-reference" href="https://mesoscope.github.io/cellpack/"><img alt="Documentation" src="https://github.com/mesoscope/cellpack/workflows/Documentation/badge.svg" /></a>
 <a class="reference external image-reference" href="https://codecov.io/gh/mesoscope/cellpack"><img alt="Code Coverage" src="https://codecov.io/gh/mesoscope/cellpack/branch/main/graph/badge.svg" /></a>
 <p>algorithm to pack molecular recipes</p>
 <section id="setup">
-<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline"></a></h2>
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this heading"></a></h2>
 <ol class="arabic simple">
 <li><p>create a virtual env: <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span> <span class="pre">-n</span> <span class="pre">autopack</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">activate</span> <span class="pre">autopack</span></code></p></li>
@@ -203,7 +202,7 @@
 </ol>
 </section>
 <section id="run-analysis-code">
-<h2>Run analysis code<a class="headerlink" href="#run-analysis-code" title="Permalink to this headline"></a></h2>
+<h2>Run analysis code<a class="headerlink" href="#run-analysis-code" title="Permalink to this heading"></a></h2>
 <p>By default analyze will run all packing methods on <a href="#id1"><span class="problematic" id="id2">`</span></a>cellpack/test-recipes/NM_Analysis_FigureB1.0.json
 Examples:</p>
 <ul class="simple">
@@ -214,7 +213,7 @@ Examples:</p>
 </ul>
 </section>
 <section id="run-conversion-code">
-<h2>Run conversion code<a class="headerlink" href="#run-conversion-code" title="Permalink to this headline"></a></h2>
+<h2>Run conversion code<a class="headerlink" href="#run-conversion-code" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>To convert to simularium and view at <a class="reference external" href="https://staging.simularium.allencell.org/viewer">https://staging.simularium.allencell.org/viewer</a>
 <code class="docutils literal notranslate"><span class="pre">convert</span> <span class="pre">-r</span> <span class="pre">[FULL_PATH_TO_INPUT_RECIPE_FILE]</span> <span class="pre">-p</span> <span class="pre">[FULL_PATH_TO_PACKING_RESULT]</span> <span class="pre">-o</span> <span class="pre">[OUTPUT_PATH]</span></code>
@@ -223,16 +222,16 @@ Examples:</p>
 <p><strong>Stable Release:</strong> <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">cellpack</span></code><span class="raw-html-m2r"><br></span>
 <strong>Development Head:</strong> <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">git+https://github.com/mesoscope/cellpack.git</span></code></p>
 <section id="documentation">
-<h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline"></a></h3>
+<h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading"></a></h3>
 <p>For full package documentation please visit <a class="reference external" href="https://mesoscope.github.io/cellpack">mesoscope.github.io/cellpack</a>.</p>
 </section>
 <section id="development">
-<h3>Development<a class="headerlink" href="#development" title="Permalink to this headline"></a></h3>
+<h3>Development<a class="headerlink" href="#development" title="Permalink to this heading"></a></h3>
 <p>See <a class="reference external" href="CONTRIBUTING.md">CONTRIBUTING.md</a> for information related to developing the code.</p>
 </section>
 </section>
 <section id="contributing-cheat-sheet">
-<h2>Contributing cheat sheet<a class="headerlink" href="#contributing-cheat-sheet" title="Permalink to this headline"></a></h2>
+<h2>Contributing cheat sheet<a class="headerlink" href="#contributing-cheat-sheet" title="Permalink to this heading"></a></h2>
 <ol class="arabic">
 <li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.[dev]</span></code></p>
 <blockquote>
@@ -277,7 +276,7 @@ well defined PR’s.</p></li>
 </section>
 </section>
 <section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline"></a></h1>
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>

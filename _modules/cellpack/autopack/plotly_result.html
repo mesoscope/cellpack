@@ -13,6 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -99,7 +100,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#molarity">molarity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbmol">nbMol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
@@ -128,7 +128,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingmode">packingMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradient">gradient</a></li>
@@ -218,11 +217,12 @@
             <span class="n">opacity</span><span class="o">=</span><span class="n">opacity</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="PlotlyAnalysis.add_square"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.add_square">[docs]</a>    <span class="k">def</span> <span class="nf">add_square</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="n">x0</span> <span class="o">=</span> <span class="o">-</span><span class="n">radius</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span>
-        <span class="n">y0</span> <span class="o">=</span> <span class="o">-</span><span class="n">radius</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span>
-        <span class="n">x1</span> <span class="o">=</span> <span class="n">radius</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span>
-        <span class="n">y1</span> <span class="o">=</span> <span class="n">radius</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span>
+<div class="viewcode-block" id="PlotlyAnalysis.add_square"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.add_square">[docs]</a>    <span class="k">def</span> <span class="nf">add_square</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">side_length</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># side_length is the length of each side</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="o">-</span><span class="n">side_length</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="n">y0</span> <span class="o">=</span> <span class="o">-</span><span class="n">side_length</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">side_length</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="n">side_length</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span>
         <span class="c1"># corner points of the cube top surface</span>
         <span class="n">point_array</span> <span class="o">=</span> <span class="p">[[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">],</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">y0</span><span class="p">],</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">y1</span><span class="p">]]</span>
         <span class="n">rotated_pts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints2D</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">point_array</span><span class="p">)</span>
@@ -259,7 +259,14 @@
                 <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_circle</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">encapsulatingRadius</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Cube&quot;</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">add_square</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">color</span><span class="p">)</span></div>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_square</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
+                    <span class="n">length</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">length</span>
+                    <span class="n">width</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">side_lengths</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="p">[</span><span class="n">width</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+                        <span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_square</span><span class="p">(</span><span class="n">side_lengths</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">color</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PlotlyAnalysis.make_grid_heatmap"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.make_grid_heatmap">[docs]</a>    <span class="k">def</span> <span class="nf">make_grid_heatmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
         <span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
@@ -308,13 +315,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PlotlyAnalysis.transformPoints2D"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.transformPoints2D">[docs]</a>    <span class="k">def</span> <span class="nf">transformPoints2D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
-        <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-        <span class="n">pos</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">xs</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">ys</span> <span class="o">+</span> <span class="n">tx</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">xs</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">ys</span> <span class="o">+</span> <span class="n">ty</span>
-            <span class="n">pos</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span></div></div>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">rot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">point</span><span class="p">)</span> <span class="o">+</span> <span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">output</span></div></div>
 </pre></div>
 
            </div>

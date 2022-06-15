@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -102,7 +103,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbmol">nbMol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
@@ -131,7 +131,6 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingmode">packingMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
@@ -190,12 +189,12 @@
            <div itemprop="articleBody">
              
   <section id="cellpack-autopack-upy-simularium-package">
-<h1>cellpack.autopack.upy.simularium package<a class="headerlink" href="#cellpack-autopack-upy-simularium-package" title="Permalink to this headline"></a></h1>
+<h1>cellpack.autopack.upy.simularium package<a class="headerlink" href="#cellpack-autopack-upy-simularium-package" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-cellpack.autopack.upy.simularium.simularium_helper">
-<span id="cellpack-autopack-upy-simularium-simularium-helper-module"></span><h2>cellpack.autopack.upy.simularium.simularium_helper module<a class="headerlink" href="#module-cellpack.autopack.upy.simularium.simularium_helper" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-upy-simularium-simularium-helper-module"></span><h2>cellpack.autopack.upy.simularium.simularium_helper module<a class="headerlink" href="#module-cellpack.autopack.upy.simularium.simularium_helper" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.Instance">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.upy.simularium.simularium_helper.</span></span><span class="sig-name descname"><span class="pre">Instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viz_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#Instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.Instance" title="Permalink to this definition"></a></dt>
@@ -220,7 +219,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.upy.simularium.simularium_helper.</span></span><span class="sig-name descname"><span class="pre">simulariumHelper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper" title="cellpack.autopack.upy.hostHelper.Helper"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.autopack.upy.hostHelper.Helper</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper" title="cellpack.autopack.upy.hostHelper.Helper"><code class="xref py py-class docutils literal notranslate"><span class="pre">Helper</span></code></a></p>
 <blockquote>
 <div><p>This is the Simularium helper Object. The helper
 give access to the basic function need for create and edit a host 3d object and scene.</p>
@@ -238,6 +237,11 @@ give access to the basic function need for create and edit a host 3d object and 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Cylinders">
 <span class="sig-name descname"><span class="pre">Cylinders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.Cylinders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Cylinders" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.DATABASE">
+<span class="sig-name descname"><span class="pre">DATABASE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0'</span></em><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.DATABASE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -319,27 +323,6 @@ give access to the basic function need for create and edit a host 3d object and 
 <dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.SPLINE">
 <span class="sig-name descname"><span class="pre">SPLINE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kNurbsCurve'</span></em><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.SPLINE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Sphere">
-<span class="sig-name descname"><span class="pre">Sphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.Sphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Sphere" title="Permalink to this definition"></a></dt>
-<dd><p>Create a hostobject of type sphere.</p>
-<ul class="simple">
-<li><p>overwrited by children class for each host</p></li>
-</ul>
-<p>&#64;type  name: string
-&#64;param name: name of the sphere
-&#64;type  radius: float
-&#64;param radius: the radius of the sphere
-&#64;type  res: float
-&#64;param res: the resolution/quality of the sphere
-&#64;type  pos: array
-&#64;param pos: the position of the cylinder
-&#64;type  kw: dictionary
-&#64;param kw: additional keywords options</p>
-<p>&#64;rtype:   hostObject,hostMesh
-&#64;return:  the created sphere object and mesh</p>
-</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Spheres">
@@ -564,30 +547,6 @@ if the object is a mesh this function handle the color per vertex.</p>
 <dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.createTexturedMaterial">
 <span class="sig-name descname"><span class="pre">createTexturedMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.createTexturedMaterial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.createTexturedMaterial" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.createsNmesh">
-<span class="sig-name descname"><span class="pre">createsNmesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vnormals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proxyCol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[1,</span> <span class="pre">1,</span> <span class="pre">1]]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.createsNmesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.createsNmesh" title="Permalink to this definition"></a></dt>
-<dd><p>This is the main function that create a polygonal mesh.</p>
-<p>&#64;type  name: string
-&#64;param name: name of the pointCloud
-&#64;type  vertices: array
-&#64;param vertices: list of x,y,z vertices points
-&#64;type  vnormals: array
-&#64;param vnormals: list of x,y,z vertex normals vector
-&#64;type  faces: array
-&#64;param faces: list of i,j,k indice of vertex by face
-&#64;type  smooth: boolean
-&#64;param smooth: smooth the mesh
-&#64;type  material: hostApp obj
-&#64;param material: material to apply to the mesh
-&#64;type  proxyCol: booelan
-&#64;param proxyCol: do we need a special object for color by vertex (ie C4D)
-&#64;type  color: array
-&#64;param color: r,g,b value to color the mesh</p>
-<p>&#64;rtype:   hostApp obj
-&#64;return:  the polygon object</p>
-</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.cylinder">
@@ -882,6 +841,11 @@ Simularium support only one object at a time.
 &#64;return:  the current visibility state of the object</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.get_display_data">
+<span class="sig-name descname"><span class="pre">get_display_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingredient</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.get_display_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.get_display_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.host">
 <span class="sig-name descname"><span class="pre">host</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'simularium'</span></em><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.host" title="Permalink to this definition"></a></dt>
@@ -899,7 +863,7 @@ Simularium support only one object at a time.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.init_scene_with_objects">
-<span class="sig-name descname"><span class="pre">init_scene_with_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objects</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.init_scene_with_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.init_scene_with_objects" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">init_scene_with_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_point_positions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_point_compartment_ids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.init_scene_with_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.init_scene_with_objects" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -920,6 +884,11 @@ Simularium support only one object at a time.
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.isIndexedPolyon">
 <span class="sig-name descname"><span class="pre">isIndexedPolyon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.isIndexedPolyon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.isIndexedPolyon" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.is_fiber">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_fiber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.is_fiber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.is_fiber" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1027,7 +996,7 @@ TO DO.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.raycast">
-<span class="sig-name descname"><span class="pre">raycast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.raycast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.raycast" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">raycast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.raycast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.raycast" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1047,11 +1016,6 @@ TO DO.</p>
 &#64;type  parent: hostObject
 &#64;param parent: the new parent object</p>
 </dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.read">
-<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.read" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.resetProgressBar">
@@ -1151,6 +1115,11 @@ This method take a 3d array [rotation_X,rotatio_Y,rotation_Z]</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.set_object_static">
 <span class="sig-name descname"><span class="pre">set_object_static</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.set_object_static"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.set_object_static" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.sphere">
+<span class="sig-name descname"><span class="pre">sphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.sphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.sphere" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1347,7 +1316,7 @@ This function can’t be call in a thread.</p>
 
 </section>
 <section id="module-cellpack.autopack.upy.simularium">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.autopack.upy.simularium" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.autopack.upy.simularium" title="Permalink to this heading"></a></h2>
 <p>Copyright (C) &lt;2010&gt;  Autin L. TSRI</p>
 <p>This file git_upy/dejavuTk/__init__.py is part of upy.</p>
 <p>upy is free software: you can redistribute it and/or modify

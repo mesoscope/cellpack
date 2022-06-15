@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cellpack.autopack.MeshStore &mdash; cellPack 0.2.4 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> cellPack
+          </a>
+              <div class="version">
+                0.2.4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Package modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cellpack.html">cellpack package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.autopack.html">cellpack.autopack package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.bin.html">cellpack.bin package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../recipe-schema.html">Cellpack Recipe Schema 1.0</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#recipe-definition-properties">Recipe definition properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#name">name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#version">version</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../recipe-schema.html#example">example:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#options-properties">Options properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#saveresult">saveResult</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#resultfile">resultfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#enviroonly">EnviroOnly</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#canceldialog">cancelDialog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pickrandpt">pickRandPt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#ingrlookforneighbours">ingrLookForNeighbours</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#overwriteplacemethod">overwritePlaceMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#boundingbox">boundingBox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#smallestproteinsize">smallestProteinSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#largestproteinsize">largestProteinSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#computegridparams">computeGridParams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#windowssize">windowsSize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#placemethod">placeMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-gradient">use_gradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradients">gradients</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#innergridmethod">innerGridMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#freeptsupdatethreshold">freePtsUpdateThreshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-periodicity">use_periodicity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#timer">_timer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#hackfreepts">_hackFreepts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../recipe-schema.html#example-options">example <code class="docutils literal notranslate"><span class="pre">Options</span></code>:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#id81">name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#molarity">molarity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbmol">nbMol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#radii">radii</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#positions">positions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#positions2">positions2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#spherefile">sphereFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pdb">pdb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#color">color</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#meshfile">meshFile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#meshname">meshName</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#coordsystem">coordsystem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#principalvector">principalVector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#offset">offset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#jittermax">jitterMax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbjitter">nbJitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#userotaxis">useRotAxis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotaxis">rotAxis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotrange">rotRange</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#placetype">placeType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradient">gradient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#proba-binding">proba_binding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#weight">weight</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#partners-name">partners_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#partners-position">partners_position</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#partners-weight">partners_weight</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#properties">properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#score">score</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#organism">organism</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#example-ingredient">example ingredient</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#deploying">Deploying</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">cellPack</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+          <li><a href="../../cellpack.html">cellpack</a> &raquo;</li>
+          <li><a href="../autopack.html">cellpack.autopack</a> &raquo;</li>
+      <li>cellpack.autopack.MeshStore</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for cellpack.autopack.MeshStore</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">trimesh</span>
+<span class="kn">from</span> <span class="nn">cellpack</span> <span class="kn">import</span> <span class="n">autopack</span>
+
+
+<div class="viewcode-block" id="MeshStore"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore">[docs]</a><span class="k">class</span> <span class="nc">MeshStore</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scene</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">Scene</span><span class="p">()</span>
+
+<div class="viewcode-block" id="MeshStore.get_collada_material"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_collada_material">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_collada_material</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
+        <span class="c1"># get the bound geometries</span>
+        <span class="n">mat</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">boundg</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="s2">&quot;geometry&quot;</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">bg</span> <span class="ow">in</span> <span class="n">boundg</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">bg</span><span class="o">.</span><span class="n">original</span> <span class="o">==</span> <span class="n">geom</span><span class="p">:</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">bg</span><span class="o">.</span><span class="n">materialnodebysymbol</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+                    <span class="n">k0</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">bg</span><span class="o">.</span><span class="n">materialnodebysymbol</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">mat</span> <span class="o">=</span> <span class="n">bg</span><span class="o">.</span><span class="n">materialnodebysymbol</span><span class="p">[</span><span class="n">k0</span><span class="p">]</span><span class="o">.</span><span class="n">target</span>
+        <span class="k">return</span> <span class="n">mat</span></div>
+
+<div class="viewcode-block" id="MeshStore.normalize_v3"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.normalize_v3">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">normalize_v3</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Normalize a numpy array of 3 component vectors shape=(n,3)&quot;&quot;&quot;</span>
+        <span class="c1">#        return self.unit_vector(arr,axis=1)</span>
+        <span class="c1">#        lens = numpy.linalg.norm(arr,axis=1)</span>
+        <span class="n">lens</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">arr</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">arr</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">arr</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">arr</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/=</span> <span class="n">lens</span>
+        <span class="n">arr</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/=</span> <span class="n">lens</span>
+        <span class="n">arr</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">/=</span> <span class="n">lens</span>
+        <span class="k">return</span> <span class="n">arr</span></div>
+
+<div class="viewcode-block" id="MeshStore.normal_array"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.normal_array">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">normal_array</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">):</span>
+        <span class="n">vertices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+        <span class="n">faces</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span>
+        <span class="c1"># Create a zeroed array with the same type and shape as our vertices i.e., per vertex normal</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">vertices</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">vertices</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="c1"># Create an indexed view into the vertex array using the array of three indices for triangles</span>
+        <span class="n">tris</span> <span class="o">=</span> <span class="n">vertices</span><span class="p">[</span><span class="n">faces</span><span class="p">]</span>
+        <span class="c1"># Calculate the normal for all the triangles, by taking the cross product of the vectors v1-v0, and v2-v0 in each triangle</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">tris</span><span class="p">[::,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">tris</span><span class="p">[::,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">tris</span><span class="p">[::,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">tris</span><span class="p">[::,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># n is now an array of normals per triangle. The length of each normal is dependent the vertices, # we need to normalize these, so that our next step weights each normal equally.normalize_v3(n)</span>
+        <span class="c1"># now we have a normalized array of normals, one per triangle, i.e., per triangle normals.</span>
+        <span class="c1"># But instead of one per triangle (i.e., flat shading), we add to each vertex in that triangle,</span>
+        <span class="c1"># the triangles&#39; normal. Multiple triangles would then contribute to every vertex, so we need to normalize again afterwards.</span>
+        <span class="c1"># The cool part, we can actually add the normals through an indexed view of our (zeroed) per vertex normal array</span>
+        <span class="n">norm</span><span class="p">[</span><span class="n">faces</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">n</span>
+        <span class="n">norm</span><span class="p">[</span><span class="n">faces</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">n</span>
+        <span class="n">norm</span><span class="p">[</span><span class="n">faces</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">n</span>
+        <span class="k">return</span> <span class="n">MeshStore</span><span class="o">.</span><span class="n">normalize_v3</span><span class="p">(</span><span class="n">norm</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MeshStore.get_midpoint"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_midpoint">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_midpoint</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">p2</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MeshStore.norm"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.norm">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return the norm of the vector [a,b,c]</span>
+
+<span class="sd">        &gt;&gt;&gt; result = helper.norm(a,b,c) #a,b,c being double</span>
+
+<span class="sd">        @type a: float</span>
+<span class="sd">        @param a:  first value of the vector</span>
+<span class="sd">        @type b: float</span>
+<span class="sd">        @param b:  second value of the vector</span>
+<span class="sd">        @type c: float</span>
+<span class="sd">        @param c:  third value of the vector</span>
+
+<span class="sd">        @rtype: float</span>
+<span class="sd">        @return: the norm of the vector</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span> <span class="o">*</span> <span class="n">c</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MeshStore.normalize"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.normalize">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return the normalized vector A [x,y,z]</span>
+
+<span class="sd">        &gt;&gt;&gt; a = [1.0,3.0,5.0]</span>
+<span class="sd">        &gt;&gt;&gt; a_normalized = helper.normalize(a)</span>
+
+<span class="sd">        @type A: vector</span>
+<span class="sd">        @param A:  the 3d vector</span>
+<span class="sd">        @rtype: vector</span>
+<span class="sd">        @return: the normalized 3d vecor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">MeshStore</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">A</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">norm</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">A</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span><span class="p">,</span> <span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span><span class="p">,</span> <span class="n">A</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">norm</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MeshStore.get_mesh_filepath_and_extension"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_mesh_filepath_and_extension">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_mesh_filepath_and_extension</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">fileName</span><span class="p">,</span> <span class="n">fileExtension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fileExtension</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">tmpFileName1</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">retrieveFile</span><span class="p">(</span>
+                <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.indpolface&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;geometries&quot;</span>
+            <span class="p">)</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">tmpFileName1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">retrieveFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;geometries&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fileExtension</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">file_name</span><span class="p">,</span> <span class="n">file_extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">file_extension</span></div>
+
+<div class="viewcode-block" id="MeshStore.add_mesh_to_scene"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.add_mesh_to_scene">[docs]</a>    <span class="k">def</span> <span class="nf">add_mesh_to_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add_geometry</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">geom_name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MeshStore.read_mesh_file"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.read_mesh_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_mesh_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="n">file_name</span><span class="p">,</span> <span class="n">file_extension</span> <span class="o">=</span> <span class="n">MeshStore</span><span class="o">.</span><span class="n">get_mesh_filepath_and_extension</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">exchange</span><span class="o">.</span><span class="n">load</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}{</span><span class="n">file_extension</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># , ignore=[collada.DaeUnsupportedError,</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">data</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">geometry</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">geometry</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MeshStore.create_mesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.create_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">create_mesh</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">,</span>
+        <span class="n">vertices</span><span class="p">,</span>
+        <span class="n">vnormals</span><span class="p">,</span>
+        <span class="n">faces</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This is the main function that create a polygonal mesh.</span>
+
+<span class="sd">        @type  name: string</span>
+<span class="sd">        @param name: name of the pointCloud</span>
+<span class="sd">        @type  vertices: array</span>
+<span class="sd">        @param vertices: list of x,y,z vertices points</span>
+<span class="sd">        @type  vnormals: array</span>
+<span class="sd">        @param vnormals: list of x,y,z vertex normals vector</span>
+<span class="sd">        @type  faces: array</span>
+<span class="sd">        @param faces: list of i,j,k indice of vertex by face</span>
+<span class="sd">        @return:  the polygon object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">faces</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_mesh_to_scene</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mesh</span></div>
+
+<div class="viewcode-block" id="MeshStore.create_sphere_data"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.create_sphere_data">[docs]</a>    <span class="k">def</span> <span class="nf">create_sphere_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;from http://paulbourke.net/geometry/circlesphere/csource2.c&quot;&quot;&quot;</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">nstart</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">vertices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">MeshStore</span><span class="o">.</span><span class="n">normalize</span><span class="p">((</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">MeshStore</span><span class="o">.</span><span class="n">normalize</span><span class="p">((</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+        <span class="n">p3</span> <span class="o">=</span> <span class="n">MeshStore</span><span class="o">.</span><span class="n">normalize</span><span class="p">((</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">))</span>
+        <span class="n">p4</span> <span class="o">=</span> <span class="n">MeshStore</span><span class="o">.</span><span class="n">normalize</span><span class="p">((</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">))</span>
+        <span class="n">vertices</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">,</span> <span class="n">p4</span><span class="p">])</span>
+        <span class="n">allfacets</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">iterations</span><span class="p">))</span>
+        <span class="n">facets</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">allfacets</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;int&quot;</span><span class="p">)</span>
+        <span class="n">facets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>  <span class="c1"># p1; facets[0].p2 = p2; facets[0].p3 = p3;</span>
+        <span class="n">facets</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>  <span class="c1"># .p1 = p2; facets[1].p2 = p1; facets[1].p3 = p4;</span>
+        <span class="n">facets</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>  <span class="c1"># .p1 = p2; facets[2].p2 = p4; facets[2].p3 = p3;</span>
+        <span class="n">facets</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>  <span class="c1"># .p1 = p1; facets[3].p2 = p3; facets[3].p3 = p4;</span>
+
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span>  <span class="c1"># (i=1;i&lt;iterations;i++) {</span>
+            <span class="n">nstart</span> <span class="o">=</span> <span class="n">n</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nstart</span><span class="p">):</span>  <span class="c1"># (j=0;j&lt;nstart;j++) {</span>
+                <span class="c1"># /* Create initially copies for the new facets */</span>
+                <span class="n">facets</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">facets</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">facets</span><span class="p">[</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">facets</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">facets</span><span class="p">[</span><span class="n">n</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">facets</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+                <span class="c1"># /* Calculate the midpoints */</span>
+                <span class="n">p1</span> <span class="o">=</span> <span class="n">MeshStore</span><span class="o">.</span><span class="n">get_midpoint</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="n">facets</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]],</span> <span class="n">vertices</span><span class="p">[</span><span class="n">facets</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]])</span>
+                <span class="n">p2</span> <span class="o">=</span> <span class="n">MeshStore</span><span class="o">.</span><span class="n">get_midpoint</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="n">facets</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]],</span> <span class="n">vertices</span><span class="p">[</span><span class="n">facets</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">2</span><span class="p">]])</span>
+                <span class="n">p3</span> <span class="o">=</span> <span class="n">MeshStore</span><span class="o">.</span><span class="n">get_midpoint</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="n">facets</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">2</span><span class="p">]],</span> <span class="n">vertices</span><span class="p">[</span><span class="n">facets</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]])</span>
+                <span class="n">vertices</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">])</span>
+                <span class="n">ip1</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span>
+                <span class="n">ip2</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span>
+                <span class="n">ip3</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="c1"># /* Replace the current facet */</span>
+                <span class="n">facets</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ip1</span>
+                <span class="n">facets</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">ip3</span>
+                <span class="c1"># /* Create the changed vertices in the new facets */</span>
+                <span class="n">facets</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ip1</span>
+                <span class="n">facets</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">ip2</span>
+                <span class="n">facets</span><span class="p">[</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ip3</span>
+                <span class="n">facets</span><span class="p">[</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ip2</span>
+                <span class="n">facets</span><span class="p">[</span><span class="n">n</span> <span class="o">+</span> <span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ip1</span>
+                <span class="n">facets</span><span class="p">[</span><span class="n">n</span> <span class="o">+</span> <span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ip2</span>
+                <span class="n">facets</span><span class="p">[</span><span class="n">n</span> <span class="o">+</span> <span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">ip3</span>
+                <span class="n">n</span> <span class="o">+=</span> <span class="mi">3</span>
+        <span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="n">MeshStore</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">facets</span></div>
+
+<div class="viewcode-block" id="MeshStore.get_nsphere"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_nsphere">[docs]</a>    <span class="k">def</span> <span class="nf">get_nsphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">):</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">nsphere</span><span class="o">.</span><span class="n">minimum_nsphere</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MeshStore.create_sphere"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.create_sphere">[docs]</a>    <span class="k">def</span> <span class="nf">create_sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the mesh data and the mesh object of a Sphere of a given radius</span>
+
+<span class="sd">        @type  name: string</span>
+<span class="sd">        @param name: name for the sphere</span>
+<span class="sd">        @type  iterations: int</span>
+<span class="sd">        @param iterations: resolution</span>
+<span class="sd">        @type  radius: float</span>
+<span class="sd">        @param radius: radius of the sphere</span>
+
+<span class="sd">        @rtype:   Object, Mesh</span>
+<span class="sd">        @return:  Sphere Object and Mesh</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">v</span><span class="p">,</span> <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_sphere_data</span><span class="p">(</span><span class="n">iterations</span><span class="p">)</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">*</span> <span class="n">radius</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mesh</span></div>
+
+<div class="viewcode-block" id="MeshStore.contains_point"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.contains_point">[docs]</a>    <span class="k">def</span> <span class="nf">contains_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">intersector</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">ray</span><span class="o">.</span><span class="n">ray_pyembree</span><span class="o">.</span><span class="n">RayMeshIntersector</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">intersector</span><span class="o">.</span><span class="n">contains_points</span><span class="p">([</span><span class="n">point</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="MeshStore.contains_points"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.contains_points">[docs]</a>    <span class="k">def</span> <span class="nf">contains_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">intersector</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">ray</span><span class="o">.</span><span class="n">ray_pyembree</span><span class="o">.</span><span class="n">RayMeshIntersector</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">intersector</span><span class="o">.</span><span class="n">contains_points</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MeshStore.contains_points_slow"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.contains_points_slow">[docs]</a>    <span class="k">def</span> <span class="nf">contains_points_slow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">intersector</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">ray</span><span class="o">.</span><span class="n">ray_triangle</span><span class="o">.</span><span class="n">RayMeshIntersector</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">intersector</span><span class="o">.</span><span class="n">contains_points</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MeshStore.get_smallest_radius"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_smallest_radius">[docs]</a>    <span class="k">def</span> <span class="nf">get_smallest_radius</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">proximity</span><span class="o">.</span><span class="n">ProximityQuery</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">closet_point</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">triangle_id</span><span class="p">)</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">on_surface</span><span class="p">([</span><span class="n">center</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">distance</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MeshStore.get_normal"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_normal">[docs]</a>    <span class="k">def</span> <span class="nf">get_normal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">point_pos</span><span class="p">):</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">proximity</span><span class="o">.</span><span class="n">ProximityQuery</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">distance</span><span class="p">,</span> <span class="n">triangle_ids</span><span class="p">)</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">vertex</span><span class="p">([</span><span class="n">point_pos</span><span class="p">])</span>
+            <span class="n">triangle_id</span> <span class="o">=</span> <span class="n">triangle_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertex_normals</span><span class="p">[</span><span class="n">triangle_id</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MeshStore.get_centroid"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_centroid">[docs]</a>    <span class="k">def</span> <span class="nf">get_centroid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">):</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">mesh</span><span class="o">.</span><span class="n">centroid</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="MeshStore.get_object"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_object">[docs]</a>    <span class="k">def</span> <span class="nf">get_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MeshStore.build_mesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.build_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">build_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">geomname</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a polygon mesh object from a dictionary verts,faces,normals</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nv</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;verts&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">nf</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;faces&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">vertices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;verts&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">nv</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">faces</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;faces&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">nf</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">vnormals</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;normals&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">nv</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">geom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">(</span><span class="n">geomname</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">faces</span><span class="p">)[</span>
+            <span class="mi">0</span>
+        <span class="p">]</span>
+
+        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">saveDejaVuMesh</span><span class="p">(</span>
+            <span class="n">autopack</span><span class="o">.</span><span class="n">cache_geoms</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">geomname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">faces</span>
+        <span class="p">)</span>
+        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">saveObjMesh</span><span class="p">(</span>
+            <span class="n">autopack</span><span class="o">.</span><span class="n">cache_geoms</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">geomname</span> <span class="o">+</span> <span class="s2">&quot;.obj&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">faces</span>
+        <span class="p">)</span>
+        <span class="c1"># self.saveObjMesh(autopack.cache_geoms + os.sep + geomname + &quot;.obj&quot;)</span>
+        <span class="k">return</span> <span class="n">geom</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">vnormals</span></div>
+
+<div class="viewcode-block" id="MeshStore.get_mesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">get_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">,</span> <span class="n">file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">geometry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">mesh_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">geometry</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">file_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">geometry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_mesh_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_mesh_to_scene</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">geometry</span></div>
+
+<div class="viewcode-block" id="MeshStore.decompose_mesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.decompose_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">decompose_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">edit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tri</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">poly</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="n">poly</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="n">poly</span><span class="o">.</span><span class="n">vertex_normals</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Megan Riel-Mehan.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

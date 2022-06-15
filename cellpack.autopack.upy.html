@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -102,7 +103,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbmol">nbMol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
@@ -131,7 +131,6 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingmode">packingMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
@@ -189,9 +188,9 @@
            <div itemprop="articleBody">
              
   <section id="cellpack-autopack-upy-package">
-<h1>cellpack.autopack.upy package<a class="headerlink" href="#cellpack-autopack-upy-package" title="Permalink to this headline"></a></h1>
+<h1>cellpack.autopack.upy package<a class="headerlink" href="#cellpack-autopack-upy-package" title="Permalink to this heading"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cellpack.autopack.upy.simularium.html">cellpack.autopack.upy.simularium package</a><ul>
@@ -204,10 +203,10 @@
 </div>
 </section>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-cellpack.autopack.upy.colors">
-<span id="cellpack-autopack-upy-colors-module"></span><h2>cellpack.autopack.upy.colors module<a class="headerlink" href="#module-cellpack.autopack.upy.colors" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-upy-colors-module"></span><h2>cellpack.autopack.upy.colors module<a class="headerlink" href="#module-cellpack.autopack.upy.colors" title="Permalink to this heading"></a></h2>
 <p>Copyright (C) &lt;2010&gt;  Autin L. TSRI</p>
 <p>This file git_upy/colors.py is part of upy.</p>
 <p>upy is free software: you can redistribute it and/or modify
@@ -265,7 +264,7 @@ in the form [[0.0, ‘rgb(222, 0, 0)’], …]</p>
 
 </section>
 <section id="module-cellpack.autopack.upy.hostHelper">
-<span id="cellpack-autopack-upy-hosthelper-module"></span><h2>cellpack.autopack.upy.hostHelper module<a class="headerlink" href="#module-cellpack.autopack.upy.hostHelper" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-upy-hosthelper-module"></span><h2>cellpack.autopack.upy.hostHelper module<a class="headerlink" href="#module-cellpack.autopack.upy.hostHelper" title="Permalink to this heading"></a></h2>
 <p>Copyright (C) &lt;2010&gt;  Autin L. TSRI
 This file git_upy/hostHelper.py is part of upy.</p>
 <p>upy is free software: you can redistribute it and/or modify
@@ -1168,12 +1167,6 @@ convert to range 0-1</p>
 &#64;param doc: the desired scene
 &#64;type  kw: dictionary
 &#64;param kw: dictionary of arg options</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.upy.hostHelper.Helper.createUnitSphereData">
-<span class="sig-name descname"><span class="pre">createUnitSphereData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/hostHelper.html#Helper.createUnitSphereData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.hostHelper.Helper.createUnitSphereData" title="Permalink to this definition"></a></dt>
-<dd><p>from <a class="reference external" href="http://paulbourke.net/geometry/circlesphere/csource2.c">http://paulbourke.net/geometry/circlesphere/csource2.c</a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -3121,20 +3114,6 @@ of point.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.upy.hostHelper.Helper.unitSphere">
-<span class="sig-name descname"><span class="pre">unitSphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/hostHelper.html#Helper.unitSphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.hostHelper.Helper.unitSphere" title="Permalink to this definition"></a></dt>
-<dd><p>Create the mesh data and the mesh object of a Sphere of a given radius</p>
-<p>&#64;type  name: string
-&#64;param name: name for the sphere
-&#64;type  iterations: int
-&#64;param iterations: resolution
-&#64;type  radius: float
-&#64;param radius: radius of the sphere</p>
-<p>&#64;rtype:   Object, Mesh
-&#64;return:  Sphere Object and Mesh</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.hostHelper.Helper.unit_vector">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unit_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/hostHelper.html#Helper.unit_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.hostHelper.Helper.unit_vector" title="Permalink to this definition"></a></dt>
 <dd><p>Return ndarray normalized by length, i.e. eucledian norm, along axis.</p>
@@ -3384,7 +3363,7 @@ Create two files : filename.indpolvert and filename.indpolface</p>
 
 </section>
 <section id="module-cellpack.autopack.upy">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.autopack.upy" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.autopack.upy" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.getHClass">
 <span class="sig-prename descclassname"><span class="pre">cellpack.autopack.upy.</span></span><span class="sig-name descname"><span class="pre">getHClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy.html#getHClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.getHClass" title="Permalink to this definition"></a></dt>

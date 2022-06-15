@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -103,7 +104,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbmol">nbMol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
@@ -132,7 +132,6 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingmode">packingMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
@@ -190,12 +189,12 @@
            <div itemprop="articleBody">
              
   <section id="cellpack-mgl-tools-oldnumeric-package">
-<h1>cellpack.mgl_tools.oldnumeric package<a class="headerlink" href="#cellpack-mgl-tools-oldnumeric-package" title="Permalink to this headline"></a></h1>
+<h1>cellpack.mgl_tools.oldnumeric package<a class="headerlink" href="#cellpack-mgl-tools-oldnumeric-package" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.alter_code1">
-<span id="cellpack-mgl-tools-oldnumeric-alter-code1-module"></span><h2>cellpack.mgl_tools.oldnumeric.alter_code1 module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.alter_code1" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-alter-code1-module"></span><h2>cellpack.mgl_tools.oldnumeric.alter_code1 module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.alter_code1" title="Permalink to this heading"></a></h2>
 <p>This module converts code written for Numeric to run with numpy</p>
 <dl>
 <dt>Makes the following changes:</dt><dd><ul>
@@ -260,7 +259,7 @@ replaced).</p>
 
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.alter_code2">
-<span id="cellpack-mgl-tools-oldnumeric-alter-code2-module"></span><h2>cellpack.mgl_tools.oldnumeric.alter_code2 module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.alter_code2" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-alter-code2-module"></span><h2>cellpack.mgl_tools.oldnumeric.alter_code2 module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.alter_code2" title="Permalink to this heading"></a></h2>
 <p>This module converts code written for numpy.oldnumeric to work
 with numpy</p>
 <p>FIXME:  Flesh this out.</p>
@@ -283,7 +282,7 @@ oldnumeric.random_array, and oldnumeric.fft</p></li>
 </dl>
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.array_printer">
-<span id="cellpack-mgl-tools-oldnumeric-array-printer-module"></span><h2>cellpack.mgl_tools.oldnumeric.array_printer module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.array_printer" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-array-printer-module"></span><h2>cellpack.mgl_tools.oldnumeric.array_printer module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.array_printer" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.array_printer.array2string">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.array_printer.</span></span><span class="sig-name descname"><span class="pre">array2string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_line_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suppress_small</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/array_printer.html#array2string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.array_printer.array2string" title="Permalink to this definition"></a></dt>
@@ -291,7 +290,7 @@ oldnumeric.random_array, and oldnumeric.fft</p></li>
 
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.arrayfns">
-<span id="cellpack-mgl-tools-oldnumeric-arrayfns-module"></span><h2>cellpack.mgl_tools.oldnumeric.arrayfns module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.arrayfns" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-arrayfns-module"></span><h2>cellpack.mgl_tools.oldnumeric.arrayfns module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.arrayfns" title="Permalink to this heading"></a></h2>
 <p>Backward compatible with arrayfns from Numeric</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.arrayfns.array_set">
@@ -538,11 +537,11 @@ variable-size chunks of an array, using the <code class="docutils literal notran
 
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.compat">
-<span id="cellpack-mgl-tools-oldnumeric-compat-module"></span><h2>cellpack.mgl_tools.oldnumeric.compat module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.compat" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-compat-module"></span><h2>cellpack.mgl_tools.oldnumeric.compat module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.compat" title="Permalink to this heading"></a></h2>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.compat.ArrayType">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.compat.</span></span><span class="sig-name descname"><span class="pre">ArrayType</span></span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.compat.ArrayType" title="Permalink to this definition"></a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
 </dd></dl>
 
 <dl class="py function">
@@ -558,7 +557,7 @@ variable-size chunks of an array, using the <code class="docutils literal notran
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.compat.Pickler">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.compat.</span></span><span class="sig-name descname"><span class="pre">Pickler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/compat.html#Pickler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.compat.Pickler" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_pickle.Pickler</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Pickler</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.compat.Pickler.save_array">
 <span class="sig-name descname"><span class="pre">save_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/compat.html#Pickler.save_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.compat.Pickler.save_array" title="Permalink to this definition"></a></dt>
@@ -569,19 +568,19 @@ variable-size chunks of an array, using the <code class="docutils literal notran
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.compat.UFuncType">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.compat.</span></span><span class="sig-name descname"><span class="pre">UFuncType</span></span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.compat.UFuncType" title="Permalink to this definition"></a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ufunc</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">ufunc</span></code></p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.compat.UfuncType">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.compat.</span></span><span class="sig-name descname"><span class="pre">UfuncType</span></span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.compat.UfuncType" title="Permalink to this definition"></a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ufunc</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">ufunc</span></code></p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.compat.Unpickler">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.compat.</span></span><span class="sig-name descname"><span class="pre">Unpickler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/compat.html#Unpickler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.compat.Unpickler" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_pickle.Unpickler</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Unpickler</span></code></p>
 </dd></dl>
 
 <dl class="py function">
@@ -598,7 +597,7 @@ variable-size chunks of an array, using the <code class="docutils literal notran
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.compat.arraytype">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.compat.</span></span><span class="sig-name descname"><span class="pre">arraytype</span></span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.compat.arraytype" title="Permalink to this definition"></a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
 </dd></dl>
 
 <dl class="py function">
@@ -754,7 +753,7 @@ If <cite>out</cite> is given, then it is returned.</p>
 
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.fft">
-<span id="cellpack-mgl-tools-oldnumeric-fft-module"></span><h2>cellpack.mgl_tools.oldnumeric.fft module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.fft" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-fft-module"></span><h2>cellpack.mgl_tools.oldnumeric.fft module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.fft" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.fft.fft">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.fft.</span></span><span class="sig-name descname"><span class="pre">fft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.fft.fft" title="Permalink to this definition"></a></dt>
@@ -1934,10 +1933,10 @@ transformation axes.</p>
 
 </section>
 <section id="cellpack-mgl-tools-oldnumeric-fix-default-axis-module">
-<h2>cellpack.mgl_tools.oldnumeric.fix_default_axis module<a class="headerlink" href="#cellpack-mgl-tools-oldnumeric-fix-default-axis-module" title="Permalink to this headline"></a></h2>
+<h2>cellpack.mgl_tools.oldnumeric.fix_default_axis module<a class="headerlink" href="#cellpack-mgl-tools-oldnumeric-fix-default-axis-module" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.functions">
-<span id="cellpack-mgl-tools-oldnumeric-functions-module"></span><h2>cellpack.mgl_tools.oldnumeric.functions module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.functions" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-functions-module"></span><h2>cellpack.mgl_tools.oldnumeric.functions module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.functions" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.functions.alltrue">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.functions.</span></span><span class="sig-name descname"><span class="pre">alltrue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/functions.html#alltrue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.functions.alltrue" title="Permalink to this definition"></a></dt>
@@ -2090,7 +2089,7 @@ dimensions which is initialized to all zeros</p>
 
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.linear_algebra">
-<span id="cellpack-mgl-tools-oldnumeric-linear-algebra-module"></span><h2>cellpack.mgl_tools.oldnumeric.linear_algebra module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.linear_algebra" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-linear-algebra-module"></span><h2>cellpack.mgl_tools.oldnumeric.linear_algebra module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.linear_algebra" title="Permalink to this heading"></a></h2>
 <p>Backward compatible with LinearAlgebra from Numeric</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.linear_algebra.Heigenvalues">
@@ -2190,9 +2189,9 @@ Singular values less than s[0]*rcond are treated as zero.</p>
 
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.ma">
-<span id="cellpack-mgl-tools-oldnumeric-ma-module"></span><h2>cellpack.mgl_tools.oldnumeric.ma module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.ma" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-ma-module"></span><h2>cellpack.mgl_tools.oldnumeric.ma module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.ma" title="Permalink to this heading"></a></h2>
 <section id="masked-arrays">
-<h3>Masked Arrays<a class="headerlink" href="#masked-arrays" title="Permalink to this headline"></a></h3>
+<h3>Masked Arrays<a class="headerlink" href="#masked-arrays" title="Permalink to this heading"></a></h3>
 <p>Arrays sometimes contain invalid or missing data.  When doing operations
 on such arrays, we wish to suppress invalid values, which is the purpose masked
 arrays fulfill (an example of typical use is given below).</p>
@@ -2237,20 +2236,20 @@ invalid operation.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.ma.MaskError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.ma.</span></span><span class="sig-name descname"><span class="pre">MaskError</span></span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.ma.MaskError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cellpack.mgl_tools.oldnumeric.ma.MAError" title="numpy.ma.core.MAError"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ma.core.MAError</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.mgl_tools.oldnumeric.ma.MAError" title="numpy.ma.core.MAError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MAError</span></code></a></p>
 <p>Class for mask related errors.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.ma.MaskType">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.ma.</span></span><span class="sig-name descname"><span class="pre">MaskType</span></span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.ma.MaskType" title="Permalink to this definition"></a></dt>
-<dd><p>alias of <a class="reference internal" href="#cellpack.mgl_tools.oldnumeric.ma.bool_" title="numpy.bool_"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.bool_</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#cellpack.mgl_tools.oldnumeric.ma.bool_" title="numpy.bool_"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool_</span></code></a></p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.ma.MaskedArray">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.ma.</span></span><span class="sig-name descname"><span class="pre">MaskedArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hard_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shrink</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.ma.MaskedArray" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
 <p>An array class with possibly masked values.</p>
 <p>Masked values of True exclude the corresponding element from any
 computation.</p>
@@ -5542,7 +5541,7 @@ input data-type, otherwise. If returned, <cite>sum_of_weights</cite> is always
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.ma.bool_">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.ma.</span></span><span class="sig-name descname"><span class="pre">bool_</span></span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.ma.bool_" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.generic</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">generic</span></code></p>
 <p>Boolean type (True or False), stored as a byte.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -7800,7 +7799,7 @@ the array <cite>arr</cite>, where all the data are masked.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.ma.masked_array">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.ma.</span></span><span class="sig-name descname"><span class="pre">masked_array</span></span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.ma.masked_array" title="Permalink to this definition"></a></dt>
-<dd><p>alias of <a class="reference internal" href="#cellpack.mgl_tools.oldnumeric.ma.MaskedArray" title="numpy.ma.core.MaskedArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ma.core.MaskedArray</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#cellpack.mgl_tools.oldnumeric.ma.MaskedArray" title="numpy.ma.core.MaskedArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedArray</span></code></a></p>
 </dd></dl>
 
 <dl class="py function">
@@ -8548,7 +8547,7 @@ taking the minimum of an array with a given dtype.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.ma.mvoid">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.ma.</span></span><span class="sig-name descname"><span class="pre">mvoid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hardmask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.ma.mvoid" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cellpack.mgl_tools.oldnumeric.ma.MaskedArray" title="numpy.ma.core.MaskedArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ma.core.MaskedArray</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.mgl_tools.oldnumeric.ma.MaskedArray" title="numpy.ma.core.MaskedArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaskedArray</span></code></a></p>
 <p>Fake a ‘void’ object to use for masked array with structured dtypes.</p>
 <p>Create a new masked array from scratch.</p>
 <p class="rubric">Notes</p>
@@ -9774,7 +9773,7 @@ elsewhere.</p>
 </section>
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.matrix">
-<span id="cellpack-mgl-tools-oldnumeric-matrix-module"></span><h2>cellpack.mgl_tools.oldnumeric.matrix module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.matrix" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-matrix-module"></span><h2>cellpack.mgl_tools.oldnumeric.matrix module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.matrix" title="Permalink to this heading"></a></h2>
 <p>matrix(data, dtype=None, copy=True)</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -11063,13 +11062,13 @@ avoided on arrays defined by slices, transposes, fortran-ordering, etc.:</p>
 
 </section>
 <section id="cellpack-mgl-tools-oldnumeric-misc-module">
-<h2>cellpack.mgl_tools.oldnumeric.misc module<a class="headerlink" href="#cellpack-mgl-tools-oldnumeric-misc-module" title="Permalink to this headline"></a></h2>
+<h2>cellpack.mgl_tools.oldnumeric.misc module<a class="headerlink" href="#cellpack-mgl-tools-oldnumeric-misc-module" title="Permalink to this heading"></a></h2>
 </section>
 <section id="cellpack-mgl-tools-oldnumeric-mlab-module">
-<h2>cellpack.mgl_tools.oldnumeric.mlab module<a class="headerlink" href="#cellpack-mgl-tools-oldnumeric-mlab-module" title="Permalink to this headline"></a></h2>
+<h2>cellpack.mgl_tools.oldnumeric.mlab module<a class="headerlink" href="#cellpack-mgl-tools-oldnumeric-mlab-module" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.precision">
-<span id="cellpack-mgl-tools-oldnumeric-precision-module"></span><h2>cellpack.mgl_tools.oldnumeric.precision module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.precision" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-precision-module"></span><h2>cellpack.mgl_tools.oldnumeric.precision module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.precision" title="Permalink to this heading"></a></h2>
 <dl class="py exception">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.precision.PrecisionError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.precision.</span></span><span class="sig-name descname"><span class="pre">PrecisionError</span></span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/precision.html#PrecisionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.precision.PrecisionError" title="Permalink to this definition"></a></dt>
@@ -11085,7 +11084,7 @@ dimensions which is initialized to all zeros</p>
 
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.random_array">
-<span id="cellpack-mgl-tools-oldnumeric-random-array-module"></span><h2>cellpack.mgl_tools.oldnumeric.random_array module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.random_array" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-random-array-module"></span><h2>cellpack.mgl_tools.oldnumeric.random_array module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.random_array" title="Permalink to this heading"></a></h2>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.random_array.ArgumentError">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.random_array.</span></span><span class="sig-name descname"><span class="pre">ArgumentError</span></span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.random_array.ArgumentError" title="Permalink to this definition"></a></dt>
@@ -11255,7 +11254,7 @@ in given range</p>
 
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.rng">
-<span id="cellpack-mgl-tools-oldnumeric-rng-module"></span><h2>cellpack.mgl_tools.oldnumeric.rng module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.rng" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-rng-module"></span><h2>cellpack.mgl_tools.oldnumeric.rng module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.rng" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.rng.CreateGenerator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.rng.</span></span><span class="sig-name descname"><span class="pre">CreateGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/rng.html#CreateGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.rng.CreateGenerator" title="Permalink to this definition"></a></dt>
@@ -11275,7 +11274,7 @@ in given range</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.rng.ExponentialDistribution">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.rng.</span></span><span class="sig-name descname"><span class="pre">ExponentialDistribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lambda_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/rng.html#ExponentialDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.rng.ExponentialDistribution" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.mgl_tools.oldnumeric.rng.Distribution</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Distribution</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.rng.ExponentialDistribution.density">
 <span class="sig-name descname"><span class="pre">density</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/rng.html#ExponentialDistribution.density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.rng.ExponentialDistribution.density" title="Permalink to this definition"></a></dt>
@@ -11286,7 +11285,7 @@ in given range</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.rng.LogNormalDistribution">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.rng.</span></span><span class="sig-name descname"><span class="pre">LogNormalDistribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/rng.html#LogNormalDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.rng.LogNormalDistribution" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.mgl_tools.oldnumeric.rng.Distribution</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Distribution</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.rng.LogNormalDistribution.density">
 <span class="sig-name descname"><span class="pre">density</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/rng.html#LogNormalDistribution.density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.rng.LogNormalDistribution.density" title="Permalink to this definition"></a></dt>
@@ -11297,7 +11296,7 @@ in given range</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.rng.NormalDistribution">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.rng.</span></span><span class="sig-name descname"><span class="pre">NormalDistribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/rng.html#NormalDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.rng.NormalDistribution" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.mgl_tools.oldnumeric.rng.Distribution</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Distribution</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.rng.NormalDistribution.density">
 <span class="sig-name descname"><span class="pre">density</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/rng.html#NormalDistribution.density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.rng.NormalDistribution.density" title="Permalink to this definition"></a></dt>
@@ -11308,7 +11307,7 @@ in given range</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.rng.UniformDistribution">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.rng.</span></span><span class="sig-name descname"><span class="pre">UniformDistribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/rng.html#UniformDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.rng.UniformDistribution" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.mgl_tools.oldnumeric.rng.Distribution</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Distribution</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.rng.UniformDistribution.density">
 <span class="sig-name descname"><span class="pre">density</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/rng.html#UniformDistribution.density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.rng.UniformDistribution.density" title="Permalink to this definition"></a></dt>
@@ -11337,10 +11336,10 @@ in given range</p>
 
 </section>
 <section id="cellpack-mgl-tools-oldnumeric-rng-stats-module">
-<h2>cellpack.mgl_tools.oldnumeric.rng_stats module<a class="headerlink" href="#cellpack-mgl-tools-oldnumeric-rng-stats-module" title="Permalink to this headline"></a></h2>
+<h2>cellpack.mgl_tools.oldnumeric.rng_stats module<a class="headerlink" href="#cellpack-mgl-tools-oldnumeric-rng-stats-module" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.setup">
-<span id="cellpack-mgl-tools-oldnumeric-setup-module"></span><h2>cellpack.mgl_tools.oldnumeric.setup module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.setup" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-setup-module"></span><h2>cellpack.mgl_tools.oldnumeric.setup module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.setup" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.setup.configuration">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.setup.</span></span><span class="sig-name descname"><span class="pre">configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/setup.html#configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.setup.configuration" title="Permalink to this definition"></a></dt>
@@ -11348,7 +11347,7 @@ in given range</p>
 
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.setupscons">
-<span id="cellpack-mgl-tools-oldnumeric-setupscons-module"></span><h2>cellpack.mgl_tools.oldnumeric.setupscons module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.setupscons" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-setupscons-module"></span><h2>cellpack.mgl_tools.oldnumeric.setupscons module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.setupscons" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.setupscons.configuration">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.setupscons.</span></span><span class="sig-name descname"><span class="pre">configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/setupscons.html#configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.setupscons.configuration" title="Permalink to this definition"></a></dt>
@@ -11356,7 +11355,7 @@ in given range</p>
 
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.typeconv">
-<span id="cellpack-mgl-tools-oldnumeric-typeconv-module"></span><h2>cellpack.mgl_tools.oldnumeric.typeconv module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.typeconv" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-typeconv-module"></span><h2>cellpack.mgl_tools.oldnumeric.typeconv module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.typeconv" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.typeconv.convtypecode">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.typeconv.</span></span><span class="sig-name descname"><span class="pre">convtypecode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">typecode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/typeconv.html#convtypecode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.typeconv.convtypecode" title="Permalink to this definition"></a></dt>
@@ -11369,17 +11368,17 @@ in given range</p>
 
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric.ufuncs">
-<span id="cellpack-mgl-tools-oldnumeric-ufuncs-module"></span><h2>cellpack.mgl_tools.oldnumeric.ufuncs module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.ufuncs" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-oldnumeric-ufuncs-module"></span><h2>cellpack.mgl_tools.oldnumeric.ufuncs module<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric.ufuncs" title="Permalink to this heading"></a></h2>
 </section>
 <section id="cellpack-mgl-tools-oldnumeric-user-array-module">
-<h2>cellpack.mgl_tools.oldnumeric.user_array module<a class="headerlink" href="#cellpack-mgl-tools-oldnumeric-user-array-module" title="Permalink to this headline"></a></h2>
+<h2>cellpack.mgl_tools.oldnumeric.user_array module<a class="headerlink" href="#cellpack-mgl-tools-oldnumeric-user-array-module" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-cellpack.mgl_tools.oldnumeric">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.mgl_tools.oldnumeric" title="Permalink to this heading"></a></h2>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.ArrayType">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.</span></span><span class="sig-name descname"><span class="pre">ArrayType</span></span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.ArrayType" title="Permalink to this definition"></a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
 </dd></dl>
 
 <dl class="py function">
@@ -11395,7 +11394,7 @@ in given range</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.Pickler">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.</span></span><span class="sig-name descname"><span class="pre">Pickler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/compat.html#Pickler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.Pickler" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_pickle.Pickler</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Pickler</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.Pickler.save_array">
 <span class="sig-name descname"><span class="pre">save_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/compat.html#Pickler.save_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.Pickler.save_array" title="Permalink to this definition"></a></dt>
@@ -11412,19 +11411,19 @@ in given range</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.UFuncType">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.</span></span><span class="sig-name descname"><span class="pre">UFuncType</span></span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.UFuncType" title="Permalink to this definition"></a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ufunc</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">ufunc</span></code></p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.UfuncType">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.</span></span><span class="sig-name descname"><span class="pre">UfuncType</span></span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.UfuncType" title="Permalink to this definition"></a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ufunc</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">ufunc</span></code></p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.Unpickler">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.</span></span><span class="sig-name descname"><span class="pre">Unpickler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/oldnumeric/compat.html#Unpickler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.Unpickler" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_pickle.Unpickler</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Unpickler</span></code></p>
 </dd></dl>
 
 <dl class="py function">
@@ -11466,7 +11465,7 @@ in given range</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.oldnumeric.arraytype">
 <span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.oldnumeric.</span></span><span class="sig-name descname"><span class="pre">arraytype</span></span><a class="headerlink" href="#cellpack.mgl_tools.oldnumeric.arraytype" title="Permalink to this definition"></a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
 </dd></dl>
 
 <dl class="py function">

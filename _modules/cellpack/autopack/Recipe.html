@@ -13,6 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -99,7 +100,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#molarity">molarity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbmol">nbMol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
@@ -128,7 +128,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingmode">packingMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradient">gradient</a></li>
@@ -319,23 +318,18 @@
             <span class="c1"># specific for M (mol / L) in a volume in Angstrom</span>
             <span class="c1">#            nbr = ingr.molarity * (volume/10e6) * 1000 * 0.000602</span>
             <span class="c1">#            nbi = int(nbr)              #Mod by Graham 8/18/11</span>
-            <span class="n">nbr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">molarity</span> <span class="o">*</span> <span class="mf">0.0006022</span> <span class="o">*</span> <span class="n">volume</span>
-            <span class="n">nbi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nbr</span><span class="p">)</span>  <span class="c1"># Mod by Graham 8/18/11</span>
-            <span class="k">if</span> <span class="n">nbi</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">nbmod</span> <span class="o">=</span> <span class="n">nbr</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">nbmod</span> <span class="o">=</span> <span class="n">nbr</span> <span class="o">%</span> <span class="n">nbi</span>  <span class="c1"># Mod by Graham 8/18/11</span>
-            <span class="n">randval</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span>  <span class="c1"># Mod by Graham 8/18/11</span>
-            <span class="k">if</span> <span class="n">nbmod</span> <span class="o">&gt;=</span> <span class="n">randval</span><span class="p">:</span>  <span class="c1"># Mod by Graham 8/18/11</span>
-                <span class="n">nbi</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nbi</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Mod by Graham 8/18/11</span>
-            <span class="n">nb</span> <span class="o">=</span> <span class="n">nbi</span>  <span class="c1"># Mod by Graham 8/18/11</span>
-            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">overwrite_nbMol</span><span class="p">:</span>  <span class="c1"># DEPRECATED</span>
-                <span class="n">ingr</span><span class="o">.</span><span class="n">vol_nbmol</span> <span class="o">=</span> <span class="n">nb</span>
-                <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">overwrite_nbMol_value</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">ingr</span><span class="o">.</span><span class="n">vol_nbmol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="n">nb</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">overwrite_nbMol_value</span>
+            <span class="n">num_to_place_float</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">molarity</span> <span class="o">*</span> <span class="mf">0.0006022</span> <span class="o">*</span> <span class="n">volume</span>
+            <span class="n">num_to_place_int</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_to_place_float</span><span class="p">)</span>  <span class="c1"># Mod by Graham 8/18/11</span>
+            <span class="n">remainder</span> <span class="o">=</span> <span class="n">num_to_place_float</span> <span class="o">%</span> <span class="n">num_to_place_int</span> <span class="k">if</span> <span class="n">num_to_place_int</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">num_to_place_float</span>
 
-            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># some chance that the fraction over the integer will result in another ingr being placed</span>
+            <span class="n">randval</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">remainder</span> <span class="o">&gt;=</span> <span class="n">randval</span><span class="p">:</span>  <span class="c1"># Mod by Graham 8/18/11</span>
+                <span class="n">num_to_place_int</span> <span class="o">=</span> <span class="n">num_to_place_int</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="n">ingr</span><span class="o">.</span><span class="n">vol_nbmol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">left_to_place</span> <span class="o">=</span> <span class="n">num_to_place_int</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">left_to_place</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                     <span class="s2">&quot;WARNING GRAHAM: recipe ingredient </span><span class="si">%s</span><span class="s2"> has 0 molecules as target&quot;</span><span class="p">,</span>
                     <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -372,7 +366,7 @@
             <span class="nb">print</span><span class="p">(</span>
                 <span class="n">indent</span>
                 <span class="o">+</span> <span class="s2">&quot;ingr: </span><span class="si">%s</span><span class="s2"> target: </span><span class="si">%3d</span><span class="s2"> placed </span><span class="si">%3d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span>
-                <span class="o">%</span> <span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">pdb</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">counter</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">pdb</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">left_to_place</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">counter</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="p">)</span></div></div>
 </pre></div>
 

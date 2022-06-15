@@ -13,6 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -99,7 +100,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#molarity">molarity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#nbmol">nbMol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
@@ -128,7 +128,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packingmode">packingMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradient">gradient</a></li>
@@ -226,7 +225,6 @@
         <span class="n">orientBiasRotRangeMax</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
         <span class="n">orientBiasRotRangeMin</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
         <span class="n">overwrite_distFunc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># overWrite</span>
-        <span class="n">overwrite_nbMol_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">packingMode</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
         <span class="n">packingPriority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">partners_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -247,21 +245,24 @@
         <span class="n">position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">sphereFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">meshFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">meshName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">meshObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">rotAxis</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
         <span class="n">rotRange</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">use_mesh_rb</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">useOrientBias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">useRotAxis</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">weight</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>  <span class="c1"># use for affinity ie partner.weight</span>
     <span class="p">):</span>
         <span class="c1"># called through inheritance</span>
-        <span class="n">radii</span> <span class="o">=</span> <span class="n">radii</span> <span class="k">if</span> <span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;MultiSphere&quot;</span> <span class="k">else</span> <span class="p">[[</span><span class="n">radius</span><span class="p">]]</span>
-        <span class="n">positions</span> <span class="o">=</span> <span class="n">positions</span> <span class="k">if</span> <span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;MultiSphere&quot;</span> <span class="k">else</span> <span class="p">[[</span><span class="n">position</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="n">radii</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">radii</span> <span class="o">=</span> <span class="p">[[</span><span class="n">radius</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="n">positions</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">position</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">positions</span> <span class="o">=</span> <span class="p">[[</span><span class="n">position</span><span class="p">]]</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">Type</span><span class="o">=</span><span class="n">Type</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+            <span class="n">coordsystem</span><span class="o">=</span><span class="n">coordsystem</span><span class="p">,</span>
             <span class="n">cutoff_boundary</span><span class="o">=</span><span class="n">cutoff_boundary</span><span class="p">,</span>
             <span class="n">cutoff_surface</span><span class="o">=</span><span class="n">cutoff_surface</span><span class="p">,</span>
             <span class="n">distExpression</span><span class="o">=</span><span class="n">distExpression</span><span class="p">,</span>
@@ -271,13 +272,14 @@
             <span class="n">gradient</span><span class="o">=</span><span class="n">gradient</span><span class="p">,</span>
             <span class="n">isAttractor</span><span class="o">=</span><span class="n">isAttractor</span><span class="p">,</span>
             <span class="n">jitterMax</span><span class="o">=</span><span class="n">jitterMax</span><span class="p">,</span>
+            <span class="n">meshName</span><span class="o">=</span><span class="n">meshName</span><span class="p">,</span>
             <span class="n">meshType</span><span class="o">=</span><span class="n">meshType</span><span class="p">,</span>
+            <span class="n">meshObject</span><span class="o">=</span><span class="n">meshObject</span><span class="p">,</span>
             <span class="n">molarity</span><span class="o">=</span><span class="n">molarity</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
             <span class="n">nbJitter</span><span class="o">=</span><span class="n">nbJitter</span><span class="p">,</span>
             <span class="n">nbMol</span><span class="o">=</span><span class="n">nbMol</span><span class="p">,</span>
             <span class="n">overwrite_distFunc</span><span class="o">=</span><span class="n">overwrite_distFunc</span><span class="p">,</span>
-            <span class="n">overwrite_nbMol_value</span><span class="o">=</span><span class="n">overwrite_nbMol_value</span><span class="p">,</span>
             <span class="n">packingMode</span><span class="o">=</span><span class="n">packingMode</span><span class="p">,</span>
             <span class="n">packingPriority</span><span class="o">=</span><span class="n">packingPriority</span><span class="p">,</span>
             <span class="n">partners_name</span><span class="o">=</span><span class="n">partners_name</span><span class="p">,</span>
@@ -303,56 +305,17 @@
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%5.2f</span><span class="s2">_</span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">molarity</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">singleSphere</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># min and max radius for a single sphere should be the same</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">=</span> <span class="n">encapsulatingRadius</span> <span class="ow">or</span> <span class="n">radius</span>
-        <span class="c1"># make a sphere ?-&gt;rapid ?</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">nogui</span><span class="p">:</span>
-                <span class="c1">#            if not autopack.helper.nogui :</span>
-                <span class="c1"># build a cylinder and make it length uLength, radius radii[0]</span>
-                <span class="c1"># this mesh is used bu RAPID for collision</span>
-                <span class="n">p</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="s2">&quot;autopackHider&quot;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">p</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">newEmpty</span><span class="p">(</span><span class="s2">&quot;autopackHider&quot;</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;blender&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">toggleDisplay</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_basic&quot;</span><span class="p">,</span>
-                    <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                    <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">,</span>
-                    <span class="n">parent</span><span class="o">=</span><span class="n">p</span><span class="p">,</span>
-                    <span class="n">res</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span>
-                <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">unitSphere</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_basic&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">getData</span><span class="p">()</span>
-        <span class="c1"># should do that for all ingredient type</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">representation</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">,</span> <span class="s2">&quot;getFaces&quot;</span>
-        <span class="p">):</span>  <span class="c1"># this is not working with dejavu</span>
-            <span class="c1"># and should go in the graphics.</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">nogui</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">representation</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_rep&quot;</span><span class="p">,</span>
-                    <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                    <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">,</span>
-                    <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">,</span>
-                    <span class="n">res</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span>
-                <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">representation</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">Icosahedron</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_rep&quot;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-
+    
 <div class="viewcode-block" id="SingleSphereIngr.collides_with_compartment"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.collides_with_compartment">[docs]</a>    <span class="k">def</span> <span class="nf">collides_with_compartment</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">jtrans</span><span class="p">,</span>
         <span class="n">rotMat</span><span class="p">,</span>
         <span class="n">level</span><span class="p">,</span>
         <span class="n">gridPointsCoords</span><span class="p">,</span>
-        <span class="n">histoVol</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check spheres for collision</span>
@@ -362,8 +325,8 @@
         <span class="n">radii</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">],)</span>
         <span class="n">centT</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">centers</span><span class="p">)</span>  <span class="c1"># this should be jtrans</span>
         <span class="k">for</span> <span class="n">radc</span><span class="p">,</span> <span class="n">posc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">centT</span><span class="p">):</span>
-            <span class="n">ptsInSphere</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span><span class="n">posc</span><span class="p">,</span> <span class="n">radc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># indices</span>
-            <span class="n">compIdsSphere</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">histoVol</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span><span class="p">,</span> <span class="n">ptsInSphere</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">ptsInSphere</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span><span class="n">posc</span><span class="p">,</span> <span class="n">radc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># indices</span>
+            <span class="n">compIdsSphere</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="n">ptsInSphere</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">wrongPt</span> <span class="o">=</span> <span class="p">[</span><span class="n">cid</span> <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">compIdsSphere</span> <span class="k">if</span> <span class="n">cid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">]</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrongPt</span><span class="p">):</span>
@@ -438,7 +401,23 @@
         <span class="c1"># the geometry for the collision ?</span>
         <span class="n">geom</span> <span class="o">=</span> <span class="n">OdeSphereGeom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ode_space</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span><span class="p">)</span>
         <span class="n">geom</span><span class="o">.</span><span class="n">setBody</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">geom</span></div></div>
+        <span class="k">return</span> <span class="n">geom</span></div>
+
+<div class="viewcode-block" id="SingleSphereIngr.initialize_mesh"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.initialize_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">create_sphere</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_basic&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">getData</span><span class="p">()</span></div></div>
+        <span class="c1"># should do that for all ingredient type</span>
+        <span class="c1"># if self.representation is None and not hasattr(</span>
+        <span class="c1">#     self.mesh, &quot;getFaces&quot;</span>
+        <span class="c1"># ):  # this is not working with dejavu</span>
+        <span class="c1">#     # and should go in the graphics.</span>
+        <span class="c1">#     self.representation = autopack.helper.Icosahedron(</span>
+        <span class="c1">#         self.name + &quot;_rep&quot;, radius=self.radii[0][0]</span>
+        <span class="c1">#     )[0]</span>
 </pre></div>
 
            </div>

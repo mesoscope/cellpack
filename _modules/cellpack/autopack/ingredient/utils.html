@@ -13,6 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -99,7 +100,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#molarity">molarity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#nbmol">nbMol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
@@ -128,7 +128,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packingmode">packingMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradient">gradient</a></li>
@@ -183,6 +182,8 @@
              
   <h1>Source code for cellpack.autopack.ingredient.utils</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">panda3d</span>
+<span class="kn">from</span> <span class="nn">panda3d.core</span> <span class="kn">import</span> <span class="n">Mat4</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">asin</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.transformation</span> <span class="kn">import</span> <span class="n">angle_between_vectors</span>
 
@@ -384,6 +385,58 @@
     <span class="c1">#    node1 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{&quot;rtype&quot;:self.Type},)</span>
     <span class="c1">#    node2 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{&quot;rtype&quot;:self.Type},)</span>
     <span class="k">return</span> <span class="n">world</span><span class="o">.</span><span class="n">contactTestPair</span><span class="p">(</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">)</span><span class="o">.</span><span class="n">getNumContacts</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+
+<span class="c1"># TODO : move somewhere in a more apropriate place ?</span>
+<div class="viewcode-block" id="pandaMatrice"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.pandaMatrice">[docs]</a><span class="k">def</span> <span class="nf">pandaMatrice</span><span class="p">(</span><span class="n">mat</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">panda3d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">mat</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">16</span><span class="p">,))</span>
+    <span class="c1">#        print mat,len(mat),mat.shape</span>
+    <span class="n">pMat</span> <span class="o">=</span> <span class="n">Mat4</span><span class="p">(</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span>
+        <span class="n">mat</span><span class="p">[</span><span class="mi">15</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">pMat</span></div>
+
+<div class="viewcode-block" id="get_reflected_point"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.utils.get_reflected_point">[docs]</a><span class="k">def</span> <span class="nf">get_reflected_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_position</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># returns the reflection of a point across a bounding box</span>
+    <span class="k">if</span> <span class="n">boundingBox</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">boundingBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">boundingBox</span>
+
+    <span class="c1"># distance from origin</span>
+    <span class="n">dist_o</span> <span class="o">=</span> <span class="n">new_position</span> <span class="o">-</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ref_inds_o</span> <span class="o">=</span> <span class="n">dist_o</span> <span class="o">&lt;</span> <span class="mi">0</span>
+
+    <span class="c1"># distance from edge</span>
+    <span class="n">dist_e</span> <span class="o">=</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">new_position</span>
+    <span class="n">ref_inds_e</span> <span class="o">=</span> <span class="n">dist_e</span> <span class="o">&lt;</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="kc">True</span> <span class="ow">in</span> <span class="n">ref_inds_o</span> <span class="ow">or</span> <span class="kc">True</span> <span class="ow">in</span> <span class="n">ref_inds_e</span><span class="p">:</span>
+        <span class="c1"># reflect around origin</span>
+        <span class="n">new_position</span><span class="p">[</span><span class="n">ref_inds_o</span><span class="p">]</span> <span class="o">=</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">ref_inds_o</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist_o</span><span class="p">[</span><span class="n">ref_inds_o</span><span class="p">]</span>
+        <span class="n">dist_o</span> <span class="o">=</span> <span class="n">new_position</span> <span class="o">-</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ref_inds_o</span> <span class="o">=</span> <span class="n">dist_o</span> <span class="o">&lt;</span> <span class="mi">0</span>
+
+        <span class="c1"># reflect around edge</span>
+        <span class="n">new_position</span><span class="p">[</span><span class="n">ref_inds_e</span><span class="p">]</span> <span class="o">=</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">ref_inds_e</span><span class="p">]</span> <span class="o">-</span> <span class="n">dist_e</span><span class="p">[</span><span class="n">ref_inds_e</span><span class="p">]</span>
+        <span class="n">dist_e</span> <span class="o">=</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">new_position</span>
+        <span class="n">ref_inds_e</span> <span class="o">=</span> <span class="n">dist_e</span> <span class="o">&lt;</span> <span class="mi">0</span>
+
+    <span class="k">return</span> <span class="n">new_position</span></div>
 </pre></div>
 
            </div>

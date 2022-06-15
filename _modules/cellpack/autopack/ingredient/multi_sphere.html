@@ -13,6 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -99,7 +100,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#molarity">molarity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#nbmol">nbMol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
@@ -128,7 +128,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packingmode">packingMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradient">gradient</a></li>
@@ -211,8 +210,9 @@
         <span class="n">isAttractor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">jitterMax</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
         <span class="n">meshFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">meshType</span><span class="o">=</span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
+        <span class="n">meshName</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">meshObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">meshType</span><span class="o">=</span><span class="s2">&quot;file&quot;</span><span class="p">,</span>
         <span class="n">molarity</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
         <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">nbJitter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
@@ -221,7 +221,6 @@
         <span class="n">orientBiasRotRangeMax</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
         <span class="n">orientBiasRotRangeMin</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
         <span class="n">overwrite_distFunc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># overWrite</span>
-        <span class="n">overwrite_nbMol_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">packingMode</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
         <span class="n">packingPriority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">partners_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -233,7 +232,7 @@
         <span class="n">positions2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">principalVector</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
         <span class="n">proba_binding</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-        <span class="n">proba_not_binding</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># chance to actually not bind</span>
+        <span class="n">proba_not_binding</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
         <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">radii</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">rejectionThreshold</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
@@ -243,16 +242,20 @@
         <span class="n">sphereFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;MultiSphere&quot;</span><span class="p">,</span>
         <span class="n">useOrientBias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">use_mesh_rb</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">useRotAxis</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">weight</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>  <span class="c1"># use for affinity ie partner.weight</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+            <span class="n">coordsystem</span><span class="o">=</span><span class="n">coordsystem</span><span class="p">,</span>
             <span class="n">cutoff_surface</span><span class="o">=</span><span class="n">cutoff_surface</span><span class="p">,</span>
             <span class="n">encapsulatingRadius</span><span class="o">=</span><span class="n">encapsulatingRadius</span><span class="p">,</span>
+            <span class="n">excluded_partners_name</span><span class="o">=</span><span class="n">excluded_partners_name</span><span class="p">,</span>
+            <span class="n">gradient</span><span class="o">=</span><span class="n">gradient</span><span class="p">,</span>
+            <span class="n">isAttractor</span><span class="o">=</span><span class="n">isAttractor</span><span class="p">,</span>
             <span class="n">jitterMax</span><span class="o">=</span><span class="n">jitterMax</span><span class="p">,</span>
             <span class="n">meshFile</span><span class="o">=</span><span class="n">meshFile</span><span class="p">,</span>
+            <span class="n">meshName</span><span class="o">=</span><span class="n">meshName</span><span class="p">,</span>
             <span class="n">meshObject</span><span class="o">=</span><span class="n">meshObject</span><span class="p">,</span>
             <span class="n">meshType</span><span class="o">=</span><span class="n">meshType</span><span class="p">,</span>
             <span class="n">molarity</span><span class="o">=</span><span class="n">molarity</span><span class="p">,</span>
@@ -260,24 +263,39 @@
             <span class="n">nbJitter</span><span class="o">=</span><span class="n">nbJitter</span><span class="p">,</span>
             <span class="n">nbMol</span><span class="o">=</span><span class="n">nbMol</span><span class="p">,</span>
             <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
+            <span class="n">orientBiasRotRangeMax</span><span class="o">=</span><span class="n">orientBiasRotRangeMax</span><span class="p">,</span>
+            <span class="n">orientBiasRotRangeMin</span><span class="o">=</span><span class="n">orientBiasRotRangeMin</span><span class="p">,</span>
             <span class="n">packingMode</span><span class="o">=</span><span class="n">packingMode</span><span class="p">,</span>
             <span class="n">packingPriority</span><span class="o">=</span><span class="n">packingPriority</span><span class="p">,</span>
+            <span class="n">partners_name</span><span class="o">=</span><span class="n">partners_name</span><span class="p">,</span>
+            <span class="n">partners_position</span><span class="o">=</span><span class="n">partners_position</span><span class="p">,</span>
             <span class="n">pdb</span><span class="o">=</span><span class="n">pdb</span><span class="p">,</span>
             <span class="n">perturbAxisAmplitude</span><span class="o">=</span><span class="n">perturbAxisAmplitude</span><span class="p">,</span>
             <span class="n">placeType</span><span class="o">=</span><span class="n">placeType</span><span class="p">,</span>
-            <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span>  <span class="c1"># positions2=None,</span>
+            <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span>
             <span class="n">principalVector</span><span class="o">=</span><span class="n">principalVector</span><span class="p">,</span>
+            <span class="n">proba_binding</span><span class="o">=</span><span class="n">proba_binding</span><span class="p">,</span>
+            <span class="n">proba_not_binding</span><span class="o">=</span><span class="n">proba_not_binding</span><span class="p">,</span>  <span class="c1"># chance to actually not bind</span>
+            <span class="n">properties</span><span class="o">=</span><span class="n">properties</span><span class="p">,</span>
             <span class="n">radii</span><span class="o">=</span><span class="n">radii</span><span class="p">,</span>
             <span class="n">rotAxis</span><span class="o">=</span><span class="n">rotAxis</span><span class="p">,</span>
             <span class="n">rotRange</span><span class="o">=</span><span class="n">rotRange</span><span class="p">,</span>
             <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
             <span class="n">sphereFile</span><span class="o">=</span><span class="n">sphereFile</span><span class="p">,</span>
             <span class="n">Type</span><span class="o">=</span><span class="n">Type</span><span class="p">,</span>
+            <span class="n">useOrientBias</span><span class="o">=</span><span class="n">useOrientBias</span><span class="p">,</span>
+            <span class="n">useRotAxis</span><span class="o">=</span><span class="n">useRotAxis</span><span class="p">,</span>
+            <span class="n">weight</span><span class="o">=</span><span class="n">weight</span>
         <span class="p">)</span>
         <span class="n">min_radius</span> <span class="o">=</span> <span class="n">encapsulatingRadius</span>
-        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">radii</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">level</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">min_radius</span><span class="p">:</span>
-                <span class="n">min_radius</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">level</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">radii</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">radii</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">level</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">min_radius</span><span class="p">:</span>
+                        <span class="n">min_radius</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">level</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">level</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_radius</span><span class="p">:</span>
+                        <span class="n">min_radius</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">minRadius</span> <span class="o">=</span> <span class="n">min_radius</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">radii</span><span class="p">),</span> <span class="n">molarity</span><span class="p">)</span>

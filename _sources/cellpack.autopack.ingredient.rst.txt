@@ -52,6 +52,14 @@ cellpack.autopack.ingredient.single\_cube module
    :undoc-members:
    :show-inheritance:
 
+cellpack.autopack.ingredient.single\_cylinder module
+----------------------------------------------------
+
+.. automodule:: cellpack.autopack.ingredient.single_cylinder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.ingredient.single\_sphere module
 --------------------------------------------------
 

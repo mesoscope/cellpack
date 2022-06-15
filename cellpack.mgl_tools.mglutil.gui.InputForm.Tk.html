@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -102,7 +103,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbmol">nbMol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
@@ -131,7 +131,6 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingmode">packingMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
@@ -192,9 +191,9 @@
            <div itemprop="articleBody">
              
   <section id="cellpack-mgl-tools-mglutil-gui-inputform-tk-package">
-<h1>cellpack.mgl_tools.mglutil.gui.InputForm.Tk package<a class="headerlink" href="#cellpack-mgl-tools-mglutil-gui-inputform-tk-package" title="Permalink to this headline"></a></h1>
+<h1>cellpack.mgl_tools.mglutil.gui.InputForm.Tk package<a class="headerlink" href="#cellpack-mgl-tools-mglutil-gui-inputform-tk-package" title="Permalink to this heading"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cellpack.mgl_tools.mglutil.gui.InputForm.Tk.Tests.html">cellpack.mgl_tools.mglutil.gui.InputForm.Tk.Tests package</a><ul>
@@ -207,14 +206,14 @@
 </div>
 </section>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw">
-<span id="cellpack-mgl-tools-mglutil-gui-inputform-tk-vfpmw-module"></span><h2>cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw module<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-mglutil-gui-inputform-tk-vfpmw-module"></span><h2>cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw module<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw.VFButtonBox">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw.</span></span><span class="sig-name descname"><span class="pre">VFButtonBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buttonText</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/gui/InputForm/Tk/VFPmw.html#VFButtonBox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw.VFButtonBox" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_Pmw.Pmw_2_0_1.lib.PmwButtonBox.ButtonBox</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ButtonBox</span></code></p>
 <p>This class is a wrapper for the Pmw.ButtonBox class.
 the __init__method takes a new argument buttonText which is the list of
 the button text contained in the ButtonBox.
@@ -240,7 +239,7 @@ Problem if no command</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw.VFEntryField">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw.</span></span><span class="sig-name descname"><span class="pre">VFEntryField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/gui/InputForm/Tk/VFPmw.html#VFEntryField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw.VFEntryField" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_Pmw.Pmw_2_0_1.lib.PmwEntryField.EntryField</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">EntryField</span></code></p>
 <p>This class is a wrapper for the Pmw.EntryField class.
 Pmw.EntryField arguments/options and their default value:</p>
 <blockquote>
@@ -278,14 +277,14 @@ value            : ‘’</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw.VFNoteBook">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw.</span></span><span class="sig-name descname"><span class="pre">VFNoteBook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">listLevel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pagesDescr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/gui/InputForm/Tk/VFPmw.html#VFNoteBook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw.VFNoteBook" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_Pmw.Pmw_2_0_1.lib.PmwNoteBook.NoteBook</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NoteBook</span></code></p>
 <p>The VFNoteBookR class is a wrapper for the Pmw.NoteBookR class.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw.VFRadioSelect">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw.</span></span><span class="sig-name descname"><span class="pre">VFRadioSelect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buttonText</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/gui/InputForm/Tk/VFPmw.html#VFRadioSelect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.gui.InputForm.Tk.VFPmw.VFRadioSelect" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_Pmw.Pmw_2_0_1.lib.PmwRadioSelect.RadioSelect</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RadioSelect</span></code></p>
 <p>This class is a wrapper for the Pmw.RadioSlect class.
 It implements :
 - get method: to get the current value.
@@ -323,7 +322,7 @@ selectmode=’single’</p>
 
 </section>
 <section id="module-cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui">
-<span id="cellpack-mgl-tools-mglutil-gui-inputform-tk-gui-module"></span><h2>cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui module<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui" title="Permalink to this headline"></a></h2>
+<span id="cellpack-mgl-tools-mglutil-gui-inputform-tk-gui-module"></span><h2>cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui module<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui" title="Permalink to this heading"></a></h2>
 <p>This module implements a bunch of objects useful for user interaction</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.AutoPlaceWidget">
@@ -343,7 +342,7 @@ to the center of the screen</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.CommandDialog">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.</span></span><span class="sig-name descname"><span class="pre">CommandDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/gui/InputForm/Tk/gui.html#CommandDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.CommandDialog" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tkinter.filedialog.FileDialog</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FileDialog</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.CommandDialog.ok_command">
 <span class="sig-name descname"><span class="pre">ok_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/gui/InputForm/Tk/gui.html#CommandDialog.ok_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.CommandDialog.ok_command" title="Permalink to this definition"></a></dt>
@@ -359,7 +358,7 @@ to the center of the screen</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.InputForm">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.</span></span><span class="sig-name descname"><span class="pre">InputForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaultDirection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'row'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">closeWithWindow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">okCfg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'text':</span> <span class="pre">'OK'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cancelCfg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'text':</span> <span class="pre">'Cancel'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initFunc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onDestroy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">okcancel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scrolledFrame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">okOnEnter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/gui/InputForm/Tk/gui.html#InputForm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.InputForm" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.AutoPlaceWidget" title="cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.AutoPlaceWidget"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.AutoPlaceWidget</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.AutoPlaceWidget" title="cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.AutoPlaceWidget"><code class="xref py py-class docutils literal notranslate"><span class="pre">AutoPlaceWidget</span></code></a></p>
 <p>Class to create a inputForm to collect values from users and
 return these values.
 More information and examples can be found at
@@ -705,7 +704,7 @@ then the checkValues method will be called and the val dictionary returned.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.InputFormDescr">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.</span></span><span class="sig-name descname"><span class="pre">InputFormDescr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Form'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/gui/InputForm/Tk/gui.html#InputFormDescr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.InputFormDescr" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.UserList</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">UserList</span></code></p>
 <p>InputFormDescr is a list of dictionary describing the widgets to be placed
 in an inputform.
 Such an object can be passed to an InputForm object to actually build an
@@ -887,7 +886,7 @@ double clicking on an entry display the associated comment</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.ModuleDialog">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.</span></span><span class="sig-name descname"><span class="pre">ModuleDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/gui/InputForm/Tk/gui.html#ModuleDialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.ModuleDialog" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tkinter.filedialog.FileDialog</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FileDialog</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.ModuleDialog.ok_command">
 <span class="sig-name descname"><span class="pre">ok_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/mgl_tools/mglutil/gui/InputForm/Tk/gui.html#ModuleDialog.ok_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.mgl_tools.mglutil.gui.InputForm.Tk.gui.ModuleDialog.ok_command" title="Permalink to this definition"></a></dt>
@@ -919,10 +918,10 @@ double clicking on an entry display the associated comment</p>
 
 </section>
 <section id="cellpack-mgl-tools-mglutil-gui-inputform-tk-movetk-module">
-<h2>cellpack.mgl_tools.mglutil.gui.InputForm.Tk.moveTk module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-gui-inputform-tk-movetk-module" title="Permalink to this headline"></a></h2>
+<h2>cellpack.mgl_tools.mglutil.gui.InputForm.Tk.moveTk module<a class="headerlink" href="#cellpack-mgl-tools-mglutil-gui-inputform-tk-movetk-module" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-cellpack.mgl_tools.mglutil.gui.InputForm.Tk">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.gui.InputForm.Tk" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.mgl_tools.mglutil.gui.InputForm.Tk" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 

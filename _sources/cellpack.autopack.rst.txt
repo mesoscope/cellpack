@@ -77,6 +77,14 @@ cellpack.autopack.IOutils module
    :undoc-members:
    :show-inheritance:
 
+cellpack.autopack.MeshStore module
+----------------------------------
+
+.. automodule:: cellpack.autopack.MeshStore
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.OutputSimularium module
 -----------------------------------------
 

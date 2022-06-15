@@ -13,6 +13,7 @@
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
@@ -99,7 +100,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../recipe-schema.html#molarity">molarity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../recipe-schema.html#nbmol">nbMol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
@@ -128,7 +128,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../recipe-schema.html#packingmode">packingMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../recipe-schema.html#gradient">gradient</a></li>
@@ -266,6 +265,7 @@
 
     <span class="c1"># this id can probably found in c4d.symbols</span>
     <span class="c1"># TAG ID</span>
+    <span class="n">DATABASE</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0&quot;</span>
     <span class="n">SPLINE</span> <span class="o">=</span> <span class="s2">&quot;kNurbsCurve&quot;</span>
     <span class="n">INSTANCE</span> <span class="o">=</span> <span class="s2">&quot;Simularium.Geom&quot;</span>
     <span class="n">EMPTY</span> <span class="o">=</span> <span class="s2">&quot;Simularium.Geom&quot;</span>
@@ -474,14 +474,12 @@
         <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agent_id_counter</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">ingredient</span> <span class="ow">and</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
-            <span class="n">ingredient</span> <span class="ow">and</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Actine&quot;</span>
-        <span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ingredient</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fiber</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">Type</span><span class="p">)):</span>
             <span class="n">viz_type</span> <span class="o">=</span> <span class="n">VIZ_TYPE</span><span class="o">.</span><span class="n">FIBER</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">viz_type</span> <span class="o">=</span> <span class="n">VIZ_TYPE</span><span class="o">.</span><span class="n">DEFAULT</span>
 
-        <span class="n">radius</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="k">if</span> <span class="n">ingredient</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="k">if</span> <span class="n">ingredient</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">10</span>
         <span class="n">new_instance</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span>
             <span class="n">name</span><span class="p">,</span>
             <span class="n">instance_id</span><span class="p">,</span>
@@ -517,7 +515,8 @@
         <span class="n">control_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">display_type</span> <span class="o">=</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">SPHERE</span>
-        <span class="k">if</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span> <span class="ow">or</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Actine&quot;</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fiber</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">Type</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">control_points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">control_points</span><span class="p">)</span>
             <span class="n">display_type</span> <span class="o">=</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">FIBER</span>
@@ -540,27 +539,105 @@
             <span class="n">instance_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingredient</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">ptInd</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">place_object</span><span class="p">(</span><span class="n">instance_id</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="simulariumHelper.get_display_data"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.get_display_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_display_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">):</span>
+        <span class="n">ingr_name</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">display_type</span> <span class="o">=</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">SPHERE</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleCube&quot;</span><span class="p">:</span>
+            <span class="n">display_type</span> <span class="o">=</span> <span class="s2">&quot;CUBE&quot;</span>
+        <span class="k">elif</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleSphere&quot;</span><span class="p">:</span>
+            <span class="n">display_type</span> <span class="o">=</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">SPHERE</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fiber</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">Type</span><span class="p">):</span>
+            <span class="n">display_type</span> <span class="o">=</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">FIBER</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pdb_file_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">display_type</span> <span class="o">=</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">PDB</span>
+            <span class="k">if</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">pdb_file_name</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">source</span><span class="p">[</span><span class="s2">&quot;pdb&quot;</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">pdb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s2">&quot;.map&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">pdb</span><span class="p">:</span>
+                <span class="n">pdb_file_name</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">pdb</span>
+            <span class="k">elif</span> <span class="s2">&quot;meshFile&quot;</span> <span class="ow">in</span> <span class="n">ingredient</span><span class="p">:</span>
+                <span class="n">meshType</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">ingredient</span><span class="o">.</span><span class="n">meshType</span> <span class="k">if</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">meshType</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;file&quot;</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">meshType</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
+                    <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">meshFile</span><span class="p">)</span>
+                    <span class="n">file_name</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="n">meshType</span> <span class="o">==</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span>
+                    <span class="n">file_name</span> <span class="o">=</span> <span class="n">ingr_name</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">simulariumHelper</span><span class="o">.</span><span class="n">DATABASE</span><span class="si">}</span><span class="s2">/geometries/</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.obj&quot;</span>
+                <span class="n">display_type</span> <span class="o">=</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">OBJ</span>
+            <span class="k">if</span> <span class="s2">&quot;.pdb&quot;</span> <span class="ow">in</span> <span class="n">pdb_file_name</span><span class="p">:</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">simulariumHelper</span><span class="o">.</span><span class="n">DATABASE</span><span class="si">}</span><span class="s2">/other/</span><span class="si">{</span><span class="n">pdb_file_name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="n">pdb_file_name</span>
+        <span class="k">return</span> <span class="n">display_type</span><span class="p">,</span> <span class="n">url</span></div>
+    
+<div class="viewcode-block" id="simulariumHelper.is_fiber"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.is_fiber">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_fiber</span><span class="p">(</span><span class="n">ingr_type</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ingr_type</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">&quot;Grow&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Actine&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;MultiCylinders&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;SingleCylinder&quot;</span><span class="p">,</span>
+        <span class="p">]</span></div>
+
 <div class="viewcode-block" id="simulariumHelper.init_scene_with_objects"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.init_scene_with_objects">[docs]</a>    <span class="k">def</span> <span class="nf">init_scene_with_objects</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">objects</span><span class="p">,</span>
+        <span class="n">grid_point_positions</span><span class="p">,</span>
+        <span class="n">grid_point_compartment_ids</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">ingredient</span><span class="p">,</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
             <span class="n">ingr_name</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">name</span>
-            <span class="n">display_type</span> <span class="o">=</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">SPHERE</span>
-            <span class="k">if</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;SingleCube&quot;</span><span class="p">:</span>
-                <span class="n">display_type</span> <span class="o">=</span> <span class="s2">&quot;CUBE&quot;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">display_data</span><span class="p">[</span><span class="n">ingredient</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">DisplayData</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="n">ingredient</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">display_type</span><span class="o">=</span><span class="n">display_type</span>
-            <span class="p">)</span>
+            <span class="n">sub_points</span> <span class="o">=</span> <span class="kc">None</span>            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fiber</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">Type</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">nbCurve</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="c1"># TODO: get sub_points accurately</span>
+                <span class="k">if</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">nbCurve</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">nbCurve</span>
+                <span class="n">sub_points</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">listePtLinear</span>
+
+            <span class="k">if</span> <span class="n">ingr_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_data</span><span class="p">:</span>
+                <span class="n">display_type</span><span class="p">,</span> <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_display_data</span><span class="p">(</span><span class="n">ingredient</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">display_data</span><span class="p">[</span><span class="n">ingredient</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">DisplayData</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">ingr_name</span><span class="p">,</span> <span class="n">display_type</span><span class="o">=</span><span class="n">display_type</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span>
+                <span class="p">)</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">add_instance</span><span class="p">(</span>
                 <span class="n">ingredient</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                 <span class="n">ingredient</span><span class="p">,</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingr_name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">ptInd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                 <span class="n">position</span><span class="p">,</span>
                 <span class="n">rotation</span><span class="p">,</span>
-                <span class="kc">None</span><span class="p">,</span>
-            <span class="p">)</span></div>
+                <span class="n">sub_points</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">grid_point_compartment_ids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">grid_point_compartment_ids</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">index</span> <span class="o">%</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">compartment_id</span> <span class="o">=</span> <span class="n">grid_point_compartment_ids</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                    <span class="n">point_pos</span> <span class="o">=</span> <span class="n">grid_point_positions</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">compartment_id</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;inside&quot;</span>
+                    <span class="k">elif</span> <span class="n">compartment_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;surface&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;outside&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">display_data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">DisplayData</span><span class="p">(</span>
+                        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">display_type</span><span class="o">=</span><span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">SPHERE</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+                    <span class="p">)</span>
+        
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_instance</span><span class="p">(</span>
+                        <span class="n">name</span><span class="p">,</span>
+                        <span class="kc">None</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">point_pos</span><span class="p">,</span>
+                        <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">]],</span>
+                        <span class="kc">None</span><span class="p">,</span>
+                    <span class="p">)</span></div>
 
 <div class="viewcode-block" id="simulariumHelper.addCameraToScene"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.addCameraToScene">[docs]</a>    <span class="k">def</span> <span class="nf">addCameraToScene</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
@@ -765,21 +842,36 @@
         <span class="o">**</span><span class="n">kw</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1">#        QualitySph={&quot;0&quot;:16,&quot;1&quot;:3,&quot;2&quot;:4,&quot;3&quot;:8,&quot;4&quot;:16,&quot;5&quot;:32}</span>
+        <span class="k">if</span> <span class="s1">&#39;axis&#39;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">kw</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">axis</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">axis</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+
         <span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pos</span><span class="p">,</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])])</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="c1"># baseCyl = Cylinders(</span>
-        <span class="c1">#     name,</span>
-        <span class="c1">#     inheritMaterial=False,</span>
-        <span class="c1">#     quality=res,</span>
-        <span class="c1">#     vertices=v,</span>
-        <span class="c1">#     faces=f,</span>
-        <span class="c1">#     radii=[radius],</span>
-        <span class="c1"># )  # , visible=1)</span>
-        <span class="c1"># # if str(res) not in QualitySph.keys():</span>
-        <span class="c1"># self.addObjectToScene(self.getCurrentScene(), baseCyl, parent=parent)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span></div>
+        
+        <span class="n">principal_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">length</span><span class="o">*</span><span class="n">axis</span><span class="p">)</span>
+
+        <span class="n">control_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pos</span><span class="p">,</span> <span class="n">pos</span> <span class="o">+</span> <span class="n">principal_vector</span><span class="p">])</span>
+
+        <span class="n">baseCyl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cylinders</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">radii</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">radius</span>
+                <span class="p">],</span>
+            <span class="n">inheritMaterial</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">quality</span><span class="o">=</span><span class="n">res</span><span class="p">,</span>
+            <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_object_to_scene</span><span class="p">(</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="n">baseCyl</span><span class="p">,</span>
+            <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span>
+            <span class="n">control_points</span><span class="o">=</span><span class="n">control_points</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">pos</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span><span class="n">baseCyl</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">baseCyl</span><span class="p">,</span> <span class="n">baseCyl</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="simulariumHelper.updateTubeMesh"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updateTubeMesh">[docs]</a>    <span class="k">def</span> <span class="nf">updateTubeMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">cradius</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="c1"># change the radius to cradius</span>
@@ -792,7 +884,7 @@
         <span class="c1"># should used current Y scale too</span>
         <span class="n">mesh</span><span class="o">.</span><span class="n">Set</span><span class="p">(</span><span class="n">radii</span><span class="o">=</span><span class="p">[</span><span class="n">cradius</span><span class="p">],</span> <span class="n">quality</span><span class="o">=</span><span class="n">quality</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="simulariumHelper.Sphere"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Sphere">[docs]</a>    <span class="k">def</span> <span class="nf">Sphere</span><span class="p">(</span>
+<div class="viewcode-block" id="simulariumHelper.sphere"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.sphere">[docs]</a>    <span class="k">def</span> <span class="nf">sphere</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
         <span class="n">baseSphere</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Spheres</span><span class="p">(</span>
@@ -885,47 +977,6 @@
         <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">updatePoly</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">faces</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="n">vertices</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="simulariumHelper.createsNmesh"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.createsNmesh">[docs]</a>    <span class="k">def</span> <span class="nf">createsNmesh</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">name</span><span class="p">,</span>
-        <span class="n">vertices</span><span class="p">,</span>
-        <span class="n">vnormals</span><span class="p">,</span>
-        <span class="n">faces</span><span class="p">,</span>
-        <span class="n">smooth</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">material</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">proxyCol</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">color</span><span class="o">=</span><span class="p">[</span>
-            <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">],</span>
-        <span class="o">**</span><span class="n">kw</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This is the main function that create a polygonal mesh.</span>
-
-<span class="sd">        @type  name: string</span>
-<span class="sd">        @param name: name of the pointCloud</span>
-<span class="sd">        @type  vertices: array</span>
-<span class="sd">        @param vertices: list of x,y,z vertices points</span>
-<span class="sd">        @type  vnormals: array</span>
-<span class="sd">        @param vnormals: list of x,y,z vertex normals vector</span>
-<span class="sd">        @type  faces: array</span>
-<span class="sd">        @param faces: list of i,j,k indice of vertex by face</span>
-<span class="sd">        @type  smooth: boolean</span>
-<span class="sd">        @param smooth: smooth the mesh</span>
-<span class="sd">        @type  material: hostApp obj</span>
-<span class="sd">        @param material: material to apply to the mesh</span>
-<span class="sd">        @type  proxyCol: booelan</span>
-<span class="sd">        @param proxyCol: do we need a special object for color by vertex (ie C4D)</span>
-<span class="sd">        @type  color: array</span>
-<span class="sd">        @param color: r,g,b value to color the mesh</span>
-
-<span class="sd">        @rtype:   hostApp obj</span>
-<span class="sd">        @return:  the polygon object</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">mesh</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">Trimesh</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">faces</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_instance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="n">mesh</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">mesh</span><span class="p">,</span> <span class="n">mesh</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="simulariumHelper.instancePolygon"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.instancePolygon">[docs]</a>    <span class="k">def</span> <span class="nf">instancePolygon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">matrices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
@@ -1281,57 +1332,6 @@
                 <span class="n">matd</span><span class="o">.</span><span class="n">prop</span><span class="p">[</span><span class="n">matd</span><span class="o">.</span><span class="n">AMBI</span><span class="p">]</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">effect</span><span class="o">.</span><span class="n">ambient</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">onode</span><span class="p">,</span> <span class="n">mesh</span></div>
 
-<div class="viewcode-block" id="simulariumHelper.read"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="n">fileName</span><span class="p">,</span> <span class="n">fileExtension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
-
-        <span class="c1"># if fileExtension == &quot;.dae&quot;:</span>
-        <span class="c1">#     daeDic = None</span>
-        <span class="c1">#     col = collada.Collada(filename)  # , ignore=[collada.DaeUnsupportedError,</span>
-        <span class="c1">#     # collada.DaeBrokenRefError])</span>
-        <span class="c1">#     dicgeoms, daeDic = self.buildGeometries(col)</span>
-        <span class="c1">#     boundgeoms = list(col.scene.objects(&quot;geometry&quot;))</span>
-        <span class="c1">#     for bg in boundgeoms:</span>
-        <span class="c1">#         if bg.original.id in dicgeoms:</span>
-        <span class="c1">#             node = dicgeoms[bg.original.id][&quot;node&quot;]</span>
-        <span class="c1">#             dicgeoms[bg.original.id][&quot;instances&quot;].append(bg.matrix)</span>
-        <span class="c1">#     # dicgeoms[&quot;col&quot;]=col</span>
-        <span class="c1">#     if self.nogui:</span>
-        <span class="c1">#         return dicgeoms</span>
-
-        <span class="c1">#     # for each nodein the scene creae an empty</span>
-        <span class="c1">#     # for each primtive in the scene create an indeedPolygins-</span>
-        <span class="c1">#     uniq = False</span>
-        <span class="c1">#     if len(col.scene.nodes) == 1:</span>
-        <span class="c1">#         uniq = True</span>
-        <span class="c1">#     for i, node in enumerate(col.scene.nodes):</span>
-        <span class="c1">#         # node,i,col,nodexml,parentxml=None,parent=None,dicgeoms=None</span>
-        <span class="c1">#         dicgeoms = self.nodeToGeom(</span>
-        <span class="c1">#             node,</span>
-        <span class="c1">#             i,</span>
-        <span class="c1">#             col,</span>
-        <span class="c1">#             col.scene.xmlnode[i],</span>
-        <span class="c1">#             parentxml=None,</span>
-        <span class="c1">#             dicgeoms=dicgeoms,</span>
-        <span class="c1">#             uniq=uniq,</span>
-        <span class="c1">#         )</span>
-        <span class="c1">#     for g in dicgeoms:</span>
-        <span class="c1">#         node = dicgeoms[g][&quot;node&quot;]</span>
-        <span class="c1">#         i = dicgeoms[g][&quot;instances&quot;]</span>
-        <span class="c1">#         if len(i):</span>
-        <span class="c1">#             if dicgeoms[g][&quot;parentmesh&quot;] is not None:</span>
-        <span class="c1">#                 self.reParent(node, dicgeoms[g][&quot;parentmesh&quot;])</span>
-        <span class="c1">#                 node.Set(instanceMatrices=i)</span>
-        <span class="c1">#     return boundgeoms, dicgeoms, col, daeDic</span>
-        <span class="c1"># #            for i,node in enumerate(col.scene.nodes) :</span>
-        <span class="c1"># #                self.transformNode(node,i,col,col.scene.xmlnode[i])</span>
-        <span class="c1"># else:</span>
-        <span class="c1">#     from Simularium.IndexedPolygons import IndexedPolygonsFromFile</span>
-
-        <span class="c1">#     geoms = IndexedPolygonsFromFile(filename, fileName)</span>
-        <span class="c1">#     self.AddObject(geoms)</span>
-
-    <span class="c1">#        raw_input()</span>
-
 <div class="viewcode-block" id="simulariumHelper.write"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listObj</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
@@ -1344,6 +1344,7 @@
         <span class="n">x_size</span> <span class="o">=</span> <span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">y_size</span> <span class="o">=</span> <span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">z_size</span> <span class="o">=</span> <span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">box_adjustment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">box_size</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">x_size</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">,</span>
             <span class="n">y_size</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">,</span>
@@ -1367,12 +1368,16 @@
         <span class="n">unique_ids</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_number_agents</span><span class="p">)]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_steps</span><span class="p">)]</span>
         <span class="n">radii</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_number_agents</span><span class="p">)]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_steps</span><span class="p">)]</span>
         <span class="n">n_subpoints</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_number_agents</span><span class="p">)]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_steps</span><span class="p">)</span>
+            <span class="p">[</span>
+                <span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_number_agents</span><span class="p">)</span>
+            <span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_steps</span><span class="p">)</span>
         <span class="p">]</span>
         <span class="n">subpoints</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span><span class="p">)]</span>
-            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_number_agents</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_steps</span><span class="p">)</span>
+            <span class="p">[</span>
+                <span class="p">[</span>
+                    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_fiber_length</span><span class="p">)</span>
+                <span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_number_agents</span><span class="p">)</span>
+            <span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_steps</span><span class="p">)</span>
         <span class="p">]</span>
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_steps</span><span class="p">):</span>
             <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1397,9 +1402,9 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">position</span> <span class="o">=</span> <span class="n">data_at_time</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span>
                     <span class="n">positions</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-                        <span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">-</span> <span class="n">box_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
-                        <span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">-</span> <span class="n">box_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
-                        <span class="n">position</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">-</span> <span class="n">box_size</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                        <span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">-</span> <span class="n">box_adjustment</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                        <span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">-</span> <span class="n">box_adjustment</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                        <span class="n">position</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">-</span> <span class="n">box_adjustment</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
                     <span class="p">]</span>
                     <span class="n">rotation</span> <span class="o">=</span> <span class="n">data_at_time</span><span class="p">[</span><span class="s2">&quot;rotation&quot;</span><span class="p">]</span>
                     <span class="n">rotations</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">rotation</span>
@@ -1427,7 +1432,7 @@
                 <span class="n">positions</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span>
                 <span class="n">rotations</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rotations</span><span class="p">),</span>
                 <span class="n">radii</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">radii</span><span class="p">),</span>
-                <span class="c1"># subpoints=np.array(subpoints),</span>
+                <span class="n">subpoints</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subpoints</span><span class="p">),</span>
                 <span class="n">n_subpoints</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">n_subpoints</span><span class="p">),</span>
             <span class="p">),</span>
             <span class="n">time_units</span><span class="o">=</span><span class="n">UnitData</span><span class="p">(</span><span class="s2">&quot;ns&quot;</span><span class="p">),</span>  <span class="c1"># nanoseconds</span>
@@ -1435,7 +1440,7 @@
         <span class="p">)</span>
         <span class="n">TrajectoryConverter</span><span class="p">(</span><span class="n">converted_data</span><span class="p">)</span><span class="o">.</span><span class="n">write_JSON</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="simulariumHelper.raycast"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.raycast">[docs]</a>    <span class="k">def</span> <span class="nf">raycast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<div class="viewcode-block" id="simulariumHelper.raycast"><a class="viewcode-back" href="../../../../../cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.raycast">[docs]</a>    <span class="k">def</span> <span class="nf">raycast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="n">intersect</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="s2">&quot;count&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">intersect</span><span class="p">,</span> <span class="mi">0</span>

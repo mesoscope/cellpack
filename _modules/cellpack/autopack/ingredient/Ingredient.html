@@ -13,6 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -99,7 +100,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#molarity">molarity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#nbmol">nbMol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
@@ -128,7 +128,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packingmode">packingMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradient">gradient</a></li>
@@ -238,6 +237,7 @@
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">gauss</span><span class="p">,</span> <span class="n">random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">math</span>
+
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ApplyMatrix</span><span class="p">,</span>
     <span class="n">getNormedVectorOnes</span><span class="p">,</span>
@@ -253,329 +253,6 @@
 <span class="n">reporthook</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="k">if</span> <span class="n">helper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">reporthook</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">reporthook</span>
-
-<span class="n">KWDS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;molarity&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;molarity&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;molarity&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;nbMol&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;nbMol&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">50000</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;nbMol&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;overwrite_nbMol_value&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;overwrite_nbMol_value&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">50000</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;nbMol&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;encapsulatingRadius&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;encapsulatingRadius&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;encapsulatingRadius&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;radii&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;positions&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;vector&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;positions2&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;vector&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;sphereFile&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;packingPriority&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;pdb&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;vector&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;offset&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;vector&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;offset&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;meshFile&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;meshName&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;use_mesh_rb&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;use_mesh_rb&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bool&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;use mesh for collision&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;coordsystem&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;coordsystem&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;left&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;coordinate system of the files&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="c1">#                        &quot;meshObject&quot;:{&quot;type&quot;:&quot;string&quot;},</span>
-    <span class="s2">&quot;Type&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;jitterMax&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;jitterMax&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;vector&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;jitterMax&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;nbJitter&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;nbJitter&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;nbJitter&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;perturbAxisAmplitude&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;perturbAxisAmplitude&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;perturbAxisAmplitude&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;useRotAxis&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;useRotAxis&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bool&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;useRotAxis&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;rotAxis&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;rotAxis&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;vector&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;rotAxis&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;rotRange&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;rotRange&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mf">6.2831</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mf">6.2831</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;rotRange&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;useOrientBias&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;useOrientBias&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bool&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;useOrientBias&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;orientBiasRotRangeMin&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;orientBiasRotRange&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="o">-</span><span class="n">pi</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="o">-</span><span class="n">pi</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="o">-</span><span class="n">pi</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="n">pi</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;orientBiasRotRangeMin&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;orientBiasRotRangeMax&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;orientBiasRotRange&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">pi</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="n">pi</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="o">-</span><span class="n">pi</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="n">pi</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;orientBiasRotRangeMax&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;rejectionThreshold&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;rejectionThreshold&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;rejectionThreshold&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;principalVector&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;principalVector&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;vector&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;principalVector&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;cutoff_boundary&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;cutoff_boundary&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;cutoff_boundary&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;cutoff_surface&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;cutoff_surface&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;cutoff_surface&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;placeType&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;placeType&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="n">autopack</span><span class="o">.</span><span class="n">LISTPLACEMETHOD</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;liste&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;placeType&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;packingMode&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;packingMode&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;random&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s2">&quot;random&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;close&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;closePartner&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;randomPartner&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;gradient&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;hexatile&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;squaretile&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;triangletile&quot;</span><span class="p">,</span>
-        <span class="p">],</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;random&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;liste&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;packingMode&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;useLength&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;useLength&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;length&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;uLength&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;uLength&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;closed&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;closed&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bool&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;biased&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;biased&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;marge&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;marge&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;constraintMarge&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;constraintMarge&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bool&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;orientation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;orientation&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;vector&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;partners_name&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;partners_name&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;liste_string&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;excluded_partners_name&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;excluded_partners_name&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;liste_string&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;[]&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;partners_position&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;partners_position&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;liste_float&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;[]&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;partners_weight&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;partners_weight&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;0.5&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;walkingMode&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;walkingMode&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;gradient&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;gradient&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[],</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;liste&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;gradient name to use if histo.use_gradient&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;isAttractor&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;isAttractor&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bool&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;isAttractor&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;weight&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">50.0</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;weight&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;proba_binding&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;proba_binding&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;proba_binding&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;proba_not_binding&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;proba_not_binding&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;proba_not_binding&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;compMask&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;compMask&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;allowed compartments&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;use_rbsphere&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;use_rbsphere&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bool&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;use sphere instead of cylinder for collision&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;properties&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;dic&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;properties&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">},</span>
-    <span class="s2">&quot;organism&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">},</span>
-<span class="p">}</span>
 
 
 <div class="viewcode-block" id="IngredientInstanceDrop"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.IngredientInstanceDrop">[docs]</a><span class="k">class</span> <span class="nc">IngredientInstanceDrop</span><span class="p">:</span>
@@ -631,6 +308,56 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">ARGUMENTS</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;color&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;coordsystem&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cutoff_boundary&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cutoff_surface&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;distExpression&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;distFunction&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;encapsulatingRadius&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;excluded_partners_name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;force_randoom&quot;</span> <span class="s2">&quot;isAttractor&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;jitterMax&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;meshFile&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;meshName&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;meshObject&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;molarity&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nbJitter&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nbMol&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;offset&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;orientBiasRotRangeMax&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;orientBiasRotRangeMin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;overwrite_distFunc&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;packingMode&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;packingPriority&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;partners_name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;partners_position&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;partners_weight&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pdb&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;perturbAxisAmplitude&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;placeType&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;positions&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;positions2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;principalVector&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;proba_binding&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;proba_not_binding&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;properties&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;radii&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;radius&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rejectionThreshold&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;resolution_dictionary&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rotAxis&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rotRange&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sphereFile&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;useOrientBias&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;useRotAxis&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;weight&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;MultiSphere&quot;</span><span class="p">,</span>
@@ -658,12 +385,11 @@
         <span class="n">orientBiasRotRangeMax</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
         <span class="n">orientBiasRotRangeMin</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
         <span class="n">overwrite_distFunc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># overWrite</span>
-        <span class="n">overwrite_nbMol_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">packingMode</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
         <span class="n">packingPriority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">partners_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">partners_position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">pdb</span><span class="o">=</span><span class="s2">&quot;????&quot;</span><span class="p">,</span>
+        <span class="n">pdb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">perturbAxisAmplitude</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
         <span class="n">placeType</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
         <span class="n">positions2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -721,6 +447,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pdb</span> <span class="o">=</span> <span class="n">pdb</span>  <span class="c1"># pmv ?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transform_sources</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">meshFile</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">meshName</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">meshType</span><span class="p">,</span>
+            <span class="s2">&quot;object&quot;</span><span class="p">:</span> <span class="n">meshObject</span><span class="p">,</span>
+        <span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># offset to apply for membrane binding</span>
         <span class="k">if</span> <span class="n">offset</span><span class="p">:</span>
@@ -833,15 +566,9 @@
         <span class="c1"># should be self.compNum per default</span>
         <span class="c1"># will be set when recipe is added to HistoVol</span>
         <span class="c1"># added to a compartment</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_nbMol</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_nbMol_value</span> <span class="o">=</span> <span class="n">nbMol</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="n">nbMol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left_to_place</span> <span class="o">=</span> <span class="n">nbMol</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vol_nbmol</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1"># used by fill() to count placed molecules,overwrite if !=0</span>
-        <span class="c1">#        if nbMol != 0:</span>
-        <span class="c1">#            self.overwrite_nbMol = True</span>
-        <span class="c1">#            self.overwrite_nbMol_value = nMol</span>
-        <span class="c1">#            self.nbMol = nMol</span>
 
         <span class="c1"># Packing tracking values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbJitter</span> <span class="o">=</span> <span class="n">nbJitter</span>  <span class="c1"># number of jitter attempts for translation</span>
@@ -871,41 +598,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">coordsystem</span> <span class="o">=</span> <span class="n">coordsystem</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rejectionThreshold</span> <span class="o">=</span> <span class="n">rejectionThreshold</span>
 
-        <span class="c1"># get the collision mesh</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">meshFile</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">meshName</span> <span class="o">=</span> <span class="n">meshName</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">meshObject</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">meshType</span> <span class="o">=</span> <span class="n">meshType</span>
-        <span class="k">if</span> <span class="n">meshFile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                <span class="s2">&quot;OK, meshFile is not none, it is = &quot;</span><span class="p">,</span>
-                <span class="n">meshFile</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">coordsystem</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="n">gname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshName</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">gname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshName</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshType</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMesh</span><span class="p">(</span><span class="n">meshFile</span><span class="p">,</span> <span class="n">gname</span><span class="p">)</span>  <span class="c1"># self.name)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;OK got&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">)</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="c1"># display a message ?</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;no geometries for ingredient &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-                <span class="c1"># should we reparent it ?</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">meshFile</span> <span class="o">=</span> <span class="n">meshFile</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshType</span> <span class="o">==</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span>
-                <span class="c1"># need to build the mesh from v,f,n</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">buildMesh</span><span class="p">(</span><span class="n">meshFile</span><span class="p">,</span> <span class="n">gname</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">meshObject</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">meshObject</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">getEncapsulatingRadius</span><span class="p">()</span>
-
         <span class="c1"># need to build the basic shape if one provided</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">use_mesh_rb</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_resolution</span> <span class="o">=</span> <span class="s2">&quot;Low&quot;</span>  <span class="c1"># should come from data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">available_resolution</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Low&quot;</span><span class="p">,</span> <span class="s2">&quot;Med&quot;</span><span class="p">,</span> <span class="s2">&quot;High&quot;</span><span class="p">]</span>  <span class="c1"># 0,1,2</span>
 
@@ -941,49 +634,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">distances_temp</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">centT</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># transformed position</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="c1">#        if self.mesh is not None :</span>
-        <span class="c1">#            self.getData()</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">unique_id</span> <span class="o">=</span> <span class="n">Ingredient</span><span class="o">.</span><span class="n">static_id</span>
         <span class="n">Ingredient</span><span class="o">.</span><span class="n">static_id</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">organism</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="c1"># add tiling property ? as any ingredient coud tile as hexagon. It is just the packing type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">KWDS</span> <span class="o">=</span> <span class="n">KWDS</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">OPTIONS</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;meshObject&quot;</span><span class="p">:</span> <span class="p">{},</span>
-            <span class="s2">&quot;compareCompartment&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;compareCompartment&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;bool&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;compareCompartment&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;compareCompartmentTolerance&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;compareCompartmentTolerance&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;compareCompartmentTolerance&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;compareCompartmentThreshold&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;compareCompartmentThreshold&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-                <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;compareCompartmentThreshold&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;partners_weight&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;partners_weight&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;0.5&quot;</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">}</span>
 
 <div class="viewcode-block" id="Ingredient.set_sphere_positions"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.set_sphere_positions">[docs]</a>    <span class="k">def</span> <span class="nf">set_sphere_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">radii</span><span class="p">):</span>
         <span class="c1"># positions and radii are passed to the constructor</span>
@@ -1030,7 +686,7 @@
 <div class="viewcode-block" id="Ingredient.reset"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;reset the states of an ingredient&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left_to_place</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">completion</span> <span class="o">=</span> <span class="mf">0.0</span></div>
 
 <div class="viewcode-block" id="Ingredient.setTilling"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.setTilling">[docs]</a>    <span class="k">def</span> <span class="nf">setTilling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
@@ -1052,6 +708,30 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">tilling</span> <span class="o">=</span> <span class="n">tileTriangleIngredient</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span><span class="p">,</span> <span class="n">init_seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">seed_used</span>
             <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Ingredient.initialize_mesh"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.initialize_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
+        <span class="c1"># get the collision mesh</span>
+        <span class="n">meshFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_info</span><span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">]</span>
+        <span class="n">meshName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_info</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="n">meshObject</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_info</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
+        <span class="n">meshType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_info</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">meshFile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">meshType</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMesh</span><span class="p">(</span><span class="n">meshFile</span><span class="p">,</span> <span class="n">meshName</span><span class="p">)</span>  <span class="c1"># self.name)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;OK got&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># display a message ?</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;no geometries for ingredient &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="c1"># should we reparent it ?</span>
+            <span class="k">elif</span> <span class="n">meshType</span> <span class="o">==</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span>
+                <span class="c1"># need to build the mesh from v,f,n</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">buildMesh</span><span class="p">(</span><span class="n">mesh_store</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">meshObject</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">meshObject</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">getEncapsulatingRadius</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Ingredient.DecomposeMesh"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.DecomposeMesh">[docs]</a>    <span class="k">def</span> <span class="nf">DecomposeMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">edit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tri</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">helper</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span>
@@ -1182,22 +862,12 @@
 
 <div class="viewcode-block" id="Ingredient.SetKw"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.SetKw">[docs]</a>    <span class="k">def</span> <span class="nf">SetKw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
-            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">kw</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;nbMol&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_nbMol_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kw</span><span class="p">[</span><span class="n">k</span><span class="p">])</span></div>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">kw</span><span class="p">[</span><span class="n">k</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Ingredient.Set"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.Set">[docs]</a>    <span class="k">def</span> <span class="nf">Set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="s2">&quot;nbMol&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
-            <span class="n">nbMol</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kw</span><span class="p">[</span><span class="s2">&quot;nbMol&quot;</span><span class="p">])</span>
-            <span class="c1">#            if nbMol != 0:</span>
-            <span class="c1">#                self.overwrite_nbMol = True</span>
-            <span class="c1">#                self.overwrite_nbMol_value = nbMol</span>
-            <span class="c1">#                self.nbMol = nbMol</span>
-            <span class="c1">#            else :</span>
-            <span class="c1">#                self.overwrite_nbMol =False</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_nbMol_value</span> <span class="o">=</span> <span class="n">nbMol</span>
-            <span class="c1"># self.nbMol = nbMol</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">kw</span><span class="p">[</span><span class="s2">&quot;nbMol&quot;</span><span class="p">])</span>
         <span class="k">if</span> <span class="s2">&quot;molarity&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">molarity</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;molarity&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="s2">&quot;priority&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
@@ -1233,18 +903,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">=</span> <span class="n">r</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">pass</span></div>
-            <span class="c1">#        if r != self.encapsulatingRadius:</span>
-            <span class="c1">#            self.encapsulatingRadius = r</span>
 
 <div class="viewcode-block" id="Ingredient.getData"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getData">[docs]</a>    <span class="k">def</span> <span class="nf">getData</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">:</span>
-                <span class="n">helper</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span>
-                <span class="k">if</span> <span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;3dsmax&quot;</span><span class="p">:</span>
-                    <span class="k">return</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vnormals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DecomposeMesh</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">,</span> <span class="n">edit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tri</span><span class="o">=</span><span class="kc">True</span>
-                <span class="p">)</span></div>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertex_normals</span></div>
 
 <div class="viewcode-block" id="Ingredient.get_rb_model"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_rb_model">[docs]</a>    <span class="k">def</span> <span class="nf">get_rb_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1256,7 +919,7 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bullet_nodes</span><span class="p">[</span><span class="n">ret</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Ingredient.getMesh"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getMesh">[docs]</a>    <span class="k">def</span> <span class="nf">getMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">geomname</span><span class="p">):</span>
+<div class="viewcode-block" id="Ingredient.getMesh"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getMesh">[docs]</a>    <span class="k">def</span> <span class="nf">getMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a mesh representation from a filename for the ingredient</span>
 
@@ -1270,73 +933,19 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># depending the extension of the filename, can be eitherdejaVu file, fbx or wavefront</span>
         <span class="c1"># no extension is DejaVu</span>
-        <span class="n">helper</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span>
         <span class="c1"># should we try to see if it already exist in the scene</span>
-        <span class="k">if</span> <span class="n">helper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">helper</span><span class="o">.</span><span class="n">nogui</span><span class="p">:</span>
-            <span class="n">o</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;retrieve </span><span class="si">%s</span><span class="s2"> </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">o</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">o</span>
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;retrieve </span><span class="si">%s</span><span class="s2"> </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">mesh</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mesh</span>
         <span class="c1"># identify extension</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">fileName</span><span class="p">,</span> <span class="n">fileExtension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;retrieve </span><span class="si">%s</span><span class="s2"> </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">fileExtension</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">fileExtension</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="n">tmpFileName1</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">retrieveFile</span><span class="p">(</span>
-                <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.indpolface&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;geometries&quot;</span>
-            <span class="p">)</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">tmpFileName1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">retrieveFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;geometries&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="ow">and</span> <span class="n">fileExtension</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;problem with </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">fileExtension</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="n">fileName</span><span class="p">,</span> <span class="n">fileExtension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;found fileName </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fileName</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">fileExtension</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;.fbx&quot;</span><span class="p">:</span>
+        <span class="n">file_name</span><span class="p">,</span> <span class="n">file_extension</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">get_mesh_filepath_and_extension</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file_extension</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;.fbx&quot;</span><span class="p">:</span>
             <span class="c1"># use the host helper if any to read</span>
             <span class="k">if</span> <span class="n">helper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># neeed the helper</span>
                 <span class="n">helper</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-                <span class="n">geom</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;geom </span><span class="si">%r</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">helper</span><span class="o">.</span><span class="n">getName</span><span class="p">(</span><span class="n">geom</span><span class="p">))</span>
-                <span class="c1"># reparent to the fill parent</span>
-                <span class="k">if</span> <span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;3dsmax&quot;</span> <span class="ow">or</span> <span class="n">helper</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;blender&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                    <span class="n">helper</span><span class="o">.</span><span class="n">resetTransformation</span><span class="p">(</span>
-                        <span class="n">geom</span>
-                    <span class="p">)</span>  <span class="c1"># remove rotation and scale from importing</span>
-                    <span class="c1"># helper.rotateObj(geom,[0.0,0.0,-math.pi/2.0])</span>
-                    <span class="c1"># m = geom.GetNodeTM()</span>
-                    <span class="c1"># m.PreRotateY(-math.pi/2.0)</span>
-                    <span class="c1"># geom.SetNodeTM(m)</span>
-                <span class="k">if</span> <span class="p">(</span>
-                    <span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">!=</span> <span class="s2">&quot;c4d&quot;</span>
-                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordsystem</span> <span class="o">==</span> <span class="s2">&quot;left&quot;</span>
-                    <span class="ow">and</span> <span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">!=</span> <span class="s2">&quot;softimage&quot;</span>
-                <span class="p">):</span>
-                    <span class="c1"># need to rotate the transform that carry the shape</span>
-                    <span class="n">helper</span><span class="o">.</span><span class="n">rotateObj</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
-                <span class="k">if</span> <span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;softimage&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordsystem</span> <span class="o">==</span> <span class="s2">&quot;left&quot;</span><span class="p">:</span>
-                    <span class="n">helper</span><span class="o">.</span><span class="n">rotateObj</span><span class="p">(</span>
-                        <span class="n">geom</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">primitive</span><span class="o">=</span><span class="kc">True</span>
-                    <span class="p">)</span>  <span class="c1"># need to rotate the primitive</span>
-                <span class="k">if</span> <span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;c4d&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordsystem</span> <span class="o">==</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span>
-                    <span class="n">helper</span><span class="o">.</span><span class="n">resetTransformation</span><span class="p">(</span><span class="n">geom</span><span class="p">)</span>
-                    <span class="n">helper</span><span class="o">.</span><span class="n">rotateObj</span><span class="p">(</span>
-                        <span class="n">geom</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">],</span> <span class="n">primitive</span><span class="o">=</span><span class="kc">True</span>
-                    <span class="p">)</span>
-                <span class="c1"># oldv = self.principalVector[:]</span>
-                <span class="c1">#                    self.principalVector = [oldv[2],oldv[1],oldv[0]]</span>
-                <span class="n">p</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="s2">&quot;autopackHider&quot;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">p</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">newEmpty</span><span class="p">(</span><span class="s2">&quot;autopackHider&quot;</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">helper</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;blender&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                        <span class="n">helper</span><span class="o">.</span><span class="n">toggleDisplay</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-                <span class="n">helper</span><span class="o">.</span><span class="n">reParent</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">geom</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">elif</span> <span class="n">fileExtension</span> <span class="o">==</span> <span class="s2">&quot;.dae&quot;</span><span class="p">:</span>
+
+        <span class="k">elif</span> <span class="n">file_extension</span> <span class="o">==</span> <span class="s2">&quot;.dae&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;read dae withHelper&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">helper</span><span class="p">,</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="p">)</span>
             <span class="c1"># use the host helper if any to read</span>
             <span class="k">if</span> <span class="n">helper</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1379,7 +988,7 @@
                             <span class="c1"># need to get the mesh directly. Only possible if dae or dejavu format</span>
                             <span class="c1"># get the dejavu heper but without the View, and in nogui mode</span>
                             <span class="n">h</span> <span class="o">=</span> <span class="n">simulariumHelper</span><span class="p">(</span><span class="n">vi</span><span class="o">=</span><span class="s2">&quot;nogui&quot;</span><span class="p">)</span>
-                            <span class="n">dgeoms</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                            <span class="n">dgeoms</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">read_mesh_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
                             <span class="c1"># should combine both</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="n">vnormals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">faces</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">combineDaeMeshData</span><span class="p">(</span>
                                 <span class="n">dgeoms</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
@@ -1388,10 +997,7 @@
                                 <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">faces</span><span class="p">)</span>
                             <span class="p">)</span>
                 <span class="n">helper</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-                <span class="c1">#                helper.update()</span>
                 <span class="n">geom</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
-                <span class="c1"># if geom is None, the name was probably wring lets try to use the default name which is</span>
-                <span class="c1"># pdbNAme+_cms</span>
                 <span class="k">if</span> <span class="n">geom</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">geom</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pdb</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
                     <span class="c1"># rename it</span>
@@ -1448,35 +1054,16 @@
                 <span class="k">return</span> <span class="n">geom</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="Ingredient.buildMesh"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.buildMesh">[docs]</a>    <span class="k">def</span> <span class="nf">buildMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">geomname</span><span class="p">):</span>
+<div class="viewcode-block" id="Ingredient.buildMesh"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.buildMesh">[docs]</a>    <span class="k">def</span> <span class="nf">buildMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a polygon mesh object from a dictionary verts,faces,normals</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">nv</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;verts&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
-        <span class="n">nf</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;faces&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;verts&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">nv</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">faces</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;faces&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">nf</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-        <span class="c1"># self.normals = data.normals</span>
-        <span class="n">geom</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">createsNmesh</span><span class="p">(</span><span class="n">geomname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">faces</span><span class="p">)[</span>
-            <span class="mi">0</span>
-        <span class="p">]</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="s2">&quot;autopackHider&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">newEmpty</span><span class="p">(</span><span class="s2">&quot;autopackHider&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">host</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;blender&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">toggleDisplay</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">reParent</span><span class="p">(</span><span class="n">geom</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">meshFile</span> <span class="o">=</span> <span class="n">geomname</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">meshName</span> <span class="o">=</span> <span class="n">geomname</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">meshType</span> <span class="o">=</span> <span class="s2">&quot;file&quot;</span>
+        <span class="n">geom</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">vnormals</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">build_mesh</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh_info</span><span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_info</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="o">=</span> <span class="n">vertices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">faces</span> <span class="o">=</span> <span class="n">faces</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">geom</span>
-        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">saveDejaVuMesh</span><span class="p">(</span>
-            <span class="n">autopack</span><span class="o">.</span><span class="n">cache_geoms</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">geomname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">faces</span>
-        <span class="p">)</span>
-        <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">saveObjMesh</span><span class="p">(</span>
-            <span class="n">autopack</span><span class="o">.</span><span class="n">cache_geoms</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">geomname</span> <span class="o">+</span> <span class="s2">&quot;.obj&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">faces</span>
-        <span class="p">)</span>
-        <span class="c1"># self.saveObjMesh(autopack.cache_geoms + os.sep + geomname + &quot;.obj&quot;)</span>
         <span class="k">return</span> <span class="n">geom</span></div>
 
 <div class="viewcode-block" id="Ingredient.jitterPosition"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.jitterPosition">[docs]</a>    <span class="k">def</span> <span class="nf">jitterPosition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -1508,7 +1095,7 @@
         <span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">dx</span>
         <span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">dy</span>
         <span class="n">position</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">dz</span>
-        <span class="k">return</span> <span class="n">position</span></div>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">position</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Ingredient.getMaxJitter"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getMaxJitter">[docs]</a>    <span class="k">def</span> <span class="nf">getMaxJitter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacing</span><span class="p">):</span>
         <span class="c1"># self.jitterMax: each value is the max it can move</span>
@@ -1534,15 +1121,7 @@
         <span class="n">jitter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMaxJitter</span><span class="p">(</span><span class="n">spacing</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">packingMode</span> <span class="o">==</span> <span class="s2">&quot;close&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">useLength</span><span class="p">:</span>
-                <span class="n">cut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="n">jitter</span>
-            <span class="c1">#            if ingr.modelType==&#39;Cube&#39; : #radius iactually the size</span>
-            <span class="c1">#                cut = min(self.radii[0]/2.)-jitter</span>
-            <span class="c1">#            elif ingr.cutoff_boundary is not None :</span>
-            <span class="c1">#                #this mueay work if we have the distance from the border</span>
-            <span class="c1">#                cut  = radius+ingr.cutoff_boundary-jitter</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">cut</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">-</span> <span class="n">jitter</span>
+            <span class="n">cut</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">-</span> <span class="n">jitter</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">cut</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">-</span> <span class="n">jitter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_distance</span> <span class="o">=</span> <span class="n">cut</span>
@@ -1617,11 +1196,10 @@
                 <span class="c1"># Only return points that aren&#39;t so close to a surface that we know the</span>
                 <span class="c1"># ingredient won&#39;t fit</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">array_length</span><span class="p">):</span>
-                    <span class="n">pt</span> <span class="o">=</span> <span class="n">starting_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                    <span class="n">d</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="n">comp_ids</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">==</span> <span class="n">current_comp_id</span> <span class="ow">and</span> <span class="n">d</span> <span class="o">&gt;=</span> <span class="n">cuttoff</span><span class="p">:</span>
-                        <span class="n">allIngrPts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
-
+                    <span class="n">pt_index</span> <span class="o">=</span> <span class="n">starting_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">d</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[</span><span class="n">pt_index</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">comp_ids</span><span class="p">[</span><span class="n">pt_index</span><span class="p">]</span> <span class="o">==</span> <span class="n">current_comp_id</span> <span class="ow">and</span> <span class="n">d</span> <span class="o">&gt;=</span> <span class="n">cuttoff</span><span class="p">:</span>
+                        <span class="n">allIngrPts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt_index</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">allIngrPts</span> <span class="o">=</span> <span class="n">allIngrPts</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">allIngrPts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -1656,6 +1234,7 @@
 
 <div class="viewcode-block" id="Ingredient.transformPoints"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.transformPoints">[docs]</a>    <span class="k">def</span> <span class="nf">transformPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
         <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">rot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
             <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">point</span><span class="p">)</span> <span class="o">+</span> <span class="n">trans</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">output</span></div>
@@ -1778,7 +1357,7 @@
 <div class="viewcode-block" id="Ingredient.isInGoodComp"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.isInGoodComp">[docs]</a>    <span class="k">def</span> <span class="nf">isInGoodComp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pId</span><span class="p">,</span> <span class="n">nbs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># cID ie [-2,-1,-2,0...], ptsinsph = [519,300,etc]</span>
         <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span>
-        <span class="n">cId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span><span class="p">[</span><span class="n">pId</span><span class="p">]</span>
+        <span class="n">cId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">[</span><span class="n">pId</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">current</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># inside</span>
             <span class="k">if</span> <span class="n">current</span> <span class="o">!=</span> <span class="n">cId</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
@@ -1802,7 +1381,7 @@
         <span class="n">trigger</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compareCompartment</span><span class="p">:</span>
             <span class="n">cId</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span><span class="p">,</span> <span class="n">ptsInSphere</span><span class="p">,</span> <span class="mi">0</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="n">ptsInSphere</span><span class="p">,</span> <span class="mi">0</span>
             <span class="p">)</span>  <span class="c1"># shoud be the same ?</span>
             <span class="k">if</span> <span class="n">nbs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">nbs</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -1846,13 +1425,7 @@
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">signed_distance_to_surface</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># point is inside dropped ingredient</span>
-            <span class="k">if</span> <span class="p">(</span>
-                <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span>
-                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&lt;=</span> <span class="mi">0</span>
-            <span class="p">):</span>  <span class="c1"># did this jitter outside of it&#39;s compartment</span>
-                <span class="c1"># in wrong compartment, reject this packing position</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;checked pt that is not in container&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{}</span>
+
             <span class="k">if</span> <span class="n">grid_point_index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inside_points</span> <span class="ow">or</span> <span class="nb">abs</span><span class="p">(</span>
                 <span class="n">signed_distance_to_surface</span>
             <span class="p">)</span> <span class="o">&lt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">inside_points</span><span class="p">[</span><span class="n">grid_point_index</span><span class="p">]):</span>
@@ -1995,13 +1568,11 @@
         <span class="c1"># ptID = self.env.grid.getPointFrom3D(point)</span>
         <span class="n">cID</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">getPointCompartmentId</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>  <span class="c1"># offset ?</span>
         <span class="c1"># dist,ptID = self.env.grid.getClosestGridPoint(point)</span>
-        <span class="c1"># cID = self.env.grid.gridPtId[ptID]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">organelle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">organelle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># surface ingredient</span>
-            <span class="c1"># print (&quot;surface ingr of type &quot;,self.Type)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
                 <span class="c1"># need a list of accepted compNum</span>
                 <span class="n">check</span> <span class="o">=</span> <span class="kc">False</span>
@@ -2025,7 +1596,7 @@
         <span class="c1">#        else :</span>
         <span class="c1">#            return True</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">inside</span> <span class="o">=</span> <span class="n">organelle</span><span class="o">.</span><span class="n">checkPointInside</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">diag</span><span class="p">,</span> <span class="n">ray</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">inside</span> <span class="o">=</span> <span class="n">organelle</span><span class="o">.</span><span class="n">checkPointInside</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">diag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">mesh_store</span><span class="p">,</span> <span class="n">ray</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">inside</span><span class="p">:</span>  <span class="c1"># and cID &lt; 0:</span>
                 <span class="k">return</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
@@ -2036,7 +1607,7 @@
                 <span class="c1">#                return False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># shouldnt be in any compartments</span>
             <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
-                <span class="n">inside</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">checkPointInside</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">diag</span><span class="p">,</span> <span class="n">ray</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+                <span class="n">inside</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">checkPointInside</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">diag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">mesh_store</span><span class="p">,</span> <span class="n">ray</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">inside</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">!=</span> <span class="n">cID</span><span class="p">:</span>
@@ -2063,11 +1634,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                     <span class="s2">&quot;distance is </span><span class="si">%r</span><span class="s2"> </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">cutoff</span>
                 <span class="p">)</span>  <span class="c1"># d can be wrond for some reason,</span>
-                <span class="c1"># d = autopack.helper.measure_distance(point,o.vertices[pt])</span>
                 <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">cutoff</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">True</span>
                 <span class="k">if</span> <span class="n">compNum</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">compartment</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                    <span class="n">inside</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">checkPointInside</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">point</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">diag</span><span class="p">)</span>
+                    <span class="n">inside</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">checkPointInside</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">point</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">diag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">mesh_store</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;inside ? </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">inside</span><span class="p">)</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">inside</span><span class="p">:</span>
                         <span class="k">return</span> <span class="kc">True</span>
@@ -2206,7 +1776,6 @@
             <span class="n">t</span> <span class="o">=</span> <span class="n">mingrs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">packingMode</span> <span class="o">==</span> <span class="s2">&quot;closePartner&quot;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ing</span><span class="o">.</span><span class="n">o_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners_name</span> <span class="ow">or</span> <span class="n">ing</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners_name</span><span class="p">:</span>
-                    <span class="c1">#                    print (&quot;is a partner of&quot;+self.name)</span>
                     <span class="n">listePartner</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">partners</span><span class="p">[</span><span class="n">ing</span><span class="o">.</span><span class="n">name</span><span class="p">],</span> <span class="n">mingrs</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="n">i</span><span class="p">]])</span>
                     <span class="c1">#                                         autopack.helper.measure_distance(jtrans,mingrs[0][i])])</span>
             <span class="k">if</span> <span class="p">(</span>
@@ -2223,7 +1792,6 @@
                         <span class="n">part</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">addPartner</span><span class="p">(</span><span class="n">ing</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">ing</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">ing</span><span class="o">.</span><span class="n">distExpression</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">part</span><span class="o">.</span><span class="n">distExpression</span> <span class="o">=</span> <span class="n">ing</span><span class="o">.</span><span class="n">distExpression</span>
-                    <span class="c1"># print &quot;new Partner&quot;, part,part.name,part.weight</span>
                     <span class="n">d</span> <span class="o">=</span> <span class="n">afvi</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">measure_distance</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
                     <span class="n">listePartner</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">part</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">listePartner</span><span class="p">:</span>
@@ -2428,7 +1996,6 @@
                 <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">rbnode</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">ingr</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rbnode</span><span class="p">)</span>
-                <span class="c1">#            print &quot;get&quot;,ingr.name,self.name,rbnode,distances[nid],(ingr.encapsulatingRadius+self.encapsulatingRadius)</span>
         <span class="c1"># append organelle rb nodes</span>
         <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">organelle</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
@@ -2456,7 +2023,6 @@
                             <span class="c1">#                if o.rbnode is not None :</span>
                             <span class="c1">#                    if not getInfo :</span>
                             <span class="c1">#                        nodes.append(o.rbnode)</span>
-                            <span class="c1">#        print (&quot;GetNode &quot;,len(nodes),nodes)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">nodes</span>
         <span class="k">return</span> <span class="n">nodes</span></div>
 
@@ -2608,7 +2174,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;drop next hexa </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">nexthexa</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="c1"># add one to molecule counter for this ingredient</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">completion</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counter</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbMol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">completion</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">counter</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_to_place</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rejectionCounter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_data_tree</span><span class="p">(</span><span class="n">dropped_position</span><span class="p">,</span> <span class="n">dropped_rotation</span><span class="p">,</span> <span class="n">grid_point_index</span><span class="p">)</span></div>
 
@@ -2665,9 +2231,10 @@
                 <span class="n">env</span><span class="o">.</span><span class="n">afviewer</span><span class="p">,</span>
                 <span class="n">current_visual_instance</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="n">collision_possible</span><span class="p">:</span>
+        <span class="n">is_fiber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Type</span><span class="o">==</span><span class="s2">&quot;Grow&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Actine&quot;</span>
+        <span class="k">if</span> <span class="n">collision_possible</span> <span class="ow">or</span> <span class="n">is_fiber</span><span class="p">:</span>
             <span class="c1"># grow doesnt use panda.......but could use all the geom produce by the grow as rb</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Actine&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">is_fiber</span><span class="p">:</span>
                 <span class="n">success</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grow_place</span><span class="p">(</span>
                     <span class="n">env</span><span class="p">,</span>
                     <span class="n">ptInd</span><span class="p">,</span>
@@ -2777,7 +2344,6 @@
                 <span class="n">grid_points_to_update</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span>
                     <span class="n">bounding_point_position</span><span class="p">,</span> <span class="n">radius_of_area_to_check</span>
                 <span class="p">)</span>
-
                 <span class="k">for</span> <span class="n">grid_point_index</span> <span class="ow">in</span> <span class="n">grid_points_to_update</span><span class="p">:</span>
                     <span class="p">(</span>
                         <span class="n">insidePoints</span><span class="p">,</span>
@@ -2807,7 +2373,7 @@
 
         <span class="k">return</span> <span class="n">success</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span></div>
 
-<div class="viewcode-block" id="Ingredient.get_rotation"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_rotation">[docs]</a>    <span class="k">def</span> <span class="nf">get_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt_ind</span><span class="p">,</span> <span class="n">histovol</span><span class="p">,</span> <span class="n">compartment</span><span class="p">):</span>
+<div class="viewcode-block" id="Ingredient.get_rotation"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.get_rotation">[docs]</a>    <span class="k">def</span> <span class="nf">get_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt_ind</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">compartment</span><span class="p">):</span>
         <span class="c1"># compute rotation matrix rotMat</span>
         <span class="n">comp_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span>
 
@@ -2816,7 +2382,7 @@
             <span class="c1"># for surface points we compute the rotation which</span>
             <span class="c1"># aligns the principalVector with the surface normal</span>
             <span class="n">v1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">principalVector</span>
-            <span class="n">v2</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">surfacePointsNormals</span><span class="p">[</span><span class="n">pt_ind</span><span class="p">]</span>
+            <span class="n">v2</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">get_normal_for_point</span><span class="p">(</span><span class="n">pt_ind</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">pt_ind</span><span class="p">],</span> <span class="n">env</span><span class="o">.</span><span class="n">mesh_store</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">rot_mat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rotVectToVect</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -2830,14 +2396,14 @@
                 <span class="k">elif</span> <span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">useOrientBias</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">packingMode</span> <span class="o">==</span> <span class="s2">&quot;gradient&quot;</span>
                 <span class="p">):</span>  <span class="c1"># you need a gradient here</span>
-                    <span class="n">rot_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alignRotation</span><span class="p">(</span><span class="n">histovol</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">pt_ind</span><span class="p">])</span>
+                    <span class="n">rot_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alignRotation</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">pt_ind</span><span class="p">])</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">rot_mat</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">rotation_matrix</span><span class="p">(</span>
                         <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotRange</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotAxis</span>
                     <span class="p">)</span>
             <span class="c1"># for other points we get a random rotation</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">rot_mat</span> <span class="o">=</span> <span class="n">histovol</span><span class="o">.</span><span class="n">randomRot</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                <span class="n">rot_mat</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">randomRot</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">rot_mat</span></div>
 
 <div class="viewcode-block" id="Ingredient.randomize_rotation"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.randomize_rotation">[docs]</a>    <span class="k">def</span> <span class="nf">randomize_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">histovol</span><span class="p">):</span>
@@ -2922,7 +2488,6 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        drop the ingredient on grid point ptInd</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># print &quot;rigid&quot;,self.placeType</span>
         <span class="n">afvi</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">afviewer</span>
         <span class="n">simulationTimes</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">simulationTimes</span>
         <span class="n">runTimeDisplay</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">runTimeDisplay</span>
@@ -3224,7 +2789,6 @@
                         <span class="n">mingrs</span><span class="p">,</span> <span class="n">listePartner</span><span class="p">,</span> <span class="n">currentPos</span><span class="o">=</span><span class="n">trans</span>
                     <span class="p">)</span>
                     <span class="k">if</span> <span class="n">targetPoint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="c1"># print &quot;found &quot;,jitterPos</span>
                         <span class="k">break</span>
                 <span class="k">if</span> <span class="n">targetPoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">targetPoint</span> <span class="o">=</span> <span class="n">trans</span>
@@ -3686,7 +3250,6 @@
                 <span class="n">t</span> <span class="o">=</span> <span class="n">elem</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">r</span> <span class="o">=</span> <span class="n">elem</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">ind</span> <span class="o">=</span> <span class="n">elem</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-                <span class="c1"># print &quot;neighbour&quot;,ing.name</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ing</span><span class="p">,</span> <span class="s2">&quot;mesh_3d&quot;</span><span class="p">):</span>
                     <span class="c1"># create an instance of mesh3d and place it</span>
                     <span class="n">name</span> <span class="o">=</span> <span class="n">ing</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span>
@@ -3719,7 +3282,6 @@
                         <span class="n">targetPoint</span> <span class="o">=</span> <span class="n">jtrans</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">targetPoint</span> <span class="o">=</span> <span class="n">jtrans</span>
-                    <span class="c1">#        print &quot;targetPt&quot;,len(targetPoint),targetPoint</span>
                     <span class="c1">#       should be panda util</span>
                     <span class="c1">#        add the rigid body</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">moving</span> <span class="o">=</span> <span class="n">rbnode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">callFunction</span><span class="p">(</span>

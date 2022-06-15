@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -102,7 +103,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbmol">nbMol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
@@ -131,7 +131,6 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingmode">packingMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
@@ -188,9 +187,9 @@
            <div itemprop="articleBody">
              
   <section id="cellpack-autopack-package">
-<h1>cellpack.autopack package<a class="headerlink" href="#cellpack-autopack-package" title="Permalink to this headline"></a></h1>
+<h1>cellpack.autopack package<a class="headerlink" href="#cellpack-autopack-package" title="Permalink to this heading"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cellpack.autopack.ingredient.html">cellpack.autopack.ingredient package</a><ul>
@@ -201,6 +200,7 @@
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.ingredient.html#module-cellpack.autopack.ingredient.multi_cylinder">cellpack.autopack.ingredient.multi_cylinder module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.ingredient.html#module-cellpack.autopack.ingredient.multi_sphere">cellpack.autopack.ingredient.multi_sphere module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.ingredient.html#module-cellpack.autopack.ingredient.single_cube">cellpack.autopack.ingredient.single_cube module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.ingredient.html#module-cellpack.autopack.ingredient.single_cylinder">cellpack.autopack.ingredient.single_cylinder module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.ingredient.html#module-cellpack.autopack.ingredient.single_sphere">cellpack.autopack.ingredient.single_sphere module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.ingredient.html#module-cellpack.autopack.ingredient.utils">cellpack.autopack.ingredient.utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.ingredient.html#module-cellpack.autopack.ingredient">Module contents</a></li>
@@ -226,10 +226,10 @@
 </div>
 </section>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-cellpack.autopack.Analysis">
-<span id="cellpack-autopack-analysis-module"></span><h2>cellpack.autopack.Analysis module<a class="headerlink" href="#module-cellpack.autopack.Analysis" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-analysis-module"></span><h2>cellpack.autopack.Analysis module<a class="headerlink" href="#module-cellpack.autopack.Analysis" title="Permalink to this heading"></a></h2>
 <p>Created on Mon May  6 22:58:44 2013</p>
 <p>&#64;author: ludo</p>
 <dl class="py class">
@@ -526,7 +526,7 @@ objects : list of object or list of points</p>
 
 </section>
 <section id="module-cellpack.autopack.BaseGrid">
-<span id="cellpack-autopack-basegrid-module"></span><h2>cellpack.autopack.BaseGrid module<a class="headerlink" href="#module-cellpack.autopack.BaseGrid" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-basegrid-module"></span><h2>cellpack.autopack.BaseGrid module<a class="headerlink" href="#module-cellpack.autopack.BaseGrid" title="Permalink to this heading"></a></h2>
 <p># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
 #   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
 #   with assistance from Mostafa Al-Alusi in 2009 and periodic input
@@ -772,7 +772,7 @@ NOTE : need to fix with grid build with numpy arrange</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.HaltonGrid">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.BaseGrid.</span></span><span class="sig-name descname"><span class="pre">HaltonGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">([0,</span> <span class="pre">0,</span> <span class="pre">0],</span> <span class="pre">[0.1,</span> <span class="pre">0.1,</span> <span class="pre">0.1])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#HaltonGrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.HaltonGrid" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid" title="cellpack.autopack.BaseGrid.BaseGrid"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.autopack.BaseGrid.BaseGrid</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid" title="cellpack.autopack.BaseGrid.BaseGrid"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGrid</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.HaltonGrid.create3DPointLookup">
 <span class="sig-name descname"><span class="pre">create3DPointLookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#HaltonGrid.create3DPointLookup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.HaltonGrid.create3DPointLookup" title="Permalink to this definition"></a></dt>
@@ -807,16 +807,16 @@ numpy broadcasting</p>
 
 </section>
 <section id="module-cellpack.autopack.Compartment">
-<span id="cellpack-autopack-compartment-module"></span><h2>cellpack.autopack.Compartment module<a class="headerlink" href="#module-cellpack.autopack.Compartment" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-compartment-module"></span><h2>cellpack.autopack.Compartment module<a class="headerlink" href="#module-cellpack.autopack.Compartment" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Compartment.</span></span><span class="sig-name descname"><span class="pre">Compartment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vnormals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fnormals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ghost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meshType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'file'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isOrthogonalBoundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mesh'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">0]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.Compartment.CompartmentList" title="cellpack.autopack.Compartment.CompartmentList"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.autopack.Compartment.CompartmentList</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Compartment.</span></span><span class="sig-name descname"><span class="pre">Compartment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vnormals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fnormals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ghost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meshType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'file'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isOrthogonalBoundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mesh'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">0]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.Compartment.CompartmentList" title="cellpack.autopack.Compartment.CompartmentList"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompartmentList</span></code></a></p>
 <p>This class represents a sub volume delimited by a polyhedral
 surface. Compartment can be nested</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.BuildGrid">
-<span class="sig-name descname"><span class="pre">BuildGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.BuildGrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.BuildGrid" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">BuildGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_store</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.BuildGrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.BuildGrid" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -834,8 +834,7 @@ surface. Compartment can be nested</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.BuildGrid_binvox">
 <span class="sig-name descname"><span class="pre">BuildGrid_binvox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grdPos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vSurfaceArea</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srfPts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.BuildGrid_binvox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.BuildGrid_binvox" title="Permalink to this definition"></a></dt>
-<dd><p>Build the compartment grid ie surface and inside point using jordan theorem and host raycast</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.BuildGrid_box">
@@ -844,7 +843,7 @@ surface. Compartment can be nested</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.BuildGrid_jordan">
-<span class="sig-name descname"><span class="pre">BuildGrid_jordan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grdPos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_distances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vSurfaceArea</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srfPts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.BuildGrid_jordan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.BuildGrid_jordan" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">BuildGrid_jordan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grdPos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_distances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vSurfaceArea</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_store</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.BuildGrid_jordan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.BuildGrid_jordan" title="Permalink to this definition"></a></dt>
 <dd><p>Build the compartment grid ie surface and inside point using jordan theorem and host raycast</p>
 </dd></dl>
 
@@ -863,8 +862,7 @@ surface. Compartment can be nested</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.BuildGrid_pyray">
 <span class="sig-name descname"><span class="pre">BuildGrid_pyray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grdPos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vSurfaceArea</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srfPts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.BuildGrid_pyray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.BuildGrid_pyray" title="Permalink to this definition"></a></dt>
-<dd><p>Build the compartment grid ie surface and inside point using bhtree</p>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.BuildGrid_scanline">
@@ -897,18 +895,18 @@ from the UT package</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.buildMesh">
-<span class="sig-name descname"><span class="pre">buildMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geomname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.buildMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.buildMesh" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">buildMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_store</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.buildMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.buildMesh" title="Permalink to this definition"></a></dt>
 <dd><p>Create a polygon mesh object from a dictionary verts,faces,normals</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.buildSphere">
-<span class="sig-name descname"><span class="pre">buildSphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geomname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.buildSphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.buildSphere" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">buildSphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh_store</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.buildSphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.buildSphere" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.checkPointInside">
-<span class="sig-name descname"><span class="pre">checkPointInside</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.checkPointInside"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.checkPointInside" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">checkPointInside</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_store</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.checkPointInside"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.checkPointInside" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -962,8 +960,14 @@ v: A pointer to the array of vertices
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.extendGridArrays">
-<span class="sig-name descname"><span class="pre">extendGridArrays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nbGridPoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srfPts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfPtsBBNorms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extended</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.extendGridArrays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.extendGridArrays" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">extendGridArrays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nbGridPoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">off_grid_surface_pts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfPtsBBNorms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfacePointsNormals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extended</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.extendGridArrays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.extendGridArrays" title="Permalink to this definition"></a></dt>
 <dd><p>Extend the environment grd using the compartment point</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.filter_surface_pts_to_fill_box">
+<span class="sig-name descname"><span class="pre">filter_surface_pts_to_fill_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">off_grid_pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.filter_surface_pts_to_fill_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.filter_surface_pts_to_fill_box" title="Permalink to this definition"></a></dt>
+<dd><p>get the bounding box from the environment grid that encapsulated the mesh</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1004,7 +1008,7 @@ v: A pointer to the array of vertices
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.getMesh">
-<span class="sig-name descname"><span class="pre">getMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.getMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.getMesh" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">getMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh_store</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.getMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.getMesh" title="Permalink to this definition"></a></dt>
 <dd><p>Retrieve the compartment 3d representation from the given filename</p>
 <p>&#64;type  filename: string
 &#64;param filename: the name of the input file
@@ -1028,12 +1032,6 @@ v: A pointer to the array of vertices
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.getSizeXYZ">
 <span class="sig-name descname"><span class="pre">getSizeXYZ</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.getSizeXYZ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.getSizeXYZ" title="Permalink to this definition"></a></dt>
 <dd><p>get the size per axe</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.getSurfaceBB">
-<span class="sig-name descname"><span class="pre">getSurfaceBB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">srfPts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.getSurfaceBB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.getSurfaceBB" title="Permalink to this definition"></a></dt>
-<dd><p>get the bounding box from the environment grid that encapsulated the mesh</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1114,6 +1112,11 @@ This is independant from the packing. Help build ingredient sphere tree and repr
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.get_normal_for_point">
+<span class="sig-name descname"><span class="pre">get_normal_for_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_store</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.get_normal_for_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.get_normal_for_point" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.get_rb_model">
 <span class="sig-name descname"><span class="pre">get_rb_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.get_rb_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.get_rb_model" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -1133,6 +1136,11 @@ did not fit</p>
 returns true or false and the extended bounding box if this compartment
 did not fit</p>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.initialize_mesh">
+<span class="sig-name descname"><span class="pre">initialize_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh_store</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.initialize_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.initialize_mesh" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment.prepare_buildgrid_box">
@@ -1227,7 +1235,7 @@ did not fit</p>
 
 </section>
 <section id="module-cellpack.autopack.Environment">
-<span id="cellpack-autopack-environment-module"></span><h2>cellpack.autopack.Environment module<a class="headerlink" href="#module-cellpack.autopack.Environment" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-environment-module"></span><h2>cellpack.autopack.Environment module<a class="headerlink" href="#module-cellpack.autopack.Environment" title="Permalink to this heading"></a></h2>
 <p># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
 #   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
 #   with assistance from Mostafa Al-Alusi in 2009 and periodic input
@@ -1271,7 +1279,7 @@ did not fit</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.Environment.Environment">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Environment.</span></span><span class="sig-name descname"><span class="pre">Environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'H'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'simularium'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Environment.html#Environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Environment.Environment" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.Compartment.CompartmentList" title="cellpack.autopack.Compartment.CompartmentList"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.autopack.Compartment.CompartmentList</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.Compartment.CompartmentList" title="cellpack.autopack.Compartment.CompartmentList"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompartmentList</span></code></a></p>
 <p>This class is main class in autopack. The class handle all the setup, initialization
 and process of the packing. We use xml or python for the setup.
 A environments is made of :</p>
@@ -1381,6 +1389,16 @@ as the pt indice in the result array have a different meaning.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Environment.Environment.convertPickleToText">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convertPickleToText</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resultfilename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norga</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Environment.html#Environment.convertPickleToText"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Environment.Environment.convertPickleToText" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.Environment.Environment.create_compartment">
+<span class="sig-name descname"><span class="pre">create_compartment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meshType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Environment.html#Environment.create_compartment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Environment.Environment.create_compartment" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.Environment.Environment.create_ingredient">
+<span class="sig-name descname"><span class="pre">create_ingredient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Environment.html#Environment.create_ingredient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Environment.Environment.create_ingredient" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1598,12 +1616,6 @@ callback function on each ingredients.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.Environment.Environment.makeIngredient">
-<span class="sig-name descname"><span class="pre">makeIngredient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Environment.html#Environment.makeIngredient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Environment.Environment.makeIngredient" title="Permalink to this definition"></a></dt>
-<dd><p>Helper function to make an ingredient, pass all arguments as keywords.</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Environment.Environment.moveRBnode">
 <span class="sig-name descname"><span class="pre">moveRBnode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trans</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotMat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Environment.html#Environment.moveRBnode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Environment.Environment.moveRBnode" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -1636,7 +1648,7 @@ drop. The picking is weighted or random</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Environment.Environment.readArraysFromFile">
 <span class="sig-name descname"><span class="pre">readArraysFromFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Environment.html#Environment.readArraysFromFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Environment.Environment.readArraysFromFile" title="Permalink to this definition"></a></dt>
-<dd><p>write self.gridPtId and self.distToClosestSurf to file. (pickle)</p>
+<dd><p>write self.compartment_ids and self.distToClosestSurf to file. (pickle)</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1832,15 +1844,15 @@ listingredient influenced</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Environment.Environment.writeArraysToFile">
 <span class="sig-name descname"><span class="pre">writeArraysToFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Environment.html#Environment.writeArraysToFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Environment.Environment.writeArraysToFile" title="Permalink to this definition"></a></dt>
-<dd><p>write self.gridPtId and self.distToClosestSurf to file. (pickle)</p>
+<dd><p>write self.compartment_ids and self.distToClosestSurf to file. (pickle)</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.Environment.Grid">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Environment.</span></span><span class="sig-name descname"><span class="pre">Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">([0,</span> <span class="pre">0,</span> <span class="pre">0],</span> <span class="pre">[0.1,</span> <span class="pre">0.1,</span> <span class="pre">0.1])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Environment.html#Grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Environment.Grid" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid" title="cellpack.autopack.BaseGrid.BaseGrid"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.autopack.BaseGrid.BaseGrid</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Environment.</span></span><span class="sig-name descname"><span class="pre">Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">([0,</span> <span class="pre">0,</span> <span class="pre">0],</span> <span class="pre">[0.1,</span> <span class="pre">0.1,</span> <span class="pre">0.1])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Environment.html#Grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Environment.Grid" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid" title="cellpack.autopack.BaseGrid.BaseGrid"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGrid</span></code></a></p>
 <p>This class handle the use of grid to control the packing. The grid keep information
 of 3d positions, distances, freePoints and inside/surface points from organelles.
 NOTE : this class could be completely replaced if openvdb is wrapped to python.</p>
@@ -1911,7 +1923,7 @@ priority = 0</p>
 
 </section>
 <section id="module-cellpack.autopack.GeometryTools">
-<span id="cellpack-autopack-geometrytools-module"></span><h2>cellpack.autopack.GeometryTools module<a class="headerlink" href="#module-cellpack.autopack.GeometryTools" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-geometrytools-module"></span><h2>cellpack.autopack.GeometryTools module<a class="headerlink" href="#module-cellpack.autopack.GeometryTools" title="Permalink to this heading"></a></h2>
 <p>Created on Mon Jun 24 15:27:52 2013</p>
 <p>&#64;author: ludovic Autin</p>
 <p>2D integration of circle rectangle intersection area from
@@ -2022,7 +2034,7 @@ check if the four corner are more than radius away from circle center</p>
 
 </section>
 <section id="module-cellpack.autopack.Gradient">
-<span id="cellpack-autopack-gradient-module"></span><h2>cellpack.autopack.Gradient module<a class="headerlink" href="#module-cellpack.autopack.Gradient" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-gradient-module"></span><h2>cellpack.autopack.Gradient module<a class="headerlink" href="#module-cellpack.autopack.Gradient" title="Permalink to this heading"></a></h2>
 <p># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
 #   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
 #   with assistance from Mostafa Al-Alusi in 2009 and periodic input
@@ -2219,7 +2231,7 @@ the total weight will be skipped in the beginning.</p>
 
 </section>
 <section id="module-cellpack.autopack.Graphics">
-<span id="cellpack-autopack-graphics-module"></span><h2>cellpack.autopack.Graphics module<a class="headerlink" href="#module-cellpack.autopack.Graphics" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-graphics-module"></span><h2>cellpack.autopack.Graphics module<a class="headerlink" href="#module-cellpack.autopack.Graphics" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.Graphics.AutopackViewer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Graphics.</span></span><span class="sig-name descname"><span class="pre">AutopackViewer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">helper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ViewerType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dejavu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Graphics.html#AutopackViewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Graphics.AutopackViewer" title="Permalink to this definition"></a></dt>
@@ -2672,7 +2684,7 @@ geometry such as spheres and cylinders</p>
 
 </section>
 <section id="module-cellpack.autopack.IOutils">
-<span id="cellpack-autopack-ioutils-module"></span><h2>cellpack.autopack.IOutils module<a class="headerlink" href="#module-cellpack.autopack.IOutils" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-ioutils-module"></span><h2>cellpack.autopack.IOutils module<a class="headerlink" href="#module-cellpack.autopack.IOutils" title="Permalink to this heading"></a></h2>
 <p>Created on Sun Jan 27 09:04:10 2013</p>
 <p>&#64;author: Ludovic Autin</p>
 <dl class="py class">
@@ -2704,6 +2716,11 @@ geometry such as spheres and cylinders</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.IOutils.</span></span><span class="sig-name descname"><span class="pre">IOingredientTool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/IOutils.html#IOingredientTool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.IOutils.IOingredientTool" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.IOutils.IOingredientTool.clean_arguments">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clean_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arguments_to_include</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">arguments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/IOutils.html#IOingredientTool.clean_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.IOutils.IOingredientTool.clean_arguments" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.IOutils.IOingredientTool.ingrJsonNode">
 <span class="sig-name descname"><span class="pre">ingrJsonNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/IOutils.html#IOingredientTool.ingrJsonNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.IOutils.IOingredientTool.ingrJsonNode" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -2720,22 +2737,17 @@ geometry such as spheres and cylinders</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.IOutils.IOingredientTool.makeIngredient">
-<span class="sig-name descname"><span class="pre">makeIngredient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/IOutils.html#IOingredientTool.makeIngredient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.IOutils.IOingredientTool.makeIngredient" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">makeIngredient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/IOutils.html#IOingredientTool.makeIngredient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.IOutils.IOingredientTool.makeIngredient" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.IOutils.IOingredientTool.makeIngredientFromJson">
-<span class="sig-name descname"><span class="pre">makeIngredientFromJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Generic'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/IOutils.html#IOingredientTool.makeIngredientFromJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.IOutils.IOingredientTool.makeIngredientFromJson" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">makeIngredientFromJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Generic'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/IOutils.html#IOingredientTool.makeIngredientFromJson"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.IOutils.IOingredientTool.makeIngredientFromJson" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.IOutils.IOingredientTool.makeIngredientFromXml">
 <span class="sig-name descname"><span class="pre">makeIngredientFromXml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Generic'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/IOutils.html#IOingredientTool.makeIngredientFromXml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.IOutils.IOingredientTool.makeIngredientFromXml" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.IOutils.IOingredientTool.parseIngrXmlNode">
-<span class="sig-name descname"><span class="pre">parseIngrXmlNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ingrnode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/IOutils.html#IOingredientTool.parseIngrXmlNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.IOutils.IOingredientTool.parseIngrXmlNode" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2758,7 +2770,7 @@ geometry such as spheres and cylinders</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.IOutils.NumpyArrayEncoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.IOutils.</span></span><span class="sig-name descname"><span class="pre">NumpyArrayEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipkeys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensure_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_circular</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_nan</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/IOutils.html#NumpyArrayEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.IOutils.NumpyArrayEncoder" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">json.encoder.JSONEncoder</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONEncoder</span></code></p>
 <p>Constructor for JSONEncoder, with sensible defaults.</p>
 <p>If skipkeys is false, then it is a TypeError to attempt
 encoding of keys that are not str, int, float or None.  If
@@ -2962,11 +2974,178 @@ env is the environment / recipe to be exported.</p>
 <dd></dd></dl>
 
 </section>
+<section id="module-cellpack.autopack.MeshStore">
+<span id="cellpack-autopack-meshstore-module"></span><h2>cellpack.autopack.MeshStore module<a class="headerlink" href="#module-cellpack.autopack.MeshStore" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.MeshStore.</span></span><span class="sig-name descname"><span class="pre">MeshStore</span></span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.add_mesh_to_scene">
+<span class="sig-name descname"><span class="pre">add_mesh_to_scene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.add_mesh_to_scene"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.add_mesh_to_scene" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.build_mesh">
+<span class="sig-name descname"><span class="pre">build_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geomname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.build_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.build_mesh" title="Permalink to this definition"></a></dt>
+<dd><p>Create a polygon mesh object from a dictionary verts,faces,normals</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.contains_point">
+<span class="sig-name descname"><span class="pre">contains_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geomname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.contains_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.contains_point" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.contains_points">
+<span class="sig-name descname"><span class="pre">contains_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geomname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.contains_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.contains_points" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.contains_points_slow">
+<span class="sig-name descname"><span class="pre">contains_points_slow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geomname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.contains_points_slow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.contains_points_slow" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.create_mesh">
+<span class="sig-name descname"><span class="pre">create_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vnormals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.create_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.create_mesh" title="Permalink to this definition"></a></dt>
+<dd><p>This is the main function that create a polygonal mesh.</p>
+<p>&#64;type  name: string
+&#64;param name: name of the pointCloud
+&#64;type  vertices: array
+&#64;param vertices: list of x,y,z vertices points
+&#64;type  vnormals: array
+&#64;param vnormals: list of x,y,z vertex normals vector
+&#64;type  faces: array
+&#64;param faces: list of i,j,k indice of vertex by face
+&#64;return:  the polygon object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.create_sphere">
+<span class="sig-name descname"><span class="pre">create_sphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.create_sphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.create_sphere" title="Permalink to this definition"></a></dt>
+<dd><p>Create the mesh data and the mesh object of a Sphere of a given radius</p>
+<p>&#64;type  name: string
+&#64;param name: name for the sphere
+&#64;type  iterations: int
+&#64;param iterations: resolution
+&#64;type  radius: float
+&#64;param radius: radius of the sphere</p>
+<p>&#64;rtype:   Object, Mesh
+&#64;return:  Sphere Object and Mesh</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.create_sphere_data">
+<span class="sig-name descname"><span class="pre">create_sphere_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.create_sphere_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.create_sphere_data" title="Permalink to this definition"></a></dt>
+<dd><p>from <a class="reference external" href="http://paulbourke.net/geometry/circlesphere/csource2.c">http://paulbourke.net/geometry/circlesphere/csource2.c</a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.decompose_mesh">
+<span class="sig-name descname"><span class="pre">decompose_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">poly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.decompose_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.decompose_mesh" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.get_centroid">
+<span class="sig-name descname"><span class="pre">get_centroid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geomname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.get_centroid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.get_centroid" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.get_collada_material">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_collada_material</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.get_collada_material"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.get_collada_material" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.get_mesh">
+<span class="sig-name descname"><span class="pre">get_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.get_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.get_mesh" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.get_mesh_filepath_and_extension">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_mesh_filepath_and_extension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.get_mesh_filepath_and_extension"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.get_mesh_filepath_and_extension" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.get_midpoint">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_midpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.get_midpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.get_midpoint" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.get_normal">
+<span class="sig-name descname"><span class="pre">get_normal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geomname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.get_normal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.get_normal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.get_nsphere">
+<span class="sig-name descname"><span class="pre">get_nsphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geomname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.get_nsphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.get_nsphere" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.get_object">
+<span class="sig-name descname"><span class="pre">get_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geomname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.get_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.get_object" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.get_smallest_radius">
+<span class="sig-name descname"><span class="pre">get_smallest_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geomname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.get_smallest_radius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.get_smallest_radius" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.norm">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.norm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.norm" title="Permalink to this definition"></a></dt>
+<dd><p>return the norm of the vector [a,b,c]</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)</span> <span class="c1">#a,b,c being double</span>
+</pre></div>
+</div>
+<p>&#64;type a: float
+&#64;param a:  first value of the vector
+&#64;type b: float
+&#64;param b:  second value of the vector
+&#64;type c: float
+&#64;param c:  third value of the vector</p>
+<p>&#64;rtype: float
+&#64;return: the norm of the vector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.normal_array">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normal_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.normal_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.normal_array" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.normalize">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.normalize" title="Permalink to this definition"></a></dt>
+<dd><p>return the normalized vector A [x,y,z]</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="mf">5.0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a_normalized</span> <span class="o">=</span> <span class="n">helper</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>&#64;type A: vector
+&#64;param A:  the 3d vector
+&#64;rtype: vector
+&#64;return: the normalized 3d vecor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.normalize_v3">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize_v3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.normalize_v3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.normalize_v3" title="Permalink to this definition"></a></dt>
+<dd><p>Normalize a numpy array of 3 component vectors shape=(n,3)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.MeshStore.MeshStore.read_mesh_file">
+<span class="sig-name descname"><span class="pre">read_mesh_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/MeshStore.html#MeshStore.read_mesh_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.MeshStore.MeshStore.read_mesh_file" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="cellpack-autopack-outputsimularium-module">
-<h2>cellpack.autopack.OutputSimularium module<a class="headerlink" href="#cellpack-autopack-outputsimularium-module" title="Permalink to this headline"></a></h2>
+<h2>cellpack.autopack.OutputSimularium module<a class="headerlink" href="#cellpack-autopack-outputsimularium-module" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-cellpack.autopack.Recipe">
-<span id="cellpack-autopack-recipe-module"></span><h2>cellpack.autopack.Recipe module<a class="headerlink" href="#module-cellpack.autopack.Recipe" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-recipe-module"></span><h2>cellpack.autopack.Recipe module<a class="headerlink" href="#module-cellpack.autopack.Recipe" title="Permalink to this heading"></a></h2>
 <p># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin,
 # and Michel Sanner
 #   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
@@ -3078,7 +3257,7 @@ see <a class="reference external" href="http://molbiol.edu.ru/eng/scripts/01_04.
 
 </section>
 <section id="module-cellpack.autopack.Serializable">
-<span id="cellpack-autopack-serializable-module"></span><h2>cellpack.autopack.Serializable module<a class="headerlink" href="#module-cellpack.autopack.Serializable" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-serializable-module"></span><h2>cellpack.autopack.Serializable module<a class="headerlink" href="#module-cellpack.autopack.Serializable" title="Permalink to this heading"></a></h2>
 <p>Created on Tue Jan 19 15:55:27 2016</p>
 <p>&#64;author: ludo</p>
 <dl class="py class">
@@ -3162,7 +3341,7 @@ see <a class="reference external" href="http://molbiol.edu.ru/eng/scripts/01_04.
 
 </section>
 <section id="module-cellpack.autopack.binvox_rw">
-<span id="cellpack-autopack-binvox-rw-module"></span><h2>cellpack.autopack.binvox_rw module<a class="headerlink" href="#module-cellpack.autopack.binvox_rw" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-binvox-rw-module"></span><h2>cellpack.autopack.binvox_rw module<a class="headerlink" href="#module-cellpack.autopack.binvox_rw" title="Permalink to this heading"></a></h2>
 <p>Binvox to Numpy and back.</p>
 <p>binvox argument
 Usage: binvox [-d &lt;voxel dimension&gt;] [-t &lt;voxel file type&gt;] [-c] [-v] &lt;model filespec&gt;</p>
@@ -3399,7 +3578,7 @@ converted to dense format.</p>
 
 </section>
 <section id="module-cellpack.autopack.iotools_simple">
-<span id="cellpack-autopack-iotools-simple-module"></span><h2>cellpack.autopack.iotools_simple module<a class="headerlink" href="#module-cellpack.autopack.iotools_simple" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-iotools-simple-module"></span><h2>cellpack.autopack.iotools_simple module<a class="headerlink" href="#module-cellpack.autopack.iotools_simple" title="Permalink to this heading"></a></h2>
 <p>Created on Sun Jan 27 09:04:10 2013</p>
 <p>&#64;author: Ludovic Autin</p>
 <dl class="py class">
@@ -3415,7 +3594,7 @@ converted to dense format.</p>
 
 </section>
 <section id="module-cellpack.autopack.ldSequence">
-<span id="cellpack-autopack-ldsequence-module"></span><h2>cellpack.autopack.ldSequence module<a class="headerlink" href="#module-cellpack.autopack.ldSequence" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-ldsequence-module"></span><h2>cellpack.autopack.ldSequence module<a class="headerlink" href="#module-cellpack.autopack.ldSequence" title="Permalink to this heading"></a></h2>
 <p># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
 #   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
 #   with assistance from Mostafa Al-Alusi in 2009 and periodic input
@@ -3480,7 +3659,7 @@ This one gives the same results as the other.</p>
 
 </section>
 <section id="module-cellpack.autopack.octree">
-<span id="cellpack-autopack-octree-module"></span><h2>cellpack.autopack.octree module<a class="headerlink" href="#module-cellpack.autopack.octree" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-octree-module"></span><h2>cellpack.autopack.octree module<a class="headerlink" href="#module-cellpack.autopack.octree" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.octree.OctNode">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.octree.</span></span><span class="sig-name descname"><span class="pre">OctNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/octree.html#OctNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.octree.OctNode" title="Permalink to this definition"></a></dt>
@@ -3515,7 +3694,7 @@ This one gives the same results as the other.</p>
 
 </section>
 <section id="module-cellpack.autopack.plotly_result">
-<span id="cellpack-autopack-plotly-result-module"></span><h2>cellpack.autopack.plotly_result module<a class="headerlink" href="#module-cellpack.autopack.plotly_result" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-plotly-result-module"></span><h2>cellpack.autopack.plotly_result module<a class="headerlink" href="#module-cellpack.autopack.plotly_result" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.plotly_result.PlotlyAnalysis">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.plotly_result.</span></span><span class="sig-name descname"><span class="pre">PlotlyAnalysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/plotly_result.html#PlotlyAnalysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.plotly_result.PlotlyAnalysis" title="Permalink to this definition"></a></dt>
@@ -3532,7 +3711,7 @@ This one gives the same results as the other.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.plotly_result.PlotlyAnalysis.add_square">
-<span class="sig-name descname"><span class="pre">add_square</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotMat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/plotly_result.html#PlotlyAnalysis.add_square"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.plotly_result.PlotlyAnalysis.add_square" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_square</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">side_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotMat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/plotly_result.html#PlotlyAnalysis.add_square"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.plotly_result.PlotlyAnalysis.add_square" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -3569,7 +3748,7 @@ This one gives the same results as the other.</p>
 
 </section>
 <section id="module-cellpack.autopack.randomRot">
-<span id="cellpack-autopack-randomrot-module"></span><h2>cellpack.autopack.randomRot module<a class="headerlink" href="#module-cellpack.autopack.randomRot" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-randomrot-module"></span><h2>cellpack.autopack.randomRot module<a class="headerlink" href="#module-cellpack.autopack.randomRot" title="Permalink to this heading"></a></h2>
 <p>Created 2012</p>
 <p># autoPACK Authors: Graham T. Johnson, Ludovic Autin, Mostafa Al-Alusi, Michel Sanner
 #   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
@@ -3719,9 +3898,9 @@ between 0 and 1 for each returned quaternion.</p>
 
 </section>
 <section id="module-cellpack.autopack.ray">
-<span id="cellpack-autopack-ray-module"></span><h2>cellpack.autopack.ray module<a class="headerlink" href="#module-cellpack.autopack.ray" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-ray-module"></span><h2>cellpack.autopack.ray module<a class="headerlink" href="#module-cellpack.autopack.ray" title="Permalink to this heading"></a></h2>
 <section id="created-on-saturday-september-1-1-50-00-2012">
-<h3>Created on Saturday September 1 1:50:00 2012<a class="headerlink" href="#created-on-saturday-september-1-1-50-00-2012" title="Permalink to this headline"></a></h3>
+<h3>Created on Saturday September 1 1:50:00 2012<a class="headerlink" href="#created-on-saturday-september-1-1-50-00-2012" title="Permalink to this heading"></a></h3>
 <p>#
 # autoPACK Authors: Graham T. Johnson, Ludovic Autin, Mostafa Al-Alusi, Michel Sanner
 #  Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
@@ -3823,7 +4002,7 @@ for the cube of points surrounding our center point.</p>
 </section>
 </section>
 <section id="module-cellpack.autopack.trajectory">
-<span id="cellpack-autopack-trajectory-module"></span><h2>cellpack.autopack.trajectory module<a class="headerlink" href="#module-cellpack.autopack.trajectory" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-trajectory-module"></span><h2>cellpack.autopack.trajectory module<a class="headerlink" href="#module-cellpack.autopack.trajectory" title="Permalink to this heading"></a></h2>
 <p>Created on Wed Mar 19 11:50:35 2014</p>
 <p>&#64;author: ludo</p>
 <dl class="py class">
@@ -3885,7 +4064,7 @@ for the cube of points surrounding our center point.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.trajectory.dcdTrajectory">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.trajectory.</span></span><span class="sig-name descname"><span class="pre">dcdTrajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbIngredients</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#dcdTrajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.dcdTrajectory" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory" title="cellpack.autopack.trajectory.Trajectory"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.autopack.trajectory.Trajectory</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory" title="cellpack.autopack.trajectory.Trajectory"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trajectory</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.trajectory.dcdTrajectory.dcd">
 <span class="sig-name descname"><span class="pre">dcd</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#cellpack.autopack.trajectory.dcdTrajectory.dcd" title="Permalink to this definition"></a></dt>
@@ -3911,7 +4090,7 @@ for the cube of points surrounding our center point.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.trajectory.molbTrajectory">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.trajectory.</span></span><span class="sig-name descname"><span class="pre">molbTrajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbIngredients</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#molbTrajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.molbTrajectory" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory" title="cellpack.autopack.trajectory.Trajectory"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.autopack.trajectory.Trajectory</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory" title="cellpack.autopack.trajectory.Trajectory"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trajectory</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.trajectory.molbTrajectory.applyState_name">
 <span class="sig-name descname"><span class="pre">applyState_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#molbTrajectory.applyState_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.molbTrajectory.applyState_name" title="Permalink to this definition"></a></dt>
@@ -3947,7 +4126,7 @@ for the cube of points surrounding our center point.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.trajectory.xyzTrajectory">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.trajectory.</span></span><span class="sig-name descname"><span class="pre">xyzTrajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbIngredients</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#xyzTrajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.xyzTrajectory" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory" title="cellpack.autopack.trajectory.Trajectory"><code class="xref py py-class docutils literal notranslate"><span class="pre">cellpack.autopack.trajectory.Trajectory</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.trajectory.Trajectory" title="cellpack.autopack.trajectory.Trajectory"><code class="xref py py-class docutils literal notranslate"><span class="pre">Trajectory</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.trajectory.xyzTrajectory.getPosAt">
 <span class="sig-name descname"><span class="pre">getPosAt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#xyzTrajectory.getPosAt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.xyzTrajectory.getPosAt" title="Permalink to this definition"></a></dt>
@@ -3972,7 +4151,7 @@ for the cube of points surrounding our center point.</p>
 
 </section>
 <section id="module-cellpack.autopack.transformation">
-<span id="cellpack-autopack-transformation-module"></span><h2>cellpack.autopack.transformation module<a class="headerlink" href="#module-cellpack.autopack.transformation" title="Permalink to this headline"></a></h2>
+<span id="cellpack-autopack-transformation-module"></span><h2>cellpack.autopack.transformation module<a class="headerlink" href="#module-cellpack.autopack.transformation" title="Permalink to this heading"></a></h2>
 <p>Homogeneous Transformation Matrices and Quaternions.</p>
 <p>A library for calculating 4x4 matrices for translating, rotating, reflecting,
 scaling, shearing, projecting, orthogonalizing, and superimposing arrays of
@@ -3991,7 +4170,7 @@ functions to decompose transformation matrices.</p>
 </dd>
 </dl>
 <section id="requirements">
-<h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline"></a></h3>
+<h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li><p><a class="reference external" href="http://www.python.org">CPython 2.7 or 3.3</a></p></li>
 <li><p><a class="reference external" href="http://www.numpy.org">Numpy 1.7</a></p></li>
@@ -4122,9 +4301,9 @@ Cambridge University Press; 2nd Ed. 2004. Chapter 4, Algorithm 4.7, p 130.</p></
 </section>
 </section>
 <section id="module-cellpack.autopack">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.autopack" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.autopack" title="Permalink to this heading"></a></h2>
 <section id="created-on-fri-jul-20-23-53-00-2012">
-<h3>Created on Fri Jul 20 23:53:00 2012<a class="headerlink" href="#created-on-fri-jul-20-23-53-00-2012" title="Permalink to this headline"></a></h3>
+<h3>Created on Fri Jul 20 23:53:00 2012<a class="headerlink" href="#created-on-fri-jul-20-23-53-00-2012" title="Permalink to this heading"></a></h3>
 <p>#
 # autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
 #   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010

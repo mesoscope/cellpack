@@ -13,6 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -99,7 +100,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#id81">name</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#overwrite-nbmol-value">overwrite_nbMol_value</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#molarity">molarity</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbmol">nbMol</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
@@ -128,7 +128,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-mesh-rb">use_mesh_rb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingmode">packingMode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradient">gradient</a></li>
@@ -250,7 +249,8 @@
 <span class="kn">from</span> <span class="nn">panda3d.bullet</span> <span class="kn">import</span> <span class="n">BulletRigidBodyNode</span>
 
 <span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
-<span class="kn">from</span> <span class="nn">.Compartment</span> <span class="kn">import</span> <span class="n">CompartmentList</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.MeshStore</span> <span class="kn">import</span> <span class="n">MeshStore</span>
+<span class="kn">from</span> <span class="nn">.Compartment</span> <span class="kn">import</span> <span class="n">CompartmentList</span><span class="p">,</span> <span class="n">Compartment</span>
 <span class="kn">from</span> <span class="nn">.Recipe</span> <span class="kn">import</span> <span class="n">Recipe</span>
 <span class="kn">from</span> <span class="nn">.ingredient</span> <span class="kn">import</span> <span class="n">GrowIngredient</span><span class="p">,</span> <span class="n">ActinIngredient</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack</span> <span class="kn">import</span> <span class="n">IOutils</span>
@@ -262,6 +262,7 @@
     <span class="n">MultiCylindersIngr</span><span class="p">,</span>
     <span class="n">SingleSphereIngr</span><span class="p">,</span>
     <span class="n">SingleCubeIngr</span><span class="p">,</span>
+    <span class="n">SingleCylinderIngr</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># backward compatibility with kevin method</span>
@@ -403,9 +404,9 @@
 <span class="sd">    NOTE : this class could be completely replaced if openvdb is wrapped to python.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]),</span> <span class="n">space</span><span class="o">=</span><span class="mf">10.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]),</span> <span class="n">space</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">lookup</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="c1"># a grid is attached to an environement</span>
-        <span class="n">BaseGrid</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="n">boundingBox</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">BaseGrid</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="n">boundingBox</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lookup</span><span class="o">=</span><span class="n">lookup</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span> <span class="o">=</span> <span class="n">space</span> <span class="o">*</span> <span class="mf">1.1547</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingGrid</span> <span class="o">=</span> <span class="mi">1</span>
@@ -628,6 +629,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">freePointsAfterFill</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePointsAfterFill</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">distanceAfterFill</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh_store</span> <span class="o">=</span> <span class="n">MeshStore</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">OPTIONS</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;smallestProteinSize&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;smallestProteinSize&quot;</span><span class="p">,</span>
@@ -847,34 +849,6 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="p">,</span> <span class="s2">&quot;vi&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">afviewer</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">progressBar</span><span class="p">(</span><span class="n">progress</span><span class="o">=</span><span class="n">progress</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Environment.makeIngredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.makeIngredient">[docs]</a>    <span class="k">def</span> <span class="nf">makeIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Helper function to make an ingredient, pass all arguments as keywords.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ingr</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="k">if</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;SingleSphere&quot;</span><span class="p">:</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;positions&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;radius&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">del</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;positions&quot;</span><span class="p">]</span>
-            <span class="k">del</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">]</span>
-            <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleSphereIngr</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;MultiSphere&quot;</span><span class="p">:</span>
-            <span class="n">ingr</span> <span class="o">=</span> <span class="n">MultiSphereIngr</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;MultiCylinder&quot;</span><span class="p">:</span>
-            <span class="n">ingr</span> <span class="o">=</span> <span class="n">MultiCylindersIngr</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;SingleCube&quot;</span><span class="p">:</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;positions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]]</span>
-            <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;positions2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleCubeIngr</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
-            <span class="n">ingr</span> <span class="o">=</span> <span class="n">GrowIngredient</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Actine&quot;</span><span class="p">:</span>
-            <span class="n">ingr</span> <span class="o">=</span> <span class="n">ActinIngredient</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;gradient&quot;</span> <span class="ow">in</span> <span class="n">kw</span> <span class="ow">and</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
-            <span class="n">ingr</span><span class="o">.</span><span class="n">gradient</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">ingr</span></div>
-
 <div class="viewcode-block" id="Environment.set_partners_ingredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.set_partners_ingredient">[docs]</a>    <span class="k">def</span> <span class="nf">set_partners_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">partners_name</span><span class="p">:</span>
             <span class="n">weightinitial</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">partners_weight</span>
@@ -990,7 +964,7 @@
                 <span class="n">unUsedPts</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="n">vDistanceString</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
                 <span class="n">insidepointindce</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span>
-                    <span class="n">numpy</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span><span class="p">,</span> <span class="o">-</span><span class="n">o</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+                    <span class="n">numpy</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="o">-</span><span class="n">o</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
                 <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">insidepointindce</span><span class="p">:</span>  <span class="c1"># xrange(innerPointNum):</span>
                     <span class="c1">#                        pt = o.insidePoints[i] #fpts[i]</span>
@@ -1379,22 +1353,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dynamicOptions</span><span class="p">[</span><span class="s2">&quot;surface&quot;</span><span class="p">][</span><span class="s2">&quot;rotMassClamp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="Environment.writeArraysToFile"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.writeArraysToFile">[docs]</a>    <span class="k">def</span> <span class="nf">writeArraysToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;write self.gridPtId and self.distToClosestSurf to file. (pickle)&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;write self.compartment_ids and self.distToClosestSurf to file. (pickle)&quot;&quot;&quot;</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Environment.readArraysFromFile"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.readArraysFromFile">[docs]</a>    <span class="k">def</span> <span class="nf">readArraysFromFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;write self.gridPtId and self.distToClosestSurf to file. (pickle)&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;write self.compartment_ids and self.distToClosestSurf to file. (pickle)&quot;&quot;&quot;</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span> <span class="o">=</span> <span class="n">pos</span>
 
         <span class="nb">id</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="c1"># assert len(id)==len(self.gridPtId)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span> <span class="o">=</span> <span class="nb">id</span>
 
         <span class="n">dist</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="c1"># assert len(dist)==len(self.distToClosestSurf)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf_store</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span><span class="p">[:]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span> <span class="o">=</span> <span class="n">dist</span>  <span class="c1"># grid+organelle+surf</span>
@@ -1409,7 +1381,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;gridfilename path problem&quot;</span><span class="p">,</span> <span class="n">gridFileOut</span><span class="p">)</span>
             <span class="k">return</span>
         <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">gridFileOut</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>  <span class="c1"># &#39;w&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">writeArraysToFile</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>  <span class="c1"># save self.gridPtId and self.distToClosestSurf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">writeArraysToFile</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="n">compartment</span><span class="o">.</span><span class="n">saveGridToFile</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -1448,7 +1420,7 @@
         <span class="n">aInteriorGrids</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">aSurfaceGrids</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">gridFileName</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">readArraysFromFile</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>  <span class="c1"># read gridPtId and distToClosestSurf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">readArraysFromFile</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> 
         <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="n">compartment</span><span class="o">.</span><span class="n">readGridFromFile</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
             <span class="n">aInteriorGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">compartment</span><span class="o">.</span><span class="n">insidePoints</span><span class="p">)</span>
@@ -1558,6 +1530,43 @@
                 <span class="n">filename</span><span class="o">=</span><span class="n">ref_obj</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="o">=</span><span class="n">faces</span><span class="p">,</span> <span class="n">vnormals</span><span class="o">=</span><span class="n">vnormals</span>
             <span class="p">)</span></div>
 
+<div class="viewcode-block" id="Environment.create_ingredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_ingredient">[docs]</a>    <span class="k">def</span> <span class="nf">create_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span><span class="p">):</span>
+        <span class="n">ingredient_type</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;SingleSphere&quot;</span><span class="p">:</span>
+            <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleSphereIngr</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;MultiSphere&quot;</span><span class="p">:</span>
+            <span class="n">ingr</span> <span class="o">=</span> <span class="n">MultiSphereIngr</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;MultiCylinder&quot;</span><span class="p">:</span>
+            <span class="n">ingr</span> <span class="o">=</span> <span class="n">MultiCylindersIngr</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;SingleCube&quot;</span><span class="p">:</span>
+            <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleCubeIngr</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;SingleCylinder&quot;</span><span class="p">:</span>
+            <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleCylinderIngr</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
+            <span class="n">ingr</span> <span class="o">=</span> <span class="n">GrowIngredient</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;Actine&quot;</span><span class="p">:</span>
+            <span class="n">ingr</span> <span class="o">=</span> <span class="n">ActinIngredient</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;gradient&quot;</span> <span class="ow">in</span> <span class="n">arguments</span> <span class="ow">and</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+            <span class="n">ingr</span><span class="o">.</span><span class="n">gradient</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;results&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="n">ingr</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span>
+        <span class="n">ingr</span><span class="o">.</span><span class="n">initialize_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_store</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ingr</span></div>
+
+<div class="viewcode-block" id="Environment.create_compartment"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_compartment">[docs]</a>    <span class="k">def</span> <span class="nf">create_compartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">gname</span><span class="p">,</span> <span class="n">object_name</span><span class="p">,</span> <span class="n">object_filename</span><span class="p">,</span> <span class="n">meshType</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">compartment</span> <span class="o">=</span> <span class="n">Compartment</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+            <span class="n">gname</span><span class="o">=</span><span class="n">gname</span><span class="p">,</span>
+            <span class="n">object_name</span><span class="o">=</span><span class="n">object_name</span><span class="p">,</span>
+            <span class="n">object_filename</span><span class="o">=</span><span class="n">object_filename</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">compartment</span><span class="o">.</span><span class="n">initialize_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_store</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">compartment</span></div>
+
 <div class="viewcode-block" id="Environment.addCompartment"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.addCompartment">[docs]</a>    <span class="k">def</span> <span class="nf">addCompartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add the given compartment to the environment.</span>
@@ -1576,7 +1585,7 @@
         <span class="c1"># check if point inside  of the compartments</span>
         <span class="c1"># closest grid point is</span>
         <span class="n">d</span><span class="p">,</span> <span class="n">pid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getClosestGridPoint</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
-        <span class="n">cid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span><span class="p">[</span><span class="n">pid</span><span class="p">]</span>
+        <span class="n">cid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">[</span><span class="n">pid</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">cid</span></div>
 
 <div class="viewcode-block" id="Environment.longestIngrdientName"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.longestIngrdientName">[docs]</a>    <span class="k">def</span> <span class="nf">longestIngrdientName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1709,18 +1718,17 @@
         <span class="c1"># thread ?</span>
         <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s2">&quot;in Environment, compartment.isOrthogonalBoundingBox =&quot;</span><span class="p">,</span>
-                <span class="n">compartment</span><span class="o">.</span><span class="n">isOrthogonalBoundingBox</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;in Environment, compartment.isOrthogonalBoundingBox=</span><span class="si">{</span><span class="n">compartment</span><span class="o">.</span><span class="n">isOrthogonalBoundingBox</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
-            <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">BuildGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># return inside and surface point</span>
-            <span class="n">aInteriorGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-            <span class="n">aSurfaceGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+            <span class="n">points_inside_compartments</span><span class="p">,</span> <span class="n">points_on_compartment_surfaces</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">BuildGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_store</span><span class="p">)</span>  <span class="c1"># return inside and surface point</span>
+            <span class="n">aInteriorGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points_inside_compartments</span><span class="p">)</span>
+            <span class="n">aSurfaceGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points_on_compartment_surfaces</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">aInteriorGrids</span> <span class="o">=</span> <span class="n">aInteriorGrids</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">aSurfaceGrids</span> <span class="o">=</span> <span class="n">aSurfaceGrids</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;I&#39;m out of the loop and have build my grid with inside points&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;build Grids </span><span class="si">%r</span><span class="s2"> </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">innerGridMethod</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">aSurfaceGrids</span><span class="p">)</span>
+            <span class="sa">f</span><span class="s2">&quot;build Grids </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">innerGridMethod</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">aSurfaceGrids</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Environment.buildGrid"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.buildGrid">[docs]</a>    <span class="k">def</span> <span class="nf">buildGrid</span><span class="p">(</span>
@@ -1780,9 +1788,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
             <span class="n">nbPoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">freePoints</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;$$$$$$$$  reset the grid&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;nbPoints = </span><span class="si">%d</span><span class="s2">, grid.nbGridPoints = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">nbPoints</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">nbGridPoints</span>
-        <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">gridFileIn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># and not rebuild:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;file in for building grid but it doesnt work well&quot;</span><span class="p">)</span>
@@ -1853,23 +1858,23 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">aInteriorGrids</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">aSurfaceGrids</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">points_inside_compartments</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">points_on_surfaces</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span>
                 <span class="s2">&quot;in Environment, compartment.isOrthogonalBoundingBox =&quot;</span><span class="p">,</span>
                 <span class="n">compartment</span><span class="o">.</span><span class="n">isOrthogonalBoundingBox</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">points_on_surfaces</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">if</span> <span class="n">compartment</span><span class="o">.</span><span class="n">isOrthogonalBoundingBox</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">EnviroOnly</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="nb">print</span><span class="p">(</span>
                     <span class="s2">&quot;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; Not building a grid because I&#39;m an Orthogonal Bounding Box&quot;</span>
                 <span class="p">)</span>
-                <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInCube</span><span class="p">(</span>
+                <span class="n">points_inside_compartments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInCube</span><span class="p">(</span>
                     <span class="n">compartment</span><span class="o">.</span><span class="n">bb</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
                 <span class="p">)</span>  <span class="c1"># This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">compartment</span><span class="o">.</span><span class="n">number</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">[</span><span class="n">points_inside_compartments</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">compartment</span><span class="o">.</span><span class="n">number</span>
                 <span class="n">compartment</span><span class="o">.</span><span class="n">surfacePointsCoords</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">bb0x</span><span class="p">,</span> <span class="n">bb0y</span><span class="p">,</span> <span class="n">bb0z</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">bb1x</span><span class="p">,</span> <span class="n">bb1y</span><span class="p">,</span> <span class="n">bb1z</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -1880,21 +1885,21 @@
                     <span class="nb">abs</span><span class="p">(</span><span class="n">AreaXplane</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">AreaYplane</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">AreaZplane</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
                 <span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;vSurfaceArea = &quot;</span><span class="p">,</span> <span class="n">vSurfaceArea</span><span class="p">)</span>
-                <span class="n">compartment</span><span class="o">.</span><span class="n">insidePoints</span> <span class="o">=</span> <span class="n">a</span>
-                <span class="n">compartment</span><span class="o">.</span><span class="n">surfacePoints</span> <span class="o">=</span> <span class="n">b</span>
+                <span class="n">compartment</span><span class="o">.</span><span class="n">insidePoints</span> <span class="o">=</span> <span class="n">points_inside_compartments</span>
+                <span class="n">compartment</span><span class="o">.</span><span class="n">surfacePoints</span> <span class="o">=</span> <span class="n">points_on_surfaces</span>
                 <span class="n">compartment</span><span class="o">.</span><span class="n">surfacePointsCoords</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="n">compartment</span><span class="o">.</span><span class="n">surfacePointsNormals</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="nb">print</span><span class="p">(</span>
                     <span class="s2">&quot; </span><span class="si">%d</span><span class="s2"> inside pts, </span><span class="si">%d</span><span class="s2"> tot grid pts, </span><span class="si">%d</span><span class="s2"> master grid&quot;</span>
-                    <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">))</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points_inside_compartments</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">points_inside_compartments</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">))</span>
                 <span class="p">)</span>
-                <span class="n">compartment</span><span class="o">.</span><span class="n">computeVolumeAndSetNbMol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">areas</span><span class="o">=</span><span class="n">vSurfaceArea</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The size of the grid I build = &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+                <span class="n">compartment</span><span class="o">.</span><span class="n">computeVolumeAndSetNbMol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points_on_surfaces</span><span class="p">,</span> <span class="n">points_inside_compartments</span><span class="p">,</span> <span class="n">areas</span><span class="o">=</span><span class="n">vSurfaceArea</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The size of the grid I build = &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">points_inside_compartments</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">BuildGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="n">points_inside_compartments</span><span class="p">,</span> <span class="n">points_on_surfaces</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">BuildGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-            <span class="n">aInteriorGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-            <span class="n">aSurfaceGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+            <span class="n">aInteriorGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points_inside_compartments</span><span class="p">)</span>
+            <span class="n">aSurfaceGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points_on_surfaces</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">aInteriorGrids</span> <span class="o">=</span> <span class="n">aInteriorGrids</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m out of the loop and have build my grid with inside points&quot;</span><span class="p">)</span>
@@ -1993,7 +1998,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">getPointsInCube</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInCube</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">boundingBox</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gridPtId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compartment_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">freePoints</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">diag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">diag</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridSpacing</span>
@@ -2006,7 +2011,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">aInteriorGrids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">aInteriorGrids</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">aSurfaceGrids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">aSurfaceGrids</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surfPtsBht</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">surfPtsBht</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gridPtId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compartment_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Environment.getSortedActiveIngredients"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getSortedActiveIngredients">[docs]</a>    <span class="k">def</span> <span class="nf">getSortedActiveIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allIngredients</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -2187,38 +2192,37 @@
 <div class="viewcode-block" id="Environment.getActiveIng"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getActiveIng">[docs]</a>    <span class="k">def</span> <span class="nf">getActiveIng</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return all remaining active ingredients&quot;&quot;&quot;</span>
         <span class="n">allIngredients</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exteriorRecipe</span>
-        <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s2">&quot;molecules&quot;</span><span class="p">):</span>
-                <span class="n">r</span><span class="o">.</span><span class="n">molecules</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+        <span class="n">recipe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exteriorRecipe</span>
+        <span class="k">if</span> <span class="n">recipe</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="s2">&quot;molecules&quot;</span><span class="p">):</span>
+                <span class="n">recipe</span><span class="o">.</span><span class="n">molecules</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">recipe</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">recipe</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                 <span class="n">ingr</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># counter of placed molecules</span>
-                <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># I DONT GET IT !</span>
+                <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">left_to_place</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># I DONT GET IT !</span>
                     <span class="n">ingr</span><span class="o">.</span><span class="n">completion</span> <span class="o">=</span> <span class="mf">0.0</span>
                     <span class="n">allIngredients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">ingr</span><span class="o">.</span><span class="n">completion</span> <span class="o">=</span> <span class="mf">1.0</span>
 
-        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s2">&quot;molecules&quot;</span><span class="p">):</span>
-                <span class="n">o</span><span class="o">.</span><span class="n">molecules</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">surfaceRecipe</span>
-            <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">compartment</span><span class="p">,</span> <span class="s2">&quot;molecules&quot;</span><span class="p">):</span>
+                <span class="n">compartment</span><span class="o">.</span><span class="n">molecules</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">recipe</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">surfaceRecipe</span>
+            <span class="k">if</span> <span class="n">recipe</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">recipe</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                     <span class="n">ingr</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># counter of placed molecules</span>
-                    <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">left_to_place</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                         <span class="n">ingr</span><span class="o">.</span><span class="n">completion</span> <span class="o">=</span> <span class="mf">0.0</span>
                         <span class="n">allIngredients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">ingr</span><span class="o">.</span><span class="n">completion</span> <span class="o">=</span> <span class="mf">1.0</span>
 
-            <span class="n">r</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">innerRecipe</span>
-            <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+            <span class="n">recipe</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">innerRecipe</span>
+            <span class="k">if</span> <span class="n">recipe</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">recipe</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                     <span class="n">ingr</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># counter of placed molecules</span>
-                    <span class="c1">#                    print &quot;nbMol&quot;,ingr.nbMol</span>
-                    <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">left_to_place</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                         <span class="n">ingr</span><span class="o">.</span><span class="n">completion</span> <span class="o">=</span> <span class="mf">0.0</span>
                         <span class="n">allIngredients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
@@ -2425,9 +2429,9 @@
         <span class="n">totalNbIngr</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">allIngredients</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
-                <span class="n">totalNbIngr</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">*</span> <span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="n">ingr</span><span class="o">.</span><span class="n">uLength</span><span class="p">))</span>
+                <span class="n">totalNbIngr</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">left_to_place</span> <span class="o">*</span> <span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="n">ingr</span><span class="o">.</span><span class="n">uLength</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">totalNbIngr</span> <span class="o">+=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span>
+                <span class="n">totalNbIngr</span> <span class="o">+=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">left_to_place</span>
             <span class="k">if</span> <span class="n">update_partner</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">set_partners_ingredient</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">totalNbIngr</span></div>
@@ -2482,8 +2486,8 @@
             <span class="n">bb_insidepoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInCube</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fbox</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mf">1.0</span><span class="p">)[:]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">freePointMask</span><span class="p">[</span><span class="n">bb_insidepoint</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">bb_outside</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">freePointMask</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span><span class="p">[</span><span class="n">bb_outside</span><span class="p">]</span> <span class="o">=</span> <span class="mi">99999</span>
-        <span class="n">compartment_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPtId</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">[</span><span class="n">bb_outside</span><span class="p">]</span> <span class="o">=</span> <span class="mi">99999</span>
+        <span class="n">compartment_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span>
         <span class="c1"># why a copy? --&gt; can we split ?</span>
         <span class="n">distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span><span class="p">[:]</span>
         <span class="n">spacing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallestProteinSize</span>
@@ -2538,18 +2542,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">totalNbIngr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTotalNbObject</span><span class="p">(</span><span class="n">allIngredients</span><span class="p">,</span> <span class="n">update_partner</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thresholdPriorities</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">allIngredients</span><span class="p">:</span>
-                <span class="n">totalNumMols</span> <span class="o">+=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span>
+                <span class="n">totalNumMols</span> <span class="o">+=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">left_to_place</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;totalNumMols pack_grid if = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">totalNumMols</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">threshProb</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">thresholdPriorities</span><span class="p">:</span>
                 <span class="n">nameMe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activeIngr</span><span class="p">[</span><span class="n">nls</span><span class="p">]</span>
-                <span class="n">totalNumMols</span> <span class="o">+=</span> <span class="n">nameMe</span><span class="o">.</span><span class="n">nbMol</span>
+                <span class="n">totalNumMols</span> <span class="o">+=</span> <span class="n">nameMe</span><span class="o">.</span><span class="n">left_to_place</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                     <span class="s2">&quot;threshprop pack_grid else is </span><span class="si">%f</span><span class="s2"> for ingredient: </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
                     <span class="n">threshProb</span><span class="p">,</span>
                     <span class="n">nameMe</span><span class="p">,</span>
                     <span class="n">nameMe</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                    <span class="n">nameMe</span><span class="o">.</span><span class="n">nbMol</span><span class="p">,</span>
+                    <span class="n">nameMe</span><span class="o">.</span><span class="n">left_to_place</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;totalNumMols pack_grid else = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">totalNumMols</span><span class="p">)</span>
                 <span class="n">nls</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -2622,29 +2626,27 @@
             <span class="n">max_radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dpad</span><span class="p">(</span><span class="n">current_ingr_compartment</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s2">&quot;picked Ingr radius compNum dpad </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
-                <span class="n">ingr</span><span class="o">.</span><span class="n">minRadius</span><span class="p">,</span>
-                <span class="n">current_ingr_compartment</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;picked Ingr radius </span><span class="si">{</span><span class="n">ingr</span><span class="o">.</span><span class="n">minRadius</span><span class="si">}</span><span class="s2">, compNum </span><span class="si">{</span><span class="n">current_ingr_compartment</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
 
             <span class="c1"># find the points that can be used for this ingredient</span>
             <span class="c1">##</span>
 
-            <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPointToDrop</span><span class="p">(</span>
-                <span class="n">ingr</span><span class="p">,</span>
-                <span class="n">freePoints</span><span class="p">,</span>
-                <span class="n">nbFreePoints</span><span class="p">,</span>
-                <span class="n">distances</span><span class="p">,</span>
-                <span class="n">spacing</span><span class="p">,</span>
-                <span class="n">compartment_ids</span><span class="p">,</span>
-                <span class="n">vRangeStart</span><span class="p">,</span>
-                <span class="n">vThreshStart</span><span class="p">,</span>
-            <span class="p">)</span>  <span class="c1"># (Bool, ptInd)</span>
             <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">allSrfpts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">compNum</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">surfacePointsNormals</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-                <span class="p">)</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">allSrfpts</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">allSrfpts</span><span class="p">))]]</span>
+                <span class="n">compartment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">compNum</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">surface_points</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">surfacePoints</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="n">surface_points</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">surface_points</span><span class="p">))]]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPointToDrop</span><span class="p">(</span>
+                    <span class="n">ingr</span><span class="p">,</span>
+                    <span class="n">freePoints</span><span class="p">,</span>
+                    <span class="n">nbFreePoints</span><span class="p">,</span>
+                    <span class="n">distances</span><span class="p">,</span>
+                    <span class="n">spacing</span><span class="p">,</span>
+                    <span class="n">compartment_ids</span><span class="p">,</span>
+                    <span class="n">vRangeStart</span><span class="p">,</span>
+                    <span class="n">vThreshStart</span><span class="p">,</span>
+                <span class="p">)</span>  <span class="c1"># (Bool, ptInd)</span>
             <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                 <span class="n">ptInd</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">ptInd</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">distances</span><span class="p">):</span>
@@ -2801,8 +2803,9 @@
             <span class="n">ingredients</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
             <span class="n">ingredients</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span>
             <span class="n">ingredients</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mat</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="n">o</span><span class="o">.</span><span class="n">molecules</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">compartment</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">compartment</span><span class="o">.</span><span class="n">center</span><span class="p">,</span> <span class="n">compartment</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">compartment</span><span class="o">.</span><span class="n">printFillInfo</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="n">compartment</span><span class="o">.</span><span class="n">molecules</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ingredients</span><span class="p">:</span>
                     <span class="n">ingredients</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">ingr</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]]</span>
                 <span class="n">mat</span> <span class="o">=</span> <span class="n">rot</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -2863,7 +2866,6 @@
             <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">compNum</span><span class="p">,</span> <span class="n">ptInd</span> <span class="o">=</span> <span class="n">elem</span>
             <span class="c1"># needto check the name if it got the comp rule</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngrFromName</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">compNum</span><span class="p">)</span>
-            <span class="c1">#            print (&quot;inr,name,compNum&quot;,ingr.name,name,compNum)</span>
             <span class="k">if</span> <span class="n">ingr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">molecules</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">pos</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rot</span><span class="p">),</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">])</span>
                 <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ingredients</span><span class="p">:</span>
@@ -2886,7 +2888,6 @@
                 <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">orgaresult</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                     <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">compNum</span><span class="p">,</span> <span class="n">ptInd</span> <span class="o">=</span> <span class="n">elem</span>
                     <span class="n">ingr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getIngrFromName</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">compNum</span><span class="p">)</span>
-                    <span class="c1"># print (&quot;inr,name,compNum&quot;,name,compNum,i,o.name,ingr)</span>
                     <span class="k">if</span> <span class="n">ingr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">molecules</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">pos</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rot</span><span class="p">),</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">])</span>
                         <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ingredients</span><span class="p">:</span>
@@ -3083,7 +3084,6 @@
                     <span class="n">iresults</span><span class="p">,</span> <span class="n">ingrname</span><span class="p">,</span> <span class="n">ingrcompNum</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">rad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOneIngrJson</span><span class="p">(</span>
                         <span class="n">ingr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;exteriorRecipe&quot;</span><span class="p">][</span><span class="n">name_ingr</span><span class="p">]</span>
                     <span class="p">)</span>
-                    <span class="c1">#                    print (&quot;rlen &quot;,len(iresults),name_ingr)</span>
                     <span class="n">ingr</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">iresults</span><span class="p">:</span>
                         <span class="n">rot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
@@ -3130,7 +3130,6 @@
                             <span class="n">ingr</span><span class="p">,</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surfaceRecipe&quot;</span><span class="p">][</span><span class="n">name_ingr</span><span class="p">],</span>
                         <span class="p">)</span>
-                        <span class="c1">#                        print (&quot;rlen &quot;,len(iresults),name_ingr)</span>
                         <span class="n">ingr</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
                         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">iresults</span><span class="p">:</span>
                             <span class="n">rot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
@@ -3173,7 +3172,6 @@
                             <span class="n">ingr</span><span class="p">,</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_innerRecipe&quot;</span><span class="p">][</span><span class="n">name_ingr</span><span class="p">],</span>
                         <span class="p">)</span>
-                        <span class="c1">#                        print (&quot;rlen &quot;,len(iresults),name_ingr)</span>
                         <span class="n">ingr</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
                         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">iresults</span><span class="p">:</span>
                             <span class="n">rot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
@@ -3197,7 +3195,6 @@
         <span class="n">adic</span><span class="p">[</span><span class="s2">&quot;compNum&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">compNum</span>
         <span class="n">adic</span><span class="p">[</span><span class="s2">&quot;encapsulatingRadius&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">encapsulatingRadius</span><span class="p">)</span>
         <span class="n">adic</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="c1">#        print (&quot;dropi &quot;,ingr.name,len(ingr.results))</span>
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;tolist&quot;</span><span class="p">):</span>
                 <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
