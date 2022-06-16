@@ -406,7 +406,9 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]),</span> <span class="n">space</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">lookup</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="c1"># a grid is attached to an environement</span>
-        <span class="n">BaseGrid</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="n">boundingBox</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lookup</span><span class="o">=</span><span class="n">lookup</span><span class="p">)</span>
+        <span class="n">BaseGrid</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="n">boundingBox</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lookup</span><span class="o">=</span><span class="n">lookup</span>
+        <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span> <span class="o">=</span> <span class="n">space</span> <span class="o">*</span> <span class="mf">1.1547</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingGrid</span> <span class="o">=</span> <span class="mi">1</span>
@@ -1420,7 +1422,7 @@
         <span class="n">aInteriorGrids</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">aSurfaceGrids</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">gridFileName</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">readArraysFromFile</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">readArraysFromFile</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="n">compartment</span><span class="o">.</span><span class="n">readGridFromFile</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
             <span class="n">aInteriorGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">compartment</span><span class="o">.</span><span class="n">insidePoints</span><span class="p">)</span>
@@ -1546,14 +1548,20 @@
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">GrowIngredient</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;Actine&quot;</span><span class="p">:</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">ActinIngredient</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;gradient&quot;</span> <span class="ow">in</span> <span class="n">arguments</span> <span class="ow">and</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="s2">&quot;gradient&quot;</span> <span class="ow">in</span> <span class="n">arguments</span>
+            <span class="ow">and</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
+            <span class="ow">and</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span>
+        <span class="p">):</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">gradient</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="s2">&quot;results&quot;</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span>
         <span class="n">ingr</span><span class="o">.</span><span class="n">initialize_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_store</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ingr</span></div>
 
-<div class="viewcode-block" id="Environment.create_compartment"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_compartment">[docs]</a>    <span class="k">def</span> <span class="nf">create_compartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">gname</span><span class="p">,</span> <span class="n">object_name</span><span class="p">,</span> <span class="n">object_filename</span><span class="p">,</span> <span class="n">meshType</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Environment.create_compartment"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_compartment">[docs]</a>    <span class="k">def</span> <span class="nf">create_compartment</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">gname</span><span class="p">,</span> <span class="n">object_name</span><span class="p">,</span> <span class="n">object_filename</span><span class="p">,</span> <span class="n">meshType</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
         <span class="n">compartment</span> <span class="o">=</span> <span class="n">Compartment</span><span class="p">(</span>
             <span class="n">name</span><span class="p">,</span>
             <span class="kc">None</span><span class="p">,</span>
@@ -1720,7 +1728,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;in Environment, compartment.isOrthogonalBoundingBox=</span><span class="si">{</span><span class="n">compartment</span><span class="o">.</span><span class="n">isOrthogonalBoundingBox</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
-            <span class="n">points_inside_compartments</span><span class="p">,</span> <span class="n">points_on_compartment_surfaces</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">BuildGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_store</span><span class="p">)</span>  <span class="c1"># return inside and surface point</span>
+            <span class="p">(</span>
+                <span class="n">points_inside_compartments</span><span class="p">,</span>
+                <span class="n">points_on_compartment_surfaces</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">BuildGrid</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh_store</span>
+            <span class="p">)</span>  <span class="c1"># return inside and surface point</span>
             <span class="n">aInteriorGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points_inside_compartments</span><span class="p">)</span>
             <span class="n">aSurfaceGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points_on_compartment_surfaces</span><span class="p">)</span>
 
@@ -1874,7 +1887,9 @@
                 <span class="n">points_inside_compartments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInCube</span><span class="p">(</span>
                     <span class="n">compartment</span><span class="o">.</span><span class="n">bb</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
                 <span class="p">)</span>  <span class="c1"># This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">[</span><span class="n">points_inside_compartments</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">compartment</span><span class="o">.</span><span class="n">number</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">[</span>
+                    <span class="n">points_inside_compartments</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">compartment</span><span class="o">.</span><span class="n">number</span>
                 <span class="n">compartment</span><span class="o">.</span><span class="n">surfacePointsCoords</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">bb0x</span><span class="p">,</span> <span class="n">bb0y</span><span class="p">,</span> <span class="n">bb0z</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">bb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">bb1x</span><span class="p">,</span> <span class="n">bb1y</span><span class="p">,</span> <span class="n">bb1z</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">bb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -1891,12 +1906,25 @@
                 <span class="n">compartment</span><span class="o">.</span><span class="n">surfacePointsNormals</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="nb">print</span><span class="p">(</span>
                     <span class="s2">&quot; </span><span class="si">%d</span><span class="s2"> inside pts, </span><span class="si">%d</span><span class="s2"> tot grid pts, </span><span class="si">%d</span><span class="s2"> master grid&quot;</span>
-                    <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points_inside_compartments</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">points_inside_compartments</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">))</span>
+                    <span class="o">%</span> <span class="p">(</span>
+                        <span class="nb">len</span><span class="p">(</span><span class="n">points_inside_compartments</span><span class="p">),</span>
+                        <span class="nb">len</span><span class="p">(</span><span class="n">points_inside_compartments</span><span class="p">),</span>
+                        <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">),</span>
+                    <span class="p">)</span>
                 <span class="p">)</span>
-                <span class="n">compartment</span><span class="o">.</span><span class="n">computeVolumeAndSetNbMol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points_on_surfaces</span><span class="p">,</span> <span class="n">points_inside_compartments</span><span class="p">,</span> <span class="n">areas</span><span class="o">=</span><span class="n">vSurfaceArea</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The size of the grid I build = &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">points_inside_compartments</span><span class="p">))</span>
+                <span class="n">compartment</span><span class="o">.</span><span class="n">computeVolumeAndSetNbMol</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span>
+                    <span class="n">points_on_surfaces</span><span class="p">,</span>
+                    <span class="n">points_inside_compartments</span><span class="p">,</span>
+                    <span class="n">areas</span><span class="o">=</span><span class="n">vSurfaceArea</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;The size of the grid I build = &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">points_inside_compartments</span><span class="p">)</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">points_inside_compartments</span><span class="p">,</span> <span class="n">points_on_surfaces</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">BuildGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="n">points_inside_compartments</span><span class="p">,</span> <span class="n">points_on_surfaces</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">BuildGrid</span><span class="p">(</span>
+                    <span class="bp">self</span>
+                <span class="p">)</span>
 
             <span class="n">aInteriorGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points_inside_compartments</span><span class="p">)</span>
             <span class="n">aSurfaceGrids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points_on_surfaces</span><span class="p">)</span>
@@ -2011,7 +2039,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">aInteriorGrids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">aInteriorGrids</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">aSurfaceGrids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">aSurfaceGrids</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surfPtsBht</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">surfPtsBht</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">compartment_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compartment_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="nb">int</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Environment.getSortedActiveIngredients"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getSortedActiveIngredients">[docs]</a>    <span class="k">def</span> <span class="nf">getSortedActiveIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allIngredients</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -2804,7 +2834,12 @@
             <span class="n">ingredients</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span>
             <span class="n">ingredients</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mat</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">compartment</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">compartment</span><span class="o">.</span><span class="n">center</span><span class="p">,</span> <span class="n">compartment</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">compartment</span><span class="o">.</span><span class="n">printFillInfo</span><span class="p">())</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="n">compartment</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">compartment</span><span class="o">.</span><span class="n">center</span><span class="p">,</span>
+                <span class="n">compartment</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span>
+                <span class="n">compartment</span><span class="o">.</span><span class="n">printFillInfo</span><span class="p">(),</span>
+            <span class="p">)</span>
             <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="n">compartment</span><span class="o">.</span><span class="n">molecules</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ingredients</span><span class="p">:</span>
                     <span class="n">ingredients</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">ingr</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]]</span>

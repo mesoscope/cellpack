@@ -320,12 +320,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">bottom_cent</span> <span class="o">+</span> <span class="p">(</span><span class="n">top_cent</span> <span class="o">-</span> <span class="n">bottom_cent</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
             <span class="p">)</span>  <span class="c1"># location of center based on top and bottom</span>
-        
+
             <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
-                <span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> 
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-                <span class="p">)</span>
-        
+                <span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="p">)</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">listePtLinear</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">bottom_cent</span><span class="p">,</span>
                 <span class="n">bottom_cent</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis</span><span class="p">,</span>
@@ -536,7 +535,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span><span class="n">sph2</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-            
+
             <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">p1</span>
             <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">p2</span>
             <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">,</span> <span class="n">vz</span> <span class="o">=</span> <span class="n">vect</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">-</span> <span class="n">z1</span><span class="p">)</span>
@@ -564,7 +563,9 @@
             <span class="n">dotp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pd</span><span class="p">,</span> <span class="n">vect</span><span class="p">)</span>
             <span class="n">rad2</span> <span class="o">=</span> <span class="n">radc</span> <span class="o">*</span> <span class="n">radc</span>
             <span class="n">d2toP1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pd</span> <span class="o">*</span> <span class="n">pd</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">dsq</span> <span class="o">=</span> <span class="n">d2toP1</span> <span class="o">-</span> <span class="n">dotp</span> <span class="o">*</span> <span class="n">dotp</span> <span class="o">/</span> <span class="n">lengthsq</span> <span class="c1"># perpendicular distance to cylinder axis</span>
+            <span class="n">dsq</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">d2toP1</span> <span class="o">-</span> <span class="n">dotp</span> <span class="o">*</span> <span class="n">dotp</span> <span class="o">/</span> <span class="n">lengthsq</span>
+            <span class="p">)</span>  <span class="c1"># perpendicular distance to cylinder axis</span>
 
             <span class="n">ptsWithinCaps</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span>
                 <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
@@ -582,7 +583,7 @@
                     <span class="n">wrongPt</span> <span class="o">=</span> <span class="p">[</span><span class="n">cid</span> <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">compIdsSphere</span> <span class="k">if</span> <span class="n">cid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">]</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrongPt</span><span class="p">):</span>
                         <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span>
-            
+
             <span class="n">pd2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">pointsInCube</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">p2</span>
             <span class="n">d2toP2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pd2</span> <span class="o">*</span> <span class="n">pd2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
@@ -604,7 +605,7 @@
                                 <span class="n">newDistPoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">newDistPoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
-                <span class="k">elif</span> <span class="n">dotp</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">lengthsq</span><span class="p">:</span> <span class="c1"># p2 is closer</span>
+                <span class="k">elif</span> <span class="n">dotp</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">lengthsq</span><span class="p">:</span>  <span class="c1"># p2 is closer</span>
                     <span class="n">d</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">d2toP2</span><span class="p">[</span><span class="n">pti</span><span class="p">])</span> <span class="o">-</span> <span class="n">radc</span>
                     <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">distance</span><span class="p">[</span><span class="n">pt</span><span class="p">]:</span>  <span class="c1"># point in region of influence</span>
                         <span class="k">if</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">newDistPoints</span><span class="p">:</span>
@@ -622,7 +623,7 @@
                             <span class="n">insidePoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
             <span class="n">cylNum</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span></div>
-    
+
 <div class="viewcode-block" id="SingleCylinderIngr.get_signed_distance"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr.get_signed_distance">[docs]</a>    <span class="k">def</span> <span class="nf">get_signed_distance</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">packing_location</span><span class="p">,</span>
@@ -635,14 +636,18 @@
         <span class="c1"># bottom_cent = center point of cylinder bottom surface (positions)</span>
         <span class="c1"># top_cent = center point of cylinder top surface (positions2)</span>
         <span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        
+
         <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span>
 
         <span class="n">bottom_cent</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">top_cent</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
-        <span class="n">bottom_cent</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">packing_location</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="p">[</span><span class="n">bottom_cent</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">top_cent</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">packing_location</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="p">[</span><span class="n">top_cent</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">bottom_cent</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">packing_location</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="p">[</span><span class="n">bottom_cent</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">top_cent</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">packing_location</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="p">[</span><span class="n">top_cent</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
 
         <span class="n">axis_vect</span> <span class="o">=</span> <span class="n">top_cent</span> <span class="o">-</span> <span class="n">bottom_cent</span>
 
@@ -657,7 +662,9 @@
         <span class="n">top_cos</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">top_vect</span><span class="p">,</span> <span class="n">axis_vect</span><span class="p">)</span> <span class="o">/</span> <span class="n">length</span> <span class="o">/</span> <span class="n">dist_to_top</span>
 
         <span class="n">bottom_sin</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">bottom_cos</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">perp_dist</span> <span class="o">=</span> <span class="n">dist_to_bottom</span> <span class="o">*</span> <span class="n">bottom_sin</span> <span class="c1"># perpendicular distance to cylinder axis</span>
+        <span class="n">perp_dist</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">dist_to_bottom</span> <span class="o">*</span> <span class="n">bottom_sin</span>
+        <span class="p">)</span>  <span class="c1"># perpendicular distance to cylinder axis</span>
 
         <span class="k">if</span> <span class="n">bottom_cos</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">top_cos</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># point lies within top and bottom faces</span>
@@ -676,7 +683,7 @@
                 <span class="n">x_dist</span> <span class="o">=</span> <span class="n">dist_to_top</span> <span class="o">*</span> <span class="n">top_cos</span>
                 <span class="n">y_dist</span> <span class="o">=</span> <span class="n">perp_dist</span> <span class="o">-</span> <span class="n">radius</span>
                 <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x_dist</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y_dist</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">bottom_cos</span> <span class="o">&lt;=</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">top_cos</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">bottom_cos</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">top_cos</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># point lies beyond bottom face</span>
             <span class="k">if</span> <span class="n">perp_dist</span> <span class="o">&lt;=</span> <span class="n">radius</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">dist_to_bottom</span> <span class="o">*</span> <span class="n">bottom_cos</span><span class="p">)</span>
@@ -684,7 +691,6 @@
                 <span class="n">x_dist</span> <span class="o">=</span> <span class="n">dist_to_bottom</span> <span class="o">*</span> <span class="n">bottom_cos</span>
                 <span class="n">y_dist</span> <span class="o">=</span> <span class="n">perp_dist</span> <span class="o">-</span> <span class="n">radius</span>
                 <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x_dist</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y_dist</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div></div>
-
 </pre></div>
 
            </div>

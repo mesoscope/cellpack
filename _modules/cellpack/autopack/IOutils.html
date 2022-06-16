@@ -582,19 +582,23 @@
         <span class="n">inrStr</span> <span class="o">+=</span> <span class="s2">&quot;)</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">inrStr</span> <span class="o">+=</span> <span class="n">recipe</span> <span class="o">+</span> <span class="s2">&quot;.addIngredient(&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;)</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="n">inrStr</span></div>
-    
+
 <div class="viewcode-block" id="IOingredientTool.clean_arguments"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.clean_arguments">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">clean_arguments</span><span class="p">(</span><span class="n">arguments_to_include</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span><span class="p">):</span>
         <span class="n">new_arguments</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">arguments</span><span class="p">):</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">name</span> <span class="ow">in</span> <span class="n">arguments_to_include</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">arguments_to_include</span><span class="p">:</span>
                 <span class="n">new_arguments</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">new_arguments</span></div>
 
 <div class="viewcode-block" id="IOingredientTool.makeIngredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.makeIngredient">[docs]</a>    <span class="k">def</span> <span class="nf">makeIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="n">ingr</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">ingredient_type</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span> <span class="ow">or</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;Actine&quot;</span> <span class="ow">or</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;MultiCylinder&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ingredient_type</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">&quot;Grow&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Actine&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;MultiCylinder&quot;</span><span class="p">,</span>
+        <span class="p">]:</span>
             <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span><span class="n">GrowIngredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span><span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
@@ -667,7 +671,9 @@
                 <span class="n">rep</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">rep_file</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;add compartment &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">rep</span><span class="p">,</span> <span class="n">rep_file</span><span class="p">)</span>
-            <span class="n">compartment</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">create_compartment</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">comp_dic</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]),</span> <span class="n">rep</span><span class="p">,</span> <span class="n">rep_file</span><span class="p">)</span>
+            <span class="n">compartment</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">create_compartment</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">comp_dic</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]),</span> <span class="n">rep</span><span class="p">,</span> <span class="n">rep_file</span>
+            <span class="p">)</span>
             <span class="c1"># need to transform the v,f,n to the new rotation and position</span>
             <span class="c1"># NOTE: we could initialize compartments with pos and rot instead</span>
             <span class="c1"># of transforming it every time we make a new one</span>
@@ -683,8 +689,7 @@
                         <span class="c1"># either xref or defined</span>
                         <span class="n">ing_dic</span> <span class="o">=</span> <span class="n">ingrs_dic</span><span class="p">[</span><span class="n">ing_name</span><span class="p">]</span>
                         <span class="n">ingr</span> <span class="o">=</span> <span class="n">io_ingr</span><span class="o">.</span><span class="n">makeIngredientFromJson</span><span class="p">(</span>
-                            <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
-                            <span class="n">inode</span><span class="o">=</span><span class="n">ing_dic</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">name</span>
+                            <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="n">inode</span><span class="o">=</span><span class="n">ing_dic</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">name</span>
                         <span class="p">)</span>
                         <span class="n">rSurf</span><span class="o">.</span><span class="n">addIngredient</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
                         <span class="c1"># setup recipe</span>
@@ -699,8 +704,7 @@
                         <span class="c1"># either xref or defined</span>
                         <span class="n">ing_dic</span> <span class="o">=</span> <span class="n">ingrs_dic</span><span class="p">[</span><span class="n">ing_name</span><span class="p">]</span>
                         <span class="n">ingr</span> <span class="o">=</span> <span class="n">io_ingr</span><span class="o">.</span><span class="n">makeIngredientFromJson</span><span class="p">(</span>
-                            <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
-                            <span class="n">inode</span><span class="o">=</span><span class="n">ing_dic</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">name</span>
+                            <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="n">inode</span><span class="o">=</span><span class="n">ing_dic</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">name</span>
                         <span class="p">)</span>
                         <span class="n">rMatrix</span><span class="o">.</span><span class="n">addIngredient</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
                         <span class="c1"># setup recipe</span>
@@ -709,8 +713,12 @@
 
 <div class="viewcode-block" id="save_as_simularium"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.save_as_simularium">[docs]</a><span class="k">def</span> <span class="nf">save_as_simularium</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">all_ingr_as_array</span><span class="p">):</span>
     <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-    <span class="n">length_original_grid_points</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">)</span> <span class="o">-</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">nbSurfacePoints</span>
-    <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">init_scene_with_objects</span><span class="p">(</span><span class="n">all_ingr_as_array</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">)</span>
+    <span class="n">length_original_grid_points</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">)</span> <span class="o">-</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">nbSurfacePoints</span>
+    <span class="p">)</span>
+    <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">init_scene_with_objects</span><span class="p">(</span>
+        <span class="n">all_ingr_as_array</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span>
+    <span class="p">)</span>
     <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">writeToFile</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">setupfile</span><span class="si">}</span><span class="s2">_results&quot;</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">)</span>
     <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;https://simularium.allencell.org/viewer&quot;</span><span class="p">)</span></div>
 
@@ -1982,7 +1990,9 @@
             <span class="k">for</span> <span class="n">ing_name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ingrs_dic</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">sortkey</span><span class="p">):</span>  <span class="c1"># ingrs_dic:</span>
                 <span class="c1"># either xref or defined</span>
                 <span class="n">ing_dic</span> <span class="o">=</span> <span class="n">ingrs_dic</span><span class="p">[</span><span class="n">ing_name</span><span class="p">]</span>
-                <span class="n">ingr</span> <span class="o">=</span> <span class="n">io_ingr</span><span class="o">.</span><span class="n">makeIngredientFromJson</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">inode</span><span class="o">=</span><span class="n">ing_dic</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">ingr</span> <span class="o">=</span> <span class="n">io_ingr</span><span class="o">.</span><span class="n">makeIngredientFromJson</span><span class="p">(</span>
+                    <span class="n">env</span><span class="p">,</span> <span class="n">inode</span><span class="o">=</span><span class="n">ing_dic</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">name</span>
+                <span class="p">)</span>
                 <span class="n">rCyto</span><span class="o">.</span><span class="n">addIngredient</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
                 <span class="c1"># setup recipe</span>
             <span class="n">env</span><span class="o">.</span><span class="n">setExteriorRecipe</span><span class="p">(</span><span class="n">rCyto</span><span class="p">)</span>
@@ -2029,7 +2039,9 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">rep</span> <span class="o">=</span> <span class="kc">None</span>
                     <span class="n">rep_file</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="n">compartment</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">create_compartment</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">gname</span><span class="p">,</span> <span class="n">rep</span><span class="p">,</span> <span class="n">rep_file</span><span class="p">,</span> <span class="n">mtype</span><span class="p">)</span>
+                <span class="n">compartment</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">create_compartment</span><span class="p">(</span>
+                    <span class="n">name</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">gname</span><span class="p">,</span> <span class="n">rep</span><span class="p">,</span> <span class="n">rep_file</span><span class="p">,</span> <span class="n">mtype</span>
+                <span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;added compartment &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
                 <span class="n">env</span><span class="o">.</span><span class="n">addCompartment</span><span class="p">(</span><span class="n">compartment</span><span class="p">)</span>
                 <span class="k">if</span> <span class="s2">&quot;surface&quot;</span> <span class="ow">in</span> <span class="n">comp_dic</span><span class="p">:</span>
@@ -2042,8 +2054,7 @@
                             <span class="c1"># either xref or defined</span>
                             <span class="n">ing_dic</span> <span class="o">=</span> <span class="n">ingrs_dic</span><span class="p">[</span><span class="n">ing_name</span><span class="p">]</span>
                             <span class="n">ingr</span> <span class="o">=</span> <span class="n">io_ingr</span><span class="o">.</span><span class="n">makeIngredientFromJson</span><span class="p">(</span>
-                                <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
-                                <span class="n">inode</span><span class="o">=</span><span class="n">ing_dic</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">name</span>
+                                <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="n">inode</span><span class="o">=</span><span class="n">ing_dic</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">name</span>
                             <span class="p">)</span>
                             <span class="n">rSurf</span><span class="o">.</span><span class="n">addIngredient</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
                             <span class="c1"># setup recipe</span>

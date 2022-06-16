@@ -527,7 +527,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span><span class="n">sph2</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-            
+
             <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="n">p1</span>
             <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">p2</span>
             <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">,</span> <span class="n">vz</span> <span class="o">=</span> <span class="n">vect</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">-</span> <span class="n">z1</span><span class="p">)</span>
@@ -555,7 +555,9 @@
             <span class="n">dotp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pd</span><span class="p">,</span> <span class="n">vect</span><span class="p">)</span>
             <span class="n">rad2</span> <span class="o">=</span> <span class="n">radc</span> <span class="o">*</span> <span class="n">radc</span>
             <span class="n">d2toP1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pd</span> <span class="o">*</span> <span class="n">pd</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">dsq</span> <span class="o">=</span> <span class="n">d2toP1</span> <span class="o">-</span> <span class="n">dotp</span> <span class="o">*</span> <span class="n">dotp</span> <span class="o">/</span> <span class="n">lengthsq</span> <span class="c1"># perpendicular distance to cylinder axis</span>
+            <span class="n">dsq</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">d2toP1</span> <span class="o">-</span> <span class="n">dotp</span> <span class="o">*</span> <span class="n">dotp</span> <span class="o">/</span> <span class="n">lengthsq</span>
+            <span class="p">)</span>  <span class="c1"># perpendicular distance to cylinder axis</span>
 
             <span class="n">ptsWithinCaps</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span>
                 <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
@@ -573,7 +575,7 @@
                     <span class="n">wrongPt</span> <span class="o">=</span> <span class="p">[</span><span class="n">cid</span> <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">compIdsSphere</span> <span class="k">if</span> <span class="n">cid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">]</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrongPt</span><span class="p">):</span>
                         <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span>
-            
+
             <span class="n">pd2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">pointsInCube</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">p2</span>
             <span class="n">d2toP2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pd2</span> <span class="o">*</span> <span class="n">pd2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
@@ -595,7 +597,7 @@
                                 <span class="n">newDistPoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">newDistPoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span>
-                <span class="k">elif</span> <span class="n">dotp</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">lengthsq</span><span class="p">:</span> <span class="c1"># p2 is closer</span>
+                <span class="k">elif</span> <span class="n">dotp</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">lengthsq</span><span class="p">:</span>  <span class="c1"># p2 is closer</span>
                     <span class="n">d</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">d2toP2</span><span class="p">[</span><span class="n">pti</span><span class="p">])</span> <span class="o">-</span> <span class="n">radc</span>
                     <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">distance</span><span class="p">[</span><span class="n">pt</span><span class="p">]:</span>  <span class="c1"># point in region of influence</span>
                         <span class="k">if</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">newDistPoints</span><span class="p">:</span>
