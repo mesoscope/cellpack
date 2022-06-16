@@ -252,7 +252,8 @@ class BaseGrid:
         if boundingBox is None:
             boundingBox = self.boundingBox
         self.diag = numpy.linalg.norm(
-            (numpy.array(boundingBox[0]) - numpy.array(boundingBox[1]))) 
+            (numpy.array(boundingBox[0]) - numpy.array(boundingBox[1]))
+        )
         return self.diag
 
     def create3DPointLookup_loop(self, boundingBox=None):

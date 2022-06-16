@@ -223,7 +223,9 @@ class Grid(BaseGrid):
 
     def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=10.0, lookup=0):
         # a grid is attached to an environement
-        BaseGrid.__init__(self, boundingBox=boundingBox, space=space, setup=False, lookup=lookup)
+        BaseGrid.__init__(
+            self, boundingBox=boundingBox, space=space, setup=False, lookup=lookup
+        )
 
         self.gridSpacing = space * 1.1547
         self.encapsulatingGrid = 1
@@ -1237,7 +1239,7 @@ class Environment(CompartmentList):
         aInteriorGrids = []
         aSurfaceGrids = []
         f = open(gridFileName, "rb")
-        self.readArraysFromFile(f) 
+        self.readArraysFromFile(f)
         for compartment in self.compartments:
             compartment.readGridFromFile(f)
             aInteriorGrids.append(compartment.insidePoints)
@@ -1363,14 +1365,20 @@ class Environment(CompartmentList):
             ingr = GrowIngredient(**arguments)
         elif ingredient_type == "Actine":
             ingr = ActinIngredient(**arguments)
-        if "gradient" in arguments and arguments["gradient"] != "" and arguments["gradient"] != "None":
+        if (
+            "gradient" in arguments
+            and arguments["gradient"] != ""
+            and arguments["gradient"] != "None"
+        ):
             ingr.gradient = arguments["gradient"]
         if "results" in arguments:
             ingr.results = arguments["results"]
         ingr.initialize_mesh(self.mesh_store)
         return ingr
 
-    def create_compartment(self, name, filename, gname, object_name, object_filename, meshType=None):
+    def create_compartment(
+        self, name, filename, gname, object_name, object_filename, meshType=None
+    ):
         compartment = Compartment(
             name,
             None,
@@ -1537,7 +1545,12 @@ class Environment(CompartmentList):
             self.log.info(
                 f"in Environment, compartment.isOrthogonalBoundingBox={compartment.isOrthogonalBoundingBox}"
             )
-            points_inside_compartments, points_on_compartment_surfaces = compartment.BuildGrid(self, self.mesh_store)  # return inside and surface point
+            (
+                points_inside_compartments,
+                points_on_compartment_surfaces,
+            ) = compartment.BuildGrid(
+                self, self.mesh_store
+            )  # return inside and surface point
             aInteriorGrids.append(points_inside_compartments)
             aSurfaceGrids.append(points_on_compartment_surfaces)
 
@@ -1691,7 +1704,9 @@ class Environment(CompartmentList):
                 points_inside_compartments = self.grid.getPointsInCube(
                     compartment.bb, None, None
                 )  # This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.
-                self.grid.compartment_ids[points_inside_compartments] = -compartment.number
+                self.grid.compartment_ids[
+                    points_inside_compartments
+                ] = -compartment.number
                 compartment.surfacePointsCoords = None
                 bb0x, bb0y, bb0z = compartment.bb[0]
                 bb1x, bb1y, bb1z = compartment.bb[1]
@@ -1708,12 +1723,25 @@ class Environment(CompartmentList):
                 compartment.surfacePointsNormals = []
                 print(
                     " %d inside pts, %d tot grid pts, %d master grid"
-                    % (len(points_inside_compartments), len(points_inside_compartments), len(self.grid.masterGridPositions))
+                    % (
+                        len(points_inside_compartments),
+                        len(points_inside_compartments),
+                        len(self.grid.masterGridPositions),
+                    )
                 )
-                compartment.computeVolumeAndSetNbMol(self, points_on_surfaces, points_inside_compartments, areas=vSurfaceArea)
-                print("The size of the grid I build = ", len(points_inside_compartments))
+                compartment.computeVolumeAndSetNbMol(
+                    self,
+                    points_on_surfaces,
+                    points_inside_compartments,
+                    areas=vSurfaceArea,
+                )
+                print(
+                    "The size of the grid I build = ", len(points_inside_compartments)
+                )
             else:
-                points_inside_compartments, points_on_surfaces = compartment.BuildGrid(self)
+                points_inside_compartments, points_on_surfaces = compartment.BuildGrid(
+                    self
+                )
 
             aInteriorGrids.append(points_inside_compartments)
             aSurfaceGrids.append(points_on_surfaces)
@@ -1828,7 +1856,9 @@ class Environment(CompartmentList):
         self.aInteriorGrids = self.grid.aInteriorGrids
         self.aSurfaceGrids = self.grid.aSurfaceGrids
         self.surfPtsBht = self.grid.surfPtsBht
-        self.compartment_ids = self.grid.compartment_ids = numpy.array(self.grid.compartment_ids, int)
+        self.compartment_ids = self.grid.compartment_ids = numpy.array(
+            self.grid.compartment_ids, int
+        )
 
     def getSortedActiveIngredients(self, allIngredients):
         """
@@ -2621,7 +2651,12 @@ class Environment(CompartmentList):
             ingredients[ingr.name][2].append(rot)
             ingredients[ingr.name][3].append(numpy.array(mat))
         for compartment in self.compartments:
-            print(compartment.name, compartment.center, compartment.radius, compartment.printFillInfo())
+            print(
+                compartment.name,
+                compartment.center,
+                compartment.radius,
+                compartment.printFillInfo(),
+            )
             for pos, rot, ingr, ptInd in compartment.molecules:
                 if ingr.name not in ingredients:
                     ingredients[ingr.name] = [ingr, [], [], []]

@@ -203,6 +203,7 @@ def bullet_checkCollision_mp(world, node1, node2):
     #    node2 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
     return world.contactTestPair(node1, node2).getNumContacts() > 0
 
+
 # TODO : move somewhere in a more apropriate place ?
 def pandaMatrice(mat):
     if panda3d is None:
@@ -228,6 +229,7 @@ def pandaMatrice(mat):
         mat[15],
     )
     return pMat
+
 
 def get_reflected_point(self, new_position, boundingBox=None):
     # returns the reflection of a point across a bounding box

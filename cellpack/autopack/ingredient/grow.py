@@ -320,10 +320,14 @@ class GrowIngredient(MultiCylindersIngr):
                 self.env.grid.getPointsInCube, (bb, posc, radt)
             )
 
-            pd = numpy.take(gridPointsCoords, pointsInCube, 0) - p1  # vector joining grid point and 1st corner
+            pd = (
+                numpy.take(gridPointsCoords, pointsInCube, 0) - p1
+            )  # vector joining grid point and 1st corner
             dotp = numpy.dot(pd, vect)
             d2toP1 = numpy.sum(pd * pd, 1)
-            dsq = d2toP1 - dotp * dotp / lengthsq  # perpendicular distance between grid point and cylinder axis
+            dsq = (
+                d2toP1 - dotp * dotp / lengthsq
+            )  # perpendicular distance between grid point and cylinder axis
 
             pd2 = numpy.take(gridPointsCoords, pointsInCube, 0) - p2
             d2toP2 = numpy.sum(pd2 * pd2, 1)
@@ -340,8 +344,8 @@ class GrowIngredient(MultiCylindersIngr):
                                 newDistPoints[pt] = d
                         else:
                             newDistPoints[pt] = d
-                elif dotp[pti] > lengthsq: # p2 is closer
-                    d = sqrt(d2toP2[pti]) - radc # add cylindrical cap at ends?
+                elif dotp[pti] > lengthsq:  # p2 is closer
+                    d = sqrt(d2toP2[pti]) - radc  # add cylindrical cap at ends?
                     if d < distance[pt]:  # point in region of influence
                         if pt in newDistPoints:
                             if d < newDistPoints[pt]:
@@ -1859,7 +1863,7 @@ class GrowIngredient(MultiCylindersIngr):
                 numpy.array(self.orientation),
                 random() * math.radians(self.marge),  # or marge ?
                 # axis=list(self.orientation).index(0),
-                axis=2, # TODO: revert to original implementation for 3D packing
+                axis=2,  # TODO: revert to original implementation for 3D packing
             )
             self.vector = (
                 numpy.array(v).flatten() * self.uLength * self.jitterMax
@@ -1984,7 +1988,7 @@ class GrowIngredient(MultiCylindersIngr):
             secondPoint = self.start_positions[self.nbCurve][1]
         if secondPoint is None:
             return success, nbFreePoints
-        
+
         # reflect points back in-plane (useful for 2D packing)
         previousPoint = get_reflected_point(self, previousPoint)
         startingPoint = get_reflected_point(self, startingPoint)
@@ -2077,7 +2081,9 @@ class GrowIngredient(MultiCylindersIngr):
         self.listePtLinear.append(listePtLinear)
         self.nbCurve += 1
         self.completion = float(self.nbCurve) / float(self.left_to_place)
-        self.log.info("completion %r %r %r", self.completion, self.nbCurve, self.left_to_place)
+        self.log.info(
+            "completion %r %r %r", self.completion, self.nbCurve, self.left_to_place
+        )
         return success, jtrans, rotMatj, insidePoints, newDistPoints
 
     def prepare_alternates(

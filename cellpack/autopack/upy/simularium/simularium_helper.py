@@ -290,7 +290,7 @@ class simulariumHelper(hostHelper.Helper):
         mesh=None,
     ):
         self.agent_id_counter += 1
-        if (ingredient and self.is_fiber(ingredient.Type)):
+        if ingredient and self.is_fiber(ingredient.Type):
             viz_type = VIZ_TYPE.FIBER
         else:
             viz_type = VIZ_TYPE.DEFAULT
@@ -389,7 +389,7 @@ class simulariumHelper(hostHelper.Helper):
             else:
                 url = pdb_file_name
         return display_type, url
-    
+
     @staticmethod
     def is_fiber(ingr_type):
         return ingr_type in [
@@ -408,7 +408,7 @@ class simulariumHelper(hostHelper.Helper):
         self.time = 0
         for position, rotation, ingredient, ptInd in objects:
             ingr_name = ingredient.name
-            sub_points = None            
+            sub_points = None
             if self.is_fiber(ingredient.Type):
                 if ingredient.nbCurve == 0:
                     continue
@@ -445,13 +445,28 @@ class simulariumHelper(hostHelper.Helper):
                     self.display_data[name] = DisplayData(
                         name=name, display_type=DISPLAY_TYPE.SPHERE, url=""
                     )
-        
+
                     self.add_instance(
                         name,
                         None,
                         f"{name}-{index}",
                         point_pos,
-                        [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0, ], [0, 0, 0, 0, ]],
+                        [
+                            [0, 0, 0, 0],
+                            [0, 0, 0, 0],
+                            [
+                                0,
+                                0,
+                                0,
+                                0,
+                            ],
+                            [
+                                0,
+                                0,
+                                0,
+                                0,
+                            ],
+                        ],
                         None,
                     )
 
@@ -658,23 +673,21 @@ class simulariumHelper(hostHelper.Helper):
         **kw,
     ):
         #        QualitySph={"0":16,"1":3,"2":4,"3":8,"4":16,"5":32}
-        if 'axis' in kw:
-            if kw['axis'] is not None:
-                axis = kw['axis']
+        if "axis" in kw:
+            if kw["axis"] is not None:
+                axis = kw["axis"]
             else:
                 axis = [0.0, 1.0, 0.0]
 
         pos = np.array(pos)
-        
-        principal_vector = np.array(length*axis)
+
+        principal_vector = np.array(length * axis)
 
         control_points = np.array([pos, pos + principal_vector])
 
         baseCyl = self.Cylinders(
             name,
-            radii=[
-                radius
-                ],
+            radii=[radius],
             inheritMaterial=False,
             quality=res,
             visible=1,
@@ -684,7 +697,7 @@ class simulariumHelper(hostHelper.Helper):
             baseCyl,
             parent=parent,
             control_points=control_points,
-            )
+        )
         if pos is not None:
             self.setTranslation(baseCyl, pos)
         return [baseCyl, baseCyl]
@@ -1184,16 +1197,14 @@ class simulariumHelper(hostHelper.Helper):
         unique_ids = [[0 for x in range(max_number_agents)] for x in range(total_steps)]
         radii = [[1 for x in range(max_number_agents)] for x in range(total_steps)]
         n_subpoints = [
-            [
-                0 for x in range(max_number_agents)
-            ] for x in range(total_steps)
+            [0 for x in range(max_number_agents)] for x in range(total_steps)
         ]
         subpoints = [
             [
-                [
-                    [0, 0, 0] for x in range(self.max_fiber_length)
-                ] for x in range(max_number_agents)
-            ] for x in range(total_steps)
+                [[0, 0, 0] for x in range(self.max_fiber_length)]
+                for x in range(max_number_agents)
+            ]
+            for x in range(total_steps)
         ]
         for t in range(total_steps):
             n = 0

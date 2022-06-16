@@ -119,7 +119,9 @@ class MeshStore:
 
     def read_mesh_file(self, filename):
         file_name, file_extension = MeshStore.get_mesh_filepath_and_extension(filename)
-        data = trimesh.exchange.load.load(f"{file_name}{file_extension}")  # , ignore=[collada.DaeUnsupportedError,
+        data = trimesh.exchange.load.load(
+            f"{file_name}{file_extension}"
+        )  # , ignore=[collada.DaeUnsupportedError,
         if type(data) == trimesh.base.Trimesh:
             return data
         for key in data.geometry:
@@ -178,9 +180,15 @@ class MeshStore:
                 facets[n + 2] = facets[j]
 
                 # /* Calculate the midpoints */
-                p1 = MeshStore.get_midpoint(vertices[facets[j][0]], vertices[facets[j][1]])
-                p2 = MeshStore.get_midpoint(vertices[facets[j][1]], vertices[facets[j][2]])
-                p3 = MeshStore.get_midpoint(vertices[facets[j][2]], vertices[facets[j][0]])
+                p1 = MeshStore.get_midpoint(
+                    vertices[facets[j][0]], vertices[facets[j][1]]
+                )
+                p2 = MeshStore.get_midpoint(
+                    vertices[facets[j][1]], vertices[facets[j][2]]
+                )
+                p3 = MeshStore.get_midpoint(
+                    vertices[facets[j][2]], vertices[facets[j][0]]
+                )
                 vertices.extend([p1, p2, p3])
                 ip1 = len(vertices) - 3
                 ip2 = len(vertices) - 2
@@ -277,9 +285,7 @@ class MeshStore:
         vertices = numpy.array(data["verts"]).reshape((nv, 3))
         faces = numpy.array(data["faces"]).reshape((nf, 3))
         vnormals = numpy.array(data["normals"]).reshape((nv, 3))
-        geom = self.create_mesh(geomname, vertices, None, faces)[
-            0
-        ]
+        geom = self.create_mesh(geomname, vertices, None, faces)[0]
 
         autopack.helper.saveDejaVuMesh(
             autopack.cache_geoms + os.sep + geomname, self.vertices, self.faces

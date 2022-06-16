@@ -344,7 +344,7 @@ class MultiCylindersIngr(Ingredient):
                 self.vi.setTranslation(sph2, p2)
 
                 self.vi.update()
-            
+
             x1, y1, z1 = p1
             x2, y2, z2 = p2
             vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
@@ -372,7 +372,9 @@ class MultiCylindersIngr(Ingredient):
             dotp = numpy.dot(pd, vect)
             rad2 = radc * radc
             d2toP1 = numpy.sum(pd * pd, 1)
-            dsq = d2toP1 - dotp * dotp / lengthsq # perpendicular distance to cylinder axis
+            dsq = (
+                d2toP1 - dotp * dotp / lengthsq
+            )  # perpendicular distance to cylinder axis
 
             ptsWithinCaps = numpy.nonzero(
                 numpy.logical_and(
@@ -390,7 +392,7 @@ class MultiCylindersIngr(Ingredient):
                     wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
                     if len(wrongPt):
                         return True, insidePoints, newDistPoints
-            
+
             pd2 = numpy.take(gridPointsCoords, pointsInCube, 0) - p2
             d2toP2 = numpy.sum(pd2 * pd2, 1)
 
@@ -412,7 +414,7 @@ class MultiCylindersIngr(Ingredient):
                                 newDistPoints[pt] = d
                         else:
                             newDistPoints[pt] = d
-                elif dotp[pti] > lengthsq: # p2 is closer
+                elif dotp[pti] > lengthsq:  # p2 is closer
                     d = sqrt(d2toP2[pti]) - radc
                     if d < distance[pt]:  # point in region of influence
                         if pt in newDistPoints:

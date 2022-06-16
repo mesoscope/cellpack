@@ -399,19 +399,23 @@ class IOingredientTool(object):
         inrStr += ")\n"
         inrStr += recipe + ".addIngredient(" + ingr.name + ")\n"
         return inrStr
-    
+
     @staticmethod
     def clean_arguments(arguments_to_include, **arguments):
         new_arguments = {}
         for index, name in enumerate(arguments):
-            if (name in arguments_to_include):
+            if name in arguments_to_include:
                 new_arguments[name] = arguments[name]
         return new_arguments
 
     def makeIngredient(self, env, **kw):
         ingr = None
         ingredient_type = kw["Type"]
-        if ingredient_type == "Grow" or ingredient_type == "Actine" or ingredient_type == "MultiCylinder":
+        if ingredient_type in [
+            "Grow",
+            "Actine",
+            "MultiCylinder",
+        ]:
             arguments = IOingredientTool.clean_arguments(GrowIngredient.ARGUMENTS, **kw)
         else:
             arguments = IOingredientTool.clean_arguments(Ingredient.ARGUMENTS, **kw)
@@ -484,7 +488,9 @@ def addCompartments(env, compdic, i, io_ingr):
                 rep = None
                 rep_file = None
             print("add compartment ", name, geom, rep, rep_file)
-            compartment = env.create_compartment(name, geom, str(comp_dic["name"]), rep, rep_file)
+            compartment = env.create_compartment(
+                name, geom, str(comp_dic["name"]), rep, rep_file
+            )
             # need to transform the v,f,n to the new rotation and position
             # NOTE: we could initialize compartments with pos and rot instead
             # of transforming it every time we make a new one
@@ -500,8 +506,7 @@ def addCompartments(env, compdic, i, io_ingr):
                         # either xref or defined
                         ing_dic = ingrs_dic[ing_name]
                         ingr = io_ingr.makeIngredientFromJson(
-                            env=env,
-                            inode=ing_dic, recipe=env.name
+                            env=env, inode=ing_dic, recipe=env.name
                         )
                         rSurf.addIngredient(ingr)
                         # setup recipe
@@ -516,8 +521,7 @@ def addCompartments(env, compdic, i, io_ingr):
                         # either xref or defined
                         ing_dic = ingrs_dic[ing_name]
                         ingr = io_ingr.makeIngredientFromJson(
-                            env=env,
-                            inode=ing_dic, recipe=env.name
+                            env=env, inode=ing_dic, recipe=env.name
                         )
                         rMatrix.addIngredient(ingr)
                         # setup recipe
@@ -526,8 +530,12 @@ def addCompartments(env, compdic, i, io_ingr):
 
 def save_as_simularium(env, setupfile, all_ingr_as_array):
     autopack.helper.clear()
-    length_original_grid_points = len(env.grid.masterGridPositions) - env.grid.nbSurfacePoints
-    autopack.helper.init_scene_with_objects(all_ingr_as_array, env.grid.masterGridPositions, env.grid.compartment_ids)
+    length_original_grid_points = (
+        len(env.grid.masterGridPositions) - env.grid.nbSurfacePoints
+    )
+    autopack.helper.init_scene_with_objects(
+        all_ingr_as_array, env.grid.masterGridPositions, env.grid.compartment_ids
+    )
     autopack.helper.writeToFile(None, f"{setupfile}_results", env.boundingBox)
     webbrowser.open("https://simularium.allencell.org/viewer")
 
@@ -1799,7 +1807,9 @@ def setupFromJsonDic(
             for ing_name in sorted(ingrs_dic, key=sortkey):  # ingrs_dic:
                 # either xref or defined
                 ing_dic = ingrs_dic[ing_name]
-                ingr = io_ingr.makeIngredientFromJson(env, inode=ing_dic, recipe=env.name)
+                ingr = io_ingr.makeIngredientFromJson(
+                    env, inode=ing_dic, recipe=env.name
+                )
                 rCyto.addIngredient(ingr)
                 # setup recipe
             env.setExteriorRecipe(rCyto)
@@ -1846,7 +1856,9 @@ def setupFromJsonDic(
                 else:
                     rep = None
                     rep_file = None
-                compartment = env.create_compartment(name, geom, gname, rep, rep_file, mtype)
+                compartment = env.create_compartment(
+                    name, geom, gname, rep, rep_file, mtype
+                )
                 print("added compartment ", name)
                 env.addCompartment(compartment)
                 if "surface" in comp_dic:
@@ -1859,8 +1871,7 @@ def setupFromJsonDic(
                             # either xref or defined
                             ing_dic = ingrs_dic[ing_name]
                             ingr = io_ingr.makeIngredientFromJson(
-                                env=env,
-                                inode=ing_dic, recipe=env.name
+                                env=env, inode=ing_dic, recipe=env.name
                             )
                             rSurf.addIngredient(ingr)
                             # setup recipe

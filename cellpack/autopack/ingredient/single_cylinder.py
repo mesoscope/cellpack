@@ -137,12 +137,11 @@ class SingleCylinderIngr(Ingredient):
             self.center = (
                 bottom_cent + (top_cent - bottom_cent) / 2
             )  # location of center based on top and bottom
-        
+
             self.encapsulatingRadius = numpy.sqrt(
-                radii[0][0]**2 + 
-                (self.length / 2.0)**2
-                )
-        
+                radii[0][0] ** 2 + (self.length / 2.0) ** 2
+            )
+
             self.listePtLinear = [
                 bottom_cent,
                 bottom_cent + self.axis,
@@ -353,7 +352,7 @@ class SingleCylinderIngr(Ingredient):
                 self.vi.setTranslation(sph2, p2)
 
                 self.vi.update()
-            
+
             x1, y1, z1 = p1
             x2, y2, z2 = p2
             vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
@@ -381,7 +380,9 @@ class SingleCylinderIngr(Ingredient):
             dotp = numpy.dot(pd, vect)
             rad2 = radc * radc
             d2toP1 = numpy.sum(pd * pd, 1)
-            dsq = d2toP1 - dotp * dotp / lengthsq # perpendicular distance to cylinder axis
+            dsq = (
+                d2toP1 - dotp * dotp / lengthsq
+            )  # perpendicular distance to cylinder axis
 
             ptsWithinCaps = numpy.nonzero(
                 numpy.logical_and(
@@ -399,7 +400,7 @@ class SingleCylinderIngr(Ingredient):
                     wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
                     if len(wrongPt):
                         return True, insidePoints, newDistPoints
-            
+
             pd2 = numpy.take(gridPointsCoords, pointsInCube, 0) - p2
             d2toP2 = numpy.sum(pd2 * pd2, 1)
 
@@ -421,7 +422,7 @@ class SingleCylinderIngr(Ingredient):
                                 newDistPoints[pt] = d
                         else:
                             newDistPoints[pt] = d
-                elif dotp[pti] > lengthsq: # p2 is closer
+                elif dotp[pti] > lengthsq:  # p2 is closer
                     d = sqrt(d2toP2[pti]) - radc
                     if d < distance[pt]:  # point in region of influence
                         if pt in newDistPoints:
@@ -439,7 +440,7 @@ class SingleCylinderIngr(Ingredient):
                             insidePoints[pt] = d
             cylNum += 1
         return False, insidePoints, newDistPoints
-    
+
     def get_signed_distance(
         self,
         packing_location,
@@ -452,14 +453,18 @@ class SingleCylinderIngr(Ingredient):
         # bottom_cent = center point of cylinder bottom surface (positions)
         # top_cent = center point of cylinder top surface (positions2)
         radius = self.radii[0][0]
-        
+
         length = self.length
 
         bottom_cent = numpy.array(self.positions[0][0] - self.axis / 2)
         top_cent = numpy.array(self.positions2[0][0] - self.axis / 2)
 
-        bottom_cent = numpy.array(self.transformPoints(packing_location, rotation_matrix, [bottom_cent])[0])
-        top_cent = numpy.array(self.transformPoints(packing_location, rotation_matrix, [top_cent])[0])
+        bottom_cent = numpy.array(
+            self.transformPoints(packing_location, rotation_matrix, [bottom_cent])[0]
+        )
+        top_cent = numpy.array(
+            self.transformPoints(packing_location, rotation_matrix, [top_cent])[0]
+        )
 
         axis_vect = top_cent - bottom_cent
 
@@ -474,7 +479,9 @@ class SingleCylinderIngr(Ingredient):
         top_cos = numpy.dot(top_vect, axis_vect) / length / dist_to_top
 
         bottom_sin = numpy.sqrt(1 - bottom_cos**2)
-        perp_dist = dist_to_bottom * bottom_sin # perpendicular distance to cylinder axis
+        perp_dist = (
+            dist_to_bottom * bottom_sin
+        )  # perpendicular distance to cylinder axis
 
         if bottom_cos >= 0 and top_cos <= 0:
             # point lies within top and bottom faces
@@ -493,7 +500,7 @@ class SingleCylinderIngr(Ingredient):
                 x_dist = dist_to_top * top_cos
                 y_dist = perp_dist - radius
                 return numpy.sqrt(x_dist**2 + y_dist**2)
-        elif bottom_cos <=0 and top_cos <= 0:
+        elif bottom_cos <= 0 and top_cos <= 0:
             # point lies beyond bottom face
             if perp_dist <= radius:
                 return numpy.abs(dist_to_bottom * bottom_cos)
@@ -501,4 +508,3 @@ class SingleCylinderIngr(Ingredient):
                 x_dist = dist_to_bottom * bottom_cos
                 y_dist = perp_dist - radius
                 return numpy.sqrt(x_dist**2 + y_dist**2)
-

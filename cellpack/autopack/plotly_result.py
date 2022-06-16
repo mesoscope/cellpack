@@ -79,10 +79,8 @@ class PlotlyAnalysis:
                     self.add_square(ingr.radii, pos, rot, ingr.color)
                 elif ingr.modelType == "Cylinders":
                     length = ingr.length
-                    width = 2*ingr.radii[0][0]
-                    side_lengths = [
-                        [width, length, 1.0]
-                        ]
+                    width = 2 * ingr.radii[0][0]
+                    side_lengths = [[width, length, 1.0]]
                     self.add_square(side_lengths, pos, rot, ingr.color)
 
     def make_grid_heatmap(self, env):

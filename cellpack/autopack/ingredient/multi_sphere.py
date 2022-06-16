@@ -102,7 +102,7 @@ class MultiSphereIngr(SingleSphereIngr):
             Type=Type,
             useOrientBias=useOrientBias,
             useRotAxis=useRotAxis,
-            weight=weight
+            weight=weight,
         )
         min_radius = encapsulatingRadius
         if radii is not None:
