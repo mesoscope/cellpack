@@ -208,12 +208,12 @@ class Compartment(CompartmentList):
         self.grid_type = "regular"
         self.grid_distances = None  # signed closest distance for each point
         # TODO Add openVDB
-        if self.filename is None:
-            autopack.helper.saveDejaVuMesh(
-                autopack.cache_geoms + os.sep + self.name, self.vertices, self.faces
-            )
-            self.filename = autopack.cache_geoms + os.sep + self.name
-            self.ref_obj = self.name
+        # if self.filename is None:
+        #     autopack.helper.saveDejaVuMesh(
+        #         autopack.cache_geoms + os.sep + self.name, self.vertices, self.faces
+        #     )
+        #     self.filename = autopack.cache_geoms + os.sep + self.name
+        #     self.ref_obj = self.name
 
     def reset(self):
         """reset the inner compartment data, surface and inner points"""
@@ -256,8 +256,8 @@ class Compartment(CompartmentList):
         return geom
 
     def initialize_mesh(self, mesh_store):
-        if self.filename is None:
-            return None
+        # if self.filename is None:
+        #     return None
         if self.vertices is None and self.meshType == "file":
             self.faces, self.vertices, self.vnormals = self.getMesh(mesh_store)
             self.ref_obj = self.name

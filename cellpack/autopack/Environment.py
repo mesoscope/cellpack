@@ -1388,6 +1388,7 @@ class Environment(CompartmentList):
             gname=gname,
             object_name=object_name,
             object_filename=object_filename,
+            meshType=meshType,
         )
         compartment.initialize_mesh(self.mesh_store)
         return compartment

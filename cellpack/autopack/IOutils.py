@@ -1829,7 +1829,7 @@ def setupFromJsonDic(
                     continue
                 comp_dic = env.jsondic["compartments"][cname]
                 name = str(comp_dic["name"])
-                geom = comp_dic["geom"]
+                geom = comp_dic.get("geom")
                 gname = name
                 mtype = "file"
                 if "meshType" in comp_dic:
@@ -1886,7 +1886,9 @@ def setupFromJsonDic(
                             # either xref or defined
                             ing_dic = ingrs_dic[ing_name]
                             ingr = io_ingr.makeIngredientFromJson(
-                                inode=ing_dic, recipe=env.name
+                                env,
+                                inode=ing_dic,
+                                recipe=env.name
                             )
                             rMatrix.addIngredient(ingr)
                             # setup recipe

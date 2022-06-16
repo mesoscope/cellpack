@@ -59,6 +59,12 @@ class PlotlyAnalysis:
         )
 
     def add_ingredient_positions(self, env):
+        bounds = env.boundingBox
+        # requiring the first bounds be lower
+        xbounds = [bounds[0][0], bounds[1][0]]
+        ybounds = [bounds[0][1], bounds[1][1]]
+        self.plot.update_xaxes(range=xbounds)
+        self.plot.update_yaxes(range=ybounds)
         for pos, rot, ingr, ptInd in env.molecules:
             if len(ingr.positions) > 1:
                 for level in range(len(ingr.positions)):
