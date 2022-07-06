@@ -1850,7 +1850,6 @@ def setupFromJsonDic(
                     rep = None
                     rep_file = None
                 compartment = env.create_compartment(name, geom, gname, rep, rep_file, mtype)
-                print("added compartment ", name)
                 env.addCompartment(compartment)
                 if "surface" in comp_dic:
                     snode = comp_dic["surface"]
