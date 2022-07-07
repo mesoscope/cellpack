@@ -62,12 +62,12 @@
         "outer_leaflet": {},
         "inner_leaflet": {},
       }
-    }
-    "sphere_tree": {
+    },
+    "sphere_tree_A": {
       "type": "multi_sphere",
       "inherit": "base",
       "representations": {
-        "sphere_tree": {
+        "collision": {
           "path": "autoPACKserver/collisionTrees/",
           "name": "sphere_tree_A.sph",
           "format": "",
@@ -79,28 +79,19 @@
     "sphere_25": {
       "type": "single_sphere",
       "inherit": "base",
-      "molarity": 0,
       "color": [
         0.5,
         0.5,
         0.5
       ],
       "weight": 0.25,
-      "radii": [[25]],
+      "radius": 25,
       "coordinate_system": "left",
       "jitterMax": [
         1,
         1,
         0
       ],
-      "packing": {
-        "mode": "random"
-      },
-      "positions": [[[
-        0,
-        0,
-        0
-      ]]],
     },
     "sphere_50": {
       "inherit": "sphere_25",
@@ -110,7 +101,7 @@
         0.8
       ],
       "weight": 0.5,
-      "radii": [[50]],
+      "radius": 50,
     },
     "sphere_75": {
       "inherit": "sphere_25",
@@ -120,7 +111,7 @@
         0.3
       ],
       "weight": 0.75,
-      "radii": [[75]],
+      "radius": 75,
     },
     "sphere_100": {
       "inherit": "sphere_25",
@@ -130,11 +121,11 @@
         0.5
       ],
       "weight": 1.0,
-      "radii": [[100]],
+      "radius": 100,
     },
   },
   "composition": {
-    "cytoplasme": {
+    "space": {
       "regions": {
         "interior": [
           "tree", "A", "B", "C"
@@ -142,48 +133,60 @@
       }
     },
     "tree": {
-      "object": "sphere_tree",
+      "object": "sphere_tree_A",
+      "molarity": 1,
+      // do we want to expand this into "amount"?
+      // "amount": {
+      //   "type": "molarity",
+      //   "value": 1,
+      // }
     },
     "A": {
       "object": "sphere_100",
       "regions": {
-        "surface": ["A_surface", "A_protrusion"],
-        "interior": ["A_interior"],
+        "surface": [{
+          "object": "sphere_50",
+          "count": 5,
+        },{
+          "object": "sphere_75",
+          "count": 1,
+        }],
+        "interior": [{
+          "object": "sphere_25",
+          "count": 30,
+          "priority": -1
+        }],
       }
-    },
-    "A_interior": {
-      "object": "sphere_25",
-      "count": 30,
-      "priority": -1
-    },
-    "A_surface": {
-      "object": "sphere_50",
-      "count": 5,
-    },
-    "A_protrusion": {
-      "object": "sphere_75",
-      "count": 1,
     },
     "B": {
       "object": "sphere_100",
       "regions": {
-        "surface": ["B_surface"],
-        "interior": ["B_interior"],
+        "surface": ["B_sphere_75"],
+        "interior": [
+          // "B_interior_ribosomes",
+          // "B_interior_transcripts",
+          "B_sphere_50"],
       }
     },
-    "B_interior": {
+    "B_sphere_50": {
       "object": "sphere_50",
       "count": 8,
       "priority": -1
     },
-    "B_surface": {
+    "B_sphere_75": {
       "object": "sphere_75",
       "count": 3,
     },
     "C": {
       "object": "sphere_100",
       "regions": {
-        "interior": ["C_interior", "D"],
+        "interior": [
+          // provide option to specify ingredients directly
+          // if they don't have regions?
+          "C_interior",
+          {"object": "sphere_50", "count": 5},
+          {"object": "ribosome", "count": 11},
+          "D"],
       }
     },
     "C_interior": {
@@ -194,7 +197,9 @@
     "D": {
       "object": "sphere_50",
       "regions": {
-        "outer_leaflet": ["D_outer"]
+        "outer_leaflet": [
+          {"object": "ribosome", "count": 5},
+          "D_outer"]
         "interior": ["D_interior"]
       }
     },
