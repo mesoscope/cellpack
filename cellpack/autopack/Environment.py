@@ -1421,7 +1421,6 @@ class Environment(CompartmentList):
         fits, bb = compartment.inBox(self.boundingBox)
 
         if not fits:
-            print("NEED NEW BB", bb, self.boundingBox)
             self.boundingBox = bb
         CompartmentList.addCompartment(self, compartment)
 
