@@ -102,7 +102,7 @@ class simulariumHelper(hostHelper.Helper):
         self.scene = {}  # dict of instances in the scene
         self.agent_id_counter = 0
         self.display_data = {}
-        self.scale_factor = 1
+        self.scale_factor = 1 / 10.0
         self.viewer = "nogui"
         self.nogui = True
         self.hext = "dae"
@@ -465,7 +465,7 @@ class simulariumHelper(hostHelper.Helper):
                         name,
                         None,
                         f"{name}-{index}",
-                        0.1,
+                        10,
                         point_pos,
                         np.identity(4),
                         None,
