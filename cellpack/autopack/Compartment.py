@@ -1021,6 +1021,7 @@ class Compartment(CompartmentList):
                 vSurfaceArea,
                 off_grid_surface_points,
                 compartment_ids,
+                mesh_store
             )
         elif (
             env.innerGridMethod == "scanline" and self.isOrthogonalBoundingBox != 1
@@ -1235,32 +1236,37 @@ class Compartment(CompartmentList):
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_trimesh(
-        self, env, grdPos, new_distances, vSurfaceArea, srfPts, idarray
+        self, env, grdPos, new_distances, vSurfaceArea, srfPts, idarray, mesh_store
     ):
         """Build the compartment grid ie surface and inside points"""
         insidePoints = []
         number = self.number
         # build trimer mesh
-        mesh = trimesh.Trimesh(vertices=self.vertices, faces=self.faces)
+        mesh = mesh_store.get_mesh(self.gname)
         # voxelized
-
+        self.log.info("CREATED MESH")
         trimesh_grid = creation.voxelize(mesh, pitch=env.grid.gridSpacing).hollow()
+        self.log.info("VOXELIZED MESH")
 
         # the main loop
-
-        for ptInd in range(len(grdPos)):  # len(grdPos)):
+        tree = spatial.cKDTree(grdPos, leafsize=10)
+        points_in_encap_sphere = tree.query_ball_point(
+            self.center, self.encapsulatingRadius + env.grid.gridSpacing * 2, return_sorted=True
+        )
+        self.log.info("GOT POINTS IN SPHERE")
+        for ptInd in points_in_encap_sphere:  # len(grdPos)):
             coord = [
                 grdPos.item((ptInd, 0)),
                 grdPos.item((ptInd, 1)),
                 grdPos.item((ptInd, 2)),
             ]
-            insideBB = self.checkPointInsideBB(coord, dist=new_distances.item(ptInd))
-            if insideBB:
-                if trimesh_grid.is_filled(coord):
-                    idarray.itemset(ptInd, number)
-                elif mesh.contains([coord]):
-                    insidePoints.append(ptInd)
-                    idarray.itemset(ptInd, -number)
+            # insideBB = self.checkPointInsideBB(coord, dist=new_distances.item(ptInd))
+            # if insideBB:
+            if trimesh_grid.is_filled(coord):
+                idarray.itemset(ptInd, number)
+            elif mesh_store.contains_point(self.gname, coord):
+                insidePoints.append(ptInd)
+                idarray.itemset(ptInd, -number)
 
         nbGridPoints = len(env.grid.masterGridPositions)
 
@@ -2044,23 +2050,11 @@ class Compartment(CompartmentList):
             surfacePointsNormals[nbGridPoints + i] = n
 
         insidePoints = insidePoints
-        print("time to extend arrays", time() - t1)
-
-        print("Total time", time() - t0)
 
         self.insidePoints = insidePoints
         self.surfacePoints = surfacePoints
         self.surfacePointsCoords = surfPtsBB
         self.surfacePointsNormals = surfacePointsNormals
-        print(
-            "%s surface pts, %d inside pts, %d tot grid pts, %d master grid"
-            % (
-                len(self.surfacePoints),
-                len(self.insidePoints),
-                nbGridPoints,
-                len(env.grid.masterGridPositions),
-            )
-        )
 
         self.computeVolumeAndSetNbMol(
             env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
@@ -2139,12 +2133,6 @@ class Compartment(CompartmentList):
         if len(pointinside) == 1 and len(pointinside[0]) != 1:
             pointinside = pointinside[0]
         env.grid.compartment_ids[indice] = -self.number
-        print(
-            "sdf pointID N ",
-            self.number,
-            len(env.grid.compartment_ids[indice]),
-            env.grid.compartment_ids[indice],
-        )
         t1 = time()
         nbGridPoints = len(env.grid.masterGridPositions)
 
@@ -2155,23 +2143,12 @@ class Compartment(CompartmentList):
         )
 
         insidePoints = pointinside
-        print("time to extend arrays", time() - t1)
 
-        print("Total time", time() - t0)
 
         self.insidePoints = insidePoints
         self.surfacePoints = surfacePoints
         self.surfacePointsCoords = surfPtsBB
         self.surfacePointsNormals = surfacePointsNormals
-        print(
-            "%s surface pts, %d inside pts, %d tot grid pts, %d master grid"
-            % (
-                len(self.surfacePoints),
-                len(self.insidePoints),
-                nbGridPoints,
-                len(env.grid.masterGridPositions),
-            )
-        )
         self.computeVolumeAndSetNbMol(
             env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
