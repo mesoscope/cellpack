@@ -221,7 +221,7 @@ def main():
             for place_method in args.place_methods:
                 env.placeMethod = place_method
                 env.saveResult = True
-                env.innerGridMethod = "jordan"  # jordan pure python ? sdf ?
+                env.innerGridMethod = "raytrace"  
                 env.boundingBox = [[-2482, -2389.0, 100.0], [2495, 2466, 2181.0]]
                 env.buildGrid(
                     boundingBox=env.boundingBox,

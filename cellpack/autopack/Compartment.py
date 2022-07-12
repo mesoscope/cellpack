@@ -945,7 +945,7 @@ class Compartment(CompartmentList):
             )  # to make the outer most selection from the master and then the compartment
         elif (
             env.innerGridMethod == "bhtree" and self.isOrthogonalBoundingBox != 1
-        ):  # surfaces and interiors will be subtracted from it as normal!
+        ): 
             inside_points, surface_points = self.BuildGrid_bhtree(
                 env,
                 ctree,
@@ -958,31 +958,15 @@ class Compartment(CompartmentList):
                 distances,
             )
         elif (
-            env.innerGridMethod == "jordan" and self.isOrthogonalBoundingBox != 1
+            env.innerGridMethod == "raytrace" and self.isOrthogonalBoundingBox != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
-            inside_points, surface_points = self.BuildGrid_jordan(
+            inside_points, surface_points = self.BuildGrid_ray(
                 env,
                 master_grid_positions,
-                new_distances,
-                diag,
                 vSurfaceArea,
                 off_grid_surface_points,
                 compartment_ids,
                 mesh_store,
-            )
-        elif (
-            env.innerGridMethod == "jordan3" and self.isOrthogonalBoundingBox != 1
-        ):  # surfaces and interiors will be subtracted from it as normal!
-            inside_points, surface_points = self.BuildGrid_jordan(
-                env,
-                master_grid_positions,
-                new_distances,
-                diag,
-                vSurfaceArea,
-                off_grid_surface_points,
-                compartment_ids,
-                mesh_store,
-                ray=3,
             )
         elif (
             env.innerGridMethod == "pyray" and self.isOrthogonalBoundingBox != 1
@@ -1017,7 +1001,6 @@ class Compartment(CompartmentList):
             inside_points, surface_points = self.BuildGrid_trimesh(
                 env,
                 master_grid_positions,
-                new_distances,
                 vSurfaceArea,
                 off_grid_surface_points,
                 compartment_ids,
@@ -1036,6 +1019,9 @@ class Compartment(CompartmentList):
                 compartment_ids,
                 mesh_store
             )
+        else:
+            self.log.error("Not a recognized inner grid method", env.innerGridMethod)
+
         return inside_points, surface_points
 
     def prepare_buildgrid_box(self, env):
@@ -1091,19 +1077,18 @@ class Compartment(CompartmentList):
             env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
 
-    def BuildGrid_jordan(
+    def BuildGrid_ray(
         self,
         env,
         grdPos,
-        new_distances,
-        diag,
         vSurfaceArea,
         vertex_points,
         idarray,
         mesh_store,
-        ray=1,
     ):
-        """Build the compartment grid ie surface and inside point using jordan theorem and host raycast"""
+        """Build the compartment grid using pyembree raycast to find inside points, 
+        and then a cKDTree to find "missing" surface points, ie surface points that are 
+        in between vertex points"""
 
         insidePoints = []
 
@@ -1236,7 +1221,7 @@ class Compartment(CompartmentList):
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_trimesh(
-        self, env, grdPos, new_distances, vSurfaceArea, srfPts, idarray, mesh_store
+        self, env, grdPos, vSurfaceArea, srfPts, idarray, mesh_store
     ):
         """Build the compartment grid ie surface and inside points"""
         insidePoints = []
@@ -1445,10 +1430,6 @@ class Compartment(CompartmentList):
                     insidePoints.append(ptInd)
                     idarray[ptInd] = -number
             p = (ptInd / float(len(grdPos))) * 100.0
-            helper.progressBar(
-                progress=int(p),
-                label=str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(inside),
-            )
 
         nbGridPoints = len(env.grid.masterGridPositions)
 
@@ -2133,7 +2114,6 @@ class Compartment(CompartmentList):
         if len(pointinside) == 1 and len(pointinside[0]) != 1:
             pointinside = pointinside[0]
         env.grid.compartment_ids[indice] = -self.number
-        t1 = time()
         nbGridPoints = len(env.grid.masterGridPositions)
 
         surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
@@ -2143,7 +2123,6 @@ class Compartment(CompartmentList):
         )
 
         insidePoints = pointinside
-
 
         self.insidePoints = insidePoints
         self.surfacePoints = surfacePoints
@@ -2557,7 +2536,7 @@ class Compartment(CompartmentList):
         vertices = self.vertices[:]
         from cellpack.autopack.Environment import Grid
 
-        # Grid initialization referenced from getSurfaceInnerPointsJordan()
+        # Grid initialization 
         self.grid = grid = Grid()  # setup=False)
         grid.boundingBox = boundingBox
         grid.gridSpacing = spacing

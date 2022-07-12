@@ -525,11 +525,11 @@ class Environment(CompartmentList):
             },
             "innerGridMethod": {
                 "name": "innerGridMethod",
-                "value": "jordan3",
+                "value": "raytrace",
                 "values": [
                     "bhtree",
                     #                                           "sdf",
-                    "jordan",
+                    "raytrace",
                     "jordan3",
                     "pyray",
                     "floodfill",
@@ -537,7 +537,7 @@ class Environment(CompartmentList):
                     "trimesh",
                     "scanline",
                 ],
-                "default": "jordan3",
+                "default": "raytrace",
                 "type": "liste",
                 "description": "Method to calculate the inner grid:",
                 "width": 30,
