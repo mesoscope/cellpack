@@ -222,7 +222,7 @@ class Grid(BaseGrid):
 
     def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=10.0, lookup=0):
         # a grid is attached to an environement
-        BaseGrid.__init__(self, boundingBox=boundingBox, space=space, setup=False, lookup=lookup)
+        BaseGrid.__init__(self, boundingBox=boundingBox, spacing=space, setup=False, lookup=lookup)
 
         self.gridSpacing = space * 1.1547
         self.encapsulatingGrid = 1
@@ -314,7 +314,7 @@ class Environment(CompartmentList):
         self.exteriorRecipe = None
         self.hgrid = []
         self.world = None  # panda world for collision
-        self.octree = None  # ongoing octree test, no need if openvdb wrapp to python
+        self.octree = None  # ongoing octree test, no need if openvdb wrapped to python
         self.grid = None  # Grid()  # the main grid
         self.encapsulatingGrid = (
             0  # Only override this with 0 for 2D packing- otherwise its very unsafe!
@@ -1418,7 +1418,7 @@ class Environment(CompartmentList):
         compartment.setNumber(self.nbCompartments)
         self.nbCompartments += 1
 
-        fits, bb = compartment.inBox(self.boundingBox)
+        fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
 
         if not fits:
             self.boundingBox = bb
@@ -1618,8 +1618,9 @@ class Environment(CompartmentList):
             # save bb for current fill
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
+            spacing = self.smallestProteinSize * 1.1547
             self.grid = Grid(
-                boundingBox=boundingBox, space=self.smallestProteinSize, lookup=lookup
+                boundingBox=boundingBox, space=spacing, lookup=lookup
             )
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
@@ -1663,7 +1664,6 @@ class Environment(CompartmentList):
         if r:
             r.setCount(self.exteriorVolume)  # should actually use the fillBB
         if not rebuild:
-            # self.grid.distToClosestSurf = self.grid.distToClosestSurf_store[:]
             for c in self.compartments:
                 c.setCount()
         else:

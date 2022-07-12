@@ -135,11 +135,10 @@ class BaseGrid:
         return nbFreePoints
 
     def __init__(
-        self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=True, lookup=0
+        self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), spacing=20, setup=True, lookup=0
     ):
         self.log = logging.getLogger("grid")
         self.log.propagate = False
-
         if None in boundingBox[0] or None in boundingBox[1]:
             boundingBox = ([0, 0, 0], [1000, 1000, 1000])
         # a grid is attached to an environnement
@@ -163,7 +162,7 @@ class BaseGrid:
         self.distToClosestSurf = []
         self.distToClosestSurf_store = []
         self.diag = self.getDiagonal()
-        self.gridSpacing = space  # * 1.1547#cubic grid with a diagonal spacing equal to that smallest packing radius
+        self.gridSpacing = spacing  # #cubic grid with a diagonal spacing equal to that smallest packing radius
         self.nbGridPoints = None
         self.nbSurfacePoints = 0
         self.gridVolume = 0  # will be the total number of grid points
@@ -188,17 +187,14 @@ class BaseGrid:
         self.center = None
         self.backup = None
         if setup:
-            self.setup(self.boundingBox, space)
+            self.setup(self.boundingBox)
             # use np.roll to have periodic condition
             # what about collision ?
 
-    def setup(self, boundingBox, space):
+    def setup(self, boundingBox):
         # TODO : verify the gridSpacing calculation / setup after reading the recipe
-        if space == 0:
-            space = 20
-        self.gridSpacing = space  # * 1.1547
+  
         self.boundingBox = boundingBox
-
         if self.lookup == 0:
             self.create3DPointLookupCover()
         elif self.lookup == 1:
@@ -211,7 +207,7 @@ class BaseGrid:
 
         self.getDiagonal()
         self.nbSurfacePoints = 0
-        self.log.info("SETUP BASE GRID %d %d", self.gridVolume, self.gridSpacing)
+        self.log.info(f"SETUP BASE GRID {self.gridVolume} {self.gridSpacing}")
         self.compartment_ids = numpy.zeros(self.gridVolume, "i")  # [0]*nbPoints
         # self.distToClosestSurf = [self.diag]*self.gridVolume#surface point too?
         self.distToClosestSurf = (
@@ -284,7 +280,7 @@ class BaseGrid:
                     pointArrayRaw[i] = (x, y, z)
                     self.ijkPtIndice[i] = (xi, yi, zi)
                     i += 1
-        self.log.info("grid spacing %d", space)
+        self.log.info(f"grid spacing {space}")
         self.masterGridPositions = pointArrayRaw
 
     def create3DPointLookup(self, boundingBox=None):
@@ -873,7 +869,7 @@ class BaseGrid:
 class HaltonGrid(BaseGrid):
     def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=False):
         BaseGrid.__init__(
-            self, boundingBox=boundingBox, space=space, setup=setup, lookup=1
+            self, boundingBox=boundingBox, spacing=space, setup=setup, lookup=1
         )
         self.haltonseq = cHaltonSequence3()
         self.tree = None
