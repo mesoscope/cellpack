@@ -335,7 +335,7 @@ class simulariumHelper(hostHelper.Helper):
             if extension == ".obj":
                 display_type = DISPLAY_TYPE.OBJ
                 url = compartment.path if not os.path.isfile(compartment.path) else os.path.basename(compartment.path)
-                radius = self.scale_factor
+                radius = 1
         self.display_data[compartment.name] = DisplayData(
             name=compartment.name, display_type=display_type, url=url
         )
@@ -446,6 +446,7 @@ class simulariumHelper(hostHelper.Helper):
                 rotation,
                 None,
             )
+        # grid_point_compartment_ids = None
         if grid_point_compartment_ids is not None:
             for index in range(len(grid_point_compartment_ids)):
                 if index % 1 == 0:
@@ -465,7 +466,7 @@ class simulariumHelper(hostHelper.Helper):
                         name,
                         None,
                         f"{name}-{index}",
-                        10,
+                        0.1,
                         point_pos,
                         np.identity(4),
                         None,
@@ -1168,7 +1169,6 @@ class simulariumHelper(hostHelper.Helper):
             z_size * self.scale_factor,
         ]
 
-        print(box_adjustment, box_size)
         n_agents = [0 for x in range(total_steps)]
         type_names = [
             ["" for x in range(max_number_agents)] for x in range(total_steps)
