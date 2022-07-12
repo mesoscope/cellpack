@@ -475,7 +475,6 @@ class AnalyseAP:
                 area = self.g.get_rectangle_cercle_area(
                     rect, m, r, leftBound, rightBound
                 )
-            #                print area,leftBound,rightBound
             else:
                 area = bbox[0][1] ** 2
         return area
