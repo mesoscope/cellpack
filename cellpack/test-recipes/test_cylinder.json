@@ -33,7 +33,7 @@
         "resultfile": "autoPACKserver/results/NM_Analysis_FigureB1.0.apr.json",
         "runTimeDisplay": false,
         "saveResult": false,
-        "smallestProteinSize": 0,
+        "smallestProteinSize": 25,
         "use_gradient": false,
         "use_periodicity": true,
         "windowsSize": 10
@@ -63,7 +63,7 @@
                 "molarity": 0,
                 "name": "cylinder_r_50_l_200",
                 "nbJitter": 20,
-                "nbMol": 1,
+                "nbMol": 100,
                 "orientBiasRotRangeMax": 3.14159,
                 "orientBiasRotRangeMin": -3.14159,
                 "packingMode": "random",
@@ -86,7 +86,7 @@
                     [
                         [
                             0,
-                            200,
+                            100,
                             0
                         ]
                     ]
@@ -101,7 +101,7 @@
                 "properties": {},
                 "radii": [
                     [
-                        50
+                        25
                     ]
                 ],
                 "rejectionThreshold": 100,

@@ -142,7 +142,7 @@ class SingleCubeIngr(Ingredient):
         level,
         gridPointsCoords,
         current_grid_distances,
-        histoVol,
+        env,
         dpad,
     ):
         """
@@ -168,7 +168,7 @@ class SingleCubeIngr(Ingredient):
             center_trans + search_radius,
         )  # bounding box in world space
 
-        if histoVol.runTimeDisplay:  # > 1:
+        if env.runTimeDisplay:  # > 1:
             box = self.vi.getObject("collBox")
             if box is None:
                 box = self.vi.Box(
@@ -178,7 +178,7 @@ class SingleCubeIngr(Ingredient):
                 self.vi.updateBox(box, cornerPoints=bb)
             self.vi.update()
 
-        points_to_check = histoVol.grid.getPointsInCube(
+        points_to_check = env.grid.getPointsInCube(
             bb, center_trans, search_radius
         )  # indices of all grid points within padded distance from cube center
 

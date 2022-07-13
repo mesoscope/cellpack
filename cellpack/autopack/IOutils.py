@@ -246,11 +246,14 @@ class IOingredientTool(object):
             f.write(ingrnode)
             f.close()
 
-    def makeIngredientFromXml(self, inode=None, filename=None, recipe="Generic"):
+    def makeIngredientFromXml(self, env, inode=None, filename=None, recipe="Generic"):
+        overwrite_dic = {}
+        ingr_dic = {}
         if filename is None and inode is not None:
-            f = str(inode.getAttribute("include"))
-            if f != "":
-                filename = str(f)
+            if "include" in inode:
+                filename = inode["include"]
+            if "overwrite" in inode:
+                overwrite_dic = inode["overwrite"]
         if filename is not None:
             # filter the filename or pass the custom-path?
             filename = autopack.retrieveFile(
@@ -262,15 +265,18 @@ class IOingredientTool(object):
 
             print("parsing an ingredient xml", filename)
             xmlingr = parse(filename)  # parse an XML file by name
-            ingrnode = xmlingr.documentElement
+            ingr_dic = xmlingr.documentElement
         elif inode is not None:
-            ingrnode = inode
+            ingr_dic = inode
         else:
             print("filename is None")
             return None
 
-        name = str(ingrnode.getAttribute("name"))
-        ingre = self.makeIngredient(**kw)
+        kw = ingr_dic
+        # check for overwritten parameter
+        if len(overwrite_dic):
+            kw.update(overwrite_dic)
+        ingre = self.makeIngredient(env, **kw)
         return ingre
 
     def ingrXmlNode(self, ingr, xmldoc=None):

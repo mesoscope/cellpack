@@ -255,31 +255,101 @@ class SingleCylinderIngr(Ingredient):
 
     def collision_jitter(
         self,
-        jtrans,
-        rotMat,
+        packing_location,
+        rotation_matrix,
         level,
         gridPointsCoords,
-        distance,
-        histoVol,
+        current_grid_distances,
+        env,
         dpad,
     ):
         """
         Check cylinders for collision
+        positions denotes the center of the cylinder base surface
+        positions2 denotes the center of the cylinder top surface
         """
-        centers1 = self.positions[level]
-        centers2 = self.positions2[level]
-        radii = self.radii[level]
-        return self.checkCylCollisions(
-            centers1,
-            centers2,
-            radii,
-            jtrans,
-            rotMat,
-            gridPointsCoords,
-            distance,
-            histoVol,
-            dpad,
+        bottom_cent = numpy.array(self.positions[0][0] - self.axis / 2)
+        top_cent = numpy.array(self.positions2[0][0] - self.axis / 2)
+
+        bottom_cent = numpy.array(
+            self.transformPoints(packing_location, rotation_matrix, [bottom_cent])[0]
         )
+        top_cent = numpy.array(
+            self.transformPoints(packing_location, rotation_matrix, [top_cent])[0]
+        )
+
+        center_trans = (top_cent + bottom_cent) / 2
+
+        insidePoints = {}
+        newDistPoints = {}
+
+        search_radius = 2 * self.encapsulatingRadius + dpad
+
+        bb = self.correctBB(
+            bottom_cent, top_cent, search_radius
+        )  # bounding box in world space
+
+        if env.runTimeDisplay:  # > 1:
+            box = self.vi.getObject("collBox")
+            if box is None:
+                box = self.vi.Box(
+                    "collBox", cornerPoints=bb, visible=1
+                )  # cornerPoints=bb,visible=1)
+            else:
+                self.vi.updateBox(box, cornerPoints=bb)
+            self.vi.update()
+
+        points_to_check = env.grid.getPointsInCube(
+            bb, center_trans, search_radius
+        )  # indices of all grid points within padded distance from cube center
+
+        grid_point_vectors = numpy.take(gridPointsCoords, points_to_check, 0)
+
+        # signed distances of grid points from the cube surface
+        grid_point_distances = []
+        for grid_point in grid_point_vectors:
+            grid_point_distance = self.get_signed_distance(
+                center_trans,
+                grid_point,
+                rotation_matrix,
+            )
+            grid_point_distances.append(grid_point_distance)
+
+        for pti in range(len(points_to_check)):
+            # pti = point index
+
+            grid_point_index = points_to_check[pti]
+            signed_distance_to_cyl_surface = grid_point_distances[pti]
+
+            collision = (
+                signed_distance_to_cyl_surface
+                + current_grid_distances[grid_point_index]
+                <= 0
+            )
+
+            if collision:
+                self.log.info("grid point already occupied %f", grid_point_index)
+                return True, {}, {}
+
+            # check if grid point lies inside the cube
+            if signed_distance_to_cyl_surface <= 0:
+                if grid_point_index not in insidePoints or abs(
+                    signed_distance_to_cyl_surface
+                ) < abs(insidePoints[grid_point_index]):
+                    insidePoints[grid_point_index] = signed_distance_to_cyl_surface
+            elif (
+                signed_distance_to_cyl_surface
+                <= current_grid_distances[grid_point_index]
+            ):
+                # update grid distances if no collision was detected
+                if grid_point_index in newDistPoints:
+                    newDistPoints[grid_point_index] = min(
+                        signed_distance_to_cyl_surface, newDistPoints[grid_point_index]
+                    )
+                else:
+                    newDistPoints[grid_point_index] = signed_distance_to_cyl_surface
+
+        return False, insidePoints, newDistPoints
 
     def add_rb_node(self, worldNP):
         inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
