@@ -1239,14 +1239,12 @@ class Compartment(CompartmentList):
             self.center, self.encapsulatingRadius + env.grid.gridSpacing * 2, return_sorted=True
         )
         self.log.info("GOT POINTS IN SPHERE")
-        for ptInd in points_in_encap_sphere:  # len(grdPos)):
+        for ptInd in points_in_encap_sphere:
             coord = [
                 grdPos.item((ptInd, 0)),
                 grdPos.item((ptInd, 1)),
                 grdPos.item((ptInd, 2)),
             ]
-            # insideBB = self.checkPointInsideBB(coord, dist=new_distances.item(ptInd))
-            # if insideBB:
             if trimesh_grid.is_filled(coord):
                 idarray.itemset(ptInd, number)
             elif mesh_store.contains_point(self.gname, coord):
