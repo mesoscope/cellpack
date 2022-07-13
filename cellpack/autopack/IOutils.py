@@ -526,7 +526,7 @@ def addCompartments(env, compdic, i, io_ingr):
 
 def save_as_simularium(env, setupfile, all_ingr_as_array, compartments):
     autopack.helper.clear()
-    grid_positions = env.grid.masterGridPosition if env.show_grid_spheres else None
+    grid_positions = env.grid.masterGridPositions if env.show_grid_spheres else None
     compartment_ids = env.grid.compartment_ids if env.show_grid_spheres else None
     autopack.helper.init_scene_with_objects(all_ingr_as_array, grid_positions, compartment_ids)
     if compartments is not None:
