@@ -420,8 +420,8 @@ class simulariumHelper(hostHelper.Helper):
     def init_scene_with_objects(
         self,
         objects,
-        grid_point_positions,
-        grid_point_compartment_ids,
+        grid_point_positions=None,
+        grid_point_compartment_ids=None,
     ):
         self.time = 0
         for position, rotation, ingredient, ptInd in objects:
@@ -446,8 +446,7 @@ class simulariumHelper(hostHelper.Helper):
                 rotation,
                 None,
             )
-        # grid_point_compartment_ids = None
-        if grid_point_compartment_ids is not None:
+        if grid_point_positions is not None:
             for index in range(len(grid_point_compartment_ids)):
                 if index % 1 == 0:
                     compartment_id = grid_point_compartment_ids[index]

@@ -1620,7 +1620,7 @@ class Environment(CompartmentList):
             self.fillBB = boundingBox
             spacing = self.smallestProteinSize * 1.1547
             self.grid = Grid(
-                boundingBox=boundingBox, space=spacing, lookup=lookup
+                boundingBox=boundingBox, spacing=spacing, lookup=lookup
             )
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
@@ -2287,6 +2287,7 @@ class Environment(CompartmentList):
         name=None,
         vTestid=3,
         vAnalysis=0,
+        show_grid_spheres=False,
         **kw,
     ):
         """
@@ -2296,6 +2297,7 @@ class Environment(CompartmentList):
         # set periodicity
         autopack.testPeriodicity = self.use_periodicity
         t1 = time()
+        self.show_grid_spheres = show_grid_spheres
         self.timeUpDistLoopTotal = 0
         self.static = []
         if self.grid is None:

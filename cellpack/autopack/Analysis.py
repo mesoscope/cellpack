@@ -981,14 +981,14 @@ class AnalyseAP:
         print("time to Build Grid", gridTime)
 
     def pack(
-        self, seed=20, vTestid=3, vAnalysis=0, fbox_bb=None, show_plotly_plot=True
+        self, seed=20, vTestid=3, vAnalysis=0, fbox_bb=None, show_plotly_plot=True, show_grid_spheres=False
     ):
         if show_plotly_plot:
             self.plotly.update_title(self.env.placeMethod)
 
         t1 = time()
         self.env.pack_grid(
-            seedNum=seed, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb
+            seedNum=seed, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb, show_grid_spheres=show_grid_spheres
         )
         t2 = time()
         print("time to run pack_grid", self.env.placeMethod, t2 - t1)
@@ -1129,7 +1129,7 @@ class AnalyseAP:
         rdf=True,
         render=False,
         plot=True,
-        show_plotly_plot=True,
+        show_grid=True,
         twod=True,
         fbox_bb=None,
         use_file=True,
@@ -1180,7 +1180,8 @@ class AnalyseAP:
                 vTestid=seed_index,
                 vAnalysis=1,
                 fbox_bb=fbox_bb,
-                show_plotly_plot=show_plotly_plot,
+                show_plotly_plot=(show_grid and twod),
+                show_grid_spheres=(show_grid and not twod)
             )
             self.center = self.env.grid.getCenter()
             if render:

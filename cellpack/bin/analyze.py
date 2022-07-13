@@ -159,13 +159,13 @@ def main():
         recipe_path = os.path.join(os.getcwd(), args.recipe)
         do_analysis = args.analysis
         dim = args.dim
-        default_should_plot = args.dim == 2 and do_analysis
+        default_should_plot = do_analysis
         save_plot = (
             args.save_analysis_plot
             if args.save_analysis_plot is not None
             else default_should_plot
         )
-        show_plotly_plot = (
+        show_grid_data = (
             args.grid_plot if args.grid_plot is not None else default_should_plot
         )
         output = args.output
@@ -214,7 +214,7 @@ def main():
                     env.boundingBox,
                     output,
                     plot=save_plot,
-                    show_plotly_plot=show_plotly_plot,
+                    show_grid=show_grid_data,
                     twod=(dim == 2),
                 )
         else:
