@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Jan 27 09:04:10 2013
-
-@author: Ludovic Autin
-"""
 import os
 
 import json
