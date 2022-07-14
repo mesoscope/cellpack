@@ -11,16 +11,16 @@ from .utils import pandaMatrice
 helper = autopack.helper
 
 
-class MultiCylindersIngr(Ingredient):
+class SingleCylinderIngr(Ingredient):
     """
-    This Ingredient is represented by a collection of cylinder specified by
+    This Ingredient is represented by a single cylinder specified by
     radii, positions and positions2.
     The principal Vector will be used to align the ingredient
     """
 
     def __init__(
         self,
-        Type="MultiCylinder",
+        Type="SingleCylinder",
         color=None,
         coordsystem="right",
         cutoff_boundary=None,
@@ -124,27 +124,35 @@ class MultiCylindersIngr(Ingredient):
         self.minRadius = self.radii[0][0]
         self.useLength = useLength
         self.uLength = uLength
-        self.encapsulatingRadius = radii[0][0]
+        self.nbCurve = 2
         if self.positions2 is not None and self.positions is not None:
-            # shoulde the overall length of the object from bottom to top
-            bb = self.getBigBB()
-            d = numpy.array(bb[1]) - numpy.array(bb[0])
-            s = numpy.sum(d * d)
-            self.length = math.sqrt(s)  # diagonal
+            bottom_cent = numpy.array(self.positions[0][0])
+            top_cent = numpy.array(self.positions2[0][0])
+
+            self.axis = top_cent - bottom_cent
+            self.length = numpy.linalg.norm(self.axis)
+
+            self.principalVector = self.axis / self.length
+
+            self.center = (
+                bottom_cent + (top_cent - bottom_cent) / 2
+            )  # location of center based on top and bottom
+
+            self.encapsulatingRadius = numpy.sqrt(
+                radii[0][0] ** 2 + (self.length / 2.0) ** 2
+            )
+
+            self.listePtLinear = [
+                bottom_cent,
+                bottom_cent + self.axis,
+            ]
 
     def initialize_mesh(self, mesh_store):
         if self.mesh is None and autopack.helper is not None:
-            length = 1
-            if self.positions2 is not None and self.positions is not None:
-                d = numpy.array(self.positions2[0][0]) - numpy.array(
-                    self.positions[0][0]
-                )
-                s = numpy.sum(d * d)
-                length = math.sqrt(s)  # diagonal
             self.mesh = autopack.helper.Cylinder(
                 self.name + "_basic",
                 radius=self.radii[0][0] * 1.24,
-                length=length,
+                length=self.length,
                 res=5,
                 parent="autopackHider",
                 axis=self.principalVector,
@@ -432,3 +440,71 @@ class MultiCylindersIngr(Ingredient):
                             insidePoints[pt] = d
             cylNum += 1
         return False, insidePoints, newDistPoints
+
+    def get_signed_distance(
+        self,
+        packing_location,
+        grid_point_location,
+        rotation_matrix,
+    ):
+        # returns the distance to 'grid_point_location' from the nearest cylinder surface
+        # the cylinder center is located at packing_location
+        # a rotation matrix rotation_matrix is applied to the cylinder
+        # bottom_cent = center point of cylinder bottom surface (positions)
+        # top_cent = center point of cylinder top surface (positions2)
+        radius = self.radii[0][0]
+
+        length = self.length
+
+        bottom_cent = numpy.array(self.positions[0][0] - self.axis / 2)
+        top_cent = numpy.array(self.positions2[0][0] - self.axis / 2)
+
+        bottom_cent = numpy.array(
+            self.transformPoints(packing_location, rotation_matrix, [bottom_cent])[0]
+        )
+        top_cent = numpy.array(
+            self.transformPoints(packing_location, rotation_matrix, [top_cent])[0]
+        )
+
+        axis_vect = top_cent - bottom_cent
+
+        # check where point lies relative to cylinder
+        bottom_vect = grid_point_location - bottom_cent
+        top_vect = grid_point_location - top_cent
+
+        dist_to_bottom = numpy.linalg.norm(bottom_vect)
+        dist_to_top = numpy.linalg.norm(top_vect)
+
+        bottom_cos = numpy.dot(bottom_vect, axis_vect) / length / dist_to_bottom
+        top_cos = numpy.dot(top_vect, axis_vect) / length / dist_to_top
+
+        bottom_sin = numpy.sqrt(1 - bottom_cos**2)
+        perp_dist = (
+            dist_to_bottom * bottom_sin
+        )  # perpendicular distance to cylinder axis
+
+        if bottom_cos >= 0 and top_cos <= 0:
+            # point lies within top and bottom faces
+            if perp_dist > radius:
+                return perp_dist - radius
+            else:
+                top_surf_dist = numpy.abs(dist_to_top * top_cos)
+                bottom_surf_dist = numpy.abs(dist_to_bottom * bottom_cos)
+                curved_surf_dist = numpy.abs(perp_dist - radius)
+                return -min(top_surf_dist, bottom_surf_dist, curved_surf_dist)
+        elif bottom_cos >= 0 and top_cos >= 0:
+            # point lies beyond top face
+            if perp_dist <= radius:
+                return dist_to_top * top_cos
+            else:
+                x_dist = dist_to_top * top_cos
+                y_dist = perp_dist - radius
+                return numpy.sqrt(x_dist**2 + y_dist**2)
+        elif bottom_cos <= 0 and top_cos <= 0:
+            # point lies beyond bottom face
+            if perp_dist <= radius:
+                return numpy.abs(dist_to_bottom * bottom_cos)
+            else:
+                x_dist = dist_to_bottom * bottom_cos
+                y_dist = perp_dist - radius
+                return numpy.sqrt(x_dist**2 + y_dist**2)

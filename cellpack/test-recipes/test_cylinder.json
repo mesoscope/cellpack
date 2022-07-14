@@ -1,6 +1,6 @@
 {
     "recipe": {
-        "name": "one_sphere",
+        "name": "test_cylinder",
         "version": "1.0"
     },
     "options": {
@@ -26,7 +26,7 @@
         "ingrLookForNeighbours": false,
         "innerGridMethod": "bhtree",
         "largestProteinSize": 200,
-        "overwritePlaceMethod": true,
+        "overwritePlaceMethod": false,
         "pickRandPt": true,
         "pickWeightedIngr": true,
         "placeMethod": "jitter",
@@ -40,14 +40,14 @@
     },
     "cytoplasme": {
         "ingredients": {
-            "Sphere_radius_100": {
-                "Type": "SingleSphere",
+            "cylinder_r_50_l_200": {
+                "Type": "SingleCylinder",
                 "color": [
                     0.498,
                     0.498,
                     0.498
                 ],
-                "coordsystem": "left",
+                "coordsystem": "right",
                 "cutoff_boundary": 0,
                 "cutoff_surface": 100,
                 "encapsulatingRadius": 100,
@@ -61,11 +61,11 @@
                 ],
                 "meshFile": null,
                 "molarity": 0,
-                "name": "Sphere_radius_100",
+                "name": "cylinder_r_50_l_200",
                 "nbJitter": 20,
                 "nbMol": 1,
-                "orientBiasRotRangeMax": -3.1415927,
-                "orientBiasRotRangeMin": -3.1415927,
+                "orientBiasRotRangeMax": 3.14159,
+                "orientBiasRotRangeMin": -3.14159,
                 "packingMode": "random",
                 "packingPriority": 0,
                 "partners_name": [],
@@ -82,10 +82,18 @@
                         ]
                     ]
                 ],
-                "positions2": null,
+                "positions2": [
+                    [
+                        [
+                            0,
+                            200,
+                            0
+                        ]
+                    ]
+                ],
                 "principalVector": [
-                    1,
                     0,
+                    1,
                     0
                 ],
                 "proba_binding": 0.5,
@@ -93,15 +101,19 @@
                 "properties": {},
                 "radii": [
                     [
-                        100
+                        50
                     ]
                 ],
                 "rejectionThreshold": 100,
-                "rotAxis": null,
-                "rotRange": 6.2831,
+                "rotAxis": [
+                    0,
+                    0,
+                    1
+                ],
+                "rotRange": 6.28318,
                 "sphereFile": null,
                 "useOrientBias": false,
-                "useRotAxis": false,
+                "useRotAxis": true,
                 "weight": 0.2
             }
         }

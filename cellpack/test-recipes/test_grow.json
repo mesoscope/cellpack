@@ -1,0 +1,136 @@
+{
+    "recipe": {
+        "name": "test_grow",
+        "version": "1.0"
+    },
+    "cytoplasme": {
+        "ingredients": {
+            "snake": {
+                "Type": "Grow",
+                "biased": 0.5,
+                "closed": false,
+                "color": [
+                    1,
+                    0.498,
+                    0.314
+                ],
+                "compMask": [],
+                "constraintMarge": false,
+                "coordsystem": "left",
+                "cutoff_boundary": 25,
+                "cutoff_surface": 25,
+                "encapsulatingRadius": 75,
+                "excluded_partners_name": [],
+                "gradient": "",
+                "isAttractor": false,
+                "jitterMax": [
+                    0.1,
+                    0.1,
+                    0.1
+                ],
+                "length": 1000,
+                "marge": 40,
+                "molarity": 3.7787372e-7,
+                "name": "snake",
+                "nbJitter": 1,
+                "nbMol": 1,
+                "orientBiasRotRangeMax": -3.1415927,
+                "orientBiasRotRangeMin": -3.1415927,
+                "orientation": [
+                    0,
+                    1,
+                    0
+                ],
+                "overwrite_nbMol_value": 1,
+                "packingMode": "random",
+                "packingPriority": -10,
+                "partners_name": [],
+                "partners_position": [],
+                "perturbAxisAmplitude": 0.1,
+                "placeType": "jitter",
+                "positions": [
+                    [
+                        [
+                            0,
+                            0,
+                            0
+                        ]
+                    ]
+                ],
+                "positions2": [
+                    [
+                        [
+                            0,
+                            100,
+                            0
+                        ]
+                    ]
+                ],
+                "principalVector": [
+                    0,
+                    0,
+                    1
+                ],
+                "proba_binding": 0.5,
+                "proba_not_binding": 0.5,
+                "properties": {},
+                "radii": [
+                    [
+                        10
+                    ]
+                ],
+                "rejectionThreshold": 30,
+                "rotRange": 6.2831,
+                "source": {
+                    "pdb": "1ATZ",
+                    "transform": {
+                        "center": true
+                    }
+                },
+                "uLength": 50,
+                "useHalton": true,
+                "useLength": false,
+                "useOrientBias": false,
+                "useRotAxis": false,
+                "use_mesh_rb": false,
+                "use_rbsphere": 75,
+                "walkingMode": "sphere",
+                "weight": 0.2
+            }
+        }
+    },
+    "options": {
+        "EnviroOnly": false,
+        "_hackFreepts": false,
+        "_timer": false,
+        "boundingBox": [
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                1000,
+                1000,
+                1
+            ]
+        ],
+        "cancelDialog": false,
+        "computeGridParams": true,
+        "freePtsUpdateThreshold": 0,
+        "ingrLookForNeighbours": false,
+        "innerGridMethod": "bhtree",
+        "largestProteinSize": 1000,
+        "overwritePlaceMethod": true,
+        "pickRandPt": true,
+        "pickWeightedIngr": true,
+        "placeMethod": "jitter",
+        "resultfile": "autoPACKserver/results/NM_Analysis_FigureC1.4.apr.json",
+        "runTimeDisplay": false,
+        "saveResult": false,
+        "smallestProteinSize": 15,
+        "use_gradient": true,
+        "use_periodicity": false,
+        "windowsSize": 10
+    }
+}

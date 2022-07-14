@@ -13,7 +13,7 @@ from cellpack.autopack.ingredient.Ingredient import Ingredient
 from cellpack.autopack.transformation import angle_between_vectors
 from cellpack.autopack.ldSequence import SphereHalton
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
-from .utils import rotVectToVect
+from .utils import rotVectToVect, get_reflected_point
 
 import cellpack.autopack as autopack
 
@@ -85,6 +85,7 @@ class GrowIngredient(MultiCylindersIngr):
         rejectionThreshold=30,
         rotAxis=[0.0, 0.0, 0.0],
         rotRange=6.2831,
+        source=None,
         sphereFile=None,
         uLength=0,
         use_rbsphere=False,
@@ -130,6 +131,7 @@ class GrowIngredient(MultiCylindersIngr):
             rejectionThreshold=rejectionThreshold,
             rotAxis=rotAxis,
             rotRange=rotRange,
+            source=source,
             sphereFile=sphereFile,
             uLength=uLength,
             useLength=useLength,
@@ -318,10 +320,14 @@ class GrowIngredient(MultiCylindersIngr):
                 self.env.grid.getPointsInCube, (bb, posc, radt)
             )
 
-            pd = numpy.take(gridPointsCoords, pointsInCube, 0) - p1
+            pd = (
+                numpy.take(gridPointsCoords, pointsInCube, 0) - p1
+            )  # vector joining grid point and 1st corner
             dotp = numpy.dot(pd, vect)
             d2toP1 = numpy.sum(pd * pd, 1)
-            dsq = d2toP1 - dotp * dotp / lengthsq
+            dsq = (
+                d2toP1 - dotp * dotp / lengthsq
+            )  # perpendicular distance between grid point and cylinder axis
 
             pd2 = numpy.take(gridPointsCoords, pointsInCube, 0) - p2
             d2toP2 = numpy.sum(pd2 * pd2, 1)
@@ -330,16 +336,16 @@ class GrowIngredient(MultiCylindersIngr):
                 if pt in insidePoints:
                     continue
 
-                if dotp[pti] < 0.0:  # outside 1st cap
-                    d = sqrt(d2toP1[pti])
+                if dotp[pti] < 0.0:  # outside 1st cap, p1 is closer
+                    d = sqrt(d2toP1[pti]) - radc  # add cylindrical cap at ends?
                     if d < distance[pt]:  # point in region of influence
                         if pt in newDistPoints:
                             if d < newDistPoints[pt]:
                                 newDistPoints[pt] = d
                         else:
                             newDistPoints[pt] = d
-                elif dotp[pti] > lengthsq:
-                    d = sqrt(d2toP2[pti])
+                elif dotp[pti] > lengthsq:  # p2 is closer
+                    d = sqrt(d2toP2[pti]) - radc  # add cylindrical cap at ends?
                     if d < distance[pt]:  # point in region of influence
                         if pt in newDistPoints:
                             if d < newDistPoints[pt]:
@@ -797,6 +803,7 @@ class GrowIngredient(MultiCylindersIngr):
             )  # *numpy.array(self.jitterMax)
             # the new position is the previous point (pt2) plus the random point
             newPt = numpy.array(pt2).flatten() + numpy.array(pt)
+
             if self.runTimeDisplay >= 2:
                 self.vi.setTranslation(sp, newPt)
                 self.vi.update()
@@ -823,25 +830,19 @@ class GrowIngredient(MultiCylindersIngr):
                     if self.modelType == "Cylinders":
                         # outise is consider as collision...?
                         #                        rotMatj,jtrans=self.getJtransRot(numpy.array(pt2).flatten(),newPt)
-                        m = [
-                            [1.0, 0.0, 0.0, 0.0],
-                            [0.0, 1.0, 0.0, 0.0],
-                            [0.0, 0.0, 1.0, 0.0],
-                            [0.0, 0.0, 0.0, 1.0],
-                        ]
-
+                        rot_mat = numpy.identity(4)
                         #                        collision = self.checkSphCollisions([newPt,],[float(self.uLength)*1.,],
                         #                                            [0.,0.,0.], m, 0,
                         #                                            histoVol.grid.masterGridPositions,
                         #                                            distance,
                         #                                            histoVol)
                         # use panda ?
-                        collision = self.checkCylCollisions(
+                        collision, _, _ = self.checkCylCollisions(
                             [numpy.array(pt2).flatten()],
                             [newPt],
                             self.radii[-1],
                             [0.0, 0.0, 0.0],
-                            m,
+                            rot_mat,
                             histoVol.grid.masterGridPositions,
                             distance,
                             histoVol,
@@ -849,7 +850,7 @@ class GrowIngredient(MultiCylindersIngr):
                         )
                         if not collision:
                             found = True
-                            return numpy.array(pt2).flatten() + numpy.array(pt), True
+                            return newPt, True
                         else:  # increment the range
                             if not self.constraintMarge:
                                 if marge >= 180:
@@ -860,13 +861,13 @@ class GrowIngredient(MultiCylindersIngr):
                             continue
                 else:
                     found = True
-                    return numpy.array(pt2).flatten() + numpy.array(pt), True
+                    return newPt, True
                     #                attempted += 1
             else:
                 attempted += 1
                 continue
             attempted += 1
-        return numpy.array(pt2).flatten() + numpy.array(pt), True
+        return newPt, True
 
     def getInterpolatedSphere(self, pt1, pt2):
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
@@ -1607,7 +1608,12 @@ class GrowIngredient(MultiCylindersIngr):
             v = o.surfacePointsCoords
             mask = numpy.ones(len(v), int)
         alternate = False
-        previousPoint_store = None
+        if secondPoint is not None:
+            previousPoint_store = previousPoint
+            previousPoint = startingPoint
+            startingPoint = secondPoint
+        else:
+            previousPoint_store = None
         while not Done:
             # rest the mask
             self.sphere_points_mask = numpy.ones(10000, "i")
@@ -1616,9 +1622,6 @@ class GrowIngredient(MultiCylindersIngr):
             if k > safetycutoff:
                 print("break safetycutoff", k)
                 return success, nbFreePoints, freePoints
-            previousPoint_store = previousPoint
-            previousPoint = startingPoint
-            startingPoint = secondPoint
             if runTimeDisplay:  # or histoVol.afviewer.doSpheres:
                 name = str(len(listePtLinear)) + "sp" + self.name + str(ptInd)
                 if r:
@@ -1676,8 +1679,8 @@ class GrowIngredient(MultiCylindersIngr):
                     saw=True,
                 )
             if secondPoint is None or not success:  # no available point? try again ?
-                secondPoint = numpy.array(previousPoint)
-                startingPoint = previousPoint_store
+                # secondPoint = numpy.array(previousPoint)
+                # startingPoint = previousPoint_store
                 k += 1
                 continue
 
@@ -1686,7 +1689,8 @@ class GrowIngredient(MultiCylindersIngr):
                 startingPoint = secondPoint[0]
                 secondPoint = secondPoint[1]
             v, d = self.vi.measure_distance(startingPoint, secondPoint, vec=True)
-
+            startingPoint = get_reflected_point(self, startingPoint)
+            secondPoint = get_reflected_point(self, secondPoint)
             rotMatj, jtrans = self.getJtransRot(startingPoint, secondPoint)
             if r:
                 # reverse mode
@@ -1695,8 +1699,9 @@ class GrowIngredient(MultiCylindersIngr):
             cent2T = self.transformPoints(jtrans, rotMatj, self.positions2[-1])
             print(
                 "here is output of walk",
-                secondPoint,
                 startingPoint,
+                secondPoint,
+                d,
                 success,
                 alternate,
                 len(secondPoint),
@@ -1804,6 +1809,9 @@ class GrowIngredient(MultiCylindersIngr):
                     Done = True
                     self.counter = counter + 1
 
+                previousPoint_store = previousPoint
+                previousPoint = startingPoint
+                startingPoint = secondPoint
             else:
                 secondPoint = startingPoint
                 break
@@ -1854,7 +1862,8 @@ class GrowIngredient(MultiCylindersIngr):
             v = self.vi.rotate_about_axis(
                 numpy.array(self.orientation),
                 random() * math.radians(self.marge),  # or marge ?
-                axis=list(self.orientation).index(0),
+                # axis=list(self.orientation).index(0),
+                axis=2,  # TODO: revert to original implementation for 3D packing
             )
             self.vector = (
                 numpy.array(v).flatten() * self.uLength * self.jitterMax
@@ -1957,7 +1966,6 @@ class GrowIngredient(MultiCylindersIngr):
             env.smallestProteinSize,
             normal=normal,
         )
-        print(self.positions, self.positions2)
         v, u = self.vi.measure_distance(self.positions, self.positions2, vec=True)
         self.vector = numpy.array(self.orientation) * self.uLength
 
@@ -1970,6 +1978,7 @@ class GrowIngredient(MultiCylindersIngr):
         self.compartment = compartment
 
         secondPoint = self.getFirstPoint(ptInd)
+
         # check collision ?
         # if we have starting position available use it
         if self.nbCurve < len(self.start_positions):
@@ -1979,6 +1988,12 @@ class GrowIngredient(MultiCylindersIngr):
             secondPoint = self.start_positions[self.nbCurve][1]
         if secondPoint is None:
             return success, nbFreePoints
+
+        # reflect points back in-plane (useful for 2D packing)
+        previousPoint = get_reflected_point(self, previousPoint)
+        startingPoint = get_reflected_point(self, startingPoint)
+        secondPoint = get_reflected_point(self, secondPoint)
+
         rotMatj, jtrans = self.getJtransRot(startingPoint, secondPoint)
         # test for collision
         # return success, nbFreePoints
@@ -2066,7 +2081,9 @@ class GrowIngredient(MultiCylindersIngr):
         self.listePtLinear.append(listePtLinear)
         self.nbCurve += 1
         self.completion = float(self.nbCurve) / float(self.left_to_place)
-        self.log.info("completion %r %r %r", self.completion, self.nbCurve, self.left_to_place)
+        self.log.info(
+            "completion %r %r %r", self.completion, self.nbCurve, self.left_to_place
+        )
         return success, jtrans, rotMatj, insidePoints, newDistPoints
 
     def prepare_alternates(

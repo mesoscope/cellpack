@@ -912,7 +912,7 @@ class Ingredient(Agent):
         position[0] += dx
         position[1] += dy
         position[2] += dz
-        return position
+        return numpy.array(position)
 
     def getMaxJitter(self, spacing):
         # self.jitterMax: each value is the max it can move
@@ -1413,7 +1413,9 @@ class Ingredient(Agent):
         #        else :
         #            return True
         if self.compNum < 0:
-            inside = organelle.checkPointInside(point, self.env.grid.diag, self.env.mesh_store, ray=3)
+            inside = organelle.checkPointInside(
+                point, self.env.grid.diag, self.env.mesh_store, ray=3
+            )
             if inside:  # and cID < 0:
                 return True
             else:
@@ -1424,7 +1426,9 @@ class Ingredient(Agent):
                 #                return False
         if self.compNum == 0:  # shouldnt be in any compartments
             for o in self.env.compartments:
-                inside = o.checkPointInside(point, self.env.grid.diag, self.env.mesh_store, ray=3)
+                inside = o.checkPointInside(
+                    point, self.env.grid.diag, self.env.mesh_store, ray=3
+                )
                 if inside:
                     return False
         if self.compNum != cID:
@@ -1454,7 +1458,9 @@ class Ingredient(Agent):
                 if d < cutoff:
                     return True
                 if compNum < 0 and o.name == compartment.name:
-                    inside = o.checkPointInside(numpy.array(point), self.env.grid.diag, self.env.mesh_store)
+                    inside = o.checkPointInside(
+                        numpy.array(point), self.env.grid.diag, self.env.mesh_store
+                    )
                     self.log.info("inside ? %r", inside)
                     if not inside:
                         return True
@@ -2048,9 +2054,10 @@ class Ingredient(Agent):
                 env.afviewer,
                 current_visual_instance,
             )
-        if collision_possible or self.compNum <= 0:
+        is_fiber = self.Type == "Grow" or self.Type == "Actine"
+        if collision_possible or is_fiber:
             # grow doesnt use panda.......but could use all the geom produce by the grow as rb
-            if self.Type == "Grow" or self.Type == "Actine":
+            if is_fiber:
                 success, jtrans, rotMatj, insidePoints, newDistPoints = self.grow_place(
                     env,
                     ptInd,
@@ -2198,7 +2205,9 @@ class Ingredient(Agent):
             # for surface points we compute the rotation which
             # aligns the principalVector with the surface normal
             v1 = self.principalVector
-            v2 = compartment.get_normal_for_point(pt_ind, env.masterGridPositions[pt_ind], env.mesh_store)
+            v2 = compartment.get_normal_for_point(
+                pt_ind, env.masterGridPositions[pt_ind], env.mesh_store
+            )
             try:
                 rot_mat = numpy.array(rotVectToVect(v1, v2), "f")
             except Exception:
