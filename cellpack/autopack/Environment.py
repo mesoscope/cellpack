@@ -95,7 +95,7 @@ except ImportError:
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
-LISTPLACEMETHOD = autopack.LISTPLACEMETHOD
+AVAILABLE_PLACE_METHODS = autopack.LISTPLACEMETHOD
 SEED = 14
 LOG = False
 verbose = 0
@@ -306,14 +306,33 @@ class Environment(CompartmentList):
         each recipe are made of a list of ingredients
     """
 
-    def __init__(self, name="H", format_output="simularium"):
+    def __init__(self, name="H", config=None):
         CompartmentList.__init__(self)
 
         self.log = logging.getLogger("env")
         self.log.propagate = False
+
+        # From config file
+        self.runTimeDisplay = config["live_packing"]
+        self.placeMethod = config["place_method"]
+        self.innerGridMethod = config["inner_grid_method"]
+        self.format_output = config["format"]
+        self.boundingBox = numpy.array(config["bounding_box"])
+        self.use_periodicity = config["use_periodicity"]
+        self.pickRandPt = not config["ordered_packing"]
+
+        # saving/pickle option
+        self.saveResult = "out" in config
+        self.resultfile = config["out"]
+        self.setupfile = ""
+        self.current_path = None  # the path of the recipe file
+        self.custom_paths = None
+        self.useXref = True
+        self.grid_filename = None  #
+        self.grid_result_filename = None  # str(gridn.getAttribute("grid_result"))
+
         self.timeUpDistLoopTotal = 0
         self.name = name
-        self.format_output = format_output
         self.exteriorRecipe = None
         self.hgrid = []
         self.world = None  # panda world for collision
@@ -339,7 +358,6 @@ class Environment(CompartmentList):
         self.EnviroOnlyCompartiment = -1
         # bounding box of the Environment
 
-        self.boundingBox = [[0, 0, 0], [0.1, 0.1, 0.1]]
         self.fbox_bb = None  # used for estimating the volume
 
         self.fbox = None  # Oct 20, 2012 Graham wonders if this is part of the problem
@@ -369,9 +387,6 @@ class Environment(CompartmentList):
         self.windowsSize = 100
         self.windowsSize_overwrite = False
 
-        self.runTimeDisplay = False
-        self.placeMethod = "jitter"
-        self.innerGridMethod = "bhtree"  # or sdf
         self.orthogonalBoxType = 0
         self.overwritePlaceMethod = False
         self.rejectionThreshold = None
@@ -381,15 +396,6 @@ class Environment(CompartmentList):
         self.setupRBOptions()
         self.simulationTimes = 2.0
 
-        # saving/pickle option
-        self.saveResult = False
-        self.resultfile = ""
-        self.setupfile = ""
-        self.current_path = None  # the path of the recipe file
-        self.custom_paths = None
-        self.useXref = True
-        self.grid_filename = None  #
-        self.grid_result_filename = None  # str(gridn.getAttribute("grid_result"))
 
         # cancel dialog-> need to be develop more
         self.cancelDialog = False
@@ -406,7 +412,6 @@ class Environment(CompartmentList):
         self.traj_linked = False
         # do we sort the ingredient or not see  getSortedActiveIngredients
         self.pickWeightedIngr = True
-        self.pickRandPt = True  # point pick randomly or one after the other?
         self.currtId = 0
 
         # gradient
@@ -418,9 +423,6 @@ class Environment(CompartmentList):
         self.ingrLookForNeighbours = False  # Old Features to be test
 
         # debug with timer function
-        self._timer = False
-        self._hackFreepts = False  # hack for speed up ?
-        self.freePtsUpdateThreshold = 0.0
         self.nb_ingredient = 0
         self.totalNbIngr = 0
         self.treemode = "cKDTree"
@@ -431,13 +433,12 @@ class Environment(CompartmentList):
         self.result = []
         self.rIngr = []
         self.rRot = []
-        self.listPlaceMethod = LISTPLACEMETHOD
+        self.listPlaceMethod = AVAILABLE_PLACE_METHODS
         # should be part of an independent module
         self.panda_solver = "bullet"  # or bullet
         # could be a problem here for pp
         # can't pickle this dictionary
         self.rb_func_dic = {}
-        self.use_periodicity = False
         # need options for the save/server data etc....
         # should it be in __init__ like other general options ?
         self.dump = True
@@ -736,7 +737,6 @@ class Environment(CompartmentList):
         else:
             print("can't read or recognize " + setupfile)
             return None
-        return None
 
     def loadRecipeString(self, astring):
         return IOutils.load_JsonString(self, astring)
@@ -1564,7 +1564,6 @@ class Environment(CompartmentList):
 
     def buildGrid(
         self,
-        boundingBox=None,
         gridFileIn=None,
         rebuild=True,
         gridFileOut=None,
@@ -1577,6 +1576,7 @@ class Environment(CompartmentList):
         compartment grid. The setup is de novo or using previously builded grid
         or restored using given file.
         """
+        boundingBox = self.boundingBox
         if self.use_halton:
             from cellpack.autopack.BaseGrid import HaltonGrid as Grid
         elif self.innerGridMethod == "floodfill":
@@ -1588,13 +1588,7 @@ class Environment(CompartmentList):
         if self.smallestProteinSize == 0:
             # compute it automatically
             self.setMinMaxProteinSize()
-        # get and test the bounding box
-        if boundingBox is None:
-            boundingBox = self.boundingBox
-        else:
-            assert len(boundingBox) == 2
-            assert len(boundingBox[0]) == 3
-            assert len(boundingBox[1]) == 3
+
         self.sortIngredient(reset=rebuild)
         self.reportprogress(label="Computing the number of grid points")
         if gridFileIn is not None:

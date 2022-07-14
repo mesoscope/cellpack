@@ -962,14 +962,12 @@ class AnalyseAP:
 
     def build_grid(
         self,
-        bb,
         forceBuild=True,
     ):
         t1 = time()
         gridFileIn = None
         gridFileOut = None
         self.env.buildGrid(
-            boundingBox=bb,
             gridFileIn=gridFileIn,
             rebuild=forceBuild,
             gridFileOut=gridFileOut,
@@ -1168,7 +1166,6 @@ class AnalyseAP:
         total_positions = []
         total_distances = []
         total_angles = []
-        self.bbox = bbox
         angles = None
         rebuild = True
         for seed_index in range(n):
@@ -1182,7 +1179,6 @@ class AnalyseAP:
             self.env.resultfile = basename
             seed = seeds_i[seed_index]  # int(time())
             self.build_grid(
-                bbox,
                 forceBuild=rebuild,
             )
             self.pack(

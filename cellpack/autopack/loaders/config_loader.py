@@ -18,4 +18,5 @@ class ConfigLoader(object):
         Read in a Json Config file.
         """
         config = json.load(open(self.file_path, "r"))
+        
         return config

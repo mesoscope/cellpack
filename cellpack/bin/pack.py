@@ -1,4 +1,23 @@
 import fire
+import os
+from os import path
+import logging
+import logging.config
+
+from cellpack import autopack
+from cellpack.autopack import upy
+from cellpack.autopack.Analysis import AnalyseAP
+from cellpack.autopack.Environment import Environment
+
+from cellpack.autopack.loaders.config_loader import ConfigLoader 
+
+###############################################################################
+
+log_file_path = path.join(path.dirname(path.abspath(__file__)), "../../logging.conf")
+logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
+log = logging.getLogger()
+###############################################################################
+
 
 def pack(recipe, config):
     '''
@@ -8,7 +27,47 @@ def pack(recipe, config):
 
     :return: greeting message appended with name
     '''
-    return recipe
+    file_name = os.path.basename(recipe)
+    config_data = ConfigLoader(config).config
+    # TODO: Decouple loading recipe and env
+    # recipe_data = RecipeLoader()
+    output = config_data["out"]
+    os.makedirs(output, exist_ok=True)
+
+    helper_class = upy.getHelperClass()
+    helper = helper_class(vi="nogui")
+    autopack.helper = helper
+
+    env = Environment(name=file_name, config=config_data)
+    env.helper = helper
+    env.load_recipe(recipe)
+    afviewer = None
+    if config_data["save_analyze_result"]:
+        output_folder = os.path.join(output, env.name)
+        output = os.path.join(output_folder, config_data["place_method"])
+        os.makedirs(output, exist_ok=True)
+        analyze = AnalyseAP(env=env, viewer=afviewer, result_file=None)
+        log.info(f"saving to {output}")
+    
+        analyze.doloop(
+            1,
+            env.boundingBox,
+            output,
+            plot=True,
+            show_grid=config_data["show_grid_plot"]
+        )
+    else:
+        env.buildGrid(
+            rebuild=True,
+            gridFileOut=None,
+            previousFill=False
+        )
+        env.pack_grid(verbose=0, usePP=False)
+
+
+def main():
+    fire.Fire(pack)
+
 
 if __name__ == '__main__':
-    fire.Fire(pack)
+    main()

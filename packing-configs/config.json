@@ -1,13 +1,14 @@
 {
     "bounding_box": [[0,0,0], [100,100,100]],
+    "dimension": 3,
     "format": "simularium",
-    "inner_grid_methods": "raytrace",
+    "inner_grid_method": "raytrace",
     "live_packing": false,
     "ordered_packing": false,
-    "out": "",
+    "out": "out/",
     "overwrite_place_method": false,
-    "place_methods": ["jitter"],
-    "save_analyze_result": false,
+    "place_method": "jitter",
+    "save_analyze_result": true,
     "show_grid_plot": false,
     "spacing": null,
     "use_periodicity": false
