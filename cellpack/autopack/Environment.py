@@ -79,6 +79,7 @@ from .ingredient import (
     MultiCylindersIngr,
     SingleSphereIngr,
     SingleCubeIngr,
+    SingleCylinderIngr,
 )
 
 # backward compatibility with kevin method
@@ -666,34 +667,6 @@ class Environment(CompartmentList):
     def reportprogress(self, label=None, progress=None):
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):
             self.afviewer.vi.progressBar(progress=progress, label=label)
-
-    def makeIngredient(self, **kw):
-        """
-        Helper function to make an ingredient, pass all arguments as keywords.
-        """
-        ingr = None
-
-        if kw["Type"] == "SingleSphere":
-            kw["position"] = kw["positions"][0][0]
-            kw["radius"] = kw["radii"][0][0]
-            del kw["positions"]
-            del kw["radii"]
-            ingr = SingleSphereIngr(**kw)
-        elif kw["Type"] == "MultiSphere":
-            ingr = MultiSphereIngr(**kw)
-        elif kw["Type"] == "MultiCylinder":
-            ingr = MultiCylindersIngr(**kw)
-        elif kw["Type"] == "SingleCube":
-            kw["positions"] = [[[0, 0, 0], [0, 0, 0], [0, 0, 0]]]
-            kw["positions2"] = None
-            ingr = SingleCubeIngr(**kw)
-        elif kw["Type"] == "Grow":
-            ingr = GrowIngredient(**kw)
-        elif kw["Type"] == "Actine":
-            ingr = ActinIngredient(**kw)
-        if "gradient" in kw and kw["gradient"] != "" and kw["gradient"] != "None":
-            ingr.gradient = kw["gradient"]
-        return ingr
 
     def set_partners_ingredient(self, ingr):
         if ingr.partners_name:
@@ -1387,6 +1360,8 @@ class Environment(CompartmentList):
             ingr = MultiCylindersIngr(**arguments)
         elif ingredient_type == "SingleCube":
             ingr = SingleCubeIngr(**arguments)
+        elif ingredient_type == "SingleCylinder":
+            ingr = SingleCylinderIngr(**arguments)
         elif ingredient_type == "Grow":
             ingr = GrowIngredient(**arguments)
         elif ingredient_type == "Actine":
@@ -2063,12 +2038,12 @@ class Environment(CompartmentList):
     def getActiveIng(self):
         """Return all remaining active ingredients"""
         allIngredients = []
-        r = self.exteriorRecipe
-        if r is not None:
-            if not hasattr(r, "molecules"):
-                r.molecules = []
-        if r:
-            for ingr in r.ingredients:
+        recipe = self.exteriorRecipe
+        if recipe is not None:
+            if not hasattr(recipe, "molecules"):
+                recipe.molecules = []
+        if recipe:
+            for ingr in recipe.ingredients:
                 ingr.counter = 0  # counter of placed molecules
                 if ingr.left_to_place > 0:  # I DONT GET IT !
                     ingr.completion = 0.0
@@ -2076,12 +2051,12 @@ class Environment(CompartmentList):
                 else:
                     ingr.completion = 1.0
 
-        for o in self.compartments:
-            if not hasattr(o, "molecules"):
-                o.molecules = []
-            r = o.surfaceRecipe
-            if r:
-                for ingr in r.ingredients:
+        for compartment in self.compartments:
+            if not hasattr(compartment, "molecules"):
+                compartment.molecules = []
+            recipe = compartment.surfaceRecipe
+            if recipe:
+                for ingr in recipe.ingredients:
                     ingr.counter = 0  # counter of placed molecules
                     if ingr.left_to_place > 0:
                         ingr.completion = 0.0
@@ -2089,9 +2064,9 @@ class Environment(CompartmentList):
                     else:
                         ingr.completion = 1.0
 
-            r = o.innerRecipe
-            if r:
-                for ingr in r.ingredients:
+            recipe = compartment.innerRecipe
+            if recipe:
+                for ingr in recipe.ingredients:
                     ingr.counter = 0  # counter of placed molecules
                     if ingr.left_to_place > 0:
                         ingr.completion = 0.0

@@ -1,4 +1,6 @@
 import numpy
+import panda3d
+from panda3d.core import Mat4
 from math import sqrt, pi, sin, cos, asin
 from cellpack.autopack.transformation import angle_between_vectors
 
@@ -200,3 +202,57 @@ def bullet_checkCollision_mp(world, node1, node2):
     #    node1 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
     #    node2 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
     return world.contactTestPair(node1, node2).getNumContacts() > 0
+
+
+# TODO : move somewhere in a more apropriate place ?
+def pandaMatrice(mat):
+    if panda3d is None:
+        return
+    mat = mat.transpose().reshape((16,))
+    #        print mat,len(mat),mat.shape
+    pMat = Mat4(
+        mat[0],
+        mat[1],
+        mat[2],
+        mat[3],
+        mat[4],
+        mat[5],
+        mat[6],
+        mat[7],
+        mat[8],
+        mat[9],
+        mat[10],
+        mat[11],
+        mat[12],
+        mat[13],
+        mat[14],
+        mat[15],
+    )
+    return pMat
+
+
+def get_reflected_point(self, new_position, boundingBox=None):
+    # returns the reflection of a point across a bounding box
+    if boundingBox is None:
+        boundingBox = self.env.grid.boundingBox
+
+    # distance from origin
+    dist_o = new_position - boundingBox[0]
+    ref_inds_o = dist_o < 0
+
+    # distance from edge
+    dist_e = boundingBox[1] - new_position
+    ref_inds_e = dist_e < 0
+
+    while True in ref_inds_o or True in ref_inds_e:
+        # reflect around origin
+        new_position[ref_inds_o] = boundingBox[1][ref_inds_o] + dist_o[ref_inds_o]
+        dist_o = new_position - boundingBox[0]
+        ref_inds_o = dist_o < 0
+
+        # reflect around edge
+        new_position[ref_inds_e] = boundingBox[0][ref_inds_e] - dist_e[ref_inds_e]
+        dist_e = boundingBox[1] - new_position
+        ref_inds_e = dist_e < 0
+
+    return new_position

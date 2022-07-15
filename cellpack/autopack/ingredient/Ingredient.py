@@ -912,7 +912,7 @@ class Ingredient(Agent):
         position[0] += dx
         position[1] += dy
         position[2] += dz
-        return position
+        return numpy.array(position)
 
     def getMaxJitter(self, spacing):
         # self.jitterMax: each value is the max it can move
@@ -2054,9 +2054,10 @@ class Ingredient(Agent):
                 env.afviewer,
                 current_visual_instance,
             )
-        if collision_possible or self.compNum <= 0:
+        is_fiber = self.Type == "Grow" or self.Type == "Actine"
+        if collision_possible or is_fiber:
             # grow doesnt use panda.......but could use all the geom produce by the grow as rb
-            if self.Type == "Grow" or self.Type == "Actine":
+            if is_fiber:
                 success, jtrans, rotMatj, insidePoints, newDistPoints = self.grow_place(
                     env,
                     ptInd,
