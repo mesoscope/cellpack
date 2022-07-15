@@ -10,7 +10,6 @@ from cellpack.autopack.Analysis import AnalyseAP
 from cellpack.autopack.Environment import Environment
 
 from cellpack.autopack.loaders.config_loader import ConfigLoader
-from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 ###############################################################################
 

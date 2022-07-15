@@ -1,4 +1,5 @@
 {
+    "name": "default-run",
     "bounding_box": [[0,0,0], [100,100,100]],
     "format": "simularium",
     "inner_grid_method": "raytrace",
