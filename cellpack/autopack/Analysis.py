@@ -1333,7 +1333,7 @@ class AnalyseAP:
                                 ingrpositions[ingr.name].extend(ingrpos)
                                 total_positions.extend(ingrpos)
                                 total_distances.extend(d)
-                            if plot and twod:
+                            if plot and two_d:
                                 for p in ingrpos:
                                     ax.add_patch(
                                         Circle(
