@@ -34,11 +34,7 @@ class Inner_Grid_Methods(MetaEnum):
 
 
 class ConfigLoader(object):
-    def __init__(self, input_file_path):
-        _, file_extension = os.path.splitext(input_file_path)
-        self.file_path = input_file_path
-        self.file_extension = file_extension
-        self.default_values = {
+    default_values = {
             "version": 1.0,
             "bounding_box": [[0, 0, 0], [100, 100, 100]],
             "format": "simularium",
@@ -47,12 +43,18 @@ class ConfigLoader(object):
             "ordered_packing": False,
             "out": "out/",
             "overwrite_place_method": False,
-            "place_method": Place_Methods.JITTER,
+            "place_method": "jitter",
             "save_analyze_result": False,
             "show_grid_plot": False,
             "spacing": None,
             "use_periodicity": False,
-        }
+    }
+    
+    def __init__(self, input_file_path):
+        _, file_extension = os.path.splitext(input_file_path)
+        self.latest_version = 1.0
+        self.file_path = input_file_path
+        self.file_extension = file_extension
         self.config = self._read()
 
     @staticmethod
@@ -67,14 +69,19 @@ class ConfigLoader(object):
         for should_be_bool in bools:
             if not isinstance(config[should_be_bool], bool):
                 raise TypeError((f"{should_be_bool} should be a boolean, not {config[should_be_bool]}"))
+    
+    @staticmethod
+    def _migrate_version(config):
+        return config
 
     def _read(self):
         """
         Read in a Json Config file.
         """
         new_values = json.load(open(self.file_path, "r"))
-        config = self.default_values.copy()
+        config = ConfigLoader.default_values.copy()
         config.update(new_values)
         ConfigLoader._test_types(config)
-
+        if config["version"] != self.latest_version:
+            config = ConfigLoader._migrate_version(config)
         return config
