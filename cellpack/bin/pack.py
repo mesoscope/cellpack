@@ -48,7 +48,6 @@ def pack(recipe, config):
         os.makedirs(output, exist_ok=True)
         analyze = AnalyseAP(env=env, viewer=afviewer, result_file=None)
         log.info(f"saving to {output}")
-    
         analyze.doloop(
             1,
             env.boundingBox,

@@ -973,7 +973,6 @@ class AnalyseAP:
             gridFileOut=gridFileOut,
             previousFill=False,
         )
-
         t2 = time()
         gridTime = t2 - t1
         print("time to Build Grid", gridTime)
@@ -1138,7 +1137,6 @@ class AnalyseAP:
         render=False,
         plot=True,
         show_grid=True,
-        twod=True,
         fbox_bb=None,
         use_file=True,
         seeds_i=None,
@@ -1181,13 +1179,14 @@ class AnalyseAP:
             self.build_grid(
                 forceBuild=rebuild,
             )
+            two_d = self.env.is_two_d()
             self.pack(
                 seed=seed,
                 vTestid=seed_index,
                 vAnalysis=1,
                 fbox_bb=fbox_bb,
-                show_plotly_plot=(show_grid and twod),
-                show_grid_spheres=(show_grid and not twod),
+                show_plotly_plot=(show_grid and two_d),
+                show_grid_spheres=(show_grid and not two_d)
             )
             self.center = self.env.grid.getCenter()
             if render:
@@ -1195,7 +1194,7 @@ class AnalyseAP:
                 self.helper.render(basename + ".jpg", 640, 480)
                 self.helper.write(basename + ".c4d", [])
             if rdf:
-                if plot and twod:
+                if plot and two_d:
                     width = 1000.0  # should be the boundary here ?
                     fig = pyplot.figure()
                     ax = fig.add_subplot(111)
@@ -1240,7 +1239,7 @@ class AnalyseAP:
                             total_positions.extend(ingrpos)
                             total_distances.extend(d)
 
-                        if plot and twod:
+                        if plot and two_d:
                             for i, p in enumerate(ingrpos):
                                 ax.add_patch(
                                     Circle(
@@ -1369,7 +1368,7 @@ class AnalyseAP:
                                 ingrpositions[ingr.name].extend(ingrpos)
                                 total_positions.extend(ingrpos)
                                 total_distances.extend(d)
-                            if plot and twod:
+                            if plot and two_d:
                                 for p in ingrpos:
                                     ax.add_patch(
                                         Circle(
@@ -1393,7 +1392,7 @@ class AnalyseAP:
                         output + os.sep + "_angleIngr_" + str(seed_index) + ".json",
                         anglesingr,
                     )
-                if plot and twod:
+                if plot and two_d:
                     ax.set_aspect(1.0)
                     pyplot.axhline(y=bbox[0][1], color="k")
                     pyplot.axhline(y=bbox[1][1], color="k")
@@ -1429,7 +1428,7 @@ class AnalyseAP:
         self.env.basename = basename
         self.env.occurences = occurences
         self.env.angles = total_angles
-        if plot and twod:
+        if plot and two_d:
             self.env.loopThroughIngr(self.axis_distribution)
             self.env.loopThroughIngr(self.occurence_distribution)
             self.axis_distribution_total(total_positions)

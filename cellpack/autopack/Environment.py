@@ -1082,6 +1082,13 @@ class Environment(CompartmentList):
                 res = function(*args)
         return res
 
+    def is_two_d(self):
+        grid_spacing = self.grid.gridSpacing
+        bounding_box = self.boundingBox
+        box_size = numpy.array(bounding_box[1]) - numpy.array(bounding_box[0])
+        smallest_size = numpy.amin(box_size)
+        return smallest_size <= grid_spacing
+
     def timeFunction(self, function, args, kw):
         """
         Mesure the time for performing the provided function.
