@@ -9,7 +9,7 @@ from cellpack.autopack import upy
 from cellpack.autopack.Analysis import AnalyseAP
 from cellpack.autopack.Environment import Environment
 
-from cellpack.autopack.loaders.config_loader import ConfigLoader 
+from cellpack.autopack.loaders.config_loader import ConfigLoader
 
 ###############################################################################
 
@@ -20,13 +20,13 @@ log = logging.getLogger()
 
 
 def pack(recipe, config):
-    '''
+    """
     Initializes an autopack packing from the command line
     :param recipe: string argument, path to recipe
     :param config: string argument, path to config file
 
     :return: greeting message appended with name
-    '''
+    """
     file_name = os.path.basename(recipe)
     config_data = ConfigLoader(config).config
     # TODO: Decouple loading recipe and env
@@ -53,14 +53,10 @@ def pack(recipe, config):
             env.boundingBox,
             output,
             plot=True,
-            show_grid=config_data["show_grid_plot"]
+            show_grid=config_data["show_grid_plot"],
         )
     else:
-        env.buildGrid(
-            rebuild=True,
-            gridFileOut=None,
-            previousFill=False
-        )
+        env.buildGrid(rebuild=True, gridFileOut=None, previousFill=False)
         env.pack_grid(verbose=0, usePP=False)
 
 
@@ -68,5 +64,5 @@ def main():
     fire.Fire(pack)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

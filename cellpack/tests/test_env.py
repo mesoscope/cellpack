@@ -12,19 +12,9 @@ Docs: https://docs.pytest.org/en/latest/
 
 from unittest.mock import MagicMock
 from cellpack.autopack.Environment import Environment
+
 test_config = {
-    "bounding_box": [
-        [
-            0,
-            0,
-            0
-        ],
-        [
-            100,
-            100,
-            100
-        ]
-    ],
+    "bounding_box": [[0, 0, 0], [100, 100, 100]],
     "dimension": 3,
     "format": "simularium",
     "inner_grid_method": "raytrace",
@@ -36,7 +26,7 @@ test_config = {
     "save_analyze_result": True,
     "show_grid_plot": False,
     "spacing": None,
-    "use_periodicity": False
+    "use_periodicity": False,
 }
 
 

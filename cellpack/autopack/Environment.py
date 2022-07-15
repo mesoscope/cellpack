@@ -396,7 +396,6 @@ class Environment(CompartmentList):
         self.setupRBOptions()
         self.simulationTimes = 2.0
 
-
         # cancel dialog-> need to be develop more
         self.cancelDialog = False
 

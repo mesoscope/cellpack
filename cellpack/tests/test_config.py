@@ -26,7 +26,10 @@ def test_wrong_place_method():
     try:
         ConfigLoader._test_types(config)
     except TypeError as error:
-        assert format(error) == "place_method must be one of ['jitter', 'spheresSST', 'pandaBullet', 'pandaBulletRelax'], not error"
+        assert (
+            format(error)
+            == "place_method must be one of ['jitter', 'spheresSST', 'pandaBullet', 'pandaBulletRelax'], not error"
+        )
 
 
 def test_not_bool():

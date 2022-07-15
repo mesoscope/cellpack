@@ -1186,7 +1186,7 @@ class AnalyseAP:
                 vAnalysis=1,
                 fbox_bb=fbox_bb,
                 show_plotly_plot=(show_grid and two_d),
-                show_grid_spheres=(show_grid and not two_d)
+                show_grid_spheres=(show_grid and not two_d),
             )
             self.center = self.env.grid.getCenter()
             if render:
