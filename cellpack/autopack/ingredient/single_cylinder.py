@@ -357,9 +357,7 @@ class SingleCylinderIngr(Ingredient):
             x2, y2, z2 = p2
             vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
             lengthsq = vx * vx + vy * vy + vz * vz
-            length = sqrt(lengthsq)
             cx, cy, cz = posc = x1 + vx * 0.5, y1 + vy * 0.5, z1 + vz * 0.5
-            # radt = length + radc
             radt = sqrt(lengthsq + radc**2)
 
             bb = self.correctBB(p1, p2, radc)

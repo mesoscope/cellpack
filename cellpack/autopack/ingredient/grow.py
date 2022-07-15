@@ -1809,7 +1809,6 @@ class GrowIngredient(MultiCylindersIngr):
                     Done = True
                     self.counter = counter + 1
 
-                previousPoint_store = previousPoint
                 previousPoint = startingPoint
                 startingPoint = secondPoint
             else:

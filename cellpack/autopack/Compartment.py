@@ -62,7 +62,6 @@ import pickle
 import numpy
 from time import time
 import math
-import trimesh
 from trimesh.voxel import creation
 from scipy import spatial
 
@@ -1955,7 +1954,7 @@ class Compartment(CompartmentList):
     def BuildGridEnviroOnly(self, env, location=None):
         """Build the compartment grid ie surface and inside only environment"""
         # create surface points
-        t0 = t1 = time()
+        t1 = time()
         self.createSurfacePoints(maxl=env.grid.gridSpacing)
 
         # Graham Sum the SurfaceArea for each polyhedron
@@ -2094,7 +2093,6 @@ class Compartment(CompartmentList):
         Build the compartment grid ie surface and inside point using signed distance fields
         from the UT package
         """
-        t0 = time()
         self.ogsurfacePoints = self.vertices[:]
         self.ogsurfacePointsNormals = self.vnormals[:]
         vertices = self.vertices
