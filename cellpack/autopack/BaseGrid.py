@@ -193,7 +193,7 @@ class BaseGrid:
 
     def setup(self, boundingBox):
         # TODO : verify the gridSpacing calculation / setup after reading the recipe
-  
+
         self.boundingBox = boundingBox
         if self.lookup == 0:
             self.create3DPointLookupCover()

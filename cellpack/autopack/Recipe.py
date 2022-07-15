@@ -137,7 +137,11 @@ class Recipe:
             #            nbi = int(nbr)              #Mod by Graham 8/18/11
             num_to_place_float = ingr.molarity * 0.0006022 * volume
             num_to_place_int = int(num_to_place_float)  # Mod by Graham 8/18/11
-            remainder = num_to_place_float % num_to_place_int if num_to_place_int != 0 else num_to_place_float
+            remainder = (
+                num_to_place_float % num_to_place_int
+                if num_to_place_int != 0
+                else num_to_place_float
+            )
 
             # some chance that the fraction over the integer will result in another ingr being placed
             randval = random()

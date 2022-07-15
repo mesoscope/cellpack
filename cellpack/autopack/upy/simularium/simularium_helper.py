@@ -334,7 +334,11 @@ class simulariumHelper(hostHelper.Helper):
             _, extension = os.path.splitext(compartment.path)
             if extension == ".obj":
                 display_type = DISPLAY_TYPE.OBJ
-                url = compartment.path if not os.path.isfile(compartment.path) else os.path.basename(compartment.path)
+                url = (
+                    compartment.path
+                    if not os.path.isfile(compartment.path)
+                    else os.path.basename(compartment.path)
+                )
                 radius = 1
         self.display_data[compartment.name] = DisplayData(
             name=compartment.name, display_type=display_type, url=url

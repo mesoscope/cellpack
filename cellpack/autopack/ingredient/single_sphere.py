@@ -125,7 +125,7 @@ class SingleSphereIngr(Ingredient):
         self.mesh = None
         # min and max radius for a single sphere should be the same
         self.encapsulatingRadius = encapsulatingRadius or radius
-    
+
     def collides_with_compartment(
         self,
         jtrans,

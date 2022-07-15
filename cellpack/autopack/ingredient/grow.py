@@ -2066,7 +2066,9 @@ class GrowIngredient(MultiCylindersIngr):
         self.listePtLinear.append(listePtLinear)
         self.nbCurve += 1
         self.completion = float(self.nbCurve) / float(self.left_to_place)
-        self.log.info("completion %r %r %r", self.completion, self.nbCurve, self.left_to_place)
+        self.log.info(
+            "completion %r %r %r", self.completion, self.nbCurve, self.left_to_place
+        )
         return success, jtrans, rotMatj, insidePoints, newDistPoints
 
     def prepare_alternates(

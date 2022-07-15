@@ -943,9 +943,7 @@ class Compartment(CompartmentList):
             inside_points, surface_points = self.BuildGrid_utsdf(
                 env
             )  # to make the outer most selection from the master and then the compartment
-        elif (
-            env.innerGridMethod == "bhtree" and self.isOrthogonalBoundingBox != 1
-        ): 
+        elif env.innerGridMethod == "bhtree" and self.isOrthogonalBoundingBox != 1:
             inside_points, surface_points = self.BuildGrid_bhtree(
                 env,
                 ctree,
@@ -1004,7 +1002,7 @@ class Compartment(CompartmentList):
                 vSurfaceArea,
                 off_grid_surface_points,
                 compartment_ids,
-                mesh_store
+                mesh_store,
             )
         elif (
             env.innerGridMethod == "scanline" and self.isOrthogonalBoundingBox != 1
@@ -1017,7 +1015,7 @@ class Compartment(CompartmentList):
                 vSurfaceArea,
                 off_grid_surface_points,
                 compartment_ids,
-                mesh_store
+                mesh_store,
             )
         else:
             self.log.error("Not a recognized inner grid method", env.innerGridMethod)
@@ -1057,7 +1055,9 @@ class Compartment(CompartmentList):
         insidePoints = env.grid.getPointsInCube(self.bb, None, None, addSP=False)
         for p in insidePoints:
             env.grid.compartment_ids[p] = -self.number
-        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(self.ogsurfacePoints, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(
+            self.ogsurfacePoints, env
+        )
         srfPts = surfPtsBB
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
             nbGridPoints, srfPts, surfPtsBBNorms, env
@@ -1086,8 +1086,8 @@ class Compartment(CompartmentList):
         idarray,
         mesh_store,
     ):
-        """Build the compartment grid using pyembree raycast to find inside points, 
-        and then a cKDTree to find "missing" surface points, ie surface points that are 
+        """Build the compartment grid using pyembree raycast to find inside points,
+        and then a cKDTree to find "missing" surface points, ie surface points that are
         in between vertex points"""
 
         insidePoints = []
@@ -1106,7 +1106,7 @@ class Compartment(CompartmentList):
         else:
             positions = grdPos[points_in_encap_sphere]
             inside = mesh_store.contains_points_slow(self.gname, positions)
-        
+
         # set inside points in data
         inside_indexes = numpy.array(points_in_encap_sphere)[numpy.nonzero(inside)]
         insidePoints.extend(inside_indexes)
@@ -1116,7 +1116,9 @@ class Compartment(CompartmentList):
         outside_points_positions = grdPos[numpy.nonzero(idarray != -compartment_id)]
         inside_points_positions = grdPos[inside_indexes]
         inside_tree = spatial.cKDTree(inside_points_positions, leafsize=10)
-        surface_i = inside_tree.query_ball_point(outside_points_positions, env.grid.gridSpacing)
+        surface_i = inside_tree.query_ball_point(
+            outside_points_positions, env.grid.gridSpacing
+        )
         on_grid_surface_point_positions = []
         for i in surface_i:
             if len(i) > 0:
@@ -1124,10 +1126,18 @@ class Compartment(CompartmentList):
                 on_grid_surface_point_positions.extend(grdPos[surface_indexes])
                 idarray[surface_indexes] = compartment_id
         number_of_base_grid_points = len(env.grid.masterGridPositions)
-        off_grid_surface_pt_pos, filtered_surface_pt_normals = self.filter_surface_pts_to_fill_box(vertex_points, env)
+        (
+            off_grid_surface_pt_pos,
+            filtered_surface_pt_normals,
+        ) = self.filter_surface_pts_to_fill_box(vertex_points, env)
         ex = True  # True if nbGridPoints == len(idarray) else False
         surface_point_ids, surfacePointsNormals = self.extendGridArrays(
-            number_of_base_grid_points, off_grid_surface_pt_pos, filtered_surface_pt_normals, env, self.surfacePointsNormals, extended=ex
+            number_of_base_grid_points,
+            off_grid_surface_pt_pos,
+            filtered_surface_pt_normals,
+            env,
+            self.surfacePointsNormals,
+            extended=ex,
         )
         all_surface_pt_pos = on_grid_surface_point_positions
         all_surface_pt_pos.extend(off_grid_surface_pt_pos)
@@ -1220,9 +1230,7 @@ class Compartment(CompartmentList):
         )
         return self.insidePoints, self.surfacePoints
 
-    def BuildGrid_trimesh(
-        self, env, grdPos, vSurfaceArea, srfPts, idarray, mesh_store
-    ):
+    def BuildGrid_trimesh(self, env, grdPos, vSurfaceArea, srfPts, idarray, mesh_store):
         """Build the compartment grid ie surface and inside points"""
         insidePoints = []
         number = self.number
@@ -1236,7 +1244,9 @@ class Compartment(CompartmentList):
         # the main loop
         tree = spatial.cKDTree(grdPos, leafsize=10)
         points_in_encap_sphere = tree.query_ball_point(
-            self.center, self.encapsulatingRadius + env.grid.gridSpacing * 2, return_sorted=True
+            self.center,
+            self.encapsulatingRadius + env.grid.gridSpacing * 2,
+            return_sorted=True,
         )
         self.log.info("GOT POINTS IN SPHERE")
         for ptInd in points_in_encap_sphere:
@@ -1258,7 +1268,12 @@ class Compartment(CompartmentList):
 
         ex = True  # True if nbGridPoints == len(idarray) else False
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
-            nbGridPoints, srfPts, surfPtsBBNorms, env, surfacePointsNormals=self.surfacePointsNormals, extended=ex
+            nbGridPoints,
+            srfPts,
+            surfPtsBBNorms,
+            env,
+            surfacePointsNormals=self.surfacePointsNormals,
+            extended=ex,
         )
 
         self.insidePoints = insidePoints
@@ -1272,7 +1287,15 @@ class Compartment(CompartmentList):
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_scanline(
-        self, env, grdPos, new_distances, vSurfaceArea, diag, srfPts, idarray, mesh_store
+        self,
+        env,
+        grdPos,
+        new_distances,
+        vSurfaceArea,
+        diag,
+        srfPts,
+        idarray,
+        mesh_store,
     ):
         """Build the compartment grid ie surface and inside point using scanline"""
         insidePoints = []
@@ -1307,7 +1330,9 @@ class Compartment(CompartmentList):
                             new_distances.item(ptInd)
                             < env.grid.gridSpacing * 1.1547 * 2.0
                         ):
-                            inside = self.checkPointInside(coord, diag, mesh_store, ray=3)
+                            inside = self.checkPointInside(
+                                coord, diag, mesh_store, ray=3
+                            )
                         if inside:
                             insidePoints.append(ptInd)
                             idarray.itemset(ptInd, -number)
@@ -1328,7 +1353,12 @@ class Compartment(CompartmentList):
 
         ex = True  # True if nbGridPoints == len(idarray) else False
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
-            nbGridPoints, srfPts, surfPtsBBNorms, env, surfacePointsNormals=self.surfacePointsNormals, extended=ex
+            nbGridPoints,
+            srfPts,
+            surfPtsBBNorms,
+            env,
+            surfacePointsNormals=self.surfacePointsNormals,
+            extended=ex,
         )
 
         self.insidePoints = insidePoints
@@ -1349,7 +1379,9 @@ class Compartment(CompartmentList):
             insidePoints = env.grid.getPointsInCube(self.bb, None, None, addSP=False)
             for p in insidePoints:
                 env.grid.compartment_ids[p] = -self.number
-            surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(self.ogsurfacePoints, env)
+            surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(
+                self.ogsurfacePoints, env
+            )
             srfPts = surfPtsBB
             surfacePoints, surfacePointsNormals = self.extendGridArrays(
                 nbGridPoints, srfPts, surfPtsBBNorms, env
@@ -1530,7 +1562,12 @@ class Compartment(CompartmentList):
         srfPts = surfPtsBB
         ex = True  # True if nbGridPoints == len(idarray) else False
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
-            nbGridPoints, srfPts, surfPtsBBNorms, env, self.surfacePointsNormals, extended=ex
+            nbGridPoints,
+            srfPts,
+            surfPtsBBNorms,
+            env,
+            self.surfacePointsNormals,
+            extended=ex,
         )
         self.insidePoints = insidePoints
         self.surfacePoints = surfacePoints
@@ -1834,7 +1871,9 @@ class Compartment(CompartmentList):
 
         nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(self.ogsurfacePoints, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(
+            self.ogsurfacePoints, env
+        )
         srfPts = surfPtsBB
 
         ex = True  # True if nbGridPoints == len(idarray) else False
@@ -1851,7 +1890,13 @@ class Compartment(CompartmentList):
         return self.insidePoints, self.surfacePoints
 
     def extendGridArrays(
-        self, nbGridPoints, off_grid_surface_pts, surfPtsBBNorms, env, surfacePointsNormals, extended=True
+        self,
+        nbGridPoints,
+        off_grid_surface_pts,
+        surfPtsBBNorms,
+        env,
+        surfacePointsNormals,
+        extended=True,
     ):
         """Extend the environment grd using the compartment point"""
         if extended:
@@ -1874,14 +1919,18 @@ class Compartment(CompartmentList):
             ptId = numpy.ones(number_off_grid_pts, "i") * self.number  # surface point
             env.grid.compartment_ids = numpy.hstack((env.grid.compartment_ids, ptId))
             env.grid.freePoints = numpy.arange(nbGridPoints + number_off_grid_pts)
-            surfacePoints = list(range(nbGridPoints, nbGridPoints + number_off_grid_pts))
+            surfacePoints = list(
+                range(nbGridPoints, nbGridPoints + number_off_grid_pts)
+            )
             for i, n in enumerate(surfPtsBBNorms):
                 surfacePointsNormals[nbGridPoints + i] = n
         else:
             number_off_grid_pts = len(off_grid_surface_pts)
             pointArrayRaw = env.grid.masterGridPositions
             env.grid.nbSurfacePoints += number_off_grid_pts
-            surfacePoints = list(range(nbGridPoints - number_off_grid_pts, nbGridPoints))
+            surfacePoints = list(
+                range(nbGridPoints - number_off_grid_pts, nbGridPoints)
+            )
             for i, n in enumerate(surfPtsBBNorms):
                 surfacePointsNormals[nbGridPoints - number_off_grid_pts + i] = n
         return surfacePoints, surfacePointsNormals
@@ -2534,7 +2583,7 @@ class Compartment(CompartmentList):
         vertices = self.vertices[:]
         from cellpack.autopack.Environment import Grid
 
-        # Grid initialization 
+        # Grid initialization
         self.grid = grid = Grid()  # setup=False)
         grid.boundingBox = boundingBox
         grid.gridSpacing = spacing
