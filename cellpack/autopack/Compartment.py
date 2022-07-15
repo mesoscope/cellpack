@@ -572,7 +572,7 @@ class Compartment(CompartmentList):
                     return False
             return True
 
-    def inBox(self, box, spacing):
+    def inBox(self, box):
         """
         check if bounding box of this compartment fits inside the give box
         returns true or false and the extended bounding box if this compartment
@@ -584,7 +584,7 @@ class Compartment(CompartmentList):
         xm, ym, zm = box[0]
         xM, yM, zM = box[1]
         # padding 50 shows problem
-        padding = spacing / 2
+        padding = 0.0
 
         newBB = [box[0][:], box[1][:]]
         fits = True

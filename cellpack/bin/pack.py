@@ -10,6 +10,7 @@ from cellpack.autopack.Analysis import AnalyseAP
 from cellpack.autopack.Environment import Environment
 
 from cellpack.autopack.loaders.config_loader import ConfigLoader
+from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 ###############################################################################
 
@@ -31,8 +32,6 @@ def pack(recipe, config):
     config_data = ConfigLoader(config).config
     # TODO: Decouple loading recipe and env
     # recipe_data = RecipeLoader()
-    output = config_data["out"]
-    os.makedirs(output, exist_ok=True)
 
     helper_class = upy.getHelperClass()
     helper = helper_class(vi="nogui")
@@ -43,9 +42,7 @@ def pack(recipe, config):
     env.load_recipe(recipe)
     afviewer = None
     if config_data["save_analyze_result"]:
-        output_folder = os.path.join(output, env.name)
-        output = os.path.join(output_folder, config_data["place_method"])
-        os.makedirs(output, exist_ok=True)
+        output = env.resultfile
         analyze = AnalyseAP(env=env, viewer=afviewer, result_file=None)
         log.info(f"saving to {output}")
         analyze.doloop(

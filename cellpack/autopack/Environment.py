@@ -67,6 +67,7 @@ from panda3d.bullet import BulletRigidBodyNode
 
 import cellpack.autopack as autopack
 from cellpack.autopack.MeshStore import MeshStore
+from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from .Compartment import CompartmentList, Compartment
 from .Recipe import Recipe
 from .ingredient import GrowIngredient, ActinIngredient
@@ -323,7 +324,7 @@ class Environment(CompartmentList):
 
         # saving/pickle option
         self.saveResult = "out" in config
-        self.resultfile = config["out"]
+        self.resultfile = RecipeLoader.create_output_dir(config["out"], name, config["place_method"])
         self.setupfile = ""
         self.current_path = None  # the path of the recipe file
         self.custom_paths = None
@@ -349,8 +350,8 @@ class Environment(CompartmentList):
         self.lastrank = 0
 
         # smallest and largest protein radii across all recipes
-        self.smallestProteinSize = 99999999
-        self.largestProteinSize = 0
+        self.smallestProteinSize = None
+        self.largestProteinSize = None
         self.scaleER = 2.5  # hack in case problem with encapsulating radius
         self.computeGridParams = True
 
@@ -375,7 +376,7 @@ class Environment(CompartmentList):
         self.randomRot = RandomRot()  # the class used to generate random rotation
         self.activeIngr = []
         self.activeIngre_saved = []
-
+        self.freePtsUpdateThreshold = 0.0
         # optionally can provide a host and a viewer
         self.host = None
         self.afviewer = None
@@ -449,198 +450,6 @@ class Environment(CompartmentList):
         self.nbFreePointsAfterFill = []
         self.distanceAfterFill = []
         self.mesh_store = MeshStore()
-        self.OPTIONS = {
-            "smallestProteinSize": {
-                "name": "smallestProteinSize",
-                "value": 15,
-                "default": 15,
-                "type": "int",
-                "description": "Smallest ingredient packing radius override (low=accurate | high=fast)",  # noqa: E501
-                "mini": 1.0,
-                "maxi": 1000.0,
-                "width": 30,
-            },
-            "largestProteinSize": {
-                "name": "largestProteinSize",
-                "value": 0,
-                "default": 0,
-                "type": "int",
-                "description": "largest Protein Size",
-                "width": 30,
-            },
-            "computeGridParams": {
-                "name": "computeGridParams",
-                "value": True,
-                "default": True,
-                "type": "bool",
-                "description": "compute Grid Params",
-                "width": 100,
-            },
-            "EnviroOnly": {
-                "name": "EnviroOnly",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "Histo volume Only",
-                "width": 30,
-            },
-            "windowsSize": {
-                "name": "windowsSize",
-                "value": 100,
-                "default": 100,
-                "type": "int",
-                "description": "windows Size",
-                "width": 30,
-            },
-            "runTimeDisplay": {
-                "name": "runTimeDisplay",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "Display packing in realtime (slow)",
-                "width": 150,
-            },
-            "placeMethod": {
-                "name": "placeMethod",
-                "value": "jitter",
-                "values": self.listPlaceMethod,
-                "default": "placeMethod",
-                "type": "liste",
-                "description": "Overriding Packing Method = ",
-                "width": 30,
-            },
-            "use_gradient": {
-                "name": "use_gradient",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "Use gradients if defined",
-                "width": 150,
-            },
-            "gradients": {
-                "name": "gradients",
-                "value": "",
-                "values": [],
-                "default": "",
-                "type": "liste",
-                "description": "Gradients available",
-                "width": 150,
-            },
-            "innerGridMethod": {
-                "name": "innerGridMethod",
-                "value": "raytrace",
-                "values": [
-                    "bhtree",
-                    #                                           "sdf",
-                    "raytrace",
-                    "jordan3",
-                    "pyray",
-                    "floodfill",
-                    #                                           "binvox",
-                    "trimesh",
-                    "scanline",
-                ],
-                "default": "raytrace",
-                "type": "liste",
-                "description": "Method to calculate the inner grid:",
-                "width": 30,
-            },
-            "overwritePlaceMethod": {
-                "name": "overwritePlaceMethod",
-                "value": True,
-                "default": True,
-                "type": "bool",
-                "description": "Overwrite per-ingredient packing method with Overriding Packing Method:",  # noqa: E501
-                "width": 300,
-            },
-            "saveResult": {
-                "name": "saveResult",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "Save packing result to .apr file (enter full path below):",  # noqa: E501
-                "width": 200,
-            },
-            "resultfile": {
-                "name": "resultfile",
-                "value": "fillResult",
-                "default": "fillResult",
-                "type": "filename",
-                "description": "result filename",
-                "width": 200,
-            },
-            # cancel dialog
-            "cancelDialog": {
-                "name": "cancelDialog",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "compute Grid Params",
-                "width": 30,
-            },
-            # do we sort the ingredient or not see  getSortedActiveIngredients
-            "pickWeightedIngr": {
-                "name": "pickWeightedIngr",
-                "value": True,
-                "default": True,
-                "type": "bool",
-                "description": "Prioritize ingredient selection by packingWeight",
-                "width": 200,
-            },
-            "pickRandPt": {
-                "name": "pickRandPt",
-                "value": True,
-                "default": True,
-                "type": "bool",
-                "description": "Pick drop position point randomly",
-                "width": 200,
-            },
-            # gradient
-            "ingrLookForNeighbours": {
-                "name": "ingrLookForNeighbours",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "Look for ingredients attractor and partner",
-                "width": 30,
-            },
-            # debug with timer function
-            "_timer": {
-                "name": "_timer",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "evaluate time per function",
-                "width": 30,
-            },
-            "_hackFreepts": {
-                "name": "_hackFreepts",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "no free point update",
-                "width": 30,
-            },
-            "freePtsUpdateThreshold": {
-                "name": "freePtsUpdateThreshold",
-                "value": 0.0,
-                "default": 0.0,
-                "type": "float",
-                "description": "Mask grid while packing (0=always | 1=never)",
-                "mini": 0.0,
-                "maxi": 1.0,
-                "width": 30,
-            },
-            "use_periodicity": {
-                "name": "use_periodicity",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "Use periodic condition",
-                "width": 200,
-            },
-        }
-        self.setDefaultOptions()
 
     def Setup(self, setupfile):
         # parse the given fill for
@@ -728,14 +537,15 @@ class Environment(CompartmentList):
         # check the extension of the filename none, txt or json
         fileName, fileExtension = os.path.splitext(setupfile)
         if fileExtension == ".xml":
-            return IOutils.load_XML(self, setupfile)
+            IOutils.load_XML(self, setupfile)
         elif fileExtension == ".py":  # execute ?
-            return IOutils.load_Python(self, setupfile)
+            IOutils.load_Python(self, setupfile)
         elif fileExtension == ".json":
-            return IOutils.load_Json(self, setupfile)
+            IOutils.load_Json(self, setupfile)
         else:
             print("can't read or recognize " + setupfile)
-            return None
+        self.setMinMaxProteinSize()
+
 
     def loadRecipeString(self, astring):
         return IOutils.load_JsonString(self, astring)
@@ -752,10 +562,9 @@ class Environment(CompartmentList):
         self.collectResultPerIngredient()
         self.store()
         self.store_asTxt()
-        #            self.store_asJson(resultfilename=self.resultfile+".json")
         IOutils.save(
             self,
-            self.resultfile + ".json",
+            self.resultfile,
             useXref=False,
             format_output=self.format_output,
             kwds=["compNum"],
@@ -1059,26 +868,17 @@ class Environment(CompartmentList):
         # default gradient 1-linear Decoy X
         self.gradients[kw["name"]] = gradient
 
-    def setDefaultOptions(self):
-        """reset all the options to their default values"""
-        for options in self.OPTIONS:
-            if options == "gradients":
-                continue
-            setattr(self, options, self.OPTIONS[options]["default"])
-
     def callFunction(self, function, args=[], kw={}):
         """
         helper function to callback another function with the
         given arguments and keywords.
         Optionally time stamp it.
         """
-        if self._timer:
-            res = self.timeFunction(function, args, kw)
+
+        if len(kw):
+            res = function(*args, **kw)
         else:
-            if len(kw):
-                res = function(*args, **kw)
-            else:
-                res = function(*args)
+            res = function(*args)
         return res
 
     def is_two_d(self):
@@ -1234,7 +1034,6 @@ class Environment(CompartmentList):
         #     # "gridPositions": json.loads(self.grid.masterGridPositions),
         #     "distances": json.loads(self.grid.distToClosestSurf)
         # }
-
         with open(gridFileOut, "w") as f:
             json.dump(data, fp=f)
         f.close()
@@ -1407,7 +1206,7 @@ class Environment(CompartmentList):
         compartment.setNumber(self.nbCompartments)
         self.nbCompartments += 1
 
-        fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
+        fits, bb = compartment.inBox(self.boundingBox)
 
         if not fits:
             self.boundingBox = bb
@@ -1591,9 +1390,6 @@ class Environment(CompartmentList):
             from cellpack.autopack.BaseGrid import BaseGrid as Grid
         # check viewer, and setup the progress bar
         self.reportprogress(label="Building the Master Grid")
-        if self.smallestProteinSize == 0:
-            # compute it automatically
-            self.setMinMaxProteinSize()
 
         self.sortIngredient(reset=rebuild)
         self.reportprogress(label="Computing the number of grid points")

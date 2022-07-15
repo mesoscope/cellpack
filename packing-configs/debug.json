@@ -1,5 +1,16 @@
 {
-    "bounding_box": [[0,0,0], [100,100,100]],
+    "bounding_box": [
+        [
+            -0.600,
+            -0.500,
+            -0.250
+        ],
+        [
+            0.600,
+            0.500,
+            0.150
+        ]
+    ],
     "format": "simularium",
     "inner_grid_method": "raytrace",
     "live_packing": false,

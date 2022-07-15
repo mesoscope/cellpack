@@ -16,6 +16,16 @@ class RecipeLoader(object):
         self.file_extension = file_extension
         self.recipe_data = self._read()
 
+    @staticmethod
+    def create_output_dir(out_base_folder, recipe_name, sub_dir=None):
+        os.makedirs(out_base_folder, exist_ok=True)
+        output_folder = os.path.join(out_base_folder, recipe_name)
+        if sub_dir is not None:
+            output_folder = os.path.join(output_folder, sub_dir)
+        os.makedirs(output_folder, exist_ok=True)
+        
+        return output_folder
+
     def _read(self):
         if self.file_extension == ".xml":
             pass  # self.load_XML(setupfile)
