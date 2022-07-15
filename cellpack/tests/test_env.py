@@ -40,8 +40,6 @@ test_config = {
 }
 
 
-# If you only have a single condition you need to test, a single test is _okay_
-# but parametrized tests are encouraged
 def test_is_two_d():
     # if one of the edges of the bounding box is smaller than the
     # grid spacing, it's considered 2D
