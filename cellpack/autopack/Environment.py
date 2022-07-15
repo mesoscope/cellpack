@@ -96,7 +96,6 @@ except ImportError:
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
-AVAILABLE_PLACE_METHODS = autopack.LISTPLACEMETHOD
 SEED = 14
 LOG = False
 verbose = 0
@@ -434,7 +433,7 @@ class Environment(CompartmentList):
         self.result = []
         self.rIngr = []
         self.rRot = []
-        self.listPlaceMethod = AVAILABLE_PLACE_METHODS
+        
         # should be part of an independent module
         self.panda_solver = "bullet"  # or bullet
         # could be a problem here for pp
