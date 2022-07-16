@@ -433,7 +433,6 @@ class Environment(CompartmentList):
         self.result = []
         self.rIngr = []
         self.rRot = []
-        
         # should be part of an independent module
         self.panda_solver = "bullet"  # or bullet
         # could be a problem here for pp

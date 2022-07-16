@@ -23,7 +23,6 @@ class RecipeLoader(object):
         if sub_dir is not None:
             output_folder = os.path.join(output_folder, sub_dir)
         os.makedirs(output_folder, exist_ok=True)
-        
         return output_folder
 
     def _read(self):
