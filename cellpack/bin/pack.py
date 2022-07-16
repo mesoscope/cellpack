@@ -41,7 +41,7 @@ def pack(recipe, config):
     env.load_recipe(recipe)
     afviewer = None
     if config_data["save_analyze_result"]:
-        output = env.resultfile
+        output = env.out_folder
         analyze = AnalyseAP(env=env, viewer=afviewer, result_file=None)
         log.info(f"saving to {output}")
         analyze.doloop(
