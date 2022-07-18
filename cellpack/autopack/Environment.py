@@ -323,7 +323,9 @@ class Environment(CompartmentList):
 
         # saving/pickle option
         self.saveResult = "out" in config
-        self.out_folder = RecipeLoader.create_output_dir(config["out"], name, config["place_method"])
+        self.out_folder = RecipeLoader.create_output_dir(
+            config["out"], name, config["place_method"]
+        )
         self.resultfile = self.out_folder + "/" + config["name"]
         self.setupfile = ""
         self.current_path = None  # the path of the recipe file
