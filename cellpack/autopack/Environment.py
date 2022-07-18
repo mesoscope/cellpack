@@ -1606,9 +1606,9 @@ class Environment(CompartmentList):
             # save bb for current fill
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
-            # 1.1547 = (2/sqrt(3)). This ensures that the smallest spherical protein completely 
+            # 1.1547 = (2/sqrt(3)). This ensures that the smallest spherical protein completely
             # encircles a cube made out of grid points with the given spacing, while touching all 8 corners
-            spacing = self.smallestProteinSize * 1.1547 
+            spacing = self.smallestProteinSize * 1.1547
             self.grid = Grid(boundingBox=boundingBox, spacing=spacing, lookup=lookup)
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
