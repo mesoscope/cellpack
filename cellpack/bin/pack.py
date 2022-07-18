@@ -25,7 +25,7 @@ def pack(recipe, config):
     :param recipe: string argument, path to recipe
     :param config: string argument, path to config file
 
-    :return: greeting message appended with name
+    :return: void
     """
     file_name = os.path.basename(recipe)
     config_data = ConfigLoader(config).config
