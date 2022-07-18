@@ -19,6 +19,7 @@ test_config = {
     "format": "simularium",
     "inner_grid_method": "raytrace",
     "live_packing": False,
+    "name": "test",
     "ordered_packing": False,
     "out": "out/",
     "overwrite_place_method": False,

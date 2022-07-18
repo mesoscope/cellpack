@@ -36,6 +36,7 @@ class Inner_Grid_Methods(MetaEnum):
 class ConfigLoader(object):
     default_values = {
         "version": 1.0,
+        "name": "default",
         "bounding_box": [[0, 0, 0], [100, 100, 100]],
         "format": "simularium",
         "inner_grid_method": "raytrace",
