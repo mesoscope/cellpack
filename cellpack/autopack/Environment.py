@@ -306,7 +306,7 @@ class Environment(CompartmentList):
         each recipe are made of a list of ingredients
     """
 
-    def __init__(self, name="H", config=None):
+    def __init__(self, name="H", config=None, recipe=None):
         CompartmentList.__init__(self)
 
         self.log = logging.getLogger("env")
@@ -317,9 +317,11 @@ class Environment(CompartmentList):
         self.placeMethod = config["place_method"]
         self.innerGridMethod = config["inner_grid_method"]
         self.format_output = config["format"]
-        self.boundingBox = numpy.array(config["bounding_box"])
         self.use_periodicity = config["use_periodicity"]
         self.pickRandPt = not config["ordered_packing"]
+
+        # TODO: this could come from recipe, the same way we're sending in config data
+        self.boundingBox = numpy.array(recipe["bounding_box"])
 
         # saving/pickle option
         self.saveResult = "out" in config

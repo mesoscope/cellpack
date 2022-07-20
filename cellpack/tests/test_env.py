@@ -14,7 +14,6 @@ from unittest.mock import MagicMock
 from cellpack.autopack.Environment import Environment
 
 test_config = {
-    "bounding_box": [[0, 0, 0], [100, 100, 100]],
     "dimension": 3,
     "format": "simularium",
     "inner_grid_method": "raytrace",
@@ -34,17 +33,17 @@ test_config = {
 def test_is_two_d():
     # if one of the edges of the bounding box is smaller than the
     # grid spacing, it's considered 2D
-    test_config["bounding_box"] = [[0, 0, 0], [100, 10, 100]]
+    test_recipe = {"bounding_box": [[0, 0, 0], [100, 10, 100]]}
 
-    env = Environment(name="test", config=test_config)
+    env = Environment(name="test", config=test_config, recipe=test_recipe)
     mock = MagicMock(gridSpacing=10)
     env.grid = mock
 
     assert env.is_two_d()
 
-    test_config["bounding_box"] = [[0, 0, 0], [40, 40, 40]]
+    test_recipe = {"bounding_box": [[0, 0, 0], [40, 40, 40]]}
 
-    env = Environment(name="test", config=test_config)
+    env = Environment(name="test", config=test_config, recipe=test_recipe)
     mock = MagicMock(gridSpacing=10)
     env.grid = mock
 

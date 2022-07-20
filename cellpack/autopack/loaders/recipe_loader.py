@@ -10,8 +10,14 @@ encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
 
 class RecipeLoader(object):
+    # TODO: add all default values here
+    default_values = {
+        "bounding_box": [[0, 0, 0], [100, 100, 100]],
+    }
+
     def __init__(self, input_file_path):
         _, file_extension = os.path.splitext(input_file_path)
+        self.latest_version = 1.0
         self.file_path = input_file_path
         self.file_extension = file_extension
         self.recipe_data = self._read()
@@ -53,19 +59,32 @@ class RecipeLoader(object):
             return None
         return data
 
+    @staticmethod
+    def _migrate_version(recipe):
+        if "format_version" not in recipe:
+            recipe["bounding_box"] = recipe["options"]["boundingBox"]
+        return recipe
+
     def _load_json(self):
         """
         Read in a Json Recipe.
         """
         sortkey = str.lower
 
-        recipe_data = json.load(open(self.file_path, "r"))
-        # is there any cutoms paths
+        new_values = json.load(open(self.file_path, "r"))
+        recipe_data = RecursionError.default_values.copy()
+        recipe_data.update(new_values)
+        # are there any custom paths
         if "paths" in recipe_data["recipe"]:
             custom_paths = recipe_data["recipe"]["paths"]
             autopack.updateReplacePath(custom_paths)
 
         autopack.current_recipe_path = self.file_path
+        if (
+            "format_version" not in recipe_data
+            or recipe_data["format_version"] != self.latest_version
+        ):
+            recipe_data = RecipeLoader._migrate_version(recipe_data)
 
         if "cytoplasme" in recipe_data:
             ingrs_dic = recipe_data["cytoplasme"]["ingredients"]

@@ -10,6 +10,7 @@ from cellpack.autopack.Analysis import AnalyseAP
 from cellpack.autopack.Environment import Environment
 
 from cellpack.autopack.loaders.config_loader import ConfigLoader
+from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 ###############################################################################
 
@@ -29,15 +30,15 @@ def pack(recipe, config):
     """
     file_name = os.path.basename(recipe)
     config_data = ConfigLoader(config).config
-    # TODO: Decouple loading recipe and env
-    # recipe_data = RecipeLoader()
+    recipe_data = RecipeLoader(recipe).recipe_data
 
     helper_class = upy.getHelperClass()
     helper = helper_class(vi="nogui")
     autopack.helper = helper
 
-    env = Environment(name=file_name, config=config_data)
+    env = Environment(name=file_name, config=config_data, recipe=recipe_data)
     env.helper = helper
+    # TODO: Remove this
     env.load_recipe(recipe)
     afviewer = None
     if config_data["save_analyze_result"]:

@@ -37,7 +37,6 @@ class ConfigLoader(object):
     default_values = {
         "version": 1.0,
         "name": "default",
-        "bounding_box": [[0, 0, 0], [100, 100, 100]],
         "format": "simularium",
         "inner_grid_method": "raytrace",
         "live_packing": False,
@@ -72,11 +71,6 @@ class ConfigLoader(object):
                     f"inner_grid_method must be one of {Inner_Grid_Methods.values()}, not {config['inner_grid_method']}"
                 )
             )
-        if (
-            not isinstance(config["bounding_box"], list)
-            or len(config["bounding_box"]) != 2
-        ):
-            raise TypeError("bounding_box must be an array of 2 arrays")
         bools = [
             "live_packing",
             "ordered_packing",
