@@ -72,7 +72,7 @@ class RecipeLoader(object):
         sortkey = str.lower
 
         new_values = json.load(open(self.file_path, "r"))
-        recipe_data = RecursionError.default_values.copy()
+        recipe_data = RecipeLoader.default_values.copy()
         recipe_data.update(new_values)
         # are there any custom paths
         if "paths" in recipe_data["recipe"]:
