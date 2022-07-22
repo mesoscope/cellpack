@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+import copy
 import os
 
 import json
 from json import encoder
 
 import cellpack.autopack as autopack
+from cellpack.autopack.utils import deep_merge
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
@@ -31,13 +33,55 @@ class RecipeLoader(object):
         os.makedirs(output_folder, exist_ok=True)
         return output_folder
 
+    @staticmethod
+    def _resolve_object(key, objects):
+        current_object = objects[key]
+        inherit_key = current_object["inherit"]
+        base_object = objects[inherit_key]
+        new_object = deep_merge(copy.deepcopy(base_object), current_object)
+        objects[key] = new_object
+
+    @staticmethod
+    def _sort(key, visited, stack, edges):
+        visited[key] = True
+        for element in edges[key]:
+            if visited[element] is False:
+                RecipeLoader._sort(element, visited, stack, edges)
+        stack.append(key)
+
+    @staticmethod
+    def _topological_sort(objects):
+        edges = dict()
+        for key, values in objects.items():
+            if key not in edges:
+                edges[key] = []
+            if "inherit" in values:
+                edges[key].append(values["inherit"])
+                # "sphere_25": ["base"]
+                # "sphere_50": ["sphere_25"]
+                # "base": []
+        stack = []
+        visited = {key: False for key in objects}
+        for key, value in objects.items():
+            if visited[key] is False:
+                RecipeLoader._sort(key, visited, stack, edges)
+        return stack
+
+    @staticmethod
+    def resolve_inheritance(objects):
+        stack = RecipeLoader._topological_sort(objects)
+        for key in stack:
+            if "inherit" in objects[key]:
+                RecipeLoader._resolve_object(key, objects)
+        return objects
+
     def _read(self):
-        if self.file_extension == ".xml":
-            pass  # self.load_XML(setupfile)
-        elif self.file_extension == ".py":  # execute ?
-            pass  # return IOutils.load_Python(env,setupfile)
-        elif self.file_extension == ".json":
-            return self._load_json()
+        new_values = json.load(open(self.file_path, "r"))
+        recipe_data = RecipeLoader.default_values.copy()
+        recipe_data = deep_merge(recipe_data, new_values)
+        # TODO: request any external data before returning
+        recipe_data["objects"] = RecipeLoader.resolve_inheritance(recipe_data["objects"])
+        return recipe_data
 
     def _request_sub_recipe(self, inode):
         filename = None

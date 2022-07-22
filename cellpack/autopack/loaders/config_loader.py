@@ -98,7 +98,7 @@ class ConfigLoader(object):
         new_values = json.load(open(self.file_path, "r"))
         config = ConfigLoader.default_values.copy()
         config.update(new_values)
-        ConfigLoader._test_types(config)
         if config["version"] != self.latest_version:
             config = ConfigLoader._migrate_version(config)
+        ConfigLoader._test_types(config)
         return config

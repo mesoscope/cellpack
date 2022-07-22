@@ -66,8 +66,10 @@ from panda3d.core import Mat3, Mat4, Vec3, BitMask32, NodePath
 from panda3d.bullet import BulletRigidBodyNode
 
 import cellpack.autopack as autopack
+from cellpack.autopack.Grid import Grid
 from cellpack.autopack.MeshStore import MeshStore
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
+from cellpack.autopack.utils import cmp_to_key, ingredient_compare0, ingredient_compare1, ingredient_compare2
 from .Compartment import CompartmentList, Compartment
 from .Recipe import Recipe
 from .ingredient import GrowIngredient, ActinIngredient
@@ -101,198 +103,6 @@ LOG = False
 verbose = 0
 
 
-def ingredient_compare1(x, y):
-    """
-    sort ingredients using decreasing priority and decreasing radii for
-    priority ties and decreasing completion for radii ties
-    for priority > 0
-    """
-    p1 = x.packingPriority
-    p2 = y.packingPriority
-    if p1 < p2:  # p1 > p2
-        return 1
-    elif p1 == p2:  # p1 == p1
-        r1 = x.minRadius
-        r2 = y.minRadius
-        if r1 > r2:  # r1 < r2
-            return 1
-        elif r1 == r2:  # r1 == r2
-            c1 = x.completion
-            c2 = y.completion
-            if c1 > c2:  # c1 > c2
-                return 1
-            elif c1 == c2:
-                return 0
-            else:
-                return -1
-        else:
-            return -1
-    else:
-        return -1
-
-
-def ingredient_compare0(x, y):
-    """
-    sort ingredients using decreasing priority and decreasing radii for
-    priority ties and decreasing completion for radii ties
-    for priority < 0
-    """
-    p1 = x.packingPriority
-    p2 = y.packingPriority
-    if p1 > p2:  # p1 > p2
-        return 1
-    elif p1 == p2:  # p1 == p1
-        r1 = x.minRadius
-        r2 = y.minRadius
-        if r1 > r2:  # r1 < r2
-            return 1
-        elif r1 == r2:  # r1 == r2
-            c1 = x.completion
-            c2 = y.completion
-            if c1 > c2:  # c1 > c2
-                return 1
-            elif c1 == c2:
-                return 0
-            else:
-                return -1
-        else:
-            return -1
-    else:
-        return -1
-
-
-def ingredient_compare2(x, y):
-    """
-    sort ingredients using decreasing radii and decresing completion
-    for radii matches:
-    priority = 0
-    """
-    c1 = x.minRadius
-    c2 = y.minRadius
-    if c1 < c2:
-        return 1
-    elif c1 == c2:
-        r1 = x.completion
-        r2 = y.completion
-        if r1 > r2:
-            return 1
-        elif r1 == r2:
-            return 0
-        else:
-            return -1
-    else:  # x < y
-        return -1
-
-
-def cmp_to_key(mycmp):
-    "Convert a cmp= function into a key= function"
-
-    class K:
-        def __init__(self, obj, *args):
-            self.obj = obj
-
-        def __lt__(self, other):
-            return mycmp(self.obj, other.obj) < 0
-
-        def __gt__(self, other):
-            return mycmp(self.obj, other.obj) > 0
-
-        def __eq__(self, other):
-            return mycmp(self.obj, other.obj) == 0
-
-        def __le__(self, other):
-            return mycmp(self.obj, other.obj) <= 0
-
-        def __ge__(self, other):
-            return mycmp(self.obj, other.obj) >= 0
-
-        def __ne__(self, other):
-            return mycmp(self.obj, other.obj) != 0
-
-    return K
-
-
-class Grid(BaseGrid):
-    """
-    The Grid class
-    ==========================
-    This class handle the use of grid to control the packing. The grid keep information
-    of 3d positions, distances, freePoints and inside/surface points from organelles.
-    NOTE : this class could be completely replaced if openvdb is wrapped to python.
-    """
-
-    def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=10.0, lookup=0):
-        # a grid is attached to an environement
-        BaseGrid.__init__(
-            self, boundingBox=boundingBox, spacing=space, setup=False, lookup=lookup
-        )
-
-        self.gridSpacing = space * 1.1547
-        self.encapsulatingGrid = 1
-        self.gridVolume, self.nbGridPoints = self.computeGridNumberOfPoint(
-            boundingBox, space
-        )
-        self.create3DPointLookup()
-        self.freePoints = list(range(self.gridVolume))
-        self.nbFreePoints = len(self.freePoints)
-
-    def reset(self):
-        # reset the  distToClosestSurf and the freePoints
-        # boundingBox shoud be the same otherwise why keeping the grid
-
-        self.distToClosestSurf[:] = self.diag
-        self.freePoints = list(range(len(self.freePoints)))
-        self.nbFreePoints = len(self.freePoints)
-        self.distancesAfterFill = []
-        self.freePointsAfterFill = []
-        self.nbFreePointsAfterFill = []
-        self.distanceAfterFill = []
-
-    def create3DPointLookup(self, boundingBox=None):
-        """
-        Fill the orthogonal bounding box described by two global corners
-        with an array of points spaces pGridSpacing apart.:
-        """
-        if boundingBox is None:
-            boundingBox = self.boundingBox
-        xl, yl, zl = boundingBox[0]
-        xr, yr, zr = boundingBox[1]
-
-        nx, ny, nz = self.nbGridPoints
-        pointArrayRaw = numpy.zeros((nx * ny * nz, 3), "f")
-        self.ijkPtIndice = numpy.zeros((nx * ny * nz, 3), "i")
-        space = self.gridSpacing
-        # Vector for lower left broken into real of only the z coord.
-        i = 0
-        for zi in range(nz):
-            for yi in range(ny):
-                for xi in range(nx):
-                    pointArrayRaw[i] = (
-                        xl + xi * space,
-                        yl + yi * space,
-                        zl + zi * space,
-                    )
-                    self.ijkPtIndice[i] = (xi, yi, zi)
-                    i += 1
-        self.masterGridPositions = pointArrayRaw
-
-    def getIJK(self, ptInd):
-        """
-        get i,j,k (3d) indices from u (1d)
-        """
-        # ptInd = k*(sizex)*(sizey)+j*(sizex)+i;#want i,j,k
-        return self.ijkPtIndice[ptInd]
-        # ==============================================================================
-
-    # TO DO File IO
-    # ==============================================================================
-    def save(self):
-        pass
-
-    def restore(self):
-        pass
-
-
 class Environment(CompartmentList):
     """
     The Environment class
@@ -306,9 +116,9 @@ class Environment(CompartmentList):
         each recipe are made of a list of ingredients
     """
 
-    def __init__(self, name="H", config=None, recipe=None):
+    def __init__(self, config=None, recipe=None):
         CompartmentList.__init__(self)
-
+        name = recipe["name"]
         self.log = logging.getLogger("env")
         self.log.propagate = False
 
@@ -320,8 +130,8 @@ class Environment(CompartmentList):
         self.use_periodicity = config["use_periodicity"]
         self.pickRandPt = not config["ordered_packing"]
 
-        # TODO: this could come from recipe, the same way we're sending in config data
         self.boundingBox = numpy.array(recipe["bounding_box"])
+        self.name = name
 
         # saving/pickle option
         self.saveResult = "out" in config
@@ -329,6 +139,7 @@ class Environment(CompartmentList):
             config["out"], name, config["place_method"]
         )
         self.resultfile = self.out_folder + "/" + config["name"]
+        
         self.setupfile = ""
         self.current_path = None  # the path of the recipe file
         self.custom_paths = None
@@ -454,20 +265,6 @@ class Environment(CompartmentList):
         self.distanceAfterFill = []
         self.mesh_store = MeshStore()
 
-    def Setup(self, setupfile):
-        # parse the given fill for
-        # 1-fillin option
-        # 2-recipe
-        # use XML with tag description of the setup:
-        # filling name root
-        # Environment option
-        # cytoplasme recipe if any and its ingredient
-        # compartment name= mesh ?
-        # orga surfaceingr#file or direct
-        # orga interioringr#file or direct
-        # etc...
-        pass
-
     def setSeed(self, seedNum):
         SEED = int(seedNum)
         numpy.random.seed(SEED)  # for gradient
@@ -512,45 +309,9 @@ class Environment(CompartmentList):
                 ingr.addExcludedPartner(iname)
         ingr.env = self
 
-    def set_recipe_ingredient(self, xmlnode, recipe, io_ingr):
-        # get the defined ingredient
-        ingrnodes = xmlnode.getElementsByTagName("ingredient")
-        for ingrnode in ingrnodes:
-            ingre = io_ingr.makeIngredientFromXml(inode=ingrnode, recipe=self.name)
-            if ingre:
-                recipe.addIngredient(ingre)
-            else:
-                print("PROBLEM creating ingredient from ", ingrnode)
-            # check for includes
-        ingrnodes_include = xmlnode.getElementsByTagName("include")
-        for inclnode in ingrnodes_include:
-            xmlfile = str(inclnode.getAttribute("filename"))
-            ingre = io_ingr.makeIngredientFromXml(filename=xmlfile, recipe=self.name)
-            if ingre:
-                recipe.addIngredient(ingre)
-            else:
-                print("PROBLEM creating ingredient from ", ingrnode)
-            # look for overwritten attribute
-
-    def load_recipe(self, setupfile):
-        if setupfile is None:
-            setupfile = self.setupfile
-        else:
-            self.setupfile = setupfile
-        # check the extension of the filename none, txt or json
-        fileName, fileExtension = os.path.splitext(setupfile)
-        if fileExtension == ".xml":
-            IOutils.load_XML(self, setupfile)
-        elif fileExtension == ".py":  # execute ?
-            IOutils.load_Python(self, setupfile)
-        elif fileExtension == ".json":
-            IOutils.load_Json(self, setupfile)
-        else:
-            print("can't read or recognize " + setupfile)
-        self.setMinMaxProteinSize()
-
-    def loadRecipeString(self, astring):
-        return IOutils.load_JsonString(self, astring)
+    # def unpack_objects(self, objects):
+    #     for key, value in objects.items():
+            
 
     def save_result(
         self, freePoints, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array

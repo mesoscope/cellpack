@@ -1,5 +1,4 @@
 import fire
-import os
 from os import path
 import logging
 import logging.config
@@ -28,7 +27,6 @@ def pack(recipe, config):
 
     :return: void
     """
-    file_name = os.path.basename(recipe)
     config_data = ConfigLoader(config).config
     recipe_data = RecipeLoader(recipe).recipe_data
 
@@ -36,10 +34,9 @@ def pack(recipe, config):
     helper = helper_class(vi="nogui")
     autopack.helper = helper
 
-    env = Environment(name=file_name, config=config_data, recipe=recipe_data)
+    env = Environment(config=config_data, recipe=recipe_data)
     env.helper = helper
-    # TODO: Remove this
-    env.load_recipe(recipe)
+
     afviewer = None
     if config_data["save_analyze_result"]:
         output = env.out_folder
