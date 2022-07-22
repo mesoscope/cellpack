@@ -51,7 +51,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../cellpack.autopack.html">cellpack.autopack package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../cellpack.bin.html">cellpack.bin package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#submodules">Submodules</a></li>
@@ -417,7 +416,7 @@
 <div class="viewcode-block" id="MeshStore.contains_point"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.contains_point">[docs]</a>    <span class="k">def</span> <span class="nf">contains_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">intersector</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">ray</span><span class="o">.</span><span class="n">ray_pyembree</span><span class="o">.</span><span class="n">RayMeshIntersector</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+            <span class="n">intersector</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">ray</span><span class="o">.</span><span class="n">ray_triangle</span><span class="o">.</span><span class="n">RayMeshIntersector</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">intersector</span><span class="o">.</span><span class="n">contains_points</span><span class="p">([</span><span class="n">point</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 

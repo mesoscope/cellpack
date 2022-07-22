@@ -115,24 +115,17 @@ _Optional `string[]`_
 An array that defines the names of directional gradients to use.
 
 ### innerGridMethod
-_Optional enum_. One of `"bhtree"`, `"jordan"`, `"sdf"`, `"jordan3"`, `"pyray"`, `"floodfill"`, `"binvox"`, `"trimesh"`, `"scanline"`. Default: `"jordan3"`.
+_Optional enum_. One of `"bhtree"`, `"raytrace"`, `"sdf"`, `"pyray"`, `"floodfill"`, `"binvox"`, `"trimesh"`, `"scanline"`. Default: `"jordan3"`.
 
 
  `"bhtree"` builds the compartment grid ie surface and inside point using bhtree.
  
- `"jordan"` builds the compartment grid ie surface and inside point using jordan theorem and host raycast.  Only computes the inner point. No grid.
-
-    - This is independent from the packing. Help build ingredient sphere tree and representation.
-    - Uses BHTree to compute surface points
-    - Uses Jordan raycasting to determine inside/outside (defaults to 1 iteration, can use 3 iterations)
+ `"raytrace"` builds the compartment grid ie surface and inside point using raytrace
         
 
 `"sdf"` builds the compartment grid ie surface and inside point using signed distance fields
         from the UT package.
-        
-
- `"jordan3"` builds the compartment grid ie surface and inside point using jordan theorem and host raycast, with ray set to `3`.
- 
+         
  `"pyray"`
  
  `"floodfill"` builds the compartment grid ie surface and inside point using flood filling algo from kevin. Takes a polyhedron, and builds a grid. In this grid:
@@ -150,7 +143,7 @@ _Optional enum_. One of `"bhtree"`, `"jordan"`, `"sdf"`, `"jordan3"`, `"pyray"`,
  
  `"binvox"` 
  
- `"trimesh"` 
+ `"trimesh"` uses trimesh voxelize to find surface points
  
  `"scanline"` builds the compartment grid ie surface and inside point using scanline.
 

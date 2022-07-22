@@ -51,7 +51,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../cellpack.autopack.html">cellpack.autopack package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../cellpack.bin.html">cellpack.bin package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#submodules">Submodules</a></li>
@@ -192,7 +191,6 @@
 <span class="kn">import</span> <span class="nn">webbrowser</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">xml.dom.minidom</span> <span class="kn">import</span> <span class="n">getDOMImplementation</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">JSONEncoder</span>
 <span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">encoder</span>
@@ -404,11 +402,6 @@
                 <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
                     <span class="n">ingdic</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
                 <span class="p">)</span>  <span class="c1"># ,indent=4, separators=(&#39;,&#39;, &#39;: &#39;)</span>
-        <span class="k">elif</span> <span class="n">ingr_format</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
-            <span class="n">ingrnode</span><span class="p">,</span> <span class="n">xmldoc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingrXmlNode</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
-            <span class="n">xmldoc</span><span class="o">.</span><span class="n">writexml</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">addindent</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">newl</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">elif</span> <span class="n">ingr_format</span> <span class="o">==</span> <span class="s2">&quot;python&quot;</span><span class="p">:</span>
             <span class="n">ingrnode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingrPythonNode</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
             <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.py&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
@@ -420,61 +413,10 @@
                 <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
                     <span class="n">ingdic</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;: &quot;</span><span class="p">)</span>
                 <span class="p">)</span>  <span class="c1"># ,indent=4, separators=(&#39;,&#39;, &#39;: &#39;)</span>
-            <span class="n">ingrnode</span><span class="p">,</span> <span class="n">xmldoc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingrXmlNode</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
-            <span class="n">xmldoc</span><span class="o">.</span><span class="n">writexml</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">addindent</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">newl</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="n">ingrnode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingrPythonNode</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
             <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.py&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ingrnode</span><span class="p">)</span>
             <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="IOingredientTool.makeIngredientFromXml"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.makeIngredientFromXml">[docs]</a>    <span class="k">def</span> <span class="nf">makeIngredientFromXml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="s2">&quot;Generic&quot;</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">inode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">f</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">inode</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;include&quot;</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">f</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-                <span class="n">filename</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># filter the filename or pass the custom-path?</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">retrieveFile</span><span class="p">(</span>
-                <span class="n">filename</span><span class="p">,</span>
-                <span class="c1"># destination = recipe+os.sep+&quot;recipe&quot;+os.sep+&quot;ingredients&quot;+os.sep,</span>
-                <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;recipes&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="kn">from</span> <span class="nn">xml.dom.minidom</span> <span class="kn">import</span> <span class="n">parse</span>
-
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;parsing an ingredient xml&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-            <span class="n">xmlingr</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>  <span class="c1"># parse an XML file by name</span>
-            <span class="n">ingrnode</span> <span class="o">=</span> <span class="n">xmlingr</span><span class="o">.</span><span class="n">documentElement</span>
-        <span class="k">elif</span> <span class="n">inode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">ingrnode</span> <span class="o">=</span> <span class="n">inode</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;filename is None&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ingrnode</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))</span>
-        <span class="n">ingre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">makeIngredient</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ingre</span></div>
-
-<div class="viewcode-block" id="IOingredientTool.ingrXmlNode"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.ingrXmlNode">[docs]</a>    <span class="k">def</span> <span class="nf">ingrXmlNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">xmldoc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">rxmldoc</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">if</span> <span class="n">xmldoc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">rxmldoc</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">impl</span> <span class="o">=</span> <span class="n">getDOMImplementation</span><span class="p">()</span>
-            <span class="c1"># what about afviewer</span>
-            <span class="n">xmldoc</span> <span class="o">=</span> <span class="n">impl</span><span class="o">.</span><span class="n">createDocument</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;ingredient&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="n">ingrnode</span> <span class="o">=</span> <span class="n">xmldoc</span><span class="o">.</span><span class="n">documentElement</span>
-            <span class="n">ingrnode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ingrnode</span> <span class="o">=</span> <span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;ingredient&quot;</span><span class="p">)</span>
-            <span class="n">ingrnode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">KWDS</span><span class="p">:</span>
-            <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-            <span class="n">setValueToXMLNode</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">ingrnode</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">rxmldoc</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ingrnode</span><span class="p">,</span> <span class="n">xmldoc</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ingrnode</span></div>
 
 <div class="viewcode-block" id="IOingredientTool.makeIngredientFromJson"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.makeIngredientFromJson">[docs]</a>    <span class="k">def</span> <span class="nf">makeIngredientFromJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">inode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="s2">&quot;Generic&quot;</span><span class="p">):</span>
         <span class="n">overwrite_dic</span> <span class="o">=</span> <span class="p">{}</span>
@@ -594,11 +536,11 @@
 <div class="viewcode-block" id="IOingredientTool.makeIngredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.makeIngredient">[docs]</a>    <span class="k">def</span> <span class="nf">makeIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="n">ingr</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">ingredient_type</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">ingredient_type</span> <span class="ow">in</span> <span class="p">[</span>
-            <span class="s2">&quot;Grow&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Actine&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;MultiCylinder&quot;</span><span class="p">,</span>
-        <span class="p">]:</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span>
+            <span class="ow">or</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;Actine&quot;</span>
+            <span class="ow">or</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;MultiCylinder&quot;</span>
+        <span class="p">):</span>
             <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span><span class="n">GrowIngredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span><span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
@@ -711,14 +653,16 @@
                     <span class="n">compartment</span><span class="o">.</span><span class="n">setInnerRecipe</span><span class="p">(</span><span class="n">rMatrix</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="save_as_simularium"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.save_as_simularium">[docs]</a><span class="k">def</span> <span class="nf">save_as_simularium</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">all_ingr_as_array</span><span class="p">):</span>
+<div class="viewcode-block" id="save_as_simularium"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.save_as_simularium">[docs]</a><span class="k">def</span> <span class="nf">save_as_simularium</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">all_ingr_as_array</span><span class="p">,</span> <span class="n">compartments</span><span class="p">):</span>
     <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-    <span class="n">length_original_grid_points</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">)</span> <span class="o">-</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">nbSurfacePoints</span>
-    <span class="p">)</span>
+    <span class="n">grid_positions</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span> <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">show_grid_spheres</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">compartment_ids</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span> <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">show_grid_spheres</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">init_scene_with_objects</span><span class="p">(</span>
-        <span class="n">all_ingr_as_array</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span>
+        <span class="n">all_ingr_as_array</span><span class="p">,</span> <span class="n">grid_positions</span><span class="p">,</span> <span class="n">compartment_ids</span>
     <span class="p">)</span>
+    <span class="k">if</span> <span class="n">compartments</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="n">compartments</span><span class="p">:</span>
+            <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">add_compartment_to_scene</span><span class="p">(</span><span class="n">compartment</span><span class="p">)</span>
     <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">writeToFile</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">setupfile</span><span class="si">}</span><span class="s2">_results&quot;</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">)</span>
     <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;https://simularium.allencell.org/viewer&quot;</span><span class="p">)</span></div>
 
@@ -903,128 +847,6 @@
                 <span class="n">env</span><span class="o">.</span><span class="n">jsondic</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">),</span> <span class="bp">cls</span><span class="o">=</span><span class="n">NumpyArrayEncoder</span>
             <span class="p">)</span>  <span class="c1"># ,indent=4, separators=(&#39;,&#39;, &#39;: &#39;)</span>
     <span class="n">printoptions</span><span class="p">(</span><span class="s2">&quot;Mixed recipe saved to &quot;</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="save_asXML"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.save_asXML">[docs]</a><span class="k">def</span> <span class="nf">save_asXML</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">useXref</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Save the current environment setup as an xml file.</span>
-<span class="sd">    env is the environment / recipe to be exported.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">io_ingr</span> <span class="o">=</span> <span class="n">IOingredientTool</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">)</span>
-    <span class="c1">#        env.setupfile = setupfile+&quot;.xml&quot;</span>
-    <span class="n">pathout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">setupfile</span><span class="p">))</span>
-    <span class="c1"># export all information as xml</span>
-    <span class="kn">from</span> <span class="nn">xml.dom.minidom</span> <span class="kn">import</span> <span class="n">getDOMImplementation</span>
-
-    <span class="n">impl</span> <span class="o">=</span> <span class="n">getDOMImplementation</span><span class="p">()</span>
-    <span class="c1"># what about afviewer</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span> <span class="o">=</span> <span class="n">impl</span><span class="o">.</span><span class="n">createDocument</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;autopackSetup&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="n">root</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">documentElement</span>
-    <span class="n">root</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">custom_paths</span><span class="p">:</span>
-        <span class="n">setValueToXMLNode</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">custom_paths</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="s2">&quot;paths&quot;</span><span class="p">)</span>
-    <span class="n">options</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;options&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">OPTIONS</span><span class="p">:</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;gradients&quot;</span><span class="p">:</span>
-            <span class="n">v</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">gradients</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="c1">#            elif k == &quot;runTimeDisplay&quot;</span>
-        <span class="n">setValueToXMLNode</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-    <span class="c1"># add the boundin box</span>
-    <span class="n">setValueToXMLNode</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="s2">&quot;boundingBox&quot;</span><span class="p">)</span>
-    <span class="n">setValueToXMLNode</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">)</span>  <span class="c1"># version?</span>
-    <span class="n">root</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">gradients</span><span class="p">):</span>
-        <span class="n">gradientsnode</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;gradients&quot;</span><span class="p">)</span>
-        <span class="n">root</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">gradientsnode</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">gname</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">gradients</span><span class="p">:</span>
-            <span class="n">g</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">gradients</span><span class="p">[</span><span class="n">gname</span><span class="p">]</span>
-            <span class="n">grnode</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;gradient&quot;</span><span class="p">)</span>
-            <span class="n">gradientsnode</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">grnode</span><span class="p">)</span>
-            <span class="n">grnode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">OPTIONS</span><span class="p">:</span>
-                <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-                <span class="n">setValueToXMLNode</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">grnode</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-
-                <span class="c1"># grid path information</span>
-    <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">result_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">gridnode</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;grid&quot;</span><span class="p">)</span>
-        <span class="n">root</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">gridnode</span><span class="p">)</span>
-        <span class="n">gridnode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;grid_storage&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span>
-        <span class="n">gridnode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;grid_result&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">result_filename</span><span class="p">))</span>
-
-    <span class="n">r</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">exteriorRecipe</span>
-    <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
-        <span class="n">rnode</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">)</span>
-        <span class="n">root</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">rnode</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">useXref</span><span class="p">:</span>
-                <span class="n">io_ingr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">pathout</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ingr_format</span><span class="o">=</span><span class="s2">&quot;xml&quot;</span><span class="p">)</span>
-                <span class="n">ingrnode</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;ingredient&quot;</span><span class="p">)</span>
-                <span class="n">rnode</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">ingrnode</span><span class="p">)</span>
-                <span class="n">ingrnode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span>
-                    <span class="s2">&quot;include&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">pathout</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.xml&quot;</span><span class="p">)</span>
-                <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">ingrnode</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;ingredient&quot;</span><span class="p">)</span>
-                <span class="n">rnode</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">ingrnode</span><span class="p">)</span>
-                <span class="n">ingrnode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">KWDS</span><span class="p">:</span>
-                    <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-                    <span class="n">setValueToXMLNode</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">ingrnode</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
-        <span class="n">onode</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;compartment&quot;</span><span class="p">)</span>
-        <span class="n">root</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">onode</span><span class="p">)</span>
-        <span class="n">onode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-        <span class="n">onode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;geom&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span>  <span class="c1"># should point to the used filename</span>
-        <span class="n">onode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;rep&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">representation</span><span class="p">))</span>  <span class="c1"># None</span>
-        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">representation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">fileName</span><span class="p">,</span> <span class="n">fileExtension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">representation_file</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">fileName</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">onode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;rep_file&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>  <span class="c1"># None</span>
-        <span class="n">rs</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">surfaceRecipe</span>
-        <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
-            <span class="n">onodesurface</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;surface&quot;</span><span class="p">)</span>
-            <span class="n">onode</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">onodesurface</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">useXref</span><span class="p">:</span>
-                    <span class="n">io_ingr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">pathout</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ingr_format</span><span class="o">=</span><span class="s2">&quot;xml&quot;</span><span class="p">)</span>
-                    <span class="n">ingrnode</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;ingredient&quot;</span><span class="p">)</span>
-                    <span class="n">onodesurface</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">ingrnode</span><span class="p">)</span>
-                    <span class="n">ingrnode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span>
-                        <span class="s2">&quot;include&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">pathout</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.xml&quot;</span><span class="p">)</span>
-                    <span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">ingrnode</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;ingredient&quot;</span><span class="p">)</span>
-                    <span class="n">onodesurface</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">ingrnode</span><span class="p">)</span>
-                    <span class="n">ingrnode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">KWDS</span><span class="p">:</span>
-                        <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-                        <span class="n">setValueToXMLNode</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">ingrnode</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-        <span class="n">ri</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">innerRecipe</span>
-        <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
-            <span class="n">onodeinterior</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;interior&quot;</span><span class="p">)</span>
-            <span class="n">onode</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">onodeinterior</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">useXref</span><span class="p">:</span>
-                    <span class="n">io_ingr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">pathout</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ingr_format</span><span class="o">=</span><span class="s2">&quot;xml&quot;</span><span class="p">)</span>
-                    <span class="n">ingrnode</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;ingredient&quot;</span><span class="p">)</span>
-                    <span class="n">onodeinterior</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">ingrnode</span><span class="p">)</span>
-                    <span class="n">ingrnode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span>
-                        <span class="s2">&quot;include&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">pathout</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.xml&quot;</span><span class="p">)</span>
-                    <span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">ingrnode</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s2">&quot;ingredient&quot;</span><span class="p">)</span>
-                    <span class="n">onodeinterior</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">ingrnode</span><span class="p">)</span>
-                    <span class="n">ingrnode</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">KWDS</span><span class="p">:</span>
-                        <span class="n">v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-                        <span class="n">setValueToXMLNode</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">ingrnode</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">setupfile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">writexml</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">addindent</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">newl</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="save_asPython"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.save_asPython">[docs]</a><span class="k">def</span> <span class="nf">save_asPython</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">useXref</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -1751,158 +1573,6 @@
     <span class="k">return</span> <span class="n">all_pos</span><span class="p">,</span> <span class="n">all_rot</span></div>
 
 
-<div class="viewcode-block" id="load_XML"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.load_XML">[docs]</a><span class="k">def</span> <span class="nf">load_XML</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Setup the environment according the given xml file.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">setupfile</span> <span class="o">=</span> <span class="n">setupfile</span>
-    <span class="n">io_ingr</span> <span class="o">=</span> <span class="n">IOingredientTool</span><span class="p">(</span><span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">)</span>
-    <span class="kn">from</span> <span class="nn">xml.dom.minidom</span> <span class="kn">import</span> <span class="n">parse</span>
-
-    <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">setupfile</span><span class="p">)</span>  <span class="c1"># parse an XML file by name</span>
-    <span class="n">root</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">xmldoc</span><span class="o">.</span><span class="n">documentElement</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">custom_paths</span> <span class="o">=</span> <span class="n">getValueToXMLNode</span><span class="p">(</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="s2">&quot;paths&quot;</span><span class="p">)</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">current_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">setupfile</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">custom_paths</span><span class="p">:</span>
-        <span class="n">autopack</span><span class="o">.</span><span class="n">updateReplacePath</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">custom_paths</span><span class="p">)</span>
-    <span class="n">autopack</span><span class="o">.</span><span class="n">current_recipe_path</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">current_path</span>
-    <span class="n">options</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;options&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">):</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">OPTIONS</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;gradients&quot;</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="n">v</span> <span class="o">=</span> <span class="n">getValueToXMLNode</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">OPTIONS</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">],</span> <span class="n">options</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-        <span class="n">boudning_box</span> <span class="o">=</span> <span class="n">getValueToXMLNode</span><span class="p">(</span><span class="s2">&quot;vector&quot;</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="s2">&quot;boundingBox&quot;</span><span class="p">)</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span> <span class="o">=</span> <span class="n">boudning_box</span>
-        <span class="n">version</span> <span class="o">=</span> <span class="n">getValueToXMLNode</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">)</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
-
-    <span class="n">gradientsnode</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;gradients&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">gradientsnode</span><span class="p">):</span>
-        <span class="n">gradientnode</span> <span class="o">=</span> <span class="n">gradientsnode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">grnodes</span> <span class="o">=</span> <span class="n">gradientnode</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;gradient&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">grnode</span> <span class="ow">in</span> <span class="n">grnodes</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">grnode</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))</span>
-            <span class="n">mode</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">grnode</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;mode&quot;</span><span class="p">))</span>
-            <span class="n">weight_mode</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">grnode</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;weight_mode&quot;</span><span class="p">))</span>
-            <span class="n">pick_mode</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">grnode</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;pick_mode&quot;</span><span class="p">))</span>
-            <span class="n">direction</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">grnode</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;direction&quot;</span><span class="p">))</span>  <span class="c1"># vector</span>
-            <span class="n">description</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">grnode</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">))</span>
-            <span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">grnode</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;radius&quot;</span><span class="p">)))</span>
-            <span class="n">env</span><span class="o">.</span><span class="n">setGradient</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-                <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span>
-                <span class="n">direction</span><span class="o">=</span><span class="nb">eval</span><span class="p">(</span><span class="n">direction</span><span class="p">),</span>
-                <span class="n">weight_mode</span><span class="o">=</span><span class="n">weight_mode</span><span class="p">,</span>
-                <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
-                <span class="n">pick_mode</span><span class="o">=</span><span class="n">pick_mode</span><span class="p">,</span>
-                <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
-            <span class="p">)</span>
-
-    <span class="n">gridnode</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;grid&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">gridnode</span><span class="p">):</span>
-        <span class="n">gridn</span> <span class="o">=</span> <span class="n">gridnode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">grid_filename</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">gridn</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;grid_storage&quot;</span><span class="p">))</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">grid_result_filename</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">gridn</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;grid_result&quot;</span><span class="p">))</span>
-
-    <span class="n">rnode</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rnode</span><span class="p">):</span>
-        <span class="n">rCyto</span> <span class="o">=</span> <span class="n">Recipe</span><span class="p">()</span>
-        <span class="n">rnode</span> <span class="o">=</span> <span class="n">rnode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="c1"># check for include list of ingredients</span>
-        <span class="n">ingredients_xmlfile</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">rnode</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;include&quot;</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">ingredients_xmlfile</span><span class="p">:</span>  <span class="c1"># open the file and parse the ingredient:</span>
-            <span class="c1"># check if multiple include filename, aumngo&#39;,&#39; in the path</span>
-            <span class="n">liste_xmlfile</span> <span class="o">=</span> <span class="n">ingredients_xmlfile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">xmlf</span> <span class="ow">in</span> <span class="n">liste_xmlfile</span><span class="p">:</span>
-                <span class="n">xmlfile</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">retrieveFile</span><span class="p">(</span>
-                    <span class="n">xmlf</span><span class="p">,</span>
-                    <span class="c1"># destination = self.name+os.sep+&quot;recipe&quot;+os.sep,</span>
-                    <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;recipes&quot;</span><span class="p">,</span>
-                <span class="p">)</span>
-                <span class="k">if</span> <span class="n">xmlfile</span><span class="p">:</span>
-                    <span class="n">xmlinclude</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">xmlfile</span><span class="p">)</span><span class="o">.</span><span class="n">documentElement</span>
-                    <span class="n">io_ingr</span><span class="o">.</span><span class="n">set_recipe_ingredient</span><span class="p">(</span><span class="n">xmlinclude</span><span class="p">,</span> <span class="n">rCyto</span><span class="p">)</span>
-
-        <span class="n">io_ingr</span><span class="o">.</span><span class="n">set_recipe_ingredient</span><span class="p">(</span><span class="n">rnode</span><span class="p">,</span> <span class="n">rCyto</span><span class="p">)</span>
-        <span class="c1"># setup recipe</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">setExteriorRecipe</span><span class="p">(</span><span class="n">rCyto</span><span class="p">)</span>
-
-    <span class="n">onodes</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;compartment&quot;</span><span class="p">)</span>  <span class="c1"># Change to Compartment</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">onodes</span><span class="p">):</span>
-        <span class="c1"># backward compatibility</span>
-        <span class="n">onodes</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;organelle&quot;</span><span class="p">)</span>  <span class="c1"># Change to Compartment</span>
-
-    <span class="k">for</span> <span class="n">onode</span> <span class="ow">in</span> <span class="n">onodes</span><span class="p">:</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">onode</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))</span>
-        <span class="n">geom</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">onode</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;geom&quot;</span><span class="p">))</span>
-        <span class="n">rep</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">onode</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;rep&quot;</span><span class="p">))</span>
-        <span class="n">rep_file</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">onode</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;rep_file&quot;</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;xml parsing &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">rep</span><span class="p">,</span> <span class="n">rep_file</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">rep</span> <span class="o">!=</span> <span class="s2">&quot;None&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">rep</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">rname</span> <span class="o">=</span> <span class="n">rep_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">fileName</span><span class="p">,</span> <span class="n">fileExtension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">rname</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">fileExtension</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-                <span class="n">fileExtension</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">hext</span>
-                <span class="k">if</span> <span class="n">fileExtension</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-                    <span class="n">rep_file</span> <span class="o">=</span> <span class="n">rep_file</span> <span class="o">+</span> <span class="n">fileExtension</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">rep_file</span> <span class="o">=</span> <span class="n">rep_file</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">fileExtension</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">rep</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">rep_file</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;no representation found&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;add compartment &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">rep</span><span class="p">,</span> <span class="n">rep_file</span><span class="p">)</span>
-        <span class="n">compartment</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">create_compartment</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">rep</span><span class="p">,</span> <span class="n">rep_file</span><span class="p">)</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">addCompartment</span><span class="p">(</span><span class="n">compartment</span><span class="p">)</span>
-        <span class="n">rsnodes</span> <span class="o">=</span> <span class="n">onode</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;surface&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rsnodes</span><span class="p">):</span>
-            <span class="n">rSurf</span> <span class="o">=</span> <span class="n">Recipe</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">compartment</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surf&quot;</span><span class="p">)</span>
-            <span class="n">rsnodes</span> <span class="o">=</span> <span class="n">rsnodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">ingredients_xmlfile</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">rsnodes</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;include&quot;</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">ingredients_xmlfile</span><span class="p">:</span>  <span class="c1"># open the file and parse the ingredient:</span>
-                <span class="c1"># check if multiple include filename, aumngo&#39;,&#39; in the path</span>
-                <span class="n">liste_xmlfile</span> <span class="o">=</span> <span class="n">ingredients_xmlfile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">xmlf</span> <span class="ow">in</span> <span class="n">liste_xmlfile</span><span class="p">:</span>
-                    <span class="n">xmlfile</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">retrieveFile</span><span class="p">(</span>
-                        <span class="n">xmlf</span><span class="p">,</span>
-                        <span class="c1"># destination = self.name+os.sep+&quot;recipe&quot;+os.sep,</span>
-                        <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;recipes&quot;</span><span class="p">,</span>
-                    <span class="p">)</span>
-                    <span class="k">if</span> <span class="n">xmlfile</span><span class="p">:</span>
-                        <span class="n">xmlinclude</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">xmlfile</span><span class="p">)</span><span class="o">.</span><span class="n">documentElement</span>
-                        <span class="n">io_ingr</span><span class="o">.</span><span class="n">set_recipe_ingredient</span><span class="p">(</span><span class="n">xmlinclude</span><span class="p">,</span> <span class="n">rSurf</span><span class="p">)</span>
-            <span class="n">io_ingr</span><span class="o">.</span><span class="n">set_recipe_ingredient</span><span class="p">(</span><span class="n">rsnodes</span><span class="p">,</span> <span class="n">rSurf</span><span class="p">)</span>
-            <span class="n">compartment</span><span class="o">.</span><span class="n">setSurfaceRecipe</span><span class="p">(</span><span class="n">rSurf</span><span class="p">)</span>
-        <span class="n">rinodes</span> <span class="o">=</span> <span class="n">onode</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;interior&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rinodes</span><span class="p">):</span>
-            <span class="n">rMatrix</span> <span class="o">=</span> <span class="n">Recipe</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">compartment</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_int&quot;</span><span class="p">)</span>
-            <span class="n">rinodes</span> <span class="o">=</span> <span class="n">rinodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">ingredients_xmlfile</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">rinodes</span><span class="o">.</span><span class="n">getAttribute</span><span class="p">(</span><span class="s2">&quot;include&quot;</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">ingredients_xmlfile</span><span class="p">:</span>  <span class="c1"># open the file and parse the ingredient:</span>
-                <span class="c1"># check if multiple include filename, aumngo&#39;,&#39; in the path</span>
-                <span class="n">liste_xmlfile</span> <span class="o">=</span> <span class="n">ingredients_xmlfile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">xmlf</span> <span class="ow">in</span> <span class="n">liste_xmlfile</span><span class="p">:</span>
-                    <span class="n">xmlfile</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">retrieveFile</span><span class="p">(</span>
-                        <span class="n">xmlf</span><span class="p">,</span>
-                        <span class="c1"># destination = self.name+os.sep+&quot;recipe&quot;+os.sep,</span>
-                        <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;recipes&quot;</span><span class="p">,</span>
-                    <span class="p">)</span>
-                    <span class="k">if</span> <span class="n">xmlfile</span><span class="p">:</span>
-                        <span class="n">xmlinclude</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">xmlfile</span><span class="p">)</span><span class="o">.</span><span class="n">documentElement</span>
-                        <span class="n">io_ingr</span><span class="o">.</span><span class="n">set_recipe_ingredient</span><span class="p">(</span><span class="n">xmlinclude</span><span class="p">,</span> <span class="n">rMatrix</span><span class="p">)</span>
-            <span class="n">io_ingr</span><span class="o">.</span><span class="n">set_recipe_ingredient</span><span class="p">(</span><span class="n">rinodes</span><span class="p">,</span> <span class="n">rMatrix</span><span class="p">)</span>
-            <span class="n">compartment</span><span class="o">.</span><span class="n">setInnerRecipe</span><span class="p">(</span><span class="n">rMatrix</span><span class="p">)</span>
-    <span class="c1"># Go through all ingredient and setup the partner</span>
-    <span class="n">env</span><span class="o">.</span><span class="n">loopThroughIngr</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">set_partners_ingredient</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="load_JsonString"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.load_JsonString">[docs]</a><span class="k">def</span> <span class="nf">load_JsonString</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">astring</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Setup the environment according the given json file.</span>
@@ -2042,7 +1712,6 @@
                 <span class="n">compartment</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">create_compartment</span><span class="p">(</span>
                     <span class="n">name</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">gname</span><span class="p">,</span> <span class="n">rep</span><span class="p">,</span> <span class="n">rep_file</span><span class="p">,</span> <span class="n">mtype</span>
                 <span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;added compartment &quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
                 <span class="n">env</span><span class="o">.</span><span class="n">addCompartment</span><span class="p">(</span><span class="n">compartment</span><span class="p">)</span>
                 <span class="k">if</span> <span class="s2">&quot;surface&quot;</span> <span class="ow">in</span> <span class="n">comp_dic</span><span class="p">:</span>
                     <span class="n">snode</span> <span class="o">=</span> <span class="n">comp_dic</span><span class="p">[</span><span class="s2">&quot;surface&quot;</span><span class="p">]</span>
@@ -2069,7 +1738,7 @@
                             <span class="c1"># either xref or defined</span>
                             <span class="n">ing_dic</span> <span class="o">=</span> <span class="n">ingrs_dic</span><span class="p">[</span><span class="n">ing_name</span><span class="p">]</span>
                             <span class="n">ingr</span> <span class="o">=</span> <span class="n">io_ingr</span><span class="o">.</span><span class="n">makeIngredientFromJson</span><span class="p">(</span>
-                                <span class="n">inode</span><span class="o">=</span><span class="n">ing_dic</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">name</span>
+                                <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span> <span class="n">inode</span><span class="o">=</span><span class="n">ing_dic</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">name</span>
                             <span class="p">)</span>
                             <span class="n">rMatrix</span><span class="o">.</span><span class="n">addIngredient</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
                             <span class="c1"># setup recipe</span>
@@ -2269,6 +1938,7 @@
     <span class="n">quaternion</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">all_ingr_as_array</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">compartments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="k">if</span> <span class="n">useXref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">useXref</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">useXref</span>
@@ -2287,13 +1957,11 @@
         <span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">format_output</span> <span class="o">==</span> <span class="s2">&quot;simularium&quot;</span><span class="p">:</span>
-        <span class="n">save_as_simularium</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">all_ingr_as_array</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">format_output</span> <span class="o">==</span> <span class="s2">&quot;xml&quot;</span><span class="p">:</span>
-        <span class="n">save_asXML</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">useXref</span><span class="o">=</span><span class="n">useXref</span><span class="p">)</span>
+        <span class="n">save_as_simularium</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">all_ingr_as_array</span><span class="p">,</span> <span class="n">compartments</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">format_output</span> <span class="o">==</span> <span class="s2">&quot;python&quot;</span><span class="p">:</span>
         <span class="n">save_asPython</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">useXref</span><span class="o">=</span><span class="n">useXref</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;format output &quot;</span> <span class="o">+</span> <span class="n">format_output</span> <span class="o">+</span> <span class="s2">&quot; not recognized (json,xml,python)&quot;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;format output &quot;</span> <span class="o">+</span> <span class="n">format_output</span> <span class="o">+</span> <span class="s2">&quot; not recognized (json,python)&quot;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

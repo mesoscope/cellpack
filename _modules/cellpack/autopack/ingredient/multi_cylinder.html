@@ -51,7 +51,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.bin.html">cellpack.bin package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#submodules">Submodules</a></li>
@@ -532,9 +531,7 @@
             <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">p2</span>
             <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">,</span> <span class="n">vz</span> <span class="o">=</span> <span class="n">vect</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">-</span> <span class="n">z1</span><span class="p">)</span>
             <span class="n">lengthsq</span> <span class="o">=</span> <span class="n">vx</span> <span class="o">*</span> <span class="n">vx</span> <span class="o">+</span> <span class="n">vy</span> <span class="o">*</span> <span class="n">vy</span> <span class="o">+</span> <span class="n">vz</span> <span class="o">*</span> <span class="n">vz</span>
-            <span class="n">length</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">lengthsq</span><span class="p">)</span>
             <span class="n">cx</span><span class="p">,</span> <span class="n">cy</span><span class="p">,</span> <span class="n">cz</span> <span class="o">=</span> <span class="n">posc</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">vx</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="n">vy</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">z1</span> <span class="o">+</span> <span class="n">vz</span> <span class="o">*</span> <span class="mf">0.5</span>
-            <span class="c1"># radt = length + radc</span>
             <span class="n">radt</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">lengthsq</span> <span class="o">+</span> <span class="n">radc</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
             <span class="n">bb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">correctBB</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">radc</span><span class="p">)</span>

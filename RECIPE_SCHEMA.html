@@ -52,7 +52,6 @@
 <li class="toctree-l3"><a class="reference internal" href="cellpack.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html">cellpack.autopack package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html">cellpack.bin package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.html#submodules">Submodules</a></li>
@@ -293,21 +292,15 @@
 </section>
 <section id="innergridmethod">
 <h3>innerGridMethod<a class="headerlink" href="#innergridmethod" title="Permalink to this heading"></a></h3>
-<p><em>Optional enum</em>. One of <code class="docutils literal notranslate"><span class="pre">&quot;bhtree&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;jordan&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;sdf&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;jordan3&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;pyray&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;floodfill&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;binvox&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;trimesh&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;scanline&quot;</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;jordan3&quot;</span></code>.</p>
+<p><em>Optional enum</em>. One of <code class="docutils literal notranslate"><span class="pre">&quot;bhtree&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;raytrace&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;sdf&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;pyray&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;floodfill&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;binvox&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;trimesh&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;scanline&quot;</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;jordan3&quot;</span></code>.</p>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">&quot;bhtree&quot;</span></code> builds the compartment grid ie surface and inside point using bhtree.</p>
-<p><code class="docutils literal notranslate"><span class="pre">&quot;jordan&quot;</span></code> builds the compartment grid ie surface and inside point using jordan theorem and host raycast.  Only computes the inner point. No grid.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;raytrace&quot;</span></code> builds the compartment grid ie surface and inside point using raytrace</p>
 </div></blockquote>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">independent</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">packing</span><span class="o">.</span> <span class="n">Help</span> <span class="n">build</span> <span class="n">ingredient</span> <span class="n">sphere</span> <span class="n">tree</span> <span class="ow">and</span> <span class="n">representation</span><span class="o">.</span>
-<span class="o">-</span> <span class="n">Uses</span> <span class="n">BHTree</span> <span class="n">to</span> <span class="n">compute</span> <span class="n">surface</span> <span class="n">points</span>
-<span class="o">-</span> <span class="n">Uses</span> <span class="n">Jordan</span> <span class="n">raycasting</span> <span class="n">to</span> <span class="n">determine</span> <span class="n">inside</span><span class="o">/</span><span class="n">outside</span> <span class="p">(</span><span class="n">defaults</span> <span class="n">to</span> <span class="mi">1</span> <span class="n">iteration</span><span class="p">,</span> <span class="n">can</span> <span class="n">use</span> <span class="mi">3</span> <span class="n">iterations</span><span class="p">)</span>
-</pre></div>
-</div>
 <dl>
 <dt><code class="docutils literal notranslate"><span class="pre">&quot;sdf&quot;</span></code> builds the compartment grid ie surface and inside point using signed distance fields</dt><dd><blockquote>
 <div><p>from the UT package.</p>
 </div></blockquote>
-<p><code class="docutils literal notranslate"><span class="pre">&quot;jordan3&quot;</span></code> builds the compartment grid ie surface and inside point using jordan theorem and host raycast, with ray set to <code class="docutils literal notranslate"><span class="pre">3</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;pyray&quot;</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;floodfill&quot;</span></code> builds the compartment grid ie surface and inside point using flood filling algo from kevin. Takes a polyhedron, and builds a grid. In this grid:</p>
 </dd>
@@ -326,7 +319,7 @@
 
 ``&quot;binvox&quot;``
 
-``&quot;trimesh&quot;``
+``&quot;trimesh&quot;`` uses trimesh voxelize to find surface points
 
 ``&quot;scanline&quot;`` builds the compartment grid ie surface and inside point using scanline.
 </pre></div>

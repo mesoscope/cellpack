@@ -9,7 +9,6 @@ Subpackages
 
    cellpack.autopack
    cellpack.bin
-   cellpack.mgl_tools
 
 Submodules
 ----------

@@ -51,7 +51,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../cellpack.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../cellpack.autopack.html">cellpack.autopack package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../cellpack.bin.html">cellpack.bin package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../cellpack.html#submodules">Submodules</a></li>
@@ -500,7 +499,6 @@
 
 
 <div class="viewcode-block" id="retrieveFile"><a class="viewcode-back" href="../../cellpack.autopack.html#cellpack.autopack.retrieveFile">[docs]</a><span class="k">def</span> <span class="nf">retrieveFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="s2">&quot;geometries&quot;</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="c1">#    helper = autopack.helper</span>
     <span class="k">if</span> <span class="n">force</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">force</span> <span class="o">=</span> <span class="n">forceFetch</span>
     <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">filename</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;ftp&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>

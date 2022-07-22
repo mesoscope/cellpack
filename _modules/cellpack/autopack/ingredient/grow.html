@@ -51,7 +51,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.autopack.html">cellpack.autopack package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.bin.html">cellpack.bin package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.mgl_tools.html">cellpack.mgl_tools package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#submodules">Submodules</a></li>
@@ -1782,8 +1781,7 @@
         <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">safetycutoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">safetycutoff</span>
-        <span class="c1">#        if self.constraintMarge:</span>
-        <span class="c1">#            safetycutoff = 50</span>
+
         <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">walkingMode</span> <span class="o">==</span> <span class="s2">&quot;lattice&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -1792,11 +1790,9 @@
             <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
         <span class="n">alternate</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">secondPoint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">previousPoint_store</span> <span class="o">=</span> <span class="n">previousPoint</span>
             <span class="n">previousPoint</span> <span class="o">=</span> <span class="n">startingPoint</span>
             <span class="n">startingPoint</span> <span class="o">=</span> <span class="n">secondPoint</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">previousPoint_store</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="k">while</span> <span class="ow">not</span> <span class="n">Done</span><span class="p">:</span>
             <span class="c1"># rest the mask</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sphere_points_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">)</span>
@@ -1992,7 +1988,6 @@
                     <span class="n">Done</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span>
 
-                <span class="n">previousPoint_store</span> <span class="o">=</span> <span class="n">previousPoint</span>
                 <span class="n">previousPoint</span> <span class="o">=</span> <span class="n">startingPoint</span>
                 <span class="n">startingPoint</span> <span class="o">=</span> <span class="n">secondPoint</span>
             <span class="k">else</span><span class="p">:</span>
