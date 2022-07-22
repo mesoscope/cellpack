@@ -33,17 +33,17 @@ test_config = {
 def test_is_two_d():
     # if one of the edges of the bounding box is smaller than the
     # grid spacing, it's considered 2D
-    test_recipe = {"bounding_box": [[0, 0, 0], [100, 10, 100]]}
+    test_recipe = {"bounding_box": [[0, 0, 0], [100, 10, 100]], "name": "test"}
 
-    env = Environment(name="test", config=test_config, recipe=test_recipe)
+    env = Environment(config=test_config, recipe=test_recipe)
     mock = MagicMock(gridSpacing=10)
     env.grid = mock
 
     assert env.is_two_d()
 
-    test_recipe = {"bounding_box": [[0, 0, 0], [40, 40, 40]]}
+    test_recipe = {"bounding_box": [[0, 0, 0], [40, 40, 40]],  "name": "test"}
 
-    env = Environment(name="test", config=test_config, recipe=test_recipe)
+    env = Environment(config=test_config, recipe=test_recipe)
     mock = MagicMock(gridSpacing=10)
     env.grid = mock
 

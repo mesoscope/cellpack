@@ -116,9 +116,9 @@ class Environment(CompartmentList):
         each recipe are made of a list of ingredients
     """
 
-    def __init__(self, name="H", config=None, recipe=None):
+    def __init__(self, config=None, recipe=None):
         CompartmentList.__init__(self)
-
+        name = recipe["name"]
         self.log = logging.getLogger("env")
         self.log.propagate = False
 
@@ -130,8 +130,8 @@ class Environment(CompartmentList):
         self.use_periodicity = config["use_periodicity"]
         self.pickRandPt = not config["ordered_packing"]
 
-        # TODO: this could come from recipe, the same way we're sending in config data
         self.boundingBox = numpy.array(recipe["bounding_box"])
+        self.name = name
 
         # saving/pickle option
         self.saveResult = "out" in config
@@ -139,6 +139,7 @@ class Environment(CompartmentList):
             config["out"], name, config["place_method"]
         )
         self.resultfile = self.out_folder + "/" + config["name"]
+        
         self.setupfile = ""
         self.current_path = None  # the path of the recipe file
         self.custom_paths = None
@@ -264,20 +265,6 @@ class Environment(CompartmentList):
         self.distanceAfterFill = []
         self.mesh_store = MeshStore()
 
-    def Setup(self, setupfile):
-        # parse the given fill for
-        # 1-fillin option
-        # 2-recipe
-        # use XML with tag description of the setup:
-        # filling name root
-        # Environment option
-        # cytoplasme recipe if any and its ingredient
-        # compartment name= mesh ?
-        # orga surfaceingr#file or direct
-        # orga interioringr#file or direct
-        # etc...
-        pass
-
     def setSeed(self, seedNum):
         SEED = int(seedNum)
         numpy.random.seed(SEED)  # for gradient
@@ -322,45 +309,9 @@ class Environment(CompartmentList):
                 ingr.addExcludedPartner(iname)
         ingr.env = self
 
-    def set_recipe_ingredient(self, xmlnode, recipe, io_ingr):
-        # get the defined ingredient
-        ingrnodes = xmlnode.getElementsByTagName("ingredient")
-        for ingrnode in ingrnodes:
-            ingre = io_ingr.makeIngredientFromXml(inode=ingrnode, recipe=self.name)
-            if ingre:
-                recipe.addIngredient(ingre)
-            else:
-                print("PROBLEM creating ingredient from ", ingrnode)
-            # check for includes
-        ingrnodes_include = xmlnode.getElementsByTagName("include")
-        for inclnode in ingrnodes_include:
-            xmlfile = str(inclnode.getAttribute("filename"))
-            ingre = io_ingr.makeIngredientFromXml(filename=xmlfile, recipe=self.name)
-            if ingre:
-                recipe.addIngredient(ingre)
-            else:
-                print("PROBLEM creating ingredient from ", ingrnode)
-            # look for overwritten attribute
-
-    def load_recipe(self, setupfile):
-        if setupfile is None:
-            setupfile = self.setupfile
-        else:
-            self.setupfile = setupfile
-        # check the extension of the filename none, txt or json
-        fileName, fileExtension = os.path.splitext(setupfile)
-        if fileExtension == ".xml":
-            IOutils.load_XML(self, setupfile)
-        elif fileExtension == ".py":  # execute ?
-            IOutils.load_Python(self, setupfile)
-        elif fileExtension == ".json":
-            IOutils.load_Json(self, setupfile)
-        else:
-            print("can't read or recognize " + setupfile)
-        self.setMinMaxProteinSize()
-
-    def loadRecipeString(self, astring):
-        return IOutils.load_JsonString(self, astring)
+    # def unpack_objects(self, objects):
+    #     for key, value in objects.items():
+            
 
     def save_result(
         self, freePoints, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array
