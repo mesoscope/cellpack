@@ -19,7 +19,7 @@ from simulariumio import (
 )
 from simulariumio.constants import DISPLAY_TYPE
 
-from cellpack.autopack.iotools_simple import RecipeLoader
+from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 ###############################################################################
 

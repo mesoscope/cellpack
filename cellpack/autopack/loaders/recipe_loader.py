@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Jan 27 09:04:10 2013
-
-@author: Ludovic Autin
-"""
 import os
 
 import json
@@ -15,11 +10,26 @@ encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
 
 class RecipeLoader(object):
+    # TODO: add all default values here
+    default_values = {
+        "bounding_box": [[0, 0, 0], [100, 100, 100]],
+    }
+
     def __init__(self, input_file_path):
         _, file_extension = os.path.splitext(input_file_path)
+        self.latest_version = 1.0
         self.file_path = input_file_path
         self.file_extension = file_extension
         self.recipe_data = self._read()
+
+    @staticmethod
+    def create_output_dir(out_base_folder, recipe_name, sub_dir=None):
+        os.makedirs(out_base_folder, exist_ok=True)
+        output_folder = os.path.join(out_base_folder, recipe_name)
+        if sub_dir is not None:
+            output_folder = os.path.join(output_folder, sub_dir)
+        os.makedirs(output_folder, exist_ok=True)
+        return output_folder
 
     def _read(self):
         if self.file_extension == ".xml":
@@ -49,19 +59,32 @@ class RecipeLoader(object):
             return None
         return data
 
+    @staticmethod
+    def _migrate_version(recipe):
+        if "format_version" not in recipe:
+            recipe["bounding_box"] = recipe["options"]["boundingBox"]
+        return recipe
+
     def _load_json(self):
         """
         Read in a Json Recipe.
         """
         sortkey = str.lower
 
-        recipe_data = json.load(open(self.file_path, "r"))
-        # is there any cutoms paths
+        new_values = json.load(open(self.file_path, "r"))
+        recipe_data = RecipeLoader.default_values.copy()
+        recipe_data.update(new_values)
+        # are there any custom paths
         if "paths" in recipe_data["recipe"]:
             custom_paths = recipe_data["recipe"]["paths"]
             autopack.updateReplacePath(custom_paths)
 
         autopack.current_recipe_path = self.file_path
+        if (
+            "format_version" not in recipe_data
+            or recipe_data["format_version"] != self.latest_version
+        ):
+            recipe_data = RecipeLoader._migrate_version(recipe_data)
 
         if "cytoplasme" in recipe_data:
             ingrs_dic = recipe_data["cytoplasme"]["ingredients"]

@@ -1,0 +1,14 @@
+{
+    "name": "default-run",
+    "format": "simularium",
+    "inner_grid_method": "raytrace",
+    "live_packing": false,
+    "ordered_packing": false,
+    "out": "out/",
+    "overwrite_place_method": false,
+    "place_method": "jitter",
+    "save_analyze_result": false,
+    "show_grid_plot": false,
+    "spacing": null,
+    "use_periodicity": false
+}

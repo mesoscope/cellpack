@@ -1437,16 +1437,7 @@ def setupFromJsonDic(
         #        autopack.replace_path.extend(env.custom_paths)#keyWordPAth,valuePath
         autopack.updateReplacePath(env.custom_paths)
     autopack.current_recipe_path = env.current_path
-    options = env.jsondic["options"]
-    if len(options):
-        for k in env.OPTIONS:
-            if k == "gradients":
-                continue
-            if k in options:
-                setattr(env, k, options[k])
-        env.boundingBox = options["boundingBox"]
-        if None in env.boundingBox[0] or None in env.boundingBox[1]:
-            env.boundingBox = ([0, 0, 0], [1000, 1000, 1000])
+
     if "gradients" in env.jsondic:
         env.gradients = {}
         gradientsnode = env.jsondic["gradients"]
