@@ -224,7 +224,7 @@ class Grid(BaseGrid):
     def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=10.0, lookup=0):
         # a grid is attached to an environement
         BaseGrid.__init__(
-            self, boundingBox=boundingBox, space=space, setup=False, lookup=lookup
+            self, boundingBox=boundingBox, spacing=space, setup=False, lookup=lookup
         )
 
         self.gridSpacing = space * 1.1547
@@ -317,7 +317,7 @@ class Environment(CompartmentList):
         self.exteriorRecipe = None
         self.hgrid = []
         self.world = None  # panda world for collision
-        self.octree = None  # ongoing octree test, no need if openvdb wrapp to python
+        self.octree = None  # ongoing octree test, no need if openvdb wrapped to python
         self.grid = None  # Grid()  # the main grid
         self.encapsulatingGrid = (
             0  # Only override this with 0 for 2D packing- otherwise its very unsafe!
@@ -528,11 +528,11 @@ class Environment(CompartmentList):
             },
             "innerGridMethod": {
                 "name": "innerGridMethod",
-                "value": "jordan3",
+                "value": "raytrace",
                 "values": [
                     "bhtree",
                     #                                           "sdf",
-                    "jordan",
+                    "raytrace",
                     "jordan3",
                     "pyray",
                     "floodfill",
@@ -540,7 +540,7 @@ class Environment(CompartmentList):
                     "trimesh",
                     "scanline",
                 ],
-                "default": "jordan3",
+                "default": "raytrace",
                 "type": "liste",
                 "description": "Method to calculate the inner grid:",
                 "width": 30,
@@ -763,6 +763,7 @@ class Environment(CompartmentList):
             result=True,
             quaternion=True,
             all_ingr_as_array=all_ingr_as_array,
+            compartments=self.compartments,
         )  # pdb ?
         self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
@@ -1400,7 +1401,7 @@ class Environment(CompartmentList):
         compartment.setNumber(self.nbCompartments)
         self.nbCompartments += 1
 
-        fits, bb = compartment.inBox(self.boundingBox)
+        fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
 
         if not fits:
             self.boundingBox = bb
@@ -1605,9 +1606,10 @@ class Environment(CompartmentList):
             # save bb for current fill
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
-            self.grid = Grid(
-                boundingBox=boundingBox, space=self.smallestProteinSize, lookup=lookup
-            )
+            # 1.1547 = (2/sqrt(3)). This ensures that the smallest spherical protein completely
+            # encircles a cube made out of grid points with the given spacing, while touching all 8 corners
+            spacing = self.smallestProteinSize * 1.1547
+            self.grid = Grid(boundingBox=boundingBox, spacing=spacing, lookup=lookup)
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
             if rebuild:
@@ -1650,7 +1652,6 @@ class Environment(CompartmentList):
         if r:
             r.setCount(self.exteriorVolume)  # should actually use the fillBB
         if not rebuild:
-            # self.grid.distToClosestSurf = self.grid.distToClosestSurf_store[:]
             for c in self.compartments:
                 c.setCount()
         else:
@@ -2291,6 +2292,7 @@ class Environment(CompartmentList):
         name=None,
         vTestid=3,
         vAnalysis=0,
+        show_grid_spheres=False,
         **kw,
     ):
         """
@@ -2300,6 +2302,7 @@ class Environment(CompartmentList):
         # set periodicity
         autopack.testPeriodicity = self.use_periodicity
         t1 = time()
+        self.show_grid_spheres = show_grid_spheres
         self.timeUpDistLoopTotal = 0
         self.static = []
         if self.grid is None:
@@ -2651,12 +2654,6 @@ class Environment(CompartmentList):
             ingredients[ingr.name][2].append(rot)
             ingredients[ingr.name][3].append(numpy.array(mat))
         for compartment in self.compartments:
-            print(
-                compartment.name,
-                compartment.center,
-                compartment.radius,
-                compartment.printFillInfo(),
-            )
             for pos, rot, ingr, ptInd in compartment.molecules:
                 if ingr.name not in ingredients:
                     ingredients[ingr.name] = [ingr, [], [], []]

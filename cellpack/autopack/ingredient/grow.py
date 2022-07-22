@@ -1599,8 +1599,7 @@ class GrowIngredient(MultiCylindersIngr):
         k = 0
         success = False
         safetycutoff = self.safetycutoff
-        #        if self.constraintMarge:
-        #            safetycutoff = 50
+
         counter = 0
         mask = None
         if self.walkingMode == "lattice" and self.compNum > 0:
@@ -1609,11 +1608,9 @@ class GrowIngredient(MultiCylindersIngr):
             mask = numpy.ones(len(v), int)
         alternate = False
         if secondPoint is not None:
-            previousPoint_store = previousPoint
             previousPoint = startingPoint
             startingPoint = secondPoint
-        else:
-            previousPoint_store = None
+
         while not Done:
             # rest the mask
             self.sphere_points_mask = numpy.ones(10000, "i")
@@ -1809,7 +1806,6 @@ class GrowIngredient(MultiCylindersIngr):
                     Done = True
                     self.counter = counter + 1
 
-                previousPoint_store = previousPoint
                 previousPoint = startingPoint
                 startingPoint = secondPoint
             else:
