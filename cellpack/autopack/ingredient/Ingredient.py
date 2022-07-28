@@ -55,6 +55,8 @@ from random import uniform, gauss, random
 from time import time
 import math
 
+from cellpack.autopack.utils import get_distance
+
 from .utils import (
     ApplyMatrix,
     getNormedVectorOnes,
@@ -198,7 +200,7 @@ class Ingredient(Agent):
         name=None,
         nbJitter=5,
         nbMol=0,
-        offset=None,
+        offset=[0.0, 0.0, 0.0],
         orientBiasRotRangeMax=-pi,
         orientBiasRotRangeMin=-pi,
         overwrite_distFunc=True,  # overWrite
@@ -272,9 +274,7 @@ class Ingredient(Agent):
             "object": meshObject,
         }
 
-        self.offset = [0, 0, 0]  # offset to apply for membrane binding
-        if offset:
-            self.offset = offset
+        self.offset = offset
 
         # should deal with source of the object
         if source:
@@ -340,7 +340,7 @@ class Ingredient(Agent):
                     positions = [positions]
                     radii = [radii]
                 elif fileExtension == ".sph":
-                    min_radius, rM, positions, radii, children = self.getSpheres(
+                    min_radius, encapsulating_radius, positions, radii, children = self.getSpheres(
                         sphereFileo
                     )
                     # if a user didn't set this properly before
@@ -356,7 +356,7 @@ class Ingredient(Agent):
                         # encapsulatingRadius is the radius of the sphere
                         # centered at 0,0,0
                         # and encapsulate the ingredient
-                        self.encapsulatingRadius = rM
+                        self.encapsulatingRadius = encapsulating_radius
                 else:
                     self.log.info(
                         "sphere file extension not recognized %r", fileExtension
@@ -399,10 +399,6 @@ class Ingredient(Agent):
         self.verts = None
         self.rad = None
         self.rapid_model = None
-        if self.encapsulatingRadius <= 0.0 or self.encapsulatingRadius < max(
-            self.radii[0]
-        ):
-            self.encapsulatingRadius = max(self.radii[0])  #
         # TODO : geometry : 3d object or procedural from PDB
         # TODO : usekeyword resolution->options dictionary of res :
         # TODO : {"simple":{"cms":{"parameters":{"gridres":12}},
@@ -487,7 +483,7 @@ class Ingredient(Agent):
                 if radii is not None:
                     delta = numpy.array(positions[0])
                     rM = sqrt(max(numpy.sum(delta * delta, 1)))
-                    self.encapsulatingRadius = max(rM, self.encapsulatingRadius)
+                    # self.encapsulatingRadius = max(rM, self.encapsulatingRadius)
             # if radii is not None and positions is not None:
             # for r, c in zip(radii, positions):
             #     assert len(r) == len(c)
@@ -586,21 +582,40 @@ class Ingredient(Agent):
         data = [x for x in datao if x[0] != "#" and len(x) > 1 and x[0] != "\r"]
 
         rmin, rmax = list(map(float, data[0].split()))
-        nblevels = int(data[1])
+        num_levels = int(data[1])
         radii = []
         centers = []
         children = []
         line = 2
-        for level in range(nblevels):
+        xmin = 9999
+        ymin = 9999
+        zmin = 9999
+        xmax = 0
+        ymax = 0
+        zmax = 0
+        
+        for level in range(num_levels):
             rl = []
             cl = []
             ch = []
-            nbs = int(data[line])
+            num_spheres = int(data[line])
             line += 1
-            for n in range(nbs):
+            for n in range(num_spheres):
                 w = data[line].split()
                 x, y, z, r = list(map(float, w[:4]))
-                if level < nblevels - 1:  # get sub spheres indices
+                if x < xmin:
+                    xmin = x
+                if y < ymin:
+                    ymin = y
+                if z < zmin:
+                    zmin = z
+                if x > xmax:
+                    xmax = x
+                if y > ymax:
+                    ymin = y
+                if z > zmax:
+                    zmax = z
+                if level < num_levels - 1:  # get sub spheres indices
                     ch.append(list(map(int, w[4:])))
                 cl.append((x, y, z))
                 rl.append(r)
@@ -608,8 +623,20 @@ class Ingredient(Agent):
             centers.append(cl)
             radii.append(rl)
             children.append(ch)
-        # we ignore the hierarchy for now
-        return rmin, rmax, centers, radii, children
+        encapsulating_radius = rmax
+        if len(centers) == 1:
+            # there are sphere tree files that are only one level
+            # and therefore do not have an ecapsulating sphere
+            tree = spatial.cKDTree(centers[0])
+            max_box = tree.maxes
+            diagonal = get_distance(numpy.array([0, 0, 0]), max_box)
+            encapsulating_radius = diagonal + rmax * 2
+            bottom = numpy.array([xmin, ymin, zmin])
+            top = numpy.array([xmax, ymax, zmax])
+            box_dia = get_distance(bottom, top)
+            encapsulating_radius = box_dia + rmax * 2
+
+        return rmin, encapsulating_radius, centers, radii, children
 
     def rejectOnce(self, rbnode, moving, afvi):
         if rbnode:
@@ -676,10 +703,6 @@ class Ingredient(Agent):
             shape
         )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
         return inodenp
-
-    def SetKw(self, **kw):
-        for k in kw:
-            setattr(self, k, kw[k])
 
     def Set(self, **kw):
         self.nbMol = 0
@@ -1951,6 +1974,37 @@ class Ingredient(Agent):
                     self.env.rTrans, leafsize=10
                 )
 
+    def pack_at_grid_pt_location(
+        self, env, jtrans, rotMatj, dpad, grid_point_distances
+    ):
+
+        newDistPoints = {}
+        insidePoints = {}
+        packing_location = jtrans
+        radius_of_area_to_check = self.encapsulatingRadius + dpad
+
+        bounding_points_to_check = self.get_all_positions_to_check(packing_location)
+
+        for bounding_point_position in bounding_points_to_check:
+
+            grid_points_to_update = env.grid.getPointsInSphere(
+                bounding_point_position, radius_of_area_to_check
+            )
+            for grid_point_index in grid_points_to_update:
+                (
+                    insidePoints,
+                    newDistPoints,
+                ) = self.get_new_distances_and_inside_points(
+                    env,
+                    bounding_point_position,
+                    rotMatj,
+                    grid_point_index,
+                    grid_point_distances,
+                    newDistPoints,
+                    insidePoints,
+                )
+        return insidePoints, newDistPoints
+
     def remove_from_realtime_display(env, moving):
         pass
         # env.afvi.vi.deleteObject(moving)
@@ -2029,11 +2083,11 @@ class Ingredient(Agent):
         target_grid_point_position = gridPointsCoords[
             ptInd
         ]  # drop point, surface points.
-        if numpy.sum(self.offset) != 0.0:
-            target_grid_point_position = (
-                numpy.array(target_grid_point_position)
-                + ApplyMatrix([self.offset], rotation_matrix)[0]
-            )
+        # if numpy.sum(self.offset) != 0.0:
+        #     target_grid_point_position = (
+        #         numpy.array(target_grid_point_position)
+        #         + ApplyMatrix([self.offset], rotation_matrix)[0]
+        #     )
         target_grid_point_position = gridPointsCoords[
             ptInd
         ]  # drop point, surface points.
@@ -2150,37 +2204,12 @@ class Ingredient(Agent):
             # TODO: make this work for ingredients other than single spheres
 
             success = True
-            newDistPoints = {}
-            insidePoints = {}
-
-            (jtrans, rotMatj,) = self.get_new_jitter_location_and_rotation(
+            (jtrans, rotMatj) = self.get_new_jitter_location_and_rotation(
                 env, target_grid_point_position, rotation_matrix
             )
-
-            packing_location = jtrans
-            radius_of_area_to_check = self.encapsulatingRadius + dpad
-
-            bounding_points_to_check = self.get_all_positions_to_check(packing_location)
-
-            for bounding_point_position in bounding_points_to_check:
-
-                grid_points_to_update = env.grid.getPointsInSphere(
-                    bounding_point_position, radius_of_area_to_check
-                )
-                for grid_point_index in grid_points_to_update:
-                    (
-                        insidePoints,
-                        newDistPoints,
-                    ) = self.get_new_distances_and_inside_points(
-                        env,
-                        bounding_point_position,
-                        rotMatj,
-                        grid_point_index,
-                        grid_point_distances,
-                        newDistPoints,
-                        insidePoints,
-                    )
-
+            (insidePoints, newDistPoints) = self.pack_at_grid_pt_location(
+                env, jtrans, rotMatj, dpad, grid_point_distances
+            )
         if success:
             if is_realtime:
                 autopack.helper.set_object_static(

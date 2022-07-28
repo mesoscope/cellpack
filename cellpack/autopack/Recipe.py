@@ -149,7 +149,6 @@ class Recipe:
                 num_to_place_int = num_to_place_int + 1
 
             ingr.vol_nbmol = ingr.left_to_place = num_to_place_int + ingr.nbMol
-            print(ingr.name, ingr.nbMol)
             if ingr.left_to_place == 0:
                 self.log.warning(
                     "WARNING GRAHAM: recipe ingredient %s has 0 molecules as target",
@@ -169,7 +168,10 @@ class Recipe:
         """get the mini and maxi radius from all recipe ingredients"""
         mini = 9999999.0
         maxi = 0
+
         for ingr in self.ingredients:
+            if ingr.encapsulatingRadius is None:
+                ingr.encapsulatingRadius = 400.0
             if ingr.encapsulatingRadius > maxi:
                 maxi = ingr.encapsulatingRadius
             if ingr.minRadius < mini:

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # standardmodule
 import os
+import matplotlib
 import numpy as np
 import trimesh
 
@@ -397,22 +398,21 @@ class simulariumHelper(hostHelper.Helper):
         else:
             pdb_file_name = ""
             display_type = DISPLAY_TYPE.PDB
-            if ingredient.source is not None:
+            if ingredient.source is not None and ingredient.source["pdb"] is not None:
                 pdb_file_name = ingredient.source["pdb"]
             elif ingredient.pdb is not None and ".map" not in ingredient.pdb:
                 pdb_file_name = ingredient.pdb
-            elif "meshFile" in ingredient:
-                meshType = (
-                    ingredient.meshType if ingredient.meshType is not None else "file"
-                )
+            elif ingredient.mesh_info["file"] is not None:
+                meshType = ingredient.mesh_info["type"]
                 if meshType == "file":
-                    file_path = os.path.basename(ingredient.meshFile)
+                    file_path = os.path.basename(ingredient.mesh_info["file"])
                     file_name, _ = os.path.splitext(file_path)
 
                 elif meshType == "raw":
                     file_name = ingr_name
                 url = f"{simulariumHelper.DATABASE}/geometries/{file_name}.obj"
                 display_type = DISPLAY_TYPE.OBJ
+                return display_type, url
             if ".pdb" in pdb_file_name:
                 url = f"{simulariumHelper.DATABASE}/other/{pdb_file_name}"
             else:
@@ -449,12 +449,13 @@ class simulariumHelper(hostHelper.Helper):
             if ingr_name not in self.display_data:
                 display_type, url = self.get_display_data(ingredient)
                 self.display_data[ingredient.name] = DisplayData(
-                    name=ingr_name, display_type=display_type, url=url
+                    name=ingr_name, display_type=display_type, url=url, color=matplotlib.colors.to_hex(np.array(ingredient.color) / 255)
                 )
             radius = ingredient.encapsulatingRadius if ingredient is not None else 10
-
+            adjusted_pos = np.array(position) - np.array(ingredient.offset)
+            print(position, adjusted_pos, ingredient.offset)
             self.add_instance(
-                ingredient.name,
+                ingr_name,
                 ingredient,
                 f"{ingr_name}-{ptInd}",
                 radius,
@@ -462,7 +463,29 @@ class simulariumHelper(hostHelper.Helper):
                 rotation,
                 sub_points,
             )
+            # # if grid_point_positions is not None:
+            if len(ingredient.positions) > 0:
+                for level in range(len(ingredient.positions)):
+                    for i in range(len(ingredient.positions[level])):
+                        pos = ingredient.apply_rotation(
+                            rotation, ingredient.positions[level][i], position
+                        )
+                        self.display_data[f"{ingredient.name}-s"] = DisplayData(
+                            name=f"{ingredient.name}-s", display_type=DISPLAY_TYPE.SPHERE, color=matplotlib.colors.to_hex(np.array(ingredient.color) / 255)
+                        )
+
+                        self.add_instance(
+                            f"{ingredient.name}-s",
+                            ingredient,
+                            f"{ingredient.name}-{ptInd}-{i}",
+                            ingredient.radii[level][i],
+                            pos,
+                            rotation,
+                            None,
+                        )
+        grid_point_positions = None
         if grid_point_positions is not None:
+
             for index in range(len(grid_point_compartment_ids)):
                 if index % 1 == 0:
                     compartment_id = grid_point_compartment_ids[index]

@@ -38,7 +38,7 @@ class SingleSphereIngr(Ingredient):
         name=None,
         nbJitter=5,
         nbMol=0,
-        offset=None,
+        offset=[0.0, 0.0, 0.0],
         orientBiasRotRangeMax=-pi,
         orientBiasRotRangeMin=-pi,
         overwrite_distFunc=True,  # overWrite
@@ -96,6 +96,7 @@ class SingleSphereIngr(Ingredient):
             name=name,
             nbJitter=nbJitter,
             nbMol=nbMol,
+            offset=offset,
             overwrite_distFunc=overwrite_distFunc,
             packingMode=packingMode,
             packingPriority=packingPriority,
