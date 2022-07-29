@@ -452,14 +452,17 @@ class simulariumHelper(hostHelper.Helper):
                     name=ingr_name, display_type=display_type, url=url, color=matplotlib.colors.to_hex(np.array(ingredient.color) / 255)
                 )
             radius = ingredient.encapsulatingRadius if ingredient is not None else 10
-            adjusted_pos = np.array(position) - np.array(ingredient.offset)
-            print(position, adjusted_pos, ingredient.offset)
+            offset = np.array(ingredient.offset)
+            rot_mat = np.array(rotation[0:3,0:3])
+            adj_offset = np.matmul(rot_mat, offset)
+            adj_pos = position - adj_offset
+
             self.add_instance(
                 ingr_name,
                 ingredient,
                 f"{ingr_name}-{ptInd}",
                 radius,
-                position,
+                adj_pos,
                 rotation,
                 sub_points,
             )
