@@ -8,7 +8,7 @@ __email__ = "meganr@alleninstitute.org"
 # Details in CONTRIBUTING.md
 __version__ = "0.2.4"
 
-from .example import Example  # noqa: F401
+from .autopack.loaders.recipe_loader import RecipeLoader  # noqa: F401
 
 
 def get_module_version():

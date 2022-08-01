@@ -38,6 +38,7 @@ dev_requirements = [
 ]
 
 requirements = [
+    "fire>=0.4.0",
     "matplotlib>=3.3.4",
     "numpy>=1.19.2",
     "panda3d==1.10.10",
@@ -77,7 +78,9 @@ setup(
     entry_points={
         "console_scripts": [
             "analyze=cellpack.bin.analyze:main",
-            "convert=cellpack.bin.simularium_converter:main"],
+            "convert=cellpack.bin.simularium_converter:main",
+            "pack=cellpack.bin.pack:main"
+        ]
     },
     install_requires=requirements,
     license="MIT license",
