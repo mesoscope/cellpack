@@ -1208,7 +1208,7 @@ class Environment(CompartmentList):
         compartment.setNumber(self.nbCompartments)
         self.nbCompartments += 1
 
-        fits, bb = compartment.inBox(self.boundingBox)
+        fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
 
         if not fits:
             self.boundingBox = bb
@@ -1404,6 +1404,8 @@ class Environment(CompartmentList):
             # save bb for current fill
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
+            # 1.1547 = (2/sqrt(3)). This ensures that the smallest spherical protein completely
+            # encircles a cube made out of grid points with the given spacing, while touching all 8 corners
             spacing = self.smallestProteinSize * 1.1547
             self.grid = Grid(boundingBox=boundingBox, spacing=spacing, lookup=lookup)
             nbPoints = self.grid.gridVolume
