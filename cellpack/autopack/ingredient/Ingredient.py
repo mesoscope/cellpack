@@ -264,8 +264,6 @@ class Ingredient(Agent):
         self.o_name = str(name)
         self.Type = Type
         self.pdb = pdb  # pmv ?
-        self.transform_sources = None
-        self.source = None
         self.mesh = None
         self.mesh_info = {
             "file": meshFile,
@@ -275,25 +273,15 @@ class Ingredient(Agent):
         }
 
         self.offset = offset
-
+        self.source = {
+            "pdb": self.pdb,
+            "transform": {"center": True, "offset": [0, 0, 0], "rotate": [ 0, 0, 0, 1 ]},
+        }
         # should deal with source of the object
         if source:
-            sources = source.keys()
             self.source = source
-            if "pdb" in sources:
-                self.pdb = source["pdb"]
-            if "transform" in sources:
-                self.transform_sources = source["transform"]
-                if "offset" in source["transform"]:
-                    self.offset = source["transform"]["offset"]
-        else:
-            self.source = {
-                "pdb": self.pdb,
-                "transform": {"center": True, "offset": [0, 0, 0]},
-            }
-            self.transform_sources = {
-                "transform": {"center": True, "offset": [0, 0, 0]}
-            }
+            
+
 
         self.color = color  # color used for sphere display
         if self.color == "None":

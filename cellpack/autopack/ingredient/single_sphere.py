@@ -115,6 +115,7 @@ class SingleSphereIngr(Ingredient):
             radii=radii,
             rotAxis=rotAxis,
             rotRange=rotRange,
+            source=source,
             useRotAxis=useRotAxis,
             weight=weight,
         )
