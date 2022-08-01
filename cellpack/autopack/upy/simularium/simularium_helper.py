@@ -4,6 +4,7 @@ import os
 import matplotlib
 import numpy as np
 import trimesh
+from scipy.spatial.transform import Rotation as R
 
 from simulariumio import (
     TrajectoryConverter,
@@ -16,6 +17,7 @@ from simulariumio import (
 )
 from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
+from cellpack.autopack.transformation import matrix_from_quaternion, quaternion_from_matrix
 
 from cellpack.autopack.upy import (
     hostHelper,
@@ -453,14 +455,17 @@ class simulariumHelper(hostHelper.Helper):
                 )
             radius = ingredient.encapsulatingRadius if ingredient is not None else 10
             adjusted_pos = np.array(position) - np.array(ingredient.offset)
-            print(position, adjusted_pos, ingredient.offset)
+            rotation_quat = R.from_quat(quaternion_from_matrix(rotation))
+            adjustment_quat = R.from_quat(ingredient.source["transform"]["rotate"])
+            r = rotation_quat * adjustment_quat
+            new_rotation = matrix_from_quaternion(r.as_quat())
             self.add_instance(
                 ingr_name,
                 ingredient,
                 f"{ingr_name}-{ptInd}",
                 radius,
                 position,
-                rotation,
+                new_rotation,
                 sub_points,
             )
             # # if grid_point_positions is not None:

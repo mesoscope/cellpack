@@ -839,9 +839,9 @@ def saveSphereTreeFile(h, ingr, filename):
 def checkRotFormat(rotation, transpose):
     if numpy.array(rotation).shape == (4,):
         if transpose:
-            return tr.quaternion_matrix(rotation).transpose()  # transpose ?
+            return tr.matrix_from_quaternion(rotation).transpose()  # transpose ?
         else:
-            return tr.quaternion_matrix(rotation)
+            return tr.matrix_from_quaternion(rotation)
     else:
         return rotation
 
@@ -1599,11 +1599,11 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                         if len(r[1]) == 4:  # quaternion
                             if type(r[1][0]) == float:
                                 if transpose:
-                                    rot = tr.quaternion_matrix(
+                                    rot = tr.matrix_from_quaternion(
                                         r[1]
                                     ).transpose()  # transpose ?
                                 else:
-                                    rot = tr.quaternion_matrix(r[1])  # transpose ?
+                                    rot = tr.matrix_from_quaternion(r[1])  # transpose ?
                                     #                        ingr.results.append([numpy.array(r[0]),rot])
                             else:
                                 rot = numpy.array(r[1]).reshape(4, 4)
@@ -1658,11 +1658,11 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                         if len(r[1]) == 4:  # quaternion
                             if type(r[1][0]) == float:
                                 if transpose:
-                                    rot = tr.quaternion_matrix(
+                                    rot = tr.matrix_from_quaternion(
                                         r[1]
                                     ).transpose()  # transpose ?
                                 else:
-                                    rot = tr.quaternion_matrix(r[1])  # transpose ?
+                                    rot = tr.matrix_from_quaternion(r[1])  # transpose ?
                             else:
                                 rot = numpy.array(r[1]).reshape(4, 4)
                             #                        ingr.results.append([numpy.array(r[0]),rot])
@@ -1711,11 +1711,11 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                         if len(r[1]) == 4:  # quaternion
                             if type(r[1][0]) == float:
                                 if transpose:
-                                    rot = tr.quaternion_matrix(
+                                    rot = tr.matrix_from_quaternion(
                                         r[1]
                                     ).transpose()  # transpose ?
                                 else:
-                                    rot = tr.quaternion_matrix(r[1])  # transpose ?
+                                    rot = tr.matrix_from_quaternion(r[1])  # transpose ?
                             else:
                                 rot = numpy.array(r[1]).reshape(4, 4)
                             #                        ingr.results.append([numpy.array(r[0]),rot])
