@@ -43,6 +43,7 @@
 # Updated with Correct Sept 25, 2011 thesis version on July 5, 2012
 
 # TODO: Describe Ingredient class here at high level
+from operator import truediv
 import os
 from scipy import spatial
 from panda3d.bullet import BulletRigidBodyNode
@@ -275,13 +276,11 @@ class Ingredient(Agent):
         self.offset = offset
         self.source = {
             "pdb": self.pdb,
-            "transform": {"center": True, "offset": [0, 0, 0], "rotate": [ 0, 0, 0, 1 ]},
+            "transform": {"center": True, "translate": [0, 0, 0], "rotate": [0, 0, 0, 1]},
         }
         # should deal with source of the object
         if source:
             self.source = source
-            
-
 
         self.color = color  # color used for sphere display
         if self.color == "None":
@@ -2097,6 +2096,7 @@ class Ingredient(Agent):
                 current_visual_instance,
             )
         is_fiber = self.Type == "Grow" or self.Type == "Actine"
+        collision_possible = True
         if collision_possible or is_fiber:
             # grow doesnt use panda.......but could use all the geom produce by the grow as rb
             if is_fiber:

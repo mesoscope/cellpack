@@ -17,7 +17,6 @@ from simulariumio import (
 )
 from simulariumio.cellpack import CellpackConverter, HAND_TYPE
 from simulariumio.constants import DISPLAY_TYPE, VIZ_TYPE
-from cellpack.autopack.transformation import matrix_from_quaternion, quaternion_from_matrix
 
 from cellpack.autopack.upy import (
     hostHelper,
@@ -454,18 +453,20 @@ class simulariumHelper(hostHelper.Helper):
                     name=ingr_name, display_type=display_type, url=url, color=matplotlib.colors.to_hex(np.array(ingredient.color) / 255)
                 )
             radius = ingredient.encapsulatingRadius if ingredient is not None else 10
-            adjusted_pos = np.array(position) - np.array(ingredient.offset)
-            rotation_quat = R.from_quat(quaternion_from_matrix(rotation))
-            adjustment_quat = R.from_quat(ingredient.source["transform"]["rotate"])
-            r = rotation_quat * adjustment_quat
-            new_rotation = matrix_from_quaternion(r.as_quat())
+            offset = [0, 0, 0]
+            if ingredient.source is not None:
+                offset = np.array(ingredient.source["transform"]["translate"])
+            rot_mat = np.array(rotation[0:3, 0:3])
+            adj_offset = np.matmul(rot_mat, offset)
+            adj_pos = position - adj_offset
+
             self.add_instance(
                 ingr_name,
                 ingredient,
                 f"{ingr_name}-{ptInd}",
                 radius,
-                position,
-                new_rotation,
+                adj_pos,
+                rotation,
                 sub_points,
             )
             # # if grid_point_positions is not None:
