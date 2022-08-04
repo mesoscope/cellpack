@@ -43,7 +43,6 @@
 # Updated with Correct Sept 25, 2011 thesis version on July 5, 2012
 
 # TODO: Describe Ingredient class here at high level
-from operator import truediv
 import os
 from scipy import spatial
 from panda3d.bullet import BulletRigidBodyNode
