@@ -23,6 +23,7 @@ class RecipeLoader(object):
         self.file_path = input_file_path
         self.file_extension = file_extension
         self.recipe_data = self._read()
+        self.roots = self._find_roots()
 
     @staticmethod
     def create_output_dir(out_base_folder, recipe_name, sub_dir=None):
@@ -82,6 +83,16 @@ class RecipeLoader(object):
         # TODO: request any external data before returning
         recipe_data["objects"] = RecipeLoader.resolve_inheritance(recipe_data["objects"])
         return recipe_data
+
+    def _find_roots(self):
+        comp_dic = self.recipe_data["composition"]
+        reference_dic = {}
+        for key, entry in comp_dic.items():
+            for _, ref_keys in entry.get("regions", {}).items():
+                for ref_key in ref_keys:
+                    if not isinstance(ref_key, dict):
+                        reference_dic[ref_key] = key
+        return set(comp_dic.keys()).difference(set(reference_dic.keys()))
 
     def _request_sub_recipe(self, inode):
         filename = None

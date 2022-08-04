@@ -68,4 +68,10 @@ def test_resolve_objects():
         },
     }
     # assert resolved_objects["sphere_50"]["radius"] == 50
+    # TODO: add granular testing for individual objects
     assert resolved_objects == expected_result
+
+def test_find_roots():
+    recipe_path = "cellpack/test-recipes/v2/test_recipe_loader.json"
+    recipe = RecipeLoader(recipe_path)
+    assert recipe.roots == set(["space"])
