@@ -69,7 +69,12 @@ import cellpack.autopack as autopack
 from cellpack.autopack.Grid import Grid
 from cellpack.autopack.MeshStore import MeshStore
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
-from cellpack.autopack.utils import cmp_to_key, ingredient_compare0, ingredient_compare1, ingredient_compare2
+from cellpack.autopack.utils import (
+    cmp_to_key,
+    ingredient_compare0,
+    ingredient_compare1,
+    ingredient_compare2,
+)
 from .Compartment import CompartmentList, Compartment
 from .Recipe import Recipe
 from .ingredient import GrowIngredient, ActinIngredient
@@ -139,7 +144,7 @@ class Environment(CompartmentList):
             config["out"], name, config["place_method"]
         )
         self.resultfile = self.out_folder + "/" + config["name"]
-        
+
         self.setupfile = ""
         self.current_path = None  # the path of the recipe file
         self.custom_paths = None
@@ -311,7 +316,6 @@ class Environment(CompartmentList):
 
     # def unpack_objects(self, objects):
     #     for key, value in objects.items():
-            
 
     def save_result(
         self, freePoints, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array

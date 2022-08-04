@@ -81,7 +81,9 @@ class RecipeLoader(object):
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
         # TODO: request any external data before returning
-        recipe_data["objects"] = RecipeLoader.resolve_inheritance(recipe_data["objects"])
+        recipe_data["objects"] = RecipeLoader.resolve_inheritance(
+            recipe_data["objects"]
+        )
         return recipe_data
 
     def _find_roots(self):

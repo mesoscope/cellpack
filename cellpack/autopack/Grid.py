@@ -1,5 +1,6 @@
-
 from cellpack.autopack.BaseGrid import BaseGrid
+
+import numpy
 
 
 class Grid(BaseGrid):
@@ -81,4 +82,3 @@ class Grid(BaseGrid):
 
     def restore(self):
         pass
-

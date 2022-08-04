@@ -41,7 +41,7 @@ def test_is_two_d():
 
     assert env.is_two_d()
 
-    test_recipe = {"bounding_box": [[0, 0, 0], [40, 40, 40]],  "name": "test"}
+    test_recipe = {"bounding_box": [[0, 0, 0], [40, 40, 40]], "name": "test"}
 
     env = Environment(config=test_config, recipe=test_recipe)
     mock = MagicMock(gridSpacing=10)

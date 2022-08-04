@@ -6,8 +6,6 @@ Docs: https://docs.pytest.org/en/latest/example/simple.html
       https://docs.pytest.org/en/latest/plugins.html#requiring-loading-plugins-in-a-test-module-or-conftest-file
 """
 
-import pytest
-
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 test_objects = {
@@ -70,6 +68,7 @@ def test_resolve_objects():
     # assert resolved_objects["sphere_50"]["radius"] == 50
     # TODO: add granular testing for individual objects
     assert resolved_objects == expected_result
+
 
 def test_find_roots():
     recipe_path = "cellpack/test-recipes/v2/test_recipe_loader.json"
