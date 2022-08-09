@@ -22,8 +22,9 @@ class RecipeLoader(object):
         self.latest_version = 1.0
         self.file_path = input_file_path
         self.file_extension = file_extension
+        self.ingredient_list = []
+        self.compartment_list = []
         self.recipe_data = self._read()
-        self.roots = self._find_roots()
 
     @staticmethod
     def create_output_dir(out_base_folder, recipe_name, sub_dir=None):
@@ -81,20 +82,45 @@ class RecipeLoader(object):
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
         # TODO: request any external data before returning
-        recipe_data["objects"] = RecipeLoader.resolve_inheritance(
-            recipe_data["objects"]
-        )
+        if "objects" in recipe_data:
+            recipe_data["objects"] = RecipeLoader.resolve_inheritance(
+                recipe_data["objects"]
+            )
+        if "composition" in recipe_data:
+            (
+                self.root,
+                self.compartment_keys,
+                self.reference_dict,
+            ) = self._resolve_composition(recipe_data)
+
         return recipe_data
 
-    def _find_roots(self):
-        comp_dic = self.recipe_data["composition"]
-        reference_dic = {}
-        for key, entry in comp_dic.items():
-            for _, ref_keys in entry.get("regions", {}).items():
-                for ref_key in ref_keys:
-                    if not isinstance(ref_key, dict):
-                        reference_dic[ref_key] = key
-        return set(comp_dic.keys()).difference(set(reference_dic.keys()))
+    @staticmethod
+    def _resolve_composition(recipe_data):
+
+        composition_dict = recipe_data["composition"]
+        # keys in reference_dict are downstream objects,
+        # values in reference_dict refer to the immediate upstream object of the key
+        reference_dict = {}
+        # compartment_keys contains a list of keys of objects that act as compartments
+        compartment_keys = []
+
+        for key, entry in composition_dict.items():
+            for region_name, obj_keys in entry.get(
+                "regions", {}
+            ).items():  # check if entry in compositions has regions
+                if (
+                    key not in compartment_keys
+                ):  # add to compartment_keys if regions exist
+                    compartment_keys.append(key)
+                for obj_key in obj_keys:
+                    if not isinstance(obj_key, dict):
+                        reference_dict[obj_key] = key
+        return (
+            set(composition_dict.keys()).difference(set(reference_dict.keys())),
+            compartment_keys,
+            reference_dict,
+        )
 
     def _request_sub_recipe(self, inode):
         filename = None
@@ -167,13 +193,13 @@ class RecipeLoader(object):
                                 compartment["from"]
                             ] = sub_recipe["compartments"]
                         continue
-                    comp_dic = recipe_data["compartments"][cname]
+                    compartment_dict = recipe_data["compartments"][cname]
                     rep = None
-                    if "rep" in comp_dic:
-                        rep = str(comp_dic["rep"])
+                    if "rep" in compartment_dict:
+                        rep = str(compartment_dict["rep"])
                     rep_file = ""
-                    if "rep_file" in comp_dic:
-                        rep_file = str(comp_dic["rep_file"])
+                    if "rep_file" in compartment_dict:
+                        rep_file = str(compartment_dict["rep_file"])
                     #                print (len(rep),rep == '',rep=="",rep != "None",rep != "None" or len(rep) != 0)
                     if rep is not None and len(rep) != 0 and rep != "" and rep != "":
                         rname = rep_file.split("/")[-1]
@@ -186,8 +212,8 @@ class RecipeLoader(object):
                         rep = None
                         rep_file = None
 
-                    if "surface" in comp_dic:
-                        snode = comp_dic["surface"]
+                    if "surface" in compartment_dict:
+                        snode = compartment_dict["surface"]
                         ingrs_dic = snode["ingredients"]
                         if len(ingrs_dic):
                             for ing_name in sorted(
@@ -196,13 +222,13 @@ class RecipeLoader(object):
                                 # either xref or defined
                                 ing_dic = ingrs_dic[ing_name]
                                 sub_recipe = self._request_sub_recipe(inode=ing_dic)
-                                comp_dic["surface"]["ingredients"][
+                                compartment_dict["surface"]["ingredients"][
                                     ing_name
                                 ] = sub_recipe
 
                                 # setup recipe
-                    if "interior" in comp_dic:
-                        snode = comp_dic["interior"]
+                    if "interior" in compartment_dict:
+                        snode = compartment_dict["interior"]
                         ingrs_dic = snode["ingredients"]
                         if len(ingrs_dic):
                             for ing_name in sorted(
@@ -211,7 +237,7 @@ class RecipeLoader(object):
                                 # either xref or defined
                                 ing_dic = ingrs_dic[ing_name]
                                 sub_recipe = self._request_sub_recipe(inode=ing_dic)
-                                comp_dic["interior"]["ingredients"][
+                                compartment_dict["interior"]["ingredients"][
                                     ing_name
                                 ] = sub_recipe
 

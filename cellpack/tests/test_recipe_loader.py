@@ -8,6 +8,8 @@ Docs: https://docs.pytest.org/en/latest/example/simple.html
 
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
+from collections import Counter
+
 test_objects = {
     "sphere_25": {
         "type": "single_sphere",
@@ -73,4 +75,10 @@ def test_resolve_objects():
 def test_find_roots():
     recipe_path = "cellpack/test-recipes/v2/test_recipe_loader.json"
     recipe = RecipeLoader(recipe_path)
-    assert recipe.roots == set(["space"])
+    assert recipe.root == set(["space"])
+
+
+def test_compartment_keys():
+    recipe_path = "cellpack/test-recipes/v2/test_recipe_loader.json"
+    recipe = RecipeLoader(recipe_path)
+    assert Counter(recipe.compartment_keys) == Counter(["space", "A", "B", "C", "D"])
