@@ -123,6 +123,14 @@ class Environment(CompartmentList):
 
     def __init__(self, config=None, recipe=None):
         CompartmentList.__init__(self)
+
+        if "composition" in recipe:
+            (
+                self.root_compartment,
+                self.compartment_keys,
+                self.reference_dict,
+            ) = self._resolve_composition(recipe)
+
         name = recipe["name"]
         self.log = logging.getLogger("env")
         self.log.propagate = False
@@ -277,6 +285,38 @@ class Environment(CompartmentList):
         self.randomRot.setSeed(seed=SEED)
         self.seed_set = True
         self.seed_used = SEED
+
+    @staticmethod
+    def _resolve_composition(recipe_data):
+
+        composition_dict = recipe_data["composition"]
+        # keys in reference_dict are downstream objects,
+        # values in reference_dict refer to the immediate upstream object of the key
+        reference_dict = {}
+        # compartment_keys contains a list of keys of objects that act as compartments
+        compartment_keys = []
+
+        for key, entry in composition_dict.items():
+            for region_name, obj_keys in entry.get(
+                "regions", {}
+            ).items():  # check if entry in compositions has regions
+                if (
+                    key not in compartment_keys
+                ):  # add to compartment_keys if regions exist
+                    compartment_keys.append(key)
+                for obj_key in obj_keys:
+                    if not isinstance(obj_key, dict):
+                        reference_dict[obj_key] = key
+        root = set(composition_dict.keys()).difference(set(reference_dict.keys()))
+
+        if len(root) > 1:
+            raise Exception(f"Composition has multiple roots {root}")
+
+        return (
+            list(root)[0],
+            compartment_keys,
+            reference_dict,
+        )
 
     def reportprogress(self, label=None, progress=None):
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):

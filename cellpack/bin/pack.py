@@ -27,6 +27,7 @@ def pack(recipe, config):
 
     :return: void
     """
+    import ipdb; ipdb.set_trace()
     config_data = ConfigLoader(config).config
     recipe_data = RecipeLoader(recipe).recipe_data
 

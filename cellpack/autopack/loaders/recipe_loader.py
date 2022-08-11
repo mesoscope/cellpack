@@ -86,41 +86,8 @@ class RecipeLoader(object):
             recipe_data["objects"] = RecipeLoader.resolve_inheritance(
                 recipe_data["objects"]
             )
-        if "composition" in recipe_data:
-            (
-                self.root,
-                self.compartment_keys,
-                self.reference_dict,
-            ) = self._resolve_composition(recipe_data)
 
         return recipe_data
-
-    @staticmethod
-    def _resolve_composition(recipe_data):
-
-        composition_dict = recipe_data["composition"]
-        # keys in reference_dict are downstream objects,
-        # values in reference_dict refer to the immediate upstream object of the key
-        reference_dict = {}
-        # compartment_keys contains a list of keys of objects that act as compartments
-        compartment_keys = []
-
-        for key, entry in composition_dict.items():
-            for region_name, obj_keys in entry.get(
-                "regions", {}
-            ).items():  # check if entry in compositions has regions
-                if (
-                    key not in compartment_keys
-                ):  # add to compartment_keys if regions exist
-                    compartment_keys.append(key)
-                for obj_key in obj_keys:
-                    if not isinstance(obj_key, dict):
-                        reference_dict[obj_key] = key
-        return (
-            set(composition_dict.keys()).difference(set(reference_dict.keys())),
-            compartment_keys,
-            reference_dict,
-        )
 
     def _request_sub_recipe(self, inode):
         filename = None
