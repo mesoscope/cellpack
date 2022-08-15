@@ -124,7 +124,9 @@ class Environment(CompartmentList):
     def __init__(self, config=None, recipe=None):
         CompartmentList.__init__(self)
 
-        if "composition" in recipe:
+        self.config_data = config
+        self.recipe_data = recipe
+        if "composition" in self.recipe_data:
             (
                 self.root_compartment,
                 self.compartment_keys,
@@ -285,6 +287,24 @@ class Environment(CompartmentList):
         self.randomRot.setSeed(seed=SEED)
         self.seed_set = True
         self.seed_used = SEED
+
+    def create_objects(self):
+        """
+        Instantiate compartments and ingredients contained within the recipe data.
+        """
+        if "objects" in self.recipe_data:
+            object_dict = self.recipe_data["objects"]
+        
+        if "composition" in self.recipe_data:
+            composition_dict = self.recipe_data["composition"]
+        
+        if "gradients" in self.recipe_data:
+            # TODO: deal with gradients here
+            pass
+
+        if self.root_compartment is not None:
+            # create cytoplasme and set as exterior recipe?
+            pass        
 
     @staticmethod
     def _resolve_composition(recipe_data):
