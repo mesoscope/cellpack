@@ -71,39 +71,3 @@ def test_resolve_objects():
     # assert resolved_objects["sphere_50"]["radius"] == 50
     # TODO: add granular testing for individual objects
     assert resolved_objects == expected_result
-
-
-def test_find_roots():
-    recipe_path = "cellpack/test-recipes/v2/test_recipe_loader.json"
-    recipe = RecipeLoader(recipe_path)
-    root, _, _ = Environment._resolve_composition(recipe.recipe_data)
-    assert root == "space"
-
-
-def test_compartment_keys():
-    recipe_path = "cellpack/test-recipes/v2/test_recipe_loader.json"
-    recipe = RecipeLoader(recipe_path)
-    _, comp_keys, _ = Environment._resolve_composition(recipe.recipe_data)
-    assert Counter(comp_keys) == Counter(["space", "A", "B", "C", "D"])
-
-def test_multiple_roots():
-    recipe_path = "cellpack/test-recipes/v2/test_recipe_loader.json"
-    recipe = RecipeLoader(recipe_path)
-    recipe.recipe_data["composition"]["other_root"] = {
-            "regions": {
-                "interior": [
-                    "tree",
-                    "A",
-                    "B",
-                    "C"
-                ]
-            }
-        }
-    err_root = set(["space", "other_root"])
-    try:
-        Environment._resolve_composition(recipe.recipe_data)
-    except Exception as err:
-        assert (
-            format(err)
-            == f"Composition has multiple roots {err_root}"
-        )

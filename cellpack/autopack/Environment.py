@@ -124,12 +124,16 @@ class Environment(CompartmentList):
     def __init__(self, config=None, recipe=None):
         CompartmentList.__init__(self)
 
-        if "composition" in recipe:
+        self.config_data = config
+        self.recipe_data = recipe
+        if "composition" in self.recipe_data:
             (
                 self.root_compartment,
                 self.compartment_keys,
                 self.reference_dict,
-            ) = self._resolve_composition(recipe)
+            ) = Recipe.resolve_composition(recipe)
+
+        self.create_objects()
 
         name = recipe["name"]
         self.log = logging.getLogger("env")
@@ -286,37 +290,26 @@ class Environment(CompartmentList):
         self.seed_set = True
         self.seed_used = SEED
 
-    @staticmethod
-    def _resolve_composition(recipe_data):
+    def create_objects(self):
+        """
+        Instantiate compartments and ingredients contained within the recipe data.
+        """
 
-        composition_dict = recipe_data["composition"]
-        # keys in reference_dict are downstream objects,
-        # values in reference_dict refer to the immediate upstream object of the key
-        reference_dict = {}
-        # compartment_keys contains a list of keys of objects that act as compartments
-        compartment_keys = []
+        if self.root_compartment is not None:
+            # create cytoplasme and set as exterior recipe?
+            self.create_compartment(
+                self.recipe_data["composition"][self.root_compartment]
+            )
 
-        for key, entry in composition_dict.items():
-            for region_name, obj_keys in entry.get(
-                "regions", {}
-            ).items():  # check if entry in compositions has regions
-                if (
-                    key not in compartment_keys
-                ):  # add to compartment_keys if regions exist
-                    compartment_keys.append(key)
-                for obj_key in obj_keys:
-                    if not isinstance(obj_key, dict):
-                        reference_dict[obj_key] = key
-        root = set(composition_dict.keys()).difference(set(reference_dict.keys()))
+        if "objects" in self.recipe_data:
+            object_dict = self.recipe_data["objects"]
 
-        if len(root) > 1:
-            raise Exception(f"Composition has multiple roots {root}")
+        if "composition" in self.recipe_data:
+            composition_dict = self.recipe_data["composition"]
 
-        return (
-            list(root)[0],
-            compartment_keys,
-            reference_dict,
-        )
+        if "gradients" in self.recipe_data:
+            # TODO: deal with gradients here
+            pass
 
     def reportprogress(self, label=None, progress=None):
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):
@@ -989,18 +982,21 @@ class Environment(CompartmentList):
         ingr.initialize_mesh(self.mesh_store)
         return ingr
 
-    def create_compartment(
-        self, name, filename, gname, object_name, object_filename, meshType=None
-    ):
+    def create_compartment(self, compartment_key):
+
+        comp_dic = self.recipe_data["composition"]
+        obj_dic = self.recipe_data["objects"]
+
+        if "object" in comp_dic[compartment_key]:
+            # create compartment using object
+            object_info = obj_dic[comp_dic[compartment_key]["object"]]
+        else:
+            # use bounding box
+            object_info = {"is_box": True, "bounding_box": self.boundingBox}
+
         compartment = Compartment(
-            name,
-            None,
-            None,
-            None,
-            filename=filename,
-            gname=gname,
-            object_name=object_name,
-            object_filename=object_filename,
+            name=compartment_key,
+            object_info=object_info,
         )
         compartment.initialize_mesh(self.mesh_store)
         return compartment

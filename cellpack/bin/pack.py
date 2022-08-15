@@ -27,7 +27,6 @@ def pack(recipe, config):
 
     :return: void
     """
-    import ipdb; ipdb.set_trace()
     config_data = ConfigLoader(config).config
     recipe_data = RecipeLoader(recipe).recipe_data
 
@@ -36,6 +35,7 @@ def pack(recipe, config):
     autopack.helper = helper
 
     env = Environment(config=config_data, recipe=recipe_data)
+    env.create_objects()
     env.helper = helper
 
     afviewer = None
