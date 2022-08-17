@@ -69,12 +69,6 @@ class Recipe:
         # compartment_keys contains a list of keys of objects that act as compartments
         compartment_keys = []
 
-        # list of ingredients
-        ingredient_list = []
-
-        # list of compartments
-        compartment_list = []
-
         for key, entry in composition_dict.items():
             for region_name, obj_keys in entry.get(
                 "regions", {}
