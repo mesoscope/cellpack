@@ -199,8 +199,8 @@ def ApplyMatrix(coords, mat):
 
 def bullet_checkCollision_mp(world, node1, node2):
     #    world =
-    #    node1 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
-    #    node2 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.Type},)
+    #    node1 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.type},)
+    #    node2 = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMatj,),{"rtype":self.type},)
     return world.contactTestPair(node1, node2).getNumContacts() > 0
 
 

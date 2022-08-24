@@ -20,46 +20,46 @@ class SingleCylinderIngr(Ingredient):
 
     def __init__(
         self,
-        Type="SingleCylinder",
+        type="SingleCylinder",
         color=None,
+        count=0,
         coordsystem="right",
         cutoff_boundary=None,
         cutoff_surface=None,
         distExpression=None,
         distFunction=None,
-        encapsulatingRadius=0,
+        encapsulating_radius=0,
         excluded_partners_name=None,
         force_random=False,  # avoid any binding
         gradient="",
         isAttractor=False,
-        jitterMax=(1, 1, 1),
+        jitter_max=(1, 1, 1),
         meshFile=None,
         meshName=None,
         meshObject=None,
         meshType="file",
         molarity=0.0,
         name=None,
-        nbJitter=5,
+        jitter_attempts=5,
         nbMol=0,
-        orientBiasRotRangeMax=-pi,
-        orientBiasRotRangeMin=-pi,
-        packingMode="random",
+        orient_bias_range=[-pi, pi],
+        packing=None,
         packingPriority=0,
         partners_position=None,
         partners_name=None,
         pdb=None,
-        perturbAxisAmplitude=0.1,
-        placeType="jitter",
+        perturb_axis_amplitude=0.1,
+        place_type="jitter",
         positions=None,
         positions2=None,
-        principalVector=(1, 0, 0),
+        principal_vector=(1, 0, 0),
         proba_binding=0.5,
         proba_not_binding=0.5,
         properties=None,
         radii=None,
-        rotAxis=[0.0, 0.0, 0.0],
-        rotRange=6.2831,
-        rejectionThreshold=30,
+        rotation_axis=[0.0, 0.0, 0.0],
+        rotation_range=6.2831,
+        rejection_threshold=30,
         source=None,
         sphereFile=None,
         uLength=0,
@@ -70,44 +70,45 @@ class SingleCylinderIngr(Ingredient):
     ):
 
         super().__init__(
-            Type=Type,
+            type=type,
             color=color,
             coordsystem=coordsystem,
+            count=count,
             cutoff_boundary=cutoff_boundary,
             cutoff_surface=cutoff_surface,
             distExpression=distExpression,
             distFunction=distFunction,
-            encapsulatingRadius=encapsulatingRadius,
+            encapsulating_radius=encapsulating_radius,
             excluded_partners_name=excluded_partners_name,
             force_random=force_random,  # avoid any binding
             gradient=gradient,
             isAttractor=isAttractor,
-            jitterMax=jitterMax,
+            jitter_max=jitter_max,
             meshFile=meshFile,
             meshName=meshName,
             meshObject=meshObject,
             meshType="file",
             molarity=molarity,
             name=name,
-            nbJitter=nbJitter,
+            jitter_attempts=jitter_attempts,
             nbMol=nbMol,
-            packingMode=packingMode,
+            packing=packing,
             packingPriority=packingPriority,
             partners_name=partners_name,
             partners_position=partners_position,
             pdb=pdb,
-            perturbAxisAmplitude=perturbAxisAmplitude,
-            placeType=placeType,
+            perturb_axis_amplitude=perturb_axis_amplitude,
+            place_type=place_type,
             positions=positions,
             positions2=positions2,
-            principalVector=principalVector,
+            principal_vector=principal_vector,
             proba_binding=proba_binding,
             proba_not_binding=proba_not_binding,
             properties=properties,
             radii=radii,
-            rejectionThreshold=rejectionThreshold,
-            rotAxis=rotAxis,
-            rotRange=rotRange,
+            rejection_threshold=rejection_threshold,
+            rotation_axis=rotation_axis,
+            rotation_range=rotation_range,
             source=source,
             sphereFile=sphereFile,
             useOrientBias=useOrientBias,
@@ -132,13 +133,13 @@ class SingleCylinderIngr(Ingredient):
             self.axis = top_cent - bottom_cent
             self.length = numpy.linalg.norm(self.axis)
 
-            self.principalVector = self.axis / self.length
+            self.principal_vector = self.axis / self.length
 
             self.center = (
                 bottom_cent + (top_cent - bottom_cent) / 2
             )  # location of center based on top and bottom
 
-            self.encapsulatingRadius = numpy.sqrt(
+            self.encapsulating_radius = numpy.sqrt(
                 radii[0][0] ** 2 + (self.length / 2.0) ** 2
             )
 
@@ -155,7 +156,7 @@ class SingleCylinderIngr(Ingredient):
                 length=self.length,
                 res=5,
                 parent="autopackHider",
-                axis=self.principalVector,
+                axis=self.principal_vector,
             )[0]
 
     def get_cuttoff_value(self, spacing):
@@ -296,9 +297,9 @@ class SingleCylinderIngr(Ingredient):
             #            d = numpy.array(p1) - numpy.array(p2)
             #            s = numpy.sum(d*d)
             Point3(
-                self.principalVector[0],
-                self.principalVector[1],
-                self.principalVector[2],
+                self.principal_vector[0],
+                self.principal_vector[1],
+                self.principal_vector[2],
             )
             shape = BulletCylinderShape(
                 radc, length, 1

@@ -68,7 +68,7 @@ class Recipe:
         reference_dict = {}
         # compartment_keys contains a list of keys of objects that act as compartments
         compartment_keys = []
-
+        referenced_objects = []
         for key, entry in composition_dict.items():
             for region_name, obj_keys in entry.get(
                 "regions", {}
@@ -80,6 +80,11 @@ class Recipe:
                 for obj_key in obj_keys:
                     if not isinstance(obj_key, dict):
                         reference_dict[obj_key] = key
+                        referenced_objects.append(obj_key)
+                    else: 
+                        obj_key = obj_key["object"]
+                        referenced_objects.append(obj_key)
+
         root = set(composition_dict.keys()).difference(set(reference_dict.keys()))
 
         if len(root) > 1:
@@ -89,6 +94,7 @@ class Recipe:
             list(root)[0],
             compartment_keys,
             reference_dict,
+            referenced_objects
         )
 
     def delIngredient(self, ingr):
@@ -180,8 +186,8 @@ class Recipe:
             if remainder >= randval:  # Mod by Graham 8/18/11
                 num_to_place_int = num_to_place_int + 1
 
-            ingr.vol_nbmol = ingr.left_to_place = num_to_place_int + ingr.nbMol
-            print(ingr.name, ingr.nbMol)
+            ingr.vol_nbmol = ingr.left_to_place = num_to_place_int + ingr.count
+            print(ingr.name, ingr.count)
             if ingr.left_to_place == 0:
                 self.log.warning(
                     "WARNING GRAHAM: recipe ingredient %s has 0 molecules as target",
@@ -202,8 +208,8 @@ class Recipe:
         mini = 9999999.0
         maxi = 0
         for ingr in self.ingredients:
-            if ingr.encapsulatingRadius > maxi:
-                maxi = ingr.encapsulatingRadius
+            if ingr.encapsulating_radius > maxi:
+                maxi = ingr.encapsulating_radius
             if ingr.minRadius < mini:
                 mini = ingr.minRadius
         return mini, maxi

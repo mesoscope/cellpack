@@ -20,52 +20,52 @@ class SingleSphereIngr(Ingredient):
 
     def __init__(
         self,
-        Type="SingleSphere",
+        type="SingleSphere",
         color=None,
         coordsystem="right",
+        count=0,
         cutoff_boundary=None,
         cutoff_surface=None,
         distExpression=None,
         distFunction=None,
-        encapsulatingRadius=0,
+        encapsulating_radius=0,
         excluded_partners_name=None,
         force_random=False,  # avoid any binding
         gradient="",
         isAttractor=False,
-        jitterMax=(1, 1, 1),
+        jitter_max=(1, 1, 1),
         meshType="file",
         molarity=0.0,
         name=None,
-        nbJitter=5,
+        jitter_attempts=5,
         nbMol=0,
         offset=None,
-        orientBiasRotRangeMax=-pi,
-        orientBiasRotRangeMin=-pi,
+        orient_bias_range=[-pi, pi],
         overwrite_distFunc=True,  # overWrite
-        packingMode="random",
+        packing=None,
         packingPriority=0,
         partners_name=None,
         partners_position=None,
         pdb=None,
-        perturbAxisAmplitude=0.1,
-        placeType="jitter",
+        perturb_axis_amplitude=0.1,
+        place_type="jitter",
         positions=[[[0, 0, 0]]],
         positions2=None,
-        principalVector=(1, 0, 0),
+        principal_vector=(1, 0, 0),
         proba_binding=0.5,
         proba_not_binding=0.5,  # chance to actually not bind
         properties=None,
         radii=None,
         radius=None,
-        rejectionThreshold=30,
+        rejection_threshold=30,
         resolution_dictionary=None,
         position=None,
         sphereFile=None,
         meshFile=None,
         meshName=None,
         meshObject=None,
-        rotAxis=[0.0, 0.0, 0.0],
-        rotRange=0,
+        rotation_axis=[0.0, 0.0, 0.0],
+        rotation_range=0,
         source=None,
         useOrientBias=False,
         useRotAxis=True,
@@ -77,9 +77,10 @@ class SingleSphereIngr(Ingredient):
         if positions is None and position is not None:
             positions = [[position]]
         super().__init__(
-            Type=Type,
+            type=type,
             color=color,
             coordsystem=coordsystem,
+            count=count,
             cutoff_boundary=cutoff_boundary,
             cutoff_surface=cutoff_surface,
             distExpression=distExpression,
@@ -88,32 +89,32 @@ class SingleSphereIngr(Ingredient):
             force_random=force_random,
             gradient=gradient,
             isAttractor=isAttractor,
-            jitterMax=jitterMax,
+            jitter_max=jitter_max,
             meshName=meshName,
             meshType=meshType,
             meshObject=meshObject,
             molarity=molarity,
             name=name,
-            nbJitter=nbJitter,
+            jitter_attempts=jitter_attempts,
             nbMol=nbMol,
             overwrite_distFunc=overwrite_distFunc,
-            packingMode=packingMode,
+            packing=packing,
             packingPriority=packingPriority,
             partners_name=partners_name,
             partners_position=partners_position,
             pdb=pdb,
             sphereFile=sphereFile,
-            perturbAxisAmplitude=perturbAxisAmplitude,
+            perturb_axis_amplitude=perturb_axis_amplitude,
             meshFile=meshFile,
-            placeType=placeType,
+            place_type=place_type,
             positions=positions,  # positions2=None,
-            principalVector=principalVector,
+            principal_vector=principal_vector,
             proba_binding=proba_binding,
             proba_not_binding=proba_not_binding,
             properties=properties,
             radii=radii,
-            rotAxis=rotAxis,
-            rotRange=rotRange,
+            rotation_axis=rotation_axis,
+            rotation_range=rotation_range,
             useRotAxis=useRotAxis,
             weight=weight,
         )
@@ -124,7 +125,7 @@ class SingleSphereIngr(Ingredient):
         self.singleSphere = True
         self.mesh = None
         # min and max radius for a single sphere should be the same
-        self.encapsulatingRadius = encapsulatingRadius or radius
+        self.encapsulating_radius = encapsulating_radius or radius
 
     def collides_with_compartment(
         self,
@@ -198,7 +199,7 @@ class SingleSphereIngr(Ingredient):
         return insidePoints, newDistPoints
 
     def add_rb_node(self, worldNP):
-        shape = BulletSphereShape(self.encapsulatingRadius)
+        shape = BulletSphereShape(self.encapsulating_radius)
         inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
         inodenp.node().setMass(1.0)
         #        inodenp.node().addShape(shape)
@@ -211,12 +212,12 @@ class SingleSphereIngr(Ingredient):
     def add_rb_node_ode(self, world, jtrans, pMat):
         body = OdeBody(world)
         M = OdeMass()
-        M.setSphereTotal(1.0, self.encapsulatingRadius)
+        M.setSphereTotal(1.0, self.encapsulating_radius)
         body.setMass(M)
         body.setPosition(Vec3(jtrans[0], jtrans[1], jtrans[2]))
         body.setRotation(pMat)
         # the geometry for the collision ?
-        geom = OdeSphereGeom(self.ode_space, self.encapsulatingRadius)
+        geom = OdeSphereGeom(self.ode_space, self.encapsulating_radius)
         geom.setBody(body)
         return geom
 

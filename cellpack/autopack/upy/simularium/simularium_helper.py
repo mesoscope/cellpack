@@ -265,7 +265,7 @@ class simulariumHelper(hostHelper.Helper):
         sub_points=None,
     ):
         self.agent_id_counter += 1
-        if ingredient.Type == "Grow" or ingredient.Type == "Actine":
+        if ingredient.type == "Grow" or ingredient.type == "Actine":
             viz_type = VIZ_TYPE.FIBER
         else:
             viz_type = VIZ_TYPE.DEFAULT
@@ -273,7 +273,7 @@ class simulariumHelper(hostHelper.Helper):
             name,
             instance_id,
             self.agent_id_counter,
-            ingredient.encapsulatingRadius,
+            ingredient.encapsulating_radius,
             viz_type,
         )
         self.scene[instance_id] = new_instance
@@ -291,7 +291,7 @@ class simulariumHelper(hostHelper.Helper):
         mesh=None,
     ):
         self.agent_id_counter += 1
-        if ingredient and self.is_fiber(ingredient.Type):
+        if ingredient and self.is_fiber(ingredient.type):
             viz_type = VIZ_TYPE.FIBER
         else:
             viz_type = VIZ_TYPE.DEFAULT
@@ -327,7 +327,7 @@ class simulariumHelper(hostHelper.Helper):
     ):
         display_type = DISPLAY_TYPE.SPHERE
         url = ""
-        radius = compartment.encapsulatingRadius
+        radius = compartment.encapsulating_radius
         if compartment.meshType == "file":
             _, extension = os.path.splitext(compartment.path)
             if extension == ".obj":
@@ -361,11 +361,11 @@ class simulariumHelper(hostHelper.Helper):
     ):
         display_type = DISPLAY_TYPE.SPHERE
 
-        if self.is_fiber(ingredient.Type):
+        if self.is_fiber(ingredient.type):
             if len(control_points) > self.max_fiber_length:
                 self.max_fiber_length = len(control_points)
             display_type = DISPLAY_TYPE.FIBER
-        elif ingredient.Type == "SingleCube":
+        elif ingredient.type == "SingleCube":
             display_type = DISPLAY_TYPE.CUBE
         self.display_data[ingredient.name] = DisplayData(
             name=ingredient.name, display_type=display_type
@@ -388,11 +388,11 @@ class simulariumHelper(hostHelper.Helper):
         ingr_name = ingredient.name
         display_type = DISPLAY_TYPE.SPHERE
         url = ""
-        if ingredient.Type == "SingleCube":
+        if ingredient.type == "SingleCube":
             display_type = "CUBE"
-        elif ingredient.Type == "SingleSphere":
+        elif ingredient.type == "SingleSphere":
             display_type = DISPLAY_TYPE.SPHERE
-        elif self.is_fiber(ingredient.Type):
+        elif self.is_fiber(ingredient.type):
             display_type = DISPLAY_TYPE.FIBER
         else:
             pdb_file_name = ""
@@ -413,6 +413,8 @@ class simulariumHelper(hostHelper.Helper):
                     file_name = ingr_name
                 url = f"{simulariumHelper.DATABASE}/geometries/{file_name}.obj"
                 display_type = DISPLAY_TYPE.OBJ
+            if pdb_file_name is None:
+                return DISPLAY_TYPE.SPHERE, ""
             if ".pdb" in pdb_file_name:
                 url = f"{simulariumHelper.DATABASE}/other/{pdb_file_name}"
             else:
@@ -438,7 +440,7 @@ class simulariumHelper(hostHelper.Helper):
         for position, rotation, ingredient, ptInd in objects:
             ingr_name = ingredient.name
             sub_points = None
-            if self.is_fiber(ingredient.Type):
+            if self.is_fiber(ingredient.type):
                 if ingredient.nbCurve == 0:
                     continue
                 # TODO: get sub_points accurately
@@ -451,7 +453,7 @@ class simulariumHelper(hostHelper.Helper):
                 self.display_data[ingredient.name] = DisplayData(
                     name=ingr_name, display_type=display_type, url=url
                 )
-            radius = ingredient.encapsulatingRadius if ingredient is not None else 10
+            radius = ingredient.encapsulating_radius if ingredient is not None else 10
 
             self.add_instance(
                 ingredient.name,

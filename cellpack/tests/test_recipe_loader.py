@@ -6,10 +6,7 @@ Docs: https://docs.pytest.org/en/latest/example/simple.html
       https://docs.pytest.org/en/latest/plugins.html#requiring-loading-plugins-in-a-test-module-or-conftest-file
 """
 
-from ..autopack.Environment import Environment
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
-
-from collections import Counter
 
 test_objects = {
     "sphere_25": {
@@ -17,7 +14,7 @@ test_objects = {
         "inherit": "base",
         "color": [0.5, 0.5, 0.5],
         "radius": 25,
-        "jitterMax": [1, 1, 0],
+        "jitter_max": [1, 1, 0],
     },
     "base": {"jitter_attempts": 10},
     "sphere_75": {
@@ -46,7 +43,7 @@ def test_resolve_objects():
             "color": [0.5, 0.5, 0.5],
             "inherit": "base",
             "jitter_attempts": 10,
-            "jitterMax": [1, 1, 0],
+            "jitter_max": [1, 1, 0],
             "radius": 25,
             "type": "single_sphere",
         },
@@ -55,7 +52,7 @@ def test_resolve_objects():
             "color": [0.3, 0.5, 0.8],
             "inherit": "sphere_50",
             "jitter_attempts": 10,
-            "jitterMax": [1, 1, 0],
+            "jitter_max": [1, 1, 0],
             "radius": 75,
             "type": "single_sphere",
         },
@@ -63,7 +60,7 @@ def test_resolve_objects():
             "color": [0.3, 0.5, 0.8],
             "inherit": "sphere_25",
             "jitter_attempts": 10,
-            "jitterMax": [1, 1, 0],
+            "jitter_max": [1, 1, 0],
             "radius": 50,
             "type": "single_sphere",
         },

@@ -179,7 +179,7 @@ class ConvertToSimularium(argparse.Namespace):
         else:
             display_type = (
                 DISPLAY_TYPE.FIBER
-                if ingredient_data["Type"] == "Grow"
+                if ingredient_data["type"] == "Grow"
                 else DISPLAY_TYPE.SPHERE
             )
             return {"display_type": display_type, "url": ""}
@@ -233,8 +233,8 @@ class ConvertToSimularium(argparse.Namespace):
         self.type_names[time_step_index].append(ingredient_name)
         self.unique_ids[time_step_index].append(agent_id)
         r = (
-            data["encapsulatingRadius"] * self.scale_factor
-            if ("encapsulatingRadius" in data)
+            data["encapsulating_radius"] * self.scale_factor
+            if ("encapsulating_radius" in data)
             else self.default_radius
         )
         self.radii[time_step_index].append(r)
@@ -284,9 +284,9 @@ class ConvertToSimularium(argparse.Namespace):
             self.radii[time_step_index].append(
                 data["radii"][0]["radii"][0] * self.scale_factor
             )
-        elif "encapsulatingRadius" in data:
+        elif "encapsulating_radius" in data:
             self.radii[time_step_index].append(
-                data["encapsulatingRadius"] * self.scale_factor
+                data["encapsulating_radius"] * self.scale_factor
             )
         else:
             self.radii[time_step_index].append(self.default_radius)

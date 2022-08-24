@@ -1,3 +1,4 @@
+from re import I
 import numpy
 import math
 
@@ -79,10 +80,10 @@ class Agent:
         gradient="",
         isAttractor=False,
         overwrite_distFunc=True,  # overWrite
-        packingMode="close",
+        packing=None,
         partners_name=None,
         partners_position=None,
-        placeType="jitter",
+        place_type="jitter",
         proba_binding=0.5,
         proba_not_binding=0.5,  # chance to actually not bind
         properties=None,
@@ -101,21 +102,24 @@ class Agent:
                 self.partners_position.append([numpy.identity(4)])
         excluded_partners_name = []
         self.excluded_partners_name = excluded_partners_name
-        assert packingMode in [
-            "random",
-            "close",
-            "closePartner",
-            "randomPartner",
-            "gradient",
-            "hexatile",
-            "squaretile",
-            "triangletile",
-        ]
-        self.packingMode = packingMode
+        self.packingMode = "random"
+        if packing is not None:
+            packingMode = packing["mode"]
+            assert packingMode in [
+                "random",
+                "close",
+                "closePartner",
+                "randomPartner",
+                "gradient",
+                "hexatile",
+                "squaretile",
+                "triangletile",
+            ]
+            self.packingMode = packingMode
         partners_weight = 0
         self.partners_weight = partners_weight
-        # assert placeType in ['jitter', 'spring','rigid-body']
-        self.placeType = placeType
+        # assert place_type in ['jitter', 'spring','rigid-body']
+        self.place_type = place_type
         self.mesh_3d = None
         self.isAttractor = isAttractor
         self.weight = weight
@@ -289,18 +293,18 @@ class Agent:
             targetPoint = self.env.grid.getClosestFreeGridPoint(
                 targetPoint,
                 compId=self.compNum,
-                ball=(ing.encapsulatingRadius + self.encapsulatingRadius),
-                distance=self.encapsulatingRadius * 2.0,
+                ball=(ing.encapsulating_radius + self.encapsulating_radius),
+                distance=self.encapsulating_radius * 2.0,
             )
             self.log.info(
                 "target point free tree is %r %r %r",
                 targetPoint,
-                self.encapsulatingRadius,
-                ing.encapsulatingRadius,
+                self.encapsulating_radius,
+                ing.encapsulating_radius,
             )
         else:
             # get closestFreePoint using freePoint and masterGridPosition
-            # if self.placeType == "rigid-body" or self.placeType == "jitter":
+            # if self.place_type == "rigid-body" or self.place_type == "jitter":
             # the new point is actually tPt -normalise(tPt-current)*radius
             self.log.info(
                 "tP %r %s %r %d", ing_indice, ing.name, targetPoint, ing.radii[0][0]
@@ -309,7 +313,7 @@ class Agent:
             v = numpy.array(targetPoint) - numpy.array(currentPos)
             s = numpy.sum(v * v)
             factor = (v / math.sqrt(s)) * (
-                ing.encapsulatingRadius + self.encapsulatingRadius
+                ing.encapsulating_radius + self.encapsulating_radius
             )  # encapsulating radus ?
             targetPoint = numpy.array(targetPoint) - factor
 

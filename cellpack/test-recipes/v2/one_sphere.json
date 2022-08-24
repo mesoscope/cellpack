@@ -39,7 +39,7 @@
                 1
             ],
             "rejection_threshold": 50,
-            "place_type": "panda_bullet",
+            "place_type": "jitter",
             "cutoff_surface": 42,
             "rotation_axis": [
                 0,
@@ -64,7 +64,7 @@
             "weight": 0.25,
             "radius": 25,
             "coordinate_system": "left",
-            "jitterMax": [
+            "jitter_max": [
                 1,
                 1,
                 0

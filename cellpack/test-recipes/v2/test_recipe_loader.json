@@ -90,7 +90,7 @@
                 "collision": {
                     "path": "autoPACKserver/collisionTrees/",
                     "name": "sphere_tree_A.sph",
-                    "format": "",
+                    "format": "sph",
                     "radii": [],
                     "positions": []
                 }
@@ -107,7 +107,7 @@
             "weight": 0.25,
             "radius": 25,
             "coordinate_system": "left",
-            "jitterMax": [
+            "jitter_max": [
                 1,
                 1,
                 0

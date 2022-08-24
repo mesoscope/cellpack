@@ -74,7 +74,7 @@ class PlotlyAnalysis:
                         )
             else:
                 if ingr.modelType == "Spheres":
-                    self.add_circle(ingr.encapsulatingRadius, pos, ingr.color)
+                    self.add_circle(ingr.encapsulating_radius, pos, ingr.color)
                 elif ingr.modelType == "Cube":
                     self.add_square(ingr.radii, pos, rot, ingr.color)
                 elif ingr.modelType == "Cylinders":
