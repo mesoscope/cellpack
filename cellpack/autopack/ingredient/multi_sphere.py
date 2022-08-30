@@ -164,6 +164,127 @@ class MultiSphereIngr(Ingredient):
         ):
             self.encapsulating_radius = max(self.radii[0])  #
 
+    def collision_jitter(
+        self,
+        jtrans,
+        rotMat,
+        level,
+        gridPointsCoords,
+        current_grid_distances,
+        env,
+        dpad,
+    ):
+        """
+        Check spheres for collision
+        """
+        centers = self.positions[level]
+        radii = self.radii[level]
+        # should we also check for outside the main grid ?
+        # wouldnt be faster to do sphere-sphere distance test ? than points/points from the grid
+        centT = self.transformPoints(jtrans, rotMat, centers)  # centers)
+        # sphNum = 0  # which sphere in the sphere tree we're checking
+        # self.distances_temp = []
+        insidePoints = {}
+        newDistPoints = {}
+        at_max_level = level == self.deepest_level and (level + 1) == len(
+            self.positions
+        )
+        for radius_of_ing_being_packed, posc in zip(radii, centT):
+            x, y, z = posc
+            radius_of_area_to_check = (
+                radius_of_ing_being_packed + dpad
+            )  # extends the packing ingredient's bounding box to be large enough to include masked gridpoints of the largest possible ingrdient in the receipe
+            #  TODO: add realtime render here that shows all the points being checked by the collision
+
+            pointsToCheck = env.grid.getPointsInSphere(
+                posc, radius_of_area_to_check
+            )  # indices
+            # check for collisions by looking at grid points in the sphere of radius radc
+            delta = numpy.take(gridPointsCoords, pointsToCheck, 0) - posc
+            delta *= delta
+            distA = numpy.sqrt(delta.sum(1))
+
+            for pti in range(len(pointsToCheck)):
+                grid_point_index = pointsToCheck[
+                    pti
+                ]  # index of master grid point that is inside the sphere
+                distance_to_packing_location = distA[
+                    pti
+                ]  # is that point's distance from the center of the sphere (packing location)
+                # distance is an array of distance of closest contact to anything currently in the grid
+                collision = (
+                    current_grid_distances[grid_point_index]
+                    + distance_to_packing_location
+                    <= radius_of_ing_being_packed
+                )
+
+                if collision:
+                    # an object is too close to the sphere at this level
+                    if not at_max_level:
+                        # if we haven't made it all the way down the sphere tree,
+                        # check a level down
+                        new_level = level + 1
+                        # NOTE: currently with sphere trees, no children seem present
+                        # get sphere that are children of this one
+                        # ccenters = []
+                        # cradii = []
+                        # for sphInd in self.children[level][sphNum]:
+                        #     ccenters.append(nxtLevelSpheres[sphInd])
+                        #     cradii.append(nxtLevelRadii[sphInd])
+                        return self.collision_jitter(
+                            jtrans,
+                            rotMat,
+                            new_level,
+                            gridPointsCoords,
+                            current_grid_distances,
+                            env,
+                            dpad,
+                        )
+                    else:
+                        self.log.info(
+                            "grid point already occupied %f",
+                            current_grid_distances[grid_point_index],
+                        )
+                        return True, {}, {}
+                if not at_max_level:
+                    # we don't want to calculate new distances if we are not
+                    # at the highest geo
+                    # but getting here means there was no collision detected
+                    # so the loop can continue
+                    continue
+                signed_distance_to_sphere_surface = (
+                    distance_to_packing_location - radius_of_ing_being_packed
+                )
+
+                (
+                    insidePoints,
+                    newDistPoints,
+                ) = self.get_new_distances_and_inside_points(
+                    env,
+                    jtrans,
+                    rotMat,
+                    grid_point_index,
+                    current_grid_distances,
+                    newDistPoints,
+                    insidePoints,
+                    signed_distance_to_sphere_surface,
+                )
+
+            if not at_max_level:
+                # we didn't find any colisions with the this level, but we still want
+                # the inside points to be based on the most detailed geom
+                new_level = self.deepest_level
+                return self.collision_jitter(
+                    jtrans,
+                    rotMat,
+                    new_level,
+                    gridPointsCoords,
+                    current_grid_distances,
+                    env,
+                    dpad,
+                )
+        return False, insidePoints, newDistPoints
+
     def add_rb_node(self, worldNP):
         inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))
         inodenp.node().setMass(1.0)

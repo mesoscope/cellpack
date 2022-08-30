@@ -292,30 +292,29 @@ class BaseGrid:
         if boundingBox is None:
             boundingBox = self.boundingBox
         space = self.gridSpacing
-        # we want the diagonal of the voxel, not the diagonal of the plane, so the second 1.1547 is was incorrect
         environmentBoxEqualFillBox = False
 
         self.log.info("Using create3DPointLookup")
         if environmentBoxEqualFillBox:  # environment.environmentBoxEqualFillBox:
             self._x = x = numpy.arange(
                 boundingBox[0][0], boundingBox[1][0], space
-            )  # *1.1547) gridspacing is already multiplied by 1.1547
+            )
             self._y = y = numpy.arange(
                 boundingBox[0][1], boundingBox[1][1], space
-            )  # *1.1547)
+            ) 
             self._z = z = numpy.arange(
                 boundingBox[0][2], boundingBox[1][2], space
-            )  # *1.1547)
+            )
         else:
             self._x = x = numpy.arange(
                 boundingBox[0][0] - space, boundingBox[1][0] + space, space
-            )  # *1.1547) gridspacing is already multiplied by 1.1547
+            )
             self._y = y = numpy.arange(
                 boundingBox[0][1] - space, boundingBox[1][1] + space, space
-            )  # *1.1547)
+            )
             self._z = z = numpy.arange(
                 boundingBox[0][2] - space, boundingBox[1][2] + space, space
-            )  # *1.1547)
+            )
         nx = len(
             x
         )  # sizes must be +1 or the right, top, and back edges don't get any points using this numpy.arange method
@@ -347,7 +346,7 @@ class BaseGrid:
             boundingBox = self.boundingBox
         space = self.gridSpacing
         S = numpy.array(boundingBox[1]) - numpy.array(boundingBox[0])
-        NX, NY, NZ = numpy.around(S / (self.gridSpacing))  # / 1.1547))
+        NX, NY, NZ = numpy.around(S / (self.gridSpacing))
         if NX == 0:
             NX = 1
         if NY == 0:
@@ -355,36 +354,35 @@ class BaseGrid:
         if NZ == 0:
             NZ = 1
         self.log.info("using create3DPointLookupCover")
-        # we want the diagonal of the voxel, not the diagonal of the plane, so the second 1.1547 is was incorrect
         environmentBoxEqualFillBox = True
         # np.linspace(2.0, 3.0, num=5)
         if environmentBoxEqualFillBox:  # environment.environmentBoxEqualFillBox:
             self._x = x = numpy.linspace(
                 boundingBox[0][0], boundingBox[1][0], int(NX)
-            )  # *1.1547) gridspacing is already multiplied by 1.1547
+            )
             self._y = y = numpy.linspace(
                 boundingBox[0][1], boundingBox[1][1], int(NY)
-            )  # *1.1547)
+            )
             self._z = z = numpy.linspace(
                 boundingBox[0][2], boundingBox[1][2], int(NZ)
-            )  # *1.1547)
+            )
         else:
             self._x = x = numpy.arange(
                 boundingBox[0][0], boundingBox[1][0] + space, space
-            )  # *1.1547) gridspacing is already multiplied by 1.1547
+            )
             self._y = y = numpy.arange(
                 boundingBox[0][1], boundingBox[1][1] + space, space
-            )  # *1.1547)
+            )
             self._z = z = numpy.arange(
                 boundingBox[0][2], boundingBox[1][2] + space, space
-            )  # *1.1547)
+            )
         xyz = numpy.meshgrid(x, y, z, copy=False)
         nx = len(
             x
         )  # sizes must be +1 or the right, top, and back edges don't get any points using this numpy.arange method
         ny = len(y)
         nz = len(z)
-        self.gridSpacing = (x[1] - x[0]) * 1.1547  # ? should I multiply here ?
+        self.gridSpacing = (x[1] - x[0])
         self.nbGridPoints = [nx, ny, nz]
         self.gridVolume = nx * ny * nz
         self.ijkPtIndice = numpy.ndindex(nx, ny, nz)

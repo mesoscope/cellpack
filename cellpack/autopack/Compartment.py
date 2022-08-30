@@ -2504,7 +2504,7 @@ class Compartment(CompartmentList):
 
         self.grid = grid = Grid()
         grid.boundingBox = boundingBox
-        grid.gridSpacing = spacing  # = self.smallestProteinSize*1.1547  # 2/sqrt(3)????
+        grid.gridSpacing = spacing
         helper.progressBar(label="BuildGRid")
         grid.gridVolume, grid.nbGridPoints = grid.computeGridNumberOfPoint(
             boundingBox, spacing

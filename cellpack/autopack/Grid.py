@@ -18,7 +18,7 @@ class Grid(BaseGrid):
             self, boundingBox=boundingBox, spacing=space, setup=False, lookup=lookup
         )
 
-        self.gridSpacing = space * 1.1547
+        self.gridSpacing = space
         self.encapsulatingGrid = 1
         self.gridVolume, self.nbGridPoints = self.computeGridNumberOfPoint(
             boundingBox, space

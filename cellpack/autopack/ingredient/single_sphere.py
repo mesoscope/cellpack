@@ -117,6 +117,78 @@ class SingleSphereIngr(Ingredient):
         self.encapsulating_radius = radius
         self.min_radius = radius
 
+    def collision_jitter(
+        self,
+        jtrans,
+        rotMat,
+        level,
+        gridPointsCoords,
+        current_grid_distances,
+        env,
+        dpad,
+    ):
+        """
+        Check spheres for collision
+        """
+
+        insidePoints = {}
+        newDistPoints = {}
+
+        radius_of_ing_being_packed = self.radius
+        position = jtrans
+        radius_of_area_to_check = (
+            radius_of_ing_being_packed + dpad
+        )  # extends the packing ingredient's bounding box to be large enough to include masked gridpoints of the largest possible ingrdient in the receipe
+        #  TODO: add realtime render here that shows all the points being checked by the collision
+
+        pointsToCheck = env.grid.getPointsInSphere(
+            position, radius_of_area_to_check
+        )  # indices
+        # check for collisions by looking at grid points in the sphere of radius radc
+        delta = numpy.take(gridPointsCoords, pointsToCheck, 0) - position
+        delta *= delta
+        distA = numpy.sqrt(delta.sum(1))
+
+        for pti in range(len(pointsToCheck)):
+            grid_point_index = pointsToCheck[
+                pti
+            ]  # index of master grid point that is inside the sphere
+            distance_to_packing_location = distA[
+                pti
+            ]  # is that point's distance from the center of the sphere (packing location)
+            # distance is an array of distance of closest contact to anything currently in the grid
+            collision = (
+                current_grid_distances[grid_point_index]
+                + distance_to_packing_location
+                <= radius_of_ing_being_packed
+            )
+
+            if collision:
+                # an object is too close to the sphere at this level
+                self.log.info(
+                    "grid point already occupied %f",
+                    current_grid_distances[grid_point_index],
+                )
+                return True, {}, {}
+            signed_distance_to_sphere_surface = (
+                distance_to_packing_location - radius_of_ing_being_packed
+            )
+
+            (
+                insidePoints,
+                newDistPoints,
+            ) = self.get_new_distances_and_inside_points(
+                env,
+                jtrans,
+                rotMat,
+                grid_point_index,
+                current_grid_distances,
+                newDistPoints,
+                insidePoints,
+                signed_distance_to_sphere_surface,
+            )
+        return False, insidePoints, newDistPoints
+
     def collides_with_compartment(
         self,
         jtrans,
