@@ -319,6 +319,7 @@ class Environment(CompartmentList):
         self.format_output = config["format"]
         self.use_periodicity = config["use_periodicity"]
         self.pickRandPt = not config["ordered_packing"]
+        self.show_sphere_trees = config["show_sphere_trees"]
 
         # TODO: this could come from recipe, the same way we're sending in config data
         self.boundingBox = numpy.array(recipe["bounding_box"])
