@@ -143,6 +143,7 @@ class Environment(CompartmentList):
         self.format_output = config["format"]
         self.use_periodicity = config["use_periodicity"]
         self.pickRandPt = not config["ordered_packing"]
+        self.show_sphere_trees = config["show_sphere_trees"]
 
         self.boundingBox = numpy.array(recipe["bounding_box"])
         self.name = name
@@ -1077,7 +1078,7 @@ class Environment(CompartmentList):
         compartment.setNumber(self.nbCompartments)
         self.nbCompartments += 1
 
-        fits, bb = compartment.inBox(self.boundingBox)
+        fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
 
         if not fits:
             self.boundingBox = bb

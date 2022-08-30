@@ -1,7 +1,7 @@
 {
     "name": "default-run",
     "format": "simularium",
-    "inner_grid_method": "raytrace",
+    "inner_grid_method": "trimesh",
     "live_packing": false,
     "ordered_packing": false,
     "out": "out/",
@@ -10,5 +10,6 @@
     "save_analyze_result": false,
     "show_grid_plot": false,
     "spacing": null,
-    "use_periodicity": false
+    "use_periodicity": false,
+    "show_sphere_trees": false
 }
