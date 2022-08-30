@@ -1203,6 +1203,14 @@ class AnalyseAP:
                 d = {}
                 if r:
                     for ingr in r.ingredients:
+                        if ingr.color is not None:
+                            color = (
+                                ingr.color
+                                if ingr.color[0] <= 1
+                                else numpy.array(ingr.color) / 255
+                            )
+                        else:
+                            color = None
                         if ingr.name not in distances:
                             distances[ingr.name] = []
                             ingrpositions[ingr.name] = []
@@ -1246,7 +1254,7 @@ class AnalyseAP:
                                         (p[0], p[1]),
                                         ingr.encapsulatingRadius,
                                         edgecolor="black",
-                                        facecolor=ingr.color,
+                                        facecolor=color,
                                     )
                                 )
                                 #  Plot "image" particles to verify that periodic boundary conditions are working
@@ -1257,7 +1265,7 @@ class AnalyseAP:
                                             Circle(
                                                 (p[0] + width, p[1]),
                                                 r,
-                                                facecolor=ingr.color,
+                                                facecolor=color,
                                             )
                                         )
                                     elif p[0] > (width - r):
@@ -1265,7 +1273,7 @@ class AnalyseAP:
                                             Circle(
                                                 (p[0] - width, p[1]),
                                                 r,
-                                                facecolor=ingr.color,
+                                                facecolor=color,
                                             )
                                         )
                                     if p[1] < r:
@@ -1273,7 +1281,7 @@ class AnalyseAP:
                                             Circle(
                                                 (p[0], p[1] + width),
                                                 r,
-                                                facecolor=ingr.color,
+                                                facecolor=color,
                                             )
                                         )
                                     elif p[1] > (width - r):
@@ -1281,7 +1289,7 @@ class AnalyseAP:
                                             Circle(
                                                 (p[0], p[1] - width),
                                                 r,
-                                                facecolor=ingr.color,
+                                                facecolor=color,
                                             )
                                         )
                                 if i == 0:  # len(ingrpos)-1:
@@ -1304,7 +1312,7 @@ class AnalyseAP:
                                                     (pt[0], pt[1]),
                                                     ingr.minRadius,
                                                     edgecolor="black",
-                                                    facecolor=ingr.color,
+                                                    facecolor=color,
                                                 )
                                             )
                 for o in self.env.compartments:

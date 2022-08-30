@@ -433,6 +433,7 @@ class simulariumHelper(hostHelper.Helper):
         objects,
         grid_point_positions=None,
         grid_point_compartment_ids=None,
+        show_sphere_trees=False
     ):
         self.time = 0
         for position, rotation, ingredient, ptInd in objects:
@@ -462,7 +463,26 @@ class simulariumHelper(hostHelper.Helper):
                 rotation,
                 sub_points,
             )
+            if show_sphere_trees:
+                if len(ingredient.positions) > 0:
+                    for level in range(len(ingredient.positions)):
+                        for i in range(len(ingredient.positions[level])):
+                            pos = ingredient.apply_rotation(
+                                rotation, ingredient.positions[level][i], position
+                            )
+
+                            self.add_instance(
+                                f"{ingredient.name}-spheres",
+                                ingredient,
+                                f"{ingredient.name}-{ptInd}-{i}",
+                                ingredient.radii[level][i],
+                                pos,
+                                rotation,
+                                None,
+                            )
+
         if grid_point_positions is not None:
+
             for index in range(len(grid_point_compartment_ids)):
                 if index % 1 == 0:
                     compartment_id = grid_point_compartment_ids[index]
