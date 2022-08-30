@@ -123,7 +123,7 @@ class MultiCylindersIngr(Ingredient):
         self.singleSphere = False
         self.modelType = "Cylinders"
         self.collisionLevel = 0
-        self.minRadius = self.radii[0][0]
+        self.min_radius = self.radii[0][0]
         self.useLength = useLength
         self.uLength = uLength
         self.encapsulating_radius = radii[0][0]
@@ -158,7 +158,7 @@ class MultiCylindersIngr(Ingredient):
         per ingredient once the jitter is set."""
         if self.min_distance > 0:
             return self.min_distance
-        radius = self.minRadius
+        radius = self.min_radius
         jitter = self.getMaxJitter(spacing)
 
         if self.packingMode == "close":

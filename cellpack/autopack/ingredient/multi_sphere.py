@@ -1,15 +1,15 @@
 from panda3d.core import Point3, TransformState
 from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
-from math import pi
+from math import pi, sqrt
 import numpy
 
-from cellpack.autopack.ingredient.single_sphere import SingleSphereIngr
+from .Ingredient import Ingredient
 import cellpack.autopack as autopack
 
 helper = autopack.helper
 
 
-class MultiSphereIngr(SingleSphereIngr):
+class MultiSphereIngr(Ingredient):
     """
     This Ingredient is represented by a collection of spheres specified by radii
     and positions. The principal Vector will be used to align the ingredient
@@ -22,7 +22,6 @@ class MultiSphereIngr(SingleSphereIngr):
         count=0,
         cutoff_boundary=None,
         cutoff_surface=None,
-        encapsulating_radius=0,
         excluded_partners_name=None,
         gradient="",
         isAttractor=False,
@@ -46,7 +45,6 @@ class MultiSphereIngr(SingleSphereIngr):
         perturb_axis_amplitude=0.1,
         place_type="jitter",
         positions=None,
-        positions2=None,
         principal_vector=(1, 0, 0),
         proba_binding=0.5,
         proba_not_binding=0.5,
@@ -64,10 +62,10 @@ class MultiSphereIngr(SingleSphereIngr):
     ):
         super().__init__(
             color=color,
+            cutoff_boundary=cutoff_boundary,
             coordsystem=coordsystem,
             count=count,
             cutoff_surface=cutoff_surface,
-            encapsulating_radius=encapsulating_radius,
             excluded_partners_name=excluded_partners_name,
             gradient=gradient,
             isAttractor=isAttractor,
@@ -104,7 +102,7 @@ class MultiSphereIngr(SingleSphereIngr):
             useRotAxis=useRotAxis,
             weight=weight,
         )
-        min_radius = encapsulating_radius
+        min_radius = 999
         if radii is not None:
             for level in radii:
                 if isinstance(level, dict):
@@ -113,11 +111,58 @@ class MultiSphereIngr(SingleSphereIngr):
                 else:
                     if min(level) < min_radius:
                         min_radius = min(level)
-        self.minRadius = min_radius
+        self.min_radius = min_radius
         if name is None:
             name = "%s_%f" % (str(radii), molarity)
         self.name = name
         self.singleSphere = False
+        self.set_sphere_positions(positions, radii)
+
+    def set_sphere_positions(self, positions, radii):
+        # positions and radii are passed to the constructor
+        # check the format old nested array, new array of dictionary
+        nLOD = 0
+        if positions is not None:
+            nLOD = len(positions)
+
+        self.positions = []
+        self.radii = []
+        if positions is not None and isinstance(positions[0], dict):
+            for i in range(nLOD):
+                c = numpy.array(positions[i]["coords"])
+                n = int(len(c) / 3)
+                self.positions.append(c.reshape((n, 3)).tolist())
+                self.radii.append(radii[i]["radii"])
+            if len(self.radii) == 0:
+                self.radii = [[10]]  # some default value ?
+                self.positions = [[[0, 0, 0]]]
+            self.deepest_level = len(radii) - 1
+        else:  # regular nested
+            if (
+                positions is None or positions[0] is None or positions[0][0] is None
+            ):  # [0][0]
+                positions = [[[0, 0, 0]]]
+
+            else:
+                if radii is not None:
+                    delta = numpy.array(positions[0])
+                    rM = sqrt(max(numpy.sum(delta * delta, 1)))
+                    self.encapsulating_radius = max(rM, self.encapsulating_radius)
+            # if radii is not None and positions is not None:
+            # for r, c in zip(radii, positions):
+            #     assert len(r) == len(c)
+            if radii is not None:
+                self.deepest_level = len(radii) - 1
+            if radii is None:
+                radii = [[0]]
+            self.radii = radii
+            self.positions = positions
+        if self.min_radius == 0:
+            self.min_radius = min(min(self.radii))
+        if self.encapsulating_radius <= 0.0 or self.encapsulating_radius < max(
+            self.radii[0]
+        ):
+            self.encapsulating_radius = max(self.radii[0])  #
 
     def add_rb_node(self, worldNP):
         inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))

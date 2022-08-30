@@ -1063,7 +1063,9 @@ class AnalyseAP:
                     if ingrname not in ingrrot:
                         ingrrot[ingrname] = []
                         ingrpos[ingrname] = []
-                        radius[ingrname] = data[recipe][ingrname]["encapsulating_radius"]
+                        radius[ingrname] = data[recipe][ingrname][
+                            "encapsulating_radius"
+                        ]
                     ingrrot[ingrname].append(data[recipe][ingrname]["results"][k][1])
                     ingrpos[ingrname].append(data[recipe][ingrname]["results"][k][0])
         for ingr in ingrpos:
@@ -1310,7 +1312,7 @@ class AnalyseAP:
                                             ax.add_patch(
                                                 Circle(
                                                     (pt[0], pt[1]),
-                                                    ingr.minRadius,
+                                                    ingr.min_radius,
                                                     edgecolor="black",
                                                     facecolor=color,
                                                 )

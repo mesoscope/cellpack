@@ -107,7 +107,7 @@ class SingleCubeIngr(Ingredient):
         self.collisionLevel = 0
         radii = numpy.array(radii)
 
-        self.minRadius = min(radii[0] / 2)  # should have three radii sizex,sizey,sizez
+        self.min_radius = min(radii[0] / 2)  # should have three radii sizex,sizey,sizez
         self.maxRadius = self.encapsulating_radius = numpy.linalg.norm(
             radii[0] / 2
         )  # calculate encapsulating radius based on side length

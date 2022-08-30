@@ -81,7 +81,7 @@ class Recipe:
                     if not isinstance(obj_key, dict):
                         reference_dict[obj_key] = key
                         referenced_objects.append(obj_key)
-                    else: 
+                    else:
                         obj_key = obj_key["object"]
                         referenced_objects.append(obj_key)
 
@@ -90,12 +90,7 @@ class Recipe:
         if len(root) > 1:
             raise Exception(f"Composition has multiple roots {root}")
 
-        return (
-            list(root)[0],
-            compartment_keys,
-            reference_dict,
-            referenced_objects
-        )
+        return (list(root)[0], compartment_keys, reference_dict, referenced_objects)
 
     def delIngredient(self, ingr):
         """remove the given ingredient from the recipe"""
@@ -210,14 +205,14 @@ class Recipe:
         for ingr in self.ingredients:
             if ingr.encapsulating_radius > maxi:
                 maxi = ingr.encapsulating_radius
-            if ingr.minRadius < mini:
-                mini = ingr.minRadius
+            if ingr.min_radius < mini:
+                mini = ingr.min_radius
         return mini, maxi
 
     def sort(self):
         """sort the ingredients using the min Radius"""
         # sort tuples in molecule list according to radius
-        self.ingredients.sort(key=lambda x: x.minRadius)
+        self.ingredients.sort(key=lambda x: x.min_radius)
 
     def printFillInfo(self, indent=""):
         """print the states of all recipe ingredients"""

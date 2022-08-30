@@ -28,7 +28,6 @@ class SingleSphereIngr(Ingredient):
         cutoff_surface=None,
         distExpression=None,
         distFunction=None,
-        encapsulating_radius=0,
         excluded_partners_name=None,
         force_random=False,  # avoid any binding
         gradient="",
@@ -49,17 +48,13 @@ class SingleSphereIngr(Ingredient):
         pdb=None,
         perturb_axis_amplitude=0.1,
         place_type="jitter",
-        positions=[[[0, 0, 0]]],
-        positions2=None,
         principal_vector=(1, 0, 0),
         proba_binding=0.5,
         proba_not_binding=0.5,  # chance to actually not bind
         properties=None,
-        radii=None,
         radius=None,
         rejection_threshold=30,
         resolution_dictionary=None,
-        position=None,
         sphereFile=None,
         meshFile=None,
         meshName=None,
@@ -71,11 +66,6 @@ class SingleSphereIngr(Ingredient):
         useRotAxis=True,
         weight=0.2,  # use for affinity ie partner.weight
     ):
-        # called through inheritance
-        if radii is None and radius is not None:
-            radii = [[radius]]
-        if positions is None and position is not None:
-            positions = [[position]]
         super().__init__(
             type=type,
             color=color,
@@ -107,12 +97,10 @@ class SingleSphereIngr(Ingredient):
             perturb_axis_amplitude=perturb_axis_amplitude,
             meshFile=meshFile,
             place_type=place_type,
-            positions=positions,  # positions2=None,
             principal_vector=principal_vector,
             proba_binding=proba_binding,
             proba_not_binding=proba_not_binding,
             properties=properties,
-            radii=radii,
             rotation_axis=rotation_axis,
             rotation_range=rotation_range,
             useRotAxis=useRotAxis,
@@ -125,7 +113,9 @@ class SingleSphereIngr(Ingredient):
         self.singleSphere = True
         self.mesh = None
         # min and max radius for a single sphere should be the same
-        self.encapsulating_radius = encapsulating_radius or radius
+        self.radius = radius
+        self.encapsulating_radius = radius
+        self.min_radius = radius
 
     def collides_with_compartment(
         self,
@@ -158,7 +148,7 @@ class SingleSphereIngr(Ingredient):
         grid_point_location,
         rotation_matrix=None,
     ):
-        radius = self.radii[0][0]
+        radius = self.radius
         distance_to_packing_location = numpy.linalg.norm(
             packing_location - grid_point_location
         )
@@ -168,34 +158,30 @@ class SingleSphereIngr(Ingredient):
     def get_new_distance_values(
         self, jtrans, rotMatj, gridPointsCoords, distance, dpad, level=0
     ):
-        self.centT = centT = self.transformPoints(
-            jtrans, rotMatj, self.positions[level]
-        )
-        centT = self.centT  # self.transformPoints(jtrans, rotMatj, self.positions[-1])
+
         insidePoints = {}
         newDistPoints = {}
-        for radc, posc in zip(self.radii[-1], centT):
-            rad = radc + dpad
-            ptsInSphere = self.env.grid.getPointsInSphere(posc, rad)
-            delta = numpy.take(gridPointsCoords, ptsInSphere, 0) - posc
-            delta *= delta
-            distA = numpy.sqrt(delta.sum(1))
-            for pti in range(len(ptsInSphere)):
-                pt = ptsInSphere[pti]
-                dist = distA[pti]
-                d = dist - radc
-                if d <= 0:  # point is inside dropped sphere
-                    if pt in insidePoints:
-                        if abs(d) < abs(insidePoints[pt]):
-                            insidePoints[pt] = d
-                    else:
+        padded_sphere = self.radius + dpad
+        ptsInSphere = self.env.grid.getPointsInSphere(jtrans, padded_sphere)
+        delta = numpy.take(gridPointsCoords, ptsInSphere, 0) - jtrans
+        delta *= delta
+        distA = numpy.sqrt(delta.sum(1))
+        for pti in range(len(ptsInSphere)):
+            pt = ptsInSphere[pti]
+            dist = distA[pti]
+            d = dist - self.radius
+            if d <= 0:  # point is inside dropped sphere
+                if pt in insidePoints:
+                    if abs(d) < abs(insidePoints[pt]):
                         insidePoints[pt] = d
-                elif d < distance[pt]:  # point in region of influence
-                    if pt in newDistPoints:
-                        if d < newDistPoints[pt]:
-                            newDistPoints[pt] = d
-                    else:
+                else:
+                    insidePoints[pt] = d
+            elif d < distance[pt]:  # point in region of influence
+                if pt in newDistPoints:
+                    if d < newDistPoints[pt]:
                         newDistPoints[pt] = d
+                else:
+                    newDistPoints[pt] = d
         return insidePoints, newDistPoints
 
     def add_rb_node(self, worldNP):
@@ -224,7 +210,7 @@ class SingleSphereIngr(Ingredient):
     def initialize_mesh(self, mesh_store):
         if self.mesh is None:
             self.mesh = mesh_store.create_sphere(
-                self.name + "_basic", 5, radius=self.radii[0][0]
+                self.name + "_basic", 5, radius=self.radius
             )
 
             self.getData()

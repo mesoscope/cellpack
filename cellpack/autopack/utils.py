@@ -17,8 +17,8 @@ def ingredient_compare1(x, y):
     if p1 < p2:  # p1 > p2
         return 1
     elif p1 == p2:  # p1 == p1
-        r1 = x.minRadius
-        r2 = y.minRadius
+        r1 = x.min_radius
+        r2 = y.min_radius
         if r1 > r2:  # r1 < r2
             return 1
         elif r1 == r2:  # r1 == r2
@@ -47,8 +47,8 @@ def ingredient_compare0(x, y):
     if p1 > p2:  # p1 > p2
         return 1
     elif p1 == p2:  # p1 == p1
-        r1 = x.minRadius
-        r2 = y.minRadius
+        r1 = x.min_radius
+        r2 = y.min_radius
         if r1 > r2:  # r1 < r2
             return 1
         elif r1 == r2:  # r1 == r2
@@ -72,8 +72,8 @@ def ingredient_compare2(x, y):
     for radii matches:
     priority = 0
     """
-    c1 = x.minRadius
-    c2 = y.minRadius
+    c1 = x.min_radius
+    c2 = y.min_radius
     if c1 < c2:
         return 1
     elif c1 == c2:

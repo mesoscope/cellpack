@@ -435,7 +435,7 @@ class simulariumHelper(hostHelper.Helper):
         objects,
         grid_point_positions=None,
         grid_point_compartment_ids=None,
-        show_sphere_trees=False
+        show_sphere_trees=False,
     ):
         self.time = 0
         for position, rotation, ingredient, ptInd in objects:
@@ -455,7 +455,6 @@ class simulariumHelper(hostHelper.Helper):
                     name=ingr_name, display_type=display_type, url=url
                 )
             radius = ingredient.encapsulating_radius if ingredient is not None else 10
-
             self.add_instance(
                 ingredient.name,
                 ingredient,
@@ -465,8 +464,9 @@ class simulariumHelper(hostHelper.Helper):
                 rotation,
                 sub_points,
             )
-            if show_sphere_trees:
+            if show_sphere_trees and hasattr(ingredient, "positions"):
                 if len(ingredient.positions) > 0:
+                    print("positions", ingredient.positions, ingredient.radii)
                     for level in range(len(ingredient.positions)):
                         for i in range(len(ingredient.positions[level])):
                             pos = ingredient.apply_rotation(

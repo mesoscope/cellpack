@@ -131,7 +131,6 @@ class Environment(CompartmentList):
         self.config_data = config
         self.recipe_data = recipe
 
-
         name = recipe["name"]
         self.log = logging.getLogger("env")
         self.log.propagate = False
@@ -304,10 +303,10 @@ class Environment(CompartmentList):
         objects_dict = self.recipe_data["objects"]
         object_key = composition_info["object"]
         base_object = objects_dict[object_key]
-        ingredient_info = deep_merge(
-            copy.deepcopy(base_object), composition_info
+        ingredient_info = deep_merge(copy.deepcopy(base_object), composition_info)
+        ingredient_info["name"] = (
+            ingredient_name if ingredient_name is not None else object_key
         )
-        ingredient_info["name"] = ingredient_name if ingredient_name is not None else object_key
         return ingredient_info
 
     def _step_down(self, compartment_key):
@@ -315,7 +314,8 @@ class Environment(CompartmentList):
         compartment = self.create_compartment(compartment_key)
         compartment_info = composition_dict[compartment_key]
         for region_name, obj_keys in compartment_info.get(
-                "regions", {}).items():  # check if entry in compositions has regions
+            "regions", {}
+        ).items():  # check if entry in compositions has regions
             recipe = Recipe(name=f"{compartment_key}_{region_name}")
             for key_or_dict in obj_keys:
                 if not isinstance(key_or_dict, dict):
@@ -325,7 +325,9 @@ class Environment(CompartmentList):
                         return self._step_down(key)
                     else:
                         composition_info = composition_dict[key]
-                        ingredient_info = self._prep_ingredient_info(composition_info, key)
+                        ingredient_info = self._prep_ingredient_info(
+                            composition_info, key
+                        )
                         self.create_ingredient(recipe, ingredient_info)
                 else:
                     composition_info = key_or_dict
@@ -359,7 +361,9 @@ class Environment(CompartmentList):
 
                         else:
                             composition_info = composition_dict[key]
-                            ingredient_info = self._prep_ingredient_info(composition_info, key)
+                            ingredient_info = self._prep_ingredient_info(
+                                composition_info, key
+                            )
                             self.create_ingredient(external_recipe, **ingredient_info)
                     else:
                         composition_info = key_or_dict
@@ -1022,9 +1026,13 @@ class Environment(CompartmentList):
             or ingredient_type == "Actine"
             or ingredient_type == "MultiCylinder"
         ):
-            arguments = IOutils.IOingredientTool.clean_arguments(GrowIngredient.ARGUMENTS, **arguments)
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                GrowIngredient.ARGUMENTS, **arguments
+            )
         else:
-            arguments = IOutils.IOingredientTool.clean_arguments(Ingredient.ARGUMENTS, **arguments)
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
         if ingredient_type == "single_sphere":
             ingr = SingleSphereIngr(**arguments)
         elif ingredient_type == "multi_sphere":
@@ -1429,7 +1437,7 @@ class Environment(CompartmentList):
         mr = self.get_dpad(ingr.compNum)
         spacing = self.smallestProteinSize
         jitter = ingr.getMaxJitter(spacing)
-        dpad = ingr.minRadius + mr + jitter
+        dpad = ingr.min_radius + mr + jitter
         insidePoints, newDistPoints = ingr.getInsidePoints(
             self.grid,
             self.grid.masterGridPositions,
@@ -1542,7 +1550,7 @@ class Environment(CompartmentList):
         #     e.g. an ingredient with a priority=10 will be 10x more likely to be picked than
         #     an ingredient with a priority=1.
         # An ingredient with the default priority=0 will recieve a weighted value based on its
-        #     complexity. (currently complexity = minRadius), thus a more 'complex' ingredient
+        #     complexity. (currently complexity = min_radius), thus a more 'complex' ingredient
         #     will more likely try to pack before a less 'complex' ingredient.
         #     IMPORTANT: the +priority list does not fully mix with the priority=0 list, but this
         #     should be an option... currently, the priority=0 list is normalized against a range
@@ -1594,11 +1602,11 @@ class Environment(CompartmentList):
         self.totalRadii = 0
         for radii in ingr2:
             if radii.modelType == "Cylinders":
-                r = max(radii.length / 2.0, radii.minRadius)
+                r = max(radii.length / 2.0, radii.min_radius)
             elif radii.modelType == "Spheres":
-                r = radii.minRadius
+                r = radii.min_radius
             elif radii.modelType == "Cube":
-                r = radii.minRadius
+                r = radii.min_radius
             self.totalRadii = self.totalRadii + r
             self.log.info("self.totalRadii += %d = %d", r, self.totalRadii)
             if r == 0:
@@ -1608,9 +1616,9 @@ class Environment(CompartmentList):
         self.normalizedPriorities0 = []
         for priors2 in ingr2:
             if priors2.modelType == "Cylinders":
-                r = max(priors2.length / 2.0, priors2.minRadius)
+                r = max(priors2.length / 2.0, priors2.min_radius)
             elif priors2.modelType == "Spheres":
-                r = priors2.minRadius
+                r = priors2.min_radius
             np = float(r) / float(self.totalRadii) * self.lowestPriority
             self.normalizedPriorities0.append(np)
             priors2.packingPriority = np
@@ -2142,7 +2150,7 @@ class Environment(CompartmentList):
             max_radius = self.get_dpad(current_ingr_compartment)
 
             self.log.info(
-                f"picked Ingr radius {ingr.minRadius}, compNum {current_ingr_compartment}"
+                f"picked Ingr radius {ingr.min_radius}, compNum {current_ingr_compartment}"
             )
 
             # find the points that can be used for this ingredient

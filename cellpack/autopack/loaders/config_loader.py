@@ -48,7 +48,7 @@ class ConfigLoader(object):
         "show_grid_plot": False,
         "spacing": None,
         "use_periodicity": False,
-        "show_sphere_trees": False
+        "show_sphere_trees": False,
     }
 
     def __init__(self, input_file_path):

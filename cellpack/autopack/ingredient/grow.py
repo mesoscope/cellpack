@@ -144,7 +144,7 @@ class GrowIngredient(MultiCylindersIngr):
         self.singleSphere = False
         self.modelType = modelType
         self.collisionLevel = 0
-        self.minRadius = self.radii[0][0]
+        self.min_radius = self.radii[0][0]
         self.marge = marge
         self.length = length
         self.closed = closed
@@ -374,7 +374,9 @@ class GrowIngredient(MultiCylindersIngr):
             return None
         ptIndr = int(uniform(0.0, 1.0) * len(pointsmask))
         sp_pt_indice = pointsmask[ptIndr]
-        np = numpy.array(self.sphere_points[sp_pt_indice]) * numpy.array(self.jitter_max)
+        np = numpy.array(self.sphere_points[sp_pt_indice]) * numpy.array(
+            self.jitter_max
+        )
         return (
             numpy.array(self.vi.unit_vector(np)) * self.uLength
         )  # biased by jitter_max ?
@@ -871,19 +873,19 @@ class GrowIngredient(MultiCylindersIngr):
     def getInterpolatedSphere(self, pt1, pt2):
         v, d = self.vi.measure_distance(pt1, pt2, vec=True)
         #        d=self.uLength
-        sps = numpy.arange(0, d, self.minRadius * 2)
+        sps = numpy.arange(0, d, self.min_radius * 2)
         r = []
         p = []
         pt1 = numpy.array(pt1)
         pt2 = numpy.array(pt2)
         vn = numpy.array(v) / numpy.linalg.norm(numpy.array(v))  # normalized
         p.append(pt1)
-        r.append(self.minRadius)
+        r.append(self.min_radius)
         for i, sp in enumerate(sps[1:]):
-            r.append(self.minRadius)
+            r.append(self.min_radius)
             p.append(pt1 + (vn * sp))
         p.append(pt2)
-        r.append(self.minRadius)
+        r.append(self.min_radius)
         return [r, p]
 
     def addRBsegment(self, pt1, pt2, nodeid=""):
@@ -1082,7 +1084,10 @@ class GrowIngredient(MultiCylindersIngr):
                     if marge >= 175:
                         attempted += 1
                         continue
-                    if attempted % (self.rejection_threshold / 3) == 0 and not alternate:
+                    if (
+                        attempted % (self.rejection_threshold / 3) == 0
+                        and not alternate
+                    ):
                         marge += 1
                         attempted = 0
                         # need to recompute the mask

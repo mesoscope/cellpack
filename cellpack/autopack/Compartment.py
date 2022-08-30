@@ -207,8 +207,14 @@ class Compartment(CompartmentList):
         # not the one provides
         # to compute inside points.
         self.isBox = object_info["bounding_box"] is not None
-        self.bounding_box = object_info["bounding_box"] if object_info["bounding_box"] is not None else None
-        self.isOrthogonalBoundingBox = 1 if object_info["bounding_box"] is not None else None
+        self.bounding_box = (
+            object_info["bounding_box"]
+            if object_info["bounding_box"] is not None
+            else None
+        )
+        self.isOrthogonalBoundingBox = (
+            1 if object_info["bounding_box"] is not None else None
+        )
 
         self.grid_type = "regular"
         self.grid_distances = None  # signed closest distance for each point

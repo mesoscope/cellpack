@@ -29,7 +29,6 @@
                 0.01
             ],
             "perturb_axis_amplitude": 0.1,
-            "encapsulating_radius": 100,
             "packing": {
                 "mode": "random"
             },

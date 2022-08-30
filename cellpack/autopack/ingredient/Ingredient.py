@@ -50,7 +50,7 @@ import numpy
 import logging
 import collada
 from scipy.spatial.transform import Rotation as R
-from math import sqrt, pi
+from math import pi
 from random import uniform, gauss, random
 from time import time
 import math
@@ -177,7 +177,7 @@ class Ingredient(Agent):
 
     def __init__(
         self,
-        type="MultiSphere",
+        type="single_sphere",
         color=None,
         coordsystem="right",
         count=0,
@@ -309,7 +309,7 @@ class Ingredient(Agent):
         self.bullet_nodes = [None, None]  # try only store 2, and move them when needd
         self.limit_nb_nodes = 50
         self.vi = autopack.helper
-        self.minRadius = 0
+        self.min_radius = 1
         self.min_distance = 0
         self.encapsulating_radius = encapsulating_radius
         self.deepest_level = 1
@@ -332,12 +332,12 @@ class Ingredient(Agent):
                     data = numpy.loadtxt(sphereFileo, converters={0: lambda s: 0})
                     positions = data[:, 1:4]
                     radii = data[:, 4]
-                    self.minRadius = min(radii)
+                    self.min_radius = min(radii)
                     # np.apply_along_axis(np.linalg.norm, 1, c)
                     self.encapsulating_radius = max(
                         numpy.sqrt(numpy.einsum("ij,ij->i", positions, positions))
                     )  # shoud be max distance
-                    self.minRadius = self.encapsulating_radius
+                    self.min_radius = self.encapsulating_radius
                     positions = [positions]
                     radii = [radii]
                 elif fileExtension == ".sph":
@@ -346,14 +346,14 @@ class Ingredient(Agent):
                     )
                     # if a user didn't set this properly before
                     if not len(radii):
-                        self.minRadius = 1.0
+                        self.min_radius = 1.0
                         self.encapsulating_radius = 1.0
                     else:
-                        # minRadius is used to compute grid spacing. It represents the
+                        # min_radius is used to compute grid spacing. It represents the
                         # smallest radius around the anchor point(i.e.
                         # the point where the
                         # ingredient is dropped that needs to be free
-                        self.minRadius = min_radius
+                        self.min_radius = min_radius
                         # encapsulating_radius is the radius of the sphere
                         # centered at 0,0,0
                         # and encapsulate the ingredient
@@ -362,7 +362,6 @@ class Ingredient(Agent):
                     self.log.info(
                         "sphere file extension not recognized %r", fileExtension
                     )
-        self.set_sphere_positions(positions, radii)
 
         self.positions2 = positions2
         self.children = children
@@ -389,7 +388,9 @@ class Ingredient(Agent):
         self.vol_nbmol = 0
 
         # Packing tracking values
-        self.jitter_attempts = jitter_attempts  # number of jitter attempts for translation
+        self.jitter_attempts = (
+            jitter_attempts  # number of jitter attempts for translation
+        )
         self.nbPts = 0
         self.allIngrPts = (
             []
@@ -400,10 +401,7 @@ class Ingredient(Agent):
         self.verts = None
         self.rad = None
         self.rapid_model = None
-        if self.encapsulating_radius <= 0.0 or self.encapsulating_radius < max(
-            self.radii[0]
-        ):
-            self.encapsulating_radius = max(self.radii[0])  #
+
         # TODO : geometry : 3d object or procedural from PDB
         # TODO : usekeyword resolution->options dictionary of res :
         # TODO : {"simple":{"cms":{"parameters":{"gridres":12}},
@@ -458,48 +456,6 @@ class Ingredient(Agent):
         self.score = ""
         self.organism = ""
         # add tiling property ? as any ingredient coud tile as hexagon. It is just the packing type
-
-    def set_sphere_positions(self, positions, radii):
-        # positions and radii are passed to the constructor
-        # check the format old nested array, new array of dictionary
-        nLOD = 0
-        if positions is not None:
-            nLOD = len(positions)
-
-        self.positions = []
-        self.radii = []
-        if positions is not None and isinstance(positions[0], dict):
-            for i in range(nLOD):
-                c = numpy.array(positions[i]["coords"])
-                n = int(len(c) / 3)
-                self.positions.append(c.reshape((n, 3)).tolist())
-                self.radii.append(radii[i]["radii"])
-            if len(self.radii) == 0:
-                self.radii = [[10]]  # some default value ?
-                self.positions = [[[0, 0, 0]]]
-            self.deepest_level = len(radii) - 1
-        else:  # regular nested
-            if (
-                positions is None or positions[0] is None or positions[0][0] is None
-            ):  # [0][0]
-                positions = [[[0, 0, 0]]]
-
-            else:
-                if radii is not None:
-                    delta = numpy.array(positions[0])
-                    rM = sqrt(max(numpy.sum(delta * delta, 1)))
-                    self.encapsulating_radius = max(rM, self.encapsulating_radius)
-            # if radii is not None and positions is not None:
-            # for r, c in zip(radii, positions):
-            #     assert len(r) == len(c)
-            if radii is not None:
-                self.deepest_level = len(radii) - 1
-            if radii is None:
-                radii = [[0]]
-            self.radii = radii
-            self.positions = positions
-        if self.minRadius == 0:
-            self.minRadius = min(min(self.radii))
 
     def reset(self):
         """reset the states of an ingredient"""
@@ -717,7 +673,9 @@ class Ingredient(Agent):
                 (v * v).sum(axis=1)
             )  # FloatingPointError: underflow encountered in multiply
             r = float(max(length)) + 15.0
-            self.log.info("self.encapsulating_radius %r %r", self.encapsulating_radius, r)
+            self.log.info(
+                "self.encapsulating_radius %r %r", self.encapsulating_radius, r
+            )
             self.encapsulating_radius = r
         except Exception:
             pass
@@ -935,7 +893,7 @@ class Ingredient(Agent):
         per ingredient once the jitter is set."""
         if self.min_distance > 0:
             return self.min_distance
-        radius = self.minRadius
+        radius = self.min_radius
         jitter = self.getMaxJitter(spacing)
 
         if self.packingMode == "close":
@@ -1472,7 +1430,9 @@ class Ingredient(Agent):
         inComp = True
         closeS = False
         inside = self.env.grid.checkPointInside(
-            newPt, dist=self.cutoff_boundary, jitter=getNormedVectorOnes(self.jitter_max)
+            newPt,
+            dist=self.cutoff_boundary,
+            jitter=getNormedVectorOnes(self.jitter_max),
         )
         if inside:
             inComp = self.checkPointComp(newPt)
@@ -1517,10 +1477,10 @@ class Ingredient(Agent):
         if histoVol.windowsSize_overwrite:
             rad = histoVol.windowsSize
         else:
-            #            rad = self.minRadius*2.0# + histoVol.largestProteinSize + \
+            #            rad = self.min_radius*2.0# + histoVol.largestProteinSize + \
             # histoVol.smallestProteinSize + histoVol.windowsSize
             rad = (
-                self.minRadius
+                self.min_radius
                 + histoVol.largestProteinSize
                 + histoVol.smallestProteinSize
                 + histoVol.windowsSize
@@ -2014,7 +1974,7 @@ class Ingredient(Agent):
     ):
         success = False
         jitter = self.getMaxJitter(spacing)
-        dpad = self.minRadius + max_radius + jitter
+        dpad = self.min_radius + max_radius + jitter
         self.vi = autopack.helper
         self.env = env  # NOTE: do we need to store the env on the ingredient?
         self.log.info(
