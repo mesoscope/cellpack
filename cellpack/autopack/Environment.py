@@ -1209,7 +1209,7 @@ class Environment(CompartmentList):
         compartment.setNumber(self.nbCompartments)
         self.nbCompartments += 1
 
-        fits, bb = compartment.inBox(self.boundingBox)
+        fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
 
         if not fits:
             self.boundingBox = bb
