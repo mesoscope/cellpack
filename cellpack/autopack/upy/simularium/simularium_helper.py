@@ -433,7 +433,7 @@ class simulariumHelper(hostHelper.Helper):
         objects,
         grid_point_positions=None,
         grid_point_compartment_ids=None,
-        show_sphere_trees=False
+        show_sphere_trees=False,
     ):
         self.time = 0
         for position, rotation, ingredient, ptInd in objects:
