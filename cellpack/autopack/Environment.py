@@ -1282,7 +1282,7 @@ class Environment(CompartmentList):
             # save bb for current fill
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
-            spacing = self.smallestProteinSize # * 1.1547
+            spacing = self.smallestProteinSize  # * 1.1547
             self.grid = Grid(boundingBox=boundingBox, spacing=spacing, lookup=lookup)
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
