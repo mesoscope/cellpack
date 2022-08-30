@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    cellpack.autopack.ingredient
+   cellpack.autopack.loaders
    cellpack.autopack.upy
 
 Submodules
@@ -117,14 +118,6 @@ cellpack.autopack.binvox\_rw module
    :undoc-members:
    :show-inheritance:
 
-cellpack.autopack.iotools\_simple module
-----------------------------------------
-
-.. automodule:: cellpack.autopack.iotools_simple
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 cellpack.autopack.ldSequence module
 -----------------------------------
 
@@ -177,6 +170,14 @@ cellpack.autopack.transformation module
 ---------------------------------------
 
 .. automodule:: cellpack.autopack.transformation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.utils module
+------------------------------
+
+.. automodule:: cellpack.autopack.utils
    :members:
    :undoc-members:
    :show-inheritance:

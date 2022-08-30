@@ -1,0 +1,29 @@
+cellpack.autopack.loaders package
+=================================
+
+Submodules
+----------
+
+cellpack.autopack.loaders.config\_loader module
+-----------------------------------------------
+
+.. automodule:: cellpack.autopack.loaders.config_loader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.loaders.recipe\_loader module
+-----------------------------------------------
+
+.. automodule:: cellpack.autopack.loaders.recipe_loader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: cellpack.autopack.loaders
+   :members:
+   :undoc-members:
+   :show-inheritance:

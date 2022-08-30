@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cellpack.autopack.upy &mdash; cellPack 1.0.0 documentation</title>
+  <title>cellpack.autopack.utils &mdash; cellPack 1.0.0 documentation</title>
   
 
   
@@ -257,7 +257,7 @@
         
           <li><a href="../autopack.html">cellpack.autopack</a> &raquo;</li>
         
-      <li>cellpack.autopack.upy</li>
+      <li>cellpack.autopack.utils</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -272,58 +272,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for cellpack.autopack.upy</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="getHClass"><a class="viewcode-back" href="../../../cellpack.autopack.upy.html#cellpack.autopack.upy.getHClass">[docs]</a><span></span><span class="k">def</span> <span class="nf">getHClass</span><span class="p">(</span><span class="n">host</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return the base class for modelling design according the provide host.</span>
-
-<span class="sd">    @type  host: string</span>
-<span class="sd">    @param host: name of the host application</span>
-
-<span class="sd">    @rtype:   Class</span>
-<span class="sd">    @return:  the specific ui class</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># print globals()</span>
-
-    <span class="k">if</span> <span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;simularium&quot;</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">.simularium.simularium_helper</span> <span class="kn">import</span> <span class="n">simulariumHelper</span> <span class="k">as</span> <span class="n">helper</span>
-
-        <span class="c1"># from .dejavuTk.dejavuHelper import dejavuHelper as helper</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">helper</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">return</span> <span class="n">helper</span></div>
+  <h1>Source code for cellpack.autopack.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span>
 
 
-<div class="viewcode-block" id="retrieveHost"><a class="viewcode-back" href="../../../cellpack.autopack.upy.html#cellpack.autopack.upy.retrieveHost">[docs]</a><span class="k">def</span> <span class="nf">retrieveHost</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Retrieve the 3d host application where the script is running.</span>
-
-<span class="sd">    @rtype:   string</span>
-<span class="sd">    @return:  the name of the host, ie blender, maya or c4d</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">host</span>
-    <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;simularium&quot;</span>
-    <span class="k">return</span> <span class="n">host</span></div>
-
-
-<div class="viewcode-block" id="getHelperClass"><a class="viewcode-back" href="../../../cellpack.autopack.upy.html#cellpack.autopack.upy.getHelperClass">[docs]</a><span class="k">def</span> <span class="nf">getHelperClass</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return the base class for modelling design according the provide host.</span>
-<span class="sd">    If the host is not provide,retrieveHost() will be called to guess the host.</span>
-
-<span class="sd">    @type  host: string</span>
-<span class="sd">    @param host: name of the host application</span>
-
-<span class="sd">    @rtype:   Class</span>
-<span class="sd">    @return:  the specific ui class</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">helper</span>
-    <span class="k">if</span> <span class="n">host</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">host</span> <span class="o">=</span> <span class="n">retrieveHost</span><span class="p">()</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">host</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>
-    <span class="n">helper</span> <span class="o">=</span> <span class="n">getHClass</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">helper</span></div>
+<div class="viewcode-block" id="get_distance"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.get_distance">[docs]</a><span class="k">def</span> <span class="nf">get_distance</span><span class="p">(</span><span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pt2</span> <span class="o">-</span> <span class="n">pt1</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
