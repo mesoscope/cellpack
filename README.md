@@ -6,19 +6,16 @@
 
 algorithm to pack molecular recipes
 
+### Prerequisite 
+1. Install Conda: https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html
 
 ### Setup 
 1. create a virtual env: `conda create -n autopack`
-2. `activate autopack`
+2. `conda activate autopack`
 3. `pip install -e .[dev]`
 
-### Run analysis code
-By default analyze will run all packing methods on `cellpack/test-recipes/NM_Analysis_FigureB1.0.json
-Examples:
-* `analyze -o [PATH/TO/OUTPUT/FOLDER]` will create subfolders for each packing method at your output folder
-* To run just one packing method: `analyze -o [PATH/TO/OUTPUT/FOLDER] -p jitter`
-* To change the dimension of the packing: `analyze -r cellpack/test-recipes/NM_Analysis_FigureC1.json  -o /Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_1 -d 3`
-* Turn off plotly plot: `analyze -o [PATH/TO/OUTPUT/FOLDER] -ng` or `analyze -o [PATH/TO/OUTPUT/FOLDER] --no-grid-plot`
+### Run pack code
+1. example pack recipe : `pack -r  cellpack/test-recipes/NM_Analysis_FigureB1.0.json  -c packing-configs/run.json`
 
 ### Run conversion code 
 * To convert to simularium and view at https://staging.simularium.allencell.org/viewer
