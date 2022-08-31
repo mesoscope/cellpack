@@ -43,7 +43,6 @@
 # Updated with Correct Sept 25, 2011 thesis version on July 5, 2012
 
 # TODO: Describe Ingredient class here at high level
-import os
 from scipy import spatial
 from panda3d.bullet import BulletRigidBodyNode
 import numpy
@@ -135,7 +134,8 @@ class Ingredient(Agent):
         "distFunction",
         "encapsulating_radius",
         "excluded_partners_name",
-        "force_randoom" "isAttractor",
+        "force_random",
+        "isAttractor",
         "jitter_max",
         "meshFile",
         "meshName",

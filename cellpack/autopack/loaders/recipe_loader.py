@@ -24,6 +24,7 @@ class RecipeLoader(object):
         self.file_extension = file_extension
         self.ingredient_list = []
         self.compartment_list = []
+        autopack.current_recipe_path = os.path.dirname(self.file_path)
         self.recipe_data = self._read()
 
     @staticmethod
@@ -81,6 +82,13 @@ class RecipeLoader(object):
         new_values = json.load(open(self.file_path, "r"))
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
+
+        if (
+            "format_version" not in recipe_data
+            or recipe_data["format_version"] != self.latest_version
+        ):
+            recipe_data = RecipeLoader._migrate_version(recipe_data)
+        
         # TODO: request any external data before returning
         if "objects" in recipe_data:
             recipe_data["objects"] = RecipeLoader.resolve_inheritance(

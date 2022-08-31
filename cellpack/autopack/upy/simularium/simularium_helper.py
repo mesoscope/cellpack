@@ -466,7 +466,6 @@ class simulariumHelper(hostHelper.Helper):
             )
             if show_sphere_trees and hasattr(ingredient, "positions"):
                 if len(ingredient.positions) > 0:
-                    print("positions", ingredient.positions, ingredient.radii)
                     for level in range(len(ingredient.positions)):
                         for i in range(len(ingredient.positions[level])):
                             pos = ingredient.apply_rotation(

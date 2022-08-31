@@ -9,25 +9,16 @@
             0
         ],
         [
-            100,
-            100,
-            100
+            1000,
+            1000,
+            1000
         ]
     ],
     "objects": {
         "base": {
             "jitter_attempts": 10,
-            "orient_bias_range": [
-                -3.1415927,
-                3.1415927
-            ],
             "rotation_range": 6.2831,
             "cutoff_boundary": 0,
-            "jitter_max": [
-                0.2,
-                0.2,
-                0.01
-            ],
             "perturb_axis_amplitude": 0.1,
             "packing": {
                 "mode": "random"
@@ -41,8 +32,8 @@
             "place_type": "jitter",
             "cutoff_surface": 42,
             "rotation_axis": [
-                0,
-                0,
+                1,
+                1,
                 1
             ],
             "available_regions": {
@@ -62,11 +53,11 @@
             ],
             "weight": 0.25,
             "coordinate_system": "left",
-            "sphereFile": "test.sph",
+            "sphereFile": "../test.sph",
             "jitter_max": [
                 1,
                 1,
-                0
+                1
             ]
         }
     },
@@ -80,7 +71,7 @@
         },
         "A": {
             "object": "sphere_25",
-            "count": 10
+            "count": 100
         }
     }
 }

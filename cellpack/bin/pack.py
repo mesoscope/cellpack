@@ -35,7 +35,6 @@ def pack(recipe, config):
     autopack.helper = helper
 
     env = Environment(config=config_data, recipe=recipe_data)
-    env.create_objects()
     env.helper = helper
 
     afviewer = None

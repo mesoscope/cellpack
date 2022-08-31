@@ -123,8 +123,7 @@ class MultiSphereIngr(Ingredient):
             sphereFileo = autopack.retrieveFile(sphereFile, cache="collisionTrees")
             fileName, fileExtension = os.path.splitext(sphereFile)
             self.log.info("sphereTree %r", sphereFileo)
-            
-            import ipdb; ipdb.set_trace()
+
             if sphereFileo is not None and os.path.isfile(sphereFileo):
                 self.sphereFile = sphereFile
                 sphereFile = sphereFileo
@@ -189,7 +188,6 @@ class MultiSphereIngr(Ingredient):
         centers = []
         children = []
         line = 2
-        import ipdb; ipdb.set_trace()
         for level in range(nblevels):
             rl = []
             cl = []
@@ -269,7 +267,6 @@ class MultiSphereIngr(Ingredient):
         """
         Check spheres for collision
         """
-        import ipdb; ipdb.set_trace()
         centers = self.positions[level]
         radii = self.radii[level]
         # should we also check for outside the main grid ?
