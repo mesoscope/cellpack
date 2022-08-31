@@ -1,3 +1,4 @@
+import os
 from panda3d.core import Point3, TransformState
 from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
 from math import pi, sqrt
@@ -116,7 +117,98 @@ class MultiSphereIngr(Ingredient):
             name = "%s_%f" % (str(radii), molarity)
         self.name = name
         self.singleSphere = False
+        self.sphereFile = sphereFile
+        print("sphereFile", sphereFile)
+        if sphereFile is not None and str(sphereFile) != "None":
+            sphereFileo = autopack.retrieveFile(sphereFile, cache="collisionTrees")
+            fileName, fileExtension = os.path.splitext(sphereFile)
+            self.log.info("sphereTree %r", sphereFileo)
+            
+            import ipdb; ipdb.set_trace()
+            if sphereFileo is not None and os.path.isfile(sphereFileo):
+                self.sphereFile = sphereFile
+                sphereFile = sphereFileo
+                if fileExtension == ".mstr":  # BD_BOX format
+                    data = numpy.loadtxt(sphereFileo, converters={0: lambda s: 0})
+                    positions = data[:, 1:4]
+                    radii = data[:, 4]
+                    self.min_radius = min(radii)
+                    # np.apply_along_axis(np.linalg.norm, 1, c)
+                    self.encapsulating_radius = max(
+                        numpy.sqrt(numpy.einsum("ij,ij->i", positions, positions))
+                    )  # shoud be max distance
+                    self.min_radius = self.encapsulating_radius
+                    positions = [positions]
+                    radii = [radii]
+                elif fileExtension == ".sph":
+                    min_radius, rM, positions, radii, children = self.getSpheres(
+                        sphereFileo
+                    )
+                    # if a user didn't set this properly before
+                    if not len(radii):
+                        self.min_radius = 1.0
+                        self.encapsulating_radius = 1.0
+                    else:
+                        # min_radius is used to compute grid spacing. It represents the
+                        # smallest radius around the anchor point(i.e.
+                        # the point where the
+                        # ingredient is dropped that needs to be free
+                        self.min_radius = min_radius
+                        # encapsulating_radius is the radius of the sphere
+                        # centered at 0,0,0
+                        # and encapsulate the ingredient
+                        self.encapsulating_radius = rM
+                else:
+                    self.log.info(
+                        "sphere file extension not recognized %r", fileExtension
+                    )
         self.set_sphere_positions(positions, radii)
+    
+    def getSpheres(self, sphereFile):
+        """
+        get spherical approximation of shape
+        """
+        # file format is space separated
+        # float:Rmin float:Rmax
+        # int:number of levels
+        # int: number of spheres in first level
+        # x y z r i j k ...# first sphere in first level and 0-based indices
+        # of spheres in next level covererd by this sphere
+        # ...
+        # int: number of spheres in second level
+        f = open(sphereFile)
+        datao = f.readlines()
+        f.close()
+
+        # strip comments
+        data = [x for x in datao if x[0] != "#" and len(x) > 1 and x[0] != "\r"]
+
+        rmin, rmax = list(map(float, data[0].split()))
+        nblevels = int(data[1])
+        radii = []
+        centers = []
+        children = []
+        line = 2
+        import ipdb; ipdb.set_trace()
+        for level in range(nblevels):
+            rl = []
+            cl = []
+            ch = []
+            nbs = int(data[line])
+            line += 1
+            for n in range(nbs):
+                w = data[line].split()
+                x, y, z, r = list(map(float, w[:4]))
+                if level < nblevels - 1:  # get sub spheres indices
+                    ch.append(list(map(int, w[4:])))
+                cl.append((x, y, z))
+                rl.append(r)
+                line += 1
+            centers.append(cl)
+            radii.append(rl)
+            children.append(ch)
+        # we ignore the hierarchy for now
+        return rmin, rmax, centers, radii, children
 
     def set_sphere_positions(self, positions, radii):
         # positions and radii are passed to the constructor
@@ -177,6 +269,7 @@ class MultiSphereIngr(Ingredient):
         """
         Check spheres for collision
         """
+        import ipdb; ipdb.set_trace()
         centers = self.positions[level]
         radii = self.radii[level]
         # should we also check for outside the main grid ?
