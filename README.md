@@ -10,7 +10,7 @@ algorithm to pack molecular recipes
 1. Install Conda: https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html
 
 ### Setup 
-1. create a virtual env: `conda create -n autopack`
+1. create a virtual env: `conda create -n autopack python=3.9`
 2. `conda activate autopack`
 3. `pip install -e .[dev]`
 
