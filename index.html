@@ -290,24 +290,25 @@
 <a class="reference external image-reference" href="https://mesoscope.github.io/cellpack/"><img alt="Documentation" src="https://github.com/mesoscope/cellpack/workflows/Documentation/badge.svg" /></a>
 <a class="reference external image-reference" href="https://codecov.io/gh/mesoscope/cellpack"><img alt="Code Coverage" src="https://codecov.io/gh/mesoscope/cellpack/branch/main/graph/badge.svg" /></a>
 <p>algorithm to pack molecular recipes</p>
+<section id="prerequisite">
+<h2>Prerequisite<a class="headerlink" href="#prerequisite" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Install Conda: <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html">https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html</a></p></li>
+</ol>
+</section>
 <section id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
-<li><p>create a virtual env: <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span> <span class="pre">-n</span> <span class="pre">autopack</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">activate</span> <span class="pre">autopack</span></code></p></li>
+<li><p>create a virtual env: <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span> <span class="pre">-n</span> <span class="pre">autopack</span> <span class="pre">python=3.9</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">autopack</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.[dev]</span></code></p></li>
 </ol>
 </section>
-<section id="run-analysis-code">
-<h2>Run analysis code<a class="headerlink" href="#run-analysis-code" title="Permalink to this heading">¶</a></h2>
-<p>By default analyze will run all packing methods on <a href="#id1"><span class="problematic" id="id2">`</span></a>cellpack/test-recipes/NM_Analysis_FigureB1.0.json
-Examples:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">analyze</span> <span class="pre">-o</span> <span class="pre">[PATH/TO/OUTPUT/FOLDER]</span></code> will create subfolders for each packing method at your output folder</p></li>
-<li><p>To run just one packing method: <code class="docutils literal notranslate"><span class="pre">analyze</span> <span class="pre">-o</span> <span class="pre">[PATH/TO/OUTPUT/FOLDER]</span> <span class="pre">-p</span> <span class="pre">jitter</span></code></p></li>
-<li><p>To change the dimension of the packing: <code class="docutils literal notranslate"><span class="pre">analyze</span> <span class="pre">-r</span> <span class="pre">cellpack/test-recipes/NM_Analysis_FigureC1.json</span>&#160; <span class="pre">-o</span> <span class="pre">/Users/meganriel-mehan/Dropbox/cellPack/NM_Analysis_C_1</span> <span class="pre">-d</span> <span class="pre">3</span></code></p></li>
-<li><p>Turn off plotly plot: <code class="docutils literal notranslate"><span class="pre">analyze</span> <span class="pre">-o</span> <span class="pre">[PATH/TO/OUTPUT/FOLDER]</span> <span class="pre">-ng</span></code> or <code class="docutils literal notranslate"><span class="pre">analyze</span> <span class="pre">-o</span> <span class="pre">[PATH/TO/OUTPUT/FOLDER]</span> <span class="pre">--no-grid-plot</span></code></p></li>
-</ul>
+<section id="run-pack-code">
+<h2>Run pack code<a class="headerlink" href="#run-pack-code" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>example pack recipe : <code class="docutils literal notranslate"><span class="pre">pack</span> <span class="pre">-r</span>&#160; <span class="pre">cellpack/test-recipes/NM_Analysis_FigureB1.0.json</span>&#160; <span class="pre">-c</span> <span class="pre">packing-configs/run.json</span></code></p></li>
+</ol>
 </section>
 <section id="run-conversion-code">
 <h2>Run conversion code<a class="headerlink" href="#run-conversion-code" title="Permalink to this heading">¶</a></h2>
