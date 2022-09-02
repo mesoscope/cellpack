@@ -88,7 +88,7 @@ class RecipeLoader(object):
             or recipe_data["format_version"] != self.latest_version
         ):
             recipe_data = RecipeLoader._migrate_version(recipe_data)
-        
+
         # TODO: request any external data before returning
         if "objects" in recipe_data:
             recipe_data["objects"] = RecipeLoader.resolve_inheritance(

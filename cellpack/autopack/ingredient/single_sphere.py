@@ -156,8 +156,7 @@ class SingleSphereIngr(Ingredient):
             ]  # is that point's distance from the center of the sphere (packing location)
             # distance is an array of distance of closest contact to anything currently in the grid
             collision = (
-                current_grid_distances[grid_point_index]
-                + distance_to_packing_location
+                current_grid_distances[grid_point_index] + distance_to_packing_location
                 <= radius_of_ing_being_packed
             )
 
@@ -172,10 +171,7 @@ class SingleSphereIngr(Ingredient):
                 distance_to_packing_location - radius_of_ing_being_packed
             )
 
-            (
-                insidePoints,
-                newDistPoints,
-            ) = self.get_new_distances_and_inside_points(
+            (insidePoints, newDistPoints,) = self.get_new_distances_and_inside_points(
                 env,
                 jtrans,
                 rotMat,

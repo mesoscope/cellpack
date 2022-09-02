@@ -74,9 +74,7 @@ class Representations:
             self.packing["radii"] = radii
         positions = self.packing["positions"]
         radii = self.packing["radii"]
-        if (
-            positions is None or positions[0] is None or positions[0][0] is None
-        ):
+        if positions is None or positions[0] is None or positions[0][0] is None:
             positions = [[[0, 0, 0]]]
 
         if radii is None:

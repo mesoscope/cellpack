@@ -296,15 +296,9 @@ class BaseGrid:
 
         self.log.info("Using create3DPointLookup")
         if environmentBoxEqualFillBox:  # environment.environmentBoxEqualFillBox:
-            self._x = x = numpy.arange(
-                boundingBox[0][0], boundingBox[1][0], space
-            )
-            self._y = y = numpy.arange(
-                boundingBox[0][1], boundingBox[1][1], space
-            ) 
-            self._z = z = numpy.arange(
-                boundingBox[0][2], boundingBox[1][2], space
-            )
+            self._x = x = numpy.arange(boundingBox[0][0], boundingBox[1][0], space)
+            self._y = y = numpy.arange(boundingBox[0][1], boundingBox[1][1], space)
+            self._z = z = numpy.arange(boundingBox[0][2], boundingBox[1][2], space)
         else:
             self._x = x = numpy.arange(
                 boundingBox[0][0] - space, boundingBox[1][0] + space, space
@@ -357,15 +351,9 @@ class BaseGrid:
         environmentBoxEqualFillBox = True
         # np.linspace(2.0, 3.0, num=5)
         if environmentBoxEqualFillBox:  # environment.environmentBoxEqualFillBox:
-            self._x = x = numpy.linspace(
-                boundingBox[0][0], boundingBox[1][0], int(NX)
-            )
-            self._y = y = numpy.linspace(
-                boundingBox[0][1], boundingBox[1][1], int(NY)
-            )
-            self._z = z = numpy.linspace(
-                boundingBox[0][2], boundingBox[1][2], int(NZ)
-            )
+            self._x = x = numpy.linspace(boundingBox[0][0], boundingBox[1][0], int(NX))
+            self._y = y = numpy.linspace(boundingBox[0][1], boundingBox[1][1], int(NY))
+            self._z = z = numpy.linspace(boundingBox[0][2], boundingBox[1][2], int(NZ))
         else:
             self._x = x = numpy.arange(
                 boundingBox[0][0], boundingBox[1][0] + space, space
@@ -382,7 +370,7 @@ class BaseGrid:
         )  # sizes must be +1 or the right, top, and back edges don't get any points using this numpy.arange method
         ny = len(y)
         nz = len(z)
-        self.gridSpacing = (x[1] - x[0])
+        self.gridSpacing = x[1] - x[0]
         self.nbGridPoints = [nx, ny, nz]
         self.gridVolume = nx * ny * nz
         self.ijkPtIndice = numpy.ndindex(nx, ny, nz)
