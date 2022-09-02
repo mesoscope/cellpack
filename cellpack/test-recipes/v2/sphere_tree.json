@@ -53,7 +53,13 @@
             ],
             "weight": 0.25,
             "coordinate_system": "left",
-            "sphereFile": "../test.sph",
+            "representations": {
+                "packing":{
+                    "path": "../",
+                    "name": "test.sph",
+                    "format": "sph"
+                }
+            },
             "jitter_max": [
                 1,
                 1,

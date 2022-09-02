@@ -827,15 +827,6 @@ h1 = Environment()
     f.close()
 
 
-def saveSphereTreeFile(h, ingr, filename):
-    wrkingdir = os.path.dirname(h.setupfile)
-    ingr.sphereFile = wrkingdir + os.sep + filename
-    # nbLevels = len(ingr.positions)
-    # nbLinker = 0
-    # mapping = None
-    # use a graph ?
-
-
 def checkRotFormat(rotation, transpose):
     if numpy.array(rotation).shape == (4,):
         if transpose:
@@ -901,7 +892,6 @@ def serializedRecipe(env, transpose, use_quaternion, result=False, lefthand=Fals
                 "positions": toupdate["positions"],
                 "radii_lod": toupdate["radii"],
             }
-            # "sphereTree":ingr.sphereFile}
             if ingr.type == "Grow":
                 if fibers is None:
                     fibers = sIngredientGroup("fibers", 1)
@@ -947,7 +937,6 @@ def serializedRecipe(env, transpose, use_quaternion, result=False, lefthand=Fals
                     "positions": toupdate["positions"],
                     "radii_lod": toupdate["radii"],
                 }
-                # "sphereTree":ingr.sphereFile}
                 if ingr.type == "Grow":
                     if fibers is None:
                         fibers = sIngredientGroup("fibers", 1)
@@ -991,7 +980,6 @@ def serializedRecipe(env, transpose, use_quaternion, result=False, lefthand=Fals
                     "positions": toupdate["positions"],
                     "radii_lod": toupdate["radii"],
                 }
-                # "sphereTree":ingr.sphereFile}
                 if ingr.type == "Grow":
                     if fibers is None:
                         fibers = sIngredientGroup("fibers", 1)

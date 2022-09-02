@@ -1056,7 +1056,6 @@ class Environment(CompartmentList):
         if "results" in arguments:
             ingr.results = arguments["results"]
         ingr.initialize_mesh(self.mesh_store)
-        print(ingr.name, arguments)
         recipe.addIngredient(ingr)
 
     def create_compartment(self, compartment_key):
