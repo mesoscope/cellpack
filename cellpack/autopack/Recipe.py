@@ -61,7 +61,6 @@ class Recipe:
 
     @staticmethod
     def resolve_composition(recipe_data):
-
         composition_dict = recipe_data["composition"]
         # keys in reference_dict are downstream objects,
         # values in reference_dict refer to the immediate upstream object of the key

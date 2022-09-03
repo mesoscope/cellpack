@@ -2,6 +2,8 @@ import cellpack.autopack as autopack
 
 
 class Representations:
+    DATABASE = "https://raw.githubusercontent.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0"
+
     def __init__(self, mesh=None, atomic=None, packing=None):
         """
         This object holds the different representation types for an ingredient
@@ -61,7 +63,7 @@ class Representations:
         return centers, radii
 
     def get_spheres(self):
-        if self.packing["path"]:
+        if "path" in self.packing:
             sphere_file = f"{self.packing['path']}/{self.packing['name']}"
             sphere_file_path = autopack.retrieveFile(
                 sphere_file, cache="collisionTrees"
@@ -80,3 +82,25 @@ class Representations:
         if radii is None:
             radii = [[0]]
         return positions, radii
+
+    def has_pdb(self):
+        return self.atomic is not None
+
+    def get_pdb_path(self):
+        if "path" in self.atomic:
+            if self.atomic["path"] == "default":
+                return f"{self.DATABASE}/other/{self.atomic['name']}"
+            return f"{self.atomic['path']}/{self.atomic['name']}"
+        else:
+            return self.atomic["id"]
+
+    def has_mesh(self):
+        return self.mesh is not None
+
+    def get_mesh_path(self):
+        if not self.has_mesh():
+            return ""
+        else:
+            if self.mesh["path"] == "default":
+                return f"{self.DATABASE}/geometries/{self.mesh['name']}"
+            return f"{self.mesh['path']}/{self.mesh['name']}"

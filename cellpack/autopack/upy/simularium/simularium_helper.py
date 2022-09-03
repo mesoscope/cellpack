@@ -385,7 +385,6 @@ class simulariumHelper(hostHelper.Helper):
             self.place_object(instance_id, position, rotation)
 
     def get_display_data(self, ingredient):
-        ingr_name = ingredient.name
         display_type = DISPLAY_TYPE.SPHERE
         url = ""
         if ingredient.type == "SingleCube":
@@ -395,30 +394,14 @@ class simulariumHelper(hostHelper.Helper):
         elif self.is_fiber(ingredient.type):
             display_type = DISPLAY_TYPE.FIBER
         else:
-            pdb_file_name = ""
-            display_type = DISPLAY_TYPE.PDB
-            if ingredient.source is not None:
-                pdb_file_name = ingredient.source["pdb"]
-            elif ingredient.pdb is not None and ".map" not in ingredient.pdb:
-                pdb_file_name = ingredient.pdb
-            elif "meshFile" in ingredient:
-                meshType = (
-                    ingredient.meshType if ingredient.meshType is not None else "file"
-                )
-                if meshType == "file":
-                    file_path = os.path.basename(ingredient.meshFile)
-                    file_name, _ = os.path.splitext(file_path)
-
-                elif meshType == "raw":
-                    file_name = ingr_name
-                url = f"{simulariumHelper.DATABASE}/geometries/{file_name}.obj"
+            if ingredient.has_pdb():
+                display_type = DISPLAY_TYPE.PDB
+                url = ingredient.representations.get_pdb_path()
+            elif ingredient.has_mesh():
                 display_type = DISPLAY_TYPE.OBJ
-            if pdb_file_name is None:
-                return DISPLAY_TYPE.SPHERE, ""
-            if ".pdb" in pdb_file_name:
-                url = f"{simulariumHelper.DATABASE}/other/{pdb_file_name}"
+                url = ingredient.representations.get_mesh_path()
             else:
-                url = pdb_file_name
+                return DISPLAY_TYPE.SPHERE, ""
         return display_type, url
 
     @staticmethod

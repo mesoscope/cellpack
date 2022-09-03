@@ -27,13 +27,22 @@ test_config = {
     "show_grid_plot": False,
     "spacing": None,
     "use_periodicity": False,
+    "show_sphere_trees": False,
 }
 
 
 def test_is_two_d():
     # if one of the edges of the bounding box is smaller than the
     # grid spacing, it's considered 2D
-    test_recipe = {"bounding_box": [[0, 0, 0], [100, 10, 100]], "name": "test"}
+    test_recipe = {
+        "bounding_box": [[0, 0, 0], [100, 10, 100]],
+        "name": "test",
+        "objects": {"sphere_25": {"radius": 25, "type": "single_sphere"}},
+        "composition": {
+            "space": {"regions": {"interior": ["A"]}},
+            "A": {"object": "sphere_25", "count": 1},
+        },
+    }
 
     env = Environment(config=test_config, recipe=test_recipe)
     mock = MagicMock(gridSpacing=10)
@@ -41,7 +50,7 @@ def test_is_two_d():
 
     assert env.is_two_d()
 
-    test_recipe = {"bounding_box": [[0, 0, 0], [40, 40, 40]], "name": "test"}
+    test_recipe["bounding_box"] = [[0, 0, 0], [40, 40, 40]]
 
     env = Environment(config=test_config, recipe=test_recipe)
     mock = MagicMock(gridSpacing=10)

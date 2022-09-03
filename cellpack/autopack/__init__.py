@@ -115,7 +115,6 @@ def checkURL(URL):
     try:
         response = urllib.urlopen(URL)
     except Exception as e:
-        log.error("Error in checkURL ", URL, e)
         return False
     return response.code != 404
 

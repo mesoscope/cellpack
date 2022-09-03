@@ -416,6 +416,12 @@ class Ingredient(Agent):
         self.left_to_place = 0.0
         self.completion = 0.0
 
+    def has_pdb(self):
+        return self.representations.has_pdb()
+
+    def has_mesh(self):
+        return self.representations.has_mesh()
+
     def setTilling(self, comp):
         if self.packingMode == "hexatile":
             from cellpack.autopack.hexagonTile import tileHexaIngredient

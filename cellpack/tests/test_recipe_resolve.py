@@ -15,14 +15,14 @@ from collections import Counter
 def test_find_roots():
     recipe_path = "cellpack/test-recipes/v2/test_recipe_loader.json"
     recipe = RecipeLoader(recipe_path)
-    root, _, _ = Recipe.resolve_composition(recipe.recipe_data)
+    root, _, _, _ = Recipe.resolve_composition(recipe.recipe_data)
     assert root == "space"
 
 
 def test_compartment_keys():
     recipe_path = "cellpack/test-recipes/v2/test_recipe_loader.json"
     recipe = RecipeLoader(recipe_path)
-    _, comp_keys, _ = Recipe.resolve_composition(recipe.recipe_data)
+    _, comp_keys, _, _ = Recipe.resolve_composition(recipe.recipe_data)
     assert Counter(comp_keys) == Counter(["space", "A", "B", "C", "D"])
 
 

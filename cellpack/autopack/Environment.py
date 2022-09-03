@@ -287,9 +287,8 @@ class Environment(CompartmentList):
                 self.reference_dict,
                 self.referenced_objects,
             ) = Recipe.resolve_composition(self.recipe_data)
-
-        self.create_objects()
-        self.setMinMaxProteinSize()
+            self.create_objects()
+            self.setMinMaxProteinSize()
 
     def setSeed(self, seedNum):
         SEED = int(seedNum)

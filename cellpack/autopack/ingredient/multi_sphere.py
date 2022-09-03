@@ -3,7 +3,7 @@ from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
 from math import pi, sqrt
 import numpy
 
-from cellpack.autopack.representations import Representations
+from cellpack.autopack.interface_objects.representations import Representations
 
 from .Ingredient import Ingredient
 import cellpack.autopack as autopack
