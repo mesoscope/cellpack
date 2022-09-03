@@ -20,7 +20,11 @@ test_pdb_id_obj = {
 
 test_pdb_url_obj = {"path": "test_path", "name": "test.pdb", "format": "pdb"}
 
-test_sphere_tree_obj = {"path": "cellpack/test-geometry", "name": "test.sph", "format": "sph"}
+test_sphere_tree_obj = {
+    "path": "cellpack/test-geometry",
+    "name": "test.sph",
+    "format": "sph",
+}
 
 test_sphere_tree_unpacked_obj = {"positions": [[[1, 0, 0]]], "radii": [[10]]}
 

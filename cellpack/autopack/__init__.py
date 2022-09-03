@@ -114,7 +114,7 @@ if not os.path.exists(appdata):
 def checkURL(URL):
     try:
         response = urllib.urlopen(URL)
-    except Exception as e:
+    except Exception:
         return False
     return response.code != 404
 
