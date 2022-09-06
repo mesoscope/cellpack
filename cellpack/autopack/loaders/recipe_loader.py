@@ -117,7 +117,6 @@ class RecipeLoader(object):
                     rep_file = ""
                     if "rep_file" in comp_dic:
                         rep_file = str(comp_dic["rep_file"])
-                    #                print (len(rep),rep == '',rep=="",rep != "None",rep != "None" or len(rep) != 0)
                     if rep is not None and len(rep) != 0 and rep != "" and rep != "":
                         rname = rep_file.split("/")[-1]
                         fileName, fileExtension = os.path.splitext(rname)

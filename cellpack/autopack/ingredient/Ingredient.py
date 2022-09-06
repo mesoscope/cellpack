@@ -2084,11 +2084,11 @@ class Ingredient(Agent):
         target_grid_point_position = gridPointsCoords[
             ptInd
         ]  # drop point, surface points.
-        # if numpy.sum(self.offset) != 0.0:
-        #     target_grid_point_position = (
-        #         numpy.array(target_grid_point_position)
-        #         + ApplyMatrix([self.offset], rotation_matrix)[0]
-        #     )
+        if numpy.sum(self.offset) != 0.0:
+            target_grid_point_position = (
+                numpy.array(target_grid_point_position)
+                + ApplyMatrix([self.offset], rotation_matrix)[0]
+            )
         target_grid_point_position = gridPointsCoords[
             ptInd
         ]  # drop point, surface points.
