@@ -490,7 +490,7 @@ class Ingredient(Agent):
             if self.name == "IgG_Antibody_1mer":
                 positions = [self.transformPoints_mult(
                     [0, 0, 0],
-                    [[-1, 0, 0, 0], [0, -1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+                    [[-1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]],
                     positions[0],
                 )]
             self.positions = positions
