@@ -434,6 +434,7 @@ class simulariumHelper(hostHelper.Helper):
         objects,
         grid_point_positions=None,
         grid_point_compartment_ids=None,
+        show_sphere_trees=False,
     ):
         self.time = 0
         for position, rotation, ingredient, ptInd in objects:
@@ -469,27 +470,24 @@ class simulariumHelper(hostHelper.Helper):
                 rotation,
                 sub_points,
             )
-            # # if grid_point_positions is not None:
-            if len(ingredient.positions) > 0:
-                for level in range(len(ingredient.positions)):
-                    for i in range(len(ingredient.positions[level])):
-                        pos = ingredient.apply_rotation(
-                            rotation, ingredient.positions[level][i], position
-                        )
-                        self.display_data[f"{ingredient.name}-s"] = DisplayData(
-                            name=f"{ingredient.name}-s", display_type=DISPLAY_TYPE.SPHERE, color=matplotlib.colors.to_hex(np.array(ingredient.color) / 255)
-                        )
+            if show_sphere_trees:
+                if len(ingredient.positions) > 0:
+                    for level in range(len(ingredient.positions)):
+                        for i in range(len(ingredient.positions[level])):
+                            pos = ingredient.apply_rotation(
+                                rotation, ingredient.positions[level][i], position
+                            )
 
-                        self.add_instance(
-                            f"{ingredient.name}-s",
-                            ingredient,
-                            f"{ingredient.name}-{ptInd}-{i}",
-                            ingredient.radii[level][i],
-                            pos,
-                            rotation,
-                            None,
-                        )
-        grid_point_positions = None
+                            self.add_instance(
+                                f"{ingredient.name}-spheres",
+                                ingredient,
+                                f"{ingredient.name}-{ptInd}-{i}",
+                                ingredient.radii[level][i],
+                                pos,
+                                rotation,
+                                None,
+                            )
+
         if grid_point_positions is not None:
 
             for index in range(len(grid_point_compartment_ids)):

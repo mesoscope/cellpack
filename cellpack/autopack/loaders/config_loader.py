@@ -48,6 +48,7 @@ class ConfigLoader(object):
         "show_grid_plot": False,
         "spacing": None,
         "use_periodicity": False,
+        "show_sphere_trees": False,
     }
 
     def __init__(self, input_file_path):
@@ -78,6 +79,7 @@ class ConfigLoader(object):
             "save_analyze_result",
             "show_grid_plot",
             "use_periodicity",
+            "show_sphere_trees",
         ]
         for should_be_bool in bools:
             if not isinstance(config[should_be_bool], bool):

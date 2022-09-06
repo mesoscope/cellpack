@@ -49,14 +49,14 @@ jobs:
         pip install .[test]
     - name: Lint with flake8
       run: |
-        flake8 cellpack --count --verbose --show-source --statistics
+        flake8 cellpack --count --verbose --show-source --statistics --ignore=E501,E277,W503,E203
     - name: Check with black
       run: |
-        black --check cellpack --exclude '/cellpack/mgl_tools/'
+        black --check cellpack
 
   publish:
     if: "contains(github.event.head_commit.message, 'Bump version')"
-    needs: [test, lint]
+    needs: [lint]
     runs-on: ubuntu-latest
 
     steps:

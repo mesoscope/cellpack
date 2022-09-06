@@ -10,5 +10,6 @@
     "save_analyze_result": false,
     "show_grid_plot": false,
     "spacing": null,
-    "use_periodicity": false
+    "use_periodicity": false,
+    "show_sphere_trees": false
 }
