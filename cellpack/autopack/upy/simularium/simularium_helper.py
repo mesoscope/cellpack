@@ -397,16 +397,16 @@ class simulariumHelper(hostHelper.Helper):
         else:
             pdb_file_name = ""
             display_type = DISPLAY_TYPE.PDB
-            if ingredient.source is not None:
+            if ingredient.source is not None and ingredient.source["pdb"] is not None:
                 pdb_file_name = ingredient.source["pdb"]
             elif ingredient.pdb is not None and ".map" not in ingredient.pdb:
                 pdb_file_name = ingredient.pdb
-            elif "meshFile" in ingredient:
+            elif ingredient.mesh_info is not None:
                 meshType = (
-                    ingredient.meshType if ingredient.meshType is not None else "file"
+                    ingredient.mesh_info["type"] if ingredient.mesh_info["type"] is not None else "file"
                 )
                 if meshType == "file":
-                    file_path = os.path.basename(ingredient.meshFile)
+                    file_path = os.path.basename(ingredient.mesh_info["file"])
                     file_name, _ = os.path.splitext(file_path)
 
                 elif meshType == "raw":
@@ -1302,7 +1302,7 @@ class simulariumHelper(hostHelper.Helper):
             time_units=UnitData("ns"),  # nanoseconds
             spatial_units=UnitData("nm"),  # nanometers
         )
-        TrajectoryConverter(converted_data).save(file_name)
+        TrajectoryConverter(converted_data).save(file_name, False)
 
     def raycast(self, **kw):
         intersect = False
