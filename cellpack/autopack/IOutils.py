@@ -482,7 +482,6 @@ def save_as_simularium(env, setupfile, all_ingr_as_array, compartments):
         for compartment in compartments:
             autopack.helper.add_compartment_to_scene(compartment)
     autopack.helper.writeToFile(None, f"{setupfile}_results", env.boundingBox)
-    webbrowser.open("https://simularium.allencell.org/viewer")
 
 
 def save_Mixed_asJson(
