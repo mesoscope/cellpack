@@ -44,6 +44,7 @@
 
 # TODO: Describe Ingredient class here at high level
 import os
+from turtle import pos
 from scipy import spatial
 from panda3d.bullet import BulletRigidBodyNode
 import numpy
@@ -275,7 +276,11 @@ class Ingredient(Agent):
         self.offset = offset
         self.source = {
             "pdb": self.pdb,
-            "transform": {"center": True, "translate": [0, 0, 0], "rotate": [0, 0, 0, 1]},
+            "transform": {
+                "center": True,
+                "translate": [0, 0, 0],
+                "rotate": [0, 0, 0, 1],
+            },
         }
         # should deal with source of the object
         if source:
@@ -326,9 +331,13 @@ class Ingredient(Agent):
                     positions = [positions]
                     radii = [radii]
                 elif fileExtension == ".sph":
-                    min_radius, encapsulating_radius, positions, radii, children = self.getSpheres(
-                        sphereFileo
-                    )
+                    (
+                        min_radius,
+                        encapsulating_radius,
+                        positions,
+                        radii,
+                        children,
+                    ) = self.getSpheres(sphereFileo)
                     # if a user didn't set this properly before
                     if not len(radii):
                         self.minRadius = 1.0
@@ -478,6 +487,12 @@ class Ingredient(Agent):
             if radii is None:
                 radii = [[0]]
             self.radii = radii
+            if self.name == "IgG_Antibody_1mer":
+                positions = [self.transformPoints_mult(
+                    [0, 0, 0],
+                    [[-1, 0, 0, 0], [0, -1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+                    positions[0],
+                )]
             self.positions = positions
         if self.minRadius == 0:
             self.minRadius = min(min(self.radii))
@@ -579,7 +594,7 @@ class Ingredient(Agent):
         xmax = 0
         ymax = 0
         zmax = 0
-        
+
         for level in range(num_levels):
             rl = []
             cl = []
