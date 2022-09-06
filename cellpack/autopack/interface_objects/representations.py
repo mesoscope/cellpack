@@ -90,17 +90,29 @@ class Representations:
         if "path" in self.atomic:
             if self.atomic["path"] == "default":
                 return f"{self.DATABASE}/other/{self.atomic['name']}"
-            return f"{self.atomic['path']}/{self.atomic['name']}"
+            return f"{self.atomic['path']}{self.atomic['name']}"
         else:
             return self.atomic["id"]
 
     def has_mesh(self):
         return self.mesh is not None
 
+    def get_mesh_name(self):
+        if not self.has_mesh():
+            return None
+        else:
+            self.mesh["name"]
+
     def get_mesh_path(self):
         if not self.has_mesh():
-            return ""
+            return None
         else:
             if self.mesh["path"] == "default":
                 return f"{self.DATABASE}/geometries/{self.mesh['name']}"
-            return f"{self.mesh['path']}/{self.mesh['name']}"
+            return f"{self.mesh['path']}{self.mesh['name']}"
+
+    def get_mesh_format(self):
+        if not self.has_mesh():
+            return None
+        else:
+            return self.mesh["format"]

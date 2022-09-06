@@ -54,6 +54,8 @@ from random import uniform, gauss, random
 from time import time
 import math
 
+from cellpack.autopack.interface_objects.representations import Representations
+
 from .utils import (
     ApplyMatrix,
     getNormedVectorOnes,
@@ -215,6 +217,7 @@ class Ingredient(Agent):
         proba_not_binding=0.5,  # chance to actually not bind
         properties=None,
         rejection_threshold=30,
+        representations=None,
         resolution_dictionary=None,
         rotation_axis=None,
         rotation_range=6.2831,
@@ -263,12 +266,12 @@ class Ingredient(Agent):
         self.transform_sources = None
         self.source = None
         self.mesh = None
-        self.mesh_info = {
-            "file": meshFile,
-            "name": meshName,
-            "type": meshType,
-            "object": meshObject,
-        }
+        if representations is not None:
+            self.representations = Representations(
+                mesh=representations.get("mesh", None),
+                atomic=representations.get("atomic", None),
+                packing=representations.get("packing", None),
+            )
 
         self.offset = [0, 0, 0]  # offset to apply for membrane binding
         if offset:
@@ -444,24 +447,21 @@ class Ingredient(Agent):
 
     def initialize_mesh(self, mesh_store):
         # get the collision mesh
-        meshFile = self.mesh_info["file"]
-        meshName = self.mesh_info["name"]
-        meshObject = self.mesh_info["object"]
-        meshType = self.mesh_info["type"]
+        mesh_path = self.representations.get_mesh_path()
+        meshName = self.representations.get_mesh_name()
+        meshType = "file"
         self.mesh = None
-        if meshFile is not None:
+        if mesh_path is not None:
             if meshType == "file":
-                self.mesh = self.getMesh(meshFile, meshName)  # self.name)
+                self.mesh = self.getMesh(mesh_path, meshName)  # self.name)
                 self.log.info("OK got", self.mesh)
                 if self.mesh is None:
                     # display a message ?
                     self.log.warning("no geometries for ingredient " + self.name)
-                # should we reparent it ?
+            # TODO: add back in raw option
             elif meshType == "raw":
                 # need to build the mesh from v,f,n
                 self.buildMesh(mesh_store)
-        elif meshObject is not None:
-            self.mesh = meshObject
 
         if self.mesh is not None:
             self.getEncapsulatingRadius()
@@ -616,7 +616,7 @@ class Ingredient(Agent):
         @type  filename: string
         @param filename: the name of the input file
         @type  geomname: string
-        @param geomname: the name of the ouput geometry
+        @param geomname: the name of the output geometry
 
         @rtype:   DejaVu.IndexedPolygons/HostObjec
         @return:  the created mesh

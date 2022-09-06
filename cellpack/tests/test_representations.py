@@ -12,16 +12,16 @@ from cellpack.autopack.interface_objects.representations import Representations
 
 pdb_id = "1234"
 
-test_mesh_obj = {"path": "test_path", "name": "test.obj", "format": "obj"}
+test_mesh_obj = {"path": "test_path/", "name": "test.obj", "format": "obj"}
 
 test_pdb_id_obj = {
     "id": pdb_id,
 }
 
-test_pdb_url_obj = {"path": "test_path", "name": "test.pdb", "format": "pdb"}
+test_pdb_url_obj = {"path": "test_path/", "name": "test.pdb", "format": "pdb"}
 
 test_sphere_tree_obj = {
-    "path": "cellpack/test-geometry",
+    "path": "cellpack/test-geometry/",
     "name": "test.sph",
     "format": "sph",
 }
@@ -38,7 +38,7 @@ def test_mesh():
 def test_mesh_missing():
     representations = Representations()
     assert not representations.has_mesh()
-    assert representations.get_mesh_path() == ""
+    assert representations.get_mesh_path() == None
 
 
 def test_pdb_id():

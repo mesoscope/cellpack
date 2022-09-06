@@ -3,8 +3,6 @@ from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
 from math import pi, sqrt
 import numpy
 
-from cellpack.autopack.interface_objects.representations import Representations
-
 from .Ingredient import Ingredient
 import cellpack.autopack as autopack
 
@@ -101,11 +99,7 @@ class MultiSphereIngr(Ingredient):
         )
         self.name = name
         self.singleSphere = False
-        self.representations = Representations(
-            mesh=representations.get("mesh", None),
-            atomic=representations.get("atomic", None),
-            packing=representations.get("packing", None),
-        )
+
         positions, radii = self.representations.get_spheres()
         self.set_sphere_positions(positions, radii)
         if name is None:
