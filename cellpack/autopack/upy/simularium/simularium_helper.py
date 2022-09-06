@@ -1311,7 +1311,7 @@ class simulariumHelper(hostHelper.Helper):
             time_units=UnitData("ns"),  # nanoseconds
             spatial_units=UnitData("nm"),  # nanometers
         )
-        TrajectoryConverter(converted_data).write_JSON(file_name)
+        TrajectoryConverter(converted_data).save(file_name, False)
 
     def raycast(self, **kw):
         intersect = False
