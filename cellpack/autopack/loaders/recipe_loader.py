@@ -122,6 +122,15 @@ class RecipeLoader(object):
         if "format_version" not in recipe:
             recipe["bounding_box"] = recipe["options"]["boundingBox"]
         return recipe
+    
+    @staticmethod
+    def _get_v1_ingredients(recipe_data):
+        objects_dict = {}
+        if "cytoplasme" in recipe_data:
+            for ingredient in recipe_data["cytoplasme"]["ingredients"]:
+                key,converted_ingredient = RecipeLoader._migrate_ingredient(ingredient)
+                objects_dict[key] = converted_ingredient
+        return objects_dict
 
     def _load_json(self):
         """
