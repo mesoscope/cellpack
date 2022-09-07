@@ -7,6 +7,7 @@ from json import encoder
 
 import cellpack.autopack as autopack
 from cellpack.autopack.utils import deep_merge
+from .rename_dict import v1_to_v2_name_map
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
@@ -122,13 +123,24 @@ class RecipeLoader(object):
         if "format_version" not in recipe:
             recipe["bounding_box"] = recipe["options"]["boundingBox"]
         return recipe
-    
+
+    @staticmethod
+    def _migrate_ingredient(old_ingredient):
+        new_ingredient = {}
+        for attribute in old_ingredient:
+            if attribute in v1_to_v2_name_map:
+                new_ingredient[v1_to_v2_name_map[attribute]] = old_ingredient[attribute]
+        return new_ingredient
+
+
     @staticmethod
     def _get_v1_ingredients(recipe_data):
         objects_dict = {}
         if "cytoplasme" in recipe_data:
             for ingredient in recipe_data["cytoplasme"]["ingredients"]:
-                key,converted_ingredient = RecipeLoader._migrate_ingredient(ingredient)
+                key = ingredient
+                ingredient_data = recipe_data["cytoplasme"]["ingredients"][key]
+                converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
                 objects_dict[key] = converted_ingredient
         return objects_dict
 
