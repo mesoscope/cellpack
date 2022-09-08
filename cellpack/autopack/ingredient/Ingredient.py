@@ -144,7 +144,7 @@ class Ingredient(Agent):
         "offset",
         "orient_bias_range",
         "overwrite_distance_function",
-        "packing_ mode",
+        "packing_mode",
         "packing_priority",
         "partners",
         "perturb_axis_amplitude",
@@ -155,10 +155,9 @@ class Ingredient(Agent):
         "resolution_dictionary",
         "rotation_axis",
         "rotation_range",
-        "source",
         "type",
-        "useOrientBias",
-        "useRotAxis",
+        "use_orient_bias",
+        "use_rotation_axis",
         "weight",
     ]
 
