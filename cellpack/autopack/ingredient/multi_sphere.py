@@ -157,12 +157,7 @@ class MultiSphereIngr(SingleSphereIngr):
         return closest_distance
 
     def pack_at_grid_pt_location(
-        self,
-        env,
-        jtrans,
-        rotMatj,
-        dpad,
-        grid_point_distances
+        self, env, jtrans, rotMatj, dpad, grid_point_distances
     ):
         level = self.deepest_level
         centers = self.positions[level]
@@ -211,4 +206,3 @@ class MultiSphereIngr(SingleSphereIngr):
                 )
 
         return insidePoints, newDistPoints
-

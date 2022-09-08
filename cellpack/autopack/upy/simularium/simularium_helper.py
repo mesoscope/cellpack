@@ -451,7 +451,10 @@ class simulariumHelper(hostHelper.Helper):
             if ingr_name not in self.display_data:
                 display_type, url = self.get_display_data(ingredient)
                 self.display_data[ingredient.name] = DisplayData(
-                    name=ingr_name, display_type=display_type, url=url, color=matplotlib.colors.to_hex(np.array(ingredient.color) / 255)
+                    name=ingr_name,
+                    display_type=display_type,
+                    url=url,
+                    color=matplotlib.colors.to_hex(np.array(ingredient.color) / 255),
                 )
             radius = ingredient.encapsulatingRadius if ingredient is not None else 10
             offset = [0, 0, 0]

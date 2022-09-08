@@ -488,11 +488,13 @@ class Ingredient(Agent):
                 radii = [[0]]
             self.radii = radii
             if self.name == "IgG_Antibody_1mer":
-                positions = [self.transformPoints_mult(
-                    [0, 0, 0],
-                    [[-1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]],
-                    positions[0],
-                )]
+                positions = [
+                    self.transformPoints_mult(
+                        [0, 0, 0],
+                        [[-1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]],
+                        positions[0],
+                    )
+                ]
             self.positions = positions
         if self.minRadius == 0:
             self.minRadius = min(min(self.radii))

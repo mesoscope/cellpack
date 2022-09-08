@@ -61,7 +61,10 @@ def pdbDownload(
             pass
 
     # Download all files in file_lists
-    to_get = [f"{directory}/{file_name[1]}{file_name[2]}/{file_name}{suffix}" for file_name in file_list]
+    to_get = [
+        f"{directory}/{file_name[1]}{file_name[2]}/{file_name}{suffix}"
+        for file_name in file_list
+    ]
 
     # to_get = ["%s/%s%s%s" % (directory, prefix, f, suffix) for f in file_list]
     to_write = [f"{out}{f}{suffix}" for f in file_list]

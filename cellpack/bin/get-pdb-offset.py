@@ -42,9 +42,7 @@ def get_pdbs(pdb_codes):
         pdb = f.readlines()
         f.close()
 
-        center, pdb_out = center_of_pdb.pdbCentermass(
-            pdb, True, False, False
-        )
+        center, pdb_out = center_of_pdb.pdbCentermass(pdb, True, False, False)
         print("%s %s" % (pdb_file, "".join(center)))
 
         # If the user wants re-centered coordinates, write them out
