@@ -34,7 +34,6 @@ class SingleCubeIngr(Ingredient):
         molarity=0.0,
         name=None,
         jitter_attempts=5,
-        nbMol=0,
         offset=None,
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
@@ -57,8 +56,8 @@ class SingleCubeIngr(Ingredient):
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=0,
         source=None,
-        useOrientBias=False,
-        useRotAxis=True,
+        use_orient_bias=False,
+        use_rotation_axis=True,
         weight=0.2,  # use for affinity ie partner.weight
     ):
         super().__init__(
@@ -77,9 +76,7 @@ class SingleCubeIngr(Ingredient):
             molarity=molarity,
             name=name,
             jitter_attempts=jitter_attempts,
-            nbMol=nbMol,
             overwrite_distance_function=overwrite_distance_function,
-            packing=packing,
             packing_priority=packing_priority,
             partners_name=partners_name,
             partners_position=partners_position,
@@ -95,7 +92,7 @@ class SingleCubeIngr(Ingredient):
             radii=radii,
             rotation_axis=rotation_axis,
             rotation_range=rotation_range,
-            useRotAxis=useRotAxis,
+            use_rotation_axis=use_rotation_axis,
             weight=weight,
         )
 

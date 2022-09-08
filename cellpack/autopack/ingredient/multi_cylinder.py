@@ -41,7 +41,6 @@ class MultiCylindersIngr(Ingredient):
         molarity=0.0,
         name=None,
         jitter_attempts=5,
-        nbMol=0,
         orient_bias_range=[-pi, pi],
         packing=None,
         packing_priority=0,
@@ -63,8 +62,8 @@ class MultiCylindersIngr(Ingredient):
         source=None,
         uLength=0,
         useLength=False,
-        useOrientBias=False,
-        useRotAxis=True,
+        use_orient_bias=False,
+        use_rotation_axis=True,
         weight=0.2,  # use for affinity ie partner.weight
     ):
 
@@ -90,9 +89,7 @@ class MultiCylindersIngr(Ingredient):
             molarity=molarity,
             name=name,
             jitter_attempts=jitter_attempts,
-            nbMol=nbMol,
             orient_bias_range=orient_bias_range,
-            packing=packing,
             packing_priority=packing_priority,
             partners_name=partners_name,
             partners_position=partners_position,
@@ -110,8 +107,8 @@ class MultiCylindersIngr(Ingredient):
             rotation_axis=rotation_axis,
             rotation_range=rotation_range,
             source=source,
-            useOrientBias=useOrientBias,
-            useRotAxis=useRotAxis,
+            use_orient_bias=use_orient_bias,
+            use_rotation_axis=use_rotation_axis,
             weight=weight,
         )
 

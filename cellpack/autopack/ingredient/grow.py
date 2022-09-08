@@ -64,7 +64,7 @@ class GrowIngredient(MultiCylindersIngr):
         molarity=0.0,
         name=None,
         jitter_attempts=5,
-        nbMol=0,
+        count=0,
         orientation=(1, 0, 0),
         orient_bias_range=[-pi, pi],
         packing=None,
@@ -89,8 +89,8 @@ class GrowIngredient(MultiCylindersIngr):
         use_rbsphere=False,
         useHalton=True,
         useLength=False,
-        useOrientBias=False,
-        useRotAxis=True,
+        use_orient_bias=False,
+        use_rotation_axis=True,
         walkingMode="sphere",
         weight=0.2,
     ):
@@ -110,9 +110,8 @@ class GrowIngredient(MultiCylindersIngr):
             molarity=molarity,
             name=name,
             jitter_attempts=jitter_attempts,
-            nbMol=nbMol,
+            count=count,
             orient_bias_range=orient_bias_range,
-            packing=packing,
             packing_priority=packing_priority,
             partners_name=partners_name,
             partners_position=partners_position,
@@ -132,8 +131,8 @@ class GrowIngredient(MultiCylindersIngr):
             source=source,
             uLength=uLength,
             useLength=useLength,
-            useOrientBias=useOrientBias,
-            useRotAxis=useRotAxis,
+            use_orient_bias=use_orient_bias,
+            use_rotation_axis=use_rotation_axis,
             weight=weight,
         )
         if name is None:
@@ -2372,7 +2371,7 @@ class ActinIngredient(GrowIngredient):
         influenceRad=100.0,
         meshObject=None,
         orientation=(1, 0, 0),
-        nbMol=0,
+        count=0,
         **kw
     ):
 
@@ -2400,7 +2399,7 @@ class ActinIngredient(GrowIngredient):
             marge,
             meshObject,
             orientation,
-            nbMol,
+            count,
             type,
             **kw
         )

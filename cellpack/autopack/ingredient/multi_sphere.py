@@ -33,7 +33,6 @@ class MultiSphereIngr(Ingredient):
         molarity=0.0,
         name=None,
         jitter_attempts=5,
-        nbMol=0,
         offset=None,
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
@@ -54,8 +53,8 @@ class MultiSphereIngr(Ingredient):
         rotation_range=0,
         source=None,
         type="MultiSphere",
-        useOrientBias=False,
-        useRotAxis=True,
+        use_orient_bias=False,
+        use_rotation_axis=True,
         weight=0.2,  # use for affinity ie partner.weight
     ):
         super().__init__(
@@ -75,10 +74,8 @@ class MultiSphereIngr(Ingredient):
             molarity=molarity,
             name=name,
             jitter_attempts=jitter_attempts,
-            nbMol=nbMol,
             offset=offset,
             orient_bias_range=orient_bias_range,
-            packing=packing,
             packing_priority=packing_priority,
             partners_name=partners_name,
             partners_position=partners_position,
@@ -93,8 +90,8 @@ class MultiSphereIngr(Ingredient):
             rotation_range=rotation_range,
             source=source,
             type=type,
-            useOrientBias=useOrientBias,
-            useRotAxis=useRotAxis,
+            use_orient_bias=use_orient_bias,
+            use_rotation_axis=use_rotation_axis,
             weight=weight,
         )
         self.name = name

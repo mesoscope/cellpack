@@ -2380,7 +2380,7 @@ class Compartment(CompartmentList):
     ):
         """
         Compute volume of surface and interior
-        set 'nbMol' in each ingredient of both recipes
+        set 'count' in each ingredient of both recipes
         """
         unitVol = histoVol.grid.gridSpacing**3
         if surfacePoints:

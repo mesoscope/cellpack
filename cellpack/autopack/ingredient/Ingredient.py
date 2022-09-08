@@ -58,7 +58,6 @@ from cellpack.autopack.interface_objects.representations import Representations
 
 from .utils import (
     ApplyMatrix,
-    get_distance,
     getNormedVectorOnes,
     rotVectToVect,
     rotax,
@@ -119,7 +118,7 @@ class Ingredient(Agent):
         - compNum is the compartment number (0 for cytoplasm, positive for compartment
         surface and negative compartment interior
         - Attributes used by the filling algorithm:
-        - nbMol counts the number of placed ingredients during a fill
+        - count counts the number of placed ingredients during a fill
         - counter is the target number of ingredients to place
         - completion is the ratio of placed/target
         - rejectionCounter is used to eliminate ingredients after too many failed
@@ -231,20 +230,7 @@ class Ingredient(Agent):
                 atomic=representations.get("atomic", None),
                 packing=representations.get("packing", None),
             )
-            if self.representations["packing"]:
         self.offset = offset
-        self.source = {
-            "pdb": self.pdb,
-            "transform": {
-                "center": True,
-                "translate": [0, 0, 0],
-                "rotate": [0, 0, 0, 1],
-            },
-        }
-        # should deal with source of the object
-        if source:
-            self.source = source
-
         self.color = color  # color used for sphere display
         if self.color == "None":
             self.color = None
@@ -260,7 +246,6 @@ class Ingredient(Agent):
         self.vi = autopack.helper
         self.min_radius = 1
         self.min_distance = 0
-        self.encapsulating_radius = encapsulating_radius
         self.deepest_level = 1
         self.is_previous = False
         self.vertices = []
@@ -268,7 +253,6 @@ class Ingredient(Agent):
         self.vnormals = []
         # self._place = self.place
         children = []
-        self.positions2 = positions2
         self.children = children
         self.rbnode = {}  # keep the rbnode if any
         self.collisionLevel = 0  # self.deepest_level
@@ -288,8 +272,8 @@ class Ingredient(Agent):
         # should be self.compNum per default
         # will be set when recipe is added to HistoVol
         # added to a compartment
-        self.nbMol = nbMol
-        self.left_to_place = nbMol
+        self.count = count
+        self.left_to_place = count
         self.vol_nbmol = 0
 
         # Packing tracking values
@@ -301,7 +285,7 @@ class Ingredient(Agent):
             []
         )  # the list of available grid points for this ingredient to pack
         self.counter = 0  # target number of molecules for a fill
-        self.completion = 0.0  # ratio of counter/nbMol
+        self.completion = 0.0  # ratio of counter/count
         self.rejectionCounter = 0
         self.verts = None
         self.rad = None
@@ -314,8 +298,7 @@ class Ingredient(Agent):
         # TODO : "med":{"method":"cms","parameters":{"gridres":30}}
         # TODO : "high":{"method":"msms","parameters":{"gridres":30}}
         # TODO : etc...
-        if coordsystem:
-            self.coordsystem = coordsystem
+
         self.rejection_threshold = rejection_threshold
 
         # need to build the basic shape if one provided
@@ -330,19 +313,16 @@ class Ingredient(Agent):
         self.representation = None
         self.representation_file = None
 
-        self.useRotAxis = useRotAxis
+        self.use_rotation_axis = use_rotation_axis
         self.rotation_axis = rotation_axis
         self.rotation_range = rotation_range
-        self.useOrientBias = useOrientBias
+        self.use_orient_bias = use_orient_bias
         self.orientBiasRotRangeMin = orient_bias_range[0]
         self.orientBiasRotRangeMax = orient_bias_range[1]
 
         # cutoff are used for picking point far from surface and boundary
         self.cutoff_boundary = cutoff_boundary
-        self.cutoff_surface = float(cutoff_surface or self.encapsulating_radius)
-        if properties is None:
-            properties = {}
-        self.properties = properties  # four tout
+        self.cutoff_surface = cutoff_surface
 
         self.compareCompartment = False
         self.compareCompartmentTolerance = 0
@@ -372,6 +352,14 @@ class Ingredient(Agent):
 
     def has_mesh(self):
         return self.representations.has_mesh()
+
+    def use_mesh(self):
+        self.representations.set_active("mesh")
+        return self.representations.get_mesh_path()
+
+    def use_pdb(self):
+        self.representations.set_active("atomic")
+        return self.representations.get_pdb_path()
 
     def setTilling(self, comp):
         if self.packingMode == "hexatile":
@@ -497,9 +485,9 @@ class Ingredient(Agent):
         return inodenp
 
     def Set(self, **kw):
-        self.nbMol = 0
-        if "nbMol" in kw:
-            self.nbMol = int(kw["nbMol"])
+        self.count = 0
+        if "count" in kw:
+            self.count = int(kw["count"])
         if "molarity" in kw:
             self.molarity = kw["molarity"]
         if "priority" in kw:
@@ -1656,7 +1644,7 @@ class Ingredient(Agent):
         newDistPoints = {}
         insidePoints = {}
         packing_location = jtrans
-        radius_of_area_to_check = self.encapsulatingRadius + dpad
+        radius_of_area_to_check = self.encapsulating_radius + dpad
 
         bounding_points_to_check = self.get_all_positions_to_check(packing_location)
 
@@ -1920,11 +1908,11 @@ class Ingredient(Agent):
                 rot_mat = numpy.identity(4)
         else:
             # this is where we could apply biased rotation ie gradient/attractor
-            if self.useRotAxis:
+            if self.use_rotation_axis:
                 if sum(self.rotation_axis) == 0.0:
                     rot_mat = numpy.identity(4)
                 elif (
-                    self.useOrientBias and self.packingMode == "gradient"
+                    self.use_orient_bias and self.packingMode == "gradient"
                 ):  # you need a gradient here
                     rot_mat = self.alignRotation(env.masterGridPositions[pt_ind])
                 else:
@@ -1942,12 +1930,12 @@ class Ingredient(Agent):
         if self.compNum > 0:
             jitter_rotation = self.getAxisRotation(rotation)
         else:
-            if self.useRotAxis:
+            if self.use_rotation_axis:
                 if sum(self.rotation_axis) == 0.0:
                     jitter_rotation = numpy.identity(4)
                     # Graham Oct 16,2012 Turned on always rotate below as default.  If you want no rotation
-                    # set useRotAxis = 1 and set rotation_axis = 0, 0, 0 for that ingredient
-                elif self.useOrientBias and self.packingMode == "gradient":
+                    # set use_rotation_axis = 1 and set rotation_axis = 0, 0, 0 for that ingredient
+                elif self.use_orient_bias and self.packingMode == "gradient":
                     jitter_rotation = self.getBiasedRotation(rotation, weight=None)
                 # weight = 1.0 - self.env.gradients[self.gradient].weight[ptInd])
                 else:
@@ -2162,7 +2150,7 @@ class Ingredient(Agent):
             "Success nbfp:%d %d/%d dpad %.2f",
             nbFreePoints,
             self.counter,
-            self.nbMol,
+            self.count,
             dpad,
         )
 

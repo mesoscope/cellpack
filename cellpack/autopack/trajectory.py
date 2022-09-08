@@ -29,7 +29,7 @@ class Trajectory:
         self.filename = filename
         # self.f = open(self.filename,"r")
         self.nbIngredients = nbIngredients
-        self.parse(filename=filename, nbMol=nbIngredients)
+        self.parse(filename=filename, count=nbIngredients)
         print("ok parsed")
         self.current_indice = 0
         self.sub_id = 0
@@ -325,14 +325,14 @@ class molbTrajectory(Trajectory):
     # NMR type file type
     traj_type = "molb"
 
-    def parse(self, filename=None, nbMol=0, log=False):
+    def parse(self, filename=None, count=0, log=False):
         # brutforce parsing
         if filename is None:
             filename = self.filename
-        # for all molecules grab the result ? nbMol is the total number of molecules
+        # for all molecules grab the result ? count is the total number of molecules
         # but how make difference between 2 molecules
         # dicrionary indice in moldb-> indice in input ?
-        for i in range(nbMol):
+        for i in range(count):
             mat = self.parse_one_mol(filename, i, log=log)
             self.data[i] = mat
 

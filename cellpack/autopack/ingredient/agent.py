@@ -74,28 +74,22 @@ class Agent:
         concentration,
         distance_expression=None,
         distance_function=None,
-        excluded_partners_name=None,
         force_random=False,  # avoid any binding
         gradient="",
         is_attractor=False,
         overwrite_distance_function=True,  # overWrite
         packing=None,
-        partners_name=None,
-        partners_position=None,
+        partners=None,
         place_type="jitter",
-        proba_binding=0.5,
-        proba_not_binding=0.5,  # chance to actually not bind
-        properties=None,
         weight=0.2,  # use for affinity ie partner.weight
     ):
         self.name = name
         self.concentration = concentration
-        self.partners = {}
+        self.partners = partners
         self.excluded_partners = {}
         # the partner position is the local position
-        self.partners_position = partners_position or []
-        self.partners_name = partners_name or []
-        self.properties = properties
+        self.partners_position = []
+        self.partners_name = []
         if not self.partners_position:
             for i in self.partners_name:
                 self.partners_position.append([numpy.identity(4)])
@@ -122,8 +116,6 @@ class Agent:
         self.mesh_3d = None
         self.is_attractor = is_attractor
         self.weight = weight
-        self.proba_not_binding = proba_not_binding
-        self.proba_binding = proba_binding
         self.force_random = force_random
         self.distance_function = distance_function
         self.distance_expression = distance_expression
