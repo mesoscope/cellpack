@@ -6,7 +6,6 @@ Created on Sun Jan 27 09:04:10 2013
 """
 import os
 import pickle
-import webbrowser
 
 import numpy
 import json
@@ -482,7 +481,6 @@ def save_as_simularium(env, setupfile, all_ingr_as_array, compartments):
         for compartment in compartments:
             autopack.helper.add_compartment_to_scene(compartment)
     autopack.helper.writeToFile(None, f"{setupfile}_results", env.boundingBox)
-    webbrowser.open("https://simularium.allencell.org/viewer")
 
 
 def save_Mixed_asJson(
@@ -830,9 +828,9 @@ h1 = Environment()
 def checkRotFormat(rotation, transpose):
     if numpy.array(rotation).shape == (4,):
         if transpose:
-            return tr.quaternion_matrix(rotation).transpose()  # transpose ?
+            return tr.matrix_from_quaternion(rotation).transpose()  # transpose ?
         else:
-            return tr.quaternion_matrix(rotation)
+            return tr.matrix_from_quaternion(rotation)
     else:
         return rotation
 
@@ -1586,11 +1584,11 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                         if len(r[1]) == 4:  # quaternion
                             if type(r[1][0]) == float:
                                 if transpose:
-                                    rot = tr.quaternion_matrix(
+                                    rot = tr.matrix_from_quaternion(
                                         r[1]
                                     ).transpose()  # transpose ?
                                 else:
-                                    rot = tr.quaternion_matrix(r[1])  # transpose ?
+                                    rot = tr.matrix_from_quaternion(r[1])  # transpose ?
                                     #                        ingr.results.append([numpy.array(r[0]),rot])
                             else:
                                 rot = numpy.array(r[1]).reshape(4, 4)
@@ -1645,11 +1643,11 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                         if len(r[1]) == 4:  # quaternion
                             if type(r[1][0]) == float:
                                 if transpose:
-                                    rot = tr.quaternion_matrix(
+                                    rot = tr.matrix_from_quaternion(
                                         r[1]
                                     ).transpose()  # transpose ?
                                 else:
-                                    rot = tr.quaternion_matrix(r[1])  # transpose ?
+                                    rot = tr.matrix_from_quaternion(r[1])  # transpose ?
                             else:
                                 rot = numpy.array(r[1]).reshape(4, 4)
                             #                        ingr.results.append([numpy.array(r[0]),rot])
@@ -1698,11 +1696,11 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                         if len(r[1]) == 4:  # quaternion
                             if type(r[1][0]) == float:
                                 if transpose:
-                                    rot = tr.quaternion_matrix(
+                                    rot = tr.matrix_from_quaternion(
                                         r[1]
                                     ).transpose()  # transpose ?
                                 else:
-                                    rot = tr.quaternion_matrix(r[1])  # transpose ?
+                                    rot = tr.matrix_from_quaternion(r[1])  # transpose ?
                             else:
                                 rot = numpy.array(r[1]).reshape(4, 4)
                             #                        ingr.results.append([numpy.array(r[0]),rot])

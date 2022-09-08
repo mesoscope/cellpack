@@ -239,7 +239,7 @@ class Compartment(CompartmentList):
         # self.molecules = []
 
     def transformMesh(self, pos, rotation):
-        rot = tr.quaternion_matrix(rotation).transpose()
+        rot = tr.matrix_from_quaternion(rotation).transpose()
         m = numpy.identity(4)
         m[:3, :3] = rot[:3, :3]
         m[3, :3] = pos

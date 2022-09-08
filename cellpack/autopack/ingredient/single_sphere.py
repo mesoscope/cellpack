@@ -41,7 +41,7 @@ class SingleSphereIngr(Ingredient):
         offset=None,
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
-        packing=None,
+        packing_ode="random",
         packing_priority=0,
         partners_name=None,
         partners_position=None,

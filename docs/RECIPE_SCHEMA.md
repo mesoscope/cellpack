@@ -115,7 +115,7 @@ _Optional `string[]`_
 An array that defines the names of directional gradients to use.
 
 ### innerGridMethod
-_Optional enum_. One of `"bhtree"`, `"raytrace"`, `"sdf"`, `"pyray"`, `"floodfill"`, `"binvox"`, `"trimesh"`, `"scanline"`. Default: `"jordan3"`.
+_Optional enum_. One of `"bhtree"`, `"raytrace"`, `"sdf"`, `"pyray"`, `"floodfill"`, `"binvox"`, `"trimesh"`, `"scanline"`. Default: `"raytrace"`.
 
 
  `"bhtree"` builds the compartment grid ie surface and inside point using bhtree.

@@ -58,6 +58,7 @@ from cellpack.autopack.interface_objects.representations import Representations
 
 from .utils import (
     ApplyMatrix,
+    get_distance,
     getNormedVectorOnes,
     rotVectToVect,
     rotax,
@@ -232,29 +233,18 @@ class Ingredient(Agent):
                 packing=representations.get("packing", None),
             )
             if self.representations["packing"]:
-
-        self.offset = [0, 0, 0]  # offset to apply for membrane binding
-        if offset:
-            self.offset = offset
-
+        self.offset = offset
+        self.source = {
+            "pdb": self.pdb,
+            "transform": {
+                "center": True,
+                "translate": [0, 0, 0],
+                "rotate": [0, 0, 0, 1],
+            },
+        }
         # should deal with source of the object
         if source:
-            sources = source.keys()
             self.source = source
-            if "pdb" in sources:
-                self.pdb = source["pdb"]
-            if "transform" in sources:
-                self.transform_sources = source["transform"]
-                if "offset" in source["transform"]:
-                    self.offset = source["transform"]["offset"]
-        else:
-            self.source = {
-                "pdb": self.pdb,
-                "transform": {"center": True, "offset": [0, 0, 0]},
-            }
-            self.transform_sources = {
-                "transform": {"center": True, "offset": [0, 0, 0]}
-            }
 
         self.color = color  # color used for sphere display
         if self.color == "None":
@@ -317,7 +307,6 @@ class Ingredient(Agent):
         self.verts = None
         self.rad = None
         self.rapid_model = None
-
         # TODO : geometry : 3d object or procedural from PDB
         # TODO : usekeyword resolution->options dictionary of res :
         # TODO : {"simple":{"cms":{"parameters":{"gridres":12}},
@@ -507,10 +496,6 @@ class Ingredient(Agent):
             shape
         )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
         return inodenp
-
-    def SetKw(self, **kw):
-        for k in kw:
-            setattr(self, k, kw[k])
 
     def Set(self, **kw):
         self.nbMol = 0
@@ -1665,6 +1650,37 @@ class Ingredient(Agent):
                     self.env.rTrans, leafsize=10
                 )
 
+    def pack_at_grid_pt_location(
+        self, env, jtrans, rotMatj, dpad, grid_point_distances
+    ):
+
+        newDistPoints = {}
+        insidePoints = {}
+        packing_location = jtrans
+        radius_of_area_to_check = self.encapsulatingRadius + dpad
+
+        bounding_points_to_check = self.get_all_positions_to_check(packing_location)
+
+        for bounding_point_position in bounding_points_to_check:
+
+            grid_points_to_update = env.grid.getPointsInSphere(
+                bounding_point_position, radius_of_area_to_check
+            )
+            for grid_point_index in grid_points_to_update:
+                (
+                    insidePoints,
+                    newDistPoints,
+                ) = self.get_new_distances_and_inside_points(
+                    env,
+                    bounding_point_position,
+                    rotMatj,
+                    grid_point_index,
+                    grid_point_distances,
+                    newDistPoints,
+                    insidePoints,
+                )
+        return insidePoints, newDistPoints
+
     def remove_from_realtime_display(env, moving):
         pass
         # env.afvi.vi.deleteObject(moving)
@@ -1865,37 +1881,12 @@ class Ingredient(Agent):
             # TODO: make this work for ingredients other than single spheres
 
             success = True
-            newDistPoints = {}
-            insidePoints = {}
-
-            (jtrans, rotMatj,) = self.get_new_jitter_location_and_rotation(
+            (jtrans, rotMatj) = self.get_new_jitter_location_and_rotation(
                 env, target_grid_point_position, rotation_matrix
             )
-
-            packing_location = jtrans
-            radius_of_area_to_check = self.encapsulating_radius + dpad
-
-            bounding_points_to_check = self.get_all_positions_to_check(packing_location)
-
-            for bounding_point_position in bounding_points_to_check:
-
-                grid_points_to_update = env.grid.getPointsInSphere(
-                    bounding_point_position, radius_of_area_to_check
-                )
-                for grid_point_index in grid_points_to_update:
-                    (
-                        insidePoints,
-                        newDistPoints,
-                    ) = self.get_new_distances_and_inside_points(
-                        env,
-                        bounding_point_position,
-                        rotMatj,
-                        grid_point_index,
-                        grid_point_distances,
-                        newDistPoints,
-                        insidePoints,
-                    )
-
+            (insidePoints, newDistPoints) = self.pack_at_grid_pt_location(
+                env, jtrans, rotMatj, dpad, grid_point_distances
+            )
         if success:
             if is_realtime:
                 autopack.helper.set_object_static(

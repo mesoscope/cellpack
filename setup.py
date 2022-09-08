@@ -44,10 +44,10 @@ requirements = [
     "panda3d==1.10.10",
     "pmw==2.0.1",
     "scipy>=1.6.2",
-    "simulariumio>=1.2.0",
+    "simulariumio>=1.6.2",
     "plotly>=5.3.1",
     "pycollada==0.7.2",
-    "pyembree>=0.1.12",
+    "pyembree>=0.1.8",
     "pymunk>=6.2.0",
     "trimesh>=3.9.34",
 ]
@@ -98,6 +98,6 @@ setup(
     url="https://github.com/mesoscope/cellpack",
     # Do not edit this string manually, always use bumpversion
     # Details in CONTRIBUTING.rst
-    version="1.0.1",
+    version="1.0.3",
     zip_safe=False,
 )
