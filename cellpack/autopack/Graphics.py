@@ -1134,8 +1134,8 @@ class AutopackViewer:
             ingr.molarity,
             ingr.pdb,
             ingr.principal_vector,
-            ingr.packingPriority,
-            ingr.jitter_max,
+            ingr.packing_priority,
+            ingr.max_jitter,
         )
 
     def printIngredients(self):
@@ -1964,7 +1964,7 @@ class AutopackViewer:
                 positions=[[[0, -h / 2.0, 0]]],
                 positions2=[[[0, h / 2.0, 0]]],
                 meshObject=ingrobj,
-                #                jitter_max=(1.,1.,1.),#how to customize
+                #                max_jitter=(1.,1.,1.),#how to customize
                 #                rotation_axis=(0.,0.,1.0),#how to customize
                 #                jitter_attempts = 10,
                 #  CRITICAL !!! IF jitter is greater than radius of object,

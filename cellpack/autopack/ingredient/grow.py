@@ -54,8 +54,8 @@ class GrowIngredient(MultiCylindersIngr):
         encapsulating_radius=0,
         excluded_partners_name=None,
         gradient="",
-        isAttractor=False,
-        jitter_max=(1, 1, 1),
+        is_attractor=False,
+        max_jitter=(1, 1, 1),
         length=10.0,
         marge=20.0,
         meshFile=None,
@@ -68,7 +68,7 @@ class GrowIngredient(MultiCylindersIngr):
         orientation=(1, 0, 0),
         orient_bias_range=[-pi, pi],
         packing=None,
-        packingPriority=0,
+        packing_priority=0,
         partners_name=None,
         partners_position=None,
         pdb=None,
@@ -103,8 +103,8 @@ class GrowIngredient(MultiCylindersIngr):
             encapsulating_radius=encapsulating_radius,
             excluded_partners_name=excluded_partners_name,
             gradient=gradient,
-            isAttractor=isAttractor,
-            jitter_max=jitter_max,
+            is_attractor=is_attractor,
+            max_jitter=max_jitter,
             meshFile=meshFile,
             meshObject=meshObject,
             molarity=molarity,
@@ -113,7 +113,7 @@ class GrowIngredient(MultiCylindersIngr):
             nbMol=nbMol,
             orient_bias_range=orient_bias_range,
             packing=packing,
-            packingPriority=packingPriority,
+            packing_priority=packing_priority,
             partners_name=partners_name,
             partners_position=partners_position,
             pdb=pdb,
@@ -373,11 +373,11 @@ class GrowIngredient(MultiCylindersIngr):
         ptIndr = int(uniform(0.0, 1.0) * len(pointsmask))
         sp_pt_indice = pointsmask[ptIndr]
         np = numpy.array(self.sphere_points[sp_pt_indice]) * numpy.array(
-            self.jitter_max
+            self.max_jitter
         )
         return (
             numpy.array(self.vi.unit_vector(np)) * self.uLength
-        )  # biased by jitter_max ?
+        )  # biased by max_jitter ?
 
     def mask_sphere_points_boundary(self, pt, boundingBox=None):
         if boundingBox is None:
@@ -546,7 +546,7 @@ class GrowIngredient(MultiCylindersIngr):
     def getNextPtIndCyl(self, jtrans, rotMatj, freePoints, histoVol):
         #        print jtrans, rotMatj
         cent2T = self.transformPoints(jtrans, rotMatj, self.positions[-1])
-        jx, jy, jz = self.jitter_max
+        jx, jy, jz = self.max_jitter
         jitter = self.getMaxJitter(histoVol.smallestProteinSize)
         if len(cent2T) == 1:
             cent2T = cent2T[0]
@@ -799,7 +799,7 @@ class GrowIngredient(MultiCylindersIngr):
                 return None, False  # numpy.array(pt2).flatten()+numpy.array(pt),False
             pt = self.vi.randpoint_onsphere(
                 self.uLength
-            )  # *numpy.array(self.jitter_max)
+            )  # *numpy.array(self.max_jitter)
             # the new position is the previous point (pt2) plus the random point
             newPt = numpy.array(pt2).flatten() + numpy.array(pt)
 
@@ -812,7 +812,7 @@ class GrowIngredient(MultiCylindersIngr):
             if abs(math.degrees(angle)) <= marge:
                 # check if in bounding box
                 inside = histoVol.grid.checkPointInside(
-                    newPt, dist=self.cutoff_boundary, jitter=self.jitter_max
+                    newPt, dist=self.cutoff_boundary, jitter=self.max_jitter
                 )
                 closeS = self.checkPointSurface(newPt, cutoff=self.cutoff_surface)
                 inComp = self.checkPointComp(newPt)
@@ -1361,7 +1361,7 @@ class GrowIngredient(MultiCylindersIngr):
                         False,
                     )  # numpy.array(pt2).flatten()+numpy.array(pt),False
                 p = numpy.array(p) * self.uLength
-                pt = numpy.array(p) * numpy.array(self.jitter_max)  # ?
+                pt = numpy.array(p) * numpy.array(self.max_jitter)  # ?
                 newPt = numpy.array(pt2).flatten() + numpy.array(pt)
                 if self.runTimeDisplay >= 2:
                     self.vi.setTranslation(sp, newPt)
@@ -1371,7 +1371,7 @@ class GrowIngredient(MultiCylindersIngr):
                 p = self.vi.advance_randpoint_onsphere(
                     self.uLength, marge=math.radians(marge), vector=v
                 )
-                pt = numpy.array(p) * numpy.array(self.jitter_max)  # ?
+                pt = numpy.array(p) * numpy.array(self.max_jitter)  # ?
                 # the new position is the previous point (pt2) plus the random point
                 newPt = numpy.array(pt2).flatten() + numpy.array(pt)
                 if self.runTimeDisplay >= 2:
@@ -1386,7 +1386,7 @@ class GrowIngredient(MultiCylindersIngr):
                 inComp = True
                 closeS = False
                 inside = histoVol.grid.checkPointInside(
-                    newPt, dist=self.cutoff_boundary, jitter=self.jitter_max
+                    newPt, dist=self.cutoff_boundary, jitter=self.max_jitter
                 )
                 if inside:
                     inComp = self.checkPointComp(newPt)
@@ -1534,14 +1534,14 @@ class GrowIngredient(MultiCylindersIngr):
         if p is None:
             return None
         p = numpy.array(p)  # *self.uLength
-        pt = numpy.array(p)  # *numpy.array(self.jitter_max)#?
+        pt = numpy.array(p)  # *numpy.array(self.max_jitter)#?
         return numpy.array(pt2).flatten() + numpy.array(pt)
 
     def pickRandomSphere(self, pt1, pt2, marge, v):
         p = self.vi.advance_randpoint_onsphere(
             self.uLength, marge=math.radians(marge), vector=v
         )
-        pt = numpy.array(p) * numpy.array(self.jitter_max)
+        pt = numpy.array(p) * numpy.array(self.max_jitter)
         # the new position is the previous point (pt2) plus the random point
         newPt = numpy.array(pt2).flatten() + numpy.array(pt)
         # compute the angle between the previous direction (pt1->pt2) and the new random one (pt)
@@ -1864,7 +1864,7 @@ class GrowIngredient(MultiCylindersIngr):
                 axis=2,  # TODO: revert to original implementation for 3D packing
             )
             self.vector = (
-                numpy.array(v).flatten() * self.uLength * self.jitter_max
+                numpy.array(v).flatten() * self.uLength * self.max_jitter
             )  # = (1,0,0)self.vector.flatten()
             secondPoint = self.startingpoint + self.vector
             # seed="F"
@@ -1874,7 +1874,7 @@ class GrowIngredient(MultiCylindersIngr):
             else:
                 seed = "F"
             inside = self.env.grid.checkPointInside(
-                secondPoint, dist=self.cutoff_boundary, jitter=self.jitter_max
+                secondPoint, dist=self.cutoff_boundary, jitter=self.max_jitter
             )
             closeS = False
             if inside and self.compNum <= 0:
@@ -1892,10 +1892,10 @@ class GrowIngredient(MultiCylindersIngr):
                     p = self.vi.advance_randpoint_onsphere(
                         self.uLength, marge=math.radians(self.marge), vector=self.vector
                     )
-                    pt = numpy.array(p) * numpy.array(self.jitter_max)
+                    pt = numpy.array(p) * numpy.array(self.max_jitter)
                     secondPoint = self.startingpoint + numpy.array(pt)
                     inside = self.env.grid.checkPointInside(
-                        secondPoint, dist=self.cutoff_boundary, jitter=self.jitter_max
+                        secondPoint, dist=self.cutoff_boundary, jitter=self.max_jitter
                     )
                     if self.compNum <= 0:
                         closeS = self.checkPointSurface(
@@ -2352,12 +2352,12 @@ class ActinIngredient(GrowIngredient):
         radii=[[50.0]],
         positions=None,
         positions2=None,
-        packingPriority=0,
+        packing_priority=0,
         name=None,
         pdb=None,
         color=None,
         jitter_attempts=5,
-        jitter_max=(1, 1, 1),
+        max_jitter=(1, 1, 1),
         perturb_axis_amplitude=0.1,
         length=10.0,
         closed=False,
@@ -2382,12 +2382,12 @@ class ActinIngredient(GrowIngredient):
             radii,
             positions,
             positions2,
-            packingPriority,
+            packing_priority,
             name,
             pdb,
             color,
             jitter_attempts,
-            jitter_max,
+            max_jitter,
             perturb_axis_amplitude,
             length,
             closed,
@@ -2406,7 +2406,7 @@ class ActinIngredient(GrowIngredient):
         )
         if name is None:
             name = "Actine_%s_%f" % (str(radii), molarity)
-        self.isAttractor = True
+        self.is_attractor = True
         self.constraintMarge = True
         self.seedOnMinus = True
         self.influenceRad = influenceRad

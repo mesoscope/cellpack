@@ -191,9 +191,9 @@ def main():
             ingr.rejection_threshold = 100  # [1,1,0]#
             ingr.cutoff_boundary = 0  # ingr.encapsulating_radius/2.0
             if dim == 3:
-                ingr.jitter_max = [1, 1, 1]
+                ingr.max_jitter = [1, 1, 1]
             else:
-                ingr.jitter_max = [1, 1, 0]
+                ingr.max_jitter = [1, 1, 0]
 
         env.loopThroughIngr(setCompartment)
 

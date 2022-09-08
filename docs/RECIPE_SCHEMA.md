@@ -235,7 +235,7 @@ _Optional `string`_
 
 Location of sphere file 
 
-### packingPriority
+### packing_priority
 _Optional `number`_ Default to `0.0`.
 
 Order to pack, largest negative number gets packed first. 
@@ -283,7 +283,7 @@ _Optional `enum`. One of `"SingleSphere"`,`"SingleCube"`,`"MultiSphere"`,`"Multi
 ### offset 
 _Optional  `[number, number, number]`_. Default: `[0.0, 0.0, 0.0]`.
 
-### jitter_max
+### max_jitter
 _Optional `[number, number, number]`_. Default: `[1, 1, 1]`.
 
 ### jitter_attempts
@@ -346,7 +346,7 @@ _Optional `number` between `0` and `1`_. Default: `0.5`.
 ### proba_not_binding
 _`number`_
 
-### isAttractor
+### is_attractor
 _Optional `boolean`_. Default: `false`.
 
 ### weight
@@ -388,13 +388,13 @@ _Optional `string`_
     "radii": [[100]], 
     "cutoff_boundary": 0,
     "coordsystem": "left",
-    "jitter_max": [ 1, 1, 0], 
+    "max_jitter": [ 1, 1, 0], 
     "perturb_axis_amplitude": 0.1,
     "encapsulating_radius": 100,
     "positions2": null,
     "useOrientBias": false,
     "gradient": "",
-    "isAttractor": false,
+    "is_attractor": false,
     "principal_vector": [ 1, 0, 0 ],
     "properties": {},
     "partners_name": [],
@@ -407,7 +407,7 @@ _Optional `string`_
     "rejection_threshold": 60,
     "place_type": "jitter",
     "cutoff_surface": 100,
-    "packingPriority": 0, 
+    "packing_priority": 0, 
     "proba_binding": 0.5,
     "rotation_axis": null,
     "positions": [ [ [ 0, 0, 0] ] ],
