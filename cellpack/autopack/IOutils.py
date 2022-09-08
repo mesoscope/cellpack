@@ -6,7 +6,6 @@ Created on Sun Jan 27 09:04:10 2013
 """
 import os
 import pickle
-import webbrowser
 
 import numpy
 import json

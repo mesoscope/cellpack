@@ -13,7 +13,9 @@ __author__ = "Michael J. Harms"
 __date__ = "070521"
 __usage__ = "pdb_download.py pdb_id or file w/ list of ids"
 
-import os, ftplib, gzip
+import os
+import ftplib
+import gzip
 
 HOSTNAME = "ftp.wwpdb.org"
 DIRECTORY = "/pub/pdb/data/biounit/PDB/divided"

@@ -44,14 +44,13 @@
 
 # TODO: Describe Ingredient class here at high level
 import os
-from turtle import pos
 from scipy import spatial
 from panda3d.bullet import BulletRigidBodyNode
 import numpy
 import logging
 import collada
 from scipy.spatial.transform import Rotation as R
-from math import sqrt, pi
+from math import pi
 from random import uniform, gauss, random
 from time import time
 import math
@@ -474,11 +473,6 @@ class Ingredient(Agent):
             ):  # [0][0]
                 positions = [[[0, 0, 0]]]
 
-            else:
-                if radii is not None:
-                    delta = numpy.array(positions[0])
-                    rM = sqrt(max(numpy.sum(delta * delta, 1)))
-                    # self.encapsulatingRadius = max(rM, self.encapsulatingRadius)
             # if radii is not None and positions is not None:
             # for r, c in zip(radii, positions):
             #     assert len(r) == len(c)

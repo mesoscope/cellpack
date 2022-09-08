@@ -32,7 +32,7 @@ def pdbCentermass(pdb, write_coord=False, include_hetatm=False, include_mass=Tru
 
     # Create a regular expression to strip out charge information from atom type
     # Look for any number or + or -
-    charge_pattern = re.compile("[0-9]|\+|\-")
+    charge_pattern = re.compile(r"[0-9]|\+|\-")
 
     # Calculate the center of mass of the protein (assuming all atoms have the
     # same mass).
