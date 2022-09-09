@@ -12,23 +12,22 @@ helper = autopack.helper
 
 class SingleCubeIngr(Ingredient):
     """
-    This Ingredient is represented by a single cube
+    This Ingredient is represented by a single cube. Required attribute: 
+    bounds, in the form of [lower bounds, upper bounds]. Each an x, y, z point.
     """
 
     def __init__(
         self,
-        type="SingleCube",
+        bounds,
+        type="single_cube",
         color=None,
-        coordsystem="right",
         count=0,
         cutoff_boundary=None,
         cutoff_surface=None,
         distance_expression=None,
         distance_function=None,
-        encapsulating_radius=0,
-        excluded_partners_name=None,
         force_random=False,  # avoid any binding
-        gradient="",
+        gradient=None,
         is_attractor=False,
         max_jitter=(1, 1, 1),
         molarity=0.0,
@@ -37,25 +36,16 @@ class SingleCubeIngr(Ingredient):
         offset=None,
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
-        packing=None,
         packing_priority=0,
-        partners_name=None,
-        partners_position=None,
-        pdb=None,
+        partners=None,
         perturb_axis_amplitude=0.1,
         place_type="jitter",
-        positions2=[[[0, 0, 0]]],
-        positions=[[[0, 0, 0]]],
         principal_vector=(1, 0, 0),
-        proba_binding=0.5,
-        proba_not_binding=0.5,  # chance to actually not bind
-        properties=None,
-        radii=None,
+        representations=None,
         rejection_threshold=30,
         resolution_dictionary=None,
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=0,
-        source=None,
         use_orient_bias=False,
         use_rotation_axis=True,
         weight=0.2,  # use for affinity ie partner.weight
@@ -68,7 +58,6 @@ class SingleCubeIngr(Ingredient):
             cutoff_surface=cutoff_surface,
             distance_expression=distance_expression,
             distance_function=distance_function,
-            excluded_partners_name=excluded_partners_name,
             force_random=force_random,
             gradient=gradient,
             is_attractor=is_attractor,
@@ -78,18 +67,11 @@ class SingleCubeIngr(Ingredient):
             jitter_attempts=jitter_attempts,
             overwrite_distance_function=overwrite_distance_function,
             packing_priority=packing_priority,
-            partners_name=partners_name,
-            partners_position=partners_position,
-            pdb=pdb,
+            partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
             place_type=place_type,
-            positions2=positions2,
-            positions=positions,
             principal_vector=principal_vector,
-            proba_binding=proba_binding,
-            proba_not_binding=proba_not_binding,
-            properties=properties,
-            radii=radii,
+            representations=representations,
             rotation_axis=rotation_axis,
             rotation_range=rotation_range,
             use_rotation_axis=use_rotation_axis,
@@ -97,31 +79,28 @@ class SingleCubeIngr(Ingredient):
         )
 
         if name is None:
-            name = "%5.2f_%f" % (radii[0][0], molarity)
+            name = "%5.2f_%f" % (bounds[0][0], molarity)
         self.name = name
-        self.singleSphere = False
-        self.modelType = "Cube"
+        self.model_type = "Cube"
         self.collisionLevel = 0
-        radii = numpy.array(radii)
 
-        self.min_radius = min(radii[0] / 2)  # should have three radii sizex,sizey,sizez
-        self.maxRadius = self.encapsulating_radius = numpy.linalg.norm(
-            radii[0] / 2
+        self.bb = bounds
+
+        self.lower_bound = bounds[0]  # bottom left corner of cuboid
+        self.upper_bound = bounds[1]  # top right corner of cuboid
+        lower_bound = numpy.array(self.lower_bound)
+        upper_bound = numpy.array(self.upper_bound)
+        self.edges = numpy.array([upper_bound[i] - upper_bound[i] for i in range(3)])
+        self.min_radius = min(self.edges) / 2  # sizex,sizey,sizez
+        self.encapsulating_radius = numpy.linalg.norm(
+            self.edges / 2
         )  # calculate encapsulating radius based on side length
-        self.bb = [-radii[0] / 2, radii[0] / 2]
-
-        self.positions = positions  # bottom left corner of cuboid
-        self.positions2 = positions2  # top right corner of cuboid
-        positions_ar = numpy.array(self.positions[0][0])
-        positions2_ar = numpy.array(self.positions2[0][0])
-
         self.center = (
-            positions_ar + (positions2_ar - positions_ar) / 2
+            lower_bound + (upper_bound - lower_bound) / 2
         )  # location of center based on corner points
 
-        d = radii[0] / 2.0
+        d = self.edges / 2.0
 
-        self.radii = radii
         self.vertices = [
             [-d, -d, -d],  # [x0, y0, z0],
             [d, -d, -d],  # [x1, y0, z0],
@@ -146,10 +125,10 @@ class SingleCubeIngr(Ingredient):
         """
         Check cube for collision
         centers1 and centers2 should be the cornerPoints, so we can do parrallelpiped
-        can also use the center plus size (radii), or the position/position2
+        can also use the center plus size (edges), or the position/position2
         """
-        corner1 = self.positions[0]
-        corner2 = self.positions2[0]
+        corner1 = self.lower_bound
+        corner2 = self.upper_bound
         corner1_trans = self.transformPoints(jtrans, rotMat, corner1)[0]  # bb1
         corner2_trans = self.transformPoints(jtrans, rotMat, corner2)[0]  # bb2
         center_trans = self.transformPoints(jtrans, rotMat, [self.center])[0]
@@ -238,11 +217,11 @@ class SingleCubeIngr(Ingredient):
         """
         Check cube for collision
         centers1 and centers2 should be the cornerPoints ?
-        can also use the center plus size (radii), or the position/position2
+        can also use the center plus size (edges), or the position/position2
         """
-        centers1 = self.positions[0]
-        centers2 = self.positions2[0]
-        radii = self.radii
+        centers1 = self.lower_bound
+        centers2 = self.upper_bound
+        edges = self.edges
         cent1T = self.transformPoints(jtrans, rotMat, centers1)[0]  # bb1
         cent2T = self.transformPoints(jtrans, rotMat, centers2)[0]  # bb2
         center = self.transformPoints(jtrans, rotMat, [self.center])[0]
@@ -263,7 +242,7 @@ class SingleCubeIngr(Ingredient):
         m = numpy.matrix(numpy.array(rotMat).reshape(4, 4))  #
         mat = m.I
         rpd = ApplyMatrix(pd, mat)
-        res = numpy.less_equal(numpy.fabs(rpd), numpy.array(radii[0]) / 2.0)
+        res = numpy.less_equal(numpy.fabs(rpd), edges / 2.0)
         c = numpy.average(res, 1)  # .astype(int)
         d = numpy.equal(c, 1.0)
         ptinside = numpy.nonzero(d)[0]
@@ -280,18 +259,18 @@ class SingleCubeIngr(Ingredient):
     def get_new_distance_values(
         self, jtrans, rotMat, gridPointsCoords, distance, dpad, level=0
     ):
-        radii = self.radii
+        edges = self.edges
         insidePoints = {}
         newDistPoints = {}
-        cent1T = self.transformPoints(jtrans, rotMat, self.positions[0])[0]  # bb1
-        cent2T = self.transformPoints(jtrans, rotMat, self.positions2[0])[0]  # bb2
+        cent1T = self.transformPoints(jtrans, rotMat, self.lower_bound)[0]  # bb1
+        cent2T = self.transformPoints(jtrans, rotMat, self.upper_bound)[0]  # bb2
         center = self.transformPoints(
             jtrans,
             rotMat,
             [self.center],
         )[0]
         #        cylNum = 0
-        #        for radc, p1, p2 in zip(radii, cent1T, cent2T):
+        #        for radc, p1, p2 in zip(edges, cent1T, cent2T):
         x1, y1, z1 = cent1T
         x2, y2, z2 = cent2T
         vx, vy, vz = (x2 - x1, y2 - y1, z2 - z1)
@@ -319,7 +298,7 @@ class SingleCubeIngr(Ingredient):
         rpd = ApplyMatrix(pd, mat)
         # need to check if these point are inside the cube using the dimension of the cube
         # numpy.fabs
-        res = numpy.less_equal(numpy.fabs(rpd), numpy.array(radii[0]) / 2.0)
+        res = numpy.less_equal(numpy.fabs(rpd), edges / 2.0)
         if len(res):
             c = numpy.average(res, 1)  # .astype(int)
             d = numpy.equal(c, 1.0)
@@ -368,7 +347,7 @@ class SingleCubeIngr(Ingredient):
         point,
     ):
         # returns the distance to the closest cube surface from point
-        side_lengths = numpy.abs(self.radii[0]) / 2.0
+        side_lengths = numpy.abs(self.edges) / 2.0
 
         dist_x, dist_y, dist_z = numpy.abs(point) - side_lengths
 

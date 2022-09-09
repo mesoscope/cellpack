@@ -170,11 +170,11 @@ class Ingredient(Agent):
         distance_expression=None,
         distance_function=None,
         force_random=False,  # avoid any binding
-        gradient="",
+        gradient=None,
         is_attractor=False,
         max_jitter=(1, 1, 1),
         molarity=0.0,
-        name="",
+        name=None,
         jitter_attempts=5,
         offset=None,
         orient_bias_range=[-pi, pi],
@@ -234,7 +234,7 @@ class Ingredient(Agent):
         self.color = color  # color used for sphere display
         if self.color == "None":
             self.color = None
-        self.modelType = "Spheres"
+        self.model_type = "Spheres"
         self.rRot = []
         self.tTrans = []
         self.htrans = []
@@ -269,10 +269,8 @@ class Ingredient(Agent):
         self.compId_accepted = (
             []
         )  # if this list is defined, point picked outise the list are rejected
-        # should be self.compNum per default
-        # will be set when recipe is added to HistoVol
+
         # added to a compartment
-        self.count = count
         self.left_to_place = count
         self.vol_nbmol = 0
 
@@ -308,10 +306,6 @@ class Ingredient(Agent):
         if resolution_dictionary is None:
             resolution_dictionary = {"Low": "", "Med": "", "High": ""}
         self.resolution_dictionary = resolution_dictionary
-
-        # how to get the geom of different res?
-        self.representation = None
-        self.representation_file = None
 
         self.use_rotation_axis = use_rotation_axis
         self.rotation_axis = rotation_axis
@@ -1212,7 +1206,7 @@ class Ingredient(Agent):
             )
         x, y, z = jtrans
         bb = ([x - rad, y - rad, z - rad], [x + rad, y + rad, z + rad])
-        if self.modelType == "Cylinders":
+        if self.model_type == "Cylinders":
             cent1T = self.transformPoints(
                 jtrans, rotMat, self.positions[self.deepest_level]
             )

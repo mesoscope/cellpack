@@ -4,6 +4,8 @@ from math import pi, sqrt
 from panda3d.core import Point3, TransformState
 from panda3d.bullet import BulletCylinderShape, BulletRigidBodyNode
 
+from cellpack.autopack.utils import get_distance
+
 from .Ingredient import Ingredient
 import cellpack.autopack as autopack
 from .utils import pandaMatrice
@@ -20,48 +22,33 @@ class SingleCylinderIngr(Ingredient):
 
     def __init__(
         self,
-        type="SingleCylinder",
+        bounds,
+        radius,
+        type="single_cylinder",
         color=None,
         count=0,
-        coordsystem="right",
         cutoff_boundary=None,
         cutoff_surface=None,
         distance_expression=None,
         distance_function=None,
-        encapsulating_radius=0,
-        excluded_partners_name=None,
         force_random=False,  # avoid any binding
         gradient="",
         is_attractor=False,
         max_jitter=(1, 1, 1),
-        meshFile=None,
-        meshName=None,
-        meshObject=None,
-        meshType="file",
         molarity=0.0,
         name=None,
         jitter_attempts=5,
         orient_bias_range=[-pi, pi],
-        packing=None,
+        packing_mode="random",
         packing_priority=0,
-        partners_position=None,
-        partners_name=None,
-        pdb=None,
+        partners=None,
         perturb_axis_amplitude=0.1,
         place_type="jitter",
-        positions=None,
-        positions2=None,
         principal_vector=(1, 0, 0),
-        proba_binding=0.5,
-        proba_not_binding=0.5,
-        properties=None,
-        radii=None,
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=6.2831,
         rejection_threshold=30,
-        source=None,
-        uLength=0,
-        useLength=False,
+        u_length=None,
         use_orient_bias=False,
         use_rotation_axis=True,
         weight=0.2,  # use for affinity ie partner.weight
@@ -70,78 +57,57 @@ class SingleCylinderIngr(Ingredient):
         super().__init__(
             type=type,
             color=color,
-            coordsystem=coordsystem,
             count=count,
             cutoff_boundary=cutoff_boundary,
             cutoff_surface=cutoff_surface,
             distance_expression=distance_expression,
             distance_function=distance_function,
-            encapsulating_radius=encapsulating_radius,
-            excluded_partners_name=excluded_partners_name,
             force_random=force_random,  # avoid any binding
             gradient=gradient,
             is_attractor=is_attractor,
             max_jitter=max_jitter,
-            meshFile=meshFile,
-            meshName=meshName,
-            meshObject=meshObject,
-            meshType="file",
             molarity=molarity,
             name=name,
             jitter_attempts=jitter_attempts,
+            packing_mode=packing_mode,
             packing_priority=packing_priority,
-            partners_name=partners_name,
-            partners_position=partners_position,
-            pdb=pdb,
+            partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
             place_type=place_type,
-            positions=positions,
-            positions2=positions2,
             principal_vector=principal_vector,
-            proba_binding=proba_binding,
-            proba_not_binding=proba_not_binding,
-            properties=properties,
-            radii=radii,
             rejection_threshold=rejection_threshold,
             rotation_axis=rotation_axis,
             rotation_range=rotation_range,
-            source=source,
             use_orient_bias=use_orient_bias,
             use_rotation_axis=use_rotation_axis,
             weight=weight,
         )
 
         if name is None:
-            name = "%s_%f" % (str(radii), molarity)
+            name = "%s_%f" % (str(radius), molarity)
         self.name = name
-        self.singleSphere = False
-        self.modelType = "Cylinders"
+        self.model_type = "Cylinders"
         self.collisionLevel = 0
-        self.min_radius = self.radii[0][0]
-        self.useLength = useLength
-        self.uLength = uLength
+        self.min_radius = self.radius
+        self.length = get_distance(bounds[1], bounds[0])
         self.nbCurve = 2
-        if self.positions2 is not None and self.positions is not None:
-            bottom_cent = numpy.array(self.positions[0][0])
-            top_cent = numpy.array(self.positions2[0][0])
+        bottom_cent = numpy.array(bounds[0])
+        top_cent = numpy.array(bounds[1])
 
-            self.axis = top_cent - bottom_cent
-            self.length = numpy.linalg.norm(self.axis)
+        self.axis = top_cent - bottom_cent
+        self.principal_vector = self.axis / self.length
+        self.center = (
+            bottom_cent + (top_cent - bottom_cent) / 2
+        )  # location of center based on top and bottom
 
-            self.principal_vector = self.axis / self.length
+        self.encapsulating_radius = numpy.sqrt(
+            radius ** 2 + (self.length / 2.0) ** 2
+        )
 
-            self.center = (
-                bottom_cent + (top_cent - bottom_cent) / 2
-            )  # location of center based on top and bottom
-
-            self.encapsulating_radius = numpy.sqrt(
-                radii[0][0] ** 2 + (self.length / 2.0) ** 2
-            )
-
-            self.listePtLinear = [
-                bottom_cent,
-                bottom_cent + self.axis,
-            ]
+        self.listePtLinear = [
+            bottom_cent,
+            bottom_cent + self.axis,
+        ]
 
     def initialize_mesh(self, mesh_store):
         if self.mesh is None and autopack.helper is not None:
@@ -165,7 +131,7 @@ class SingleCylinderIngr(Ingredient):
 
         if self.packingMode == "close":
             cut = self.length - jitter
-        #            if ingr.modelType=='Cube' : #radius iactually the size
+        #            if ingrmodel_type=='Cube' : #radius iactually the size
         #                cut = min(self.radii[0]/2.)-jitter
         #            elif ingr.cutoff_boundary is not None :
         #                #this mueay work if we have the distance from the border

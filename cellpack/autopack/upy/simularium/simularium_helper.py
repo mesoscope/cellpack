@@ -388,9 +388,9 @@ class simulariumHelper(hostHelper.Helper):
     def get_display_data(self, ingredient):
         display_type = DISPLAY_TYPE.SPHERE
         url = ""
-        if ingredient.type == "SingleCube":
+        if ingredient.type == "single_cube":
             display_type = "CUBE"
-        elif ingredient.type == "SingleSphere":
+        elif ingredient.type == "single_sphere":
             display_type = DISPLAY_TYPE.SPHERE
         elif self.is_fiber(ingredient.type):
             display_type = DISPLAY_TYPE.FIBER

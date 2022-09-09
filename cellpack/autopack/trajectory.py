@@ -128,15 +128,15 @@ class Trajectory:
         indice = 0
         if r:
             for ingr in r.ingredients:
-                if ingr.type == "SingleSphere" or ingr.type == "SingleCube":
+                if ingr.type == "single_sphere" or ingr.type == "single_cube":
                     for k in range(len(ingr.results)):
                         pos = self.getIngredientInstancePos(ingr.name, k, frame)
                         autopack.helper.setTranslation(
                             autopack.helper.getName(ingr.ipoly[k]), pos
                         )
                         indice += 1
-                elif ingr.type == "MultiSphere":
-                    level = ingr.maxLevel
+                elif ingr.type == "multi_sphere":
+                    level = ingr.deepest_level
                     nbPrim = len(ingr.radii[level])
                     for k in range(len(ingr.results) * nbPrim):
                         pos = self.getIngredientInstancePos(ingr.name, k, frame)
@@ -149,15 +149,15 @@ class Trajectory:
             rs = orga.surfaceRecipe
             if rs:
                 for ingr in rs.ingredients:
-                    if ingr.type == "SingleSphere" or ingr.type == "SingleCube":
+                    if ingr.type == "single_sphere" or ingr.type == "single_cube":
                         for k in range(len(ingr.results)):
                             pos = self.getIngredientInstancePos(ingr.name, k, frame)
                             autopack.helper.setTranslation(
                                 autopack.helper.getName(ingr.ipoly[k]), pos
                             )
                             indice += 1
-                    elif ingr.type == "MultiSphere":
-                        level = ingr.maxLevel
+                    elif ingr.type == "multi_sphere":
+                        level = ingr.deepest_level
                         nbPrim = len(ingr.radii[level])
                         for k in range(len(ingr.results) * nbPrim):
                             pos = self.getIngredientInstancePos(ingr.name, k, frame)
@@ -170,15 +170,15 @@ class Trajectory:
             if ri:
                 k = 0
                 for ingr in ri.ingredients:
-                    if ingr.type == "SingleSphere" or ingr.type == "SingleCube":
+                    if ingr.type == "single_sphere" or ingr.type == "single_cube":
                         for k in range(len(ingr.results)):
                             pos = self.getIngredientInstancePos(ingr.name, k, frame)
                             autopack.helper.setTranslation(
                                 autopack.helper.getName(ingr.ipoly[k]), pos
                             )
                             indice += 1
-                    elif ingr.type == "MultiSphere":
-                        level = ingr.maxLevel
+                    elif ingr.type == "multi_sphere":
+                        level = ingr.deepest_level
                         nbPrim = len(ingr.radii[level])
                         for k in range(len(ingr.results) * nbPrim):
                             pos = self.getIngredientInstancePos(ingr.name, k, frame)
@@ -228,13 +228,13 @@ class Trajectory:
                 if not len(ingr.results):
                     continue
                 if (
-                    ingr.type == "SingleSphere"
-                    or ingr.type == "SingleCube"
+                    ingr.type == "single_sphere"
+                    or ingr.type == "single_cube"
                     or self.traj_type == "molb"
                 ):
                     self.makeIngrMapping(ingr.name, len(ingr.results))
-                elif ingr.type == "MultiSphere":
-                    level = ingr.maxLevel
+                elif ingr.type == "multi_sphere":
+                    level = ingr.deepest_level
                     nbPrim = len(ingr.radii[level])
                     self.makeIngrMapping(ingr.name, len(ingr.results) * nbPrim)
 
@@ -247,13 +247,13 @@ class Trajectory:
                     if not len(ingr.results):
                         continue
                     if (
-                        ingr.type == "SingleSphere"
-                        or ingr.type == "SingleCube"
+                        ingr.type == "single_sphere"
+                        or ingr.type == "single_cube"
                         or self.traj_type == "molb"
                     ):
                         self.makeIngrMapping(ingr.name, len(ingr.results))
-                    elif ingr.type == "MultiSphere":
-                        level = ingr.maxLevel
+                    elif ingr.type == "multi_sphere":
+                        level = ingr.deepest_level
                         nbPrim = len(ingr.radii[level])
                         self.makeIngrMapping(ingr.name, len(ingr.results) * nbPrim)
             # compartment matrix ingr
@@ -263,13 +263,13 @@ class Trajectory:
                     if not len(ingr.results):
                         continue
                     if (
-                        ingr.type == "SingleSphere"
-                        or ingr.type == "SingleCube"
+                        ingr.type == "single_sphere"
+                        or ingr.type == "single_cube"
                         or self.traj_type == "molb"
                     ):
                         self.makeIngrMapping(ingr.name, len(ingr.results))
-                    elif ingr.type == "MultiSphere":
-                        level = ingr.maxLevel
+                    elif ingr.type == "multi_sphere":
+                        level = ingr.deepest_level
                         nbPrim = len(ingr.radii[level])
                         self.makeIngrMapping(ingr.name, len(ingr.results) * nbPrim)
 

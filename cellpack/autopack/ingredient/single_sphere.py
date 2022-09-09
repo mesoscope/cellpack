@@ -20,7 +20,8 @@ class SingleSphereIngr(Ingredient):
 
     def __init__(
         self,
-        type="SingleSphere",
+        radius,
+        type="single_sphere",
         color=None,
         count=0,
         cutoff_boundary=None,
@@ -28,10 +29,9 @@ class SingleSphereIngr(Ingredient):
         distance_expression=None,
         distance_function=None,
         force_random=False,  # avoid any binding
-        gradient="",
+        gradient=None,
         is_attractor=False,
         max_jitter=(1, 1, 1),
-        meshType="file",
         molarity=0.0,
         name=None,
         jitter_attempts=5,
@@ -44,8 +44,7 @@ class SingleSphereIngr(Ingredient):
         perturb_axis_amplitude=0.1,
         place_type="jitter",
         principal_vector=(1, 0, 0),
-        properties=None,
-        radius=1,
+        representations=None,
         rejection_threshold=30,
         resolution_dictionary=None,
         rotation_axis=[0.0, 0.0, 0.0],
@@ -75,16 +74,16 @@ class SingleSphereIngr(Ingredient):
             perturb_axis_amplitude=perturb_axis_amplitude,
             place_type=place_type,
             principal_vector=principal_vector,
+            representations=representations,
             rotation_axis=rotation_axis,
             rotation_range=rotation_range,
             use_rotation_axis=use_rotation_axis,
             weight=weight,
         )
-        self.modelType = "Spheres"
+        self.model_type = "Spheres"
         if name is None:
             name = "%5.2f_%f" % (radius, molarity)
         self.name = name
-        self.singleSphere = True
         self.mesh = None
         # min and max radius for a single sphere should be the same
         self.radius = radius
@@ -256,11 +255,4 @@ class SingleSphereIngr(Ingredient):
             )
 
             self.getData()
-        # should do that for all ingredient type
-        # if self.representation is None and not hasattr(
-        #     self.mesh, "getFaces"
-        # ):  # this is not working with dejavu
-        #     # and should go in the graphics.
-        #     self.representation = autopack.helper.Icosahedron(
-        #         self.name + "_rep", radius=self.radii[0][0]
-        #     )[0]
+

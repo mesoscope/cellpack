@@ -95,7 +95,6 @@ class MultiSphereIngr(Ingredient):
             weight=weight,
         )
         self.name = name
-        self.singleSphere = False
 
         positions, radii = self.representations.get_spheres()
         self.set_sphere_positions(positions, radii)

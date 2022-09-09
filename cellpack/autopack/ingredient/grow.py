@@ -48,39 +48,31 @@ class GrowIngredient(MultiCylindersIngr):
         color=None,
         compMask=None,
         constraintMarge=False,
-        coordsystem="right",
         cutoff_boundary=1.0,
         cutoff_surface=0.5,
-        encapsulating_radius=0,
-        excluded_partners_name=None,
-        gradient="",
+        gradient=None,
         is_attractor=False,
         max_jitter=(1, 1, 1),
         length=10.0,
         marge=20.0,
         meshFile=None,
         meshObject=None,
-        modelType="Cylinders",
+        model_type="Cylinders",
         molarity=0.0,
         name=None,
         jitter_attempts=5,
         count=0,
         orientation=(1, 0, 0),
         orient_bias_range=[-pi, pi],
-        packing=None,
         packing_priority=0,
-        partners_name=None,
-        partners_position=None,
-        pdb=None,
+        partners=None,
         perturb_axis_amplitude=0.1,
         place_type="jitter",
         positions=None,
         positions2=None,
         principal_vector=(1, 0, 0),
-        proba_binding=0.5,
-        proba_not_binding=0.5,
-        properties=None,
         radii=None,
+        representations=None,
         rejection_threshold=30,
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=6.2831,
@@ -98,39 +90,24 @@ class GrowIngredient(MultiCylindersIngr):
         super().__init__(
             type=type,
             color=color,
-            coordsystem=coordsystem,
             cutoff_surface=cutoff_surface,
-            encapsulating_radius=encapsulating_radius,
-            excluded_partners_name=excluded_partners_name,
             gradient=gradient,
             is_attractor=is_attractor,
             max_jitter=max_jitter,
-            meshFile=meshFile,
-            meshObject=meshObject,
             molarity=molarity,
             name=name,
             jitter_attempts=jitter_attempts,
             count=count,
             orient_bias_range=orient_bias_range,
             packing_priority=packing_priority,
-            partners_name=partners_name,
-            partners_position=partners_position,
-            pdb=pdb,
+            partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
             place_type=place_type,
-            positions=positions,
-            positions2=positions2,
             principal_vector=principal_vector,
-            proba_binding=proba_binding,
-            proba_not_binding=proba_not_binding,
-            properties=properties,
-            radii=radii,
+            representations=representations,
             rejection_threshold=rejection_threshold,
             rotation_axis=rotation_axis,
             rotation_range=rotation_range,
-            source=source,
-            uLength=uLength,
-            useLength=useLength,
             use_orient_bias=use_orient_bias,
             use_rotation_axis=use_rotation_axis,
             weight=weight,
@@ -138,8 +115,7 @@ class GrowIngredient(MultiCylindersIngr):
         if name is None:
             name = "%s_%f" % (str(radii), molarity)
         self.name = name
-        self.singleSphere = False
-        self.modelType = modelType
+        self.model_type = model_type
         self.collisionLevel = 0
         self.min_radius = self.radii[0][0]
         self.marge = marge
@@ -825,7 +801,7 @@ class GrowIngredient(MultiCylindersIngr):
                     continue
                 # optionally check for collision
                 if checkcollision:
-                    if self.modelType == "Cylinders":
+                    if self.model_type == "Cylinders":
                         # outise is consider as collision...?
                         #                        rotMatj,jtrans=self.getJtransRot(numpy.array(pt2).flatten(),newPt)
                         rot_mat = numpy.identity(4)
