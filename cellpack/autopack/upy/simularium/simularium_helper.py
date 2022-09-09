@@ -403,7 +403,9 @@ class simulariumHelper(hostHelper.Helper):
                 pdb_file_name = ingredient.pdb
             elif ingredient.mesh_info is not None:
                 meshType = (
-                    ingredient.mesh_info["type"] if ingredient.mesh_info["type"] is not None else "file"
+                    ingredient.mesh_info["type"]
+                    if ingredient.mesh_info["type"] is not None
+                    else "file"
                 )
                 if meshType == "file":
                     file_path = os.path.basename(ingredient.mesh_info["file"])
