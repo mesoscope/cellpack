@@ -15,5 +15,7 @@ v1_to_v2_name_map = {
     "rejectionThreshold": "rejection_threshold",
     "rotAxis": "rotation_axis",
     "rotRange": "rotation_range",
-    "useRotAxis": "use_rotation_axis"
+    "useRotAxis": "use_rotation_axis",
 }
+
+unused_attributes_list = ["encapsulatingRadius","meshObject","meshType","name","properties"]

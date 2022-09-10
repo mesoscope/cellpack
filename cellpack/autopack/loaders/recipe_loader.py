@@ -7,7 +7,7 @@ from json import encoder
 
 import cellpack.autopack as autopack
 from cellpack.autopack.utils import deep_merge
-from .rename_dict import v1_to_v2_name_map
+from .rename_dict import v1_to_v2_name_map,unused_attributes_list
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
@@ -125,13 +125,33 @@ class RecipeLoader(object):
         return recipe
 
     @staticmethod
+    def _delete_unused_attributes(v1_recipe_data):
+        # ingredients = v1_recipe_data["cytoplasme"]["ingredients"]
+        # for ingredient in ingredients:
+        #     ingredient_data = ingredients[ingredient]
+        #     for attribute in list(ingredient_data):
+        #         if attribute in unused_attributes_list:
+        #             del ingredient_data[attribute]
+        # return v1_recipe_data
+
+        ingredients = v1_recipe_data["cytoplasme"]["ingredients"]
+        filtered_v1_recipe_data = {}
+        for ingredient in ingredients:
+            ingredient_data = ingredients[ingredient]
+            for attribute in list(ingredient_data):
+                if attribute in unused_attributes_list:
+                    del ingredient_data[attribute]
+            filtered_v1_recipe_data[ingredient] = ingredient_data
+
+        return filtered_v1_recipe_data
+
+    @staticmethod
     def _migrate_ingredient(old_ingredient):
         new_ingredient = {}
         for attribute in old_ingredient:
             if attribute in v1_to_v2_name_map:
                 new_ingredient[v1_to_v2_name_map[attribute]] = old_ingredient[attribute]
         return new_ingredient
-
 
     @staticmethod
     def _get_v1_ingredients(recipe_data):
@@ -143,6 +163,7 @@ class RecipeLoader(object):
                 converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
                 objects_dict[key] = converted_ingredient
         return objects_dict
+
 
     def _load_json(self):
         """
