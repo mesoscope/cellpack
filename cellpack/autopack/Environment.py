@@ -1599,11 +1599,11 @@ class Environment(CompartmentList):
         self.log.info("self.lowestPriority for Ing1 = %d", self.lowestPriority)
         self.totalRadii = 0
         for radii in ingr2:
-            if radii.modelType == "Cylinders":
+            if radii.model_type == "Cylinders":
                 r = max(radii.length / 2.0, radii.min_radius)
-            elif radii.modelType == "Spheres":
+            elif radii.model_type == "Spheres":
                 r = radii.min_radius
-            elif radii.modelType == "Cube":
+            elif radii.model_type == "Cube":
                 r = radii.min_radius
             self.totalRadii = self.totalRadii + r
             self.log.info("self.totalRadii += %d = %d", r, self.totalRadii)
@@ -1613,9 +1613,9 @@ class Environment(CompartmentList):
 
         self.normalizedPriorities0 = []
         for priors2 in ingr2:
-            if priors2.modelType == "Cylinders":
+            if priors2.model_type == "Cylinders":
                 r = max(priors2.length / 2.0, priors2.min_radius)
-            elif priors2.modelType == "Spheres":
+            elif priors2.model_type == "Spheres":
                 r = priors2.min_radius
             np = float(r) / float(self.totalRadii) * self.lowestPriority
             self.normalizedPriorities0.append(np)
@@ -1949,7 +1949,7 @@ class Environment(CompartmentList):
         totalNbIngr = 0
         for ingr in allIngredients:
             if ingr.type == "Grow":
-                totalNbIngr += int(ingr.left_to_place * (ingr.length / ingr.uLength))
+                totalNbIngr += int(ingr.left_to_place * (ingr.length / ingr.length))
             else:
                 totalNbIngr += ingr.left_to_place
             if update_partner:
@@ -2194,7 +2194,7 @@ class Environment(CompartmentList):
                 self.grid.masterGridPositions[ptInd],
             )
             collision_possible = True
-            # if distances[ptInd] >= ingr.encapsulatingRadius + ingr.getMaxJitter(
+            # if distances[ptInd] >= ingr.encapsulating_radius + ingr.getMaxJitter(
             #     spacing
             # ):
             #     # there is no possible collision here
@@ -3093,7 +3093,7 @@ class Environment(CompartmentList):
             inodenp = inodenp.node()
         return inodenp
 
-    def addRB(self, ingr, trans, rotMat, rtype="SingleSphere", static=False):
+    def addRB(self, ingr, trans, rotMat, rtype="single_sphere", static=False):
         # Sphere
         if panda3d is None:
             return None

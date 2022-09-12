@@ -763,13 +763,13 @@ class AutopackViewer:
                         parent=parent,
                         delete=True,
                     )
-                #        else : #cylinder or growingredient#if ingr.modelType=='Spheres':
+                #        else : #cylinder or growingredient#if ingrmodel_type=='Spheres':
                 #            pass
 
     def displayIngrSpheres(self, ingr, verts, radii, visible=1):
         o = ingr.recipe.compartment
         if len(verts[ingr]):
-            if ingr.modelType == "Spheres":
+            if ingr.model_type == "Spheres":
                 name = o.name + "_Spheres_" + ingr.name.replace(" ", "_")
                 if self.ViewerType == "dejavu":
                     sph = self.vi.Spheres(
@@ -1155,11 +1155,11 @@ class AutopackViewer:
         radii = []
         level = ingr.deepest_level
         px = ingr.transformPoints(pos, rot, ingr.positions[level])
-        if ingr.modelType == "Spheres":
+        if ingr.model_type == "Spheres":
             for ii in range(len(ingr.radii[level])):
                 verts.append(px[ii])
                 radii.append(ingr.radii[level][ii])
-        elif ingr.modelType == "Cylinders":
+        elif ingr.model_type == "Cylinders":
             px2 = ingr.transformPoints(pos, rot, ingr.positions2[level])
             for ii in range(len(ingr.radii[level])):
                 verts.append(px[ii])
@@ -1220,11 +1220,11 @@ class AutopackViewer:
             matrices.append(r[2])
         print("collected ", len(res), len(matrices), doMesh)
         if doSphere and verts:
-            if ingredient.modelType == "Spheres":
+            if ingredient.model_type == "Spheres":
                 self.displayIngrSpheres(
                     ingredient, {ingredient: verts}, {ingredient: radii}, visible=1
                 )
-            elif ingredient.modelType == "Cylinders":
+            elif ingredient.model_type == "Cylinders":
                 self.displayIngrCylinders(
                     ingredient, {ingredient: verts}, {ingredient: radii}, visible=1
                 )
@@ -1301,11 +1301,11 @@ class AutopackViewer:
             for pos, rot, ingr, ptInd in self.histo.molecules:
                 level = ingr.deepest_level
                 px = ingr.transformPoints(pos, rot, ingr.positions[level])
-                if ingr.modelType == "Spheres":
+                if ingr.model_type == "Spheres":
                     for ii in range(len(ingr.radii[level])):
                         verts[ingr].append(px[ii])
                         radii[ingr].append(ingr.radii[level][ii])
-                elif ingr.modelType == "Cylinders":
+                elif ingr.model_type == "Cylinders":
                     px2 = ingr.transformPoints(pos, rot, ingr.positions2[level])
                     for ii in range(len(ingr.radii[level])):
                         verts[ingr].append(px[ii])
@@ -1319,9 +1319,9 @@ class AutopackViewer:
             if r:
                 for ingr in r.ingredients:
                     #                    self.displayIngrSpheres(ingr,verts,radii)
-                    if ingr.modelType == "Spheres":
+                    if ingr.model_type == "Spheres":
                         self.displayIngrSpheres(ingr, verts, radii, visible=1)
-                    elif ingr.modelType == "Cylinders":
+                    elif ingr.model_type == "Cylinders":
                         self.displayIngrCylinders(ingr, verts, radii, visible=1)
 
         # display cytoplasm meshes
@@ -1413,11 +1413,11 @@ class AutopackViewer:
                 for pos, rot, ingr, ptInd in orga.molecules:
                     level = ingr.deepest_level
                     px = ingr.transformPoints(pos, rot, ingr.positions[level])
-                    if ingr.modelType == "Spheres":
+                    if ingr.model_type == "Spheres":
                         for ii in range(len(ingr.radii[level])):
                             verts[ingr].append(px[ii])
                             radii[ingr].append(ingr.radii[level][ii])
-                    elif ingr.modelType == "Cylinders":
+                    elif ingr.model_type == "Cylinders":
                         px2 = ingr.transformPoints(pos, rot, ingr.positions2[level])
                         for ii in range(len(ingr.radii[level])):
                             verts[ingr].append(px[ii])
@@ -1429,17 +1429,17 @@ class AutopackViewer:
                 if rs:
                     for ingr in rs.ingredients:
                         if len(verts[ingr]):
-                            if ingr.modelType == "Spheres":
+                            if ingr.model_type == "Spheres":
                                 self.displayIngrSpheres(ingr, verts, radii, visible=0)
-                            elif ingr.modelType == "Cylinders":
+                            elif ingr.model_type == "Cylinders":
                                 print("display", ingr.name)
                                 self.displayIngrCylinders(ingr, verts, radii, visible=1)
                 if ri:
                     for ingr in ri.ingredients:
                         if len(verts[ingr]):
-                            if ingr.modelType == "Spheres":
+                            if ingr.model_type == "Spheres":
                                 self.displayIngrSpheres(ingr, verts, radii, visible=0)
-                            elif ingr.modelType == "Cylinders":
+                            elif ingr.model_type == "Cylinders":
                                 self.displayIngrCylinders(ingr, verts, radii, visible=1)
 
             # Meshs
@@ -2630,7 +2630,7 @@ class AutopackViewer:
         )
 
     def checkIngrSpheres(self, ingr):
-        if ingr.modelType == "Spheres":
+        if ingr.model_type == "Spheres":
             name = "SpheresRep_" + ingr.name.replace(" ", "_")
             parent = self.vi.getObject(name)
             names = "SpheresRep_" + ingr.name.replace(" ", "_") + "S"

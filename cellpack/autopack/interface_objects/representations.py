@@ -1,4 +1,5 @@
 import cellpack.autopack as autopack
+import numpy as np
 
 
 class Representations:
@@ -15,6 +16,7 @@ class Representations:
         self.mesh = mesh
         self.atomic = atomic
         self.packing = packing
+        self.active = None
 
     @staticmethod
     def _read_sphere_file(file):
@@ -117,3 +119,23 @@ class Representations:
         else:
             return self.mesh["format"]
 
+    def set_active(self, type="atomic"):
+        self.active = type
+
+    def get_active(self):
+        return self.active
+
+    def get_active_data(self):
+        if self.active is None:
+            return {}
+        return getattr(self, self.active)
+
+    def get_adjusted_position(self, position, rotation):
+        active_data = self.get_active_data()
+        if "transform" in active_data:
+            offset = np.array(active_data["transform"]["translate"])
+        else:
+            offset = np.array([0, 0, 0])
+        rot_mat = np.array(rotation[0:3, 0:3])
+        adj_offset = np.matmul(rot_mat, offset)
+        return position - adj_offset

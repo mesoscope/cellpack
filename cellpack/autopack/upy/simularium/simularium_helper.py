@@ -388,19 +388,19 @@ class simulariumHelper(hostHelper.Helper):
     def get_display_data(self, ingredient):
         display_type = DISPLAY_TYPE.SPHERE
         url = ""
-        if ingredient.type == "SingleCube":
+        if ingredient.type == "single_cube":
             display_type = "CUBE"
-        elif ingredient.type == "SingleSphere":
+        elif ingredient.type == "single_sphere":
             display_type = DISPLAY_TYPE.SPHERE
         elif self.is_fiber(ingredient.type):
             display_type = DISPLAY_TYPE.FIBER
         else:
             if ingredient.has_pdb():
                 display_type = DISPLAY_TYPE.PDB
-                url = ingredient.representations.get_pdb_path()
+                url = ingredient.use_pdb()
             elif ingredient.has_mesh():
                 display_type = DISPLAY_TYPE.OBJ
-                url = ingredient.representations.get_mesh_path()
+                url = ingredient.use_mesh()
             else:
                 return DISPLAY_TYPE.SPHERE, ""
         return display_type, url
@@ -441,13 +441,11 @@ class simulariumHelper(hostHelper.Helper):
                     url=url,
                     color=matplotlib.colors.to_hex(np.array(ingredient.color) / 255),
                 )
+
             radius = ingredient.encapsulating_radius if ingredient is not None else 10
-            offset = [0, 0, 0]
-            if ingredient.source is not None:
-                offset = np.array(ingredient.source["transform"]["translate"])
-            rot_mat = np.array(rotation[0:3, 0:3])
-            adj_offset = np.matmul(rot_mat, offset)
-            adj_pos = position - adj_offset
+            adj_pos = ingredient.representations.get_adjusted_position(
+                position, rotation
+            )
 
             self.add_instance(
                 ingr_name,

@@ -880,10 +880,10 @@ def serializedRecipe(env, transpose, use_quaternion, result=False, lefthand=Fals
         for ingr in r.ingredients:
             nbmol = len(ingr.results)
             if len(ingr.results) == 0:
-                nbmol = ingr.nbMol
+                nbmol = ingr.count
             toupdate = updatePositionsRadii(ingr)
             kwds = {
-                "nbMol": nbmol,
+                "count": nbmol,
                 "principal_vector": ingr.principal_vector,
                 "molarity": ingr.molarity,
                 "source": ingr.source,
@@ -925,10 +925,10 @@ def serializedRecipe(env, transpose, use_quaternion, result=False, lefthand=Fals
             for ingr in rs.ingredients:
                 nbmol = len(ingr.results)
                 if len(ingr.results) == 0:
-                    nbmol = ingr.nbMol
+                    nbmol = ingr.count
                 toupdate = updatePositionsRadii(ingr)
                 kwds = {
-                    "nbMol": nbmol,
+                    "count": nbmol,
                     "principal_vector": ingr.principal_vector,
                     "molarity": ingr.molarity,
                     "source": ingr.source,
@@ -968,10 +968,10 @@ def serializedRecipe(env, transpose, use_quaternion, result=False, lefthand=Fals
             for ingr in ri.ingredients:
                 nbmol = len(ingr.results)
                 if len(ingr.results) == 0:
-                    nbmol = ingr.nbMol
+                    nbmol = ingr.count
                 toupdate = updatePositionsRadii(ingr)
                 kwds = {
-                    "nbMol": nbmol,
+                    "count": nbmol,
                     "principal_vector": ingr.principal_vector,
                     "molarity": ingr.molarity,
                     "source": ingr.source,
@@ -1021,7 +1021,7 @@ def serializedFromResult(env, transpose, use_quaternion, result=False, lefthand=
         # fibers = None  # sIngredientGroup("fibers", 1)
         for ingr_name in r["ingredients"]:
             ingr = r["ingredients"][ingr_name]
-            kwds = {"nbMol": len(ingr["results"]), "source": ingr["source"]}
+            kwds = {"count": len(ingr["results"]), "source": ingr["source"]}
             #            if ingr.type == "Grow":
             #                if fibers is None:
             #                    fibers = sIngredientGroup("fibers", 1)
@@ -1059,7 +1059,7 @@ def serializedFromResult(env, transpose, use_quaternion, result=False, lefthand=
                 proteins = None  # sIngredientGroup("proteins", 0)
                 for ingr_name in rs["ingredients"]:
                     ingr = rs["ingredients"][ingr_name]
-                    kwds = {"nbMol": len(ingr["results"]), "source": ingr["source"]}
+                    kwds = {"count": len(ingr["results"]), "source": ingr["source"]}
                     #                if ingr.type == "Grow":
                     #                    if fibers is None:
                     #                        fibers = sIngredientGroup("fibers", 1)
@@ -1093,7 +1093,7 @@ def serializedFromResult(env, transpose, use_quaternion, result=False, lefthand=
                 proteins = None  # sIngredientGroup("proteins", 0)
                 for ingr_name in ri["ingredients"]:
                     ingr = ri["ingredients"][ingr_name]
-                    kwds = {"nbMol": len(ingr["results"]), "source": ingr["source"]}
+                    kwds = {"count": len(ingr["results"]), "source": ingr["source"]}
                     #                if ingr.type == "Grow":
                     #                    if fibers is None:
                     #                        fibers = sIngredientGroup("fibers", 1)
@@ -1133,7 +1133,7 @@ def serializedRecipe_group_dic(env, transpose, use_quaternion, lefthand=False):
         group = sIngredientGroup("cytoplasme")
         for ingr_name in r["ingredients"]:
             ingr = r["ingredients"][ingr_name]
-            kwds = {"nbMol": len(ingr["results"]), "source": ingr["source"]}
+            kwds = {"count": len(ingr["results"]), "source": ingr["source"]}
             # if ingr.type == "Grow":
             #    igr = sIngredientFiber(ingr.o_name, **kwds)
             #    group.addIngredientFiber(igr)
@@ -1151,7 +1151,7 @@ def serializedRecipe_group_dic(env, transpose, use_quaternion, lefthand=False):
             group = sIngredientGroup("surface")
             for ingr_name in rs["ingredients"]:
                 ingr = rs["ingredients"][ingr_name]
-                kwds = {"nbMol": len(ingr["results"]), "source": ingr["source"]}
+                kwds = {"count": len(ingr["results"]), "source": ingr["source"]}
                 igr = sIngredient(ingr["name"], **kwds)
                 group.addIngredient(igr)
 
@@ -1161,7 +1161,7 @@ def serializedRecipe_group_dic(env, transpose, use_quaternion, lefthand=False):
             group = sIngredientGroup("interior")
             for ingr_name in ri["ingredients"]:
                 ingr = ri["ingredients"][ingr_name]
-                kwds = {"nbMol": len(ingr["results"]), "source": ingr["source"]}
+                kwds = {"count": len(ingr["results"]), "source": ingr["source"]}
                 #                if ingr.type == "Grow":
                 #                    igr = sIngredientFiber(ingr.o_name, **kwds)
                 #                    group.addIngredientFiber(igr)
@@ -1183,7 +1183,7 @@ def serializedRecipe_group(env, transpose, use_quaternion, lefthand=False):
     if r:
         group = sIngredientGroup("cytoplasme")
         for ingr in r.ingredients:
-            kwds = {"nbMol": len(ingr.results), "source": ingr.source}
+            kwds = {"count": len(ingr.results), "source": ingr.source}
             if ingr.type == "Grow":
                 igr = sIngredientFiber(ingr.o_name, **kwds)
                 group.addIngredientFiber(igr)
@@ -1206,7 +1206,7 @@ def serializedRecipe_group(env, transpose, use_quaternion, lefthand=False):
         if rs:
             group = sIngredientGroup("surface")
             for ingr in rs.ingredients:
-                kwds = {"nbMol": len(ingr.results), "source": ingr.source}
+                kwds = {"count": len(ingr.results), "source": ingr.source}
                 if ingr.type == "Grow":
                     igr = sIngredientFiber(ingr.o_name, **kwds)
                     group.addIngredientFiber(igr)
@@ -1227,7 +1227,7 @@ def serializedRecipe_group(env, transpose, use_quaternion, lefthand=False):
         if ri:
             group = sIngredientGroup("interior")
             for ingr in ri.ingredients:
-                kwds = {"nbMol": len(ingr.results), "source": ingr.source}
+                kwds = {"count": len(ingr.results), "source": ingr.source}
                 if ingr.type == "Grow":
                     igr = sIngredientFiber(ingr.o_name, **kwds)
                     group.addIngredientFiber(igr)
