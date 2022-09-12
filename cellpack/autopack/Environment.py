@@ -2319,11 +2319,11 @@ class Environment(CompartmentList):
                 self.grid.masterGridPositions[ptInd],
             )
             collision_possible = True
-            if distances[ptInd] >= ingr.encapsulatingRadius + ingr.getMaxJitter(
-                spacing
-            ):
-                # there is no possible collision here
-                collision_possible = False
+            # if distances[ptInd] >= ingr.encapsulatingRadius + ingr.getMaxJitter(
+            #     spacing
+            # ):
+            #     # there is no possible collision here
+            #     collision_possible = False
             (
                 success,
                 insidePoints,
