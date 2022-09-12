@@ -1020,31 +1020,43 @@ class Environment(CompartmentList):
 
     def create_ingredient(self, recipe, **arguments):
         ingredient_type = arguments["type"]
-        if (
-            ingredient_type == "Grow"
-            or ingredient_type == "Actine"
-            or ingredient_type == "MultiCylinder"
-        ):
+
+        if ingredient_type == "single_sphere":
+            radius = arguments["radius"]
             arguments = IOutils.IOingredientTool.clean_arguments(
-                GrowIngredient.ARGUMENTS, **arguments
-            )
-        else:
+                Ingredient.ARGUMENTS, **arguments
+            )          
+            ingr = SingleSphereIngr(radius, **arguments)
+        elif ingredient_type == "multi_sphere":
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
-        if ingredient_type == "single_sphere":
-            ingr = SingleSphereIngr(**arguments)
-        elif ingredient_type == "multi_sphere":
             ingr = MultiSphereIngr(**arguments)
         elif ingredient_type == "multi_cylinder":
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
             ingr = MultiCylindersIngr(**arguments)
         elif ingredient_type == "single_cube":
-            ingr = SingleCubeIngr(**arguments)
+            bounds = arguments["bounds"]
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            ) 
+            ingr = SingleCubeIngr(bounds, **arguments)
         elif ingredient_type == "single_cylinder":
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
             ingr = SingleCylinderIngr(**arguments)
         elif ingredient_type == "grow":
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                GrowIngredient.ARGUMENTS, **arguments
+            )
             ingr = GrowIngredient(**arguments)
         elif ingredient_type == "actine":
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                GrowIngredient.ARGUMENTS, **arguments
+            )
             ingr = ActinIngredient(**arguments)
         if (
             "gradient" in arguments
@@ -1881,7 +1893,7 @@ class Environment(CompartmentList):
 
         if self.pickRandPt:
             self.log.info("picking random point")
-            if ingr.packingMode == "close":
+            if ingr.packing_mode == "close":
                 order = numpy.argsort(allIngrDist)
                 # pick point with closest distance
                 ptInd = allIngrPts[order[0]]
@@ -1891,7 +1903,7 @@ class Environment(CompartmentList):
                     ptIndr = int(uniform(0.0, 1.0) * len(allIngrPts))
                     ptInd = allIngrPts[ptIndr]
 
-            elif ingr.packingMode == "gradient" and self.use_gradient:
+            elif ingr.packing_mode == "gradient" and self.use_gradient:
                 # get the most probable point using the gradient
                 # use the gradient weighted map and get mot probabl point
                 self.log.info("pick point from gradients %d", (len(allIngrPts)))

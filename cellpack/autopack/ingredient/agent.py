@@ -78,7 +78,7 @@ class Agent:
         gradient="",
         is_attractor=False,
         overwrite_distance_function=True,  # overWrite
-        packing=None,
+        packing_mode="random",
         partners=None,
         place_type="jitter",
         weight=0.2,  # use for affinity ie partner.weight
@@ -95,20 +95,18 @@ class Agent:
                 self.partners_position.append([numpy.identity(4)])
         excluded_partners_name = []
         self.excluded_partners_name = excluded_partners_name
-        self.packingMode = "random"
-        if packing is not None:
-            packingMode = packing["mode"]
-            assert packingMode in [
-                "random",
-                "close",
-                "closePartner",
-                "randomPartner",
-                "gradient",
-                "hexatile",
-                "squaretile",
-                "triangletile",
-            ]
-            self.packingMode = packingMode
+        self.packing_mode = packing_mode
+
+        assert self.packing_mode in [
+            "random",
+            "close",
+            "closePartner",
+            "randomPartner",
+            "gradient",
+            "hexatile",
+            "squaretile",
+            "triangletile",
+        ]
         partners_weight = 0
         self.partners_weight = partners_weight
         # assert place_type in ['jitter', 'spring','rigid-body']

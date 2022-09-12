@@ -127,7 +127,7 @@ class SingleCylinderIngr(Ingredient):
         radius = self.min_radius
         jitter = self.getMaxJitter(spacing)
 
-        if self.packingMode == "close":
+        if self.packing_mode == "close":
             cut = self.length - jitter
         #            if ingrmodel_type=='Cube' : #radius iactually the size
         #                cut = min(self.radii[0]/2.)-jitter
