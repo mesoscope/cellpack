@@ -18,4 +18,10 @@ v1_to_v2_name_map = {
     "useRotAxis": "use_rotation_axis",
 }
 
-unused_attributes_list = ["encapsulatingRadius","meshObject","meshType","name","properties"]
+unused_attributes_list = [
+    "encapsulatingRadius",
+    "meshObject",
+    "meshType",
+    "name",
+    "properties",
+]
