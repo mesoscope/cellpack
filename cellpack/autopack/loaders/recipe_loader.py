@@ -125,27 +125,6 @@ class RecipeLoader(object):
         return recipe
 
     @staticmethod
-    def _delete_unused_attributes(v1_recipe_data):
-        # ingredients = v1_recipe_data["cytoplasme"]["ingredients"]
-        # for ingredient in ingredients:
-        #     ingredient_data = ingredients[ingredient]
-        #     for attribute in list(ingredient_data):
-        #         if attribute in unused_attributes_list:
-        #             del ingredient_data[attribute]
-        # return v1_recipe_data
-
-        ingredients = v1_recipe_data["cytoplasme"]["ingredients"]
-        filtered_v1_recipe_data = {}
-        for ingredient in ingredients:
-            ingredient_data = ingredients[ingredient]
-            for attribute in list(ingredient_data):
-                if attribute in unused_attributes_list:
-                    del ingredient_data[attribute]
-            filtered_v1_recipe_data[ingredient] = ingredient_data
-
-        return filtered_v1_recipe_data
-
-    @staticmethod
     def _migrate_ingredient(old_ingredient):
         new_ingredient = {}
         for attribute in list(old_ingredient):
