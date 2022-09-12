@@ -71,55 +71,27 @@ def test_resolve_objects():
     # TODO: add granular testing for individual objects
     assert resolved_objects == expected_result
 
-old_ingredient_should_be_renamed_or_deleted = {
-    "nbJitter": 20,
-    "jitterMax": [1, 1, 0],
-    "perturbAxisAmplitude": 0.1,
-    "isAttractor": False,
-    "principalVector": [1, 0, 0],
-    "Type": "SingleSphere",
+old_ingredient = {
     "nbMol": 15,
-    "packingMode": "random",
-    "packingPriority": 0,
-    "placeType": "jitter",
-    "rejectionThreshold": 100,
-    "rotAxis": None,
-    "rotRange": 6.2831,
-    "useRotAxis": False,
     "encapsulatingRadius": 100,
-    "name": "Sphere_radius_100",
-    "meshObject":None,
-    "meshType":"file",
-    "properties": {},
 }
 
 @pytest.mark.parametrize(
-    "old_ingredient_should_be_renamed_or_deleted, expected_new_data",
+    "old_ingredient, expected_new_data",
     [
         (
-            old_ingredient_should_be_renamed_or_deleted,
+            old_ingredient,
             {
-                "count": 15,
-                "is_attractor": False,
-                "max_jitter": [1, 1, 0],
-                "num_jitter": 20,
-                "packing_mode": "random",
-                "packing_priority": 0,
-                "perturb_axis_amplitude": 0.1,
-                "place_type": "jitter",
-                "principal_vector": [1, 0, 0],
-                "rejection_threshold": 100,
-                "rotation_axis": None,
-                "rotation_range": 6.2831,
-                "type": "SingleSphere",
-                "use_rotation_axis": False,
+                "count": 15
             },
         )
     ],
 )
-def test_migrate_ingredient(old_ingredient_should_be_renamed_or_deleted, expected_new_data):
-    new_ingredient = RecipeLoader._migrate_ingredient(old_ingredient_should_be_renamed_or_deleted)
+def test_migrate_ingredient(old_ingredient, expected_new_data):
+    new_ingredient = RecipeLoader._migrate_ingredient(old_ingredient)
     assert expected_new_data == new_ingredient
+    assert expected_new_data["count"] == old_ingredient["nbMol"]
+    assert "encapsulatingRadius" not in expected_new_data
 
 
 old_recipe_test_data = {
