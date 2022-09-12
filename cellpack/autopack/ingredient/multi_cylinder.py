@@ -1,11 +1,8 @@
-from audioop import mul
 import numpy
 import math
 from math import pi, sqrt
 from panda3d.core import Point3, TransformState
 from panda3d.bullet import BulletCylinderShape, BulletRigidBodyNode
-
-from cellpack.autopack.utils import get_distance
 
 from .Ingredient import Ingredient
 import cellpack.autopack as autopack
@@ -52,6 +49,7 @@ class MultiCylindersIngr(Ingredient):
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=6.2831,
         rejection_threshold=30,
+        unit_length=None,
         use_orient_bias=False,
         use_rotation_axis=True,
         weight=0.2,  # use for affinity ie partner.weight
@@ -99,8 +97,8 @@ class MultiCylindersIngr(Ingredient):
         self.collisionLevel = 0
         self.radii = radii
         self.min_radius = min(self.radii)
-        self.useLength = useLength
-        self.uLength = uLength
+        self.useLength = unit_length is not None
+        self.uLength = unit_length
         self.encapsulating_radius = radii[0][0]
         if self.positions2 is not None and self.positions is not None:
             # should the overall length of the object from bottom to top
