@@ -25,6 +25,7 @@ test_config = {
     "place_method": "jitter",
     "save_analyze_result": True,
     "show_grid_plot": False,
+    "show_sphere_trees": False,
     "spacing": None,
     "use_periodicity": False,
     "show_sphere_trees": False,
