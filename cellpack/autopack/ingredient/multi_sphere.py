@@ -1,15 +1,15 @@
 from panda3d.core import Point3, TransformState
 from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
-from math import pi
+from math import pi, sqrt
 import numpy
 
-from cellpack.autopack.ingredient.single_sphere import SingleSphereIngr
+from .Ingredient import Ingredient
 import cellpack.autopack as autopack
 
 helper = autopack.helper
 
 
-class MultiSphereIngr(SingleSphereIngr):
+class MultiSphereIngr(Ingredient):
     """
     This Ingredient is represented by a collection of spheres specified by radii
     and positions. The principal Vector will be used to align the ingredient
@@ -19,105 +19,243 @@ class MultiSphereIngr(SingleSphereIngr):
         self,
         color=None,
         coordsystem="right",
+        count=0,
         cutoff_boundary=None,
         cutoff_surface=None,
-        encapsulatingRadius=0,
         excluded_partners_name=None,
         gradient="",
-        isAttractor=False,
-        jitterMax=(1, 1, 1),
+        is_attractor=False,
+        max_jitter=(1, 1, 1),
         meshFile=None,
         meshName="",
         meshObject=None,
         meshType="file",
         molarity=0.0,
         name=None,
-        nbJitter=5,
+        jitter_attempts=5,
         nbMol=0,
-        offset=[0.0, 0.0, 0.0],
-        orientBiasRotRangeMax=-pi,
-        orientBiasRotRangeMin=-pi,
-        overwrite_distFunc=True,  # overWrite
-        packingMode="random",
-        packingPriority=0,
+        offset=None,
+        orient_bias_range=[-pi, pi],
+        overwrite_distance_function=True,  # overWrite
+        packing=None,
+        packing_priority=0,
         partners_name=None,
         partners_position=None,
         pdb=None,
-        perturbAxisAmplitude=0.1,
-        placeType="jitter",
-        positions=None,
-        positions2=None,
-        principalVector=(1, 0, 0),
+        perturb_axis_amplitude=0.1,
+        place_type="jitter",
+        principal_vector=(1, 0, 0),
         proba_binding=0.5,
         proba_not_binding=0.5,
         properties=None,
-        radii=None,
-        rejectionThreshold=30,
-        rotAxis=[0.0, 0.0, 0.0],
-        rotRange=0,
+        representations=None,
+        rejection_threshold=30,
+        rotation_axis=[0.0, 0.0, 0.0],
+        rotation_range=0,
         source=None,
-        sphereFile=None,
-        Type="MultiSphere",
+        type="MultiSphere",
         useOrientBias=False,
         useRotAxis=True,
         weight=0.2,  # use for affinity ie partner.weight
     ):
         super().__init__(
             color=color,
+            cutoff_boundary=cutoff_boundary,
             coordsystem=coordsystem,
+            count=count,
             cutoff_surface=cutoff_surface,
-            encapsulatingRadius=encapsulatingRadius,
             excluded_partners_name=excluded_partners_name,
             gradient=gradient,
-            isAttractor=isAttractor,
-            jitterMax=jitterMax,
+            is_attractor=is_attractor,
+            max_jitter=max_jitter,
             meshFile=meshFile,
             meshName=meshName,
             meshObject=meshObject,
             meshType=meshType,
             molarity=molarity,
             name=name,
-            nbJitter=nbJitter,
+            jitter_attempts=jitter_attempts,
             nbMol=nbMol,
             offset=offset,
-            orientBiasRotRangeMax=orientBiasRotRangeMax,
-            orientBiasRotRangeMin=orientBiasRotRangeMin,
-            packingMode=packingMode,
-            packingPriority=packingPriority,
+            orient_bias_range=orient_bias_range,
+            packing=packing,
+            packing_priority=packing_priority,
             partners_name=partners_name,
             partners_position=partners_position,
             pdb=pdb,
-            perturbAxisAmplitude=perturbAxisAmplitude,
-            placeType=placeType,
-            positions=positions,
-            principalVector=principalVector,
+            perturb_axis_amplitude=perturb_axis_amplitude,
+            place_type=place_type,
+            principal_vector=principal_vector,
             proba_binding=proba_binding,
             proba_not_binding=proba_not_binding,  # chance to actually not bind
             properties=properties,
-            radii=radii,
-            rotAxis=rotAxis,
-            rotRange=rotRange,
+            rotation_axis=rotation_axis,
+            rotation_range=rotation_range,
             source=source,
-            sphereFile=sphereFile,
-            Type=Type,
+            type=type,
             useOrientBias=useOrientBias,
             useRotAxis=useRotAxis,
             weight=weight,
         )
-        min_radius = encapsulatingRadius
-        if radii is not None:
-            for level in radii:
-                if isinstance(level, dict):
-                    if min(level["radii"]) < min_radius:
-                        min_radius = min(level["radii"])
-                else:
-                    if min(level) < min_radius:
-                        min_radius = min(level)
-        self.minRadius = min_radius
-        if name is None:
-            name = "%s_%f" % (str(radii), molarity)
         self.name = name
         self.singleSphere = False
+
+        positions, radii = self.representations.get_spheres()
+        self.set_sphere_positions(positions, radii)
+        if name is None:
+            name = "%s_%f" % (str(radii), molarity)
+
+    def set_sphere_positions(self, positions, radii):
+        # positions and radii are passed to the constructor
+        # check the format old nested array, new array of dictionary
+        nLOD = 0
+        if positions is not None:
+            nLOD = len(positions)
+        if positions is not None and isinstance(positions[0], dict):
+            for i in range(nLOD):
+                c = numpy.array(positions[i]["coords"])
+                n = int(len(c) / 3)
+                self.positions.append(c.reshape((n, 3)).tolist())
+                self.radii.append(radii[i]["radii"])
+            if len(self.radii) == 0:
+                self.radii = [[10]]  # some default value ?
+                self.positions = [[[0, 0, 0]]]
+            self.deepest_level = len(radii) - 1
+        else:  # regular nested
+            if radii is not None:
+                delta = numpy.array(positions[0])
+                rM = sqrt(max(numpy.sum(delta * delta, 1)))
+                self.encapsulating_radius = max(rM, self.encapsulating_radius)
+            if radii is not None:
+                self.deepest_level = len(radii) - 1
+            self.radii = radii
+            self.positions = positions
+        self.min_radius = min(min(self.radii))
+        if self.encapsulating_radius <= 0.0 or self.encapsulating_radius < max(
+            self.radii[0]
+        ):
+            self.encapsulating_radius = max(self.radii[0])  #
+
+    def collision_jitter(
+        self,
+        jtrans,
+        rotMat,
+        level,
+        gridPointsCoords,
+        current_grid_distances,
+        env,
+        dpad,
+    ):
+        """
+        Check spheres for collision
+        """
+        centers = self.positions[level]
+        radii = self.radii[level]
+        # should we also check for outside the main grid ?
+        # wouldnt be faster to do sphere-sphere distance test ? than points/points from the grid
+        centT = self.transformPoints(jtrans, rotMat, centers)  # centers)
+        # sphNum = 0  # which sphere in the sphere tree we're checking
+        # self.distances_temp = []
+        insidePoints = {}
+        newDistPoints = {}
+        at_max_level = level == self.deepest_level and (level + 1) == len(
+            self.positions
+        )
+        for radius_of_ing_being_packed, posc in zip(radii, centT):
+            x, y, z = posc
+            radius_of_area_to_check = (
+                radius_of_ing_being_packed + dpad
+            )  # extends the packing ingredient's bounding box to be large enough to include masked gridpoints of the largest possible ingrdient in the receipe
+            #  TODO: add realtime render here that shows all the points being checked by the collision
+
+            pointsToCheck = env.grid.getPointsInSphere(
+                posc, radius_of_area_to_check
+            )  # indices
+            # check for collisions by looking at grid points in the sphere of radius radc
+            delta = numpy.take(gridPointsCoords, pointsToCheck, 0) - posc
+            delta *= delta
+            distA = numpy.sqrt(delta.sum(1))
+
+            for pti in range(len(pointsToCheck)):
+                grid_point_index = pointsToCheck[
+                    pti
+                ]  # index of master grid point that is inside the sphere
+                distance_to_packing_location = distA[
+                    pti
+                ]  # is that point's distance from the center of the sphere (packing location)
+                # distance is an array of distance of closest contact to anything currently in the grid
+                collision = (
+                    current_grid_distances[grid_point_index]
+                    + distance_to_packing_location
+                    <= radius_of_ing_being_packed
+                )
+
+                if collision:
+                    # an object is too close to the sphere at this level
+                    if not at_max_level:
+                        # if we haven't made it all the way down the sphere tree,
+                        # check a level down
+                        new_level = level + 1
+                        # NOTE: currently with sphere trees, no children seem present
+                        # get sphere that are children of this one
+                        # ccenters = []
+                        # cradii = []
+                        # for sphInd in self.children[level][sphNum]:
+                        #     ccenters.append(nxtLevelSpheres[sphInd])
+                        #     cradii.append(nxtLevelRadii[sphInd])
+                        return self.collision_jitter(
+                            jtrans,
+                            rotMat,
+                            new_level,
+                            gridPointsCoords,
+                            current_grid_distances,
+                            env,
+                            dpad,
+                        )
+                    else:
+                        self.log.info(
+                            "grid point already occupied %f",
+                            current_grid_distances[grid_point_index],
+                        )
+                        return True, {}, {}
+                if not at_max_level:
+                    # we don't want to calculate new distances if we are not
+                    # at the highest geo
+                    # but getting here means there was no collision detected
+                    # so the loop can continue
+                    continue
+                signed_distance_to_sphere_surface = (
+                    distance_to_packing_location - radius_of_ing_being_packed
+                )
+
+                (
+                    insidePoints,
+                    newDistPoints,
+                ) = self.get_new_distances_and_inside_points(
+                    env,
+                    jtrans,
+                    rotMat,
+                    grid_point_index,
+                    current_grid_distances,
+                    newDistPoints,
+                    insidePoints,
+                    signed_distance_to_sphere_surface,
+                )
+
+            if not at_max_level:
+                # we didn't find any colisions with the this level, but we still want
+                # the inside points to be based on the most detailed geom
+                new_level = self.deepest_level
+                return self.collision_jitter(
+                    jtrans,
+                    rotMat,
+                    new_level,
+                    gridPointsCoords,
+                    current_grid_distances,
+                    env,
+                    dpad,
+                )
+        return False, insidePoints, newDistPoints
 
     def add_rb_node(self, worldNP):
         inodenp = worldNP.attachNewNode(BulletRigidBodyNode(self.name))

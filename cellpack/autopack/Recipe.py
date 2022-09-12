@@ -59,6 +59,38 @@ class Recipe:
         self.number = 0
         self.name = name
 
+    @staticmethod
+    def resolve_composition(recipe_data):
+        composition_dict = recipe_data["composition"]
+        # keys in reference_dict are downstream objects,
+        # values in reference_dict refer to the immediate upstream object of the key
+        reference_dict = {}
+        # compartment_keys contains a list of keys of objects that act as compartments
+        compartment_keys = []
+        referenced_objects = []
+        for key, entry in composition_dict.items():
+            for region_name, obj_keys in entry.get(
+                "regions", {}
+            ).items():  # check if entry in compositions has regions
+                if (
+                    key not in compartment_keys
+                ):  # add to compartment_keys if regions exist
+                    compartment_keys.append(key)
+                for obj_key in obj_keys:
+                    if not isinstance(obj_key, dict):
+                        reference_dict[obj_key] = key
+                        referenced_objects.append(obj_key)
+                    else:
+                        obj_key = obj_key["object"]
+                        referenced_objects.append(obj_key)
+
+        root = set(composition_dict.keys()).difference(set(reference_dict.keys()))
+
+        if len(root) > 1:
+            raise Exception(f"Composition has multiple roots {root}")
+
+        return (list(root)[0], compartment_keys, reference_dict, referenced_objects)
+
     def delIngredient(self, ingr):
         """remove the given ingredient from the recipe"""
         if ingr in self.ingredients:
@@ -181,7 +213,7 @@ class Recipe:
     def sort(self):
         """sort the ingredients using the min Radius"""
         # sort tuples in molecule list according to radius
-        self.ingredients.sort(key=lambda x: x.minRadius)
+        self.ingredients.sort(key=lambda x: x.min_radius)
 
     def printFillInfo(self, indent=""):
         """print the states of all recipe ingredients"""

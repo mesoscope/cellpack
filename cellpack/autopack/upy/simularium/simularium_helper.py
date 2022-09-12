@@ -266,7 +266,7 @@ class simulariumHelper(hostHelper.Helper):
         sub_points=None,
     ):
         self.agent_id_counter += 1
-        if ingredient.Type == "Grow" or ingredient.Type == "Actine":
+        if ingredient.type == "Grow" or ingredient.type == "Actine":
             viz_type = VIZ_TYPE.FIBER
         else:
             viz_type = VIZ_TYPE.DEFAULT
@@ -274,7 +274,7 @@ class simulariumHelper(hostHelper.Helper):
             name,
             instance_id,
             self.agent_id_counter,
-            ingredient.encapsulatingRadius,
+            ingredient.encapsulating_radius,
             viz_type,
         )
         self.scene[instance_id] = new_instance
@@ -292,7 +292,7 @@ class simulariumHelper(hostHelper.Helper):
         mesh=None,
     ):
         self.agent_id_counter += 1
-        if ingredient and self.is_fiber(ingredient.Type):
+        if ingredient and self.is_fiber(ingredient.type):
             viz_type = VIZ_TYPE.FIBER
         else:
             viz_type = VIZ_TYPE.DEFAULT
@@ -328,7 +328,7 @@ class simulariumHelper(hostHelper.Helper):
     ):
         display_type = DISPLAY_TYPE.SPHERE
         url = ""
-        radius = compartment.encapsulatingRadius
+        radius = compartment.encapsulating_radius
         if compartment.meshType == "file":
             _, extension = os.path.splitext(compartment.path)
             if extension == ".obj":
@@ -362,11 +362,11 @@ class simulariumHelper(hostHelper.Helper):
     ):
         display_type = DISPLAY_TYPE.SPHERE
 
-        if self.is_fiber(ingredient.Type):
+        if self.is_fiber(ingredient.type):
             if len(control_points) > self.max_fiber_length:
                 self.max_fiber_length = len(control_points)
             display_type = DISPLAY_TYPE.FIBER
-        elif ingredient.Type == "SingleCube":
+        elif ingredient.type == "SingleCube":
             display_type = DISPLAY_TYPE.CUBE
         self.display_data[ingredient.name] = DisplayData(
             name=ingredient.name, display_type=display_type
@@ -386,41 +386,23 @@ class simulariumHelper(hostHelper.Helper):
             self.place_object(instance_id, position, rotation)
 
     def get_display_data(self, ingredient):
-        ingr_name = ingredient.name
         display_type = DISPLAY_TYPE.SPHERE
         url = ""
-        if ingredient.Type == "SingleCube":
+        if ingredient.type == "SingleCube":
             display_type = "CUBE"
-        elif ingredient.Type == "SingleSphere":
+        elif ingredient.type == "SingleSphere":
             display_type = DISPLAY_TYPE.SPHERE
-        elif self.is_fiber(ingredient.Type):
+        elif self.is_fiber(ingredient.type):
             display_type = DISPLAY_TYPE.FIBER
         else:
-            pdb_file_name = ""
-            display_type = DISPLAY_TYPE.PDB
-            if ingredient.source is not None and ingredient.source["pdb"] is not None:
-                pdb_file_name = ingredient.source["pdb"]
-            elif ingredient.pdb is not None and ".map" not in ingredient.pdb:
-                pdb_file_name = ingredient.pdb
-            elif ingredient.mesh_info is not None:
-                meshType = (
-                    ingredient.mesh_info["type"]
-                    if ingredient.mesh_info["type"] is not None
-                    else "file"
-                )
-                if meshType == "file":
-                    file_path = os.path.basename(ingredient.mesh_info["file"])
-                    file_name, _ = os.path.splitext(file_path)
-
-                elif meshType == "raw":
-                    file_name = ingr_name
-                url = f"{simulariumHelper.DATABASE}/geometries/{file_name}.obj"
+            if ingredient.has_pdb():
+                display_type = DISPLAY_TYPE.PDB
+                url = ingredient.representations.get_pdb_path()
+            elif ingredient.has_mesh():
                 display_type = DISPLAY_TYPE.OBJ
-                return display_type, url
-            if ".pdb" in pdb_file_name:
-                url = f"{simulariumHelper.DATABASE}/other/{pdb_file_name}"
+                url = ingredient.representations.get_mesh_path()
             else:
-                url = pdb_file_name
+                return DISPLAY_TYPE.SPHERE, ""
         return display_type, url
 
     @staticmethod
@@ -443,7 +425,7 @@ class simulariumHelper(hostHelper.Helper):
         for position, rotation, ingredient, ptInd in objects:
             ingr_name = ingredient.name
             sub_points = None
-            if self.is_fiber(ingredient.Type):
+            if self.is_fiber(ingredient.type):
                 if ingredient.nbCurve == 0:
                     continue
                 # TODO: get sub_points accurately
@@ -459,7 +441,7 @@ class simulariumHelper(hostHelper.Helper):
                     url=url,
                     color=matplotlib.colors.to_hex(np.array(ingredient.color) / 255),
                 )
-            radius = ingredient.encapsulatingRadius if ingredient is not None else 10
+            radius = ingredient.encapsulating_radius if ingredient is not None else 10
             offset = [0, 0, 0]
             if ingredient.source is not None:
                 offset = np.array(ingredient.source["transform"]["translate"])
@@ -476,7 +458,7 @@ class simulariumHelper(hostHelper.Helper):
                 rotation,
                 sub_points,
             )
-            if show_sphere_trees:
+            if show_sphere_trees and hasattr(ingredient, "positions"):
                 if len(ingredient.positions) > 0:
                     for level in range(len(ingredient.positions)):
                         for i in range(len(ingredient.positions[level])):

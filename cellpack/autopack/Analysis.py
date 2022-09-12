@@ -1063,7 +1063,9 @@ class AnalyseAP:
                     if ingrname not in ingrrot:
                         ingrrot[ingrname] = []
                         ingrpos[ingrname] = []
-                        radius[ingrname] = data[recipe][ingrname]["encapsulatingRadius"]
+                        radius[ingrname] = data[recipe][ingrname][
+                            "encapsulating_radius"
+                        ]
                     ingrrot[ingrname].append(data[recipe][ingrname]["results"][k][1])
                     ingrpos[ingrname].append(data[recipe][ingrname]["results"][k][0])
         for ingr in ingrpos:
@@ -1093,7 +1095,7 @@ class AnalyseAP:
         for i in range(len(self.env.molecules)):
             m = self.env.molecules[i]
             pos.append(numpy.array(m[0]).tolist())
-            s.append(m[2].encapsulatingRadius ** 2)
+            s.append(m[2].encapsulating_radius ** 2)
             c.append(m[2].color)
         fig = plt.figure()
         ax = fig.gca(projection="3d")
@@ -1252,13 +1254,13 @@ class AnalyseAP:
                                 ax.add_patch(
                                     Circle(
                                         (p[0], p[1]),
-                                        ingr.encapsulatingRadius,
+                                        ingr.encapsulating_radius,
                                         edgecolor="black",
                                         facecolor=color,
                                     )
                                 )
                                 #  Plot "image" particles to verify that periodic boundary conditions are working
-                                r = ingr.encapsulatingRadius
+                                r = ingr.encapsulating_radius
                                 if autopack.testPeriodicity:
                                     if p[0] < r:
                                         ax.add_patch(
@@ -1294,7 +1296,7 @@ class AnalyseAP:
                                         )
                                 if i == 0:  # len(ingrpos)-1:
                                     continue
-                                if ingr.Type == "Grow":
+                                if ingr.type == "Grow":
                                     pyplot.plot(
                                         [ingrpos[-i][0], ingrpos[-i - 1][0]],
                                         [ingrpos[-i][1], ingrpos[-i - 1][1]],
@@ -1310,7 +1312,7 @@ class AnalyseAP:
                                             ax.add_patch(
                                                 Circle(
                                                     (pt[0], pt[1]),
-                                                    ingr.minRadius,
+                                                    ingr.min_radius,
                                                     edgecolor="black",
                                                     facecolor=color,
                                                 )
@@ -1346,7 +1348,7 @@ class AnalyseAP:
                                     ax.add_patch(
                                         Circle(
                                             (p[0], p[1]),
-                                            ingr.encapsulatingRadius,
+                                            ingr.encapsulating_radius,
                                             edgecolor="black",
                                             facecolor=ingr.color,
                                         )
@@ -1381,7 +1383,7 @@ class AnalyseAP:
                                     ax.add_patch(
                                         Circle(
                                             (p[0], p[1]),
-                                            ingr.encapsulatingRadius,
+                                            ingr.encapsulating_radius,
                                             edgecolor="black",
                                             facecolor=ingr.color,
                                         )

@@ -11,7 +11,7 @@ class Partner:
         self.ingr = ingr
         self.weight = weight
         self.properties = {}
-        self.distExpression = None
+        self.distance_expression = None
         if properties is not None:
             self.properties = properties
 
@@ -72,17 +72,17 @@ class Agent:
         self,
         name,
         concentration,
-        distExpression=None,
-        distFunction=None,
+        distance_expression=None,
+        distance_function=None,
         excluded_partners_name=None,
         force_random=False,  # avoid any binding
         gradient="",
-        isAttractor=False,
-        overwrite_distFunc=True,  # overWrite
-        packingMode="close",
+        is_attractor=False,
+        overwrite_distance_function=True,  # overWrite
+        packing=None,
         partners_name=None,
         partners_position=None,
-        placeType="jitter",
+        place_type="jitter",
         proba_binding=0.5,
         proba_not_binding=0.5,  # chance to actually not bind
         properties=None,
@@ -101,31 +101,34 @@ class Agent:
                 self.partners_position.append([numpy.identity(4)])
         excluded_partners_name = []
         self.excluded_partners_name = excluded_partners_name
-        assert packingMode in [
-            "random",
-            "close",
-            "closePartner",
-            "randomPartner",
-            "gradient",
-            "hexatile",
-            "squaretile",
-            "triangletile",
-        ]
-        self.packingMode = packingMode
+        self.packingMode = "random"
+        if packing is not None:
+            packingMode = packing["mode"]
+            assert packingMode in [
+                "random",
+                "close",
+                "closePartner",
+                "randomPartner",
+                "gradient",
+                "hexatile",
+                "squaretile",
+                "triangletile",
+            ]
+            self.packingMode = packingMode
         partners_weight = 0
         self.partners_weight = partners_weight
-        # assert placeType in ['jitter', 'spring','rigid-body']
-        self.placeType = placeType
+        # assert place_type in ['jitter', 'spring','rigid-body']
+        self.place_type = place_type
         self.mesh_3d = None
-        self.isAttractor = isAttractor
+        self.is_attractor = is_attractor
         self.weight = weight
         self.proba_not_binding = proba_not_binding
         self.proba_binding = proba_binding
         self.force_random = force_random
-        self.distFunction = distFunction
-        self.distExpression = distExpression
-        self.overwrite_distFunc = overwrite_distFunc
-        self.overwrite_distFunc = True
+        self.distance_function = distance_function
+        self.distance_expression = distance_expression
+        self.overwrite_distance_function = overwrite_distance_function
+        self.overwrite_distance_function = True
         # chance to actually bind to any partner
         self.gradient = gradient
         self.cb = None
@@ -212,10 +215,10 @@ class Agent:
         w = 0.0
         for i, part, dist in listePartner:
             # print ("i",part,dist,w,part.weight)
-            if self.overwrite_distFunc:
+            if self.overwrite_distance_function:
                 wd = part.weight
             else:
-                wd = part.distanceFunction(dist, expression=part.distExpression)
+                wd = part.distanceFunction(dist, expression=part.distance_expression)
             # print "calc ",dist, wd
             probaArray.append(wd)
             w = w + wd
@@ -289,18 +292,18 @@ class Agent:
             targetPoint = self.env.grid.getClosestFreeGridPoint(
                 targetPoint,
                 compId=self.compNum,
-                ball=(ing.encapsulatingRadius + self.encapsulatingRadius),
-                distance=self.encapsulatingRadius * 2.0,
+                ball=(ing.encapsulating_radius + self.encapsulating_radius),
+                distance=self.encapsulating_radius * 2.0,
             )
             self.log.info(
                 "target point free tree is %r %r %r",
                 targetPoint,
-                self.encapsulatingRadius,
-                ing.encapsulatingRadius,
+                self.encapsulating_radius,
+                ing.encapsulating_radius,
             )
         else:
             # get closestFreePoint using freePoint and masterGridPosition
-            # if self.placeType == "rigid-body" or self.placeType == "jitter":
+            # if self.place_type == "rigid-body" or self.place_type == "jitter":
             # the new point is actually tPt -normalise(tPt-current)*radius
             self.log.info(
                 "tP %r %s %r %d", ing_indice, ing.name, targetPoint, ing.radii[0][0]
@@ -309,7 +312,7 @@ class Agent:
             v = numpy.array(targetPoint) - numpy.array(currentPos)
             s = numpy.sum(v * v)
             factor = (v / math.sqrt(s)) * (
-                ing.encapsulatingRadius + self.encapsulatingRadius
+                ing.encapsulating_radius + self.encapsulating_radius
             )  # encapsulating radus ?
             targetPoint = numpy.array(targetPoint) - factor
 

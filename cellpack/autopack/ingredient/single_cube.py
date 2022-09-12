@@ -17,83 +17,84 @@ class SingleCubeIngr(Ingredient):
 
     def __init__(
         self,
-        Type="SingleCube",
+        type="SingleCube",
         color=None,
         coordsystem="right",
+        count=0,
         cutoff_boundary=None,
         cutoff_surface=None,
-        distExpression=None,
-        distFunction=None,
-        encapsulatingRadius=0,
+        distance_expression=None,
+        distance_function=None,
+        encapsulating_radius=0,
         excluded_partners_name=None,
         force_random=False,  # avoid any binding
         gradient="",
-        isAttractor=False,
-        jitterMax=(1, 1, 1),
+        is_attractor=False,
+        max_jitter=(1, 1, 1),
         molarity=0.0,
         name=None,
-        nbJitter=5,
+        jitter_attempts=5,
         nbMol=0,
         offset=None,
-        orientBiasRotRangeMax=-pi,
-        orientBiasRotRangeMin=-pi,
-        overwrite_distFunc=True,  # overWrite
-        packingMode="random",
-        packingPriority=0,
+        orient_bias_range=[-pi, pi],
+        overwrite_distance_function=True,  # overWrite
+        packing=None,
+        packing_priority=0,
         partners_name=None,
         partners_position=None,
         pdb=None,
-        perturbAxisAmplitude=0.1,
-        placeType="jitter",
+        perturb_axis_amplitude=0.1,
+        place_type="jitter",
         positions2=[[[0, 0, 0]]],
         positions=[[[0, 0, 0]]],
-        principalVector=(1, 0, 0),
+        principal_vector=(1, 0, 0),
         proba_binding=0.5,
         proba_not_binding=0.5,  # chance to actually not bind
         properties=None,
         radii=None,
-        rejectionThreshold=30,
+        rejection_threshold=30,
         resolution_dictionary=None,
-        rotAxis=[0.0, 0.0, 0.0],
-        rotRange=0,
+        rotation_axis=[0.0, 0.0, 0.0],
+        rotation_range=0,
         source=None,
         useOrientBias=False,
         useRotAxis=True,
         weight=0.2,  # use for affinity ie partner.weight
     ):
         super().__init__(
-            Type=Type,
+            type=type,
             color=color,
+            count=count,
             cutoff_boundary=cutoff_boundary,
             cutoff_surface=cutoff_surface,
-            distExpression=distExpression,
-            distFunction=distFunction,
+            distance_expression=distance_expression,
+            distance_function=distance_function,
             excluded_partners_name=excluded_partners_name,
             force_random=force_random,
             gradient=gradient,
-            isAttractor=isAttractor,
-            jitterMax=jitterMax,
+            is_attractor=is_attractor,
+            max_jitter=max_jitter,
             molarity=molarity,
             name=name,
-            nbJitter=nbJitter,
+            jitter_attempts=jitter_attempts,
             nbMol=nbMol,
-            overwrite_distFunc=overwrite_distFunc,
-            packingMode=packingMode,
-            packingPriority=packingPriority,
+            overwrite_distance_function=overwrite_distance_function,
+            packing=packing,
+            packing_priority=packing_priority,
             partners_name=partners_name,
             partners_position=partners_position,
             pdb=pdb,
-            perturbAxisAmplitude=perturbAxisAmplitude,
-            placeType=placeType,
+            perturb_axis_amplitude=perturb_axis_amplitude,
+            place_type=place_type,
             positions2=positions2,
             positions=positions,
-            principalVector=principalVector,
+            principal_vector=principal_vector,
             proba_binding=proba_binding,
             proba_not_binding=proba_not_binding,
             properties=properties,
             radii=radii,
-            rotAxis=rotAxis,
-            rotRange=rotRange,
+            rotation_axis=rotation_axis,
+            rotation_range=rotation_range,
             useRotAxis=useRotAxis,
             weight=weight,
         )
@@ -106,8 +107,8 @@ class SingleCubeIngr(Ingredient):
         self.collisionLevel = 0
         radii = numpy.array(radii)
 
-        self.minRadius = min(radii[0] / 2)  # should have three radii sizex,sizey,sizez
-        self.maxRadius = self.encapsulatingRadius = numpy.linalg.norm(
+        self.min_radius = min(radii[0] / 2)  # should have three radii sizex,sizey,sizez
+        self.maxRadius = self.encapsulating_radius = numpy.linalg.norm(
             radii[0] / 2
         )  # calculate encapsulating radius based on side length
         self.bb = [-radii[0] / 2, radii[0] / 2]
@@ -161,7 +162,7 @@ class SingleCubeIngr(Ingredient):
 
         diag_length = numpy.linalg.norm(corner2_trans - corner1_trans)
 
-        search_radius = diag_length / 2.0 + self.encapsulatingRadius + dpad
+        search_radius = diag_length / 2.0 + self.encapsulating_radius + dpad
 
         bb = (
             center_trans - search_radius,
@@ -255,7 +256,7 @@ class SingleCubeIngr(Ingredient):
         lengthsq = vx * vx + vy * vy + vz * vz
         length = sqrt(lengthsq)
         cx, cy, cz = posc = center  # x1+vx*.5, y1+vy*.5, z1+vz*.5
-        radt = length / 2.0 + self.encapsulatingRadius
+        radt = length / 2.0 + self.encapsulating_radius
         x, y, z = posc
         bb = ([x - radt, y - radt, z - radt], [x + radt, y + radt, z + radt])
 
@@ -300,7 +301,7 @@ class SingleCubeIngr(Ingredient):
         lengthsq = vx * vx + vy * vy + vz * vz
         length = sqrt(lengthsq)
         posc = center  # x1+vx*.5, y1+vy*.5, z1+vz*.5
-        radt = length / 2.0 + self.encapsulatingRadius
+        radt = length / 2.0 + self.encapsulating_radius
 
         bb = [cent2T, cent1T]  # self.correctBB(p1,p2,radc)
         x, y, z = posc
@@ -334,7 +335,7 @@ class SingleCubeIngr(Ingredient):
             if pt in insidePoints:
                 continue
             dist = distA[pti]
-            d = dist - self.encapsulatingRadius
+            d = dist - self.encapsulating_radius
             # should be distance to the cube, but will use approximation
             if pti in ptinsideCube:
                 # dist < radt:  # point is inside dropped sphere

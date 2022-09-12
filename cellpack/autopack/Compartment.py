@@ -68,6 +68,7 @@ from scipy import spatial
 import cellpack.autopack as autopack
 from cellpack.autopack import transformation as tr, binvox_rw
 from cellpack.autopack.BaseGrid import gridPoint
+from cellpack.autopack.interface_objects.representations import Representations
 from .Recipe import Recipe
 from .ray import (
     makeMarchingCube,
@@ -126,51 +127,63 @@ class Compartment(CompartmentList):
     def __init__(
         self,
         name,
-        vertices,
-        faces,
-        vnormals,
-        scale=1.0,
-        fnormals=None,
-        ghost=None,
-        ref_obj=None,
-        meshType="file",
-        filename=None,
-        gname=None,
-        object_name=None,
-        object_filename=None,
-        isBox=False,
-        isOrthogonalBoundingBox=None,
-        stype="mesh",
-        radius=200.0,
-        height=0.0,
-        axis=[0, 1, 0],
+        object_info
+        # vertices,
+        # faces,
+        # vnormals,
+        # scale=1.0,
+        # fnormals=None,
+        # ghost=None,
+        # ref_obj=None,
+        # meshType="file",
+        # filename=None,
+        # gname=None,
+        # object_name=None,
+        # object_filename=None,
+        # isBox=False,
+        # isOrthogonalBoundingBox=None,
+        # stype="mesh",
+        # radius=200.0,
+        # height=0.0,
+        # axis=[0, 1, 0],
     ):
         super().__init__()
-        gname = gname or name
         self.name = name
         self.center = [0, 0, 0]  # calculated centroid of the mesh
         self.position = [0, 0, 0]  # where the object is placed
-        self.vertices = vertices
-        self.faces = faces
-        self.vnormals = vnormals
+        self.vertices = None
+        self.faces = None
+        self.vnormals = None
+        self.scale = 1.0
         self.fnormals = None
+        self.gname = None
+        self.filename = None
+        self.ref_obj = None
+        self.meshType = None
+
+        if "representations" in object_info:
+            representations = object_info["representations"]
+            if "mesh" in representations:
+                self.representations = Representations(
+                    representations.get("mesh", None)
+                )
+                self.gname = self.representations.get_mesh_name()
+                self.meshType = self.representations.get_mesh_format()
+                self.filename = self.representations.get_mesh_path()
+                self.path = autopack.fixOnePath(self.filename)
+
+        self.stype = "mesh"
+        self.radius = object_info["radius"] if "radius" in object_info else 200.0
+        self.height = 0.0
+        self.axis = [0, 1, 0]
         self.area = 0.0
-        self.scale = scale
-        self.fnormals = fnormals
         self.mesh = None
         self.rbnode = None
-        self.gname = gname
         self.ghost = False
         self.bb = None
         self.diag = 9999.9
-        self.ghost = ghost
-        self.filename = filename
-        self.ref_obj = ref_obj
-        self.meshType = meshType
-        self.representation = object_name
-        self.representation_file = object_filename
-        self.encapsulatingRadius = 9999.9
-        self.path = autopack.fixOnePath(filename)
+        self.ghost = None
+        self.encapsulating_radius = 9999.9
 
         self.checkinside = True
         self.innerRecipe = None
@@ -196,23 +209,25 @@ class Compartment(CompartmentList):
         # if a highres vertices is provided this give the surface point,
         # not the one provides
         # to compute inside points.
-        self.isBox = isBox
-        self.isOrthogonalBoundingBox = None  # the compartment shape is a box, no need
-        # to compute inside points.
-        self.isOrthogonalBoundingBox = isOrthogonalBoundingBox
-        self.stype = stype
-        self.radius = radius
-        self.height = height
-        self.axis = axis
+        self.isBox = object_info["bounding_box"] is not None
+        self.bounding_box = (
+            object_info["bounding_box"]
+            if object_info["bounding_box"] is not None
+            else None
+        )
+        self.isOrthogonalBoundingBox = (
+            1 if object_info["bounding_box"] is not None else None
+        )
+
         self.grid_type = "regular"
         self.grid_distances = None  # signed closest distance for each point
         # TODO Add openVDB
-        if self.filename is None:
-            autopack.helper.saveDejaVuMesh(
-                autopack.cache_geoms + os.sep + self.name, self.vertices, self.faces
-            )
-            self.filename = autopack.cache_geoms + os.sep + self.name
-            self.ref_obj = self.name
+        # if self.filename is None:
+        #     autopack.helper.saveDejaVuMesh(
+        #         autopack.cache_geoms + os.sep + self.name, self.vertices, self.faces
+        #     )
+        #     self.filename = autopack.cache_geoms + os.sep + self.name
+        #     self.ref_obj = self.name
 
     def reset(self):
         """reset the inner compartment data, surface and inner points"""
@@ -274,7 +289,7 @@ class Compartment(CompartmentList):
             self.bb = self.getBoundingBox()
             center, radius = mesh_store.get_nsphere(self.gname)
             self.center = center
-            self.encapsulatingRadius = radius
+            self.encapsulating_radius = radius
             self.radius = mesh_store.get_smallest_radius(self.gname, center)
 
     def addShapeRB(self):
@@ -472,7 +487,7 @@ class Compartment(CompartmentList):
         self.bb = self.getBoundingBox()
         v = numpy.array(self.vertices, "f")
         length = numpy.sqrt((v * v).sum(axis=1))
-        self.encapsulatingRadius = max(length)
+        self.encapsulating_radius = max(length)
 
     def saveGridToFile(self, f):
         """Save insidePoints and surfacePoints to file"""
@@ -1093,12 +1108,12 @@ class Compartment(CompartmentList):
 
         compartment_id = self.number
         spacing = env.grid.gridSpacing
-        variation = self.encapsulatingRadius - self.radius
+        variation = self.encapsulating_radius - self.radius
         is_sphere = variation < spacing
         # now check if point inside
         tree = spatial.cKDTree(grdPos, leafsize=10)
         points_in_encap_sphere = tree.query_ball_point(
-            self.center, self.encapsulatingRadius, return_sorted=True
+            self.center, self.encapsulating_radius, return_sorted=True
         )
         if is_sphere:
             inside = points_in_encap_sphere
@@ -1244,7 +1259,7 @@ class Compartment(CompartmentList):
         tree = spatial.cKDTree(grdPos, leafsize=10)
         points_in_encap_sphere = tree.query_ball_point(
             self.center,
-            self.encapsulatingRadius + env.grid.gridSpacing * 2,
+            self.encapsulating_radius + env.grid.gridSpacing * 2,
             return_sorted=True,
         )
         self.log.info("GOT POINTS IN SPHERE")
@@ -2492,7 +2507,7 @@ class Compartment(CompartmentList):
 
         self.grid = grid = Grid()
         grid.boundingBox = boundingBox
-        grid.gridSpacing = spacing  # = self.smallestProteinSize*1.1547  # 2/sqrt(3)????
+        grid.gridSpacing = spacing
         helper.progressBar(label="BuildGRid")
         grid.gridVolume, grid.nbGridPoints = grid.computeGridNumberOfPoint(
             boundingBox, spacing

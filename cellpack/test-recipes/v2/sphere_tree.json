@@ -1,0 +1,83 @@
+{
+    "version": "1.0.0",
+    "format_version": "2.0.0",
+    "name": "sphere_tree",
+    "bounding_box": [
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            1000,
+            1000,
+            1000
+        ]
+    ],
+    "objects": {
+        "base": {
+            "jitter_attempts": 10,
+            "rotation_range": 6.2831,
+            "cutoff_boundary": 0,
+            "perturb_axis_amplitude": 0.1,
+            "packing": {
+                "mode": "random"
+            },
+            "principal_vector": [
+                0,
+                0,
+                1
+            ],
+            "rejection_threshold": 50,
+            "place_type": "jitter",
+            "cutoff_surface": 42,
+            "rotation_axis": [
+                1,
+                1,
+                1
+            ],
+            "available_regions": {
+                "interior": {},
+                "surface": {},
+                "outer_leaflet": {},
+                "inner_leaflet": {}
+            }
+        },
+        "sphere_25": {
+            "type": "multi_sphere",
+            "inherit": "base",
+            "color": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "weight": 0.25,
+            "coordinate_system": "left",
+            "representations": {
+                "packing":{
+                    "path": "../",
+                    "name": "test.sph",
+                    "format": "sph"
+                }
+            },
+            "max_jitter": [
+                1,
+                1,
+                1
+            ]
+        }
+    },
+    "composition": {
+        "space": {
+            "regions": {
+                "interior": [
+                    "A"
+                ]
+            }
+        },
+        "A": {
+            "object": "sphere_25",
+            "count": 100
+        }
+    }
+}
