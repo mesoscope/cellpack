@@ -87,7 +87,7 @@ class SingleSphereIngr(Ingredient):
             jitter_attempts=jitter_attempts,
             nbMol=nbMol,
             overwrite_distance_function=overwrite_distance_function,
-            packing=packing,
+            packing_mode=packing_mode,
             packing_priority=packing_priority,
             partners_name=partners_name,
             partners_position=partners_position,

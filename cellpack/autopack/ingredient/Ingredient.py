@@ -58,7 +58,6 @@ from cellpack.autopack.interface_objects.representations import Representations
 
 from .utils import (
     ApplyMatrix,
-    get_distance,
     getNormedVectorOnes,
     rotVectToVect,
     rotax,
@@ -233,15 +232,15 @@ class Ingredient(Agent):
                 packing=representations.get("packing", None),
             )
             if self.representations["packing"]:
-        self.offset = offset
-        self.source = {
-            "pdb": self.pdb,
-            "transform": {
-                "center": True,
-                "translate": [0, 0, 0],
-                "rotate": [0, 0, 0, 1],
-            },
-        }
+                self.offset = offset
+                self.source = {
+                    "pdb": self.pdb,
+                    "transform": {
+                        "center": True,
+                        "translate": [0, 0, 0],
+                        "rotate": [0, 0, 0, 1],
+                    },
+                }
         # should deal with source of the object
         if source:
             self.source = source
