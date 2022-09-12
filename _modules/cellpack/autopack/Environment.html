@@ -2594,11 +2594,11 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">ptInd</span><span class="p">],</span>
             <span class="p">)</span>
             <span class="n">collision_possible</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">if</span> <span class="n">distances</span><span class="p">[</span><span class="n">ptInd</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">getMaxJitter</span><span class="p">(</span>
-                <span class="n">spacing</span>
-            <span class="p">):</span>
-                <span class="c1"># there is no possible collision here</span>
-                <span class="n">collision_possible</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1"># if distances[ptInd] &gt;= ingr.encapsulatingRadius + ingr.getMaxJitter(</span>
+            <span class="c1">#     spacing</span>
+            <span class="c1"># ):</span>
+            <span class="c1">#     # there is no possible collision here</span>
+            <span class="c1">#     collision_possible = False</span>
             <span class="p">(</span>
                 <span class="n">success</span><span class="p">,</span>
                 <span class="n">insidePoints</span><span class="p">,</span>

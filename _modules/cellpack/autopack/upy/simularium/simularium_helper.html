@@ -278,6 +278,7 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1"># standardmodule</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">trimesh</span>
 
@@ -692,6 +693,7 @@
                     <span class="n">file_name</span> <span class="o">=</span> <span class="n">ingr_name</span>
                 <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">simulariumHelper</span><span class="o">.</span><span class="n">DATABASE</span><span class="si">}</span><span class="s2">/geometries/</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.obj&quot;</span>
                 <span class="n">display_type</span> <span class="o">=</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">OBJ</span>
+                <span class="k">return</span> <span class="n">display_type</span><span class="p">,</span> <span class="n">url</span>
             <span class="k">if</span> <span class="s2">&quot;.pdb&quot;</span> <span class="ow">in</span> <span class="n">pdb_file_name</span><span class="p">:</span>
                 <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">simulariumHelper</span><span class="o">.</span><span class="n">DATABASE</span><span class="si">}</span><span class="s2">/other/</span><span class="si">{</span><span class="n">pdb_file_name</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="k">else</span><span class="p">:</span>
@@ -729,16 +731,25 @@
             <span class="k">if</span> <span class="n">ingr_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_data</span><span class="p">:</span>
                 <span class="n">display_type</span><span class="p">,</span> <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_display_data</span><span class="p">(</span><span class="n">ingredient</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">display_data</span><span class="p">[</span><span class="n">ingredient</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">DisplayData</span><span class="p">(</span>
-                    <span class="n">name</span><span class="o">=</span><span class="n">ingr_name</span><span class="p">,</span> <span class="n">display_type</span><span class="o">=</span><span class="n">display_type</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">ingr_name</span><span class="p">,</span>
+                    <span class="n">display_type</span><span class="o">=</span><span class="n">display_type</span><span class="p">,</span>
+                    <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">color</span><span class="p">)</span> <span class="o">/</span> <span class="mi">255</span><span class="p">),</span>
                 <span class="p">)</span>
             <span class="n">radius</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="k">if</span> <span class="n">ingredient</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">10</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">source</span><span class="p">[</span><span class="s2">&quot;transform&quot;</span><span class="p">][</span><span class="s2">&quot;translate&quot;</span><span class="p">])</span>
+            <span class="n">rot_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rotation</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">adj_offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">rot_mat</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+            <span class="n">adj_pos</span> <span class="o">=</span> <span class="n">position</span> <span class="o">-</span> <span class="n">adj_offset</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">add_instance</span><span class="p">(</span>
-                <span class="n">ingredient</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">ingr_name</span><span class="p">,</span>
                 <span class="n">ingredient</span><span class="p">,</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ingr_name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">ptInd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                 <span class="n">radius</span><span class="p">,</span>
-                <span class="n">position</span><span class="p">,</span>
+                <span class="n">adj_pos</span><span class="p">,</span>
                 <span class="n">rotation</span><span class="p">,</span>
                 <span class="n">sub_points</span><span class="p">,</span>
             <span class="p">)</span>

@@ -281,7 +281,6 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">webbrowser</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">json</span>
@@ -756,8 +755,7 @@
     <span class="k">if</span> <span class="n">compartments</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="n">compartments</span><span class="p">:</span>
             <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">add_compartment_to_scene</span><span class="p">(</span><span class="n">compartment</span><span class="p">)</span>
-    <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">writeToFile</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">setupfile</span><span class="si">}</span><span class="s2">_results&quot;</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">)</span>
-    <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;https://simularium.allencell.org/viewer&quot;</span><span class="p">)</span></div>
+    <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">writeToFile</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">setupfile</span><span class="si">}</span><span class="s2">_results&quot;</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="save_Mixed_asJson"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.save_Mixed_asJson">[docs]</a><span class="k">def</span> <span class="nf">save_Mixed_asJson</span><span class="p">(</span>
@@ -1114,9 +1112,9 @@
 <div class="viewcode-block" id="checkRotFormat"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.checkRotFormat">[docs]</a><span class="k">def</span> <span class="nf">checkRotFormat</span><span class="p">(</span><span class="n">rotation</span><span class="p">,</span> <span class="n">transpose</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">4</span><span class="p">,):</span>
         <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">tr</span><span class="o">.</span><span class="n">quaternion_matrix</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>  <span class="c1"># transpose ?</span>
+            <span class="k">return</span> <span class="n">tr</span><span class="o">.</span><span class="n">matrix_from_quaternion</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>  <span class="c1"># transpose ?</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">tr</span><span class="o">.</span><span class="n">quaternion_matrix</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">tr</span><span class="o">.</span><span class="n">matrix_from_quaternion</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">rotation</span></div>
 
@@ -1874,11 +1872,11 @@
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>  <span class="c1"># quaternion</span>
                             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
                                 <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
-                                    <span class="n">rot</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">quaternion_matrix</span><span class="p">(</span>
+                                    <span class="n">rot</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">matrix_from_quaternion</span><span class="p">(</span>
                                         <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                                     <span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>  <span class="c1"># transpose ?</span>
                                 <span class="k">else</span><span class="p">:</span>
-                                    <span class="n">rot</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">quaternion_matrix</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># transpose ?</span>
+                                    <span class="n">rot</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">matrix_from_quaternion</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># transpose ?</span>
                                     <span class="c1">#                        ingr.results.append([numpy.array(r[0]),rot])</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">rot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
@@ -1933,11 +1931,11 @@
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>  <span class="c1"># quaternion</span>
                             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
                                 <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
-                                    <span class="n">rot</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">quaternion_matrix</span><span class="p">(</span>
+                                    <span class="n">rot</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">matrix_from_quaternion</span><span class="p">(</span>
                                         <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                                     <span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>  <span class="c1"># transpose ?</span>
                                 <span class="k">else</span><span class="p">:</span>
-                                    <span class="n">rot</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">quaternion_matrix</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># transpose ?</span>
+                                    <span class="n">rot</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">matrix_from_quaternion</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># transpose ?</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">rot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
                             <span class="c1">#                        ingr.results.append([numpy.array(r[0]),rot])</span>
@@ -1986,11 +1984,11 @@
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>  <span class="c1"># quaternion</span>
                             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
                                 <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
-                                    <span class="n">rot</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">quaternion_matrix</span><span class="p">(</span>
+                                    <span class="n">rot</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">matrix_from_quaternion</span><span class="p">(</span>
                                         <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                                     <span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>  <span class="c1"># transpose ?</span>
                                 <span class="k">else</span><span class="p">:</span>
-                                    <span class="n">rot</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">quaternion_matrix</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># transpose ?</span>
+                                    <span class="n">rot</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">matrix_from_quaternion</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># transpose ?</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">rot</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
                             <span class="c1">#                        ingr.results.append([numpy.array(r[0]),rot])</span>

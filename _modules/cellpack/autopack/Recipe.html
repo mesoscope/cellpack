@@ -424,7 +424,6 @@
                 <span class="n">num_to_place_int</span> <span class="o">=</span> <span class="n">num_to_place_int</span> <span class="o">+</span> <span class="mi">1</span>
 
             <span class="n">ingr</span><span class="o">.</span><span class="n">vol_nbmol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">left_to_place</span> <span class="o">=</span> <span class="n">num_to_place_int</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">left_to_place</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                     <span class="s2">&quot;WARNING GRAHAM: recipe ingredient </span><span class="si">%s</span><span class="s2"> has 0 molecules as target&quot;</span><span class="p">,</span>
@@ -444,7 +443,10 @@
         <span class="sd">&quot;&quot;&quot;get the mini and maxi radius from all recipe ingredients&quot;&quot;&quot;</span>
         <span class="n">mini</span> <span class="o">=</span> <span class="mf">9999999.0</span>
         <span class="n">maxi</span> <span class="o">=</span> <span class="mi">0</span>
+
         <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">=</span> <span class="mf">400.0</span>
             <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">&gt;</span> <span class="n">maxi</span><span class="p">:</span>
                 <span class="n">maxi</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulatingRadius</span>
             <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">minRadius</span> <span class="o">&lt;</span> <span class="n">mini</span><span class="p">:</span>

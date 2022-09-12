@@ -325,10 +325,12 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">collada</span>
 <span class="kn">from</span> <span class="nn">scipy.spatial.transform</span> <span class="kn">import</span> <span class="n">Rotation</span> <span class="k">as</span> <span class="n">R</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">pi</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">gauss</span><span class="p">,</span> <span class="n">random</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">from</span> <span class="nn">cellpack.autopack.utils</span> <span class="kn">import</span> <span class="n">get_distance</span>
 
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ApplyMatrix</span><span class="p">,</span>
@@ -473,7 +475,7 @@
         <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">nbJitter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="n">nbMol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">offset</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
         <span class="n">orientBiasRotRangeMax</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
         <span class="n">orientBiasRotRangeMin</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
         <span class="n">overwrite_distFunc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># overWrite</span>
@@ -537,8 +539,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">o_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Type</span> <span class="o">=</span> <span class="n">Type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pdb</span> <span class="o">=</span> <span class="n">pdb</span>  <span class="c1"># pmv ?</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transform_sources</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_info</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">meshFile</span><span class="p">,</span>
@@ -547,28 +547,18 @@
             <span class="s2">&quot;object&quot;</span><span class="p">:</span> <span class="n">meshObject</span><span class="p">,</span>
         <span class="p">}</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># offset to apply for membrane binding</span>
-        <span class="k">if</span> <span class="n">offset</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;pdb&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdb</span><span class="p">,</span>
+            <span class="s2">&quot;transform&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;center&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;translate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                <span class="s2">&quot;rotate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
         <span class="c1"># should deal with source of the object</span>
         <span class="k">if</span> <span class="n">source</span><span class="p">:</span>
-            <span class="n">sources</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
-            <span class="k">if</span> <span class="s2">&quot;pdb&quot;</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">pdb</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s2">&quot;pdb&quot;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="s2">&quot;transform&quot;</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">transform_sources</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s2">&quot;transform&quot;</span><span class="p">]</span>
-                <span class="k">if</span> <span class="s2">&quot;offset&quot;</span> <span class="ow">in</span> <span class="n">source</span><span class="p">[</span><span class="s2">&quot;transform&quot;</span><span class="p">]:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s2">&quot;transform&quot;</span><span class="p">][</span><span class="s2">&quot;offset&quot;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;pdb&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pdb</span><span class="p">,</span>
-                <span class="s2">&quot;transform&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;center&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]},</span>
-            <span class="p">}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">transform_sources</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;transform&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;center&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]}</span>
-            <span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>  <span class="c1"># color used for sphere display</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
@@ -615,9 +605,13 @@
                     <span class="n">positions</span> <span class="o">=</span> <span class="p">[</span><span class="n">positions</span><span class="p">]</span>
                     <span class="n">radii</span> <span class="o">=</span> <span class="p">[</span><span class="n">radii</span><span class="p">]</span>
                 <span class="k">elif</span> <span class="n">fileExtension</span> <span class="o">==</span> <span class="s2">&quot;.sph&quot;</span><span class="p">:</span>
-                    <span class="n">min_radius</span><span class="p">,</span> <span class="n">rM</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSpheres</span><span class="p">(</span>
-                        <span class="n">sphereFileo</span>
-                    <span class="p">)</span>
+                    <span class="p">(</span>
+                        <span class="n">min_radius</span><span class="p">,</span>
+                        <span class="n">encapsulating_radius</span><span class="p">,</span>
+                        <span class="n">positions</span><span class="p">,</span>
+                        <span class="n">radii</span><span class="p">,</span>
+                        <span class="n">children</span><span class="p">,</span>
+                    <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSpheres</span><span class="p">(</span><span class="n">sphereFileo</span><span class="p">)</span>
                     <span class="c1"># if a user didn&#39;t set this properly before</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">radii</span><span class="p">):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">minRadius</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -631,7 +625,7 @@
                         <span class="c1"># encapsulatingRadius is the radius of the sphere</span>
                         <span class="c1"># centered at 0,0,0</span>
                         <span class="c1"># and encapsulate the ingredient</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">=</span> <span class="n">rM</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">=</span> <span class="n">encapsulating_radius</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                         <span class="s2">&quot;sphere file extension not recognized </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fileExtension</span>
@@ -674,10 +668,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">verts</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rad</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rapid_model</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">&lt;</span> <span class="nb">max</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1">#</span>
         <span class="c1"># TODO : geometry : 3d object or procedural from PDB</span>
         <span class="c1"># TODO : usekeyword resolution-&gt;options dictionary of res :</span>
         <span class="c1"># TODO : {&quot;simple&quot;:{&quot;cms&quot;:{&quot;parameters&quot;:{&quot;gridres&quot;:12}},</span>
@@ -758,11 +748,6 @@
             <span class="p">):</span>  <span class="c1"># [0][0]</span>
                 <span class="n">positions</span> <span class="o">=</span> <span class="p">[[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]]</span>
 
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">radii</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">delta</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">positions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-                    <span class="n">rM</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">delta</span> <span class="o">*</span> <span class="n">delta</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">rM</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span><span class="p">)</span>
             <span class="c1"># if radii is not None and positions is not None:</span>
             <span class="c1"># for r, c in zip(radii, positions):</span>
             <span class="c1">#     assert len(r) == len(c)</span>
@@ -771,6 +756,14 @@
             <span class="k">if</span> <span class="n">radii</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">radii</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">radii</span> <span class="o">=</span> <span class="n">radii</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;IgG_Antibody_1mer&quot;</span><span class="p">:</span>
+                <span class="n">positions</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints_mult</span><span class="p">(</span>
+                        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                        <span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span>
+                        <span class="n">positions</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="p">)</span>
+                <span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">positions</span> <span class="o">=</span> <span class="n">positions</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">minRadius</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">minRadius</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">))</span></div>
@@ -861,21 +854,40 @@
         <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">datao</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;#&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">]</span>
 
         <span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
-        <span class="n">nblevels</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">num_levels</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">radii</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">centers</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">line</span> <span class="o">=</span> <span class="mi">2</span>
-        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nblevels</span><span class="p">):</span>
+        <span class="n">xmin</span> <span class="o">=</span> <span class="mi">9999</span>
+        <span class="n">ymin</span> <span class="o">=</span> <span class="mi">9999</span>
+        <span class="n">zmin</span> <span class="o">=</span> <span class="mi">9999</span>
+        <span class="n">xmax</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ymax</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">zmax</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_levels</span><span class="p">):</span>
             <span class="n">rl</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">cl</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">ch</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">nbs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">line</span><span class="p">])</span>
+            <span class="n">num_spheres</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">line</span><span class="p">])</span>
             <span class="n">line</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbs</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_spheres</span><span class="p">):</span>
                 <span class="n">w</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">line</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
                 <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">w</span><span class="p">[:</span><span class="mi">4</span><span class="p">]))</span>
-                <span class="k">if</span> <span class="n">level</span> <span class="o">&lt;</span> <span class="n">nblevels</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># get sub spheres indices</span>
+                <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">xmin</span><span class="p">:</span>
+                    <span class="n">xmin</span> <span class="o">=</span> <span class="n">x</span>
+                <span class="k">if</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">ymin</span><span class="p">:</span>
+                    <span class="n">ymin</span> <span class="o">=</span> <span class="n">y</span>
+                <span class="k">if</span> <span class="n">z</span> <span class="o">&lt;</span> <span class="n">zmin</span><span class="p">:</span>
+                    <span class="n">zmin</span> <span class="o">=</span> <span class="n">z</span>
+                <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">xmax</span><span class="p">:</span>
+                    <span class="n">xmax</span> <span class="o">=</span> <span class="n">x</span>
+                <span class="k">if</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="n">ymax</span><span class="p">:</span>
+                    <span class="n">ymin</span> <span class="o">=</span> <span class="n">y</span>
+                <span class="k">if</span> <span class="n">z</span> <span class="o">&gt;</span> <span class="n">zmax</span><span class="p">:</span>
+                    <span class="n">zmax</span> <span class="o">=</span> <span class="n">z</span>
+                <span class="k">if</span> <span class="n">level</span> <span class="o">&lt;</span> <span class="n">num_levels</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># get sub spheres indices</span>
                     <span class="n">ch</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">w</span><span class="p">[</span><span class="mi">4</span><span class="p">:])))</span>
                 <span class="n">cl</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
                 <span class="n">rl</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
@@ -883,8 +895,20 @@
             <span class="n">centers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
             <span class="n">radii</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rl</span><span class="p">)</span>
             <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
-        <span class="c1"># we ignore the hierarchy for now</span>
-        <span class="k">return</span> <span class="n">rmin</span><span class="p">,</span> <span class="n">rmax</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">children</span></div>
+        <span class="n">encapsulating_radius</span> <span class="o">=</span> <span class="n">rmax</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># there are sphere tree files that are only one level</span>
+            <span class="c1"># and therefore do not have an ecapsulating sphere</span>
+            <span class="n">tree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">centers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">max_box</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">maxes</span>
+            <span class="n">diagonal</span> <span class="o">=</span> <span class="n">get_distance</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">max_box</span><span class="p">)</span>
+            <span class="n">encapsulating_radius</span> <span class="o">=</span> <span class="n">diagonal</span> <span class="o">+</span> <span class="n">rmax</span> <span class="o">*</span> <span class="mi">2</span>
+            <span class="n">bottom</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">zmin</span><span class="p">])</span>
+            <span class="n">top</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xmax</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">zmax</span><span class="p">])</span>
+            <span class="n">box_dia</span> <span class="o">=</span> <span class="n">get_distance</span><span class="p">(</span><span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">)</span>
+            <span class="n">encapsulating_radius</span> <span class="o">=</span> <span class="n">box_dia</span> <span class="o">+</span> <span class="n">rmax</span> <span class="o">*</span> <span class="mi">2</span>
+
+        <span class="k">return</span> <span class="n">rmin</span><span class="p">,</span> <span class="n">encapsulating_radius</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">children</span></div>
 
 <div class="viewcode-block" id="Ingredient.rejectOnce"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.rejectOnce">[docs]</a>    <span class="k">def</span> <span class="nf">rejectOnce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rbnode</span><span class="p">,</span> <span class="n">moving</span><span class="p">,</span> <span class="n">afvi</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">rbnode</span><span class="p">:</span>
@@ -951,10 +975,6 @@
             <span class="n">shape</span>
         <span class="p">)</span>  <span class="c1"># ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?</span>
         <span class="k">return</span> <span class="n">inodenp</span></div>
-
-<div class="viewcode-block" id="Ingredient.SetKw"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.SetKw">[docs]</a>    <span class="k">def</span> <span class="nf">SetKw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
-            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">kw</span><span class="p">[</span><span class="n">k</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Ingredient.Set"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.Set">[docs]</a>    <span class="k">def</span> <span class="nf">Set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbMol</span> <span class="o">=</span> <span class="mi">0</span>
@@ -2226,6 +2246,37 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span>
                 <span class="p">)</span></div>
 
+<div class="viewcode-block" id="Ingredient.pack_at_grid_pt_location"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.pack_at_grid_pt_location">[docs]</a>    <span class="k">def</span> <span class="nf">pack_at_grid_pt_location</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">dpad</span><span class="p">,</span> <span class="n">grid_point_distances</span>
+    <span class="p">):</span>
+
+        <span class="n">newDistPoints</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">insidePoints</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">packing_location</span> <span class="o">=</span> <span class="n">jtrans</span>
+        <span class="n">radius_of_area_to_check</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">+</span> <span class="n">dpad</span>
+
+        <span class="n">bounding_points_to_check</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_positions_to_check</span><span class="p">(</span><span class="n">packing_location</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">bounding_point_position</span> <span class="ow">in</span> <span class="n">bounding_points_to_check</span><span class="p">:</span>
+
+            <span class="n">grid_points_to_update</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span>
+                <span class="n">bounding_point_position</span><span class="p">,</span> <span class="n">radius_of_area_to_check</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">grid_point_index</span> <span class="ow">in</span> <span class="n">grid_points_to_update</span><span class="p">:</span>
+                <span class="p">(</span>
+                    <span class="n">insidePoints</span><span class="p">,</span>
+                    <span class="n">newDistPoints</span><span class="p">,</span>
+                <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_distances_and_inside_points</span><span class="p">(</span>
+                    <span class="n">env</span><span class="p">,</span>
+                    <span class="n">bounding_point_position</span><span class="p">,</span>
+                    <span class="n">rotMatj</span><span class="p">,</span>
+                    <span class="n">grid_point_index</span><span class="p">,</span>
+                    <span class="n">grid_point_distances</span><span class="p">,</span>
+                    <span class="n">newDistPoints</span><span class="p">,</span>
+                    <span class="n">insidePoints</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span></div>
+
 <div class="viewcode-block" id="Ingredient.remove_from_realtime_display"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.remove_from_realtime_display">[docs]</a>    <span class="k">def</span> <span class="nf">remove_from_realtime_display</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">moving</span><span class="p">):</span>
         <span class="k">pass</span></div>
         <span class="c1"># env.afvi.vi.deleteObject(moving)</span>
@@ -2330,6 +2381,7 @@
                 <span class="n">current_visual_instance</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="n">is_fiber</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Actine&quot;</span>
+        <span class="n">collision_possible</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">if</span> <span class="n">collision_possible</span> <span class="ow">or</span> <span class="n">is_fiber</span><span class="p">:</span>
             <span class="c1"># grow doesnt use panda.......but could use all the geom produce by the grow as rb</span>
             <span class="k">if</span> <span class="n">is_fiber</span><span class="p">:</span>
@@ -2425,37 +2477,12 @@
             <span class="c1"># TODO: make this work for ingredients other than single spheres</span>
 
             <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">newDistPoints</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="n">insidePoints</span> <span class="o">=</span> <span class="p">{}</span>
-
-            <span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_jitter_location_and_rotation</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_jitter_location_and_rotation</span><span class="p">(</span>
                 <span class="n">env</span><span class="p">,</span> <span class="n">target_grid_point_position</span><span class="p">,</span> <span class="n">rotation_matrix</span>
             <span class="p">)</span>
-
-            <span class="n">packing_location</span> <span class="o">=</span> <span class="n">jtrans</span>
-            <span class="n">radius_of_area_to_check</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">+</span> <span class="n">dpad</span>
-
-            <span class="n">bounding_points_to_check</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_positions_to_check</span><span class="p">(</span><span class="n">packing_location</span><span class="p">)</span>
-
-            <span class="k">for</span> <span class="n">bounding_point_position</span> <span class="ow">in</span> <span class="n">bounding_points_to_check</span><span class="p">:</span>
-
-                <span class="n">grid_points_to_update</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span>
-                    <span class="n">bounding_point_position</span><span class="p">,</span> <span class="n">radius_of_area_to_check</span>
-                <span class="p">)</span>
-                <span class="k">for</span> <span class="n">grid_point_index</span> <span class="ow">in</span> <span class="n">grid_points_to_update</span><span class="p">:</span>
-                    <span class="p">(</span>
-                        <span class="n">insidePoints</span><span class="p">,</span>
-                        <span class="n">newDistPoints</span><span class="p">,</span>
-                    <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_distances_and_inside_points</span><span class="p">(</span>
-                        <span class="n">env</span><span class="p">,</span>
-                        <span class="n">bounding_point_position</span><span class="p">,</span>
-                        <span class="n">rotMatj</span><span class="p">,</span>
-                        <span class="n">grid_point_index</span><span class="p">,</span>
-                        <span class="n">grid_point_distances</span><span class="p">,</span>
-                        <span class="n">newDistPoints</span><span class="p">,</span>
-                        <span class="n">insidePoints</span><span class="p">,</span>
-                    <span class="p">)</span>
-
+            <span class="p">(</span><span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pack_at_grid_pt_location</span><span class="p">(</span>
+                <span class="n">env</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">dpad</span><span class="p">,</span> <span class="n">grid_point_distances</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">is_realtime</span><span class="p">:</span>
                 <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">set_object_static</span><span class="p">(</span>
