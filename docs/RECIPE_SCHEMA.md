@@ -333,7 +333,7 @@ _Optional enum. One of `"jitter"`, `"spheresSST"`, `"pandaBullet"`_. Default: `"
 ### rejection_threshold
 _Optional `number`_. Default: `30`.
 
-### packingMode
+### packing_mode
 _Optional enum. One of `"random"`, `"close"`, `"closePartner"`, `"randomPartner"`, `"gradient"`, `"hexatile"`, `"squaretile"`, `"triangletile"`_. Default: `"random"`.
 
 ### gradient
@@ -401,7 +401,7 @@ _Optional `string`_
     "count": 6, 
     "name": "Sphere_radius_100",
     "orientBiasRotRangeMax": -3.1415927,
-    "packingMode": "random",
+    "packing_mode": "random",
     "type": "SingleSphere", 
     "excluded_partners_name": [],
     "rejection_threshold": 60,
