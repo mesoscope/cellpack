@@ -7,7 +7,7 @@ from json import encoder
 
 import cellpack.autopack as autopack
 from cellpack.autopack.utils import deep_merge
-from .rename_dict import v1_to_v2_name_map,unused_attributes_list
+from .v1_v2_attribute_changes import v1_to_v2_name_map,unused_attributes_list
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
@@ -148,9 +148,11 @@ class RecipeLoader(object):
     @staticmethod
     def _migrate_ingredient(old_ingredient):
         new_ingredient = {}
-        for attribute in old_ingredient:
+        for attribute in list(old_ingredient):
             if attribute in v1_to_v2_name_map:
                 new_ingredient[v1_to_v2_name_map[attribute]] = old_ingredient[attribute]
+            elif attribute in unused_attributes_list:
+                del old_ingredient[attribute]
         return new_ingredient
 
     @staticmethod

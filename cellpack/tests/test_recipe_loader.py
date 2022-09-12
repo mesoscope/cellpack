@@ -71,51 +71,7 @@ def test_resolve_objects():
     # TODO: add granular testing for individual objects
     assert resolved_objects == expected_result
 
-
-v1_test_data_with_unused_attributes = {
-    "recipe": {
-        "version": "1.1",
-        "name": "test recipe",
-    },
-    "cytoplasme": {
-        "ingredients": {
-            "test_ingredient_1": {
-                "Type": "SingleSphere",
-                "encapsulatingRadius": 100,
-                "name": "Sphere_radius_100",
-                "meshObject":None,
-                "properties": {},
-                "nbMol": 15,
-            },
-            "test_ingredient_2": {
-                "packingMode": "random",
-                "encapsulatingRadius": 200,
-                "name": "Sphere_radius_200",
-                "meshType":"file",
-                "packingPriority": 0,
-            },
-        }
-    },
-}
-
-
-@pytest.mark.parametrize(
-    "ingredient_data_with_unused_keys, filtered_ingredient_data",
-    [
-        (
-            v1_test_data_with_unused_attributes,
-            {
-                'test_ingredient_1': {'Type': 'SingleSphere', 'nbMol': 15}, 
-                'test_ingredient_2': {'packingMode': 'random', 'packingPriority': 0}
-            }
-        )
-    ],
-)
-def test_delete_unused_attributes(ingredient_data_with_unused_keys, filtered_ingredient_data):
-    assert filtered_ingredient_data == RecipeLoader._delete_unused_attributes(ingredient_data_with_unused_keys)
-
-
-old_ingredient_should_be_renamed = {
+old_ingredient_should_be_renamed_or_deleted = {
     "nbJitter": 20,
     "jitterMax": [1, 1, 0],
     "perturbAxisAmplitude": 0.1,
@@ -130,14 +86,18 @@ old_ingredient_should_be_renamed = {
     "rotAxis": None,
     "rotRange": 6.2831,
     "useRotAxis": False,
+    "encapsulatingRadius": 100,
+    "name": "Sphere_radius_100",
+    "meshObject":None,
+    "meshType":"file",
+    "properties": {},
 }
 
-
 @pytest.mark.parametrize(
-    "old_ingredient_data, expected_new_data",
+    "old_ingredient_should_be_renamed_or_deleted, expected_new_data",
     [
         (
-            old_ingredient_should_be_renamed,
+            old_ingredient_should_be_renamed_or_deleted,
             {
                 "count": 15,
                 "is_attractor": False,
@@ -157,9 +117,9 @@ old_ingredient_should_be_renamed = {
         )
     ],
 )
-def test_migrate_ingredient(old_ingredient_data, expected_new_data):
-    new_ingredient = RecipeLoader._migrate_ingredient(old_ingredient_data)
-    assert new_ingredient == expected_new_data
+def test_migrate_ingredient(old_ingredient_should_be_renamed_or_deleted, expected_new_data):
+    new_ingredient = RecipeLoader._migrate_ingredient(old_ingredient_should_be_renamed_or_deleted)
+    assert expected_new_data == new_ingredient
 
 
 old_recipe_test_data = {
@@ -172,10 +132,15 @@ old_recipe_test_data = {
             "test_ingredient_1": {
                 "Type": "SingleSphere",
                 "nbMol": 15,
+                "meshObject":None,
+                "meshType":"file",
+                "properties": {},
             },
             "test_ingredient_2": {
                 "packingMode": "random",
                 "packingPriority": 0,
+                "encapsulatingRadius": 100,
+                "name": "Sphere_radius_100"
             },
         }
     },
