@@ -17,9 +17,9 @@ helper = autopack.helper
 class MultiCylindersIngr(Ingredient):
     """
     This Ingredient is represented by a collection of cylinder specified by
-    multi_bounds and radii. Each cylinder in the group is has two bounds, representing 
-    the center of the bottom and the center of the top, and a radius. 
-    The array of multi_bounds and radii must be the same length. 
+    multi_bounds and radii. Each cylinder in the group is has two bounds, representing
+    the center of the bottom and the center of the top, and a radius.
+    The array of multi_bounds and radii must be the same length.
     The principal Vector will be used to align the ingredient
     """
 
@@ -92,7 +92,9 @@ class MultiCylindersIngr(Ingredient):
             name = "%s_%f" % (str(radii[0]), molarity)
         self.name = name
         if len(multi_bounds) != len(radii):
-            raise IndexError(f"Problem with {name}: multi cylinder needs bounds and radius for every cylinder ")
+            raise IndexError(
+                f"Problem with {name}: multi cylinder needs bounds and radius for every cylinder "
+            )
         self.model_type = "Cylinders"
         self.collisionLevel = 0
         self.radii = radii

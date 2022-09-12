@@ -1428,7 +1428,7 @@ class AutopackViewer:
                         # if self.doSpheres :
                 if rs:
                     for ingr in rs.ingredients:
-                        if len(.verts[ingr]):
+                        if len(verts[ingr]):
                             if ingr.model_type == "Spheres":
                                 self.displayIngrSpheres(ingr, verts, radii, visible=0)
                             elif ingr.model_type == "Cylinders":

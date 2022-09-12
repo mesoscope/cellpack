@@ -100,9 +100,7 @@ class SingleCylinderIngr(Ingredient):
             bottom_cent + (top_cent - bottom_cent) / 2
         )  # location of center based on top and bottom
 
-        self.encapsulating_radius = numpy.sqrt(
-            radius ** 2 + (self.length / 2.0) ** 2
-        )
+        self.encapsulating_radius = numpy.sqrt(radius**2 + (self.length / 2.0) ** 2)
 
         self.listePtLinear = [
             bottom_cent,

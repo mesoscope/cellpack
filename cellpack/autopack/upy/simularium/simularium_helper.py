@@ -443,7 +443,9 @@ class simulariumHelper(hostHelper.Helper):
                 )
 
             radius = ingredient.encapsulating_radius if ingredient is not None else 10
-            adj_pos = ingredient.representations.get_adjusted_position(position, rotation)
+            adj_pos = ingredient.representations.get_adjusted_position(
+                position, rotation
+            )
 
             self.add_instance(
                 ingr_name,

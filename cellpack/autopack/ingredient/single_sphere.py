@@ -255,4 +255,3 @@ class SingleSphereIngr(Ingredient):
             )
 
             self.getData()
-

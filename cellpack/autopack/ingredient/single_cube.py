@@ -12,7 +12,7 @@ helper = autopack.helper
 
 class SingleCubeIngr(Ingredient):
     """
-    This Ingredient is represented by a single cube. Required attribute: 
+    This Ingredient is represented by a single cube. Required attribute:
     bounds, in the form of [lower bounds, upper bounds]. Each an x, y, z point.
     """
 
