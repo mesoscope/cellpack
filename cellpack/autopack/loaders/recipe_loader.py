@@ -7,7 +7,7 @@ from json import encoder
 
 import cellpack.autopack as autopack
 from cellpack.autopack.utils import deep_merge
-from .v1_v2_attribute_changes import v1_to_v2_name_map,unused_attributes_list
+from .v1_v2_attribute_changes import v1_to_v2_name_map, unused_attributes_list
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
@@ -144,7 +144,6 @@ class RecipeLoader(object):
                 converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
                 objects_dict[key] = converted_ingredient
         return objects_dict
-
 
     def _load_json(self):
         """

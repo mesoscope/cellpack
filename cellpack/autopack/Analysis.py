@@ -1325,7 +1325,10 @@ class AnalyseAP:
                                 distances[ingr.name] = []
                                 ingrpositions[ingr.name] = []
                                 occurences[ingr.name] = []
-                            if ingr.packing_mode == "gradient" and self.env.use_gradient:
+                            if (
+                                ingr.packing_mode == "gradient"
+                                and self.env.use_gradient
+                            ):
                                 center = self.env.gradients[ingr.gradient].direction
                             ingrpos, d = self.getDistance(ingr.name, center)
                             occurences[ingr.name].append(len(ingrpos))
@@ -1360,7 +1363,10 @@ class AnalyseAP:
                                 distances[ingr.name] = []
                                 ingrpositions[ingr.name] = []
                                 occurences[ingr.name] = []
-                            if ingr.packing_mode == "gradient" and self.env.use_gradient:
+                            if (
+                                ingr.packing_mode == "gradient"
+                                and self.env.use_gradient
+                            ):
                                 center = self.env.gradients[ingr.gradient].direction
                             ingrpos, d = self.getDistance(ingr.name, center)
                             occurences[ingr.name].append(len(ingrpos))

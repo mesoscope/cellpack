@@ -71,19 +71,19 @@ def test_resolve_objects():
     # TODO: add granular testing for individual objects
     assert resolved_objects == expected_result
 
+
 old_ingredient = {
     "nbMol": 15,
     "encapsulatingRadius": 100,
 }
+
 
 @pytest.mark.parametrize(
     "old_ingredient, expected_new_data",
     [
         (
             old_ingredient,
-            {
-                "count": 15
-            },
+            {"count": 15},
         )
     ],
 )
@@ -104,15 +104,15 @@ old_recipe_test_data = {
             "test_ingredient_1": {
                 "Type": "SingleSphere",
                 "nbMol": 15,
-                "meshObject":None,
-                "meshType":"file",
+                "meshObject": None,
+                "meshType": "file",
                 "properties": {},
             },
             "test_ingredient_2": {
                 "packingMode": "random",
                 "packingPriority": 0,
                 "encapsulatingRadius": 100,
-                "name": "Sphere_radius_100"
+                "name": "Sphere_radius_100",
             },
         }
     },

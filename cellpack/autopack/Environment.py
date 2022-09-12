@@ -1025,7 +1025,7 @@ class Environment(CompartmentList):
             radius = arguments["radius"]
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
-            )          
+            )
             ingr = SingleSphereIngr(radius, **arguments)
         elif ingredient_type == "multi_sphere":
             arguments = IOutils.IOingredientTool.clean_arguments(
@@ -1041,7 +1041,7 @@ class Environment(CompartmentList):
             bounds = arguments["bounds"]
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
-            ) 
+            )
             ingr = SingleCubeIngr(bounds, **arguments)
         elif ingredient_type == "single_cylinder":
             arguments = IOutils.IOingredientTool.clean_arguments(
