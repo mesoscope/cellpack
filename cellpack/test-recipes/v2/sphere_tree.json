@@ -60,7 +60,7 @@
                     "format": "sph"
                 }
             },
-            "jitter_max": [
+            "max_jitter": [
                 1,
                 1,
                 1

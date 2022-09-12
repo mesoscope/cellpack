@@ -11,7 +11,7 @@ class Partner:
         self.ingr = ingr
         self.weight = weight
         self.properties = {}
-        self.distExpression = None
+        self.distance_expression = None
         if properties is not None:
             self.properties = properties
 
@@ -72,13 +72,13 @@ class Agent:
         self,
         name,
         concentration,
-        distExpression=None,
-        distFunction=None,
+        distance_expression=None,
+        distance_function=None,
         excluded_partners_name=None,
         force_random=False,  # avoid any binding
         gradient="",
-        isAttractor=False,
-        overwrite_distFunc=True,  # overWrite
+        is_attractor=False,
+        overwrite_distance_function=True,  # overWrite
         packing=None,
         partners_name=None,
         partners_position=None,
@@ -120,15 +120,15 @@ class Agent:
         # assert place_type in ['jitter', 'spring','rigid-body']
         self.place_type = place_type
         self.mesh_3d = None
-        self.isAttractor = isAttractor
+        self.is_attractor = is_attractor
         self.weight = weight
         self.proba_not_binding = proba_not_binding
         self.proba_binding = proba_binding
         self.force_random = force_random
-        self.distFunction = distFunction
-        self.distExpression = distExpression
-        self.overwrite_distFunc = overwrite_distFunc
-        self.overwrite_distFunc = True
+        self.distance_function = distance_function
+        self.distance_expression = distance_expression
+        self.overwrite_distance_function = overwrite_distance_function
+        self.overwrite_distance_function = True
         # chance to actually bind to any partner
         self.gradient = gradient
         self.cb = None
@@ -215,10 +215,10 @@ class Agent:
         w = 0.0
         for i, part, dist in listePartner:
             # print ("i",part,dist,w,part.weight)
-            if self.overwrite_distFunc:
+            if self.overwrite_distance_function:
                 wd = part.weight
             else:
-                wd = part.distanceFunction(dist, expression=part.distExpression)
+                wd = part.distanceFunction(dist, expression=part.distance_expression)
             # print "calc ",dist, wd
             probaArray.append(wd)
             w = w + wd

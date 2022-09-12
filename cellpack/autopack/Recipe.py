@@ -180,8 +180,7 @@ class Recipe:
             if remainder >= randval:  # Mod by Graham 8/18/11
                 num_to_place_int = num_to_place_int + 1
 
-            ingr.vol_nbmol = ingr.left_to_place = num_to_place_int + ingr.count
-            print(ingr.name, ingr.count)
+            ingr.vol_nbmol = ingr.left_to_place = num_to_place_int + ingr.nbMol
             if ingr.left_to_place == 0:
                 self.log.warning(
                     "WARNING GRAHAM: recipe ingredient %s has 0 molecules as target",
@@ -201,11 +200,14 @@ class Recipe:
         """get the mini and maxi radius from all recipe ingredients"""
         mini = 9999999.0
         maxi = 0
+
         for ingr in self.ingredients:
-            if ingr.encapsulating_radius > maxi:
-                maxi = ingr.encapsulating_radius
-            if ingr.min_radius < mini:
-                mini = ingr.min_radius
+            if ingr.encapsulatingRadius is None:
+                ingr.encapsulatingRadius = 400.0
+            if ingr.encapsulatingRadius > maxi:
+                maxi = ingr.encapsulatingRadius
+            if ingr.minRadius < mini:
+                mini = ingr.minRadius
         return mini, maxi
 
     def sort(self):

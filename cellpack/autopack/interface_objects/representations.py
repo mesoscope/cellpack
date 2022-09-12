@@ -116,3 +116,4 @@ class Representations:
             return None
         else:
             return self.mesh["format"]
+

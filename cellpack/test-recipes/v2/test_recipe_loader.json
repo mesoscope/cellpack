@@ -51,7 +51,7 @@
             ],
             "rotation_range": 6.2831,
             "cutoff_boundary": 0,
-            "jitter_max": [
+            "max_jitter": [
                 0.2,
                 0.2,
                 0.01
@@ -107,7 +107,7 @@
             "weight": 0.25,
             "radius": 25,
             "coordinate_system": "left",
-            "jitter_max": [
+            "max_jitter": [
                 1,
                 1,
                 0

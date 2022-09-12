@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # standardmodule
 import os
+import matplotlib
 import numpy as np
 import trimesh
 
@@ -435,15 +436,25 @@ class simulariumHelper(hostHelper.Helper):
             if ingr_name not in self.display_data:
                 display_type, url = self.get_display_data(ingredient)
                 self.display_data[ingredient.name] = DisplayData(
-                    name=ingr_name, display_type=display_type, url=url
+                    name=ingr_name,
+                    display_type=display_type,
+                    url=url,
+                    color=matplotlib.colors.to_hex(np.array(ingredient.color) / 255),
                 )
             radius = ingredient.encapsulating_radius if ingredient is not None else 10
+            offset = [0, 0, 0]
+            if ingredient.source is not None:
+                offset = np.array(ingredient.source["transform"]["translate"])
+            rot_mat = np.array(rotation[0:3, 0:3])
+            adj_offset = np.matmul(rot_mat, offset)
+            adj_pos = position - adj_offset
+
             self.add_instance(
-                ingredient.name,
+                ingr_name,
                 ingredient,
                 f"{ingr_name}-{ptInd}",
                 radius,
-                position,
+                adj_pos,
                 rotation,
                 sub_points,
             )

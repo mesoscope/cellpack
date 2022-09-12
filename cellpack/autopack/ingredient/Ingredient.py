@@ -58,6 +58,7 @@ from cellpack.autopack.interface_objects.representations import Representations
 
 from .utils import (
     ApplyMatrix,
+    get_distance,
     getNormedVectorOnes,
     rotVectToVect,
     rotax,
@@ -109,8 +110,8 @@ class Ingredient(Agent):
         - an optional pdb ID
         - an optional packing priority. If omitted the priority will be based
         on the radius with larger radii first
-        ham here: (-)packingPriority object will pack from high to low one at a time
-        (+)packingPriority will be weighted by assigned priority value
+        ham here: (-)packing_priority object will pack from high to low one at a time
+        (+)packing_priority will be weighted by assigned priority value
         (0)packignPriority will be weighted by complexity and appended to what is left
         of the (+) values
         - an optional principal vector used to align the ingredient
@@ -128,43 +129,27 @@ class Ingredient(Agent):
 
     ARGUMENTS = [
         "color",
-        "coordsystem",
         "count",
         "cutoff_boundary",
         "cutoff_surface",
-        "distExpression",
-        "distFunction",
-        "encapsulating_radius",
-        "excluded_partners_name",
+        "distance_expression",
+        "distance_function",
         "force_random",
-        "isAttractor",
-        "jitter_max",
-        "meshFile",
-        "meshName",
-        "meshObject",
+        "gradient",
+        "is_attractor",
+        "max_jitter",
         "molarity",
         "name",
         "jitter_attempts",
-        "nbMol",
         "offset",
         "orient_bias_range",
-        "overwrite_distFunc",
-        "packing",
-        "packingPriority",
-        "partners_name",
-        "partners_position",
-        "partners_weight",
-        "pdb",
+        "overwrite_distance_function",
+        "packing_ mode",
+        "packing_priority",
+        "partners",
         "perturb_axis_amplitude",
         "place_type",
-        "positions",
-        "positions2",
         "principal_vector",
-        "proba_binding",
-        "proba_not_binding",
-        "properties",
-        "radii",
-        "radius",
         "rejection_threshold",
         "representations",
         "resolution_dictionary",
@@ -181,68 +166,46 @@ class Ingredient(Agent):
         self,
         type="single_sphere",
         color=None,
-        coordsystem="right",
         count=0,
         cutoff_boundary=None,
         cutoff_surface=None,
-        distExpression=None,
-        distFunction=None,
-        encapsulating_radius=0,
-        excluded_partners_name=None,
+        distance_expression=None,
+        distance_function=None,
         force_random=False,  # avoid any binding
         gradient="",
-        isAttractor=False,
-        jitter_max=(1, 1, 1),
-        meshFile=None,
-        meshName=None,
-        meshObject=None,
-        meshType="file",
+        is_attractor=False,
+        max_jitter=(1, 1, 1),
         molarity=0.0,
-        name=None,
+        name="",
         jitter_attempts=5,
-        nbMol=0,
         offset=None,
         orient_bias_range=[-pi, pi],
-        overwrite_distFunc=True,  # overWrite
-        packing=None,
-        packingPriority=0,
-        partners_name=None,
-        partners_position=None,
-        pdb=None,
+        overwrite_distance_function=True,  # overWrite
+        packing_priority=0,
+        partners=None,
         perturb_axis_amplitude=0.1,
         place_type="jitter",
-        positions2=None,
         principal_vector=(1, 0, 0),
-        proba_binding=0.5,
-        proba_not_binding=0.5,  # chance to actually not bind
-        properties=None,
         rejection_threshold=30,
         representations=None,
         resolution_dictionary=None,
         rotation_axis=None,
         rotation_range=6.2831,
-        source=None,
-        useOrientBias=False,
-        useRotAxis=False,
+        use_orient_bias=False,
+        use_rotation_axis=False,
         weight=0.2,  # use for affinity ie partner.weight
     ):
         super().__init__(
             name,
             molarity,
-            distExpression=distExpression,
-            distFunction=distFunction,
-            excluded_partners_name=excluded_partners_name,
+            distance_expression=distance_expression,
+            distance_function=distance_function,
             force_random=force_random,
             gradient=gradient,
-            isAttractor=isAttractor,
-            overwrite_distFunc=overwrite_distFunc,
-            packing=packing,
-            partners_name=partners_name,
-            partners_position=partners_position,
+            is_attractor=is_attractor,
+            overwrite_distance_function=overwrite_distance_function,
+            partners=partners,
             place_type=place_type,
-            proba_binding=proba_binding,
-            proba_not_binding=proba_not_binding,
-            properties=properties,
             weight=weight,
         )
         self.log = logging.getLogger("ingredient")
@@ -250,11 +213,11 @@ class Ingredient(Agent):
 
         self.molarity = molarity
         self.count = count
-        self.packingPriority = packingPriority
+        self.packing_priority = packing_priority
         self.log.info(
-            "packingPriority %d,  self.packingPriority %r",
-            packingPriority,
-            self.packingPriority,
+            "packing_priority %d,  self.packing_priority %r",
+            packing_priority,
+            self.packing_priority,
         )
         if name is None:
             name = "%f" % molarity
@@ -262,9 +225,6 @@ class Ingredient(Agent):
         self.name = str(name)
         self.o_name = str(name)
         self.type = type
-        self.pdb = pdb  # pmv ?
-        self.transform_sources = None
-        self.source = None
         self.mesh = None
         if representations is not None:
             self.representations = Representations(
@@ -272,29 +232,19 @@ class Ingredient(Agent):
                 atomic=representations.get("atomic", None),
                 packing=representations.get("packing", None),
             )
-
-        self.offset = [0, 0, 0]  # offset to apply for membrane binding
-        if offset:
-            self.offset = offset
-
+            if self.representations["packing"]:
+        self.offset = offset
+        self.source = {
+            "pdb": self.pdb,
+            "transform": {
+                "center": True,
+                "translate": [0, 0, 0],
+                "rotate": [0, 0, 0, 1],
+            },
+        }
         # should deal with source of the object
         if source:
-            sources = source.keys()
             self.source = source
-            if "pdb" in sources:
-                self.pdb = source["pdb"]
-            if "transform" in sources:
-                self.transform_sources = source["transform"]
-                if "offset" in source["transform"]:
-                    self.offset = source["transform"]["offset"]
-        else:
-            self.source = {
-                "pdb": self.pdb,
-                "transform": {"center": True, "offset": [0, 0, 0]},
-            }
-            self.transform_sources = {
-                "transform": {"center": True, "offset": [0, 0, 0]}
-            }
 
         self.color = color  # color used for sphere display
         if self.color == "None":
@@ -324,7 +274,7 @@ class Ingredient(Agent):
         self.rbnode = {}  # keep the rbnode if any
         self.collisionLevel = 0  # self.deepest_level
         # first level used for collision detection
-        self.jitter_max = jitter_max
+        self.max_jitter = max_jitter
         # (1,1,1) means 1/2 grid spacing in all directions
 
         self.perturb_axis_amplitude = perturb_axis_amplitude
@@ -357,7 +307,6 @@ class Ingredient(Agent):
         self.verts = None
         self.rad = None
         self.rapid_model = None
-
         # TODO : geometry : 3d object or procedural from PDB
         # TODO : usekeyword resolution->options dictionary of res :
         # TODO : {"simple":{"cms":{"parameters":{"gridres":12}},
@@ -548,10 +497,6 @@ class Ingredient(Agent):
         )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
         return inodenp
 
-    def SetKw(self, **kw):
-        for k in kw:
-            setattr(self, k, kw[k])
-
     def Set(self, **kw):
         self.nbMol = 0
         if "nbMol" in kw:
@@ -559,7 +504,7 @@ class Ingredient(Agent):
         if "molarity" in kw:
             self.molarity = kw["molarity"]
         if "priority" in kw:
-            self.packingPriority = kw["priority"]
+            self.packing_priority = kw["priority"]
         if "packingMode" in kw:
             self.packingMode = kw["packingMode"]
         if "compMask" in kw:
@@ -760,7 +705,7 @@ class Ingredient(Agent):
         """
         position are the 3d coordiantes of the grid point
         spacing is the grid spacing
-        this will jitter gauss(0., 0.3) * Ingredient.jitter_max
+        this will jitter gauss(0., 0.3) * Ingredient.max_jitter
         """
         if self.compNum > 0:
             vx, vy, vz = v1 = self.principal_vector
@@ -772,7 +717,7 @@ class Ingredient(Agent):
                 self.log.error(e)
                 rotMat = numpy.identity(4)
 
-        jx, jy, jz = self.jitter_max
+        jx, jy, jz = self.max_jitter
         dx = (
             jx * spacing * uniform(-1.0, 1.0)
         )  # This needs to use the same rejection if outside of the sphere that the uniform cartesian jitters have.  Shoiuld use oneJitter instead?
@@ -788,10 +733,10 @@ class Ingredient(Agent):
         return numpy.array(position)
 
     def getMaxJitter(self, spacing):
-        # self.jitter_max: each value is the max it can move
+        # self.max_jitter: each value is the max it can move
         # along that axis, but not cocurrently, ie, can't move
         # in the max x AND max y direction at the same time
-        return max(self.jitter_max) * spacing
+        return max(self.max_jitter) * spacing
 
     def swap(self, d, n):
         d.rotate(-n)
@@ -1225,7 +1170,7 @@ class Ingredient(Agent):
         inside = self.env.grid.checkPointInside(
             newPt,
             dist=self.cutoff_boundary,
-            jitter=getNormedVectorOnes(self.jitter_max),
+            jitter=getNormedVectorOnes(self.max_jitter),
         )
         if inside:
             inComp = self.checkPointComp(newPt)
@@ -1356,7 +1301,7 @@ class Ingredient(Agent):
                     listePartner.append([i, self.partners[ing.name], mingrs[3][i]])
                     #                                         autopack.helper.measure_distance(jtrans,mingrs[0][i])])
             if (
-                ing.isAttractor
+                ing.is_attractor
             ):  # and self.compNum <= 0: #always attract! or rol a dice ?sself.excluded_partners.has_key(name)
                 if (
                     ing.name not in self.partners_name
@@ -1367,8 +1312,8 @@ class Ingredient(Agent):
                     part = self.getPartner(ing.name)
                     if part is None:
                         part = self.addPartner(ing, weight=ing.weight)
-                    if ing.distExpression is not None:
-                        part.distExpression = ing.distExpression
+                    if ing.distance_expression is not None:
+                        part.distance_expression = ing.distance_expression
                     d = afvi.vi.measure_distance(jtrans, t)
                     listePartner.append([i, part, d])
         if not listePartner:
@@ -1705,6 +1650,37 @@ class Ingredient(Agent):
                     self.env.rTrans, leafsize=10
                 )
 
+    def pack_at_grid_pt_location(
+        self, env, jtrans, rotMatj, dpad, grid_point_distances
+    ):
+
+        newDistPoints = {}
+        insidePoints = {}
+        packing_location = jtrans
+        radius_of_area_to_check = self.encapsulatingRadius + dpad
+
+        bounding_points_to_check = self.get_all_positions_to_check(packing_location)
+
+        for bounding_point_position in bounding_points_to_check:
+
+            grid_points_to_update = env.grid.getPointsInSphere(
+                bounding_point_position, radius_of_area_to_check
+            )
+            for grid_point_index in grid_points_to_update:
+                (
+                    insidePoints,
+                    newDistPoints,
+                ) = self.get_new_distances_and_inside_points(
+                    env,
+                    bounding_point_position,
+                    rotMatj,
+                    grid_point_index,
+                    grid_point_distances,
+                    newDistPoints,
+                    insidePoints,
+                )
+        return insidePoints, newDistPoints
+
     def remove_from_realtime_display(env, moving):
         pass
         # env.afvi.vi.deleteObject(moving)
@@ -1905,37 +1881,12 @@ class Ingredient(Agent):
             # TODO: make this work for ingredients other than single spheres
 
             success = True
-            newDistPoints = {}
-            insidePoints = {}
-
-            (jtrans, rotMatj,) = self.get_new_jitter_location_and_rotation(
+            (jtrans, rotMatj) = self.get_new_jitter_location_and_rotation(
                 env, target_grid_point_position, rotation_matrix
             )
-
-            packing_location = jtrans
-            radius_of_area_to_check = self.encapsulating_radius + dpad
-
-            bounding_points_to_check = self.get_all_positions_to_check(packing_location)
-
-            for bounding_point_position in bounding_points_to_check:
-
-                grid_points_to_update = env.grid.getPointsInSphere(
-                    bounding_point_position, radius_of_area_to_check
-                )
-                for grid_point_index in grid_points_to_update:
-                    (
-                        insidePoints,
-                        newDistPoints,
-                    ) = self.get_new_distances_and_inside_points(
-                        env,
-                        bounding_point_position,
-                        rotMatj,
-                        grid_point_index,
-                        grid_point_distances,
-                        newDistPoints,
-                        insidePoints,
-                    )
-
+            (insidePoints, newDistPoints) = self.pack_at_grid_pt_location(
+                env, jtrans, rotMatj, dpad, grid_point_distances
+            )
         if success:
             if is_realtime:
                 autopack.helper.set_object_static(
@@ -2021,7 +1972,7 @@ class Ingredient(Agent):
         spacing = env.grid.gridSpacing
         jitter = spacing / 2.0
         jitter_sq = jitter * jitter
-        jx, jy, jz = self.jitter_max
+        jx, jy, jz = self.max_jitter
         tx, ty, tz = translation
         dx, dy, dz, d2 = [0.0, 0.0, 0.0, 0.0]
         jitter_trans = [0.0, 0.0, 0.0]
@@ -2250,7 +2201,7 @@ class Ingredient(Agent):
         if self.packingMode != "graident":
             periodic_pos = self.env.grid.getPositionPeridocity(
                 packing_location,
-                getNormedVectorOnes(self.jitter_max),
+                getNormedVectorOnes(self.max_jitter),
                 self.encapsulating_radius,
             )
             points_to_check.extend(periodic_pos)

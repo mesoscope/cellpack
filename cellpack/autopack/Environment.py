@@ -1567,21 +1567,21 @@ class Environment(CompartmentList):
         priorities1 = []
         ingr2 = []  # priority = 0 or none and will be assigned based on complexity
         priorities2 = []
-        ingr0 = []  # negative values will pack first in order of abs[packingPriority]
+        ingr0 = []  # negative values will pack first in order of abs[packing_priority]
         priorities0 = []
         for ing in allIngredients:
             if ing.completion >= 1.0:
                 continue  # ignore completed ingredients
-            if ing.packingPriority is None or ing.packingPriority == 0:
+            if ing.packing_priority is None or ing.packing_priority == 0:
                 ingr2.append(ing)
-                priorities2.append(ing.packingPriority)
-            elif ing.packingPriority > 0:
+                priorities2.append(ing.packing_priority)
+            elif ing.packing_priority > 0:
                 ingr1.append(ing)
-                priorities1.append(ing.packingPriority)
+                priorities1.append(ing.packing_priority)
             else:
-                # ing.packingPriority    = -ing.packingPriority
+                # ing.packing_priority    = -ing.packing_priority
                 ingr0.append(ing)
-                priorities0.append(ing.packingPriority)
+                priorities0.append(ing.packing_priority)
 
         if self.pickWeightedIngr:
             try:
@@ -1593,7 +1593,7 @@ class Environment(CompartmentList):
         # GrahamAdded this stuff in summer 2011, beware!
         if len(ingr1) != 0:
             lowestIng = ingr1[len(ingr1) - 1]
-            self.lowestPriority = lowestIng.packingPriority
+            self.lowestPriority = lowestIng.packing_priority
         else:
             self.lowestPriority = 1.0
         self.log.info("self.lowestPriority for Ing1 = %d", self.lowestPriority)
@@ -1619,7 +1619,7 @@ class Environment(CompartmentList):
                 r = priors2.min_radius
             np = float(r) / float(self.totalRadii) * self.lowestPriority
             self.normalizedPriorities0.append(np)
-            priors2.packingPriority = np
+            priors2.packing_priority = np
             self.log.info("self.normalizedPriorities0 = %r", self.normalizedPriorities0)
         activeIngr0 = ingr0  # +ingr1+ingr2  #cropped to 0 on 7/20/10
 
@@ -1850,7 +1850,7 @@ class Environment(CompartmentList):
 
             self.totalPriorities = 0  # 0.00001
             for priors in self.activeIngr12:
-                pp = priors.packingPriority
+                pp = priors.packing_priority
                 self.totalPriorities = self.totalPriorities + pp
             previousThresh = 0
             self.normalizedPriorities = []
@@ -1864,7 +1864,7 @@ class Environment(CompartmentList):
                     self.thresholdPriorities.append(2)
             for priors in self.activeIngr12:
                 # pp1 = 0
-                pp = priors.packingPriority
+                pp = priors.packing_priority
                 if self.totalPriorities != 0:
                     np = float(pp) / float(self.totalPriorities)
                 else:
@@ -2034,7 +2034,7 @@ class Environment(CompartmentList):
 
         self.totalPriorities = 0  # 0.00001
         for priors in self.activeIngr12:
-            pp = priors.packingPriority
+            pp = priors.packing_priority
             self.totalPriorities = self.totalPriorities + pp
             self.log.info("totalPriorities = %d", self.totalPriorities)
         previousThresh = 0
@@ -2049,7 +2049,7 @@ class Environment(CompartmentList):
                 self.thresholdPriorities.append(2)
         for priors in self.activeIngr12:
             # pp1 = 0
-            pp = priors.packingPriority
+            pp = priors.packing_priority
             if self.totalPriorities != 0:
                 np = float(pp) / float(self.totalPriorities)
             else:
@@ -2194,11 +2194,11 @@ class Environment(CompartmentList):
                 self.grid.masterGridPositions[ptInd],
             )
             collision_possible = True
-            if distances[ptInd] >= ingr.encapsulating_radius + ingr.getMaxJitter(
-                spacing
-            ):
-                # there is no possible collision here
-                collision_possible = False
+            # if distances[ptInd] >= ingr.encapsulatingRadius + ingr.getMaxJitter(
+            #     spacing
+            # ):
+            #     # there is no possible collision here
+            #     collision_possible = False
             (
                 success,
                 insidePoints,
@@ -2256,7 +2256,7 @@ class Environment(CompartmentList):
 
                 self.totalPriorities = 0  # 0.00001
                 for priors in self.activeIngr12:
-                    pp = priors.packingPriority
+                    pp = priors.packing_priority
                     self.totalPriorities = self.totalPriorities + pp
                 #                    print ('totalPriorities = ', self.totalPriorities)
                 previousThresh = 0
@@ -2271,7 +2271,7 @@ class Environment(CompartmentList):
                         self.thresholdPriorities.append(2)
                 for priors in self.activeIngr12:
                     # pp1 = 0
-                    pp = priors.packingPriority
+                    pp = priors.packing_priority
                     if self.totalPriorities != 0:
                         np = float(pp) / float(self.totalPriorities)
                     else:

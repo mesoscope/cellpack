@@ -24,8 +24,8 @@ class MultiSphereIngr(Ingredient):
         cutoff_surface=None,
         excluded_partners_name=None,
         gradient="",
-        isAttractor=False,
-        jitter_max=(1, 1, 1),
+        is_attractor=False,
+        max_jitter=(1, 1, 1),
         meshFile=None,
         meshName="",
         meshObject=None,
@@ -36,9 +36,9 @@ class MultiSphereIngr(Ingredient):
         nbMol=0,
         offset=None,
         orient_bias_range=[-pi, pi],
-        overwrite_distFunc=True,  # overWrite
+        overwrite_distance_function=True,  # overWrite
         packing=None,
-        packingPriority=0,
+        packing_priority=0,
         partners_name=None,
         partners_position=None,
         pdb=None,
@@ -66,8 +66,8 @@ class MultiSphereIngr(Ingredient):
             cutoff_surface=cutoff_surface,
             excluded_partners_name=excluded_partners_name,
             gradient=gradient,
-            isAttractor=isAttractor,
-            jitter_max=jitter_max,
+            is_attractor=is_attractor,
+            max_jitter=max_jitter,
             meshFile=meshFile,
             meshName=meshName,
             meshObject=meshObject,
@@ -79,7 +79,7 @@ class MultiSphereIngr(Ingredient):
             offset=offset,
             orient_bias_range=orient_bias_range,
             packing=packing,
-            packingPriority=packingPriority,
+            packing_priority=packing_priority,
             partners_name=partners_name,
             partners_position=partners_position,
             pdb=pdb,
@@ -293,3 +293,54 @@ class MultiSphereIngr(Ingredient):
                 closest_distance = signed_distance_to_surface
 
         return closest_distance
+
+    def pack_at_grid_pt_location(
+        self, env, jtrans, rotMatj, dpad, grid_point_distances
+    ):
+        level = self.deepest_level
+        centers = self.positions[level]
+        radii = self.radii[level]
+        centT = self.transformPoints(jtrans, rotMatj, centers)  # centers)
+        insidePoints = {}
+        newDistPoints = {}
+        gridPointsCoords = env.masterGridPositions
+        for radius_of_sphere_in_tree, pos_of_sphere in zip(radii, centT):
+            radius_of_area_to_check = (
+                radius_of_sphere_in_tree + dpad
+            )  # extends the packing ingredient's bounding box to be large enough to include masked gridpoints of the largest possible ingrdient in the receipe
+
+            pointsToCheck = env.grid.getPointsInSphere(
+                pos_of_sphere, radius_of_area_to_check
+            )  # indices
+            # check for collisions by looking at grid points in the sphere of radius radc
+            delta = numpy.take(gridPointsCoords, pointsToCheck, 0) - pos_of_sphere
+            delta *= delta
+            distA = numpy.sqrt(delta.sum(1))
+
+            for pti in range(len(pointsToCheck)):
+                grid_point_index = pointsToCheck[
+                    pti
+                ]  # index of master grid point that is inside the sphere
+                distance_to_packing_location = distA[
+                    pti
+                ]  # is that point's distance from the center of the sphere (packing location)
+                # distance is an array of distance of closest contact to anything currently in the grid
+
+                signed_distance_to_sphere_surface = (
+                    distance_to_packing_location - radius_of_sphere_in_tree
+                )
+                (
+                    insidePoints,
+                    newDistPoints,
+                ) = self.get_new_distances_and_inside_points(
+                    env,
+                    jtrans,
+                    rotMatj,
+                    grid_point_index,
+                    grid_point_distances,
+                    newDistPoints,
+                    insidePoints,
+                    signed_distance_to_sphere_surface,
+                )
+
+        return insidePoints, newDistPoints
