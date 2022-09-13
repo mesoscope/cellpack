@@ -88,7 +88,11 @@ class RecipeLoader(object):
             "format_version" not in recipe_data
             or recipe_data["format_version"] != self.latest_version
         ):
-            format_version = recipe_data["format_version"] if "format_version" in recipe_data else "1.0"
+            format_version = (
+                recipe_data["format_version"]
+                if "format_version" in recipe_data
+                else "1.0"
+            )
             recipe_data = RecipeLoader._migrate_version(recipe_data, format_version)
 
         # TODO: request any external data before returning
