@@ -90,7 +90,7 @@ class SingleCubeIngr(Ingredient):
         self.upper_bound = bounds[1]  # top right corner of cuboid
         lower_bound = numpy.array(self.lower_bound)
         upper_bound = numpy.array(self.upper_bound)
-        self.edges = numpy.array([upper_bound[i] - upper_bound[i] for i in range(3)])
+        self.edges = numpy.array([upper_bound[i] - lower_bound[i] for i in range(3)])
         self.min_radius = min(self.edges) / 2  # sizex,sizey,sizez
         self.encapsulating_radius = numpy.linalg.norm(
             self.edges / 2
