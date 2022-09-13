@@ -17,6 +17,7 @@ class RecipeLoader(object):
     # TODO: add all default values here
     default_values = {
         "bounding_box": [[0, 0, 0], [100, 100, 100]],
+        "representations": {"atomic": None, "packing": None, "mesh": None},
     }
 
     def __init__(self, input_file_path):
@@ -132,6 +133,21 @@ class RecipeLoader(object):
         return recipe
 
     @staticmethod
+    def _convert_to_representations(old_ingredient):
+        representations = RecipeLoader.default_values["representations"]
+        if "sphereFile" in old_ingredient:
+            path, filename = os.path.split(old_ingredient["sphereFile"])
+            _, extension = os.path.splitext(filename)
+
+            representations["packing"] = {
+                "path": path,
+                "name": filename,
+                "format": extension,
+            }
+
+        return representations
+
+    @staticmethod
     def _migrate_ingredient(old_ingredient):
         new_ingredient = {}
         for attribute in list(old_ingredient):
@@ -155,7 +171,9 @@ class RecipeLoader(object):
                 else pi
             )
             new_ingredient["orient_bias_range"] = [range_min, range_max]
-
+        new_ingredient["representations"] = RecipeLoader._convert_to_representations(
+            old_ingredient
+        )
         return new_ingredient
 
     @staticmethod

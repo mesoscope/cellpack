@@ -19,7 +19,11 @@ old_ingredient = {"nbMol": 15, "encapsulatingRadius": 100, "orientBiasRotRangeMa
     [
         (
             old_ingredient,
-            {"count": 15, "orient_bias_range": [-pi, 12]},
+            {
+                "count": 15,
+                "orient_bias_range": [-pi, 12],
+                "representations": RecipeLoader.default_values["representations"],
+            },
         )
     ],
 )
@@ -61,8 +65,16 @@ old_recipe_test_data = {
         (
             old_recipe_test_data,
             {
-                "test_ingredient_1": {"count": 15, "type": "SingleSphere"},
-                "test_ingredient_2": {"packing_mode": "random", "packing_priority": 0},
+                "test_ingredient_1": {
+                    "count": 15,
+                    "type": "SingleSphere",
+                    "representations": RecipeLoader.default_values["representations"],
+                },
+                "test_ingredient_2": {
+                    "packing_mode": "random",
+                    "packing_priority": 0,
+                    "representations": RecipeLoader.default_values["representations"],
+                },
             },
         )
     ],
@@ -70,4 +82,58 @@ old_recipe_test_data = {
 def test_get_v1_ingredients(old_recipe_test_data, expected_object_dict):
     assert expected_object_dict == RecipeLoader._get_v1_ingredients(
         old_recipe_test_data
+    )
+
+
+@pytest.mark.parametrize(
+    "external_sphereFile, external_result, local_sphereFile, local_result, local_sphereFile_2, local_result_2",
+    [
+        (
+            {"sphereFile": "autoPACKserver/collisionTrees/fibrinogen.sph"},
+            {
+                "packing": {
+                    "name": "fibrinogen.sph",
+                    "format": ".sph",
+                    "path": "autoPACKserver/collisionTrees",
+                },
+                "atomic": None,
+                "mesh": None,
+            },
+            {"sphereFile": "fibrinogen.sph"},
+            {
+                "packing": {
+                    "name": "fibrinogen.sph",
+                    "format": ".sph",
+                    "path": "",
+                },
+                "atomic": None,
+                "mesh": None,
+            },
+            {"sphereFile": "/fibrinogen.sph"},
+            {
+                "packing": {
+                    "name": "fibrinogen.sph",
+                    "format": ".sph",
+                    "path": "/",
+                },
+                "atomic": None,
+                "mesh": None,
+            },
+        )
+    ],
+)
+def test_create_packing_representation(
+    external_sphereFile,
+    external_result,
+    local_sphereFile,
+    local_result,
+    local_sphereFile_2,
+    local_result_2,
+):
+    assert external_result == RecipeLoader._convert_to_representations(
+        external_sphereFile
+    )
+    assert local_result == RecipeLoader._convert_to_representations(local_sphereFile)
+    assert local_result_2 == RecipeLoader._convert_to_representations(
+        local_sphereFile_2
     )
