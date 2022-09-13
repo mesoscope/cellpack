@@ -58,7 +58,6 @@ from cellpack.autopack.interface_objects.representations import Representations
 
 from .utils import (
     ApplyMatrix,
-    get_distance,
     getNormedVectorOnes,
     rotVectToVect,
     rotax,
@@ -119,7 +118,7 @@ class Ingredient(Agent):
         - compNum is the compartment number (0 for cytoplasm, positive for compartment
         surface and negative compartment interior
         - Attributes used by the filling algorithm:
-        - nbMol counts the number of placed ingredients during a fill
+        - count counts the number of placed ingredients during a fill
         - counter is the target number of ingredients to place
         - completion is the ratio of placed/target
         - rejectionCounter is used to eliminate ingredients after too many failed
@@ -144,7 +143,7 @@ class Ingredient(Agent):
         "offset",
         "orient_bias_range",
         "overwrite_distance_function",
-        "packing_ mode",
+        "packing_mode",
         "packing_priority",
         "partners",
         "perturb_axis_amplitude",
@@ -155,10 +154,9 @@ class Ingredient(Agent):
         "resolution_dictionary",
         "rotation_axis",
         "rotation_range",
-        "source",
         "type",
-        "useOrientBias",
-        "useRotAxis",
+        "use_orient_bias",
+        "use_rotation_axis",
         "weight",
     ]
 
@@ -172,15 +170,16 @@ class Ingredient(Agent):
         distance_expression=None,
         distance_function=None,
         force_random=False,  # avoid any binding
-        gradient="",
+        gradient=None,
         is_attractor=False,
         max_jitter=(1, 1, 1),
         molarity=0.0,
-        name="",
+        name=None,
         jitter_attempts=5,
         offset=None,
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
+        packing_mode="random",
         packing_priority=0,
         partners=None,
         perturb_axis_amplitude=0.1,
@@ -204,6 +203,7 @@ class Ingredient(Agent):
             gradient=gradient,
             is_attractor=is_attractor,
             overwrite_distance_function=overwrite_distance_function,
+            packing_mode=packing_mode,
             partners=partners,
             place_type=place_type,
             weight=weight,
@@ -232,24 +232,11 @@ class Ingredient(Agent):
                 atomic=representations.get("atomic", None),
                 packing=representations.get("packing", None),
             )
-            if self.representations["packing"]:
         self.offset = offset
-        self.source = {
-            "pdb": self.pdb,
-            "transform": {
-                "center": True,
-                "translate": [0, 0, 0],
-                "rotate": [0, 0, 0, 1],
-            },
-        }
-        # should deal with source of the object
-        if source:
-            self.source = source
-
         self.color = color  # color used for sphere display
         if self.color == "None":
             self.color = None
-        self.modelType = "Spheres"
+        self.model_type = "Spheres"
         self.rRot = []
         self.tTrans = []
         self.htrans = []
@@ -261,7 +248,6 @@ class Ingredient(Agent):
         self.vi = autopack.helper
         self.min_radius = 1
         self.min_distance = 0
-        self.encapsulating_radius = encapsulating_radius
         self.deepest_level = 1
         self.is_previous = False
         self.vertices = []
@@ -269,7 +255,6 @@ class Ingredient(Agent):
         self.vnormals = []
         # self._place = self.place
         children = []
-        self.positions2 = positions2
         self.children = children
         self.rbnode = {}  # keep the rbnode if any
         self.collisionLevel = 0  # self.deepest_level
@@ -286,11 +271,9 @@ class Ingredient(Agent):
         self.compId_accepted = (
             []
         )  # if this list is defined, point picked outise the list are rejected
-        # should be self.compNum per default
-        # will be set when recipe is added to HistoVol
+
         # added to a compartment
-        self.nbMol = nbMol
-        self.left_to_place = nbMol
+        self.left_to_place = count
         self.vol_nbmol = 0
 
         # Packing tracking values
@@ -302,7 +285,7 @@ class Ingredient(Agent):
             []
         )  # the list of available grid points for this ingredient to pack
         self.counter = 0  # target number of molecules for a fill
-        self.completion = 0.0  # ratio of counter/nbMol
+        self.completion = 0.0  # ratio of counter/count
         self.rejectionCounter = 0
         self.verts = None
         self.rad = None
@@ -315,8 +298,7 @@ class Ingredient(Agent):
         # TODO : "med":{"method":"cms","parameters":{"gridres":30}}
         # TODO : "high":{"method":"msms","parameters":{"gridres":30}}
         # TODO : etc...
-        if coordsystem:
-            self.coordsystem = coordsystem
+
         self.rejection_threshold = rejection_threshold
 
         # need to build the basic shape if one provided
@@ -327,23 +309,16 @@ class Ingredient(Agent):
             resolution_dictionary = {"Low": "", "Med": "", "High": ""}
         self.resolution_dictionary = resolution_dictionary
 
-        # how to get the geom of different res?
-        self.representation = None
-        self.representation_file = None
-
-        self.useRotAxis = useRotAxis
+        self.use_rotation_axis = use_rotation_axis
         self.rotation_axis = rotation_axis
         self.rotation_range = rotation_range
-        self.useOrientBias = useOrientBias
+        self.use_orient_bias = use_orient_bias
         self.orientBiasRotRangeMin = orient_bias_range[0]
         self.orientBiasRotRangeMax = orient_bias_range[1]
 
         # cutoff are used for picking point far from surface and boundary
         self.cutoff_boundary = cutoff_boundary
-        self.cutoff_surface = float(cutoff_surface or self.encapsulating_radius)
-        if properties is None:
-            properties = {}
-        self.properties = properties  # four tout
+        self.cutoff_surface = cutoff_surface
 
         self.compareCompartment = False
         self.compareCompartmentTolerance = 0
@@ -374,20 +349,28 @@ class Ingredient(Agent):
     def has_mesh(self):
         return self.representations.has_mesh()
 
+    def use_mesh(self):
+        self.representations.set_active("mesh")
+        return self.representations.get_mesh_path()
+
+    def use_pdb(self):
+        self.representations.set_active("atomic")
+        return self.representations.get_pdb_path()
+
     def setTilling(self, comp):
-        if self.packingMode == "hexatile":
+        if self.packing_mode == "hexatile":
             from cellpack.autopack.hexagonTile import tileHexaIngredient
 
             self.tilling = tileHexaIngredient(
                 self, comp, self.encapsulating_radius, init_seed=self.env.seed_used
             )
-        elif self.packingMode == "squaretile":
+        elif self.packing_mode == "squaretile":
             from cellpack.autopack.hexagonTile import tileSquareIngredient
 
             self.tilling = tileSquareIngredient(
                 self, comp, self.encapsulating_radius, init_seed=self.env.seed_used
             )
-        elif self.packingMode == "triangletile":
+        elif self.packing_mode == "triangletile":
             from cellpack.autopack.hexagonTile import tileTriangleIngredient
 
             self.tilling = tileTriangleIngredient(
@@ -498,15 +481,15 @@ class Ingredient(Agent):
         return inodenp
 
     def Set(self, **kw):
-        self.nbMol = 0
-        if "nbMol" in kw:
-            self.nbMol = int(kw["nbMol"])
+        self.count = 0
+        if "count" in kw:
+            self.count = int(kw["count"])
         if "molarity" in kw:
             self.molarity = kw["molarity"]
         if "priority" in kw:
             self.packing_priority = kw["priority"]
-        if "packingMode" in kw:
-            self.packingMode = kw["packingMode"]
+        if "packing_mode" in kw:
+            self.packing_mode = kw["packing_mode"]
         if "compMask" in kw:
             if type(kw["compMask"]) is str:
                 self.compMask = eval(kw["compMask"])
@@ -755,7 +738,7 @@ class Ingredient(Agent):
         radius = self.min_radius
         jitter = self.getMaxJitter(spacing)
 
-        if self.packingMode == "close":
+        if self.packing_mode == "close":
             cut = radius - jitter
         else:
             cut = radius - jitter
@@ -800,7 +783,7 @@ class Ingredient(Agent):
         current_comp_id = self.compNum
         # gets min distance an object has to be away to allow packing for this object
         cuttoff = self.get_cuttoff_value(spacing)
-        if self.packingMode == "close":
+        if self.packing_mode == "close":
             # Get an array of free points where the distance is greater than half the cuttoff value
             # and less than the cutoff. Ie an array where the distances are all very small.
             # this also masks the array to only include points in the current commpartment
@@ -1187,7 +1170,7 @@ class Ingredient(Agent):
     def get_new_jitter_location_and_rotation(
         self, env, starting_pos, starting_rotation
     ):
-        if self.packingMode[-4:] == "tile":
+        if self.packing_mode[-4:] == "tile":
             packing_location = starting_pos
             packing_rotation = starting_rotation[:]
             return packing_location, packing_rotation
@@ -1225,7 +1208,7 @@ class Ingredient(Agent):
             )
         x, y, z = jtrans
         bb = ([x - rad, y - rad, z - rad], [x + rad, y + rad, z + rad])
-        if self.modelType == "Cylinders":
+        if self.model_type == "Cylinders":
             cent1T = self.transformPoints(
                 jtrans, rotMat, self.positions[self.deepest_level]
             )
@@ -1296,7 +1279,7 @@ class Ingredient(Agent):
         for i in range(len(mingrs[2])):
             ing = mingrs[2][i]
             t = mingrs[0][i]
-            if self.packingMode == "closePartner":
+            if self.packing_mode == "closePartner":
                 if ing.o_name in self.partners_name or ing.name in self.partners_name:
                     listePartner.append([i, self.partners[ing.name], mingrs[3][i]])
                     #                                         autopack.helper.measure_distance(jtrans,mingrs[0][i])])
@@ -1317,7 +1300,7 @@ class Ingredient(Agent):
                     d = afvi.vi.measure_distance(jtrans, t)
                     listePartner.append([i, part, d])
         if not listePartner:
-            self.log.info("no partner found in close ingredient %s", self.packingMode)
+            self.log.info("no partner found in close ingredient %s", self.packing_mode)
             return [], []
         else:
             return mingrs, listePartner
@@ -1509,7 +1492,7 @@ class Ingredient(Agent):
                 c = len(self.env.rIngr)
                 if (n == c) or n == (c - 1):  # or (n==c-2):
                     continue
-                    #            if self.packingMode == 'hexatile' :
+                    #            if self.packing_mode == 'hexatile' :
                     #                #no self collition for testing
                     #                if self.name == ingr.name :
                     #                    continue
@@ -1657,7 +1640,7 @@ class Ingredient(Agent):
         newDistPoints = {}
         insidePoints = {}
         packing_location = jtrans
-        radius_of_area_to_check = self.encapsulatingRadius + dpad
+        radius_of_area_to_check = self.encapsulating_radius + dpad
 
         bounding_points_to_check = self.get_all_positions_to_check(packing_location)
 
@@ -1717,7 +1700,7 @@ class Ingredient(Agent):
         env.lastrank += 1
         env.nb_ingredient += 1
 
-        if self.packingMode[-4:] == "tile":
+        if self.packing_mode[-4:] == "tile":
             nexthexa = self.tilling.dropTile(
                 self.tilling.idc,
                 self.tilling.edge_id,
@@ -1776,7 +1759,7 @@ class Ingredient(Agent):
         is_realtime = current_visual_instance is not None
         # NOTE: move the target point for close partner check.
         # I think this should be done ealier, when we're getting the point index
-        if env.ingrLookForNeighbours and self.packingMode == "closePartner":
+        if env.ingrLookForNeighbours and self.packing_mode == "closePartner":
             target_grid_point_position, rotation_matrix = self.close_partner_check(
                 target_grid_point_position,
                 rotation_matrix,
@@ -1921,11 +1904,11 @@ class Ingredient(Agent):
                 rot_mat = numpy.identity(4)
         else:
             # this is where we could apply biased rotation ie gradient/attractor
-            if self.useRotAxis:
+            if self.use_rotation_axis:
                 if sum(self.rotation_axis) == 0.0:
                     rot_mat = numpy.identity(4)
                 elif (
-                    self.useOrientBias and self.packingMode == "gradient"
+                    self.use_orient_bias and self.packing_mode == "gradient"
                 ):  # you need a gradient here
                     rot_mat = self.alignRotation(env.masterGridPositions[pt_ind])
                 else:
@@ -1943,12 +1926,12 @@ class Ingredient(Agent):
         if self.compNum > 0:
             jitter_rotation = self.getAxisRotation(rotation)
         else:
-            if self.useRotAxis:
+            if self.use_rotation_axis:
                 if sum(self.rotation_axis) == 0.0:
                     jitter_rotation = numpy.identity(4)
                     # Graham Oct 16,2012 Turned on always rotate below as default.  If you want no rotation
-                    # set useRotAxis = 1 and set rotation_axis = 0, 0, 0 for that ingredient
-                elif self.useOrientBias and self.packingMode == "gradient":
+                    # set use_rotation_axis = 1 and set rotation_axis = 0, 0, 0 for that ingredient
+                elif self.use_orient_bias and self.packing_mode == "gradient":
                     jitter_rotation = self.getBiasedRotation(rotation, weight=None)
                 # weight = 1.0 - self.env.gradients[self.gradient].weight[ptInd])
                 else:
@@ -2074,7 +2057,7 @@ class Ingredient(Agent):
                 )
                 static.append(ipoly)
 
-        if listePartner:  # self.packingMode=="closePartner":
+        if listePartner:  # self.packing_mode=="closePartner":
             self.log.info("len listePartner = %d", len(listePartner))
             if not self.force_random:
                 targetPoint, weight = self.pickPartner(
@@ -2163,7 +2146,7 @@ class Ingredient(Agent):
             "Success nbfp:%d %d/%d dpad %.2f",
             nbFreePoints,
             self.counter,
-            self.nbMol,
+            self.count,
             dpad,
         )
 
@@ -2198,7 +2181,7 @@ class Ingredient(Agent):
         """
         points_to_check = [packing_location]
         # periodicity check
-        if self.packingMode != "graident":
+        if self.packing_mode != "graident":
             periodic_pos = self.env.grid.getPositionPeridocity(
                 packing_location,
                 getNormedVectorOnes(self.max_jitter),
@@ -2312,7 +2295,7 @@ class Ingredient(Agent):
         )
         targetPoint = trans
         found = False
-        if listePartner:  # self.packingMode=="closePartner":
+        if listePartner:  # self.packing_mode=="closePartner":
             self.log.info("partner found")
             if not self.force_random:
                 for jitterPos in range(self.jitter_attempts):  #
@@ -2443,7 +2426,7 @@ class Ingredient(Agent):
         histoVol.setupPanda()
         is_realtime = moving is not None
         # we need to change here in case tilling, the pos,rot ade deduced fromte tilling.
-        if self.packingMode[-4:] == "tile":
+        if self.packing_mode[-4:] == "tile":
 
             if self.tilling is None:
                 self.setTilling(compartment)
@@ -2562,7 +2545,7 @@ class Ingredient(Agent):
                     self.env.close_ingr_bhtree = spatial.cKDTree(
                         self.env.rTrans, leafsize=10
                     )
-                if self.packingMode[-4:] == "tile":
+                if self.packing_mode[-4:] == "tile":
                     self.tilling.dropTile(
                         self.tilling.idc,
                         self.tilling.edge_id,
@@ -2581,7 +2564,7 @@ class Ingredient(Agent):
 
         # never found a place to pack
         success = False
-        if self.packingMode[-4:] == "tile":
+        if self.packing_mode[-4:] == "tile":
             if self.tilling.start.nvisit[self.tilling.edge_id] >= 2:
                 self.tilling.start.free_pos[self.tilling.edge_id] = 0
 
@@ -2617,7 +2600,7 @@ class Ingredient(Agent):
         # should se a distance_of_influence ? or self.env.largestProteinSize+self.encapsulating_radius*2.0
         # or the grid diagonal
         # we need to change here in case tilling, the pos,rot ade deduced fromte tilling.
-        if self.packingMode[-4:] == "tile":
+        if self.packing_mode[-4:] == "tile":
             if self.tilling is None:
                 self.setTilling(compartment)
             if self.counter != 0:
@@ -2803,7 +2786,7 @@ class Ingredient(Agent):
                         name, afvi.orgaToMasterGeom[ing], parent=afvi.staticMesh
                     )
 
-            if listePartner:  # self.packingMode=="closePartner":
+            if listePartner:  # self.packing_mode=="closePartner":
                 self.log.info("len listePartner = %d", len(listePartner))
                 if not self.force_random:
                     targetPoint, weight = self.pickPartner(

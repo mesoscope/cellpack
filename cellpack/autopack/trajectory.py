@@ -29,7 +29,7 @@ class Trajectory:
         self.filename = filename
         # self.f = open(self.filename,"r")
         self.nbIngredients = nbIngredients
-        self.parse(filename=filename, nbMol=nbIngredients)
+        self.parse(filename=filename, count=nbIngredients)
         print("ok parsed")
         self.current_indice = 0
         self.sub_id = 0
@@ -128,15 +128,15 @@ class Trajectory:
         indice = 0
         if r:
             for ingr in r.ingredients:
-                if ingr.type == "SingleSphere" or ingr.type == "SingleCube":
+                if ingr.type == "single_sphere" or ingr.type == "single_cube":
                     for k in range(len(ingr.results)):
                         pos = self.getIngredientInstancePos(ingr.name, k, frame)
                         autopack.helper.setTranslation(
                             autopack.helper.getName(ingr.ipoly[k]), pos
                         )
                         indice += 1
-                elif ingr.type == "MultiSphere":
-                    level = ingr.maxLevel
+                elif ingr.type == "multi_sphere":
+                    level = ingr.deepest_level
                     nbPrim = len(ingr.radii[level])
                     for k in range(len(ingr.results) * nbPrim):
                         pos = self.getIngredientInstancePos(ingr.name, k, frame)
@@ -149,15 +149,15 @@ class Trajectory:
             rs = orga.surfaceRecipe
             if rs:
                 for ingr in rs.ingredients:
-                    if ingr.type == "SingleSphere" or ingr.type == "SingleCube":
+                    if ingr.type == "single_sphere" or ingr.type == "single_cube":
                         for k in range(len(ingr.results)):
                             pos = self.getIngredientInstancePos(ingr.name, k, frame)
                             autopack.helper.setTranslation(
                                 autopack.helper.getName(ingr.ipoly[k]), pos
                             )
                             indice += 1
-                    elif ingr.type == "MultiSphere":
-                        level = ingr.maxLevel
+                    elif ingr.type == "multi_sphere":
+                        level = ingr.deepest_level
                         nbPrim = len(ingr.radii[level])
                         for k in range(len(ingr.results) * nbPrim):
                             pos = self.getIngredientInstancePos(ingr.name, k, frame)
@@ -170,15 +170,15 @@ class Trajectory:
             if ri:
                 k = 0
                 for ingr in ri.ingredients:
-                    if ingr.type == "SingleSphere" or ingr.type == "SingleCube":
+                    if ingr.type == "single_sphere" or ingr.type == "single_cube":
                         for k in range(len(ingr.results)):
                             pos = self.getIngredientInstancePos(ingr.name, k, frame)
                             autopack.helper.setTranslation(
                                 autopack.helper.getName(ingr.ipoly[k]), pos
                             )
                             indice += 1
-                    elif ingr.type == "MultiSphere":
-                        level = ingr.maxLevel
+                    elif ingr.type == "multi_sphere":
+                        level = ingr.deepest_level
                         nbPrim = len(ingr.radii[level])
                         for k in range(len(ingr.results) * nbPrim):
                             pos = self.getIngredientInstancePos(ingr.name, k, frame)
@@ -228,13 +228,13 @@ class Trajectory:
                 if not len(ingr.results):
                     continue
                 if (
-                    ingr.type == "SingleSphere"
-                    or ingr.type == "SingleCube"
+                    ingr.type == "single_sphere"
+                    or ingr.type == "single_cube"
                     or self.traj_type == "molb"
                 ):
                     self.makeIngrMapping(ingr.name, len(ingr.results))
-                elif ingr.type == "MultiSphere":
-                    level = ingr.maxLevel
+                elif ingr.type == "multi_sphere":
+                    level = ingr.deepest_level
                     nbPrim = len(ingr.radii[level])
                     self.makeIngrMapping(ingr.name, len(ingr.results) * nbPrim)
 
@@ -247,13 +247,13 @@ class Trajectory:
                     if not len(ingr.results):
                         continue
                     if (
-                        ingr.type == "SingleSphere"
-                        or ingr.type == "SingleCube"
+                        ingr.type == "single_sphere"
+                        or ingr.type == "single_cube"
                         or self.traj_type == "molb"
                     ):
                         self.makeIngrMapping(ingr.name, len(ingr.results))
-                    elif ingr.type == "MultiSphere":
-                        level = ingr.maxLevel
+                    elif ingr.type == "multi_sphere":
+                        level = ingr.deepest_level
                         nbPrim = len(ingr.radii[level])
                         self.makeIngrMapping(ingr.name, len(ingr.results) * nbPrim)
             # compartment matrix ingr
@@ -263,13 +263,13 @@ class Trajectory:
                     if not len(ingr.results):
                         continue
                     if (
-                        ingr.type == "SingleSphere"
-                        or ingr.type == "SingleCube"
+                        ingr.type == "single_sphere"
+                        or ingr.type == "single_cube"
                         or self.traj_type == "molb"
                     ):
                         self.makeIngrMapping(ingr.name, len(ingr.results))
-                    elif ingr.type == "MultiSphere":
-                        level = ingr.maxLevel
+                    elif ingr.type == "multi_sphere":
+                        level = ingr.deepest_level
                         nbPrim = len(ingr.radii[level])
                         self.makeIngrMapping(ingr.name, len(ingr.results) * nbPrim)
 
@@ -325,14 +325,14 @@ class molbTrajectory(Trajectory):
     # NMR type file type
     traj_type = "molb"
 
-    def parse(self, filename=None, nbMol=0, log=False):
+    def parse(self, filename=None, count=0, log=False):
         # brutforce parsing
         if filename is None:
             filename = self.filename
-        # for all molecules grab the result ? nbMol is the total number of molecules
+        # for all molecules grab the result ? count is the total number of molecules
         # but how make difference between 2 molecules
         # dicrionary indice in moldb-> indice in input ?
-        for i in range(nbMol):
+        for i in range(count):
             mat = self.parse_one_mol(filename, i, log=log)
             self.data[i] = mat
 

@@ -1020,31 +1020,43 @@ class Environment(CompartmentList):
 
     def create_ingredient(self, recipe, **arguments):
         ingredient_type = arguments["type"]
-        if (
-            ingredient_type == "Grow"
-            or ingredient_type == "Actine"
-            or ingredient_type == "MultiCylinder"
-        ):
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                GrowIngredient.ARGUMENTS, **arguments
-            )
-        else:
+
+        if ingredient_type == "single_sphere":
+            radius = arguments["radius"]
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
-        if ingredient_type == "single_sphere":
-            ingr = SingleSphereIngr(**arguments)
+            ingr = SingleSphereIngr(radius, **arguments)
         elif ingredient_type == "multi_sphere":
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
             ingr = MultiSphereIngr(**arguments)
         elif ingredient_type == "multi_cylinder":
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
             ingr = MultiCylindersIngr(**arguments)
         elif ingredient_type == "single_cube":
-            ingr = SingleCubeIngr(**arguments)
+            bounds = arguments["bounds"]
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
+            ingr = SingleCubeIngr(bounds, **arguments)
         elif ingredient_type == "single_cylinder":
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
             ingr = SingleCylinderIngr(**arguments)
         elif ingredient_type == "grow":
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                GrowIngredient.ARGUMENTS, **arguments
+            )
             ingr = GrowIngredient(**arguments)
         elif ingredient_type == "actine":
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                GrowIngredient.ARGUMENTS, **arguments
+            )
             ingr = ActinIngredient(**arguments)
         if (
             "gradient" in arguments
@@ -1599,11 +1611,11 @@ class Environment(CompartmentList):
         self.log.info("self.lowestPriority for Ing1 = %d", self.lowestPriority)
         self.totalRadii = 0
         for radii in ingr2:
-            if radii.modelType == "Cylinders":
+            if radii.model_type == "Cylinders":
                 r = max(radii.length / 2.0, radii.min_radius)
-            elif radii.modelType == "Spheres":
+            elif radii.model_type == "Spheres":
                 r = radii.min_radius
-            elif radii.modelType == "Cube":
+            elif radii.model_type == "Cube":
                 r = radii.min_radius
             self.totalRadii = self.totalRadii + r
             self.log.info("self.totalRadii += %d = %d", r, self.totalRadii)
@@ -1613,9 +1625,9 @@ class Environment(CompartmentList):
 
         self.normalizedPriorities0 = []
         for priors2 in ingr2:
-            if priors2.modelType == "Cylinders":
+            if priors2.model_type == "Cylinders":
                 r = max(priors2.length / 2.0, priors2.min_radius)
-            elif priors2.modelType == "Spheres":
+            elif priors2.model_type == "Spheres":
                 r = priors2.min_radius
             np = float(r) / float(self.totalRadii) * self.lowestPriority
             self.normalizedPriorities0.append(np)
@@ -1881,7 +1893,7 @@ class Environment(CompartmentList):
 
         if self.pickRandPt:
             self.log.info("picking random point")
-            if ingr.packingMode == "close":
+            if ingr.packing_mode == "close":
                 order = numpy.argsort(allIngrDist)
                 # pick point with closest distance
                 ptInd = allIngrPts[order[0]]
@@ -1891,7 +1903,7 @@ class Environment(CompartmentList):
                     ptIndr = int(uniform(0.0, 1.0) * len(allIngrPts))
                     ptInd = allIngrPts[ptIndr]
 
-            elif ingr.packingMode == "gradient" and self.use_gradient:
+            elif ingr.packing_mode == "gradient" and self.use_gradient:
                 # get the most probable point using the gradient
                 # use the gradient weighted map and get mot probabl point
                 self.log.info("pick point from gradients %d", (len(allIngrPts)))
@@ -1949,7 +1961,9 @@ class Environment(CompartmentList):
         totalNbIngr = 0
         for ingr in allIngredients:
             if ingr.type == "Grow":
-                totalNbIngr += int(ingr.left_to_place * (ingr.length / ingr.uLength))
+                totalNbIngr += int(
+                    ingr.left_to_place * (ingr.length / ingr.unit_length)
+                )
             else:
                 totalNbIngr += ingr.left_to_place
             if update_partner:
@@ -2194,7 +2208,7 @@ class Environment(CompartmentList):
                 self.grid.masterGridPositions[ptInd],
             )
             collision_possible = True
-            # if distances[ptInd] >= ingr.encapsulatingRadius + ingr.getMaxJitter(
+            # if distances[ptInd] >= ingr.encapsulating_radius + ingr.getMaxJitter(
             #     spacing
             # ):
             #     # there is no possible collision here
@@ -3093,7 +3107,7 @@ class Environment(CompartmentList):
             inodenp = inodenp.node()
         return inodenp
 
-    def addRB(self, ingr, trans, rotMat, rtype="SingleSphere", static=False):
+    def addRB(self, ingr, trans, rotMat, rtype="single_sphere", static=False):
         # Sphere
         if panda3d is None:
             return None

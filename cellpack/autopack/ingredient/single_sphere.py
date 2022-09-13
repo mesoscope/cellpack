@@ -20,95 +20,71 @@ class SingleSphereIngr(Ingredient):
 
     def __init__(
         self,
-        type="SingleSphere",
+        radius,
+        type="single_sphere",
         color=None,
-        coordsystem="right",
         count=0,
         cutoff_boundary=None,
         cutoff_surface=None,
         distance_expression=None,
         distance_function=None,
-        excluded_partners_name=None,
         force_random=False,  # avoid any binding
-        gradient="",
+        gradient=None,
         is_attractor=False,
         max_jitter=(1, 1, 1),
-        meshType="file",
         molarity=0.0,
         name=None,
         jitter_attempts=5,
-        nbMol=0,
         offset=None,
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
-        packing_ode="random",
+        packing_mode="random",
         packing_priority=0,
-        partners_name=None,
-        partners_position=None,
-        pdb=None,
+        partners=None,
         perturb_axis_amplitude=0.1,
         place_type="jitter",
         principal_vector=(1, 0, 0),
-        proba_binding=0.5,
-        proba_not_binding=0.5,  # chance to actually not bind
-        properties=None,
-        radius=None,
+        representations=None,
         rejection_threshold=30,
         resolution_dictionary=None,
-        meshFile=None,
-        meshName=None,
-        meshObject=None,
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=0,
-        source=None,
-        useOrientBias=False,
-        useRotAxis=True,
+        use_orient_bias=False,
+        use_rotation_axis=True,
         weight=0.2,  # use for affinity ie partner.weight
     ):
         super().__init__(
             type=type,
             color=color,
-            coordsystem=coordsystem,
             count=count,
             cutoff_boundary=cutoff_boundary,
             cutoff_surface=cutoff_surface,
             distance_expression=distance_expression,
             distance_function=distance_function,
-            excluded_partners_name=excluded_partners_name,
             force_random=force_random,
             gradient=gradient,
             is_attractor=is_attractor,
             max_jitter=max_jitter,
-            meshName=meshName,
-            meshType=meshType,
-            meshObject=meshObject,
             molarity=molarity,
             name=name,
             jitter_attempts=jitter_attempts,
-            nbMol=nbMol,
             overwrite_distance_function=overwrite_distance_function,
-            packing=packing,
+            packing_mode=packing_mode,
             packing_priority=packing_priority,
-            partners_name=partners_name,
-            partners_position=partners_position,
-            pdb=pdb,
+            partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
-            meshFile=meshFile,
             place_type=place_type,
             principal_vector=principal_vector,
-            proba_binding=proba_binding,
-            proba_not_binding=proba_not_binding,
-            properties=properties,
+            representations=representations,
             rotation_axis=rotation_axis,
             rotation_range=rotation_range,
-            useRotAxis=useRotAxis,
+            use_rotation_axis=use_rotation_axis,
             weight=weight,
         )
-        self.modelType = "Spheres"
+        self.model_type = "Spheres"
         if name is None:
             name = "%5.2f_%f" % (radius, molarity)
         self.name = name
-        self.singleSphere = True
         self.mesh = None
         # min and max radius for a single sphere should be the same
         self.radius = radius
@@ -280,11 +256,3 @@ class SingleSphereIngr(Ingredient):
             )
 
             self.getData()
-        # should do that for all ingredient type
-        # if self.representation is None and not hasattr(
-        #     self.mesh, "getFaces"
-        # ):  # this is not working with dejavu
-        #     # and should go in the graphics.
-        #     self.representation = autopack.helper.Icosahedron(
-        #         self.name + "_rep", radius=self.radii[0][0]
-        #     )[0]

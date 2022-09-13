@@ -209,7 +209,7 @@ _Optional `number`_. Default: `0`.
 
 Concentration of the ingredient. 
 
-### nbMol
+### count
 _Optional `number`_
 
 Number to pack, additive with molarity.. Default: `0`. 
@@ -294,7 +294,7 @@ How many times it will attempts to pack before rejecting the ingredient.
 ### perturb_axis_amplitude
 _Optional `number`_. Default: `0.1`.
 
-### useRotAxis
+### use_rotation_axis
 _Optional `boolean`_. Default: `false`.
 
 ### rotation_axis 
@@ -303,7 +303,7 @@ _Optional [number, number, number]_. Default: `[0.0, 0.0, 0.0]`.
 ### rotation_range
 _Optional `number`_. Default: `6.2831`.
 
-### useOrientBias
+### use_orient_bias
 _Optional `boolean`_. Default: `false`.
 
 ### orientBiasRotRangeMin
@@ -333,7 +333,7 @@ _Optional enum. One of `"jitter"`, `"spheresSST"`, `"pandaBullet"`_. Default: `"
 ### rejection_threshold
 _Optional `number`_. Default: `30`.
 
-### packingMode
+### packing_mode
 _Optional enum. One of `"random"`, `"close"`, `"closePartner"`, `"randomPartner"`, `"gradient"`, `"hexatile"`, `"squaretile"`, `"triangletile"`_. Default: `"random"`.
 
 ### gradient
@@ -392,16 +392,16 @@ _Optional `string`_
     "perturb_axis_amplitude": 0.1,
     "encapsulating_radius": 100,
     "positions2": null,
-    "useOrientBias": false,
+    "use_orient_bias": false,
     "gradient": "",
     "is_attractor": false,
     "principal_vector": [ 1, 0, 0 ],
     "properties": {},
     "partners_name": [],
-    "nbMol": 6, 
+    "count": 6, 
     "name": "Sphere_radius_100",
     "orientBiasRotRangeMax": -3.1415927,
-    "packingMode": "random",
+    "packing_mode": "random",
     "type": "SingleSphere", 
     "excluded_partners_name": [],
     "rejection_threshold": 60,
@@ -413,7 +413,7 @@ _Optional `string`_
     "positions": [ [ [ 0, 0, 0] ] ],
     "proba_not_binding": 0.5,
     "pdb": null,
-    "useRotAxis": false
+    "use_rotation_axis": false
 },
 
 ```

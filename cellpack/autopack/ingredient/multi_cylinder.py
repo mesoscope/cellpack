@@ -14,119 +14,94 @@ helper = autopack.helper
 class MultiCylindersIngr(Ingredient):
     """
     This Ingredient is represented by a collection of cylinder specified by
-    radii, positions and positions2.
+    multi_bounds and radii. Each cylinder in the group is has two bounds, representing
+    the center of the bottom and the center of the top, and a radius.
+    The array of multi_bounds and radii must be the same length.
     The principal Vector will be used to align the ingredient
     """
 
     def __init__(
         self,
-        type="MultiCylinder",
+        multi_bounds,
+        radii,
+        type="multi_cylinder",
         color=None,
-        coordsystem="right",
         count=0,
         cutoff_boundary=None,
         cutoff_surface=None,
         distance_expression=None,
         distance_function=None,
-        encapsulating_radius=0,
-        excluded_partners_name=None,
         force_random=False,  # avoid any binding
-        gradient="",
+        gradient=None,
         is_attractor=False,
         max_jitter=(1, 1, 1),
-        meshFile=None,
-        meshName=None,
-        meshObject=None,
-        meshType="file",
         molarity=0.0,
         name=None,
         jitter_attempts=5,
-        nbMol=0,
         orient_bias_range=[-pi, pi],
-        packing=None,
+        packing_mode="random",
         packing_priority=0,
-        partners_position=None,
-        partners_name=None,
-        pdb=None,
+        partners=None,
         perturb_axis_amplitude=0.1,
         place_type="jitter",
-        positions=None,
-        positions2=None,
         principal_vector=(1, 0, 0),
-        proba_binding=0.5,
-        proba_not_binding=0.5,
-        properties=None,
-        radii=None,
+        representations=None,
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=6.2831,
         rejection_threshold=30,
-        source=None,
-        uLength=0,
-        useLength=False,
-        useOrientBias=False,
-        useRotAxis=True,
+        unit_length=None,
+        use_orient_bias=False,
+        use_rotation_axis=True,
         weight=0.2,  # use for affinity ie partner.weight
     ):
 
         super().__init__(
             type=type,
             color=color,
-            coordsystem=coordsystem,
             count=count,
             cutoff_boundary=cutoff_boundary,
             cutoff_surface=cutoff_surface,
             distance_expression=distance_expression,
             distance_function=distance_function,
-            encapsulating_radius=encapsulating_radius,
-            excluded_partners_name=excluded_partners_name,
             force_random=force_random,  # avoid any binding
             gradient=gradient,
             is_attractor=is_attractor,
             max_jitter=max_jitter,
-            meshFile=meshFile,
-            meshName=meshName,
-            meshObject=meshObject,
-            meshType="file",
             molarity=molarity,
             name=name,
             jitter_attempts=jitter_attempts,
-            nbMol=nbMol,
             orient_bias_range=orient_bias_range,
-            packing=packing,
+            packing_mode=packing_mode,
             packing_priority=packing_priority,
-            partners_name=partners_name,
-            partners_position=partners_position,
-            pdb=pdb,
+            partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
             place_type=place_type,
-            positions=positions,
-            positions2=positions2,
             principal_vector=principal_vector,
-            proba_binding=proba_binding,
-            proba_not_binding=proba_not_binding,
-            properties=properties,
-            radii=radii,
             rejection_threshold=rejection_threshold,
+            representations=representations,
             rotation_axis=rotation_axis,
             rotation_range=rotation_range,
-            source=source,
-            useOrientBias=useOrientBias,
-            useRotAxis=useRotAxis,
+            use_orient_bias=use_orient_bias,
+            use_rotation_axis=use_rotation_axis,
             weight=weight,
         )
 
         if name is None:
-            name = "%s_%f" % (str(radii), molarity)
+            name = "%s_%f" % (str(radii[0]), molarity)
         self.name = name
-        self.singleSphere = False
-        self.modelType = "Cylinders"
+        if len(multi_bounds) != len(radii):
+            raise IndexError(
+                f"Problem with {name}: multi cylinder needs bounds and radius for every cylinder "
+            )
+        self.model_type = "Cylinders"
         self.collisionLevel = 0
-        self.min_radius = self.radii[0][0]
-        self.useLength = useLength
-        self.uLength = uLength
+        self.radii = radii
+        self.min_radius = min(self.radii)
+        self.useLength = unit_length is not None
+        self.uLength = unit_length
         self.encapsulating_radius = radii[0][0]
         if self.positions2 is not None and self.positions is not None:
-            # shoulde the overall length of the object from bottom to top
+            # should the overall length of the object from bottom to top
             bb = self.getBigBB()
             d = numpy.array(bb[1]) - numpy.array(bb[0])
             s = numpy.sum(d * d)
@@ -134,17 +109,10 @@ class MultiCylindersIngr(Ingredient):
 
     def initialize_mesh(self, mesh_store):
         if self.mesh is None and autopack.helper is not None:
-            length = 1
-            if self.positions2 is not None and self.positions is not None:
-                d = numpy.array(self.positions2[0][0]) - numpy.array(
-                    self.positions[0][0]
-                )
-                s = numpy.sum(d * d)
-                length = math.sqrt(s)  # diagonal
             self.mesh = autopack.helper.Cylinder(
                 self.name + "_basic",
-                radius=self.radii[0][0] * 1.24,
-                length=length,
+                radius=self.radius * 1.24,
+                length=self.length,
                 res=5,
                 parent="autopackHider",
                 axis=self.principal_vector,
@@ -159,9 +127,9 @@ class MultiCylindersIngr(Ingredient):
         radius = self.min_radius
         jitter = self.getMaxJitter(spacing)
 
-        if self.packingMode == "close":
+        if self.packing_mode == "close":
             cut = self.length - jitter
-        #            if ingr.modelType=='Cube' : #radius iactually the size
+        #            if ingrmodel_type=='Cube' : #radius iactually the size
         #                cut = min(self.radii[0]/2.)-jitter
         #            elif ingr.cutoff_boundary is not None :
         #                #this mueay work if we have the distance from the border
