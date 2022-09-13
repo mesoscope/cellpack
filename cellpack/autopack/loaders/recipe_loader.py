@@ -88,7 +88,8 @@ class RecipeLoader(object):
             "format_version" not in recipe_data
             or recipe_data["format_version"] != self.latest_version
         ):
-            recipe_data = RecipeLoader._migrate_version(recipe_data)
+            format_version = recipe_data["format_version"] if "format_version" in recipe_data else "1.0"
+            recipe_data = RecipeLoader._migrate_version(recipe_data, format_version)
 
         # TODO: request any external data before returning
         if "objects" in recipe_data:
@@ -119,9 +120,10 @@ class RecipeLoader(object):
         return data
 
     @staticmethod
-    def _migrate_version(recipe):
-        if "format_version" not in recipe:
+    def _migrate_version(recipe, format_version):
+        if format_version == "1.0":
             recipe["bounding_box"] = recipe["options"]["boundingBox"]
+            recipe["objects"] = RecipeLoader._get_v1_ingredients(recipe)
         return recipe
 
     @staticmethod
