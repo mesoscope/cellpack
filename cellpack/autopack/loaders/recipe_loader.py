@@ -81,30 +81,6 @@ class RecipeLoader(object):
                 RecipeLoader._resolve_object(key, objects)
         return objects
 
-    def _read(self):
-        new_values = json.load(open(self.file_path, "r"))
-        recipe_data = RecipeLoader.default_values.copy()
-        recipe_data = deep_merge(recipe_data, new_values)
-
-        if (
-            "format_version" not in recipe_data
-            or recipe_data["format_version"] != self.latest_version
-        ):
-            format_version = (
-                recipe_data["format_version"]
-                if "format_version" in recipe_data
-                else "1.0"
-            )
-            recipe_data = RecipeLoader._migrate_version(recipe_data, format_version)
-
-        # TODO: request any external data before returning
-        if "objects" in recipe_data:
-            recipe_data["objects"] = RecipeLoader.resolve_inheritance(
-                recipe_data["objects"]
-            )
-
-        return recipe_data
-
     def _request_sub_recipe(self, inode):
         filename = None
         if inode is not None:
@@ -124,13 +100,6 @@ class RecipeLoader(object):
             print("filename is None and not ingredient dictionary provided")
             return None
         return data
-
-    @staticmethod
-    def _migrate_version(recipe, format_version):
-        if format_version == "1.0":
-            recipe["bounding_box"] = recipe["options"]["boundingBox"]
-            recipe["objects"] = RecipeLoader._get_v1_ingredients(recipe)
-        return recipe
 
     @staticmethod
     def _convert_to_representations(old_ingredient):
@@ -186,6 +155,37 @@ class RecipeLoader(object):
                 converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
                 objects_dict[key] = converted_ingredient
         return objects_dict
+
+    @staticmethod
+    def _migrate_version(recipe, format_version):
+        if format_version == "1.0":
+            recipe["bounding_box"] = recipe["options"]["boundingBox"]
+            recipe["objects"] = RecipeLoader._get_v1_ingredients(recipe)
+        return recipe
+
+    def _read(self):
+        new_values = json.load(open(self.file_path, "r"))
+        recipe_data = RecipeLoader.default_values.copy()
+        recipe_data = deep_merge(recipe_data, new_values)
+
+        if (
+            "format_version" not in recipe_data
+            or recipe_data["format_version"] != self.latest_version
+        ):
+            format_version = (
+                recipe_data["format_version"]
+                if "format_version" in recipe_data
+                else "1.0"
+            )
+            recipe_data = RecipeLoader._migrate_version(recipe_data, format_version)
+
+        # TODO: request any external data before returning
+        if "objects" in recipe_data:
+            recipe_data["objects"] = RecipeLoader.resolve_inheritance(
+                recipe_data["objects"]
+            )
+
+        return recipe_data
 
     def _load_json(self):
         """
