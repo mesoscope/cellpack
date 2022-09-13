@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from math import pi
 import pytest
 
 """
@@ -72,10 +73,7 @@ def test_resolve_objects():
     assert resolved_objects == expected_result
 
 
-old_ingredient = {
-    "nbMol": 15,
-    "encapsulatingRadius": 100,
-}
+old_ingredient = {"nbMol": 15, "encapsulatingRadius": 100, "orientBiasRotRangeMax": 12}
 
 
 @pytest.mark.parametrize(
@@ -83,7 +81,7 @@ old_ingredient = {
     [
         (
             old_ingredient,
-            {"count": 15},
+            {"count": 15, "orient_bias_range": [-pi, 12]},
         )
     ],
 )

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import copy
+from math import pi
 import os
 
 import json
@@ -138,6 +139,23 @@ class RecipeLoader(object):
                 new_ingredient[v1_to_v2_name_map[attribute]] = old_ingredient[attribute]
             elif attribute in unused_attributes_list:
                 del old_ingredient[attribute]
+
+        if (
+            "orientBiasRotRangeMax" in old_ingredient
+            or "orientBiasRotRangeMin" in old_ingredient
+        ):
+            range_min = (
+                old_ingredient["orientBiasRotRangeMin"]
+                if "orientBiasRotRangeMin" in old_ingredient
+                else -pi
+            )
+            range_max = (
+                old_ingredient["orientBiasRotRangeMax"]
+                if "orientBiasRotRangeMax" in old_ingredient
+                else pi
+            )
+            new_ingredient["orient_bias_range"] = [range_min, range_max]
+
         return new_ingredient
 
     @staticmethod
