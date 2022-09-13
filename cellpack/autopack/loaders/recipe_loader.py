@@ -7,6 +7,7 @@ import json
 from json import encoder
 
 import cellpack.autopack as autopack
+from cellpack.autopack.loaders.util import create_file_info_object_from_full_path
 from cellpack.autopack.utils import deep_merge
 from .v1_v2_attribute_changes import v1_to_v2_name_map, unused_attributes_list
 
@@ -105,14 +106,9 @@ class RecipeLoader(object):
     def _convert_to_representations(old_ingredient):
         representations = RecipeLoader.default_values["representations"]
         if "sphereFile" in old_ingredient:
-            path, filename = os.path.split(old_ingredient["sphereFile"])
-            _, extension = os.path.splitext(filename)
-
-            representations["packing"] = {
-                "path": path,
-                "name": filename,
-                "format": extension,
-            }
+            representations["packing"] = create_file_info_object_from_full_path(old_ingredient["sphereFile"])
+        if "meshFile" in old_ingredient:
+            representations["mesh"] = create_file_info_object_from_full_path(old_ingredient["meshFile"])
 
         return representations
 
