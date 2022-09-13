@@ -1961,7 +1961,7 @@ class Environment(CompartmentList):
         totalNbIngr = 0
         for ingr in allIngredients:
             if ingr.type == "Grow":
-                totalNbIngr += int(ingr.left_to_place * (ingr.length / ingr.length))
+                totalNbIngr += int(ingr.left_to_place * (ingr.length / ingr.unit_length))
             else:
                 totalNbIngr += ingr.left_to_place
             if update_partner:
