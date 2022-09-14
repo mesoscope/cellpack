@@ -176,7 +176,7 @@ class Ingredient(Agent):
         molarity=0.0,
         name=None,
         jitter_attempts=5,
-        offset=None,
+        offset=[0, 0, 0],
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
         packing_mode="random",
@@ -226,12 +226,13 @@ class Ingredient(Agent):
         self.o_name = str(name)
         self.type = type
         self.mesh = None
-        if representations is not None:
-            self.representations = Representations(
-                mesh=representations.get("mesh", None),
-                atomic=representations.get("atomic", None),
-                packing=representations.get("packing", None),
-            )
+        representations = representations or {}
+        self.representations = Representations(
+            mesh=representations.get("mesh", None),
+            atomic=representations.get("atomic", None),
+            packing=representations.get("packing", None),
+        )
+
         self.offset = offset
         self.color = color  # color used for sphere display
         if self.color == "None":

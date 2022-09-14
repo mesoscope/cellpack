@@ -188,7 +188,6 @@ def ApplyMatrix(coords, mat):
     @rtype:   array
     @return:  the transformed list of 3d points
     """
-
     # 4x4matrix"
     mat = numpy.array(mat)
     coords = numpy.array(coords)
