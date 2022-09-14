@@ -137,3 +137,59 @@ def test_create_packing_representation(
     assert local_result_2 == RecipeLoader._convert_to_representations(
         local_sphereFile_2
     )
+
+
+
+
+@pytest.mark.parametrize(
+    "external_sphereFile, external_result, local_sphereFile, local_result, local_sphereFile_2, local_result_2",
+    [
+        (
+            {"sphereFile": "autoPACKserver/collisionTrees/fibrinogen.sph"},
+            {
+                "packing": {
+                    "name": "fibrinogen.sph",
+                    "format": ".sph",
+                    "path": "autoPACKserver/collisionTrees",
+                },
+                "atomic": None,
+                "mesh": None,
+            },
+            {"sphereFile": "fibrinogen.sph"},
+            {
+                "packing": {
+                    "name": "fibrinogen.sph",
+                    "format": ".sph",
+                    "path": "",
+                },
+                "atomic": None,
+                "mesh": None,
+            },
+            {"sphereFile": "/fibrinogen.sph"},
+            {
+                "packing": {
+                    "name": "fibrinogen.sph",
+                    "format": ".sph",
+                    "path": "/",
+                },
+                "atomic": None,
+                "mesh": None,
+            },
+        )
+    ],
+)
+def test_create_packing_representation(
+    external_sphereFile,
+    external_result,
+    local_sphereFile,
+    local_result,
+    local_sphereFile_2,
+    local_result_2,
+):
+    assert external_result == RecipeLoader._convert_to_representations(
+        external_sphereFile
+    )
+    assert local_result == RecipeLoader._convert_to_representations(local_sphereFile)
+    assert local_result_2 == RecipeLoader._convert_to_representations(
+        local_sphereFile_2
+    )
