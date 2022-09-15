@@ -117,7 +117,7 @@ class simulariumHelper(hostHelper.Helper):
                 need_to_divide = True
         if need_to_divide:
             color = np.array(color) / 255
-        return  matplotlib.colors.to_hex(color)
+        return matplotlib.colors.to_hex(color)
 
     def clear(self):
         self.scene = {}

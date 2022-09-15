@@ -98,4 +98,3 @@ def test_get_adjusted_position():
     )
     for i in range(len(adjusted_position)):
         assert adjusted_position[i] == starting_position[i]
-

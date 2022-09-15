@@ -77,7 +77,10 @@ class MultiSphereIngr(Ingredient):
         self.radii = self.representations.get_radii()
         self.positions = self.representations.get_positions()
         self.deepest_level = self.representations.get_deepest_level()
-        self.min_radius, self.encapsulating_radius = self.representations.get_min_max_radius()
+        (
+            self.min_radius,
+            self.encapsulating_radius,
+        ) = self.representations.get_min_max_radius()
         if name is None:
             name = "%s_%f" % (str(self.radii), molarity)
 
