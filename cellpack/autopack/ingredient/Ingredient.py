@@ -474,22 +474,6 @@ class Ingredient(Agent):
         )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
         return inodenp
 
-    def Set(self, **kw):
-        self.count = 0
-        if "count" in kw:
-            self.count = int(kw["count"])
-        if "molarity" in kw:
-            self.molarity = kw["molarity"]
-        if "priority" in kw:
-            self.packing_priority = kw["priority"]
-        if "packing_mode" in kw:
-            self.packing_mode = kw["packing_mode"]
-        if "compMask" in kw:
-            if type(kw["compMask"]) is str:
-                self.compMask = eval(kw["compMask"])
-            else:
-                self.compMask = kw["compMask"]
-
     def getEncapsulatingRadius(self, mesh=None):
         if self.vertices is None or not len(self.vertices):
             if self.mesh:

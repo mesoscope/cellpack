@@ -124,29 +124,7 @@ class Compartment(CompartmentList):
     surface. Compartment can be nested
     """
 
-    def __init__(
-        self,
-        name,
-        object_info
-        # vertices,
-        # faces,
-        # vnormals,
-        # scale=1.0,
-        # fnormals=None,
-        # ghost=None,
-        # ref_obj=None,
-        # meshType="file",
-        # filename=None,
-        # gname=None,
-        # object_name=None,
-        # object_filename=None,
-        # isBox=False,
-        # isOrthogonalBoundingBox=None,
-        # stype="mesh",
-        # radius=200.0,
-        # height=0.0,
-        # axis=[0, 1, 0],
-    ):
+    def __init__(self, name, object_info):
         super().__init__()
         self.name = name
         self.center = [0, 0, 0]  # calculated centroid of the mesh

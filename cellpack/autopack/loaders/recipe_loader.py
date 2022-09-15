@@ -29,6 +29,20 @@ class RecipeLoader(object):
         self.recipe_data = self._read()
 
     @staticmethod
+    def is_key(key_or_dict, composition_dict):
+        """
+        Helper function to find if data in composition list
+        is a key or an object
+        """
+        is_key = not isinstance(key_or_dict, dict)
+        if is_key:
+            key = key_or_dict
+            composition_info = composition_dict[key]
+        else:
+            composition_info = key_or_dict
+        return is_key, composition_info
+
+    @staticmethod
     def create_output_dir(out_base_folder, recipe_name, sub_dir=None):
         os.makedirs(out_base_folder, exist_ok=True)
         output_folder = os.path.join(out_base_folder, recipe_name)
