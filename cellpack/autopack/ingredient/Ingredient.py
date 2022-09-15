@@ -54,8 +54,6 @@ from random import uniform, gauss, random
 from time import time
 import math
 
-from cellpack.autopack.interface_objects.representations import Representations
-
 from .utils import (
     ApplyMatrix,
     getNormedVectorOnes,
@@ -226,12 +224,7 @@ class Ingredient(Agent):
         self.o_name = str(name)
         self.type = type
         self.mesh = None
-        representations = representations or {}
-        self.representations = Representations(
-            mesh=representations.get("mesh", None),
-            atomic=representations.get("atomic", None),
-            packing=representations.get("packing", None),
-        )
+        self.representations = representations
 
         self.offset = offset
         self.color = color  # color used for sphere display

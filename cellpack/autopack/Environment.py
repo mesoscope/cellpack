@@ -2296,25 +2296,9 @@ class Environment(CompartmentList):
                     previousThresh = np + float(previousThresh)
                 self.activeIngr = self.activeIngr0 + self.activeIngr12
             if dump and ((time() - stime) > dump_freq):
-                self.collectResultPerIngredient()
+                # self.collectResultPerIngredient()
                 print("SAVING", self.resultfile)
-                IOutils.save(
-                    self,
-                    self.resultfile + "_temporaray.json",
-                    useXref=True,
-                    kwds=["source", "name", "positions", "radii"],
-                    result=True,
-                    quaternion=True,
-                )
-                IOutils.save(
-                    self,
-                    self.resultfile + "_temporaray_transpose.json",
-                    useXref=True,
-                    kwds=["source", "name", "positions", "radii"],
-                    result=True,
-                    quaternion=True,
-                    transpose=True,
-                )
+                # TODO: save out intermediate simularium files
                 stime = time()
 
         self.distancesAfterFill = distances[:]

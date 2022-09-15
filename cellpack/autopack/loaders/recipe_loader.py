@@ -7,6 +7,7 @@ from json import encoder
 
 import cellpack.autopack as autopack
 from cellpack.autopack.utils import deep_merge
+from cellpack.autopack.interface_objects.representations import Representations
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
@@ -94,7 +95,13 @@ class RecipeLoader(object):
             recipe_data["objects"] = RecipeLoader.resolve_inheritance(
                 recipe_data["objects"]
             )
-
+            for _, obj in recipe_data["objects"].items():
+                reps = obj["representations"] if "representations" in obj else {}
+                obj["representations"] = Representations(
+                    mesh=reps.get("mesh", None),
+                    atomic=reps.get("atomic", None),
+                    packing=reps.get("packing", None),
+                )
         return recipe_data
 
     def _request_sub_recipe(self, inode):

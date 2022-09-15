@@ -59,18 +59,16 @@ def test_pdb_url():
 def test_sphere_tree():
     autopack.current_recipe_path = os.path.dirname(".")
     representations = Representations(packing=test_sphere_tree_obj)
-    positions, radii = representations.get_spheres()
-    assert len(positions) > 0
-    assert len(radii) > 0
+    assert len(representations.get_positions()) > 0
+    assert len(representations.get_radii()) > 0
 
 
 def test_unpacked_sphere_tree():
     autopack.current_recipe_path = os.path.dirname(".")
     representations = Representations(packing=test_sphere_tree_unpacked_obj)
-    positions, radii = representations.get_spheres()
-    assert len(positions) > 0
-    assert len(radii) > 0
-    assert positions == [[[1, 0, 0]]]
+    assert len(representations.get_positions()) > 0
+    assert len(representations.get_radii()) > 0
+    assert representations.get_positions() == [[[1, 0, 0]]]
 
 
 def test_set_active():
@@ -100,3 +98,4 @@ def test_get_adjusted_position():
     )
     for i in range(len(adjusted_position)):
         assert adjusted_position[i] == starting_position[i]
+
