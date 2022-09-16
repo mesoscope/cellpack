@@ -11,27 +11,49 @@ Docs: https://docs.pytest.org/en/latest/example/simple.html
 
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
-old_ingredient = {"nbMol": 15, "encapsulatingRadius": 100, "orientBiasRotRangeMax": 12}
-
 
 @pytest.mark.parametrize(
-    "old_ingredient, expected_new_data",
+    "old_ingredient_1, expected_result_1, old_ingredient_2, expected_result_2, old_ingredient_3,expected_result_3",
     [
         (
-            old_ingredient,
+            {"nbMol": 15, "encapsulatingRadius": 100, "orientBiasRotRangeMax": 12},
             {
                 "count": 15,
                 "orient_bias_range": [-pi, 12],
                 "representations": RecipeLoader.default_values["representations"],
             },
+            {"nbMol": 15, "encapsulatingRadius": 100, "orientBiasRotRangeMin": 6},
+            {
+                "count": 15,
+                "orient_bias_range": [6, pi],
+                "representations": RecipeLoader.default_values["representations"],
+            },
+            {
+                "nbMol": 15,
+                "encapsulatingRadius": 100,
+                "orientBiasRotRangeMin": 6,
+                "orientBiasRotRangeMax": 12,
+            },
+            {
+                "count": 15,
+                "orient_bias_range": [6, 12],
+                "representations": RecipeLoader.default_values["representations"],
+            },
         )
     ],
 )
-def test_migrate_ingredient(old_ingredient, expected_new_data):
-    new_ingredient = RecipeLoader._migrate_ingredient(old_ingredient)
-    assert expected_new_data == new_ingredient
-    assert expected_new_data["count"] == old_ingredient["nbMol"]
-    assert "encapsulatingRadius" not in expected_new_data
+def test_migrate_ingredient(
+    old_ingredient_1,
+    expected_result_1,
+    old_ingredient_2,
+    expected_result_2,
+    old_ingredient_3,
+    expected_result_3,
+):
+    assert expected_result_1 == RecipeLoader._migrate_ingredient(old_ingredient_1)
+    assert expected_result_2 == RecipeLoader._migrate_ingredient(old_ingredient_2)
+    assert expected_result_3 == RecipeLoader._migrate_ingredient(old_ingredient_3)
+    assert "encapsulatingRadius" not in expected_result_1
 
 
 old_recipe_test_data = {
@@ -86,7 +108,7 @@ def test_get_v1_ingredients(old_recipe_test_data, expected_object_dict):
 
 
 @pytest.mark.parametrize(
-    "external_sphereFile, external_result, local_sphereFile, local_result, local_sphereFile_2, local_result_2",
+    "external_sphereFile, external_sphere_result, local_sphereFile, local_sphere_result, local_sphereFile_2, local_sphere_result_2,",
     [
         (
             {"sphereFile": "autoPACKserver/collisionTrees/fibrinogen.sph"},
@@ -122,18 +144,110 @@ def test_get_v1_ingredients(old_recipe_test_data, expected_object_dict):
         )
     ],
 )
-def test_create_packing_representation(
+def test_create_packing_sphere_representation(
     external_sphereFile,
-    external_result,
+    external_sphere_result,
     local_sphereFile,
-    local_result,
+    local_sphere_result,
     local_sphereFile_2,
-    local_result_2,
+    local_sphere_result_2,
 ):
-    assert external_result == RecipeLoader._convert_to_representations(
+    assert external_sphere_result == RecipeLoader._convert_to_representations(
         external_sphereFile
     )
-    assert local_result == RecipeLoader._convert_to_representations(local_sphereFile)
-    assert local_result_2 == RecipeLoader._convert_to_representations(
+    assert local_sphere_result == RecipeLoader._convert_to_representations(
+        local_sphereFile
+    )
+    assert local_sphere_result_2 == RecipeLoader._convert_to_representations(
         local_sphereFile_2
+    )
+
+
+@pytest.mark.parametrize(
+    "external_mesh, external_mesh_result, local_mesh, local_mesh_result",
+    [
+        (
+            {
+                "meshFile": "autoPACKserver/collisionTrees/test.obj",
+                "coordsystem": None,
+            },
+            {
+                "mesh": {
+                    "name": "test.obj",
+                    "format": ".obj",
+                    "path": "autoPACKserver/collisionTrees",
+                },
+                "atomic": None,
+                "packing": None,
+            },
+            {
+                "meshFile": "test.obj",
+                "coordsystem": "left",
+            },
+            {
+                "mesh": {
+                    "name": "test.obj",
+                    "format": ".obj",
+                    "path": "",
+                    "coordinate_system": "left",
+                },
+                "atomic": None,
+                "packing": None,
+            },
+        )
+    ],
+)
+def test_create_packing_mesh_representation(
+    external_mesh,
+    external_mesh_result,
+    local_mesh,
+    local_mesh_result,
+):
+    assert external_mesh_result == RecipeLoader._convert_to_representations(
+        external_mesh
+    )
+    assert local_mesh_result == RecipeLoader._convert_to_representations(local_mesh)
+
+
+@pytest.mark.parametrize(
+    "atomic_test_data, expected_atomic_result, atomic_test_data_1, expected_atomic_result_1",
+    [
+        (
+            {
+                "pdb": "test.pdb",
+                "source": {"transform": {"center": True, "translate": [1, 1, 1]}},
+            },
+            {
+                "atomic": {
+                    "path": "default",
+                    "format": ".pdb",
+                    "name": "test.pdb",
+                    "transform": {"center": True, "translate": [1, 1, 1]},
+                },
+                "packing": None,
+                "mesh": None,
+            },
+            {"pdb": "test"},
+            {
+                "atomic": {
+                    "id": "test",
+                    "format": ".pdb",
+                },
+                "packing": None,
+                "mesh": None,
+            },
+        )
+    ],
+)
+def test_create_packing_atomic_representation(
+    atomic_test_data,
+    expected_atomic_result,
+    atomic_test_data_1,
+    expected_atomic_result_1,
+):
+    assert expected_atomic_result == RecipeLoader._convert_to_representations(
+        atomic_test_data
+    )
+    assert expected_atomic_result_1 == RecipeLoader._convert_to_representations(
+        atomic_test_data_1
     )

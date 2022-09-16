@@ -104,29 +104,39 @@ class RecipeLoader(object):
 
     @staticmethod
     def _convert_to_representations(old_ingredient):
-        representations = RecipeLoader.default_values["representations"]
+        representations = RecipeLoader.default_values["representations"].copy()
         if "sphereFile" in old_ingredient and old_ingredient["sphereFile"] is not None:
-            representations["packing"] = create_file_info_object_from_full_path(old_ingredient["sphereFile"])
+            representations["packing"] = create_file_info_object_from_full_path(
+                old_ingredient["sphereFile"]
+            )
         if "meshFile" in old_ingredient and old_ingredient["meshFile"] is not None:
-            representations["mesh"] = create_file_info_object_from_full_path(old_ingredient["meshFile"])
-            if "coordsystem" in old_ingredient and old_ingredient["coordsystem"] is not None:
-                representations["mesh"]["coordinate_system"] = old_ingredient["coordsystem"]
+            representations["mesh"] = create_file_info_object_from_full_path(
+                old_ingredient["meshFile"]
+            )
+            if (
+                "coordsystem" in old_ingredient
+                and old_ingredient["coordsystem"] is not None
+            ):
+                representations["mesh"]["coordinate_system"] = old_ingredient[
+                    "coordsystem"
+                ]
         if "pdb" in old_ingredient and old_ingredient["pdb"] is not None:
             if ".pdb" in old_ingredient["pdb"]:
                 representations["atomic"] = {
                     "path": "default",
                     "name": old_ingredient["pdb"],
-                    "format": ".pdb"
+                    "format": ".pdb",
                 }
             else:
                 representations["atomic"] = {
                     "id": old_ingredient["pdb"],
-                    "format": ".pdb"
+                    "format": ".pdb",
                 }
-                if "source" in old_ingredient and "transform" in old_ingredient["source"]:
-                    representations["atomic"]["transform"] = {
-                        old_ingredient["source"]["transform"]
-                    }
+            if "source" in old_ingredient and "transform" in old_ingredient["source"]:
+                representations["atomic"]["transform"] = old_ingredient["source"][
+                    "transform"
+                ]
+
         return representations
 
     @staticmethod
