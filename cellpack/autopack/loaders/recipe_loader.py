@@ -9,7 +9,11 @@ from json import encoder
 import cellpack.autopack as autopack
 from cellpack.autopack.loaders.util import create_file_info_object_from_full_path
 from cellpack.autopack.utils import deep_merge
-from .v1_v2_attribute_changes import v1_to_v2_name_map, unused_attributes_list
+from .v1_v2_attribute_changes import (
+    v1_to_v2_name_map,
+    unused_attributes_list,
+    convert_to_partners_map,
+)
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
@@ -140,6 +144,14 @@ class RecipeLoader(object):
         return representations
 
     @staticmethod
+    def _convert_to_partners(old_ingredient):
+        partners = {}
+        for attribute in old_ingredient:
+            if attribute in convert_to_partners_map:
+                partners[convert_to_partners_map[attribute]] = old_ingredient[attribute]
+        return partners
+
+    @staticmethod
     def _migrate_ingredient(old_ingredient):
         new_ingredient = {}
         for attribute in list(old_ingredient):
@@ -166,6 +178,8 @@ class RecipeLoader(object):
         new_ingredient["representations"] = RecipeLoader._convert_to_representations(
             old_ingredient
         )
+        new_ingredient["partners"] = RecipeLoader._convert_to_partners(old_ingredient)
+
         return new_ingredient
 
     @staticmethod

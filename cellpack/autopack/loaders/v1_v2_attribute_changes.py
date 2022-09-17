@@ -25,3 +25,12 @@ unused_attributes_list = [
     "name",
     "properties",
 ]
+
+convert_to_partners_map = {
+    "partners_name": "names",
+    "partners_position": "positions",
+    "partners_weight": "weight",
+    "proba_binding": "probability_binding",
+    "proba_not_binding": "probability_repelled",
+    "excluded_partners_name": "excluded_names",
+}
