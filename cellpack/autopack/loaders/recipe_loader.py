@@ -145,17 +145,17 @@ class RecipeLoader(object):
 
     @staticmethod
     def _convert_rotation_range(old_ingredient):
-            range_min = (
-                old_ingredient["orientBiasRotRangeMin"]
-                if "orientBiasRotRangeMin" in old_ingredient
-                else -pi
-            )
-            range_max = (
-                old_ingredient["orientBiasRotRangeMax"]
-                if "orientBiasRotRangeMax" in old_ingredient
-                else pi
-            )
-            return [range_min, range_max]
+        range_min = (
+            old_ingredient["orientBiasRotRangeMin"]
+            if "orientBiasRotRangeMin" in old_ingredient
+            else -pi
+        )
+        range_max = (
+            old_ingredient["orientBiasRotRangeMax"]
+            if "orientBiasRotRangeMax" in old_ingredient
+            else pi
+        )
+        return [range_min, range_max]
 
     @staticmethod
     def _migrate_ingredient(old_ingredient):
@@ -170,7 +170,9 @@ class RecipeLoader(object):
                     partners = {}
                     new_ingredient["partners"] = partners
                 partners[convert_to_partners_map[attribute]] = old_ingredient[attribute]
-        new_ingredient["orient_bias_range"] = RecipeLoader._convert_rotation_range(old_ingredient)
+        new_ingredient["orient_bias_range"] = RecipeLoader._convert_rotation_range(
+            old_ingredient
+        )
         new_ingredient["representations"] = RecipeLoader._convert_to_representations(
             old_ingredient
         )
