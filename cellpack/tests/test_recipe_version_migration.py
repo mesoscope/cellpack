@@ -16,12 +16,17 @@ from cellpack.autopack.loaders.recipe_loader import RecipeLoader
     "old_ingredient, expected_result",
     [
         (
-            {"nbMol": 15, "encapsulatingRadius": 100, "orientBiasRotRangeMax": 12},
+            {
+                "nbMol": 15,
+                "encapsulatingRadius": 100,
+                "orientBiasRotRangeMax": 12,
+                "proba_binding": 0.5,
+            },
             {
                 "count": 15,
                 "orient_bias_range": [-pi, 12],
                 "representations": RecipeLoader.default_values["representations"],
-                "partners": {},
+                "partners": {"probability_binding": 0.5},
             },
         ),
         (
@@ -30,7 +35,6 @@ from cellpack.autopack.loaders.recipe_loader import RecipeLoader
                 "count": 15,
                 "orient_bias_range": [6, pi],
                 "representations": RecipeLoader.default_values["representations"],
-                "partners": {},
             },
         ),
         (
@@ -39,12 +43,13 @@ from cellpack.autopack.loaders.recipe_loader import RecipeLoader
                 "encapsulatingRadius": 100,
                 "orientBiasRotRangeMin": 6,
                 "orientBiasRotRangeMax": 12,
+                "proba_binding": 0.5,
             },
             {
                 "count": 15,
                 "orient_bias_range": [6, 12],
                 "representations": RecipeLoader.default_values["representations"],
-                "partners": {},
+                "partners": {"probability_binding": 0.5},
             },
         ),
     ],
@@ -92,13 +97,11 @@ old_recipe_test_data = {
                     "count": 15,
                     "type": "SingleSphere",
                     "representations": RecipeLoader.default_values["representations"],
-                    "partners": {},
                 },
                 "test_ingredient_2": {
                     "packing_mode": "random",
                     "packing_priority": 0,
                     "representations": RecipeLoader.default_values["representations"],
-                    "partners": {},
                 },
             },
         )
@@ -238,22 +241,4 @@ def test_create_packing_atomic_representation(
 ):
     assert expected_atomic_result == RecipeLoader._convert_to_representations(
         atomic_test_data
-    )
-
-
-@pytest.mark.parametrize(
-    "partners_test_data, expected_partners_result",
-    [
-        (
-            {"partners_name": [], "proba_binding": 0.5, "name": "Sphere_radius_100"},
-            {
-                "names": [],
-                "probability_binding": 0.5,
-            },
-        )
-    ],
-)
-def test_convert_to_partners(partners_test_data, expected_partners_result):
-    assert expected_partners_result == RecipeLoader._convert_to_partners(
-        partners_test_data
     )

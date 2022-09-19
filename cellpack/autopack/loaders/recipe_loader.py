@@ -144,14 +144,6 @@ class RecipeLoader(object):
         return representations
 
     @staticmethod
-    def _convert_to_partners(old_ingredient):
-        partners = {}
-        for attribute in old_ingredient:
-            if attribute in convert_to_partners_map:
-                partners[convert_to_partners_map[attribute]] = old_ingredient[attribute]
-        return partners
-
-    @staticmethod
     def _migrate_ingredient(old_ingredient):
         new_ingredient = {}
         for attribute in list(old_ingredient):
@@ -159,6 +151,11 @@ class RecipeLoader(object):
                 new_ingredient[v1_to_v2_name_map[attribute]] = old_ingredient[attribute]
             elif attribute in unused_attributes_list:
                 del old_ingredient[attribute]
+            elif attribute in convert_to_partners_map:
+                if "partners" not in new_ingredient:
+                    partners = {}
+                    new_ingredient["partners"] = partners
+                partners[convert_to_partners_map[attribute]] = old_ingredient[attribute]
 
         if (
             "orientBiasRotRangeMax" in old_ingredient
@@ -178,7 +175,6 @@ class RecipeLoader(object):
         new_ingredient["representations"] = RecipeLoader._convert_to_representations(
             old_ingredient
         )
-        new_ingredient["partners"] = RecipeLoader._convert_to_partners(old_ingredient)
 
         return new_ingredient
 
