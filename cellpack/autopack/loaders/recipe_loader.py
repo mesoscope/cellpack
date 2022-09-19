@@ -9,7 +9,11 @@ from json import encoder
 import cellpack.autopack as autopack
 from cellpack.autopack.loaders.util import create_file_info_object_from_full_path
 from cellpack.autopack.utils import deep_merge
-from .v1_v2_attribute_changes import v1_to_v2_name_map, unused_attributes_list
+from .v1_v2_attribute_changes import (
+    v1_to_v2_name_map,
+    unused_attributes_list,
+    convert_to_partners_map,
+)
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
@@ -104,30 +108,48 @@ class RecipeLoader(object):
 
     @staticmethod
     def _convert_to_representations(old_ingredient):
-        representations = RecipeLoader.default_values["representations"]
+        representations = RecipeLoader.default_values["representations"].copy()
         if "sphereFile" in old_ingredient and old_ingredient["sphereFile"] is not None:
-            representations["packing"] = create_file_info_object_from_full_path(old_ingredient["sphereFile"])
+            representations["packing"] = create_file_info_object_from_full_path(
+                old_ingredient["sphereFile"]
+            )
         if "meshFile" in old_ingredient and old_ingredient["meshFile"] is not None:
-            representations["mesh"] = create_file_info_object_from_full_path(old_ingredient["meshFile"])
-            if "coordsystem" in old_ingredient and old_ingredient["coordsystem"] is not None:
-                representations["mesh"]["coordinate_system"] = old_ingredient["coordsystem"]
+            representations["mesh"] = create_file_info_object_from_full_path(
+                old_ingredient["meshFile"]
+            )
+            if (
+                "coordsystem" in old_ingredient
+                and old_ingredient["coordsystem"] is not None
+            ):
+                representations["mesh"]["coordinate_system"] = old_ingredient[
+                    "coordsystem"
+                ]
         if "pdb" in old_ingredient and old_ingredient["pdb"] is not None:
             if ".pdb" in old_ingredient["pdb"]:
                 representations["atomic"] = {
                     "path": "default",
                     "name": old_ingredient["pdb"],
-                    "format": ".pdb"
+                    "format": ".pdb",
                 }
             else:
                 representations["atomic"] = {
                     "id": old_ingredient["pdb"],
-                    "format": ".pdb"
+                    "format": ".pdb",
                 }
-                if "source" in old_ingredient and "transform" in old_ingredient["source"]:
-                    representations["atomic"]["transform"] = {
-                        old_ingredient["source"]["transform"]
-                    }
+            if "source" in old_ingredient and "transform" in old_ingredient["source"]:
+                representations["atomic"]["transform"] = old_ingredient["source"][
+                    "transform"
+                ]
+
         return representations
+
+    @staticmethod
+    def _convert_to_partners(old_ingredient):
+        partners = {}
+        for attribute in old_ingredient:
+            if attribute in convert_to_partners_map:
+                partners[convert_to_partners_map[attribute]] = old_ingredient[attribute]
+        return partners
 
     @staticmethod
     def _migrate_ingredient(old_ingredient):
@@ -156,6 +178,8 @@ class RecipeLoader(object):
         new_ingredient["representations"] = RecipeLoader._convert_to_representations(
             old_ingredient
         )
+        new_ingredient["partners"] = RecipeLoader._convert_to_partners(old_ingredient)
+
         return new_ingredient
 
     @staticmethod
