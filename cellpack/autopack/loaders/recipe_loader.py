@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
 import copy
+from math import pi
 import os
 
 import json
 from json import encoder
 
 import cellpack.autopack as autopack
+from cellpack.autopack.loaders.util import create_file_info_object_from_full_path
 from cellpack.autopack.utils import deep_merge
-from .v1_v2_attribute_changes import v1_to_v2_name_map, unused_attributes_list
+from .v1_v2_attribute_changes import (
+    v1_to_v2_name_map,
+    unused_attributes_list,
+    convert_to_partners_map,
+)
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
@@ -16,6 +22,7 @@ class RecipeLoader(object):
     # TODO: add all default values here
     default_values = {
         "bounding_box": [[0, 0, 0], [100, 100, 100]],
+        "representations": {"atomic": None, "packing": None, "mesh": None},
     }
 
     def __init__(self, input_file_path):
@@ -79,25 +86,6 @@ class RecipeLoader(object):
                 RecipeLoader._resolve_object(key, objects)
         return objects
 
-    def _read(self):
-        new_values = json.load(open(self.file_path, "r"))
-        recipe_data = RecipeLoader.default_values.copy()
-        recipe_data = deep_merge(recipe_data, new_values)
-
-        if (
-            "format_version" not in recipe_data
-            or recipe_data["format_version"] != self.latest_version
-        ):
-            recipe_data = RecipeLoader._migrate_version(recipe_data)
-
-        # TODO: request any external data before returning
-        if "objects" in recipe_data:
-            recipe_data["objects"] = RecipeLoader.resolve_inheritance(
-                recipe_data["objects"]
-            )
-
-        return recipe_data
-
     def _request_sub_recipe(self, inode):
         filename = None
         if inode is not None:
@@ -119,10 +107,55 @@ class RecipeLoader(object):
         return data
 
     @staticmethod
-    def _migrate_version(recipe):
-        if "format_version" not in recipe:
-            recipe["bounding_box"] = recipe["options"]["boundingBox"]
-        return recipe
+    def _convert_to_representations(old_ingredient):
+        representations = RecipeLoader.default_values["representations"].copy()
+        if "sphereFile" in old_ingredient and old_ingredient["sphereFile"] is not None:
+            representations["packing"] = create_file_info_object_from_full_path(
+                old_ingredient["sphereFile"]
+            )
+        if "meshFile" in old_ingredient and old_ingredient["meshFile"] is not None:
+            representations["mesh"] = create_file_info_object_from_full_path(
+                old_ingredient["meshFile"]
+            )
+            if (
+                "coordsystem" in old_ingredient
+                and old_ingredient["coordsystem"] is not None
+            ):
+                representations["mesh"]["coordinate_system"] = old_ingredient[
+                    "coordsystem"
+                ]
+        if "pdb" in old_ingredient and old_ingredient["pdb"] is not None:
+            if ".pdb" in old_ingredient["pdb"]:
+                representations["atomic"] = {
+                    "path": "default",
+                    "name": old_ingredient["pdb"],
+                    "format": ".pdb",
+                }
+            else:
+                representations["atomic"] = {
+                    "id": old_ingredient["pdb"],
+                    "format": ".pdb",
+                }
+            if "source" in old_ingredient and "transform" in old_ingredient["source"]:
+                representations["atomic"]["transform"] = old_ingredient["source"][
+                    "transform"
+                ]
+
+        return representations
+
+    @staticmethod
+    def _convert_rotation_range(old_ingredient):
+        range_min = (
+            old_ingredient["orientBiasRotRangeMin"]
+            if "orientBiasRotRangeMin" in old_ingredient
+            else -pi
+        )
+        range_max = (
+            old_ingredient["orientBiasRotRangeMax"]
+            if "orientBiasRotRangeMax" in old_ingredient
+            else pi
+        )
+        return [range_min, range_max]
 
     @staticmethod
     def _migrate_ingredient(old_ingredient):
@@ -132,6 +165,18 @@ class RecipeLoader(object):
                 new_ingredient[v1_to_v2_name_map[attribute]] = old_ingredient[attribute]
             elif attribute in unused_attributes_list:
                 del old_ingredient[attribute]
+            elif attribute in convert_to_partners_map:
+                if "partners" not in new_ingredient:
+                    partners = {}
+                    new_ingredient["partners"] = partners
+                partners[convert_to_partners_map[attribute]] = old_ingredient[attribute]
+        new_ingredient["orient_bias_range"] = RecipeLoader._convert_rotation_range(
+            old_ingredient
+        )
+        new_ingredient["representations"] = RecipeLoader._convert_to_representations(
+            old_ingredient
+        )
+
         return new_ingredient
 
     @staticmethod
@@ -144,6 +189,37 @@ class RecipeLoader(object):
                 converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
                 objects_dict[key] = converted_ingredient
         return objects_dict
+
+    @staticmethod
+    def _migrate_version(recipe, format_version):
+        if format_version == "1.0":
+            recipe["bounding_box"] = recipe["options"]["boundingBox"]
+            recipe["objects"] = RecipeLoader._get_v1_ingredients(recipe)
+        return recipe
+
+    def _read(self):
+        new_values = json.load(open(self.file_path, "r"))
+        recipe_data = RecipeLoader.default_values.copy()
+        recipe_data = deep_merge(recipe_data, new_values)
+
+        if (
+            "format_version" not in recipe_data
+            or recipe_data["format_version"] != self.latest_version
+        ):
+            format_version = (
+                recipe_data["format_version"]
+                if "format_version" in recipe_data
+                else "1.0"
+            )
+            recipe_data = RecipeLoader._migrate_version(recipe_data, format_version)
+
+        # TODO: request any external data before returning
+        if "objects" in recipe_data:
+            recipe_data["objects"] = RecipeLoader.resolve_inheritance(
+                recipe_data["objects"]
+            )
+
+        return recipe_data
 
     def _load_json(self):
         """
