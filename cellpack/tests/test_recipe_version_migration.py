@@ -75,12 +75,15 @@ old_recipe_test_data = {
                 "meshObject": None,
                 "meshType": "file",
                 "properties": {},
+                "orientBiasRotRangeMin": 6,
+                "orientBiasRotRangeMax": 12,
             },
             "test_ingredient_2": {
                 "packingMode": "random",
                 "packingPriority": 0,
                 "encapsulatingRadius": 100,
                 "name": "Sphere_radius_100",
+                "orientBiasRotRangeMin": 6,
             },
         }
     },
@@ -97,11 +100,13 @@ old_recipe_test_data = {
                     "count": 15,
                     "type": "SingleSphere",
                     "representations": RecipeLoader.default_values["representations"],
+                    "orient_bias_range": [6, 12],
                 },
                 "test_ingredient_2": {
                     "packing_mode": "random",
                     "packing_priority": 0,
                     "representations": RecipeLoader.default_values["representations"],
+                    "orient_bias_range": [6, pi],
                 },
             },
         )
