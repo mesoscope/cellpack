@@ -103,28 +103,28 @@ def test_get_v1_ingredient():
     region_list = []
     objects_dict = {}
     expected_object_data = {
-                    "type": "SingleSphere",
-                    "representations": RecipeLoader.default_values["representations"],
-                    "orient_bias_range": [6, 12],
-                }
+        "type": "SingleSphere",
+        "representations": RecipeLoader.default_values["representations"],
+        "orient_bias_range": [6, 12],
+    }
     expected_composition_data = {
         "object": ingredient_key,
         "count": 15,
-
     }
-    RecipeLoader._get_v1_ingredient(ingredient_key, ingredient_data, region_list, objects_dict)
+    RecipeLoader._get_v1_ingredient(
+        ingredient_key, ingredient_data, region_list, objects_dict
+    )
     assert len(region_list) == 1
     assert objects_dict[ingredient_key] == expected_object_data
     assert region_list[0] == expected_composition_data
 
 
 @pytest.mark.parametrize(
-    "old_recipe_test_data, expected_object_dict",
+    "old_recipe_test_data, expected_object_dict, expected_composition_dict",
     [
         (
             old_recipe_test_data,
             {
-
                 "A": {
                     "type": "SingleSphere",
                     "representations": RecipeLoader.default_values["representations"],
@@ -149,16 +149,26 @@ def test_get_v1_ingredient():
                     },
                 },
             },
+            {
+                "space": {
+                    "regions": {
+                        "interior": [
+                            {"object": "A", "count": 15},
+                            {"object": "B", "packing_priority": 0},
+                            {"object": "C", "packing_priority": 0},
+                        ]
+                    }
+                }
+            },
         )
     ],
 )
 def test_get_v1_ingredients_into_composition(
-    old_recipe_test_data, expected_object_dict
+    old_recipe_test_data, expected_object_dict, expected_composition_dict
 ):
-    object_dict, compositions = RecipeLoader._convert_v1_to_v2(
-        old_recipe_test_data
-    )
+    object_dict, compositions = RecipeLoader._convert_v1_to_v2(old_recipe_test_data)
     assert object_dict == expected_object_dict
+    assert compositions == expected_composition_dict
 
 
 @pytest.mark.parametrize(
