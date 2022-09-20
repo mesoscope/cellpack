@@ -62,6 +62,61 @@ def test_migrate_ingredient(
     assert "encapsulatingRadius" not in expected_result
 
 
+# old_recipe_test_data = {
+#     "recipe": {
+#         "version": "1.1",
+#         "name": "test recipe",
+#     },
+#     "cytoplasme": {
+#         "ingredients": {
+#             "test_ingredient_1": {
+#                 "Type": "SingleSphere",
+#                 "nbMol": 15,
+#                 "meshObject": None,
+#                 "meshType": "file",
+#                 "properties": {},
+#                 "orientBiasRotRangeMin": 6,
+#                 "orientBiasRotRangeMax": 12,
+#             },
+#             "test_ingredient_2": {
+#                 "packingMode": "random",
+#                 "packingPriority": 0,
+#                 "encapsulatingRadius": 100,
+#                 "name": "Sphere_radius_100",
+#                 "orientBiasRotRangeMin": 6,
+#             },
+#         }
+#     },
+# }
+
+
+# @pytest.mark.parametrize(
+#     "old_recipe_test_data, expected_object_dict",
+#     [
+#         (
+#             old_recipe_test_data,
+#             {
+#                 "test_ingredient_1": {
+#                     "count": 15,
+#                     "type": "SingleSphere",
+#                     "representations": RecipeLoader.default_values["representations"],
+#                     "orient_bias_range": [6, 12],
+#                 },
+#                 "test_ingredient_2": {
+#                     "packing_mode": "random",
+#                     "packing_priority": 0,
+#                     "representations": RecipeLoader.default_values["representations"],
+#                     "orient_bias_range": [6, pi],
+#                 },
+#             },
+#         )
+#     ],
+# )
+# def test_get_v1_ingredients(old_recipe_test_data, expected_object_dict):
+#     assert expected_object_dict == RecipeLoader._get_v1_ingredients(
+#         old_recipe_test_data
+#     )
+
 old_recipe_test_data = {
     "recipe": {
         "version": "1.1",
@@ -69,7 +124,7 @@ old_recipe_test_data = {
     },
     "cytoplasme": {
         "ingredients": {
-            "test_ingredient_1": {
+            "A": {
                 "Type": "SingleSphere",
                 "nbMol": 15,
                 "meshObject": None,
@@ -78,12 +133,19 @@ old_recipe_test_data = {
                 "orientBiasRotRangeMin": 6,
                 "orientBiasRotRangeMax": 12,
             },
-            "test_ingredient_2": {
+            "B": {
                 "packingMode": "random",
                 "packingPriority": 0,
                 "encapsulatingRadius": 100,
                 "name": "Sphere_radius_100",
                 "orientBiasRotRangeMin": 6,
+            },
+            "C": {
+                "packingPriority": 0,
+                "proba_binding": 0.5,
+                "name": "Sphere_radius_200",
+                "orientBiasRotRangeMax": 12,
+                "sphereFile": "/fibrinogen.sph",
             },
         }
     },
@@ -96,24 +158,49 @@ old_recipe_test_data = {
         (
             old_recipe_test_data,
             {
-                "test_ingredient_1": {
+                "space": {
+                    "regions": {
+                        "interior": [
+                            "A",
+                            "B",
+                            "C",
+                        ]
+                    }
+                },
+                "A": {
                     "count": 15,
                     "type": "SingleSphere",
                     "representations": RecipeLoader.default_values["representations"],
                     "orient_bias_range": [6, 12],
                 },
-                "test_ingredient_2": {
+                "B": {
                     "packing_mode": "random",
                     "packing_priority": 0,
                     "representations": RecipeLoader.default_values["representations"],
                     "orient_bias_range": [6, pi],
                 },
+                "C": {
+                    "packing_priority": 0,
+                    "partners": {"probability_binding": 0.5},
+                    "orient_bias_range": [-pi, 12],
+                    "representations": {
+                        "packing": {
+                            "name": "fibrinogen.sph",
+                            "format": ".sph",
+                            "path": "/",
+                        },
+                        "atomic": None,
+                        "mesh": None,
+                    },
+                },
             },
         )
     ],
 )
-def test_get_v1_ingredients(old_recipe_test_data, expected_object_dict):
-    assert expected_object_dict == RecipeLoader._get_v1_ingredients(
+def test_get_v1_ingredients_into_composition(
+    old_recipe_test_data, expected_object_dict
+):
+    assert expected_object_dict == RecipeLoader._get_v1_ingredients_into_composition(
         old_recipe_test_data
     )
 
