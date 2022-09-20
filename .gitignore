@@ -109,5 +109,11 @@ ENV/
 # VSCode
 .vscode
 
-/out
+out/
 *.simularium
+
+# test recipes
+test-recipes/
+
+# packing configs
+packing-configs/
