@@ -13,6 +13,7 @@ from .v1_v2_attribute_changes import (
     v1_to_v2_name_map,
     unused_attributes_list,
     convert_to_partners_map,
+    attributes_move_to_composition,
 )
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
@@ -179,33 +180,43 @@ class RecipeLoader(object):
 
         return new_ingredient
 
-    # @staticmethod
-    # def _get_v1_ingredients(recipe_data):
-    #     objects_dict = {}
-    #     if "cytoplasme" in recipe_data:
-    #         for ingredient in recipe_data["cytoplasme"]["ingredients"]:
-    #             key = ingredient
-    #             ingredient_data = recipe_data["cytoplasme"]["ingredients"][key]
-    #             converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
-    #             objects_dict[key] = converted_ingredient
-    #     return objects_dict
+    @staticmethod
+    def _split_ingredient_data(object_key, ingredient_data):
+        composition_info = {"object": object_key}
+        object_info = ingredient_data.copy()
+        for attribute in attributes_move_to_composition:
+            if attribute in ingredient_data:
+                composition_info[attribute] = ingredient_data[attribute]
+                del object_info[attribute]
+        return object_info, composition_info
 
     @staticmethod
-    def _get_v1_ingredients_into_composition(recipe_data):
-        composition = {}
-        composition["space"] = {}
-        composition["space"]["regions"] = {}
-        composition["space"]["regions"]["interior"] = list()
-        interior = composition["space"]["regions"]["interior"]
+    def _get_v1_ingredients(recipe_data):
+        objects_dict = {}
+        composition = {"space": {"regions": {"interior": []}}}
         if "cytoplasme" in recipe_data:
-            for ingredient in recipe_data["cytoplasme"]["ingredients"]:
-                ingredient_data = recipe_data["cytoplasme"]["ingredients"][ingredient]
+            for ingredient_key in recipe_data["cytoplasme"]["ingredients"]:
+                ingredient_data = recipe_data["cytoplasme"]["ingredients"][ingredient_key]
                 converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
-                interior.append(ingredient)
-                composition[ingredient] = converted_ingredient
-        return composition
+                object_info, composition_info = RecipeLoader._split_ingredient_data(ingredient_key, converted_ingredient)
+                composition["space"]["regions"]["interior"].append(composition_info)
+                objects_dict[ingredient_key] = object_info
+        return objects_dict, composition
 
-
+    # @staticmethod
+    # def _get_v1_ingredients_into_composition(recipe_data):
+    #     composition = {}
+    #     composition["space"] = {}
+    #     composition["space"]["regions"] = {}
+    #     composition["space"]["regions"]["interior"] = list()
+    #     interior = composition["space"]["regions"]["interior"]
+    #     if "cytoplasme" in recipe_data:
+    #         for ingredient in recipe_data["cytoplasme"]["ingredients"]:
+    #             ingredient_data = recipe_data["cytoplasme"]["ingredients"][ingredient]
+    #             converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
+    #             interior.append(ingredient)
+    #             composition[ingredient] = converted_ingredient
+    #     return composition
 
     @staticmethod
     def _migrate_version(recipe, format_version):

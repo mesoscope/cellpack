@@ -34,3 +34,9 @@ convert_to_partners_map = {
     "proba_not_binding": "probability_repelled",
     "excluded_partners_name": "excluded_names",
 }
+
+attributes_move_to_composition = [
+    "count",
+    "molarity",
+    "packing_priority",
+]
