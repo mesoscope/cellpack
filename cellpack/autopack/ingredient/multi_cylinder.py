@@ -318,7 +318,7 @@ class MultiCylindersIngr(Ingredient):
             vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
             lengthsq = vx * vx + vy * vy + vz * vz
             cx, cy, cz = posc = x1 + vx * 0.5, y1 + vy * 0.5, z1 + vz * 0.5
-            radt = sqrt(lengthsq + radc ** 2)
+            radt = sqrt(lengthsq + radc**2)
 
             bb = self.correctBB(p1, p2, radc)
             #            bb = self.correctBB(posc,posc,radt)

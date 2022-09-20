@@ -432,7 +432,7 @@ class Environment(CompartmentList):
         if vAnalysis == 1:
             #    START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
             # totalVolume = self.grid.gridVolume*unitVol
-            unitVol = self.grid.gridSpacing ** 3
+            unitVol = self.grid.gridSpacing**3
             wrkDirRes = self.resultfile + "_analyze_"
             for o in self.compartments:  # only for compartment ?
                 # totalVolume -= o.surfaceVolume
@@ -566,7 +566,7 @@ class Environment(CompartmentList):
 
         self.log.info("self.compartments In Environment = %d", len(self.compartments))
         if self.compartments == []:
-            unitVol = self.grid.gridSpacing ** 3
+            unitVol = self.grid.gridSpacing**3
             innerPointNum = len(freePoints)
             self.log.info("  .  .  .  . ")
             self.log.info("inner Point Count = %d", innerPointNum)
@@ -2874,7 +2874,7 @@ class Environment(CompartmentList):
         grid.gridVolume, grid.nbGridPoints = self.callFunction(
             grid.computeGridNumberOfPoint, (boundingBox, spacing)
         )
-        unitVol = spacing ** 3
+        unitVol = spacing**3
         realTotalVol = grid.gridVolume * unitVol
 
         r = self.exteriorRecipe
