@@ -55,8 +55,8 @@ jobs:
         black --check cellpack
 
   publish:
-    if: "contains(github.event.head_commit.message, 'Bump version')"
-    needs: [lint]
+    if: contains(github.event.head_commit.message, 'Bump version')
+    needs: [lint, test]
     runs-on: ubuntu-latest
 
     steps:

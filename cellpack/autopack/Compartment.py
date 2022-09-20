@@ -138,17 +138,13 @@ class Compartment(CompartmentList):
         self.filename = None
         self.ref_obj = None
         self.meshType = None
-
-        if "representations" in object_info:
-            representations = object_info["representations"]
-            if "mesh" in representations:
-                self.representations = Representations(
-                    representations.get("mesh", None)
-                )
-                self.gname = self.representations.get_mesh_name()
-                self.meshType = self.representations.get_mesh_format()
-                self.filename = self.representations.get_mesh_path()
-                self.path = autopack.fixOnePath(self.filename)
+        self.representations = object_info["representations"]
+        # import ipdb; ipdb.set_trace()
+        if self.representations.has_mesh():
+            self.gname = self.representations.get_mesh_name()
+            self.meshType = self.representations.get_mesh_format()
+            self.filename = self.representations.get_mesh_path()
+            self.path = autopack.fixOnePath(self.filename)
 
         self.stype = "mesh"
         self.radius = object_info["radius"] if "radius" in object_info else 200.0
@@ -187,14 +183,14 @@ class Compartment(CompartmentList):
         # if a highres vertices is provided this give the surface point,
         # not the one provides
         # to compute inside points.
-        self.isBox = object_info["bounding_box"] is not None
+        self.isBox = "bounding_box" in object_info and object_info["bounding_box"] is not None
         self.bounding_box = (
             object_info["bounding_box"]
-            if object_info["bounding_box"] is not None
+            if "bounding_box" in object_info
             else None
         )
         self.isOrthogonalBoundingBox = (
-            1 if object_info["bounding_box"] is not None else None
+            1 if "bounding_box" in object_info else None
         )
 
         self.grid_type = "regular"
