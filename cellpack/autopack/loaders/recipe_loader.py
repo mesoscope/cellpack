@@ -28,7 +28,7 @@ class RecipeLoader(object):
 
     def __init__(self, input_file_path):
         _, file_extension = os.path.splitext(input_file_path)
-        self.latest_version = 1.0
+        self.latest_version = "2.0"
         self.file_path = input_file_path
         self.file_extension = file_extension
         self.ingredient_list = []
