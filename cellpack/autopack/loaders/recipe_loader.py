@@ -191,38 +191,29 @@ class RecipeLoader(object):
         return object_info, composition_info
 
     @staticmethod
-    def _get_v1_ingredients(recipe_data):
+    def _get_v1_ingredient(ingredient_key, ingredient_data, region_list, objects_dict):
+        converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
+        object_info, composition_info = RecipeLoader._split_ingredient_data(ingredient_key, converted_ingredient)
+        region_list.append(composition_info)
+        objects_dict[ingredient_key] = object_info
+
+    @staticmethod
+    def _convert_v1_to_v2(recipe_data):
         objects_dict = {}
-        composition = {"space": {"regions": {"interior": []}}}
+        composition = {"space": {"regions": {}}}
         if "cytoplasme" in recipe_data:
+            outer_most_region_array = []
+            composition["space"]["regions"]["interior"] = outer_most_region_array
             for ingredient_key in recipe_data["cytoplasme"]["ingredients"]:
                 ingredient_data = recipe_data["cytoplasme"]["ingredients"][ingredient_key]
-                converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
-                object_info, composition_info = RecipeLoader._split_ingredient_data(ingredient_key, converted_ingredient)
-                composition["space"]["regions"]["interior"].append(composition_info)
-                objects_dict[ingredient_key] = object_info
+                RecipeLoader._get_v1_ingredient(ingredient_key, ingredient_data, outer_most_region_array, objects_dict)
         return objects_dict, composition
-
-    # @staticmethod
-    # def _get_v1_ingredients_into_composition(recipe_data):
-    #     composition = {}
-    #     composition["space"] = {}
-    #     composition["space"]["regions"] = {}
-    #     composition["space"]["regions"]["interior"] = list()
-    #     interior = composition["space"]["regions"]["interior"]
-    #     if "cytoplasme" in recipe_data:
-    #         for ingredient in recipe_data["cytoplasme"]["ingredients"]:
-    #             ingredient_data = recipe_data["cytoplasme"]["ingredients"][ingredient]
-    #             converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
-    #             interior.append(ingredient)
-    #             composition[ingredient] = converted_ingredient
-    #     return composition
 
     @staticmethod
     def _migrate_version(recipe, format_version):
         if format_version == "1.0":
             recipe["bounding_box"] = recipe["options"]["boundingBox"]
-            recipe["objects"] = RecipeLoader._get_v1_ingredients(recipe)
+            recipe["objects"], recipe["composition"] = RecipeLoader._convert_v1_to_v2(recipe)
         return recipe
 
     def _read(self):

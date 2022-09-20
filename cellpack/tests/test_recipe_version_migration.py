@@ -61,6 +61,7 @@ def test_migrate_ingredient(
     assert expected_result == RecipeLoader._migrate_ingredient(old_ingredient)
     assert "encapsulatingRadius" not in expected_result
 
+
 old_recipe_test_data = {
     "recipe": {
         "version": "1.1",
@@ -96,35 +97,45 @@ old_recipe_test_data = {
 }
 
 
+def test_get_v1_ingredient():
+    ingredient_key = "A"
+    ingredient_data = old_recipe_test_data["cytoplasme"]["ingredients"]["A"]
+    region_list = []
+    objects_dict = {}
+    expected_object_data = {
+                    "type": "SingleSphere",
+                    "representations": RecipeLoader.default_values["representations"],
+                    "orient_bias_range": [6, 12],
+                }
+    expected_composition_data = {
+        "object": ingredient_key,
+        "count": 15,
+
+    }
+    RecipeLoader._get_v1_ingredient(ingredient_key, ingredient_data, region_list, objects_dict)
+    assert len(region_list) == 1
+    assert objects_dict[ingredient_key] == expected_object_data
+    assert region_list[0] == expected_composition_data
+
+
 @pytest.mark.parametrize(
     "old_recipe_test_data, expected_object_dict",
     [
         (
             old_recipe_test_data,
             {
-                "space": {
-                    "regions": {
-                        "interior": [
-                            "A",
-                            "B",
-                            "C",
-                        ]
-                    }
-                },
+
                 "A": {
-                    "count": 15,
                     "type": "SingleSphere",
                     "representations": RecipeLoader.default_values["representations"],
                     "orient_bias_range": [6, 12],
                 },
                 "B": {
                     "packing_mode": "random",
-                    "packing_priority": 0,
                     "representations": RecipeLoader.default_values["representations"],
                     "orient_bias_range": [6, pi],
                 },
                 "C": {
-                    "packing_priority": 0,
                     "partners": {"probability_binding": 0.5},
                     "orient_bias_range": [-pi, 12],
                     "representations": {
@@ -144,9 +155,10 @@ old_recipe_test_data = {
 def test_get_v1_ingredients_into_composition(
     old_recipe_test_data, expected_object_dict
 ):
-    assert expected_object_dict == RecipeLoader._get_v1_ingredients_into_composition(
+    object_dict, compositions = RecipeLoader._convert_v1_to_v2(
         old_recipe_test_data
     )
+    assert object_dict == expected_object_dict
 
 
 @pytest.mark.parametrize(
