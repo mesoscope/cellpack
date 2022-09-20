@@ -308,8 +308,8 @@ class Helper:
         else:
             theta = random.uniform(0.0, 1.0) * (2 * math.pi)
             u = random.uniform(0.0, 1.0) * 2 - 1
-        x = radius * math.sqrt(1 - u**2) * math.cos(theta)
-        y = radius * math.sqrt(1 - u**2) * math.sin(theta)
+        x = radius * math.sqrt(1 - u ** 2) * math.cos(theta)
+        y = radius * math.sqrt(1 - u ** 2) * math.sin(theta)
         z = radius * u
         return [x, y, z]
 

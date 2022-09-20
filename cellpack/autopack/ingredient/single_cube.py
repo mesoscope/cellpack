@@ -365,7 +365,7 @@ class SingleCubeIngr(Ingredient):
                     current_distance = dist_y
                 else:
                     # yz edge is the closest
-                    current_distance = numpy.sqrt(dist_y**2 + dist_z**2)
+                    current_distance = numpy.sqrt(dist_y ** 2 + dist_z ** 2)
         else:
             if dist_y <= 0:
                 if dist_z <= 0:
@@ -373,15 +373,15 @@ class SingleCubeIngr(Ingredient):
                     current_distance = dist_x
                 else:
                     # xz edge is the closest
-                    current_distance = numpy.sqrt(dist_x**2 + dist_z**2)
+                    current_distance = numpy.sqrt(dist_x ** 2 + dist_z ** 2)
             else:
                 if dist_z <= 0:
                     # xy edge is the closest
-                    current_distance = numpy.sqrt(dist_x**2 + dist_y**2)
+                    current_distance = numpy.sqrt(dist_x ** 2 + dist_y ** 2)
                 else:
                     # vertex is the closest
                     current_distance = numpy.sqrt(
-                        dist_x**2 + dist_y**2 + dist_z**2
+                        dist_x ** 2 + dist_y ** 2 + dist_z ** 2
                     )
         return current_distance
 

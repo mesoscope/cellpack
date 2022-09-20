@@ -820,7 +820,7 @@ class BaseGrid:
 
     def computeExteriorVolume(self, compartments=None, space=None, fbox_bb=None):
         # compute exterior volume, totalVolume without compartments volume
-        unitVol = self.gridSpacing**3
+        unitVol = self.gridSpacing ** 3
         totalVolume = self.gridVolume * unitVol
         if fbox_bb is not None:
             V, nbG = self.computeGridNumberOfPoint(fbox_bb, space)
@@ -833,7 +833,7 @@ class BaseGrid:
 
     def computeVolume(self, space=None, fbox_bb=None):
         # compute exterior volume, totalVolume without compartments volume
-        unitVol = self.gridSpacing**3
+        unitVol = self.gridSpacing ** 3
         totalVolume = self.gridVolume * unitVol
         if fbox_bb is not None:
             V, nbG = self.computeGridNumberOfPoint(fbox_bb, space)

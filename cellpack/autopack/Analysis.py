@@ -466,7 +466,7 @@ class AnalyseAP:
         )  # top,bottom, right, left
         m = [center[0], center[1]]
         r = radius
-        area = math.pi * r**2
+        area = math.pi * r ** 2
         chs = self.g.check_sphere_inside(rect, m, r)
         if chs:  # sph not completly inside
             ch = self.g.check_rectangle_oustide(rect, m, r)
@@ -610,7 +610,7 @@ class AnalyseAP:
             self.env.grid.nbGridPoints[0]
             * self.env.grid.nbGridPoints[1]
             * self.env.grid.nbGridPoints[2]
-            * self.env.grid.gridSpacing**3
+            * self.env.grid.gridSpacing ** 3
         )
         Vshell = numpy.array(self.getVolumeShell(self.bbox, radii, self.center))
         gr = (dnr * V) / (N * Vshell)
@@ -642,8 +642,8 @@ class AnalyseAP:
         # which will approximately follow the horizontal zero-axis with constant
         # dispersion if the data follow a homogeneous Poisson process.
         N = len(positions)
-        V = 1000**2
-        diag = numpy.sqrt(1000**2 + 1000**2)
+        V = 1000 ** 2
+        diag = numpy.sqrt(1000 ** 2 + 1000 ** 2)
         dr = dr  # all_distance.min()
         if rMax is None:
             rMax = diag
@@ -657,10 +657,10 @@ class AnalyseAP:
             )
             # dV = np.array(analyse.getAreaShell(analyse.bbox,edges,p))
             for j, e in enumerate(edges):
-                area0 = math.pi * e**2  # complete circle
+                area0 = math.pi * e ** 2  # complete circle
                 area1 = self.rectangle_circle_area(self.bbox, p, e)
                 w = area1 / area0
-                k[i, j] = w * len(numpy.nonzero(di < e)[0]) / N**2
+                k[i, j] = w * len(numpy.nonzero(di < e)[0]) / N ** 2
         Kt = V * numpy.sum(k, axis=0)
         Lt = (Kt / numpy.pi) ** 0.5
         return Kt, Lt
@@ -668,8 +668,8 @@ class AnalyseAP:
     #        pos=numpy.array(self.env.ingrpositions[ingr.name])#np.array([np.array(p[0]) for p in h.molecules])
     def rdf(self, positions, dr=10, rMax=None):
         N = len(positions)
-        V = 1000**2
-        diag = numpy.sqrt(1000**2 + 1000**2)
+        V = 1000 ** 2
+        diag = numpy.sqrt(1000 ** 2 + 1000 ** 2)
         dr = dr  # all_distance.min()
         if rMax is None:
             rMax = diag
@@ -723,7 +723,7 @@ class AnalyseAP:
         V = (
             self.env.grid.nbGridPoints[0]
             * self.env.grid.nbGridPoints[1]
-            * self.env.grid.gridSpacing**2
+            * self.env.grid.gridSpacing ** 2
         )
         Vshell = numpy.array(self.getAreaShell(self.bbox, radii, self.center))
         #        print Vshell
@@ -826,7 +826,7 @@ class AnalyseAP:
         num_increments = len(edges) - 1
         g = zeros([num_interior_particles, num_increments])
         radii = zeros(num_increments)
-        numberDensity = len(x) / S**3
+        numberDensity = len(x) / S ** 3
 
         # Compute pairwise correlation for each interior particle
         for p in range(num_interior_particles):
@@ -844,7 +844,7 @@ class AnalyseAP:
             rOuter = edges[i + 1]
             rInner = edges[i]
             g_average[i] = average(g[:, i]) / (
-                4.0 / 3.0 * pi * (rOuter**3 - rInner**3)
+                4.0 / 3.0 * pi * (rOuter ** 3 - rInner ** 3)
             )
 
         return (
@@ -905,7 +905,7 @@ class AnalyseAP:
         num_increments = len(edges) - 1
         g = zeros([num_interior_particles, num_increments])
         radii = zeros(num_increments)
-        numberDensity = len(x) / S**2
+        numberDensity = len(x) / S ** 2
 
         # Compute pairwise correlation for each interior particle
         for p in range(num_interior_particles):
@@ -923,7 +923,7 @@ class AnalyseAP:
             rOuter = edges[i + 1]
             rInner = edges[i]
             # divide by the area of sphere cut by sqyare
-            g_average[i] = average(g[:, i]) / (pi * (rOuter**2 - rInner**2))
+            g_average[i] = average(g[:, i]) / (pi * (rOuter ** 2 - rInner ** 2))
 
         return (g_average, radii, interior_indices)
 
