@@ -9,9 +9,9 @@
             0
         ],
         [
-            300,
-            300,
-            300
+            1000,
+            1000,
+            1000
         ]
     ],
     "objects": {
@@ -32,7 +32,7 @@
                 0.5,
                 0.5
             ],
-            "radius": 200,
+            "radius": 600,
             "max_jitter": [
                 1,
                 1,
@@ -47,7 +47,7 @@
                 0.25,
                 0.25
             ],
-            "radius": 25,
+            "radius": 100,
             "max_jitter": [
                 1,
                 1,
@@ -62,7 +62,7 @@
                 0.70,
                 0.10
             ],
-            "radius": 10,
+            "radius": 30,
             "max_jitter": [
                 1,
                 1,
@@ -74,11 +74,11 @@
         "space": {
             "regions": {
                 "interior": [
+                    "outer_sphere",
                     {
                         "object": "small_sphere",
-                        "count": 40
-                    },
-                    "outer_sphere"
+                        "count": 5
+                    }
                 ]
             }
         },
@@ -86,8 +86,22 @@
             "object": "large_sphere",
             "count": 1,
             "regions": {
+                "interior": ["inner_sphere",
+                    {
+                        "object": "small_sphere",
+                        "count": 40
+                    }
+                ]
+            }
+        },
+        "inner_sphere": {
+            "object": "medium_sphere",
+            "regions": {
                 "interior": [
-                    {"object": "medium_sphere", "count": 1}
+                    {
+                        "object": "small_sphere",
+                        "count": 20
+                    }
                 ]
             }
         }

@@ -68,7 +68,6 @@ from scipy import spatial
 import cellpack.autopack as autopack
 from cellpack.autopack import transformation as tr, binvox_rw
 from cellpack.autopack.BaseGrid import gridPoint
-from cellpack.autopack.interface_objects.representations import Representations
 from .Recipe import Recipe
 from .ray import (
     makeMarchingCube,
@@ -108,7 +107,7 @@ class CompartmentList:
         # point to parent compartment or Environment
         self.parent = None
 
-    def addCompartment(self, compartment):
+    def _add_compartment(self, compartment):
         """add a new compartment to the list"""
         assert compartment.parent is None
         assert isinstance(compartment, Compartment)
@@ -157,8 +156,7 @@ class Compartment(CompartmentList):
         self.bb = None
         self.diag = 9999.9
         self.ghost = None
-        self.encapsulating_radius = 9999.9
-
+        self.encapsulating_radius = object_info["radius"] if "radius" in object_info else 200.0
         self.checkinside = True
         self.innerRecipe = None
         self.surfaceRecipe = None
@@ -183,15 +181,14 @@ class Compartment(CompartmentList):
         # if a highres vertices is provided this give the surface point,
         # not the one provides
         # to compute inside points.
-        self.isBox = "bounding_box" in object_info and object_info["bounding_box"] is not None
+        self.is_sphere = object_info["type"] == "single_sphere"
+        self.isBox = (
+            "bounding_box" in object_info and object_info["bounding_box"] is not None
+        )
         self.bounding_box = (
-            object_info["bounding_box"]
-            if "bounding_box" in object_info
-            else None
+            object_info["bounding_box"] if "bounding_box" in object_info else None
         )
-        self.isOrthogonalBoundingBox = (
-            1 if "bounding_box" in object_info else None
-        )
+        self.isOrthogonalBoundingBox = 1 if "bounding_box" in object_info else None
 
         self.grid_type = "regular"
         self.grid_distances = None  # signed closest distance for each point
@@ -244,27 +241,26 @@ class Compartment(CompartmentList):
         return geom
 
     def initialize_mesh(self, mesh_store):
-        if self.filename is None:
-            return None
+        if self.is_sphere:
+            # one sphere, geom is a dictionary
+            self.buildSphere(mesh_store)
         if self.vertices is None and self.meshType == "file":
             self.faces, self.vertices, self.vnormals = self.getMesh(mesh_store)
             self.ref_obj = self.name
         if self.meshType == "raw":
             # need to build the mesh from v,f,n
             self.buildMesh(self.meshFile, mesh_store)
-        if self.meshType == "sphere":
-            # one sphere, geom is a dictionary
-            self.buildSphere(mesh_store)
         if self.meshType == "mb":
             # one sphere, geom is a dictionary
             self.buildSphere(mesh_store)
         if self.vertices is not None and len(self.vertices):
             # can be dae/fbx file, object name that have to be in the scene or dejaVu indexedpolygon file
             self.bb = self.getBoundingBox()
-            center, radius = mesh_store.get_nsphere(self.gname)
-            self.center = center
-            self.encapsulating_radius = radius
-            self.radius = mesh_store.get_smallest_radius(self.gname, center)
+            if not self.is_sphere:
+                center, radius = mesh_store.get_nsphere(self.name)
+                self.center = center
+                self.encapsulating_radius = radius
+                self.radius = mesh_store.get_smallest_radius(self.name, center)
 
     def addShapeRB(self):
         # in case our shape is a regular primitive
@@ -885,12 +881,14 @@ class Compartment(CompartmentList):
         faces = (
             self.faces
         )  # Should be able to use self.ogsurfacePoints and collect faces too from above
+        
         normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
         vSurfaceArea = sum(areas)
         if self.isBox:
             self.overwriteSurfacePts = True
             self.BuildGrid_box(env, vSurfaceArea)
             return self.insidePoints, self.surfacePoints
+
         if self.overwriteSurfacePts:
             self.ogsurfacePoints = self.vertices[:]
             self.ogsurfacePointsNormals = self.vnormals[:]
@@ -1010,6 +1008,28 @@ class Compartment(CompartmentList):
 
         return inside_points, surface_points
 
+    def build_grid_sphere(self, env):
+        nbGridPoints = len(env.grid.masterGridPositions)
+
+        grid_pts_in_sphere_indexes = env.grid.getPointsInSphere(
+            self.position, self.radius
+        )  # This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.
+        b = []
+        env.grid.compartment_ids[grid_pts_in_sphere_indexes] = -self.number
+        self.surfacePointsCoords = None
+        vSurfaceArea = 4 * math.pi * self.radius**2
+        self.log.info("vSurfaceArea = %r", vSurfaceArea)
+        self.insidePoints = grid_pts_in_sphere_indexes
+        self.surfacePoints = []
+        self.surfacePointsCoords = []
+        self.surfacePointsNormals = []
+        self.log.info(
+            f"{len(grid_pts_in_sphere_indexes)} inside pts, {len(grid_pts_in_sphere_indexes)} tot grid pts, {len(env.grid.masterGridPositions)} master grid"
+        )
+        self.computeVolumeAndSetNbMol(
+            env, b, grid_pts_in_sphere_indexes, areas=vSurfaceArea
+        )
+
     def prepare_buildgrid_box(self, env):
         a = env.grid.getPointsInCube(
             self.bb, None, None
@@ -1032,11 +1052,9 @@ class Compartment(CompartmentList):
             "%d inside pts, %d tot grid pts, %d master grid",
             len(a),
             len(a),
-            len(self.grid.masterGridPositions),
+            len(env.grid.masterGridPositions),
         )
         self.computeVolumeAndSetNbMol(env, b, a, areas=vSurfaceArea)
-
-        return a, b, vSurfaceArea
 
     def BuildGrid_box(self, env, vSurfaceArea):
         nbGridPoints = len(env.grid.masterGridPositions)
@@ -2383,12 +2401,7 @@ class Compartment(CompartmentList):
         ri = self.innerRecipe
         if ri:
             volume = self.interiorVolume
-            a = ri.setCount(volume)
-            self.log.info(
-                "number of molecules for Special Cube = %r, because interiorVolume = %r",
-                a,
-                volume,
-            )
+            ri.setCount(volume)
 
     def setCount(self):
         # compute number of molecules and save in recipes

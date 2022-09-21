@@ -179,8 +179,9 @@ class Recipe:
             randval = random()
             if remainder >= randval:  # Mod by Graham 8/18/11
                 num_to_place_int = num_to_place_int + 1
-
+            
             ingr.vol_nbmol = ingr.left_to_place = num_to_place_int + ingr.count
+            print("NUMB TO PLACE", ingr.vol_nbmol, num_to_place_int,  ingr.count)
             if ingr.left_to_place == 0:
                 self.log.warning(
                     "WARNING GRAHAM: recipe ingredient %s has 0 molecules as target",

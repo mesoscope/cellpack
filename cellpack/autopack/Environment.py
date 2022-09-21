@@ -417,7 +417,6 @@ class Environment(CompartmentList):
         IOutils.save(
             self,
             self.resultfile,
-            useXref=False,
             format_output=self.format_output,
             kwds=["compNum"],
             result=True,
@@ -1057,10 +1056,10 @@ class Environment(CompartmentList):
             object_info=object_info,
         )
         compartment.initialize_mesh(self.mesh_store)
-        self.addCompartment(compartment)
+        self._add_compartment(compartment)
         return compartment
 
-    def addCompartment(self, compartment):
+    def _add_compartment(self, compartment):
         """
         Add the given compartment to the environment.
         Extend the main bounding box if needed
@@ -1072,7 +1071,7 @@ class Environment(CompartmentList):
 
         if not fits:
             self.boundingBox = bb
-        CompartmentList.addCompartment(self, compartment)
+        CompartmentList._add_compartment(self, compartment)
 
     def getPointCompartmentId(self, point, ray=3):
         # check if point inside  of the compartments
@@ -1204,7 +1203,7 @@ class Environment(CompartmentList):
 
     def BuildCompartmentsGrids(self):
         """
-        Build the comparmtents grid (intrior and surface points) to be merged with the main grid
+        Build the compartments grid (interior and surface points) to be merged with the main grid
         """
         aInteriorGrids = []
         aSurfaceGrids = []
@@ -1945,8 +1944,6 @@ class Environment(CompartmentList):
     def pack_grid(
         self,
         seedNum=14,
-        stepByStep=False,
-        debugFunc=None,
         name=None,
         vTestid=3,
         vAnalysis=0,

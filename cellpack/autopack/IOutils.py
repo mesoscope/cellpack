@@ -1722,7 +1722,6 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
 def save(
     env,
     setupfile,
-    useXref=None,
     format_output="json",
     kwds=None,
     result=False,
@@ -1734,13 +1733,12 @@ def save(
     all_ingr_as_array=None,
     compartments=None,
 ):
-    if useXref is None:
-        useXref = False
+
     if format_output == "json":
         save_Mixed_asJson(
             env,
             setupfile,
-            useXref=useXref,
+            useXref=False,
             kwds=kwds,
             result=result,
             indent=indent,
@@ -1753,6 +1751,6 @@ def save(
     elif format_output == "simularium":
         save_as_simularium(env, setupfile, all_ingr_as_array, compartments)
     elif format_output == "python":
-        save_asPython(env, setupfile, useXref=useXref)
+        save_asPython(env, setupfile, useXref=False)
     else:
         print("format output " + format_output + " not recognized (json,python)")
