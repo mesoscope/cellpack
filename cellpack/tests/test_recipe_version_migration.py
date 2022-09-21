@@ -11,6 +11,135 @@ Docs: https://docs.pytest.org/en/latest/example/simple.html
 
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
+@pytest.mark.parametrize(
+    "sphereFile_data, sphereFile_result",
+    [
+        (
+            {"sphereFile": "autoPACKserver/collisionTrees/fibrinogen.sph"},
+            {
+                "packing": {
+                    "name": "fibrinogen.sph",
+                    "format": ".sph",
+                    "path": "autoPACKserver/collisionTrees",
+                },
+                "atomic": None,
+                "mesh": None,
+            },
+        ),
+        (
+            {"sphereFile": "fibrinogen.sph"},
+            {
+                "packing": {
+                    "name": "fibrinogen.sph",
+                    "format": ".sph",
+                    "path": "",
+                },
+                "atomic": None,
+                "mesh": None,
+            },
+        ),
+        (
+            {"sphereFile": "/fibrinogen.sph"},
+            {
+                "packing": {
+                    "name": "fibrinogen.sph",
+                    "format": ".sph",
+                    "path": "/",
+                },
+                "atomic": None,
+                "mesh": None,
+            },
+        ),
+    ],
+)
+def test_create_packing_sphere_representation(sphereFile_data, sphereFile_result):
+    assert sphereFile_result == RecipeLoader._convert_to_representations(
+        sphereFile_data
+    )
+
+
+@pytest.mark.parametrize(
+    "mesh_data, mesh_result",
+    [
+        (
+            {
+                "meshFile": "autoPACKserver/collisionTrees/test.obj",
+                "coordsystem": None,
+            },
+            {
+                "mesh": {
+                    "name": "test.obj",
+                    "format": ".obj",
+                    "path": "autoPACKserver/collisionTrees",
+                },
+                "atomic": None,
+                "packing": None,
+            },
+        ),
+        (
+            {
+                "meshFile": "test.obj",
+                "coordsystem": "left",
+            },
+            {
+                "mesh": {
+                    "name": "test.obj",
+                    "format": ".obj",
+                    "path": "",
+                    "coordinate_system": "left",
+                },
+                "atomic": None,
+                "packing": None,
+            },
+        ),
+    ],
+)
+def test_create_packing_mesh_representation(
+    mesh_data,
+    mesh_result,
+):
+    assert mesh_result == RecipeLoader._convert_to_representations(mesh_data)
+
+
+@pytest.mark.parametrize(
+    "atomic_test_data, expected_atomic_result",
+    [
+        (
+            {
+                "pdb": "test.pdb",
+                "source": {"transform": {"center": True, "translate": [1, 1, 1]}},
+            },
+            {
+                "atomic": {
+                    "path": "default",
+                    "format": ".pdb",
+                    "name": "test.pdb",
+                    "transform": {"center": True, "translate": [1, 1, 1]},
+                },
+                "packing": None,
+                "mesh": None,
+            },
+        ),
+        (
+            {"pdb": "test"},
+            {
+                "atomic": {
+                    "id": "test",
+                    "format": ".pdb",
+                },
+                "packing": None,
+                "mesh": None,
+            },
+        ),
+    ],
+)
+def test_create_packing_atomic_representation(
+    atomic_test_data,
+    expected_atomic_result,
+):
+    assert expected_atomic_result == RecipeLoader._convert_to_representations(
+        atomic_test_data
+    )
 
 @pytest.mark.parametrize(
     "old_ingredient, expected_result",
@@ -163,140 +292,11 @@ def test_get_v1_ingredient():
         )
     ],
 )
-def test_get_v1_ingredients_into_composition(
+def test_convert_v1_to_v2(
     old_recipe_test_data, expected_object_dict, expected_composition_dict
 ):
-    object_dict, compositions = RecipeLoader._convert_v1_to_v2(old_recipe_test_data)
-    assert object_dict == expected_object_dict
-    assert compositions == expected_composition_dict
+    objects_dict, composition = RecipeLoader._convert_v1_to_v2(old_recipe_test_data)
+    assert objects_dict == expected_object_dict
+    assert composition == expected_composition_dict
 
 
-@pytest.mark.parametrize(
-    "sphereFile_data, sphereFile_result",
-    [
-        (
-            {"sphereFile": "autoPACKserver/collisionTrees/fibrinogen.sph"},
-            {
-                "packing": {
-                    "name": "fibrinogen.sph",
-                    "format": ".sph",
-                    "path": "autoPACKserver/collisionTrees",
-                },
-                "atomic": None,
-                "mesh": None,
-            },
-        ),
-        (
-            {"sphereFile": "fibrinogen.sph"},
-            {
-                "packing": {
-                    "name": "fibrinogen.sph",
-                    "format": ".sph",
-                    "path": "",
-                },
-                "atomic": None,
-                "mesh": None,
-            },
-        ),
-        (
-            {"sphereFile": "/fibrinogen.sph"},
-            {
-                "packing": {
-                    "name": "fibrinogen.sph",
-                    "format": ".sph",
-                    "path": "/",
-                },
-                "atomic": None,
-                "mesh": None,
-            },
-        ),
-    ],
-)
-def test_create_packing_sphere_representation(sphereFile_data, sphereFile_result):
-    assert sphereFile_result == RecipeLoader._convert_to_representations(
-        sphereFile_data
-    )
-
-
-@pytest.mark.parametrize(
-    "mesh_data, mesh_result",
-    [
-        (
-            {
-                "meshFile": "autoPACKserver/collisionTrees/test.obj",
-                "coordsystem": None,
-            },
-            {
-                "mesh": {
-                    "name": "test.obj",
-                    "format": ".obj",
-                    "path": "autoPACKserver/collisionTrees",
-                },
-                "atomic": None,
-                "packing": None,
-            },
-        ),
-        (
-            {
-                "meshFile": "test.obj",
-                "coordsystem": "left",
-            },
-            {
-                "mesh": {
-                    "name": "test.obj",
-                    "format": ".obj",
-                    "path": "",
-                    "coordinate_system": "left",
-                },
-                "atomic": None,
-                "packing": None,
-            },
-        ),
-    ],
-)
-def test_create_packing_mesh_representation(
-    mesh_data,
-    mesh_result,
-):
-    assert mesh_result == RecipeLoader._convert_to_representations(mesh_data)
-
-
-@pytest.mark.parametrize(
-    "atomic_test_data, expected_atomic_result",
-    [
-        (
-            {
-                "pdb": "test.pdb",
-                "source": {"transform": {"center": True, "translate": [1, 1, 1]}},
-            },
-            {
-                "atomic": {
-                    "path": "default",
-                    "format": ".pdb",
-                    "name": "test.pdb",
-                    "transform": {"center": True, "translate": [1, 1, 1]},
-                },
-                "packing": None,
-                "mesh": None,
-            },
-        ),
-        (
-            {"pdb": "test"},
-            {
-                "atomic": {
-                    "id": "test",
-                    "format": ".pdb",
-                },
-                "packing": None,
-                "mesh": None,
-            },
-        ),
-    ],
-)
-def test_create_packing_atomic_representation(
-    atomic_test_data,
-    expected_atomic_result,
-):
-    assert expected_atomic_result == RecipeLoader._convert_to_representations(
-        atomic_test_data
-    )
