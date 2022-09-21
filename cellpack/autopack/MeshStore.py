@@ -224,11 +224,11 @@ class MeshStore:
         @type  radius: float
         @param radius: radius of the sphere
 
-        @rtype:   Object, Mesh
-        @return:  Sphere Object and Mesh
+        @rtype:   Mesh
+        @return:  Mesh
         """
-        v, f = self.create_sphere_data(iterations)
-        mesh = self.create_mesh(name, numpy.array(v) * radius, None, f)
+        mesh = trimesh.creation.icosphere(radius=radius)
+        self.add_mesh_to_scene(mesh, name)
         return mesh
 
     def contains_point(self, geomname, point):
