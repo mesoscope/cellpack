@@ -9,7 +9,8 @@ Docs: https://docs.pytest.org/en/latest/example/simple.html
     https://docs.pytest.org/en/latest/plugins.html#requiring-loading-plugins-in-a-test-module-or-conftest-file
 """
 
-from cellpack.autopack.loaders.recipe_loader import RecipeLoader
+from cellpack.autopack.loaders.recipe_loader import CURRENT_VERSION, RecipeLoader
+
 
 @pytest.mark.parametrize(
     "sphereFile_data, sphereFile_result",
@@ -141,6 +142,7 @@ def test_create_packing_atomic_representation(
         atomic_test_data
     )
 
+
 @pytest.mark.parametrize(
     "old_ingredient, expected_result",
     [
@@ -193,8 +195,12 @@ def test_migrate_ingredient(
 
 old_recipe_test_data = {
     "recipe": {
-        "version": "1.1",
-        "name": "test recipe",
+        "version": "1.0",
+        "name": "test_recipe",
+    },
+    "options": {
+        "windowsSize": 10,
+        "boundingBox": [[0, 0, 0], [1000, 1000, 1000]],
     },
     "cytoplasme": {
         "ingredients": {
@@ -300,3 +306,64 @@ def test_convert_v1_to_v2(
     assert composition == expected_composition_dict
 
 
+# format_version = "1.0"
+
+
+@pytest.mark.parametrize(
+    "old_recipe_test_data, expected_header_data",
+    [
+        (
+            old_recipe_test_data,
+            {
+                "version": "1.0",
+                "format_version": "2.0.0",
+                "name": "test_recipe",
+                "bounding_box": [[0, 0, 0], [1000, 1000, 1000]],
+                "objects": {
+                    "A": {
+                        "type": "SingleSphere",
+                        "representations": RecipeLoader.default_values[
+                            "representations"
+                        ],
+                        "orient_bias_range": [6, 12],
+                    },
+                    "B": {
+                        "packing_mode": "random",
+                        "representations": RecipeLoader.default_values[
+                            "representations"
+                        ],
+                        "orient_bias_range": [6, pi],
+                    },
+                    "C": {
+                        "partners": {"probability_binding": 0.5},
+                        "orient_bias_range": [-pi, 12],
+                        "representations": {
+                            "packing": {
+                                "name": "fibrinogen.sph",
+                                "format": ".sph",
+                                "path": "/",
+                            },
+                            "atomic": None,
+                            "mesh": None,
+                        },
+                    },
+                },
+                "composition": {
+                    "space": {
+                        "regions": {
+                            "interior": [
+                                {"object": "A", "count": 15},
+                                {"object": "B", "priority": 0},
+                                {"object": "C", "priority": 0},
+                            ]
+                        }
+                    }
+                },
+            },
+        )
+    ],
+)
+def test_migrate_version(old_recipe_test_data, expected_header_data):
+    assert expected_header_data == RecipeLoader._migrate_version(
+        old_recipe_test_data, CURRENT_VERSION, format_version="1.0"
+    )
