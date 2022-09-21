@@ -12,118 +12,95 @@ helper = autopack.helper
 
 class SingleCubeIngr(Ingredient):
     """
-    This Ingredient is represented by a single cube
+    This Ingredient is represented by a single cube. Required attribute:
+    bounds, in the form of [lower bounds, upper bounds]. Each an x, y, z point.
     """
 
     def __init__(
         self,
-        Type="SingleCube",
+        bounds,
+        type="single_cube",
         color=None,
-        coordsystem="right",
+        count=0,
         cutoff_boundary=None,
         cutoff_surface=None,
-        distExpression=None,
-        distFunction=None,
-        encapsulatingRadius=0,
-        excluded_partners_name=None,
+        distance_expression=None,
+        distance_function=None,
         force_random=False,  # avoid any binding
-        gradient="",
-        isAttractor=False,
-        jitterMax=(1, 1, 1),
+        gradient=None,
+        is_attractor=False,
+        max_jitter=(1, 1, 1),
         molarity=0.0,
         name=None,
-        nbJitter=5,
-        nbMol=0,
+        jitter_attempts=5,
         offset=None,
-        orientBiasRotRangeMax=-pi,
-        orientBiasRotRangeMin=-pi,
-        overwrite_distFunc=True,  # overWrite
-        packingMode="random",
-        packingPriority=0,
-        partners_name=None,
-        partners_position=None,
-        pdb=None,
-        perturbAxisAmplitude=0.1,
-        placeType="jitter",
-        positions2=[[[0, 0, 0]]],
-        positions=[[[0, 0, 0]]],
-        principalVector=(1, 0, 0),
-        proba_binding=0.5,
-        proba_not_binding=0.5,  # chance to actually not bind
-        properties=None,
-        radii=None,
-        rejectionThreshold=30,
+        orient_bias_range=[-pi, pi],
+        overwrite_distance_function=True,  # overWrite
+        packing_priority=0,
+        partners=None,
+        perturb_axis_amplitude=0.1,
+        place_type="jitter",
+        principal_vector=(1, 0, 0),
+        representations=None,
+        rejection_threshold=30,
         resolution_dictionary=None,
-        rotAxis=[0.0, 0.0, 0.0],
-        rotRange=0,
-        source=None,
-        useOrientBias=False,
-        useRotAxis=True,
+        rotation_axis=[0.0, 0.0, 0.0],
+        rotation_range=0,
+        use_orient_bias=False,
+        use_rotation_axis=True,
         weight=0.2,  # use for affinity ie partner.weight
     ):
         super().__init__(
-            Type=Type,
+            type=type,
             color=color,
+            count=count,
             cutoff_boundary=cutoff_boundary,
             cutoff_surface=cutoff_surface,
-            distExpression=distExpression,
-            distFunction=distFunction,
-            excluded_partners_name=excluded_partners_name,
+            distance_expression=distance_expression,
+            distance_function=distance_function,
             force_random=force_random,
             gradient=gradient,
-            isAttractor=isAttractor,
-            jitterMax=jitterMax,
+            is_attractor=is_attractor,
+            max_jitter=max_jitter,
             molarity=molarity,
             name=name,
-            nbJitter=nbJitter,
-            nbMol=nbMol,
-            overwrite_distFunc=overwrite_distFunc,
-            packingMode=packingMode,
-            packingPriority=packingPriority,
-            partners_name=partners_name,
-            partners_position=partners_position,
-            pdb=pdb,
-            perturbAxisAmplitude=perturbAxisAmplitude,
-            placeType=placeType,
-            positions2=positions2,
-            positions=positions,
-            principalVector=principalVector,
-            proba_binding=proba_binding,
-            proba_not_binding=proba_not_binding,
-            properties=properties,
-            radii=radii,
-            rotAxis=rotAxis,
-            rotRange=rotRange,
-            useRotAxis=useRotAxis,
+            jitter_attempts=jitter_attempts,
+            overwrite_distance_function=overwrite_distance_function,
+            packing_priority=packing_priority,
+            partners=partners,
+            perturb_axis_amplitude=perturb_axis_amplitude,
+            place_type=place_type,
+            principal_vector=principal_vector,
+            representations=representations,
+            rotation_axis=rotation_axis,
+            rotation_range=rotation_range,
+            use_rotation_axis=use_rotation_axis,
             weight=weight,
         )
 
         if name is None:
-            name = "%5.2f_%f" % (radii[0][0], molarity)
+            name = "%5.2f_%f" % (bounds[0][0], molarity)
         self.name = name
-        self.singleSphere = False
-        self.modelType = "Cube"
+        self.model_type = "Cube"
         self.collisionLevel = 0
-        radii = numpy.array(radii)
 
-        self.minRadius = min(radii[0] / 2)  # should have three radii sizex,sizey,sizez
-        self.maxRadius = self.encapsulatingRadius = numpy.linalg.norm(
-            radii[0] / 2
+        self.bb = bounds
+
+        self.lower_bound = bounds[0]  # bottom left corner of cuboid
+        self.upper_bound = bounds[1]  # top right corner of cuboid
+        lower_bound = numpy.array(self.lower_bound)
+        upper_bound = numpy.array(self.upper_bound)
+        self.edges = numpy.array([upper_bound[i] - lower_bound[i] for i in range(3)])
+        self.min_radius = min(self.edges) / 2  # sizex,sizey,sizez
+        self.encapsulating_radius = numpy.linalg.norm(
+            self.edges / 2
         )  # calculate encapsulating radius based on side length
-        self.bb = [-radii[0] / 2, radii[0] / 2]
-
-        self.positions = positions  # bottom left corner of cuboid
-        self.positions2 = positions2  # top right corner of cuboid
-        positions_ar = numpy.array(self.positions[0][0])
-        positions2_ar = numpy.array(self.positions2[0][0])
-
         self.center = (
-            positions_ar + (positions2_ar - positions_ar) / 2
+            lower_bound + (upper_bound - lower_bound) / 2
         )  # location of center based on corner points
 
-        d = radii[0] / 2.0
+        d = self.edges / 2.0
 
-        self.radii = radii
         self.vertices = [
             [-d, -d, -d],  # [x0, y0, z0],
             [d, -d, -d],  # [x1, y0, z0],
@@ -148,10 +125,10 @@ class SingleCubeIngr(Ingredient):
         """
         Check cube for collision
         centers1 and centers2 should be the cornerPoints, so we can do parrallelpiped
-        can also use the center plus size (radii), or the position/position2
+        can also use the center plus size (edges), or the position/position2
         """
-        corner1 = self.positions[0]
-        corner2 = self.positions2[0]
+        corner1 = self.lower_bound
+        corner2 = self.upper_bound
         corner1_trans = self.transformPoints(jtrans, rotMat, corner1)[0]  # bb1
         corner2_trans = self.transformPoints(jtrans, rotMat, corner2)[0]  # bb2
         center_trans = self.transformPoints(jtrans, rotMat, [self.center])[0]
@@ -161,7 +138,7 @@ class SingleCubeIngr(Ingredient):
 
         diag_length = numpy.linalg.norm(corner2_trans - corner1_trans)
 
-        search_radius = diag_length / 2.0 + self.encapsulatingRadius + dpad
+        search_radius = diag_length / 2.0 + self.encapsulating_radius + dpad
 
         bb = (
             center_trans - search_radius,
@@ -240,11 +217,11 @@ class SingleCubeIngr(Ingredient):
         """
         Check cube for collision
         centers1 and centers2 should be the cornerPoints ?
-        can also use the center plus size (radii), or the position/position2
+        can also use the center plus size (edges), or the position/position2
         """
-        centers1 = self.positions[0]
-        centers2 = self.positions2[0]
-        radii = self.radii
+        centers1 = self.lower_bound
+        centers2 = self.upper_bound
+        edges = self.edges
         cent1T = self.transformPoints(jtrans, rotMat, centers1)[0]  # bb1
         cent2T = self.transformPoints(jtrans, rotMat, centers2)[0]  # bb2
         center = self.transformPoints(jtrans, rotMat, [self.center])[0]
@@ -255,7 +232,7 @@ class SingleCubeIngr(Ingredient):
         lengthsq = vx * vx + vy * vy + vz * vz
         length = sqrt(lengthsq)
         cx, cy, cz = posc = center  # x1+vx*.5, y1+vy*.5, z1+vz*.5
-        radt = length / 2.0 + self.encapsulatingRadius
+        radt = length / 2.0 + self.encapsulating_radius
         x, y, z = posc
         bb = ([x - radt, y - radt, z - radt], [x + radt, y + radt, z + radt])
 
@@ -265,7 +242,7 @@ class SingleCubeIngr(Ingredient):
         m = numpy.matrix(numpy.array(rotMat).reshape(4, 4))  #
         mat = m.I
         rpd = ApplyMatrix(pd, mat)
-        res = numpy.less_equal(numpy.fabs(rpd), numpy.array(radii[0]) / 2.0)
+        res = numpy.less_equal(numpy.fabs(rpd), edges / 2.0)
         c = numpy.average(res, 1)  # .astype(int)
         d = numpy.equal(c, 1.0)
         ptinside = numpy.nonzero(d)[0]
@@ -282,25 +259,25 @@ class SingleCubeIngr(Ingredient):
     def get_new_distance_values(
         self, jtrans, rotMat, gridPointsCoords, distance, dpad, level=0
     ):
-        radii = self.radii
+        edges = self.edges
         insidePoints = {}
         newDistPoints = {}
-        cent1T = self.transformPoints(jtrans, rotMat, self.positions[0])[0]  # bb1
-        cent2T = self.transformPoints(jtrans, rotMat, self.positions2[0])[0]  # bb2
+        cent1T = self.transformPoints(jtrans, rotMat, self.lower_bound)[0]  # bb1
+        cent2T = self.transformPoints(jtrans, rotMat, self.upper_bound)[0]  # bb2
         center = self.transformPoints(
             jtrans,
             rotMat,
             [self.center],
         )[0]
         #        cylNum = 0
-        #        for radc, p1, p2 in zip(radii, cent1T, cent2T):
+        #        for radc, p1, p2 in zip(edges, cent1T, cent2T):
         x1, y1, z1 = cent1T
         x2, y2, z2 = cent2T
         vx, vy, vz = (x2 - x1, y2 - y1, z2 - z1)
         lengthsq = vx * vx + vy * vy + vz * vz
         length = sqrt(lengthsq)
         posc = center  # x1+vx*.5, y1+vy*.5, z1+vz*.5
-        radt = length / 2.0 + self.encapsulatingRadius
+        radt = length / 2.0 + self.encapsulating_radius
 
         bb = [cent2T, cent1T]  # self.correctBB(p1,p2,radc)
         x, y, z = posc
@@ -321,7 +298,7 @@ class SingleCubeIngr(Ingredient):
         rpd = ApplyMatrix(pd, mat)
         # need to check if these point are inside the cube using the dimension of the cube
         # numpy.fabs
-        res = numpy.less_equal(numpy.fabs(rpd), numpy.array(radii[0]) / 2.0)
+        res = numpy.less_equal(numpy.fabs(rpd), edges / 2.0)
         if len(res):
             c = numpy.average(res, 1)  # .astype(int)
             d = numpy.equal(c, 1.0)
@@ -334,7 +311,7 @@ class SingleCubeIngr(Ingredient):
             if pt in insidePoints:
                 continue
             dist = distA[pti]
-            d = dist - self.encapsulatingRadius
+            d = dist - self.encapsulating_radius
             # should be distance to the cube, but will use approximation
             if pti in ptinsideCube:
                 # dist < radt:  # point is inside dropped sphere
@@ -370,7 +347,7 @@ class SingleCubeIngr(Ingredient):
         point,
     ):
         # returns the distance to the closest cube surface from point
-        side_lengths = numpy.abs(self.radii[0]) / 2.0
+        side_lengths = numpy.abs(self.edges) / 2.0
 
         dist_x, dist_y, dist_z = numpy.abs(point) - side_lengths
 

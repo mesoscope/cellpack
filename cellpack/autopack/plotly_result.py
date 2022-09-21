@@ -73,11 +73,11 @@ class PlotlyAnalysis:
                             level / len(ingr.positions),
                         )
             else:
-                if ingr.modelType == "Spheres":
-                    self.add_circle(ingr.encapsulatingRadius, pos, ingr.color)
-                elif ingr.modelType == "Cube":
+                if ingr.model_type == "Spheres":
+                    self.add_circle(ingr.encapsulating_radius, pos, ingr.color)
+                elif ingr.model_type == "Cube":
                     self.add_square(ingr.radii, pos, rot, ingr.color)
-                elif ingr.modelType == "Cylinders":
+                elif ingr.model_type == "Cylinders":
                     length = ingr.length
                     width = 2 * ingr.radii[0][0]
                     side_lengths = [[width, length, 1.0]]
