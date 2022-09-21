@@ -1735,7 +1735,7 @@ def save(
     compartments=None,
 ):
     if useXref is None:
-        useXref = env.useXref
+        useXref = False
     if format_output == "json":
         save_Mixed_asJson(
             env,

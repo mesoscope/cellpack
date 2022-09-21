@@ -87,7 +87,7 @@
             "count": 1,
             "regions": {
                 "interior": [
-                    "medium_sphere"
+                    {"object": "medium_sphere", "count": 1}
                 ]
             }
         }
