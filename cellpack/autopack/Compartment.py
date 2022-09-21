@@ -133,12 +133,11 @@ class Compartment(CompartmentList):
         self.vnormals = None
         self.scale = 1.0
         self.fnormals = None
-        self.gname = None
+        self.gname = name
         self.filename = None
         self.ref_obj = None
         self.meshType = None
         self.representations = object_info["representations"]
-        # import ipdb; ipdb.set_trace()
         if self.representations.has_mesh():
             self.gname = self.representations.get_mesh_name()
             self.meshType = self.representations.get_mesh_format()
@@ -863,7 +862,7 @@ class Compartment(CompartmentList):
         self.ogsurfacePoints = points
         self.ogsurfacePointsNormals = normals
 
-    def checkPointInside(self, point, diag, mesh_store, ray=1):
+    def is_point_inside_mesh(self, point, diag, mesh_store, ray=1):
         insideBB = self.checkPointInsideBB(point)  # cutoff?
         if insideBB:
             return mesh_store.contains_point(self.gname, point)
@@ -1317,7 +1316,7 @@ class Compartment(CompartmentList):
             grdPos.item((ptInd, 2)),
         ]
         # is this point inside
-        inside = self.checkPointInside(coord, diag, mesh_store, ray=3)
+        inside = self.is_point_inside_mesh(coord, diag, mesh_store, ray=3)
         for k in range(NZ):
             for i in range(NX):
                 for j in range(NY):
@@ -1336,7 +1335,7 @@ class Compartment(CompartmentList):
                             new_distances.item(ptInd)
                             < env.grid.gridSpacing * 1.1547 * 2.0
                         ):
-                            inside = self.checkPointInside(
+                            inside = self.is_point_inside_mesh(
                                 coord, diag, mesh_store, ray=3
                             )
                         if inside:

@@ -15,7 +15,8 @@
         ]
     ],
     "objects": {
-        "base": {
+        "common_settings": {
+            "type": "single_sphere",
             "jitter_attempts": 10,
             "packing_mode": "random",
             "place_type": "jitter",
@@ -25,58 +26,49 @@
             }
         },
         "large_sphere": {
-            "type": "single_sphere",
-            "inherit": "base",
+            "inherit": "common_settings",
             "color": [
                 0.5,
                 0.5,
                 0.5
             ],
-            "radius": 600,
-            "max_jitter": [
-                1,
-                1,
-                0
-            ]
+            "radius": 600
         },
         "medium_sphere": {
-            "type": "single_sphere",
-            "inherit": "base",
+            "inherit": "common_settings",
             "color": [
                 0.25,
                 0.25,
                 0.25
             ],
-            "radius": 100,
-            "max_jitter": [
-                1,
-                1,
-                0
-            ]
+            "radius": 100
         },
-        "small_sphere": {
-            "type": "single_sphere",
-            "inherit": "base",
+        "green_sphere": {
+            "inherit": "common_settings",
             "color": [
                 0.20,
                 0.70,
                 0.10
             ],
-            "radius": 30,
-            "max_jitter": [
-                1,
-                1,
-                0
-            ]
+            "radius": 30
+        },
+        "red_sphere": {
+            "inherit": "common_settings",
+            "color": [
+                0.90,
+                0.10,
+                0.10
+            ],
+            "radius": 25
         }
     },
     "composition": {
-        "space": {
+        "bounding_area": {
             "regions": {
                 "interior": [
                     "outer_sphere",
                     {
-                        "object": "small_sphere",
+                        "object": "green_sphere",
                         "count": 5
                     }
                 ]
@@ -86,9 +78,10 @@
             "object": "large_sphere",
             "count": 1,
             "regions": {
-                "interior": ["inner_sphere",
+                "interior": [
+                    "inner_sphere",
                     {
-                        "object": "small_sphere",
+                        "object": "red_sphere",
                         "count": 40
                     }
                 ]
@@ -99,7 +92,7 @@
             "regions": {
                 "interior": [
                     {
-                        "object": "small_sphere",
+                        "object": "green_sphere",
                         "count": 20
                     }
                 ]

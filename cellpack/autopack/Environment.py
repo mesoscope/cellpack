@@ -1073,12 +1073,12 @@ class Environment(CompartmentList):
             self.boundingBox = bb
         CompartmentList._add_compartment(self, compartment)
 
-    def getPointCompartmentId(self, point, ray=3):
+    def compartment_id_for_nearest_grid_point(self, point):
         # check if point inside  of the compartments
         # closest grid point is
         d, pid = self.grid.getClosestGridPoint(point)
-        cid = self.grid.compartment_ids[pid]
-        return cid
+        compartment_id = self.grid.compartment_ids[pid]
+        return compartment_id
 
     def longestIngrdientName(self):
         """

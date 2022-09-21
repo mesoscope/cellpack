@@ -360,7 +360,7 @@ class GrowIngredient(MultiCylindersIngr):
         pts = (numpy.array(self.sphere_points) * self.uLength) + pt
         points_mask = numpy.nonzero(self.sphere_points_mask)[0]
         if len(points_mask):
-            mask = [not self.point_is_not_available(pt) for pt in pts[points_mask]]
+            mask = [not self.point_is_available(pt) for pt in pts[points_mask]]
             if len(mask):
                 self.sphere_points_mask[points_mask] = numpy.logical_and(
                     mask, self.sphere_points_mask[points_mask]
@@ -626,8 +626,8 @@ class GrowIngredient(MultiCylindersIngr):
             angle = self.vi.angle_between_vectors(numpy.array(posc), numpy.array(v))
             v, d = self.vi.measure_distance(numpy.array(posc), numpy.array(v), vec=True)
             if abs(math.degrees(angle)) <= marge:
-                closeS = self.checkPointSurface(v, cutoff=self.cutoff_surface)
-                inComp = self.checkPointComp(v)
+                closeS = self.far_enough_from_surfaces(v, cutoff=self.cutoff_surface)
+                inComp = self.is_point_in_correct_region(v)
                 if closeS or not inComp:  # or d > self.uLength:
                     attempted += 1
                     continue
@@ -714,8 +714,8 @@ class GrowIngredient(MultiCylindersIngr):
             angle = self.vi.angle_between_vectors(numpy.array(posc), numpy.array(v))
             v, d = self.vi.measure_distance(numpy.array(posc), numpy.array(v), vec=True)
             if abs(math.degrees(angle)) <= marge:
-                closeS = self.checkPointSurface(v, cutoff=self.cutoff_surface)
-                inComp = self.checkPointComp(v)
+                closeS = self.far_enough_from_surfaces(v, cutoff=self.cutoff_surface)
+                inComp = self.is_point_in_correct_region(v)
                 if closeS or not inComp:  # or d > self.uLength:
                     attempted += 1
                     continue
@@ -789,8 +789,8 @@ class GrowIngredient(MultiCylindersIngr):
                 inside = histoVol.grid.checkPointInside(
                     newPt, dist=self.cutoff_boundary, jitter=self.max_jitter
                 )
-                closeS = self.checkPointSurface(newPt, cutoff=self.cutoff_surface)
-                inComp = self.checkPointComp(newPt)
+                closeS = self.far_enough_from_surfaces(newPt, cutoff=self.cutoff_surface)
+                inComp = self.is_point_in_correct_region(newPt)
                 if not inside or closeS or not inComp:
                     if not self.constraintMarge:
                         if marge >= 175:
@@ -1043,7 +1043,7 @@ class GrowIngredient(MultiCylindersIngr):
                 print("no  points available")
                 return None, False
             r = [False]
-            point_is_not_available = self.point_is_not_available(newPt)
+            point_is_not_available = self.point_is_available(newPt)
             print(
                 "point is available",
                 point_is_not_available,
@@ -1364,10 +1364,10 @@ class GrowIngredient(MultiCylindersIngr):
                     newPt, dist=self.cutoff_boundary, jitter=self.max_jitter
                 )
                 if inside:
-                    inComp = self.checkPointComp(newPt)
+                    inComp = self.is_point_in_correct_region(newPt)
                     if inComp:
                         # check how far from surface ?
-                        closeS = self.checkPointSurface(
+                        closeS = self.far_enough_from_surfaces(
                             newPt, cutoff=self.cutoff_surface
                         )
                 if not inside or closeS or not inComp:
@@ -1854,7 +1854,7 @@ class GrowIngredient(MultiCylindersIngr):
             closeS = False
             if inside and self.compNum <= 0:
                 # only if not surface ingredient
-                closeS = self.checkPointSurface(secondPoint, cutoff=self.cutoff_surface)
+                closeS = self.far_enough_from_surfaces(secondPoint, cutoff=self.cutoff_surface)
             if not inside or closeS:
                 safety = 30
                 k = 0
@@ -1873,7 +1873,7 @@ class GrowIngredient(MultiCylindersIngr):
                         secondPoint, dist=self.cutoff_boundary, jitter=self.max_jitter
                     )
                     if self.compNum <= 0:
-                        closeS = self.checkPointSurface(
+                        closeS = self.far_enough_from_surfaces(
                             secondPoint, cutoff=self.cutoff_surface
                         )
             if self.runTimeDisplay:
