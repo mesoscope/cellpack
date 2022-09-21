@@ -12,8 +12,8 @@ def ingredient_compare1(x, y):
     priority ties and decreasing completion for radii ties
     for priority > 0
     """
-    p1 = x.packing_priority
-    p2 = y.packing_priority
+    p1 = x.priority
+    p2 = y.priority
     if p1 < p2:  # p1 > p2
         return 1
     elif p1 == p2:  # p1 == p1
@@ -42,8 +42,8 @@ def ingredient_compare0(x, y):
     priority ties and decreasing completion for radii ties
     for priority < 0
     """
-    p1 = x.packing_priority
-    p2 = y.packing_priority
+    p1 = x.priority
+    p2 = y.priority
     if p1 > p2:  # p1 > p2
         return 1
     elif p1 == p2:  # p1 == p1

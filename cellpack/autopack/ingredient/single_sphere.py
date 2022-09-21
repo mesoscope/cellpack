@@ -39,7 +39,7 @@ class SingleSphereIngr(Ingredient):
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
         packing_mode="random",
-        packing_priority=0,
+        priority=0,
         partners=None,
         perturb_axis_amplitude=0.1,
         place_type="jitter",
@@ -70,7 +70,7 @@ class SingleSphereIngr(Ingredient):
             jitter_attempts=jitter_attempts,
             overwrite_distance_function=overwrite_distance_function,
             packing_mode=packing_mode,
-            packing_priority=packing_priority,
+            priority=priority,
             partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
             place_type=place_type,

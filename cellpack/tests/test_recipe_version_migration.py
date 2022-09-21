@@ -283,8 +283,8 @@ def test_get_v1_ingredient():
                     "regions": {
                         "interior": [
                             {"object": "A", "count": 15},
-                            {"object": "B", "packing_priority": 0},
-                            {"object": "C", "packing_priority": 0},
+                            {"object": "B", "priority": 0},
+                            {"object": "C", "priority": 0},
                         ]
                     }
                 }
