@@ -2427,7 +2427,7 @@ class Ingredient(Agent):
             if is_realtime:
                 self.update_display_rt(moving, target_point, rot_matrix)
 
-            if self.point_is_available(packing_location):
+            if not self.point_is_available(packing_location):
                 # jittered into wrong compartment,
                 # go to next jitter
                 continue
@@ -2614,7 +2614,7 @@ class Ingredient(Agent):
                 if collision:
                     break
             t = time()
-            if self.point_is_available(packing_location):
+            if not self.point_is_available(packing_location):
                 continue
             if True in collision_results:
                 continue

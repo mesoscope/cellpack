@@ -360,7 +360,7 @@ class GrowIngredient(MultiCylindersIngr):
         pts = (numpy.array(self.sphere_points) * self.uLength) + pt
         points_mask = numpy.nonzero(self.sphere_points_mask)[0]
         if len(points_mask):
-            mask = [not self.point_is_available(pt) for pt in pts[points_mask]]
+            mask = [self.point_is_available(pt) for pt in pts[points_mask]]
             if len(mask):
                 self.sphere_points_mask[points_mask] = numpy.logical_and(
                     mask, self.sphere_points_mask[points_mask]
@@ -1045,7 +1045,7 @@ class GrowIngredient(MultiCylindersIngr):
                 print("no  points available")
                 return None, False
             r = [False]
-            point_is_not_available = self.point_is_available(newPt)
+            point_is_not_available = not self.point_is_available(newPt)
             print(
                 "point is available",
                 point_is_not_available,
