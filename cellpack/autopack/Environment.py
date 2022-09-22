@@ -556,9 +556,8 @@ class Environment(CompartmentList):
                 self.log.info("Volume Used   = %d", usedPts * unitVol)
                 self.log.info("Volume Unused = %d", unUsedPts * unitVol)
                 self.log.info("vTestid = %d", vTestid)
-                self.log.info("self.nbGridPoints = %r", self.nbGridPoints)
-                self.log.info("self.gridVolume = %d", self.gridVolume)
-                #        self.exteriorVolume = totalVolume
+                self.log.info("self.nbGridPoints = %r", self.grid.nbGridPoints)
+                self.log.info("self.gridVolume = %d", self.grid.gridVolume)
 
         self.log.info("self.compartments In Environment = %d", len(self.compartments))
         if self.compartments == []:
@@ -697,7 +696,6 @@ class Environment(CompartmentList):
         if self.exteriorRecipe:
             self.exteriorRecipe.sort()
         for o in self.compartments:
-            #            o.molecules = []
             if reset:
                 o.reset()
             if o.innerRecipe:
@@ -1055,7 +1053,7 @@ class Environment(CompartmentList):
             name=compartment_key,
             object_info=object_info,
         )
-        compartment.initialize_mesh(self.mesh_store)
+        compartment.initialize_shape(self.mesh_store)
         self._add_compartment(compartment)
         return compartment
 
@@ -1228,6 +1226,18 @@ class Environment(CompartmentList):
             f"build Grids {self.innerGridMethod}, {len(self.grid.aSurfaceGrids)}"
         )
 
+    def build_compartment_grids(self):
+        self.log.info("file is None thus re/building grid distance")
+        self.BuildCompartmentsGrids()
+
+        if len(self.compartments):
+            verts = numpy.array(self.compartments[0].surfacePointsCoords)
+            for i in range(1, len(self.compartments)):
+                verts = numpy.vstack([verts, self.compartments[i].surfacePointsCoords])
+            self.grid.set_surfPtsBht(
+                verts.tolist()
+            )  # should do it only on inside grid point
+
     def buildGrid(
         self,
         gridFileIn=None,
@@ -1239,7 +1249,7 @@ class Environment(CompartmentList):
     ):
         """
         The main build grid function. Setup the main grid and merge the
-        compartment grid. The setup is de novo or using previously builded grid
+        compartment grid. The setup is de novo or using previously built grid
         or restored using given file.
         """
         boundingBox = self.boundingBox
@@ -1249,60 +1259,46 @@ class Environment(CompartmentList):
             from cellpack.autopack.Environment import Grid
         else:
             from cellpack.autopack.BaseGrid import BaseGrid as Grid
-        # check viewer, and setup the progress bar
-        self.reportprogress(label="Building the Master Grid")
 
-        self.sortIngredient(reset=rebuild)
-        self.reportprogress(label="Computing the number of grid points")
+        self.sortIngredient(reset=True)
         if gridFileIn is not None:
             if not os.path.isfile(gridFileIn):
                 gridFileIn = None
-        if self.nFill == 0:
-            rebuild = True
-        if rebuild or gridFileIn is not None or self.grid is None or self.nFill == 0:
-            # save bb for current fill
+        if self.grid is None or self.nFill == 0:
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
-            spacing = self.smallestProteinSize  # * 1.1547
+            spacing = self.smallestProteinSize
             self.grid = Grid(boundingBox=boundingBox, spacing=spacing, lookup=lookup)
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
-            if rebuild:
+            if self.nFill == 0:
                 self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
                 nbPoints = self.grid.gridVolume
+
         else:
             self.log.info("$$$$$$$$  reset the grid")
             self.grid.reset()
             nbPoints = len(self.grid.freePoints)
             self.log.info("$$$$$$$$  reset the grid")
 
-        if gridFileIn is not None:  # and not rebuild:
+        if gridFileIn is not None:
             self.log.warning("file in for building grid but it doesnt work well")
             self.grid.filename = gridFileIn
             if self.nFill == 0:  # first fill, after we can just reset
                 self.log.info("restore from file")
                 self.restoreGridFromFile(gridFileIn)
-        elif (gridFileIn is None and rebuild) or self.nFill == 0:
-            # assign ids to grid points
-            self.log.info("file is None thus re/building grid distance")
-            self.BuildCompartmentsGrids()
-            self.exteriorVolume = self.grid.computeExteriorVolume(
-                compartments=self.compartments,
-                space=self.smallestProteinSize,
-                fbox_bb=self.fbox_bb,
-            )
         else:
-            self.log.info("file is not rebuild nor restore from file")
-        if len(self.compartments):
-            verts = numpy.array(self.compartments[0].surfacePointsCoords)
-            for i in range(1, len(self.compartments)):
-                verts = numpy.vstack([verts, self.compartments[i].surfacePointsCoords])
-            self.grid.set_surfPtsBht(
-                verts.tolist()
-            )  # should do it only on inside grid point
+            self.build_compartment_grids()
+
+        self.exteriorVolume = self.grid.computeExteriorVolume(
+            compartments=self.compartments,
+            space=self.smallestProteinSize,
+            fbox_bb=self.fbox_bb,
+        )
         if gridFileOut is not None and gridFileIn is None:
             self.saveGridToFile(gridFileOut)
             self.grid.filename = gridFileOut
+
         r = self.exteriorRecipe
         if r:
             r.setCount(self.exteriorVolume)  # should actually use the fillBB
@@ -1333,79 +1329,6 @@ class Environment(CompartmentList):
                         i, mingrs, distance, nbFreePoints, organelle.molecules
                     )
             self.grid.nbFreePoints = nbFreePoints
-        self.setCompatibility()
-
-    def BuildGrids(self):
-        """
-        Build the comparmtents grid (intrior and surface points) to be merged with the main grid
-        Note :
-        #New version allows for orthogonal box to be used as an organelle requireing no expensive InsidePoints test
-        # FIXME make recursive?
-        """
-        aInteriorGrids = []
-        aSurfaceGrids = []
-        points_inside_compartments = []
-        points_on_surfaces = []
-        for compartment in self.compartments:
-            print(
-                "in Environment, compartment.isOrthogonalBoundingBox =",
-                compartment.isOrthogonalBoundingBox,
-            )
-            points_on_surfaces = []
-            if compartment.isOrthogonalBoundingBox == 1:
-                self.EnviroOnly = True
-                print(
-                    ">>>>>>>>>>>>>>>>>>>>>>>>> Not building a grid because I'm an Orthogonal Bounding Box"
-                )
-                points_inside_compartments = self.grid.getPointsInCube(
-                    compartment.bb, None, None
-                )  # This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.
-                self.grid.compartment_ids[
-                    points_inside_compartments
-                ] = -compartment.number
-                compartment.surfacePointsCoords = None
-                bb0x, bb0y, bb0z = compartment.bb[0]
-                bb1x, bb1y, bb1z = compartment.bb[1]
-                AreaXplane = (bb1y - bb0y) * (bb1z - bb0z)
-                AreaYplane = (bb1x - bb0x) * (bb1z - bb0z)
-                AreaZplane = (bb1y - bb0y) * (bb1x - bb0x)
-                vSurfaceArea = (
-                    abs(AreaXplane) * 2 + abs(AreaYplane) * 2 + abs(AreaZplane) * 2
-                )
-                print("vSurfaceArea = ", vSurfaceArea)
-                compartment.insidePoints = points_inside_compartments
-                compartment.surfacePoints = points_on_surfaces
-                compartment.surfacePointsCoords = []
-                compartment.surfacePointsNormals = []
-                print(
-                    " %d inside pts, %d tot grid pts, %d master grid"
-                    % (
-                        len(points_inside_compartments),
-                        len(points_inside_compartments),
-                        len(self.grid.masterGridPositions),
-                    )
-                )
-                compartment.computeVolumeAndSetNbMol(
-                    self,
-                    points_on_surfaces,
-                    points_inside_compartments,
-                    areas=vSurfaceArea,
-                )
-                print(
-                    "The size of the grid I build = ", len(points_inside_compartments)
-                )
-            else:
-                points_inside_compartments, points_on_surfaces = compartment.BuildGrid(
-                    self
-                )
-
-            aInteriorGrids.append(points_inside_compartments)
-            aSurfaceGrids.append(points_on_surfaces)
-
-        self.grid.aInteriorGrids = aInteriorGrids
-        print("I'm out of the loop and have build my grid with inside points")
-        self.grid.aSurfaceGrids = aSurfaceGrids
-        print("build Grids", self.innerGridMethod, len(self.grid.aSurfaceGrids))
 
     def onePrevIngredient(self, i, mingrs, distance, nbFreePoints, marray):
         """
@@ -1481,40 +1404,6 @@ class Environment(CompartmentList):
         if i < len(marray):
             marray[i][3] = insidePoints.keys()[0]
             ingr.rbnode[insidePoints.keys()[0]] = rbnode
-        #        else :
-        #            nmol = len(self.molecules)
-        #            for j,organelle in enumerate(self.organelles):
-        #                print (i,nmol+len(organelle.molecules))
-        #                if i < nmol+len(organelle.molecules):
-        #                    organelle.molecules[i-nmol][3]=insidePoints.keys()[0]
-        #                    ingr.rbnode[insidePoints.keys()[0]] = rbnode
-        #                else :
-        #                    nmol+=len(organelle.molecules)
-
-    def setCompatibility(self):
-        """
-        in earlier version the grid was part of the environment class.
-        Since we split the grid in her own class, to avoid some error during the transition
-        we alias all the function and attribute.
-        """
-        self.getPointsInCube = self.grid.getPointsInCube
-        self.boundingBox = self.grid.boundingBox
-        self.compartment_ids = self.grid.compartment_ids
-        self.freePoints = self.grid.freePoints
-        self.diag = self.grid.diag
-        self.gridSpacing = self.grid.gridSpacing
-        self.nbGridPoints = self.grid.nbGridPoints
-        self.nbSurfacePoints = self.grid.nbSurfacePoints
-        self.gridVolume = (
-            self.grid.gridVolume
-        )  # will be the toatl number of grid points
-        self.masterGridPositions = self.grid.masterGridPositions
-        self.aInteriorGrids = self.grid.aInteriorGrids
-        self.aSurfaceGrids = self.grid.aSurfaceGrids
-        self.surfPtsBht = self.grid.surfPtsBht
-        self.compartment_ids = self.grid.compartment_ids = numpy.array(
-            self.grid.compartment_ids, int
-        )
 
     def getSortedActiveIngredients(self, allIngredients):
         """
@@ -2319,19 +2208,6 @@ class Environment(CompartmentList):
             "Popup CancelBox: if Cancel Box is up for more than 10 sec, close box and continue loop from here"
         )
 
-    #        from pyubic.cinema4d.c4dUI import TimerDialog
-    #        dialog = TimerDialog()
-    #        dialog.init()
-    #        dialog.Open(async=True, pluginid=25555589, width=120, height=100)
-    #        tt=time()
-    # while dialog.IsOpen():
-    #    if time()-tt > 5.:
-    #        print "time()-tt = ", time()-tt
-    #        dialog.Close()
-    #        cancel = dialog._cancel
-    #        cancel=c4d.gui.QuestionDialog('WannaCancel?') # Removed by Graham on July 10, 2012 because it may no longer be needed, but test it TODO
-    #        return cancel
-
     def restore_molecules_array(self, ingr):
         if len(ingr.results):
             for elem in ingr.results:
@@ -2432,7 +2308,7 @@ class Environment(CompartmentList):
             #            pickle.dump(orga.molecules, orfile)
             orfile.close()
         rfile = open(resultfilename + "freePoints", "wb")
-        pickle.dump(self.freePoints, rfile)
+        pickle.dump(self.grid.freePoints, rfile)
         rfile.close()
 
     @classmethod
@@ -2839,34 +2715,6 @@ class Environment(CompartmentList):
             nbFreePoints = self.nbFreePointsAfterFill
         # a freepoint is a voxel, how many water in the voxel
         # coords masterGridPositions
-
-    def estimateVolume(self, boundingBox, spacing):
-        # need to box N point and coordinaePoint
-        #        xl,yl,zl = boundingBox[0]
-        #        xr,yr,zr = boundingBox[1]
-        #        realTotalVol = (xr-xl)*(yr-yl)*(zr-zl)
-        grid = Grid()
-        grid.boundingBox = boundingBox
-        grid.gridSpacing = spacing
-        grid.gridVolume, grid.nbGridPoints = self.callFunction(
-            grid.computeGridNumberOfPoint, (boundingBox, spacing)
-        )
-        unitVol = spacing**3
-        realTotalVol = grid.gridVolume * unitVol
-
-        r = self.exteriorRecipe
-        if r:
-            r.setCount(realTotalVol, reset=False)
-        for o in self.compartments:
-            o.estimateVolume(hBB=grid.boundingBox)
-            rs = o.surfaceRecipe
-            if rs:
-                realTotalVol = o.surfaceVolume
-                rs.setCount(realTotalVol, reset=False)
-            ri = o.innerRecipe
-            if ri:
-                realTotalVol = o.interiorVolume
-                ri.setCount(realTotalVol, reset=False)
 
     # ==============================================================================
     # AFter this point, features development around physics engine and algo

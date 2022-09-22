@@ -789,7 +789,9 @@ class GrowIngredient(MultiCylindersIngr):
                 inside = histoVol.grid.checkPointInside(
                     newPt, dist=self.cutoff_boundary, jitter=self.max_jitter
                 )
-                closeS = self.far_enough_from_surfaces(newPt, cutoff=self.cutoff_surface)
+                closeS = self.far_enough_from_surfaces(
+                    newPt, cutoff=self.cutoff_surface
+                )
                 inComp = self.is_point_in_correct_region(newPt)
                 if not inside or closeS or not inComp:
                     if not self.constraintMarge:
@@ -1854,7 +1856,9 @@ class GrowIngredient(MultiCylindersIngr):
             closeS = False
             if inside and self.compNum <= 0:
                 # only if not surface ingredient
-                closeS = self.far_enough_from_surfaces(secondPoint, cutoff=self.cutoff_surface)
+                closeS = self.far_enough_from_surfaces(
+                    secondPoint, cutoff=self.cutoff_surface
+                )
             if not inside or closeS:
                 safety = 30
                 k = 0

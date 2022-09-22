@@ -1040,7 +1040,9 @@ class Ingredient(Agent):
 
     def is_point_in_correct_region(self, point):
         # crude location check (using nearest grid point)
-        nearest_grid_point_compartment_id = self.env.compartment_id_for_nearest_grid_point(point)  # offset ?
+        nearest_grid_point_compartment_id = (
+            self.env.compartment_id_for_nearest_grid_point(point)
+        )  # offset ?
         compartment_ingr_belongs_in = self.compNum
         if compartment_ingr_belongs_in == 0:
             compartment = self.env
@@ -1071,22 +1073,27 @@ class Ingredient(Agent):
                 inside = o.is_point_inside_mesh(
                     point, self.env.grid.diag, self.env.mesh_store, ray=3
                 )
-                # if inside a compartment, we can't pack here. 
+                # if inside a compartment, we can't pack here.
                 if inside:
                     return False
             return compartment_ingr_belongs_in == nearest_grid_point_compartment_id
 
     def far_enough_from_surfaces(self, point, cutoff):
-        # check if clear of all other compartment surfaces 
+        # check if clear of all other compartment surfaces
         if self.compNum == 0:
             ingredient_compartment = self.env
         else:
             ingredient_compartment = self.env.compartments[abs(self.compNum) - 1]
         ingredient_compartment_id = self.compNum
         for compartment in self.env.compartments:
-            if ingredient_compartment_id > 0 and ingredient_compartment.name == compartment.name:
+            if (
+                ingredient_compartment_id > 0
+                and ingredient_compartment.name == compartment.name
+            ):
                 continue
-            self.log.info("test compartment %s %r", compartment.name, compartment.OGsrfPtsBht)
+            self.log.info(
+                "test compartment %s %r", compartment.name, compartment.OGsrfPtsBht
+            )
             # checking compartments I don't belong to
             res = compartment.OGsrfPtsBht.query(tuple(numpy.array([point])))
             if len(res) == 2:
@@ -1112,13 +1119,15 @@ class Ingredient(Agent):
             point_in_correct_region = self.is_point_in_correct_region(newPt)
             if point_in_correct_region:
                 # check how far from surface ?
-                far_from_surfaces = self.far_enough_from_surfaces(newPt, cutoff=self.cutoff_surface)
+                far_from_surfaces = self.far_enough_from_surfaces(
+                    newPt, cutoff=self.cutoff_surface
+                )
                 return far_from_surfaces
-            else: 
+            else:
                 return False
-        else: 
+        else:
             return False
-               
+
     def oneJitter(self, env, trans, rotMat):
         jtrans = self.randomize_translation(env, trans, rotMat)
         rotMatj = self.randomize_rotation(rotMat, env)
@@ -1694,7 +1703,7 @@ class Ingredient(Agent):
             env.grid.masterGridPositions[ptInd],
         )
         compartment = self.get_compartment(env)
-        gridPointsCoords = env.masterGridPositions
+        gridPointsCoords = env.grid.masterGridPositions
         rotation_matrix = self.get_rotation(ptInd, env, compartment)
         target_grid_point_position = gridPointsCoords[
             ptInd
@@ -2201,7 +2210,7 @@ class Ingredient(Agent):
                     pt,
                     packing_rotation,
                     level,
-                    env.masterGridPositions,
+                    env.grid.masterGridPositions,
                     distance,
                     env,
                     dpad,

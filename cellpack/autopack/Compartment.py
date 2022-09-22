@@ -155,7 +155,9 @@ class Compartment(CompartmentList):
         self.bb = None
         self.diag = 9999.9
         self.ghost = None
-        self.encapsulating_radius = object_info["radius"] if "radius" in object_info else 200.0
+        self.encapsulating_radius = (
+            object_info["radius"] if "radius" in object_info else 200.0
+        )
         self.checkinside = True
         self.innerRecipe = None
         self.surfaceRecipe = None
@@ -239,7 +241,11 @@ class Compartment(CompartmentList):
         self.ref_obj = self.name
         return geom
 
-    def initialize_mesh(self, mesh_store):
+    def _get_volume(self, mesh_store):
+        if self.is_sphere:
+            return 4 * math.pi * self.radius**2
+
+    def initialize_shape(self, mesh_store):
         if self.is_sphere:
             # one sphere, geom is a dictionary
             self.buildSphere(mesh_store)
@@ -880,7 +886,7 @@ class Compartment(CompartmentList):
         faces = (
             self.faces
         )  # Should be able to use self.ogsurfacePoints and collect faces too from above
-        
+
         normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
         vSurfaceArea = sum(areas)
         if self.isBox:
@@ -1004,12 +1010,12 @@ class Compartment(CompartmentList):
             )
         else:
             self.log.error("Not a recognized inner grid method", env.innerGridMethod)
-
+        self.compute_volume_and_set_count(
+            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
+        )
         return inside_points, surface_points
 
     def build_grid_sphere(self, env):
-        nbGridPoints = len(env.grid.masterGridPositions)
-
         grid_pts_in_sphere_indexes = env.grid.getPointsInSphere(
             self.position, self.radius
         )  # This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.
@@ -1024,9 +1030,6 @@ class Compartment(CompartmentList):
         self.surfacePointsNormals = []
         self.log.info(
             f"{len(grid_pts_in_sphere_indexes)} inside pts, {len(grid_pts_in_sphere_indexes)} tot grid pts, {len(env.grid.masterGridPositions)} master grid"
-        )
-        self.computeVolumeAndSetNbMol(
-            env, b, grid_pts_in_sphere_indexes, areas=vSurfaceArea
         )
 
     def prepare_buildgrid_box(self, env):
@@ -1053,7 +1056,6 @@ class Compartment(CompartmentList):
             len(a),
             len(env.grid.masterGridPositions),
         )
-        self.computeVolumeAndSetNbMol(env, b, a, areas=vSurfaceArea)
 
     def BuildGrid_box(self, env, vSurfaceArea):
         nbGridPoints = len(env.grid.masterGridPositions)
@@ -1077,9 +1079,6 @@ class Compartment(CompartmentList):
             len(self.insidePoints),
             nbGridPoints,
             len(env.grid.masterGridPositions),
-        )
-        self.computeVolumeAndSetNbMol(
-            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
 
     def BuildGrid_ray(
@@ -1153,10 +1152,6 @@ class Compartment(CompartmentList):
         self.surfacePoints = all_surface_pt_ids
         self.surfacePointsCoords = all_surface_pt_pos
         self.surfacePointsNormals = surfacePointsNormals
-
-        self.computeVolumeAndSetNbMol(
-            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
-        )
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_binvox(self, env, grdPos, vSurfaceArea, srfPts, idarray, ray=1):
@@ -1230,9 +1225,6 @@ class Compartment(CompartmentList):
         self.surfacePointsCoords = surfPtsBB
         self.surfacePointsNormals = surfacePointsNormals
 
-        self.computeVolumeAndSetNbMol(
-            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
-        )
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_trimesh(self, env, grdPos, vSurfaceArea, srfPts, idarray, mesh_store):
@@ -1285,10 +1277,6 @@ class Compartment(CompartmentList):
         self.surfacePoints = surfacePoints
         self.surfacePointsCoords = surfPtsBB
         self.surfacePointsNormals = surfacePointsNormals
-
-        self.computeVolumeAndSetNbMol(
-            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
-        )
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_scanline(
@@ -1370,9 +1358,6 @@ class Compartment(CompartmentList):
         self.surfacePoints = surfacePoints
         self.surfacePointsCoords = surfPtsBB
         self.surfacePointsNormals = surfacePointsNormals
-        self.computeVolumeAndSetNbMol(
-            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
-        )
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_pyray(
@@ -1395,9 +1380,6 @@ class Compartment(CompartmentList):
             self.surfacePoints = surfacePoints
             self.surfacePointsCoords = surfPtsBB
             self.surfacePointsNormals = surfacePointsNormals
-            self.computeVolumeAndSetNbMol(
-                env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
-            )
             return self.insidePoints, self.surfacePoints
 
         number = self.number
@@ -1481,9 +1463,6 @@ class Compartment(CompartmentList):
         self.surfacePoints = surfacePoints
         self.surfacePointsCoords = surfPtsBB
         self.surfacePointsNormals = surfacePointsNormals
-        self.computeVolumeAndSetNbMol(
-            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
-        )
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_bhtree(
@@ -1578,9 +1557,7 @@ class Compartment(CompartmentList):
         self.surfacePoints = surfacePoints
         self.surfacePointsCoords = surfPtsBB
         self.surfacePointsNormals = surfacePointsNormals
-        self.computeVolumeAndSetNbMol(
-            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
-        )
+
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_kevin(self, env, superFine=False):
@@ -1889,9 +1866,6 @@ class Compartment(CompartmentList):
         self.surfacePoints = surfacePoints
         self.surfacePointsCoords = surfPtsBB
         self.surfacePointsNormals = surfacePointsNormals
-        self.computeVolumeAndSetNbMol(
-            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
-        )
         return self.insidePoints, self.surfacePoints
 
     def extendGridArrays(
@@ -2089,9 +2063,6 @@ class Compartment(CompartmentList):
         self.surfacePointsCoords = surfPtsBB
         self.surfacePointsNormals = surfacePointsNormals
 
-        self.computeVolumeAndSetNbMol(
-            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
-        )
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_utsdf(self, env):
@@ -2179,9 +2150,6 @@ class Compartment(CompartmentList):
         self.surfacePoints = surfacePoints
         self.surfacePointsCoords = surfPtsBB
         self.surfacePointsNormals = surfacePointsNormals
-        self.computeVolumeAndSetNbMol(
-            env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
-        )
         return insidePoints, surfacePoints
 
     def get_bbox(self, vert_list, BB_SCALE=0.0):
@@ -2313,8 +2281,6 @@ class Compartment(CompartmentList):
                 insidePoints.append(i)
                 idarray[i] = -number
 
-        self.computeVolumeAndSetNbMol(histoVol, surfacePoints, insidePoints)
-
         self.insidePoints = insidePoints
         self.surfacePoints = surfacePoints
         self.surfacePointsNormals = allNormals
@@ -2330,58 +2296,20 @@ class Compartment(CompartmentList):
         vec = (x2 - x1, y2 - y1, z2 - z1)
         return x1 + ratio * vec[0], y1 + ratio * vec[1], z1 + ratio * vec[2]
 
-    def estimateVolume(self, unitVol=None, hBB=None):
-        """
-        get the volume of the compartment
-        v: A pointer to the array of vertices
-        // i: A pointer to the array of indices
-        // n: The number of indices (multiple of 3)
-        // This function uses Gauss's Theorem to calculate the volume of a body
-        // enclosed by a set of triangles. The triangle set must form a closed
-        // surface in R3 and be outward facing. Outward facing triangles index
-        // their vertices in a counterclockwise order where the x-axis points
-        // left, the y-axis point up and the z-axis points toward you (rhs).
-        // from http://www.gamedev.net/page/resources/_/technical/game-programming/area-and-volume-calculations-r2247
-        """
-        if self.interiorVolume is None or self.interiorVolume == 0.0:
-            v = self.vertices
-            i = self.faces
-            n = len(self.faces)
-            volume = 0.0
-            for j in range(n):  # (j = 0; j < n; j+=3)
-                v1 = v[i[j][0]]
-                v2 = v[i[j][1]]
-                v3 = v[i[j][2]]
-                volume += (
-                    (v2[1] - v1[1]) * (v3[2] - v1[2])
-                    - (v2[2] - v1[2]) * (v3[1] - v1[1])
-                ) * (v1[0] + v2[0] + v3[0])
-            self.interiorVolume = volume / 6.0
-        if self.surfaceVolume is None or self.surfaceVolume == 0.0:
-            if hBB is not None:
-                normalList2, areas = self.getFaceNormals(
-                    self.vertices, self.faces, fillBB=hBB
-                )
-                self.surfaceVolume = sum(areas)
-            elif unitVol is not None:
-                self.surfaceVolume = len(self.vertices) * unitVol
-
-    def computeVolumeAndSetNbMol(
-        self, histoVol, surfacePoints, insidePoints, areas=None
+    def compute_volume_and_set_count(
+        self, env, surfacePoints, insidePoints, areas=None
     ):
         """
         Compute volume of surface and interior
         set 'count' in each ingredient of both recipes
         """
-        unitVol = histoVol.grid.gridSpacing**3
+        unitVol = env.grid.gridSpacing**3
         if surfacePoints:
             self.log.info("%d surface points %.2f unitVol", len(surfacePoints), unitVol)
             # FIXME .. should be surface per surface point instead of unitVol
             self.surfaceVolume = len(surfacePoints) * unitVol
-        area = False
         if areas is not None:
             self.surfaceVolume = areas
-            area = True
         self.interiorVolume = len(insidePoints) * unitVol
         if self.surfaceVolume is not None:
             self.log.info(
@@ -2390,17 +2318,7 @@ class Compartment(CompartmentList):
                 self.interiorVolume,
             )
         self.log.info("%.2f interior volume", self.interiorVolume)
-
-        # compute number of molecules and save in recipes
-        rs = self.surfaceRecipe
-        if rs:
-            volume = self.surfaceVolume
-            rs.setCount(volume, area=area)
-
-        ri = self.innerRecipe
-        if ri:
-            volume = self.interiorVolume
-            ri.setCount(volume)
+        self.setCount()
 
     def setCount(self):
         # compute number of molecules and save in recipes
