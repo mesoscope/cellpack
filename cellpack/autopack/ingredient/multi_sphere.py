@@ -32,7 +32,7 @@ class MultiSphereIngr(Ingredient):
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
         packing_mode="random",
-        packing_priority=0,
+        packing=0,
         partners=None,
         perturb_axis_amplitude=0.1,
         place_type="jitter",
@@ -59,7 +59,7 @@ class MultiSphereIngr(Ingredient):
             offset=offset,
             orient_bias_range=orient_bias_range,
             packing_mode=packing_mode,
-            packing_priority=packing_priority,
+            packing_priority=priority,
             partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
             place_type=place_type,
