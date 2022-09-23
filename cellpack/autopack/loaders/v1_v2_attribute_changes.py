@@ -8,7 +8,7 @@ v1_to_v2_name_map = {
     "nbMol": "count",
     "overwrite_distFunc": "overwrite_distance_function",
     "packingMode": "packing_mode",
-    "packingPriority": "packing_priority",
+    "packingPriority": "priority",
     "perturbAxisAmplitude": "perturb_axis_amplitude",
     "placeType": "place_type",
     "principalVector": "principal_vector",
@@ -34,3 +34,9 @@ convert_to_partners_map = {
     "proba_not_binding": "probability_repelled",
     "excluded_partners_name": "excluded_names",
 }
+
+attributes_move_to_composition = [
+    "count",
+    "molarity",
+    "priority",
+]

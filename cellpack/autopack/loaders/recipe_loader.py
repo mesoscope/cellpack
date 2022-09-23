@@ -13,9 +13,11 @@ from .v1_v2_attribute_changes import (
     v1_to_v2_name_map,
     unused_attributes_list,
     convert_to_partners_map,
+    attributes_move_to_composition,
 )
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
+CURRENT_VERSION = "2.0"
 
 
 class RecipeLoader(object):
@@ -27,7 +29,7 @@ class RecipeLoader(object):
 
     def __init__(self, input_file_path):
         _, file_extension = os.path.splitext(input_file_path)
-        self.latest_version = 1.0
+        self.current_version = CURRENT_VERSION
         self.file_path = input_file_path
         self.file_extension = file_extension
         self.ingredient_list = []
@@ -180,22 +182,56 @@ class RecipeLoader(object):
         return new_ingredient
 
     @staticmethod
-    def _get_v1_ingredients(recipe_data):
-        objects_dict = {}
-        if "cytoplasme" in recipe_data:
-            for ingredient in recipe_data["cytoplasme"]["ingredients"]:
-                key = ingredient
-                ingredient_data = recipe_data["cytoplasme"]["ingredients"][key]
-                converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
-                objects_dict[key] = converted_ingredient
-        return objects_dict
+    def _split_ingredient_data(object_key, ingredient_data):
+        composition_info = {"object": object_key}
+        object_info = ingredient_data.copy()
+        for attribute in attributes_move_to_composition:
+            if attribute in ingredient_data:
+                composition_info[attribute] = ingredient_data[attribute]
+                del object_info[attribute]
+        return object_info, composition_info
 
     @staticmethod
-    def _migrate_version(recipe, format_version):
+    def _get_v1_ingredient(ingredient_key, ingredient_data, region_list, objects_dict):
+        converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
+        object_info, composition_info = RecipeLoader._split_ingredient_data(
+            ingredient_key, converted_ingredient
+        )
+        region_list.append(composition_info)
+        objects_dict[ingredient_key] = object_info
+
+    @staticmethod
+    def _convert_v1_to_v2(recipe_data):
+        objects_dict = {}
+        composition = {"space": {"regions": {}}}
+        if "cytoplasme" in recipe_data:
+            outer_most_region_array = []
+            composition["space"]["regions"]["interior"] = outer_most_region_array
+            for ingredient_key in recipe_data["cytoplasme"]["ingredients"]:
+                ingredient_data = recipe_data["cytoplasme"]["ingredients"][
+                    ingredient_key
+                ]
+                RecipeLoader._get_v1_ingredient(
+                    ingredient_key,
+                    ingredient_data,
+                    outer_most_region_array,
+                    objects_dict,
+                )
+        return objects_dict, composition
+
+    @staticmethod
+    def _migrate_version(recipe, current_version, format_version="1.0"):
+        new_recipe = {}
         if format_version == "1.0":
-            recipe["bounding_box"] = recipe["options"]["boundingBox"]
-            recipe["objects"] = RecipeLoader._get_v1_ingredients(recipe)
-        return recipe
+            new_recipe["version"] = recipe["recipe"]["version"]
+            new_recipe["format_version"] = current_version
+            new_recipe["name"] = recipe["recipe"]["name"]
+            new_recipe["bounding_box"] = recipe["options"]["boundingBox"]
+            (
+                new_recipe["objects"],
+                new_recipe["composition"],
+            ) = RecipeLoader._convert_v1_to_v2(recipe)
+        return new_recipe
 
     def _read(self):
         new_values = json.load(open(self.file_path, "r"))
@@ -204,14 +240,16 @@ class RecipeLoader(object):
 
         if (
             "format_version" not in recipe_data
-            or recipe_data["format_version"] != self.latest_version
+            or recipe_data["format_version"] != self.current_version
         ):
-            format_version = (
+            input_format_version = (
                 recipe_data["format_version"]
                 if "format_version" in recipe_data
                 else "1.0"
             )
-            recipe_data = RecipeLoader._migrate_version(recipe_data, format_version)
+            recipe_data = RecipeLoader._migrate_version(
+                recipe_data, input_format_version, self.current_version
+            )
 
         # TODO: request any external data before returning
         if "objects" in recipe_data:
@@ -238,7 +276,7 @@ class RecipeLoader(object):
         autopack.current_recipe_path = self.file_path
         if (
             "format_version" not in recipe_data
-            or recipe_data["format_version"] != self.latest_version
+            or recipe_data["format_version"] != self.current_version
         ):
             recipe_data = RecipeLoader._migrate_version(recipe_data)
 

@@ -109,8 +109,8 @@ class Ingredient(Agent):
         - an optional pdb ID
         - an optional packing priority. If omitted the priority will be based
         on the radius with larger radii first
-        ham here: (-)packing_priority object will pack from high to low one at a time
-        (+)packing_priority will be weighted by assigned priority value
+        ham here: (-)priority object will pack from high to low one at a time
+        (+)priority will be weighted by assigned priority value
         (0)packignPriority will be weighted by complexity and appended to what is left
         of the (+) values
         - an optional principal vector used to align the ingredient
@@ -144,7 +144,7 @@ class Ingredient(Agent):
         "orient_bias_range",
         "overwrite_distance_function",
         "packing_mode",
-        "packing_priority",
+        "priority",
         "partners",
         "perturb_axis_amplitude",
         "place_type",
@@ -180,7 +180,7 @@ class Ingredient(Agent):
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
         packing_mode="random",
-        packing_priority=0,
+        priority=0,
         partners=None,
         perturb_axis_amplitude=0.1,
         place_type="jitter",
@@ -213,11 +213,11 @@ class Ingredient(Agent):
 
         self.molarity = molarity
         self.count = count
-        self.packing_priority = packing_priority
+        self.priority = priority
         self.log.info(
-            "packing_priority %d,  self.packing_priority %r",
-            packing_priority,
-            self.packing_priority,
+            "priority %d,  self.priority %r",
+            priority,
+            self.priority,
         )
         if name is None:
             name = "%f" % molarity
@@ -487,7 +487,7 @@ class Ingredient(Agent):
         if "molarity" in kw:
             self.molarity = kw["molarity"]
         if "priority" in kw:
-            self.packing_priority = kw["priority"]
+            self.priority = kw["priority"]
         if "packing_mode" in kw:
             self.packing_mode = kw["packing_mode"]
         if "compMask" in kw:
