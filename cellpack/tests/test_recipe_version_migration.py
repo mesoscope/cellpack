@@ -316,7 +316,7 @@ def test_convert_v1_to_v2(
             old_recipe_test_data,
             {
                 "version": "1.0",
-                "format_version": "2.0.0",
+                "format_version": "2.0",
                 "name": "test_recipe",
                 "bounding_box": [[0, 0, 0], [1000, 1000, 1000]],
                 "objects": {

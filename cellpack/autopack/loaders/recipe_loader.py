@@ -17,7 +17,7 @@ from .v1_v2_attribute_changes import (
 )
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
-CURRENT_VERSION = "2.0.0"
+CURRENT_VERSION = "2.0"
 
 
 class RecipeLoader(object):
@@ -222,7 +222,7 @@ class RecipeLoader(object):
     @staticmethod
     def _migrate_version(recipe, current_version, format_version="1.0"):
         new_recipe = {}
-        if format_version == "1.0" or format_version == "1.0.0":
+        if format_version == "1.0":
             new_recipe["version"] = recipe["recipe"]["version"]
             new_recipe["format_version"] = current_version
             new_recipe["name"] = recipe["recipe"]["name"]
