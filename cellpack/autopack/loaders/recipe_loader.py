@@ -193,7 +193,8 @@ class RecipeLoader(object):
         new_ingredient["representations"] = RecipeLoader._convert_to_representations(
             old_ingredient
         )
-
+        if new_ingredient["type"] == "SingleSphere":  # TODO: change this to lower case
+            new_ingredient["radius"] = old_ingredient["radii"][0][0]
         return new_ingredient
 
     @staticmethod
@@ -234,12 +235,13 @@ class RecipeLoader(object):
                 )
         return objects_dict, composition
 
-    @staticmethod
-    def _migrate_version(recipe, current_version, format_version="1.0"):
+    def _migrate_version(self, recipe, format_version="1.0"):
         new_recipe = {}
+
         if format_version == "1.0":
+
             new_recipe["version"] = recipe["recipe"]["version"]
-            new_recipe["format_version"] = current_version
+            new_recipe["format_version"] = self.current_version
             new_recipe["name"] = recipe["recipe"]["name"]
             new_recipe["bounding_box"] = recipe["options"]["boundingBox"]
             (
@@ -252,7 +254,6 @@ class RecipeLoader(object):
         new_values = json.load(open(self.file_path, "r"))
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
-
         if (
             "format_version" not in recipe_data
             or recipe_data["format_version"] != self.current_version
@@ -262,8 +263,8 @@ class RecipeLoader(object):
                 if "format_version" in recipe_data
                 else "1.0"
             )
-            recipe_data = RecipeLoader._migrate_version(
-                recipe_data, input_format_version, self.current_version
+            recipe_data = self._migrate_version(
+                recipe_data, input_format_version
             )
 
         # TODO: request any external data before returning

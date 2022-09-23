@@ -111,6 +111,8 @@ class simulariumHelper(hostHelper.Helper):
 
     @staticmethod
     def format_rgb_color(color):
+        if color is None:
+            return
         need_to_divide = False
         for ele in color:
             if ele > 1:
@@ -448,7 +450,9 @@ class simulariumHelper(hostHelper.Helper):
                     name=ingr_name,
                     display_type=display_type,
                     url=url,
-                    color=simulariumHelper.format_rgb_color(ingredient.color),
+                    color=simulariumHelper.format_rgb_color(
+                        ingredient.color
+                    ),
                 )
 
             radius = ingredient.encapsulating_radius if ingredient is not None else 10

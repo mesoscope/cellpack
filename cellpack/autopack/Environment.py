@@ -1050,6 +1050,13 @@ class Environment(CompartmentList):
                 GrowIngredient.ARGUMENTS, **arguments
             )
             ingr = ActinIngredient(**arguments)
+        else:
+            radius = arguments["radius"]
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
+            ingr = SingleSphereIngr(radius, **arguments)
+
         if (
             "gradient" in arguments
             and arguments["gradient"] != ""
