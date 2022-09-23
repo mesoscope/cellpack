@@ -54,8 +54,6 @@ from random import uniform, gauss, random
 from time import time
 import math
 
-from cellpack.autopack.interface_objects.representations import Representations
-
 from .utils import (
     ApplyMatrix,
     getNormedVectorOnes,
@@ -176,7 +174,7 @@ class Ingredient(Agent):
         molarity=0.0,
         name=None,
         jitter_attempts=5,
-        offset=None,
+        offset=[0, 0, 0],
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
         packing_mode="random",
@@ -226,12 +224,8 @@ class Ingredient(Agent):
         self.o_name = str(name)
         self.type = type
         self.mesh = None
-        if representations is not None:
-            self.representations = Representations(
-                mesh=representations.get("mesh", None),
-                atomic=representations.get("atomic", None),
-                packing=representations.get("packing", None),
-            )
+        self.representations = representations
+
         self.offset = offset
         self.color = color  # color used for sphere display
         if self.color == "None":
@@ -479,22 +473,6 @@ class Ingredient(Agent):
             shape
         )  # ,TransformState.makePos(Point3(0, 0, 0)))#, pMat)#TransformState.makePos(Point3(jtrans[0],jtrans[1],jtrans[2])))#rotation ?
         return inodenp
-
-    def Set(self, **kw):
-        self.count = 0
-        if "count" in kw:
-            self.count = int(kw["count"])
-        if "molarity" in kw:
-            self.molarity = kw["molarity"]
-        if "priority" in kw:
-            self.packing_priority = kw["priority"]
-        if "packing_mode" in kw:
-            self.packing_mode = kw["packing_mode"]
-        if "compMask" in kw:
-            if type(kw["compMask"]) is str:
-                self.compMask = eval(kw["compMask"])
-            else:
-                self.compMask = kw["compMask"]
 
     def getEncapsulatingRadius(self, mesh=None):
         if self.vertices is None or not len(self.vertices):

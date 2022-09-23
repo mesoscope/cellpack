@@ -1,3 +1,4 @@
+from math import sqrt
 import cellpack.autopack as autopack
 import numpy as np
 
@@ -17,6 +18,12 @@ class Representations:
         self.atomic = atomic
         self.packing = packing
         self.active = None
+        if self.packing is not None:
+            # self.packing = {
+            #     "radii": [[r]],
+            #     "positions": [[x, y, x]],
+            # }
+            self.set_sphere_positions()
 
     @staticmethod
     def _read_sphere_file(file):
@@ -64,7 +71,7 @@ class Representations:
         # we ignore the hierarchy for now
         return centers, radii
 
-    def get_spheres(self):
+    def _get_spheres(self):
         if "path" in self.packing:
             sphere_file = f"{self.packing['path']}/{self.packing['name']}"
             sphere_file_path = autopack.retrieveFile(
@@ -76,6 +83,7 @@ class Representations:
             ) = Representations._read_sphere_file(sphere_file_path)
             self.packing["positions"] = positions
             self.packing["radii"] = radii
+        # can be passed in directly, or they were just read from a file
         positions = self.packing["positions"]
         radii = self.packing["radii"]
         if positions is None or positions[0] is None or positions[0][0] is None:
@@ -139,3 +147,33 @@ class Representations:
         rot_mat = np.array(rotation[0:3, 0:3])
         adj_offset = np.matmul(rot_mat, offset)
         return position - adj_offset
+
+    def set_sphere_positions(self):
+        positions, radii = self._get_spheres()
+        packing = self.packing
+        packing["radii"] = radii
+        packing["positions"] = positions
+
+    def get_radii(self):
+        if "radii" not in self.packing:
+            raise ValueError("expected to have radii")
+        return self.packing["radii"]
+
+    def get_positions(self):
+        if "positions" not in self.packing:
+            raise ValueError("expected to have positions")
+        return self.packing["positions"]
+
+    def get_deepest_level(self):
+        radii = self.get_radii()
+        return len(radii) - 1
+
+    def get_min_max_radius(self):
+        radii = self.get_radii()
+        r_max_level_zero = max(radii[0])
+        positions = self.get_positions()
+        delta = np.array(positions[0])
+        r_max = sqrt(max(np.sum(delta * delta, 1)))
+        r_max = max(r_max, r_max_level_zero)
+        r_min = min(min(radii))
+        return r_min, r_max

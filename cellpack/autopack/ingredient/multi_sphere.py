@@ -1,6 +1,6 @@
 from panda3d.core import Point3, TransformState
 from panda3d.bullet import BulletSphereShape, BulletRigidBodyNode
-from math import pi, sqrt
+from math import pi
 import numpy
 
 from .Ingredient import Ingredient
@@ -17,41 +17,29 @@ class MultiSphereIngr(Ingredient):
 
     def __init__(
         self,
+        representations,  # required because the representations.packing dictionary will have the spheres
         color=None,
-        coordsystem="right",
         count=0,
         cutoff_boundary=None,
         cutoff_surface=None,
-        excluded_partners_name=None,
-        gradient="",
+        gradient=None,
         is_attractor=False,
         max_jitter=(1, 1, 1),
-        meshFile=None,
-        meshName="",
-        meshObject=None,
-        meshType="file",
         molarity=0.0,
         name=None,
         jitter_attempts=5,
-        offset=None,
+        offset=[0, 0, 0],
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
-        packing=None,
+        packing_mode="random",
         packing_priority=0,
-        partners_name=None,
-        partners_position=None,
-        pdb=None,
+        partners=None,
         perturb_axis_amplitude=0.1,
         place_type="jitter",
         principal_vector=(1, 0, 0),
-        proba_binding=0.5,
-        proba_not_binding=0.5,
-        properties=None,
-        representations=None,
         rejection_threshold=30,
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=0,
-        source=None,
         type="MultiSphere",
         use_orient_bias=False,
         use_rotation_axis=True,
@@ -60,35 +48,25 @@ class MultiSphereIngr(Ingredient):
         super().__init__(
             color=color,
             cutoff_boundary=cutoff_boundary,
-            coordsystem=coordsystem,
             count=count,
             cutoff_surface=cutoff_surface,
-            excluded_partners_name=excluded_partners_name,
             gradient=gradient,
             is_attractor=is_attractor,
             max_jitter=max_jitter,
-            meshFile=meshFile,
-            meshName=meshName,
-            meshObject=meshObject,
-            meshType=meshType,
             molarity=molarity,
             name=name,
             jitter_attempts=jitter_attempts,
             offset=offset,
             orient_bias_range=orient_bias_range,
+            packing_mode=packing_mode,
             packing_priority=packing_priority,
-            partners_name=partners_name,
-            partners_position=partners_position,
-            pdb=pdb,
+            partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
             place_type=place_type,
             principal_vector=principal_vector,
-            proba_binding=proba_binding,
-            proba_not_binding=proba_not_binding,  # chance to actually not bind
-            properties=properties,
+            representations=representations,
             rotation_axis=rotation_axis,
             rotation_range=rotation_range,
-            source=source,
             type=type,
             use_orient_bias=use_orient_bias,
             use_rotation_axis=use_rotation_axis,
@@ -96,41 +74,15 @@ class MultiSphereIngr(Ingredient):
         )
         self.name = name
 
-        positions, radii = self.representations.get_spheres()
-        self.set_sphere_positions(positions, radii)
+        self.radii = self.representations.get_radii()
+        self.positions = self.representations.get_positions()
+        self.deepest_level = self.representations.get_deepest_level()
+        (
+            self.min_radius,
+            self.encapsulating_radius,
+        ) = self.representations.get_min_max_radius()
         if name is None:
-            name = "%s_%f" % (str(radii), molarity)
-
-    def set_sphere_positions(self, positions, radii):
-        # positions and radii are passed to the constructor
-        # check the format old nested array, new array of dictionary
-        nLOD = 0
-        if positions is not None:
-            nLOD = len(positions)
-        if positions is not None and isinstance(positions[0], dict):
-            for i in range(nLOD):
-                c = numpy.array(positions[i]["coords"])
-                n = int(len(c) / 3)
-                self.positions.append(c.reshape((n, 3)).tolist())
-                self.radii.append(radii[i]["radii"])
-            if len(self.radii) == 0:
-                self.radii = [[10]]  # some default value ?
-                self.positions = [[[0, 0, 0]]]
-            self.deepest_level = len(radii) - 1
-        else:  # regular nested
-            if radii is not None:
-                delta = numpy.array(positions[0])
-                rM = sqrt(max(numpy.sum(delta * delta, 1)))
-                self.encapsulating_radius = max(rM, self.encapsulating_radius)
-            if radii is not None:
-                self.deepest_level = len(radii) - 1
-            self.radii = radii
-            self.positions = positions
-        self.min_radius = min(min(self.radii))
-        if self.encapsulating_radius <= 0.0 or self.encapsulating_radius < max(
-            self.radii[0]
-        ):
-            self.encapsulating_radius = max(self.radii[0])  #
+            name = "%s_%f" % (str(self.radii), molarity)
 
     def collision_jitter(
         self,

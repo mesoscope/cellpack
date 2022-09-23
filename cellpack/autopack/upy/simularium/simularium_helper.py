@@ -109,6 +109,16 @@ class simulariumHelper(hostHelper.Helper):
         self.hext = "dae"
         self.max_fiber_length = 0
 
+    @staticmethod
+    def format_rgb_color(color):
+        need_to_divide = False
+        for ele in color:
+            if ele > 1:
+                need_to_divide = True
+        if need_to_divide:
+            color = np.array(color) / 255
+        return matplotlib.colors.to_hex(color)
+
     def clear(self):
         self.scene = {}
         self.time = -1
@@ -432,14 +442,13 @@ class simulariumHelper(hostHelper.Helper):
                 if ingredient.nbCurve > self.max_fiber_length:
                     self.max_fiber_length = ingredient.nbCurve
                 sub_points = ingredient.listePtLinear
-
             if ingr_name not in self.display_data:
                 display_type, url = self.get_display_data(ingredient)
                 self.display_data[ingredient.name] = DisplayData(
                     name=ingr_name,
                     display_type=display_type,
                     url=url,
-                    color=matplotlib.colors.to_hex(np.array(ingredient.color) / 255),
+                    color=simulariumHelper.format_rgb_color(ingredient.color),
                 )
 
             radius = ingredient.encapsulating_radius if ingredient is not None else 10

@@ -317,20 +317,15 @@ class Environment(CompartmentList):
         ).items():  # check if entry in compositions has regions
             recipe = Recipe(name=f"{compartment_key}_{region_name}")
             for key_or_dict in obj_keys:
-                if not isinstance(key_or_dict, dict):
+                is_key, composition_info = RecipeLoader.is_key(
+                    key_or_dict, composition_dict
+                )
+                if is_key and key_or_dict in self.compartment_keys:
                     key = key_or_dict
-                    if key in self.compartment_keys:
-                        # deal with compartment
-                        return self._step_down(key)
-                    else:
-                        composition_info = composition_dict[key]
-                        ingredient_info = self._prep_ingredient_info(
-                            composition_info, key
-                        )
-                        self.create_ingredient(recipe, ingredient_info)
+                    self._step_down(key)
                 else:
-                    composition_info = key_or_dict
-                    ingredient_info = self._prep_ingredient_info(composition_info)
+                    key = key_or_dict if is_key else None
+                    ingredient_info = self._prep_ingredient_info(composition_info, key)
                     self.create_ingredient(recipe, ingredient_info)
             if region_name == "surface":
                 compartment.setSurfaceRecipe(recipe)
@@ -352,22 +347,19 @@ class Environment(CompartmentList):
                 "regions", {}
             ).items():  # check if entry in compositions has regions
                 for key_or_dict in obj_keys:
-                    if not isinstance(key_or_dict, dict):
-
+                    is_key, composition_info = RecipeLoader.is_key(
+                        key_or_dict, composition_dict
+                    )
+                    if is_key and key_or_dict in self.compartment_keys:
+                        # key is pointing to another container
                         key = key_or_dict
-                        if key in self.compartment_keys:
-                            return self._step_down(key)
-
-                        else:
-                            composition_info = composition_dict[key]
-                            ingredient_info = self._prep_ingredient_info(
-                                composition_info, key
-                            )
-                            self.create_ingredient(external_recipe, **ingredient_info)
+                        self._step_down(key)
                     else:
-                        composition_info = key_or_dict
-                        ingredient_info = self._prep_ingredient_info(composition_info)
-                        self.create_ingredient(external_recipe, **ingredient_info)
+                        key = key_or_dict if is_key else None
+                        ingredient_info = self._prep_ingredient_info(
+                            composition_info, key
+                        )
+                        self.create_ingredient(external_recipe, ingredient_info)
             self.setExteriorRecipe(external_recipe)
 
         if "gradients" in self.recipe_data:
@@ -1018,7 +1010,7 @@ class Environment(CompartmentList):
                 filename=ref_obj, vertices=vertices, faces=faces, vnormals=vnormals
             )
 
-    def create_ingredient(self, recipe, **arguments):
+    def create_ingredient(self, recipe, arguments):
         ingredient_type = arguments["type"]
 
         if ingredient_type == "single_sphere":
@@ -2296,25 +2288,9 @@ class Environment(CompartmentList):
                     previousThresh = np + float(previousThresh)
                 self.activeIngr = self.activeIngr0 + self.activeIngr12
             if dump and ((time() - stime) > dump_freq):
-                self.collectResultPerIngredient()
+                # self.collectResultPerIngredient()
                 print("SAVING", self.resultfile)
-                IOutils.save(
-                    self,
-                    self.resultfile + "_temporaray.json",
-                    useXref=True,
-                    kwds=["source", "name", "positions", "radii"],
-                    result=True,
-                    quaternion=True,
-                )
-                IOutils.save(
-                    self,
-                    self.resultfile + "_temporaray_transpose.json",
-                    useXref=True,
-                    kwds=["source", "name", "positions", "radii"],
-                    result=True,
-                    quaternion=True,
-                    transpose=True,
-                )
+                # TODO: save out intermediate simularium files
                 stime = time()
 
         self.distancesAfterFill = distances[:]

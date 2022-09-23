@@ -14,6 +14,7 @@ from .v1_v2_attribute_changes import (
     unused_attributes_list,
     convert_to_partners_map,
 )
+from cellpack.autopack.interface_objects.representations import Representations
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
@@ -34,6 +35,20 @@ class RecipeLoader(object):
         self.compartment_list = []
         autopack.current_recipe_path = os.path.dirname(self.file_path)
         self.recipe_data = self._read()
+
+    @staticmethod
+    def is_key(key_or_dict, composition_dict):
+        """
+        Helper function to find if data in composition list
+        is a key or an object
+        """
+        is_key = not isinstance(key_or_dict, dict)
+        if is_key:
+            key = key_or_dict
+            composition_info = composition_dict[key]
+        else:
+            composition_info = key_or_dict
+        return is_key, composition_info
 
     @staticmethod
     def create_output_dir(out_base_folder, recipe_name, sub_dir=None):
@@ -206,19 +221,25 @@ class RecipeLoader(object):
             "format_version" not in recipe_data
             or recipe_data["format_version"] != self.latest_version
         ):
-            format_version = (
+            input_format_version = (
                 recipe_data["format_version"]
                 if "format_version" in recipe_data
                 else "1.0"
             )
-            recipe_data = RecipeLoader._migrate_version(recipe_data, format_version)
+            recipe_data = RecipeLoader._migrate_version(recipe_data, input_format_version)
 
         # TODO: request any external data before returning
         if "objects" in recipe_data:
             recipe_data["objects"] = RecipeLoader.resolve_inheritance(
                 recipe_data["objects"]
             )
-
+            for _, obj in recipe_data["objects"].items():
+                reps = obj["representations"] if "representations" in obj else {}
+                obj["representations"] = Representations(
+                    mesh=reps.get("mesh", None),
+                    atomic=reps.get("atomic", None),
+                    packing=reps.get("packing", None),
+                )
         return recipe_data
 
     def _load_json(self):

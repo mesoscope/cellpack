@@ -58,9 +58,7 @@
             ],
             "perturb_axis_amplitude": 0.1,
             "encapsulating_radius": 100,
-            "packing": {
-                "mode": "random"
-            },
+            "packing_mode": "random",
             "principal_vector": [
                 0,
                 0,
