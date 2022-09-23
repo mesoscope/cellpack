@@ -1019,7 +1019,6 @@ class Compartment(CompartmentList):
         grid_pts_in_sphere_indexes = env.grid.getPointsInSphere(
             self.position, self.radius
         )  # This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.
-        b = []
         env.grid.compartment_ids[grid_pts_in_sphere_indexes] = -self.number
         self.surfacePointsCoords = None
         vSurfaceArea = 4 * math.pi * self.radius**2
@@ -1036,7 +1035,6 @@ class Compartment(CompartmentList):
         a = env.grid.getPointsInCube(
             self.bb, None, None
         )  # This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.
-        b = []
         env.grid.compartment_ids[a] = -self.number
         self.surfacePointsCoords = None
         bb0x, bb0y, bb0z = self.bb[0]
@@ -1571,7 +1569,6 @@ class Compartment(CompartmentList):
             :
         ]  # Should be able to use self.ogsurfacePoints and collect faces too from above
         normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
-        vSurfaceArea = sum(areas)
 
         srfPts = self.ogsurfacePoints
         self.OGsrfPtsBht = spatial.cKDTree(tuple(srfPts), leafsize=10)
@@ -1945,8 +1942,6 @@ class Compartment(CompartmentList):
             self.faces
         )  # Should be able to use self.ogsurfacePoints and collect faces too from above
         normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
-        vSurfaceArea = sum(areas)
-        print("time to create surface points", time() - t1, len(self.ogsurfacePoints))
 
         distances = env.grid.distToClosestSurf
         idarray = env.grid.compartment_ids
@@ -2075,7 +2070,6 @@ class Compartment(CompartmentList):
         vertices = self.vertices
         faces = self.faces
         normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
-        vSurfaceArea = sum(areas)
         #        labels = numpy.ones(len(faces), 'i')
 
         # FIXME .. dimensions on SDF should addapt to compartment size

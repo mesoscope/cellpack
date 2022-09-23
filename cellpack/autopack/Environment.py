@@ -67,7 +67,6 @@ from panda3d.core import Mat3, Mat4, Vec3, BitMask32, NodePath
 from panda3d.bullet import BulletRigidBodyNode
 
 import cellpack.autopack as autopack
-from cellpack.autopack.Grid import Grid
 from cellpack.autopack.MeshStore import MeshStore
 from cellpack.autopack.ingredient import Ingredient
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
