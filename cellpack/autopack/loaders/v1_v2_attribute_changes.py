@@ -1,3 +1,5 @@
+from enum import Enum 
+
 v1_to_v2_name_map = {
     "Type": "type",
     "distExpression": "distance_expression",
@@ -40,3 +42,19 @@ attributes_move_to_composition = [
     "molarity",
     "priority",
 ]
+
+class ingredient_types(Enum):
+    SINGLE_SPHERE = "SingleSphere"
+    MULTI_SPHERE = "MultiSphere"
+    SINGLE_CUBE = "SingleCube"
+    SINGLE_CYLINDER = "SingleCylinder"
+    MULTI_CYLINDER = "MultiCylinder"
+    GROW = "Grow"
+
+    def convert(str):
+        for typeValue in ingredient_types:
+            if str == typeValue.value:
+                return typeValue
+
+    def get_key_name(self):
+        return self.name.lower()
