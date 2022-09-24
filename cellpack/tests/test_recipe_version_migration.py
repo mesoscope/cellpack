@@ -152,20 +152,23 @@ def test_create_packing_atomic_representation(
                 "encapsulatingRadius": 100,
                 "orientBiasRotRangeMax": 12,
                 "proba_binding": 0.5,
+                "Type": "MultiSphere"
             },
             {
                 "count": 15,
                 "orient_bias_range": [-pi, 12],
                 "representations": RecipeLoader.default_values["representations"],
                 "partners": {"probability_binding": 0.5},
+                "type": "multi_sphere"
             },
         ),
         (
-            {"nbMol": 15, "encapsulatingRadius": 100, "orientBiasRotRangeMin": 6},
+            {"nbMol": 15, "encapsulatingRadius": 100, "orientBiasRotRangeMin": 6, "Type": "Grow"},
             {
                 "count": 15,
                 "orient_bias_range": [6, pi],
                 "representations": RecipeLoader.default_values["representations"],
+                "type": "grow",
             },
         ),
         (
@@ -238,7 +241,7 @@ def test_get_v1_ingredient():
     region_list = []
     objects_dict = {}
     expected_object_data = {
-        "type": "SingleSphere",
+        "type": "single_sphere",
         "representations": RecipeLoader.default_values["representations"],
         "orient_bias_range": [6, 12],
     }
@@ -261,7 +264,7 @@ def test_get_v1_ingredient():
             old_recipe_test_data,
             {
                 "A": {
-                    "type": "SingleSphere",
+                    "type": "single_sphere",
                     "representations": RecipeLoader.default_values["representations"],
                     "orient_bias_range": [6, 12],
                 },
@@ -305,10 +308,6 @@ def test_convert_v1_to_v2(
     assert objects_dict == expected_object_dict
     assert composition == expected_composition_dict
 
-
-# format_version = "1.0"
-
-
 @pytest.mark.parametrize(
     "old_recipe_test_data, expected_header_data",
     [
@@ -321,7 +320,7 @@ def test_convert_v1_to_v2(
                 "bounding_box": [[0, 0, 0], [1000, 1000, 1000]],
                 "objects": {
                     "A": {
-                        "type": "SingleSphere",
+                        "type": "single_sphere",
                         "representations": RecipeLoader.default_values[
                             "representations"
                         ],
