@@ -183,13 +183,13 @@ class Compartment(CompartmentList):
         # not the one provides
         # to compute inside points.
         self.is_sphere = object_info["type"] == "single_sphere"
-        self.isBox = (
+        self.is_box = (
             "bounding_box" in object_info and object_info["bounding_box"] is not None
         )
         self.bounding_box = (
             object_info["bounding_box"] if "bounding_box" in object_info else None
         )
-        self.isOrthogonalBoundingBox = 1 if "bounding_box" in object_info else None
+        self.is_orthogonal_bounding_box = 1 if "bounding_box" in object_info else None
 
         self.grid_type = "regular"
         self.grid_distances = None  # signed closest distance for each point
@@ -243,7 +243,7 @@ class Compartment(CompartmentList):
 
     def _get_volume(self, mesh_store):
         if self.is_sphere:
-            return 4 * math.pi * self.radius**2
+            return 4 * math.pi * self.radius**3 / 3
 
     def initialize_shape(self, mesh_store):
         if self.is_sphere:
@@ -876,7 +876,7 @@ class Compartment(CompartmentList):
             return False
 
     def BuildGrid(self, env, mesh_store=None):
-        if self.isOrthogonalBoundingBox == 1:
+        if self.is_orthogonal_bounding_box == 1:
             self.prepare_buildgrid_box(env)
         if self.ghost:
             return
@@ -889,7 +889,7 @@ class Compartment(CompartmentList):
 
         normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
         vSurfaceArea = sum(areas)
-        if self.isBox:
+        if self.is_box:
             self.overwriteSurfacePts = True
             self.BuildGrid_box(env, vSurfaceArea)
             return self.insidePoints, self.surfacePoints
@@ -929,12 +929,12 @@ class Compartment(CompartmentList):
         # )
         # compartment_ids[indexes_of_grid_surface_points] = self.number
         if (
-            env.innerGridMethod == "sdf" and self.isOrthogonalBoundingBox != 1
+            env.innerGridMethod == "sdf" and self.is_orthogonal_bounding_box != 1
         ):  # A fillSelection can now be a mesh too... it can use either of these methods
             inside_points, surface_points = self.BuildGrid_utsdf(
                 env
             )  # to make the outer most selection from the master and then the compartment
-        elif env.innerGridMethod == "bhtree" and self.isOrthogonalBoundingBox != 1:
+        elif env.innerGridMethod == "bhtree" and self.is_orthogonal_bounding_box != 1:
             inside_points, surface_points = self.BuildGrid_bhtree(
                 env,
                 ctree,
@@ -947,7 +947,7 @@ class Compartment(CompartmentList):
                 distances,
             )
         elif (
-            env.innerGridMethod == "raytrace" and self.isOrthogonalBoundingBox != 1
+            env.innerGridMethod == "raytrace" and self.is_orthogonal_bounding_box != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_ray(
                 env,
@@ -958,7 +958,7 @@ class Compartment(CompartmentList):
                 mesh_store,
             )
         elif (
-            env.innerGridMethod == "pyray" and self.isOrthogonalBoundingBox != 1
+            env.innerGridMethod == "pyray" and self.is_orthogonal_bounding_box != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_pyray(
                 env,
@@ -971,11 +971,11 @@ class Compartment(CompartmentList):
                 compartment_ids,
             )
         elif (
-            env.innerGridMethod == "floodfill" and self.isOrthogonalBoundingBox != 1
+            env.innerGridMethod == "floodfill" and self.is_orthogonal_bounding_box != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_kevin(env)
         elif (
-            env.innerGridMethod == "binvox" and self.isOrthogonalBoundingBox != 1
+            env.innerGridMethod == "binvox" and self.is_orthogonal_bounding_box != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_binvox(
                 env,
@@ -985,7 +985,7 @@ class Compartment(CompartmentList):
                 compartment_ids,
             )
         elif (
-            env.innerGridMethod == "trimesh" and self.isOrthogonalBoundingBox != 1
+            env.innerGridMethod == "trimesh" and self.is_orthogonal_bounding_box != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_trimesh(
                 env,
@@ -996,7 +996,7 @@ class Compartment(CompartmentList):
                 mesh_store,
             )
         elif (
-            env.innerGridMethod == "scanline" and self.isOrthogonalBoundingBox != 1
+            env.innerGridMethod == "scanline" and self.is_orthogonal_bounding_box != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_scanline(
                 env,
@@ -1362,7 +1362,7 @@ class Compartment(CompartmentList):
         self, env, ctree, distances, grdPos, diag, vSurfaceArea, srfPts, idarray, ray=1
     ):
 
-        if self.isBox:
+        if self.is_box:
             nbGridPoints = len(env.grid.masterGridPositions)
             insidePoints = env.grid.getPointsInCube(self.bb, None, None, addSP=False)
             for p in insidePoints:
