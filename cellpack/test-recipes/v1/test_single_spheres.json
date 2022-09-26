@@ -1,0 +1,64 @@
+{
+    "recipe": {
+        "version": "1.0",
+        "name": "test_recipe"
+    },
+    "options": {
+        "windowsSize": 10,
+        "boundingBox": [
+            [
+                0,
+                0,
+                0
+            ],
+            [
+                1000,
+                1000,
+                1000
+            ]
+        ]
+    },
+    "cytoplasme": {
+        "ingredients": {
+            "A": {
+                "Type": "SingleSphere",
+                "nbMol": 15,
+                "meshType": "file",
+                "properties": {},
+                "orientBiasRotRangeMin": 6,
+                "orientBiasRotRangeMax": 12,
+                "radii": [
+                    [
+                        10
+                    ]
+                ]
+            },
+            "B": {
+                "Type": "SingleSphere",
+                "packingMode": "random",
+                "packingPriority": 0,
+                "encapsulatingRadius": 100,
+                "name": "Sphere_radius_100",
+                "orientBiasRotRangeMin": 6,
+                "radii": [
+                    [
+                        12
+                    ]
+                ]
+            },
+            "C": {
+                "Type": "SingleSphere",
+                "packingPriority": 0,
+                "proba_binding": 0.5,
+                "name": "Sphere_radius_200",
+                "orientBiasRotRangeMax": 12,
+                "sphereFile": "/fibrinogen.sph",
+                "radii": [
+                    [
+                        100
+                    ]
+                ]
+            }
+        }
+    }
+}

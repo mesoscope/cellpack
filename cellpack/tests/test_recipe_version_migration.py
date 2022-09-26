@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from math import pi
-import pytest
-
 """
 Docs: https://docs.pytest.org/en/latest/example/simple.html
     https://docs.pytest.org/en/latest/plugins.html#requiring-loading-plugins-in-a-test-module-or-conftest-file
 """
+from math import pi
+import pytest
 
-from cellpack.autopack.loaders.recipe_loader import CURRENT_VERSION, RecipeLoader
+from cellpack.autopack.interface_objects.representations import Representations
+from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 
 @pytest.mark.parametrize(
@@ -148,12 +148,16 @@ def test_create_packing_atomic_representation(
     [
         (
             {
+                "Type": "SingleSphere",
+                "radii": [[10]],
                 "nbMol": 15,
                 "encapsulatingRadius": 100,
                 "orientBiasRotRangeMax": 12,
                 "proba_binding": 0.5,
             },
             {
+                "type": "SingleSphere",
+                "radius": 10,
                 "count": 15,
                 "orient_bias_range": [-pi, 12],
                 "representations": RecipeLoader.default_values["representations"],
@@ -161,8 +165,16 @@ def test_create_packing_atomic_representation(
             },
         ),
         (
-            {"nbMol": 15, "encapsulatingRadius": 100, "orientBiasRotRangeMin": 6},
             {
+                "Type": "SingleSphere",
+                "radii": [[1]],
+                "nbMol": 15,
+                "encapsulatingRadius": 100,
+                "orientBiasRotRangeMin": 6,
+            },
+            {
+                "type": "SingleSphere",
+                "radius": 1,
                 "count": 15,
                 "orient_bias_range": [6, pi],
                 "representations": RecipeLoader.default_values["representations"],
@@ -170,6 +182,8 @@ def test_create_packing_atomic_representation(
         ),
         (
             {
+                "Type": "SingleSphere",
+                "radii": [[100]],
                 "nbMol": 15,
                 "encapsulatingRadius": 100,
                 "orientBiasRotRangeMin": 6,
@@ -177,6 +191,8 @@ def test_create_packing_atomic_representation(
                 "proba_binding": 0.5,
             },
             {
+                "type": "SingleSphere",
+                "radius": 100,
                 "count": 15,
                 "orient_bias_range": [6, 12],
                 "representations": RecipeLoader.default_values["representations"],
@@ -206,6 +222,7 @@ old_recipe_test_data = {
         "ingredients": {
             "A": {
                 "Type": "SingleSphere",
+                "radii": [[10]],
                 "nbMol": 15,
                 "meshObject": None,
                 "meshType": "file",
@@ -214,6 +231,7 @@ old_recipe_test_data = {
                 "orientBiasRotRangeMax": 12,
             },
             "B": {
+                "radii": [[10]],
                 "packingMode": "random",
                 "packingPriority": 0,
                 "encapsulatingRadius": 100,
@@ -221,6 +239,7 @@ old_recipe_test_data = {
                 "orientBiasRotRangeMin": 6,
             },
             "C": {
+                "radii": [[10]],
                 "packingPriority": 0,
                 "proba_binding": 0.5,
                 "name": "Sphere_radius_200",
@@ -239,6 +258,7 @@ def test_get_v1_ingredient():
     objects_dict = {}
     expected_object_data = {
         "type": "SingleSphere",
+        "radius": 10,
         "representations": RecipeLoader.default_values["representations"],
         "orient_bias_range": [6, 12],
     }
@@ -262,15 +282,20 @@ def test_get_v1_ingredient():
             {
                 "A": {
                     "type": "SingleSphere",
+                    "radius": 10,
                     "representations": RecipeLoader.default_values["representations"],
                     "orient_bias_range": [6, 12],
                 },
                 "B": {
+                    "type": "SingleSphere",
+                    "radius": 10,
                     "packing_mode": "random",
                     "representations": RecipeLoader.default_values["representations"],
                     "orient_bias_range": [6, pi],
                 },
                 "C": {
+                    "type": "SingleSphere",
+                    "radius": 10,
                     "partners": {"probability_binding": 0.5},
                     "orient_bias_range": [-pi, 12],
                     "representations": {
@@ -306,14 +331,13 @@ def test_convert_v1_to_v2(
     assert composition == expected_composition_dict
 
 
-# format_version = "1.0"
-
-
 @pytest.mark.parametrize(
-    "old_recipe_test_data, expected_header_data",
+    "converted_data, expected_data",
     [
         (
-            old_recipe_test_data,
+            RecipeLoader(
+                input_file_path="cellpack/test-recipes/v1/test_single_spheres.json"
+            ).recipe_data,
             {
                 "version": "1.0",
                 "format_version": "2.0",
@@ -322,30 +346,29 @@ def test_convert_v1_to_v2(
                 "objects": {
                     "A": {
                         "type": "SingleSphere",
-                        "representations": RecipeLoader.default_values[
-                            "representations"
-                        ],
+                        "radius": 10,
+                        "representations": Representations(**RecipeLoader.default_values["representations"]),
                         "orient_bias_range": [6, 12],
                     },
                     "B": {
+                        "type": "SingleSphere",
+                        "radius": 12,
                         "packing_mode": "random",
-                        "representations": RecipeLoader.default_values[
-                            "representations"
-                        ],
+                        "representations": Representations(**RecipeLoader.default_values["representations"]),
                         "orient_bias_range": [6, pi],
                     },
                     "C": {
+                        "type": "SingleSphere",
+                        "radius": 100,
                         "partners": {"probability_binding": 0.5},
                         "orient_bias_range": [-pi, 12],
-                        "representations": {
-                            "packing": {
+                        "representations": Representations(
+                            packing={
                                 "name": "fibrinogen.sph",
                                 "format": ".sph",
                                 "path": "/",
-                            },
-                            "atomic": None,
-                            "mesh": None,
-                        },
+                            }
+                        ),
                     },
                 },
                 "composition": {
@@ -363,7 +386,10 @@ def test_convert_v1_to_v2(
         )
     ],
 )
-def test_migrate_version(old_recipe_test_data, expected_header_data):
-    assert expected_header_data == RecipeLoader._migrate_version(
-        old_recipe_test_data, CURRENT_VERSION, format_version="1.0"
-    )
+def test_migrate_version(converted_data, expected_data):
+    assert converted_data["composition"] == expected_data["composition"]
+    assert converted_data["composition"] == expected_data["composition"]
+    assert converted_data["version"] == expected_data["version"]
+    assert converted_data["format_version"] == expected_data["format_version"]
+    assert converted_data["name"] == expected_data["name"]
+    assert converted_data["bounding_box"] == expected_data["bounding_box"]

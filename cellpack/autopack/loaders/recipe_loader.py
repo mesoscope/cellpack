@@ -14,6 +14,7 @@ from .v1_v2_attribute_changes import (
     unused_attributes_list,
     convert_to_partners_map,
     attributes_move_to_composition,
+    required_attributes
 )
 from cellpack.autopack.interface_objects.representations import Representations
 
@@ -198,6 +199,16 @@ class RecipeLoader(object):
         return new_ingredient
 
     @staticmethod
+    def _check_required_attributes(old_ingredient_data):
+        if "Type" not in old_ingredient_data:
+            old_ingredient_data["Type"] = "SingleSphere"
+        ingr_type = old_ingredient_data["Type"]
+        required = required_attributes[ingr_type]
+        for attr in required:
+            if attr not in old_ingredient_data:
+                raise ValueError(f"{ingr_type} data needs {attr}")
+
+    @staticmethod
     def _split_ingredient_data(object_key, ingredient_data):
         composition_info = {"object": object_key}
         object_info = ingredient_data.copy()
@@ -209,6 +220,7 @@ class RecipeLoader(object):
 
     @staticmethod
     def _get_v1_ingredient(ingredient_key, ingredient_data, region_list, objects_dict):
+        RecipeLoader._check_required_attributes(ingredient_data)
         converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
         object_info, composition_info = RecipeLoader._split_ingredient_data(
             ingredient_key, converted_ingredient

@@ -40,3 +40,7 @@ attributes_move_to_composition = [
     "molarity",
     "priority",
 ]
+
+required_attributes = {
+    "SingleSphere": ["radii"]
+}
