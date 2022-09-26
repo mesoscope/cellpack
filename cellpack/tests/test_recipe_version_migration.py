@@ -152,18 +152,23 @@ def test_create_packing_atomic_representation(
                 "encapsulatingRadius": 100,
                 "orientBiasRotRangeMax": 12,
                 "proba_binding": 0.5,
-                "Type": "MultiSphere"
+                "Type": "MultiSphere",
             },
             {
                 "count": 15,
                 "orient_bias_range": [-pi, 12],
                 "representations": RecipeLoader.default_values["representations"],
                 "partners": {"probability_binding": 0.5},
-                "type": "multi_sphere"
+                "type": "multi_sphere",
             },
         ),
         (
-            {"nbMol": 15, "encapsulatingRadius": 100, "orientBiasRotRangeMin": 6, "Type": "Grow"},
+            {
+                "nbMol": 15,
+                "encapsulatingRadius": 100,
+                "orientBiasRotRangeMin": 6,
+                "Type": "Grow",
+            },
             {
                 "count": 15,
                 "orient_bias_range": [6, pi],
@@ -307,6 +312,7 @@ def test_convert_v1_to_v2(
     objects_dict, composition = RecipeLoader._convert_v1_to_v2(old_recipe_test_data)
     assert objects_dict == expected_object_dict
     assert composition == expected_composition_dict
+
 
 @pytest.mark.parametrize(
     "old_recipe_test_data, expected_header_data",

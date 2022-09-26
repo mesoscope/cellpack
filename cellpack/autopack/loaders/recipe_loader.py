@@ -166,10 +166,16 @@ class RecipeLoader(object):
         for attribute in list(old_ingredient):
             if attribute in v1_to_v2_name_map:
                 if attribute == "Type":
-                    converted_value = ingredient_types.convert(old_ingredient[attribute])
-                    new_ingredient[v1_to_v2_name_map[attribute]] = converted_value.get_key_name()
+                    converted_value = ingredient_types.convert(
+                        old_ingredient[attribute]
+                    )
+                    new_ingredient[
+                        v1_to_v2_name_map[attribute]
+                    ] = converted_value.get_key_name()
                 else:
-                    new_ingredient[v1_to_v2_name_map[attribute]] = old_ingredient[attribute]
+                    new_ingredient[v1_to_v2_name_map[attribute]] = old_ingredient[
+                        attribute
+                    ]
             elif attribute in unused_attributes_list:
                 del old_ingredient[attribute]
             elif attribute in convert_to_partners_map:
