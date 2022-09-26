@@ -206,7 +206,6 @@ class RecipeLoader(object):
         new_ingredient["representations"] = RecipeLoader._convert_to_representations(
             old_ingredient
         )
-        print("new_ingredient", new_ingredient)
         return new_ingredient
 
     @staticmethod
