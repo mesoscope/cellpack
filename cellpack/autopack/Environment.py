@@ -1207,7 +1207,7 @@ class Environment(CompartmentList):
         # thread ?
         for compartment in self.compartments:
             self.log.info(
-                f"in Environment, compartment.isOrthogonalBoundingBox={compartment.isOrthogonalBoundingBox}"
+                f"in Environment, compartment.is_orthogonal_bounding_box={compartment.is_orthogonal_bounding_box}"
             )
             (
                 points_inside_compartments,
