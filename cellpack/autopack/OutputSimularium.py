@@ -94,7 +94,7 @@ def ingredientToAsset(ingr_node, compId):
     # proxyname;
     LevelPoints = []
     ingr_source = ingr_node["source"]
-    pcpalVector = ingr_node["principalVector"]
+    pcpalVector = ingr_node["principal_vector"]
     if pcpalVector == [0, 0, 0]:
         pcpalVector = [0, 0, 1]
     offsetnode = ingr_source["transform"]["offset"]
@@ -108,7 +108,7 @@ def ingredientToAsset(ingr_node, compId):
         if compId <= 0:
             offset = offset * -1
     # parse the proxy and create a rigid body asset
-    # check if "Type":"Grow"
+    # check if "type":"Grow"
     # IngredientSphereTree ingr_spheres;
     if ingr_node["ingtype"] == "Grow" or ingr_node["ingtype"] == "fiber":
         pnames_fiber.append(ingr_node["name"])

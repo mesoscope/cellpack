@@ -475,7 +475,6 @@ class AnalyseAP:
                 area = self.g.get_rectangle_cercle_area(
                     rect, m, r, leftBound, rightBound
                 )
-            #                print area,leftBound,rightBound
             else:
                 area = bbox[0][1] ** 2
         return area
@@ -963,33 +962,40 @@ class AnalyseAP:
 
     def build_grid(
         self,
-        bb,
         forceBuild=True,
     ):
         t1 = time()
         gridFileIn = None
         gridFileOut = None
         self.env.buildGrid(
-            boundingBox=bb,
             gridFileIn=gridFileIn,
             rebuild=forceBuild,
             gridFileOut=gridFileOut,
             previousFill=False,
         )
-
         t2 = time()
         gridTime = t2 - t1
         print("time to Build Grid", gridTime)
 
     def pack(
-        self, seed=20, vTestid=3, vAnalysis=0, fbox_bb=None, show_plotly_plot=True
+        self,
+        seed=20,
+        vTestid=3,
+        vAnalysis=0,
+        fbox_bb=None,
+        show_plotly_plot=True,
+        show_grid_spheres=False,
     ):
         if show_plotly_plot:
             self.plotly.update_title(self.env.placeMethod)
 
         t1 = time()
         self.env.pack_grid(
-            seedNum=seed, vTestid=vTestid, vAnalysis=vAnalysis, fbox=fbox_bb
+            seedNum=seed,
+            vTestid=vTestid,
+            vAnalysis=vAnalysis,
+            fbox=fbox_bb,
+            show_grid_spheres=show_grid_spheres,
         )
         t2 = time()
         print("time to run pack_grid", self.env.placeMethod, t2 - t1)
@@ -1057,7 +1063,9 @@ class AnalyseAP:
                     if ingrname not in ingrrot:
                         ingrrot[ingrname] = []
                         ingrpos[ingrname] = []
-                        radius[ingrname] = data[recipe][ingrname]["encapsulatingRadius"]
+                        radius[ingrname] = data[recipe][ingrname][
+                            "encapsulating_radius"
+                        ]
                     ingrrot[ingrname].append(data[recipe][ingrname]["results"][k][1])
                     ingrpos[ingrname].append(data[recipe][ingrname]["results"][k][0])
         for ingr in ingrpos:
@@ -1087,7 +1095,7 @@ class AnalyseAP:
         for i in range(len(self.env.molecules)):
             m = self.env.molecules[i]
             pos.append(numpy.array(m[0]).tolist())
-            s.append(m[2].encapsulatingRadius ** 2)
+            s.append(m[2].encapsulating_radius ** 2)
             c.append(m[2].color)
         fig = plt.figure()
         ax = fig.gca(projection="3d")
@@ -1130,8 +1138,7 @@ class AnalyseAP:
         rdf=True,
         render=False,
         plot=True,
-        show_plotly_plot=True,
-        twod=True,
+        show_grid=True,
         fbox_bb=None,
         use_file=True,
         seeds_i=None,
@@ -1159,7 +1166,6 @@ class AnalyseAP:
         total_positions = []
         total_distances = []
         total_angles = []
-        self.bbox = bbox
         angles = None
         rebuild = True
         for seed_index in range(n):
@@ -1173,15 +1179,16 @@ class AnalyseAP:
             self.env.resultfile = basename
             seed = seeds_i[seed_index]  # int(time())
             self.build_grid(
-                bbox,
                 forceBuild=rebuild,
             )
+            two_d = self.env.is_two_d()
             self.pack(
                 seed=seed,
                 vTestid=seed_index,
                 vAnalysis=1,
                 fbox_bb=fbox_bb,
-                show_plotly_plot=show_plotly_plot,
+                show_plotly_plot=(show_grid and two_d),
+                show_grid_spheres=(show_grid and not two_d),
             )
             self.center = self.env.grid.getCenter()
             if render:
@@ -1189,7 +1196,7 @@ class AnalyseAP:
                 self.helper.render(basename + ".jpg", 640, 480)
                 self.helper.write(basename + ".c4d", [])
             if rdf:
-                if plot and twod:
+                if plot and two_d:
                     width = 1000.0  # should be the boundary here ?
                     fig = pyplot.figure()
                     ax = fig.add_subplot(111)
@@ -1198,12 +1205,20 @@ class AnalyseAP:
                 d = {}
                 if r:
                     for ingr in r.ingredients:
+                        if ingr.color is not None:
+                            color = (
+                                ingr.color
+                                if ingr.color[0] <= 1
+                                else numpy.array(ingr.color) / 255
+                            )
+                        else:
+                            color = None
                         if ingr.name not in distances:
                             distances[ingr.name] = []
                             ingrpositions[ingr.name] = []
                             anglesingr[ingr.name] = []
                             occurences[ingr.name] = []
-                        if ingr.packingMode == "gradient" and self.env.use_gradient:
+                        if ingr.packing_mode == "gradient" and self.env.use_gradient:
                             self.center = center = self.env.gradients[
                                 ingr.gradient
                             ].direction
@@ -1234,25 +1249,25 @@ class AnalyseAP:
                             total_positions.extend(ingrpos)
                             total_distances.extend(d)
 
-                        if plot and twod:
+                        if plot and two_d:
                             for i, p in enumerate(ingrpos):
                                 ax.add_patch(
                                     Circle(
                                         (p[0], p[1]),
-                                        ingr.encapsulatingRadius,
+                                        ingr.encapsulating_radius,
                                         edgecolor="black",
-                                        facecolor=ingr.color,
+                                        facecolor=color,
                                     )
                                 )
                                 #  Plot "image" particles to verify that periodic boundary conditions are working
-                                r = ingr.encapsulatingRadius
+                                r = ingr.encapsulating_radius
                                 if autopack.testPeriodicity:
                                     if p[0] < r:
                                         ax.add_patch(
                                             Circle(
                                                 (p[0] + width, p[1]),
                                                 r,
-                                                facecolor=ingr.color,
+                                                facecolor=color,
                                             )
                                         )
                                     elif p[0] > (width - r):
@@ -1260,7 +1275,7 @@ class AnalyseAP:
                                             Circle(
                                                 (p[0] - width, p[1]),
                                                 r,
-                                                facecolor=ingr.color,
+                                                facecolor=color,
                                             )
                                         )
                                     if p[1] < r:
@@ -1268,7 +1283,7 @@ class AnalyseAP:
                                             Circle(
                                                 (p[0], p[1] + width),
                                                 r,
-                                                facecolor=ingr.color,
+                                                facecolor=color,
                                             )
                                         )
                                     elif p[1] > (width - r):
@@ -1276,12 +1291,12 @@ class AnalyseAP:
                                             Circle(
                                                 (p[0], p[1] - width),
                                                 r,
-                                                facecolor=ingr.color,
+                                                facecolor=color,
                                             )
                                         )
                                 if i == 0:  # len(ingrpos)-1:
                                     continue
-                                if ingr.Type == "Grow":
+                                if ingr.type == "Grow":
                                     pyplot.plot(
                                         [ingrpos[-i][0], ingrpos[-i - 1][0]],
                                         [ingrpos[-i][1], ingrpos[-i - 1][1]],
@@ -1297,9 +1312,9 @@ class AnalyseAP:
                                             ax.add_patch(
                                                 Circle(
                                                     (pt[0], pt[1]),
-                                                    ingr.minRadius,
+                                                    ingr.min_radius,
                                                     edgecolor="black",
-                                                    facecolor=ingr.color,
+                                                    facecolor=color,
                                                 )
                                             )
                 for o in self.env.compartments:
@@ -1310,7 +1325,10 @@ class AnalyseAP:
                                 distances[ingr.name] = []
                                 ingrpositions[ingr.name] = []
                                 occurences[ingr.name] = []
-                            if ingr.packingMode == "gradient" and self.env.use_gradient:
+                            if (
+                                ingr.packing_mode == "gradient"
+                                and self.env.use_gradient
+                            ):
                                 center = self.env.gradients[ingr.gradient].direction
                             ingrpos, d = self.getDistance(ingr.name, center)
                             occurences[ingr.name].append(len(ingrpos))
@@ -1328,12 +1346,12 @@ class AnalyseAP:
                                 ingrpositions[ingr.name].extend(ingrpos)
                                 total_positions.extend(ingrpos)
                                 total_distances.extend(d)
-                            if plot and twod:
+                            if plot and two_d:
                                 for p in ingrpos:
                                     ax.add_patch(
                                         Circle(
                                             (p[0], p[1]),
-                                            ingr.encapsulatingRadius,
+                                            ingr.encapsulating_radius,
                                             edgecolor="black",
                                             facecolor=ingr.color,
                                         )
@@ -1345,7 +1363,10 @@ class AnalyseAP:
                                 distances[ingr.name] = []
                                 ingrpositions[ingr.name] = []
                                 occurences[ingr.name] = []
-                            if ingr.packingMode == "gradient" and self.env.use_gradient:
+                            if (
+                                ingr.packing_mode == "gradient"
+                                and self.env.use_gradient
+                            ):
                                 center = self.env.gradients[ingr.gradient].direction
                             ingrpos, d = self.getDistance(ingr.name, center)
                             occurences[ingr.name].append(len(ingrpos))
@@ -1363,12 +1384,12 @@ class AnalyseAP:
                                 ingrpositions[ingr.name].extend(ingrpos)
                                 total_positions.extend(ingrpos)
                                 total_distances.extend(d)
-                            if plot and twod:
+                            if plot and two_d:
                                 for p in ingrpos:
                                     ax.add_patch(
                                         Circle(
                                             (p[0], p[1]),
-                                            ingr.encapsulatingRadius,
+                                            ingr.encapsulating_radius,
                                             edgecolor="black",
                                             facecolor=ingr.color,
                                         )
@@ -1387,7 +1408,7 @@ class AnalyseAP:
                         output + os.sep + "_angleIngr_" + str(seed_index) + ".json",
                         anglesingr,
                     )
-                if plot and twod:
+                if plot and two_d:
                     ax.set_aspect(1.0)
                     pyplot.axhline(y=bbox[0][1], color="k")
                     pyplot.axhline(y=bbox[1][1], color="k")
@@ -1423,7 +1444,7 @@ class AnalyseAP:
         self.env.basename = basename
         self.env.occurences = occurences
         self.env.angles = total_angles
-        if plot and twod:
+        if plot and two_d:
             self.env.loopThroughIngr(self.axis_distribution)
             self.env.loopThroughIngr(self.occurence_distribution)
             self.axis_distribution_total(total_positions)

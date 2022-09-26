@@ -985,7 +985,7 @@ def affine_matrix_from_points(v0, v1, shear=True, scale=True, usesvd=True):
         q = V[:, numpy.argmax(w)]
         q /= vector_norm(q)  # unit quaternion
         # homogeneous transformation matrix
-        M = quaternion_matrix(q)
+        M = matrix_from_quaternion(q)
 
     if scale and not shear:
         # Affine transformation; scale is ratio of RMS deviations from centroid
@@ -1222,7 +1222,7 @@ def euler_from_quaternion(quaternion, axes="sxyz"):
     True
 
     """
-    return euler_from_matrix(quaternion_matrix(quaternion), axes)
+    return euler_from_matrix(matrix_from_quaternion(quaternion), axes)
 
 
 def quaternion_from_euler(ai, aj, ak, axes="sxyz"):
@@ -1298,7 +1298,7 @@ def quaternion_about_axis(angle, axis):
     return q
 
 
-def quaternion_matrix(quaternion):
+def matrix_from_quaternion(quaternion):
     """Return homogeneous rotation matrix from quaternion.
 
     >>> M = quaternion_matrix([0.99810947, 0.06146124, 0, 0])
@@ -1560,7 +1560,7 @@ def random_rotation_matrix(rand=None):
     True
 
     """
-    return quaternion_matrix(random_quaternion(rand))
+    return matrix_from_quaternion(random_quaternion(rand))
 
 
 class Arcball(object):
@@ -1672,7 +1672,7 @@ class Arcball(object):
 
     def matrix(self):
         """Return homogeneous rotation matrix."""
-        return quaternion_matrix(self._qnow)
+        return matrix_from_quaternion(self._qnow)
 
 
 def arcball_map_to_sphere(point, center, radius):

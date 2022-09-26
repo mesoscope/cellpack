@@ -46,6 +46,7 @@
 # TODO: fix the save/restore grid
 """
 
+import copy
 import os
 from time import time
 from random import random, uniform, seed
@@ -67,6 +68,15 @@ from panda3d.bullet import BulletRigidBodyNode
 
 import cellpack.autopack as autopack
 from cellpack.autopack.MeshStore import MeshStore
+from cellpack.autopack.ingredient import Ingredient
+from cellpack.autopack.loaders.recipe_loader import RecipeLoader
+from cellpack.autopack.utils import (
+    cmp_to_key,
+    deep_merge,
+    ingredient_compare0,
+    ingredient_compare1,
+    ingredient_compare2,
+)
 from .Compartment import CompartmentList, Compartment
 from .Recipe import Recipe
 from .ingredient import GrowIngredient, ActinIngredient
@@ -95,202 +105,9 @@ except ImportError:
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
-LISTPLACEMETHOD = autopack.LISTPLACEMETHOD
 SEED = 14
 LOG = False
 verbose = 0
-
-
-def ingredient_compare1(x, y):
-    """
-    sort ingredients using decreasing priority and decreasing radii for
-    priority ties and decreasing completion for radii ties
-    for priority > 0
-    """
-    p1 = x.packingPriority
-    p2 = y.packingPriority
-    if p1 < p2:  # p1 > p2
-        return 1
-    elif p1 == p2:  # p1 == p1
-        r1 = x.minRadius
-        r2 = y.minRadius
-        if r1 > r2:  # r1 < r2
-            return 1
-        elif r1 == r2:  # r1 == r2
-            c1 = x.completion
-            c2 = y.completion
-            if c1 > c2:  # c1 > c2
-                return 1
-            elif c1 == c2:
-                return 0
-            else:
-                return -1
-        else:
-            return -1
-    else:
-        return -1
-
-
-def ingredient_compare0(x, y):
-    """
-    sort ingredients using decreasing priority and decreasing radii for
-    priority ties and decreasing completion for radii ties
-    for priority < 0
-    """
-    p1 = x.packingPriority
-    p2 = y.packingPriority
-    if p1 > p2:  # p1 > p2
-        return 1
-    elif p1 == p2:  # p1 == p1
-        r1 = x.minRadius
-        r2 = y.minRadius
-        if r1 > r2:  # r1 < r2
-            return 1
-        elif r1 == r2:  # r1 == r2
-            c1 = x.completion
-            c2 = y.completion
-            if c1 > c2:  # c1 > c2
-                return 1
-            elif c1 == c2:
-                return 0
-            else:
-                return -1
-        else:
-            return -1
-    else:
-        return -1
-
-
-def ingredient_compare2(x, y):
-    """
-    sort ingredients using decreasing radii and decresing completion
-    for radii matches:
-    priority = 0
-    """
-    c1 = x.minRadius
-    c2 = y.minRadius
-    if c1 < c2:
-        return 1
-    elif c1 == c2:
-        r1 = x.completion
-        r2 = y.completion
-        if r1 > r2:
-            return 1
-        elif r1 == r2:
-            return 0
-        else:
-            return -1
-    else:  # x < y
-        return -1
-
-
-def cmp_to_key(mycmp):
-    "Convert a cmp= function into a key= function"
-
-    class K:
-        def __init__(self, obj, *args):
-            self.obj = obj
-
-        def __lt__(self, other):
-            return mycmp(self.obj, other.obj) < 0
-
-        def __gt__(self, other):
-            return mycmp(self.obj, other.obj) > 0
-
-        def __eq__(self, other):
-            return mycmp(self.obj, other.obj) == 0
-
-        def __le__(self, other):
-            return mycmp(self.obj, other.obj) <= 0
-
-        def __ge__(self, other):
-            return mycmp(self.obj, other.obj) >= 0
-
-        def __ne__(self, other):
-            return mycmp(self.obj, other.obj) != 0
-
-    return K
-
-
-class Grid(BaseGrid):
-    """
-    The Grid class
-    ==========================
-    This class handle the use of grid to control the packing. The grid keep information
-    of 3d positions, distances, freePoints and inside/surface points from organelles.
-    NOTE : this class could be completely replaced if openvdb is wrapped to python.
-    """
-
-    def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=10.0, lookup=0):
-        # a grid is attached to an environement
-        BaseGrid.__init__(
-            self, boundingBox=boundingBox, space=space, setup=False, lookup=lookup
-        )
-
-        self.gridSpacing = space * 1.1547
-        self.encapsulatingGrid = 1
-        self.gridVolume, self.nbGridPoints = self.computeGridNumberOfPoint(
-            boundingBox, space
-        )
-        self.create3DPointLookup()
-        self.freePoints = list(range(self.gridVolume))
-        self.nbFreePoints = len(self.freePoints)
-
-    def reset(self):
-        # reset the  distToClosestSurf and the freePoints
-        # boundingBox shoud be the same otherwise why keeping the grid
-
-        self.distToClosestSurf[:] = self.diag
-        self.freePoints = list(range(len(self.freePoints)))
-        self.nbFreePoints = len(self.freePoints)
-        self.distancesAfterFill = []
-        self.freePointsAfterFill = []
-        self.nbFreePointsAfterFill = []
-        self.distanceAfterFill = []
-
-    def create3DPointLookup(self, boundingBox=None):
-        """
-        Fill the orthogonal bounding box described by two global corners
-        with an array of points spaces pGridSpacing apart.:
-        """
-        if boundingBox is None:
-            boundingBox = self.boundingBox
-        xl, yl, zl = boundingBox[0]
-        xr, yr, zr = boundingBox[1]
-
-        nx, ny, nz = self.nbGridPoints
-        pointArrayRaw = numpy.zeros((nx * ny * nz, 3), "f")
-        self.ijkPtIndice = numpy.zeros((nx * ny * nz, 3), "i")
-        space = self.gridSpacing
-        # Vector for lower left broken into real of only the z coord.
-        i = 0
-        for zi in range(nz):
-            for yi in range(ny):
-                for xi in range(nx):
-                    pointArrayRaw[i] = (
-                        xl + xi * space,
-                        yl + yi * space,
-                        zl + zi * space,
-                    )
-                    self.ijkPtIndice[i] = (xi, yi, zi)
-                    i += 1
-        self.masterGridPositions = pointArrayRaw
-
-    def getIJK(self, ptInd):
-        """
-        get i,j,k (3d) indices from u (1d)
-        """
-        # ptInd = k*(sizex)*(sizey)+j*(sizex)+i;#want i,j,k
-        return self.ijkPtIndice[ptInd]
-        # ==============================================================================
-
-    # TO DO File IO
-    # ==============================================================================
-    def save(self):
-        pass
-
-    def restore(self):
-        pass
 
 
 class Environment(CompartmentList):
@@ -306,18 +123,48 @@ class Environment(CompartmentList):
         each recipe are made of a list of ingredients
     """
 
-    def __init__(self, name="H", format_output="simularium"):
+    def __init__(self, config=None, recipe=None):
         CompartmentList.__init__(self)
+        self.mesh_store = MeshStore()
 
+        self.config_data = config
+        self.recipe_data = recipe
+
+        name = recipe["name"]
         self.log = logging.getLogger("env")
         self.log.propagate = False
+
+        # From config file
+        self.runTimeDisplay = config["live_packing"]
+        self.placeMethod = config["place_method"]
+        self.innerGridMethod = config["inner_grid_method"]
+        self.format_output = config["format"]
+        self.use_periodicity = config["use_periodicity"]
+        self.pickRandPt = not config["ordered_packing"]
+        self.show_sphere_trees = config["show_sphere_trees"]
+
+        self.boundingBox = numpy.array(recipe["bounding_box"])
+        self.name = name
+
+        # saving/pickle option
+        self.saveResult = "out" in config
+        self.out_folder = RecipeLoader.create_output_dir(
+            config["out"], name, config["place_method"]
+        )
+        self.resultfile = self.out_folder + "/" + config["name"]
+
+        self.setupfile = ""
+        self.current_path = None  # the path of the recipe file
+        self.custom_paths = None
+        self.grid_filename = None  #
+        self.grid_result_filename = None  # str(gridn.getAttribute("grid_result"))
+
         self.timeUpDistLoopTotal = 0
         self.name = name
-        self.format_output = format_output
         self.exteriorRecipe = None
         self.hgrid = []
         self.world = None  # panda world for collision
-        self.octree = None  # ongoing octree test, no need if openvdb wrapp to python
+        self.octree = None  # ongoing octree test, no need if openvdb wrapped to python
         self.grid = None  # Grid()  # the main grid
         self.encapsulatingGrid = (
             0  # Only override this with 0 for 2D packing- otherwise its very unsafe!
@@ -330,7 +177,7 @@ class Environment(CompartmentList):
         self.lastrank = 0
 
         # smallest and largest protein radii across all recipes
-        self.smallestProteinSize = 99999999
+        self.smallestProteinSize = 999
         self.largestProteinSize = 0
         self.scaleER = 2.5  # hack in case problem with encapsulating radius
         self.computeGridParams = True
@@ -339,7 +186,6 @@ class Environment(CompartmentList):
         self.EnviroOnlyCompartiment = -1
         # bounding box of the Environment
 
-        self.boundingBox = [[0, 0, 0], [0.1, 0.1, 0.1]]
         self.fbox_bb = None  # used for estimating the volume
 
         self.fbox = None  # Oct 20, 2012 Graham wonders if this is part of the problem
@@ -352,12 +198,11 @@ class Environment(CompartmentList):
             []
         )  # list of ( (x,y,z), rotation, ingredient) triplet generated by packing
         self.ingr_result = {}
-        self.ingr_added = {}
 
         self.randomRot = RandomRot()  # the class used to generate random rotation
         self.activeIngr = []
         self.activeIngre_saved = []
-
+        self.freePtsUpdateThreshold = 0.0
         # optionally can provide a host and a viewer
         self.host = None
         self.afviewer = None
@@ -369,27 +214,14 @@ class Environment(CompartmentList):
         self.windowsSize = 100
         self.windowsSize_overwrite = False
 
-        self.runTimeDisplay = False
-        self.placeMethod = "jitter"
-        self.innerGridMethod = "bhtree"  # or sdf
         self.orthogonalBoxType = 0
         self.overwritePlaceMethod = False
-        self.rejectionThreshold = None
+        self.rejection_threshold = None
         # if use C4D RB dynamics, should be genralized
         self.springOptions = {}
         self.dynamicOptions = {}
         self.setupRBOptions()
         self.simulationTimes = 2.0
-
-        # saving/pickle option
-        self.saveResult = False
-        self.resultfile = ""
-        self.setupfile = ""
-        self.current_path = None  # the path of the recipe file
-        self.custom_paths = None
-        self.useXref = True
-        self.grid_filename = None  #
-        self.grid_result_filename = None  # str(gridn.getAttribute("grid_result"))
 
         # cancel dialog-> need to be develop more
         self.cancelDialog = False
@@ -406,7 +238,6 @@ class Environment(CompartmentList):
         self.traj_linked = False
         # do we sort the ingredient or not see  getSortedActiveIngredients
         self.pickWeightedIngr = True
-        self.pickRandPt = True  # point pick randomly or one after the other?
         self.currtId = 0
 
         # gradient
@@ -418,9 +249,6 @@ class Environment(CompartmentList):
         self.ingrLookForNeighbours = False  # Old Features to be test
 
         # debug with timer function
-        self._timer = False
-        self._hackFreepts = False  # hack for speed up ?
-        self.freePtsUpdateThreshold = 0.0
         self.nb_ingredient = 0
         self.totalNbIngr = 0
         self.treemode = "cKDTree"
@@ -431,13 +259,11 @@ class Environment(CompartmentList):
         self.result = []
         self.rIngr = []
         self.rRot = []
-        self.listPlaceMethod = LISTPLACEMETHOD
         # should be part of an independent module
         self.panda_solver = "bullet"  # or bullet
         # could be a problem here for pp
         # can't pickle this dictionary
         self.rb_func_dic = {}
-        self.use_periodicity = False
         # need options for the save/server data etc....
         # should it be in __init__ like other general options ?
         self.dump = True
@@ -448,213 +274,17 @@ class Environment(CompartmentList):
         self.freePointsAfterFill = []
         self.nbFreePointsAfterFill = []
         self.distanceAfterFill = []
-        self.mesh_store = MeshStore()
-        self.OPTIONS = {
-            "smallestProteinSize": {
-                "name": "smallestProteinSize",
-                "value": 15,
-                "default": 15,
-                "type": "int",
-                "description": "Smallest ingredient packing radius override (low=accurate | high=fast)",  # noqa: E501
-                "mini": 1.0,
-                "maxi": 1000.0,
-                "width": 30,
-            },
-            "largestProteinSize": {
-                "name": "largestProteinSize",
-                "value": 0,
-                "default": 0,
-                "type": "int",
-                "description": "largest Protein Size",
-                "width": 30,
-            },
-            "computeGridParams": {
-                "name": "computeGridParams",
-                "value": True,
-                "default": True,
-                "type": "bool",
-                "description": "compute Grid Params",
-                "width": 100,
-            },
-            "EnviroOnly": {
-                "name": "EnviroOnly",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "Histo volume Only",
-                "width": 30,
-            },
-            "windowsSize": {
-                "name": "windowsSize",
-                "value": 100,
-                "default": 100,
-                "type": "int",
-                "description": "windows Size",
-                "width": 30,
-            },
-            "runTimeDisplay": {
-                "name": "runTimeDisplay",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "Display packing in realtime (slow)",
-                "width": 150,
-            },
-            "placeMethod": {
-                "name": "placeMethod",
-                "value": "jitter",
-                "values": self.listPlaceMethod,
-                "default": "placeMethod",
-                "type": "liste",
-                "description": "Overriding Packing Method = ",
-                "width": 30,
-            },
-            "use_gradient": {
-                "name": "use_gradient",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "Use gradients if defined",
-                "width": 150,
-            },
-            "gradients": {
-                "name": "gradients",
-                "value": "",
-                "values": [],
-                "default": "",
-                "type": "liste",
-                "description": "Gradients available",
-                "width": 150,
-            },
-            "innerGridMethod": {
-                "name": "innerGridMethod",
-                "value": "jordan3",
-                "values": [
-                    "bhtree",
-                    #                                           "sdf",
-                    "jordan",
-                    "jordan3",
-                    "pyray",
-                    "floodfill",
-                    #                                           "binvox",
-                    "trimesh",
-                    "scanline",
-                ],
-                "default": "jordan3",
-                "type": "liste",
-                "description": "Method to calculate the inner grid:",
-                "width": 30,
-            },
-            "overwritePlaceMethod": {
-                "name": "overwritePlaceMethod",
-                "value": True,
-                "default": True,
-                "type": "bool",
-                "description": "Overwrite per-ingredient packing method with Overriding Packing Method:",  # noqa: E501
-                "width": 300,
-            },
-            "saveResult": {
-                "name": "saveResult",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "Save packing result to .apr file (enter full path below):",  # noqa: E501
-                "width": 200,
-            },
-            "resultfile": {
-                "name": "resultfile",
-                "value": "fillResult",
-                "default": "fillResult",
-                "type": "filename",
-                "description": "result filename",
-                "width": 200,
-            },
-            # cancel dialog
-            "cancelDialog": {
-                "name": "cancelDialog",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "compute Grid Params",
-                "width": 30,
-            },
-            # do we sort the ingredient or not see  getSortedActiveIngredients
-            "pickWeightedIngr": {
-                "name": "pickWeightedIngr",
-                "value": True,
-                "default": True,
-                "type": "bool",
-                "description": "Prioritize ingredient selection by packingWeight",
-                "width": 200,
-            },
-            "pickRandPt": {
-                "name": "pickRandPt",
-                "value": True,
-                "default": True,
-                "type": "bool",
-                "description": "Pick drop position point randomly",
-                "width": 200,
-            },
-            # gradient
-            "ingrLookForNeighbours": {
-                "name": "ingrLookForNeighbours",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "Look for ingredients attractor and partner",
-                "width": 30,
-            },
-            # debug with timer function
-            "_timer": {
-                "name": "_timer",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "evaluate time per function",
-                "width": 30,
-            },
-            "_hackFreepts": {
-                "name": "_hackFreepts",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "no free point update",
-                "width": 30,
-            },
-            "freePtsUpdateThreshold": {
-                "name": "freePtsUpdateThreshold",
-                "value": 0.0,
-                "default": 0.0,
-                "type": "float",
-                "description": "Mask grid while packing (0=always | 1=never)",
-                "mini": 0.0,
-                "maxi": 1.0,
-                "width": 30,
-            },
-            "use_periodicity": {
-                "name": "use_periodicity",
-                "value": False,
-                "default": False,
-                "type": "bool",
-                "description": "Use periodic condition",
-                "width": 200,
-            },
-        }
-        self.setDefaultOptions()
+        self._setup()
 
-    def Setup(self, setupfile):
-        # parse the given fill for
-        # 1-fillin option
-        # 2-recipe
-        # use XML with tag description of the setup:
-        # filling name root
-        # Environment option
-        # cytoplasme recipe if any and its ingredient
-        # compartment name= mesh ?
-        # orga surfaceingr#file or direct
-        # orga interioringr#file or direct
-        # etc...
-        pass
+    def _setup(self):
+        if "composition" in self.recipe_data:
+            (
+                self.root_compartment,
+                self.compartment_keys,
+                self.reference_dict,
+                self.referenced_objects,
+            ) = Recipe.resolve_composition(self.recipe_data)
+            self.create_objects()
 
     def setSeed(self, seedNum):
         SEED = int(seedNum)
@@ -663,6 +293,74 @@ class Environment(CompartmentList):
         self.randomRot.setSeed(seed=SEED)
         self.seed_set = True
         self.seed_used = SEED
+
+    def _prep_ingredient_info(self, composition_info, ingredient_name=None):
+        objects_dict = self.recipe_data["objects"]
+        object_key = composition_info["object"]
+        base_object = objects_dict[object_key]
+        ingredient_info = deep_merge(copy.deepcopy(base_object), composition_info)
+        ingredient_info["name"] = (
+            ingredient_name if ingredient_name is not None else object_key
+        )
+        return ingredient_info
+
+    def _step_down(self, compartment_key):
+        composition_dict = self.recipe_data["composition"]
+        compartment = self.create_compartment(compartment_key)
+        compartment_info = composition_dict[compartment_key]
+        for region_name, obj_keys in compartment_info.get(
+            "regions", {}
+        ).items():  # check if entry in compositions has regions
+            recipe = Recipe(name=f"{compartment_key}_{region_name}")
+            for key_or_dict in obj_keys:
+                is_key, composition_info = RecipeLoader.is_key(
+                    key_or_dict, composition_dict
+                )
+                if is_key and key_or_dict in self.compartment_keys:
+                    key = key_or_dict
+                    self._step_down(key)
+                else:
+                    key = key_or_dict if is_key else None
+                    ingredient_info = self._prep_ingredient_info(composition_info, key)
+                    self.create_ingredient(recipe, ingredient_info)
+            if region_name == "surface":
+                compartment.setSurfaceRecipe(recipe)
+            elif region_name == "interior":
+                compartment.setInnerRecipe(recipe)
+
+    def create_objects(self):
+        """
+        Instantiate compartments and ingredients contained within the recipe data.
+        """
+        composition_dict = self.recipe_data["composition"]
+
+        if self.root_compartment is not None:
+            # create cytoplasme and set as exterior recipe
+            root_compartment = composition_dict[self.root_compartment]
+            # self.create_compartment(self.root_compartment)
+            external_recipe = Recipe()
+            for region_name, obj_keys in root_compartment.get(
+                "regions", {}
+            ).items():  # check if entry in compositions has regions
+                for key_or_dict in obj_keys:
+                    is_key, composition_info = RecipeLoader.is_key(
+                        key_or_dict, composition_dict
+                    )
+                    if is_key and key_or_dict in self.compartment_keys:
+                        # key is pointing to another container
+                        key = key_or_dict
+                        self._step_down(key)
+                    else:
+                        key = key_or_dict if is_key else None
+                        ingredient_info = self._prep_ingredient_info(
+                            composition_info, key
+                        )
+                        self.create_ingredient(external_recipe, ingredient_info)
+            self.setExteriorRecipe(external_recipe)
+
+        if "gradients" in self.recipe_data:
+            # TODO: deal with gradients here
+            pass
 
     def reportprogress(self, label=None, progress=None):
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):
@@ -693,53 +391,15 @@ class Environment(CompartmentList):
                 for p in ingr_partner.properties:
                     partner.addProperties(p, ingr_partner.properties[p])
                 w += ((1 - weightinitial) / (total - 1)) - weightinitial
-            if ingr.Type == "Grow":
+            if ingr.type == "Grow":
                 ingr.prepare_alternates()
         if ingr.excluded_partners_name:
             for iname in ingr.excluded_partners_name:
                 ingr.addExcludedPartner(iname)
         ingr.env = self
 
-    def set_recipe_ingredient(self, xmlnode, recipe, io_ingr):
-        # get the defined ingredient
-        ingrnodes = xmlnode.getElementsByTagName("ingredient")
-        for ingrnode in ingrnodes:
-            ingre = io_ingr.makeIngredientFromXml(inode=ingrnode, recipe=self.name)
-            if ingre:
-                recipe.addIngredient(ingre)
-            else:
-                print("PROBLEM creating ingredient from ", ingrnode)
-            # check for includes
-        ingrnodes_include = xmlnode.getElementsByTagName("include")
-        for inclnode in ingrnodes_include:
-            xmlfile = str(inclnode.getAttribute("filename"))
-            ingre = io_ingr.makeIngredientFromXml(filename=xmlfile, recipe=self.name)
-            if ingre:
-                recipe.addIngredient(ingre)
-            else:
-                print("PROBLEM creating ingredient from ", ingrnode)
-            # look for overwritten attribute
-
-    def load_recipe(self, setupfile):
-        if setupfile is None:
-            setupfile = self.setupfile
-        else:
-            self.setupfile = setupfile
-        # check the extension of the filename none, txt or json
-        fileName, fileExtension = os.path.splitext(setupfile)
-        if fileExtension == ".xml":
-            return IOutils.load_XML(self, setupfile)
-        elif fileExtension == ".py":  # execute ?
-            return IOutils.load_Python(self, setupfile)
-        elif fileExtension == ".json":
-            return IOutils.load_Json(self, setupfile)
-        else:
-            print("can't read or recognize " + setupfile)
-            return None
-        return None
-
-    def loadRecipeString(self, astring):
-        return IOutils.load_JsonString(self, astring)
+    # def unpack_objects(self, objects):
+    #     for key, value in objects.items():
 
     def save_result(
         self, freePoints, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array
@@ -753,16 +413,15 @@ class Environment(CompartmentList):
         self.collectResultPerIngredient()
         self.store()
         self.store_asTxt()
-        #            self.store_asJson(resultfilename=self.resultfile+".json")
         IOutils.save(
             self,
-            self.resultfile + ".json",
-            useXref=False,
+            self.resultfile,
             format_output=self.format_output,
             kwds=["compNum"],
             result=True,
             quaternion=True,
             all_ingr_as_array=all_ingr_as_array,
+            compartments=self.compartments,
         )  # pdb ?
         self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
@@ -896,9 +555,8 @@ class Environment(CompartmentList):
                 self.log.info("Volume Used   = %d", usedPts * unitVol)
                 self.log.info("Volume Unused = %d", unUsedPts * unitVol)
                 self.log.info("vTestid = %d", vTestid)
-                self.log.info("self.nbGridPoints = %r", self.nbGridPoints)
-                self.log.info("self.gridVolume = %d", self.gridVolume)
-                #        self.exteriorVolume = totalVolume
+                self.log.info("self.nbGridPoints = %r", self.grid.nbGridPoints)
+                self.log.info("self.gridVolume = %d", self.grid.gridVolume)
 
         self.log.info("self.compartments In Environment = %d", len(self.compartments))
         if self.compartments == []:
@@ -1037,7 +695,6 @@ class Environment(CompartmentList):
         if self.exteriorRecipe:
             self.exteriorRecipe.sort()
         for o in self.compartments:
-            #            o.molecules = []
             if reset:
                 o.reset()
             if o.innerRecipe:
@@ -1059,27 +716,25 @@ class Environment(CompartmentList):
         # default gradient 1-linear Decoy X
         self.gradients[kw["name"]] = gradient
 
-    def setDefaultOptions(self):
-        """reset all the options to their default values"""
-        for options in self.OPTIONS:
-            if options == "gradients":
-                continue
-            setattr(self, options, self.OPTIONS[options]["default"])
-
     def callFunction(self, function, args=[], kw={}):
         """
         helper function to callback another function with the
         given arguments and keywords.
         Optionally time stamp it.
         """
-        if self._timer:
-            res = self.timeFunction(function, args, kw)
+
+        if len(kw):
+            res = function(*args, **kw)
         else:
-            if len(kw):
-                res = function(*args, **kw)
-            else:
-                res = function(*args)
+            res = function(*args)
         return res
+
+    def is_two_d(self):
+        grid_spacing = self.grid.gridSpacing
+        bounding_box = self.boundingBox
+        box_size = numpy.array(bounding_box[1]) - numpy.array(bounding_box[0])
+        smallest_size = numpy.amin(box_size)
+        return smallest_size <= grid_spacing
 
     def timeFunction(self, function, args, kw):
         """
@@ -1227,7 +882,6 @@ class Environment(CompartmentList):
         #     # "gridPositions": json.loads(self.grid.masterGridPositions),
         #     "distances": json.loads(self.grid.distToClosestSurf)
         # }
-
         with open(gridFileOut, "w") as f:
             json.dump(data, fp=f)
         f.close()
@@ -1253,30 +907,6 @@ class Environment(CompartmentList):
         f.close()
         self.grid.aInteriorGrids = aInteriorGrids
         self.grid.aSurfaceGrids = aSurfaceGrids
-
-    def setMinMaxProteinSize(self):
-        """
-        Retrieve and store mini and maxi ingredient size
-        """
-        self.smallestProteinSize = 999999
-        self.largestProteinSize = 0
-        for compartment in self.compartments:
-            mini, maxi = compartment.getMinMaxProteinSize()
-            if mini < self.smallestProteinSize:
-                self.computeGridParams = True
-                self.smallestProteinSize = mini
-
-            if maxi > self.largestProteinSize:
-                self.computeGridParams = True
-                self.largestProteinSize = maxi
-        if self.exteriorRecipe:
-            smallest, largest = self.exteriorRecipe.getMinMaxProteinSize()
-
-            if smallest < self.smallestProteinSize:
-                self.smallestProteinSize = smallest
-
-            if largest > self.largestProteinSize:
-                self.largestProteinSize = largest
 
     def extractMeshComponent(self, obj):
         """
@@ -1349,21 +979,51 @@ class Environment(CompartmentList):
                 filename=ref_obj, vertices=vertices, faces=faces, vnormals=vnormals
             )
 
-    def create_ingredient(self, **arguments):
-        ingredient_type = arguments["Type"]
-        if ingredient_type == "SingleSphere":
-            ingr = SingleSphereIngr(**arguments)
-        elif ingredient_type == "MultiSphere":
+    def update_largest_smallest_size(self, ingr):
+        if ingr.encapsulating_radius > self.largestProteinSize:
+            self.largestProteinSize = ingr.encapsulating_radius
+        if ingr.min_radius < self.smallestProteinSize:
+            self.smallestProteinSize = ingr.min_radius
+
+    def create_ingredient(self, recipe, arguments):
+        ingredient_type = arguments["type"]
+
+        if ingredient_type == "single_sphere":
+            radius = arguments["radius"]
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
+            ingr = SingleSphereIngr(radius, **arguments)
+        elif ingredient_type == "multi_sphere":
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
             ingr = MultiSphereIngr(**arguments)
-        elif ingredient_type == "MultiCylinder":
+        elif ingredient_type == "multi_cylinder":
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
             ingr = MultiCylindersIngr(**arguments)
-        elif ingredient_type == "SingleCube":
-            ingr = SingleCubeIngr(**arguments)
-        elif ingredient_type == "SingleCylinder":
+        elif ingredient_type == "single_cube":
+            bounds = arguments["bounds"]
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
+            ingr = SingleCubeIngr(bounds, **arguments)
+        elif ingredient_type == "single_cylinder":
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
             ingr = SingleCylinderIngr(**arguments)
-        elif ingredient_type == "Grow":
+        elif ingredient_type == "grow":
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                GrowIngredient.ARGUMENTS, **arguments
+            )
             ingr = GrowIngredient(**arguments)
-        elif ingredient_type == "Actine":
+        elif ingredient_type == "actine":
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                GrowIngredient.ARGUMENTS, **arguments
+            )
             ingr = ActinIngredient(**arguments)
         if (
             "gradient" in arguments
@@ -1374,25 +1034,29 @@ class Environment(CompartmentList):
         if "results" in arguments:
             ingr.results = arguments["results"]
         ingr.initialize_mesh(self.mesh_store)
-        return ingr
+        recipe.addIngredient(ingr)
+        self.update_largest_smallest_size(ingr)
 
-    def create_compartment(
-        self, name, filename, gname, object_name, object_filename, meshType=None
-    ):
+    def create_compartment(self, compartment_key):
+        comp_dic = self.recipe_data["composition"]
+        obj_dic = self.recipe_data["objects"]
+
+        if "object" in comp_dic[compartment_key]:
+            # create compartment using object
+            object_info = obj_dic[comp_dic[compartment_key]["object"]]
+        else:
+            # use bounding box
+            object_info = {"bounding_box": self.boundingBox}
+
         compartment = Compartment(
-            name,
-            None,
-            None,
-            None,
-            filename=filename,
-            gname=gname,
-            object_name=object_name,
-            object_filename=object_filename,
+            name=compartment_key,
+            object_info=object_info,
         )
-        compartment.initialize_mesh(self.mesh_store)
+        compartment.initialize_shape(self.mesh_store)
+        self._add_compartment(compartment)
         return compartment
 
-    def addCompartment(self, compartment):
+    def _add_compartment(self, compartment):
         """
         Add the given compartment to the environment.
         Extend the main bounding box if needed
@@ -1400,18 +1064,18 @@ class Environment(CompartmentList):
         compartment.setNumber(self.nbCompartments)
         self.nbCompartments += 1
 
-        fits, bb = compartment.inBox(self.boundingBox)
+        fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
 
         if not fits:
             self.boundingBox = bb
-        CompartmentList.addCompartment(self, compartment)
+        CompartmentList._add_compartment(self, compartment)
 
-    def getPointCompartmentId(self, point, ray=3):
+    def compartment_id_for_nearest_grid_point(self, point):
         # check if point inside  of the compartments
         # closest grid point is
         d, pid = self.grid.getClosestGridPoint(point)
-        cid = self.grid.compartment_ids[pid]
-        return cid
+        compartment_id = self.grid.compartment_ids[pid]
+        return compartment_id
 
     def longestIngrdientName(self):
         """
@@ -1536,7 +1200,7 @@ class Environment(CompartmentList):
 
     def BuildCompartmentsGrids(self):
         """
-        Build the comparmtents grid (intrior and surface points) to be merged with the main grid
+        Build the compartments grid (interior and surface points) to be merged with the main grid
         """
         aInteriorGrids = []
         aSurfaceGrids = []
@@ -1561,9 +1225,20 @@ class Environment(CompartmentList):
             f"build Grids {self.innerGridMethod}, {len(self.grid.aSurfaceGrids)}"
         )
 
+    def build_compartment_grids(self):
+        self.log.info("file is None thus re/building grid distance")
+        self.BuildCompartmentsGrids()
+
+        if len(self.compartments):
+            verts = numpy.array(self.compartments[0].surfacePointsCoords)
+            for i in range(1, len(self.compartments)):
+                verts = numpy.vstack([verts, self.compartments[i].surfacePointsCoords])
+            self.grid.set_surfPtsBht(
+                verts.tolist()
+            )  # should do it only on inside grid point
+
     def buildGrid(
         self,
-        boundingBox=None,
         gridFileIn=None,
         rebuild=True,
         gridFileOut=None,
@@ -1573,84 +1248,60 @@ class Environment(CompartmentList):
     ):
         """
         The main build grid function. Setup the main grid and merge the
-        compartment grid. The setup is de novo or using previously builded grid
+        compartment grid. The setup is de novo or using previously built grid
         or restored using given file.
         """
+        boundingBox = self.boundingBox
         if self.use_halton:
             from cellpack.autopack.BaseGrid import HaltonGrid as Grid
         elif self.innerGridMethod == "floodfill":
             from cellpack.autopack.Environment import Grid
         else:
             from cellpack.autopack.BaseGrid import BaseGrid as Grid
-        # check viewer, and setup the progress bar
-        self.reportprogress(label="Building the Master Grid")
-        if self.smallestProteinSize == 0:
-            # compute it automatically
-            self.setMinMaxProteinSize()
-        # get and test the bounding box
-        if boundingBox is None:
-            boundingBox = self.boundingBox
-        else:
-            assert len(boundingBox) == 2
-            assert len(boundingBox[0]) == 3
-            assert len(boundingBox[1]) == 3
-        self.sortIngredient(reset=rebuild)
-        self.reportprogress(label="Computing the number of grid points")
+
+        self.sortIngredient(reset=True)
         if gridFileIn is not None:
             if not os.path.isfile(gridFileIn):
                 gridFileIn = None
-        if self.nFill == 0:
-            rebuild = True
-        if rebuild or gridFileIn is not None or self.grid is None or self.nFill == 0:
-            # save bb for current fill
+        if self.grid is None or self.nFill == 0:
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
-            self.grid = Grid(
-                boundingBox=boundingBox, space=self.smallestProteinSize, lookup=lookup
-            )
+            spacing = self.smallestProteinSize
+            self.grid = Grid(boundingBox=boundingBox, spacing=spacing, lookup=lookup)
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
-            if rebuild:
+            if self.nFill == 0:
                 self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
                 nbPoints = self.grid.gridVolume
+
         else:
             self.log.info("$$$$$$$$  reset the grid")
             self.grid.reset()
             nbPoints = len(self.grid.freePoints)
             self.log.info("$$$$$$$$  reset the grid")
 
-        if gridFileIn is not None:  # and not rebuild:
+        if gridFileIn is not None:
             self.log.warning("file in for building grid but it doesnt work well")
             self.grid.filename = gridFileIn
             if self.nFill == 0:  # first fill, after we can just reset
                 self.log.info("restore from file")
                 self.restoreGridFromFile(gridFileIn)
-        elif (gridFileIn is None and rebuild) or self.nFill == 0:
-            # assign ids to grid points
-            self.log.info("file is None thus re/building grid distance")
-            self.BuildCompartmentsGrids()
-            self.exteriorVolume = self.grid.computeExteriorVolume(
-                compartments=self.compartments,
-                space=self.smallestProteinSize,
-                fbox_bb=self.fbox_bb,
-            )
         else:
-            self.log.info("file is not rebuild nor restore from file")
-        if len(self.compartments):
-            verts = numpy.array(self.compartments[0].surfacePointsCoords)
-            for i in range(1, len(self.compartments)):
-                verts = numpy.vstack([verts, self.compartments[i].surfacePointsCoords])
-            self.grid.set_surfPtsBht(
-                verts.tolist()
-            )  # should do it only on inside grid point
+            self.build_compartment_grids()
+
+        self.exteriorVolume = self.grid.computeExteriorVolume(
+            compartments=self.compartments,
+            space=self.smallestProteinSize,
+            fbox_bb=self.fbox_bb,
+        )
         if gridFileOut is not None and gridFileIn is None:
             self.saveGridToFile(gridFileOut)
             self.grid.filename = gridFileOut
+
         r = self.exteriorRecipe
         if r:
             r.setCount(self.exteriorVolume)  # should actually use the fillBB
         if not rebuild:
-            # self.grid.distToClosestSurf = self.grid.distToClosestSurf_store[:]
             for c in self.compartments:
                 c.setCount()
         else:
@@ -1677,79 +1328,6 @@ class Environment(CompartmentList):
                         i, mingrs, distance, nbFreePoints, organelle.molecules
                     )
             self.grid.nbFreePoints = nbFreePoints
-        self.setCompatibility()
-
-    def BuildGrids(self):
-        """
-        Build the comparmtents grid (intrior and surface points) to be merged with the main grid
-        Note :
-        #New version allows for orthogonal box to be used as an organelle requireing no expensive InsidePoints test
-        # FIXME make recursive?
-        """
-        aInteriorGrids = []
-        aSurfaceGrids = []
-        points_inside_compartments = []
-        points_on_surfaces = []
-        for compartment in self.compartments:
-            print(
-                "in Environment, compartment.isOrthogonalBoundingBox =",
-                compartment.isOrthogonalBoundingBox,
-            )
-            points_on_surfaces = []
-            if compartment.isOrthogonalBoundingBox == 1:
-                self.EnviroOnly = True
-                print(
-                    ">>>>>>>>>>>>>>>>>>>>>>>>> Not building a grid because I'm an Orthogonal Bounding Box"
-                )
-                points_inside_compartments = self.grid.getPointsInCube(
-                    compartment.bb, None, None
-                )  # This is the highspeed shortcut for inside points! and no surface! that gets used if the fillSelection is an orthogonal box and there are no other compartments.
-                self.grid.compartment_ids[
-                    points_inside_compartments
-                ] = -compartment.number
-                compartment.surfacePointsCoords = None
-                bb0x, bb0y, bb0z = compartment.bb[0]
-                bb1x, bb1y, bb1z = compartment.bb[1]
-                AreaXplane = (bb1y - bb0y) * (bb1z - bb0z)
-                AreaYplane = (bb1x - bb0x) * (bb1z - bb0z)
-                AreaZplane = (bb1y - bb0y) * (bb1x - bb0x)
-                vSurfaceArea = (
-                    abs(AreaXplane) * 2 + abs(AreaYplane) * 2 + abs(AreaZplane) * 2
-                )
-                print("vSurfaceArea = ", vSurfaceArea)
-                compartment.insidePoints = points_inside_compartments
-                compartment.surfacePoints = points_on_surfaces
-                compartment.surfacePointsCoords = []
-                compartment.surfacePointsNormals = []
-                print(
-                    " %d inside pts, %d tot grid pts, %d master grid"
-                    % (
-                        len(points_inside_compartments),
-                        len(points_inside_compartments),
-                        len(self.grid.masterGridPositions),
-                    )
-                )
-                compartment.computeVolumeAndSetNbMol(
-                    self,
-                    points_on_surfaces,
-                    points_inside_compartments,
-                    areas=vSurfaceArea,
-                )
-                print(
-                    "The size of the grid I build = ", len(points_inside_compartments)
-                )
-            else:
-                points_inside_compartments, points_on_surfaces = compartment.BuildGrid(
-                    self
-                )
-
-            aInteriorGrids.append(points_inside_compartments)
-            aSurfaceGrids.append(points_on_surfaces)
-
-        self.grid.aInteriorGrids = aInteriorGrids
-        print("I'm out of the loop and have build my grid with inside points")
-        self.grid.aSurfaceGrids = aSurfaceGrids
-        print("build Grids", self.innerGridMethod, len(self.grid.aSurfaceGrids))
 
     def onePrevIngredient(self, i, mingrs, distance, nbFreePoints, marray):
         """
@@ -1762,7 +1340,7 @@ class Environment(CompartmentList):
         mr = self.get_dpad(ingr.compNum)
         spacing = self.smallestProteinSize
         jitter = ingr.getMaxJitter(spacing)
-        dpad = ingr.minRadius + mr + jitter
+        dpad = ingr.min_radius + mr + jitter
         insidePoints, newDistPoints = ingr.getInsidePoints(
             self.grid,
             self.grid.masterGridPositions,
@@ -1825,40 +1403,6 @@ class Environment(CompartmentList):
         if i < len(marray):
             marray[i][3] = insidePoints.keys()[0]
             ingr.rbnode[insidePoints.keys()[0]] = rbnode
-        #        else :
-        #            nmol = len(self.molecules)
-        #            for j,organelle in enumerate(self.organelles):
-        #                print (i,nmol+len(organelle.molecules))
-        #                if i < nmol+len(organelle.molecules):
-        #                    organelle.molecules[i-nmol][3]=insidePoints.keys()[0]
-        #                    ingr.rbnode[insidePoints.keys()[0]] = rbnode
-        #                else :
-        #                    nmol+=len(organelle.molecules)
-
-    def setCompatibility(self):
-        """
-        in earlier version the grid was part of the environment class.
-        Since we split the grid in her own class, to avoid some error during the transition
-        we alias all the function and attribute.
-        """
-        self.getPointsInCube = self.grid.getPointsInCube
-        self.boundingBox = self.grid.boundingBox
-        self.compartment_ids = self.grid.compartment_ids
-        self.freePoints = self.grid.freePoints
-        self.diag = self.grid.diag
-        self.gridSpacing = self.grid.gridSpacing
-        self.nbGridPoints = self.grid.nbGridPoints
-        self.nbSurfacePoints = self.grid.nbSurfacePoints
-        self.gridVolume = (
-            self.grid.gridVolume
-        )  # will be the toatl number of grid points
-        self.masterGridPositions = self.grid.masterGridPositions
-        self.aInteriorGrids = self.grid.aInteriorGrids
-        self.aSurfaceGrids = self.grid.aSurfaceGrids
-        self.surfPtsBht = self.grid.surfPtsBht
-        self.compartment_ids = self.grid.compartment_ids = numpy.array(
-            self.grid.compartment_ids, int
-        )
 
     def getSortedActiveIngredients(self, allIngredients):
         """
@@ -1875,7 +1419,7 @@ class Environment(CompartmentList):
         #     e.g. an ingredient with a priority=10 will be 10x more likely to be picked than
         #     an ingredient with a priority=1.
         # An ingredient with the default priority=0 will recieve a weighted value based on its
-        #     complexity. (currently complexity = minRadius), thus a more 'complex' ingredient
+        #     complexity. (currently complexity = min_radius), thus a more 'complex' ingredient
         #     will more likely try to pack before a less 'complex' ingredient.
         #     IMPORTANT: the +priority list does not fully mix with the priority=0 list, but this
         #     should be an option... currently, the priority=0 list is normalized against a range
@@ -1894,21 +1438,21 @@ class Environment(CompartmentList):
         priorities1 = []
         ingr2 = []  # priority = 0 or none and will be assigned based on complexity
         priorities2 = []
-        ingr0 = []  # negative values will pack first in order of abs[packingPriority]
+        ingr0 = []  # negative values will pack first in order of abs[packing_priority]
         priorities0 = []
         for ing in allIngredients:
             if ing.completion >= 1.0:
                 continue  # ignore completed ingredients
-            if ing.packingPriority is None or ing.packingPriority == 0:
+            if ing.packing_priority is None or ing.packing_priority == 0:
                 ingr2.append(ing)
-                priorities2.append(ing.packingPriority)
-            elif ing.packingPriority > 0:
+                priorities2.append(ing.packing_priority)
+            elif ing.packing_priority > 0:
                 ingr1.append(ing)
-                priorities1.append(ing.packingPriority)
+                priorities1.append(ing.packing_priority)
             else:
-                # ing.packingPriority    = -ing.packingPriority
+                # ing.packing_priority    = -ing.packing_priority
                 ingr0.append(ing)
-                priorities0.append(ing.packingPriority)
+                priorities0.append(ing.packing_priority)
 
         if self.pickWeightedIngr:
             try:
@@ -1920,18 +1464,18 @@ class Environment(CompartmentList):
         # GrahamAdded this stuff in summer 2011, beware!
         if len(ingr1) != 0:
             lowestIng = ingr1[len(ingr1) - 1]
-            self.lowestPriority = lowestIng.packingPriority
+            self.lowestPriority = lowestIng.packing_priority
         else:
             self.lowestPriority = 1.0
         self.log.info("self.lowestPriority for Ing1 = %d", self.lowestPriority)
         self.totalRadii = 0
         for radii in ingr2:
-            if radii.modelType == "Cylinders":
-                r = max(radii.length / 2.0, radii.minRadius)
-            elif radii.modelType == "Spheres":
-                r = radii.minRadius
-            elif radii.modelType == "Cube":
-                r = radii.minRadius
+            if radii.model_type == "Cylinders":
+                r = max(radii.length / 2.0, radii.min_radius)
+            elif radii.model_type == "Spheres":
+                r = radii.min_radius
+            elif radii.model_type == "Cube":
+                r = radii.min_radius
             self.totalRadii = self.totalRadii + r
             self.log.info("self.totalRadii += %d = %d", r, self.totalRadii)
             if r == 0:
@@ -1940,13 +1484,13 @@ class Environment(CompartmentList):
 
         self.normalizedPriorities0 = []
         for priors2 in ingr2:
-            if priors2.modelType == "Cylinders":
-                r = max(priors2.length / 2.0, priors2.minRadius)
-            elif priors2.modelType == "Spheres":
-                r = priors2.minRadius
+            if priors2.model_type == "Cylinders":
+                r = max(priors2.length / 2.0, priors2.min_radius)
+            elif priors2.model_type == "Spheres":
+                r = priors2.min_radius
             np = float(r) / float(self.totalRadii) * self.lowestPriority
             self.normalizedPriorities0.append(np)
-            priors2.packingPriority = np
+            priors2.packing_priority = np
             self.log.info("self.normalizedPriorities0 = %r", self.normalizedPriorities0)
         activeIngr0 = ingr0  # +ingr1+ingr2  #cropped to 0 on 7/20/10
 
@@ -2109,18 +1653,18 @@ class Environment(CompartmentList):
         return ingr
 
     def get_dpad(self, compNum):
-        """Return the largest encapsulatingRadius and use it for padding"""
+        """Return the largest encapsulating_radius and use it for padding"""
         mr = 0.0
         if compNum == 0:  # cytoplasm -> use cyto and all surfaces
             for ingr1 in self.activeIngr:
                 if ingr1.compNum >= 0:
-                    r = ingr1.encapsulatingRadius
+                    r = ingr1.encapsulating_radius
                     if r > mr:
                         mr = r
         else:
             for ingr1 in self.activeIngr:
                 if ingr1.compNum == compNum or ingr1.compNum == -compNum:
-                    r = ingr1.encapsulatingRadius
+                    r = ingr1.encapsulating_radius
                     if r > mr:
                         mr = r
         return mr
@@ -2177,7 +1721,7 @@ class Environment(CompartmentList):
 
             self.totalPriorities = 0  # 0.00001
             for priors in self.activeIngr12:
-                pp = priors.packingPriority
+                pp = priors.packing_priority
                 self.totalPriorities = self.totalPriorities + pp
             previousThresh = 0
             self.normalizedPriorities = []
@@ -2191,7 +1735,7 @@ class Environment(CompartmentList):
                     self.thresholdPriorities.append(2)
             for priors in self.activeIngr12:
                 # pp1 = 0
-                pp = priors.packingPriority
+                pp = priors.packing_priority
                 if self.totalPriorities != 0:
                     np = float(pp) / float(self.totalPriorities)
                 else:
@@ -2208,7 +1752,7 @@ class Environment(CompartmentList):
 
         if self.pickRandPt:
             self.log.info("picking random point")
-            if ingr.packingMode == "close":
+            if ingr.packing_mode == "close":
                 order = numpy.argsort(allIngrDist)
                 # pick point with closest distance
                 ptInd = allIngrPts[order[0]]
@@ -2218,7 +1762,7 @@ class Environment(CompartmentList):
                     ptIndr = int(uniform(0.0, 1.0) * len(allIngrPts))
                     ptInd = allIngrPts[ptIndr]
 
-            elif ingr.packingMode == "gradient" and self.use_gradient:
+            elif ingr.packing_mode == "gradient" and self.use_gradient:
                 # get the most probable point using the gradient
                 # use the gradient weighted map and get mot probabl point
                 self.log.info("pick point from gradients %d", (len(allIngrPts)))
@@ -2275,8 +1819,10 @@ class Environment(CompartmentList):
     def getTotalNbObject(self, allIngredients, update_partner=False):
         totalNbIngr = 0
         for ingr in allIngredients:
-            if ingr.Type == "Grow":
-                totalNbIngr += int(ingr.left_to_place * (ingr.length / ingr.uLength))
+            if ingr.type == "Grow":
+                totalNbIngr += int(
+                    ingr.left_to_place * (ingr.length / ingr.unit_length)
+                )
             else:
                 totalNbIngr += ingr.left_to_place
             if update_partner:
@@ -2286,11 +1832,10 @@ class Environment(CompartmentList):
     def pack_grid(
         self,
         seedNum=14,
-        stepByStep=False,
-        debugFunc=None,
         name=None,
         vTestid=3,
         vAnalysis=0,
+        show_grid_spheres=False,
         **kw,
     ):
         """
@@ -2300,6 +1845,7 @@ class Environment(CompartmentList):
         # set periodicity
         autopack.testPeriodicity = self.use_periodicity
         t1 = time()
+        self.show_grid_spheres = show_grid_spheres
         self.timeUpDistLoopTotal = 0
         self.static = []
         if self.grid is None:
@@ -2359,7 +1905,7 @@ class Environment(CompartmentList):
 
         self.totalPriorities = 0  # 0.00001
         for priors in self.activeIngr12:
-            pp = priors.packingPriority
+            pp = priors.packing_priority
             self.totalPriorities = self.totalPriorities + pp
             self.log.info("totalPriorities = %d", self.totalPriorities)
         previousThresh = 0
@@ -2374,7 +1920,7 @@ class Environment(CompartmentList):
                 self.thresholdPriorities.append(2)
         for priors in self.activeIngr12:
             # pp1 = 0
-            pp = priors.packingPriority
+            pp = priors.packing_priority
             if self.totalPriorities != 0:
                 np = float(pp) / float(self.totalPriorities)
             else:
@@ -2473,7 +2019,7 @@ class Environment(CompartmentList):
             max_radius = self.get_dpad(current_ingr_compartment)
 
             self.log.info(
-                f"picked Ingr radius {ingr.minRadius}, compNum {current_ingr_compartment}"
+                f"picked Ingr radius {ingr.min_radius}, compNum {current_ingr_compartment}"
             )
 
             # find the points that can be used for this ingredient
@@ -2509,21 +2055,21 @@ class Environment(CompartmentList):
             # NOTE: should we do the close partner check here instead of in the place functions?
             # place the ingredient
             if self.overwritePlaceMethod:
-                ingr.placeType = self.placeMethod
+                ingr.place_type = self.placeMethod
 
-            if ingr.encapsulatingRadius > self.largestProteinSize:
-                self.largestProteinSize = ingr.encapsulatingRadius
+            if ingr.encapsulating_radius > self.largestProteinSize:
+                self.largestProteinSize = ingr.encapsulating_radius
             self.log.info(
                 "attempting to place near %d: %r",
                 ptInd,
                 self.grid.masterGridPositions[ptInd],
             )
             collision_possible = True
-            if distances[ptInd] >= ingr.encapsulatingRadius + ingr.getMaxJitter(
-                spacing
-            ):
-                # there is no possible collision here
-                collision_possible = False
+            # if distances[ptInd] >= ingr.encapsulating_radius + ingr.getMaxJitter(
+            #     spacing
+            # ):
+            #     # there is no possible collision here
+            #     collision_possible = False
             (
                 success,
                 insidePoints,
@@ -2545,9 +2091,9 @@ class Environment(CompartmentList):
                 self.grid.freePoints = numpy.array(freePoints[:])
                 self.grid.nbFreePoints = len(freePoints)  # -1
                 # update largest protein size
-                # problem when the encapsulatingRadius is actually wrong
-                if ingr.encapsulatingRadius > self.largestProteinSize:
-                    self.largestProteinSize = ingr.encapsulatingRadius
+                # problem when the encapsulating_radius is actually wrong
+                if ingr.encapsulating_radius > self.largestProteinSize:
+                    self.largestProteinSize = ingr.encapsulating_radius
                 PlacedMols += 1
             else:
                 self.log.info("rejected %r", ingr.rejectionCounter)
@@ -2581,7 +2127,7 @@ class Environment(CompartmentList):
 
                 self.totalPriorities = 0  # 0.00001
                 for priors in self.activeIngr12:
-                    pp = priors.packingPriority
+                    pp = priors.packing_priority
                     self.totalPriorities = self.totalPriorities + pp
                 #                    print ('totalPriorities = ', self.totalPriorities)
                 previousThresh = 0
@@ -2596,7 +2142,7 @@ class Environment(CompartmentList):
                         self.thresholdPriorities.append(2)
                 for priors in self.activeIngr12:
                     # pp1 = 0
-                    pp = priors.packingPriority
+                    pp = priors.packing_priority
                     if self.totalPriorities != 0:
                         np = float(pp) / float(self.totalPriorities)
                     else:
@@ -2607,25 +2153,9 @@ class Environment(CompartmentList):
                     previousThresh = np + float(previousThresh)
                 self.activeIngr = self.activeIngr0 + self.activeIngr12
             if dump and ((time() - stime) > dump_freq):
-                self.collectResultPerIngredient()
+                # self.collectResultPerIngredient()
                 print("SAVING", self.resultfile)
-                IOutils.save(
-                    self,
-                    self.resultfile + "_temporaray.json",
-                    useXref=True,
-                    kwds=["source", "name", "positions", "radii"],
-                    result=True,
-                    quaternion=True,
-                )
-                IOutils.save(
-                    self,
-                    self.resultfile + "_temporaray_transpose.json",
-                    useXref=True,
-                    kwds=["source", "name", "positions", "radii"],
-                    result=True,
-                    quaternion=True,
-                    transpose=True,
-                )
+                # TODO: save out intermediate simularium files
                 stime = time()
 
         self.distancesAfterFill = distances[:]
@@ -2651,12 +2181,6 @@ class Environment(CompartmentList):
             ingredients[ingr.name][2].append(rot)
             ingredients[ingr.name][3].append(numpy.array(mat))
         for compartment in self.compartments:
-            print(
-                compartment.name,
-                compartment.center,
-                compartment.radius,
-                compartment.printFillInfo(),
-            )
             for pos, rot, ingr, ptInd in compartment.molecules:
                 if ingr.name not in ingredients:
                     ingredients[ingr.name] = [ingr, [], [], []]
@@ -2682,19 +2206,6 @@ class Environment(CompartmentList):
         print(
             "Popup CancelBox: if Cancel Box is up for more than 10 sec, close box and continue loop from here"
         )
-
-    #        from pyubic.cinema4d.c4dUI import TimerDialog
-    #        dialog = TimerDialog()
-    #        dialog.init()
-    #        dialog.Open(async=True, pluginid=25555589, width=120, height=100)
-    #        tt=time()
-    # while dialog.IsOpen():
-    #    if time()-tt > 5.:
-    #        print "time()-tt = ", time()-tt
-    #        dialog.Close()
-    #        cancel = dialog._cancel
-    #        cancel=c4d.gui.QuestionDialog('WannaCancel?') # Removed by Graham on July 10, 2012 because it may no longer be needed, but test it TODO
-    #        return cancel
 
     def restore_molecules_array(self, ingr):
         if len(ingr.results):
@@ -2796,7 +2307,7 @@ class Environment(CompartmentList):
             #            pickle.dump(orga.molecules, orfile)
             orfile.close()
         rfile = open(resultfilename + "freePoints", "wb")
-        pickle.dump(self.freePoints, rfile)
+        pickle.dump(self.grid.freePoints, rfile)
         rfile.close()
 
     @classmethod
@@ -2841,8 +2352,8 @@ class Environment(CompartmentList):
             ingr.o_name,
             ingr.compNum,
             1,
-            ingr.encapsulatingRadius,
-        )  # ingrdic["compNum"],1,ingrdic["encapsulatingRadius"]
+            ingr.encapsulating_radius,
+        )  # ingrdic["compNum"],1,ingrdic["encapsulating_radius"]
 
     def load_asTxt(self, resultfilename=None):
         if resultfilename is None:
@@ -3045,7 +2556,7 @@ class Environment(CompartmentList):
     def dropOneIngrJson(self, ingr, rdic):
         adic = OrderedDict()  # [ingr.name]
         adic["compNum"] = ingr.compNum
-        adic["encapsulatingRadius"] = float(ingr.encapsulatingRadius)
+        adic["encapsulating_radius"] = float(ingr.encapsulating_radius)
         adic["results"] = []
         for r in ingr.results:
             if hasattr(r[0], "tolist"):
@@ -3127,7 +2638,7 @@ class Environment(CompartmentList):
         line += "<recipe include = " + self.setupfile + ">\n"
         for pos, rot, ingr, ptInd in self.molecules:
             line += self.dropOneIngr(
-                pos, rot, ingr.name, ingr.compNum, ptInd, rad=ingr.encapsulatingRadius
+                pos, rot, ingr.name, ingr.compNum, ptInd, rad=ingr.encapsulating_radius
             )
             # result.append([pos,rot,ingr.name,ingr.compNum,ptInd])
         rfile.write(line)
@@ -3144,7 +2655,7 @@ class Environment(CompartmentList):
                     ingr.name,
                     ingr.compNum,
                     ptInd,
-                    rad=ingr.encapsulatingRadius,
+                    rad=ingr.encapsulating_radius,
                 )
             orfile.write(line)
             #            pickle.dump(orga.molecules, orfile)
@@ -3203,34 +2714,6 @@ class Environment(CompartmentList):
             nbFreePoints = self.nbFreePointsAfterFill
         # a freepoint is a voxel, how many water in the voxel
         # coords masterGridPositions
-
-    def estimateVolume(self, boundingBox, spacing):
-        # need to box N point and coordinaePoint
-        #        xl,yl,zl = boundingBox[0]
-        #        xr,yr,zr = boundingBox[1]
-        #        realTotalVol = (xr-xl)*(yr-yl)*(zr-zl)
-        grid = Grid()
-        grid.boundingBox = boundingBox
-        grid.gridSpacing = spacing  # = self.smallestProteinSize*1.1547  # 2/sqrt(3)????
-        grid.gridVolume, grid.nbGridPoints = self.callFunction(
-            grid.computeGridNumberOfPoint, (boundingBox, spacing)
-        )
-        unitVol = spacing**3
-        realTotalVol = grid.gridVolume * unitVol
-
-        r = self.exteriorRecipe
-        if r:
-            r.setCount(realTotalVol, reset=False)
-        for o in self.compartments:
-            o.estimateVolume(hBB=grid.boundingBox)
-            rs = o.surfaceRecipe
-            if rs:
-                realTotalVol = o.surfaceVolume
-                rs.setCount(realTotalVol, reset=False)
-            ri = o.innerRecipe
-            if ri:
-                realTotalVol = o.interiorVolume
-                ri.setCount(realTotalVol, reset=False)
 
     # ==============================================================================
     # AFter this point, features development around physics engine and algo
@@ -3322,9 +2805,9 @@ class Environment(CompartmentList):
                 o.rbnode = o.addShapeRB()  # addMeshRBOrganelle(o)
 
     def add_rb_node(self, ingr, trans, mat):
-        if ingr.Type == "Mesh":
+        if ingr.type == "Mesh":
             return ingr.add_rb_mesh(self.worldNP)
-        elif self.panda_solver == "ode" and ingr.Type == "Sphere":
+        elif self.panda_solver == "ode" and ingr.type == "Sphere":
             mat3x3 = Mat3(
                 mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10]
             )
@@ -3424,7 +2907,7 @@ class Environment(CompartmentList):
             inodenp = inodenp.node()
         return inodenp
 
-    def addRB(self, ingr, trans, rotMat, rtype="SingleSphere", static=False):
+    def addRB(self, ingr, trans, rotMat, rtype="single_sphere", static=False):
         # Sphere
         if panda3d is None:
             return None

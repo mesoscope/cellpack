@@ -1,0 +1,102 @@
+{
+    "version": "1.0.0",
+    "format_version": "2.0.0",
+    "name": "nested_test",
+    "bounding_box": [
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            1000,
+            1000,
+            1000
+        ]
+    ],
+    "objects": {
+        "common_settings": {
+            "type": "single_sphere",
+            "jitter_attempts": 10,
+            "packing_mode": "random",
+            "place_type": "jitter",
+            "available_regions": {
+                "interior": {},
+                "surface": {}
+            }
+        },
+        "large_sphere": {
+            "inherit": "common_settings",
+            "color": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "radius": 600
+        },
+        "medium_sphere": {
+            "inherit": "common_settings",
+            "color": [
+                0.25,
+                0.25,
+                0.25
+            ],
+            "radius": 100
+        },
+        "green_sphere": {
+            "inherit": "common_settings",
+            "color": [
+                0.20,
+                0.70,
+                0.10
+            ],
+            "radius": 30
+        },
+        "red_sphere": {
+            "inherit": "common_settings",
+            "color": [
+                0.90,
+                0.10,
+                0.10
+            ],
+            "radius": 25
+        }
+    },
+    "composition": {
+        "bounding_area": {
+            "regions": {
+                "interior": [
+                    "outer_sphere",
+                    {
+                        "object": "green_sphere",
+                        "count": 5
+                    }
+                ]
+            }
+        },
+        "outer_sphere": {
+            "object": "large_sphere",
+            "count": 1,
+            "regions": {
+                "interior": [
+                    "inner_sphere",
+                    {
+                        "object": "red_sphere",
+                        "count": 40
+                    }
+                ]
+            }
+        },
+        "inner_sphere": {
+            "object": "medium_sphere",
+            "regions": {
+                "interior": [
+                    {
+                        "object": "green_sphere",
+                        "count": 20
+                    }
+                ]
+            }
+        }
+    }
+}

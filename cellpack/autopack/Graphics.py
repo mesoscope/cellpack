@@ -763,13 +763,13 @@ class AutopackViewer:
                         parent=parent,
                         delete=True,
                     )
-                #        else : #cylinder or growingredient#if ingr.modelType=='Spheres':
+                #        else : #cylinder or growingredient#if ingrmodel_type=='Spheres':
                 #            pass
 
     def displayIngrSpheres(self, ingr, verts, radii, visible=1):
         o = ingr.recipe.compartment
         if len(verts[ingr]):
-            if ingr.modelType == "Spheres":
+            if ingr.model_type == "Spheres":
                 name = o.name + "_Spheres_" + ingr.name.replace(" ", "_")
                 if self.ViewerType == "dejavu":
                     sph = self.vi.Spheres(
@@ -993,7 +993,7 @@ class AutopackViewer:
                     # is that not correctly scaled ?
                     circle = self.vi.build_2dshape(
                         name + "_shape",
-                        opts=[ingr.encapsulatingRadius],
+                        opts=[ingr.encapsulating_radius],
                     )[0]
                     extruder, shape = self.vi.extrudeSpline(
                         snake, shape=circle, parent=parent
@@ -1133,9 +1133,9 @@ class AutopackViewer:
             ingr.name,
             ingr.molarity,
             ingr.pdb,
-            ingr.principalVector,
-            ingr.packingPriority,
-            ingr.jitterMax,
+            ingr.principal_vector,
+            ingr.packing_priority,
+            ingr.max_jitter,
         )
 
     def printIngredients(self):
@@ -1155,11 +1155,11 @@ class AutopackViewer:
         radii = []
         level = ingr.deepest_level
         px = ingr.transformPoints(pos, rot, ingr.positions[level])
-        if ingr.modelType == "Spheres":
+        if ingr.model_type == "Spheres":
             for ii in range(len(ingr.radii[level])):
                 verts.append(px[ii])
                 radii.append(ingr.radii[level][ii])
-        elif ingr.modelType == "Cylinders":
+        elif ingr.model_type == "Cylinders":
             px2 = ingr.transformPoints(pos, rot, ingr.positions2[level])
             for ii in range(len(ingr.radii[level])):
                 verts.append(px[ii])
@@ -1220,11 +1220,11 @@ class AutopackViewer:
             matrices.append(r[2])
         print("collected ", len(res), len(matrices), doMesh)
         if doSphere and verts:
-            if ingredient.modelType == "Spheres":
+            if ingredient.model_type == "Spheres":
                 self.displayIngrSpheres(
                     ingredient, {ingredient: verts}, {ingredient: radii}, visible=1
                 )
-            elif ingredient.modelType == "Cylinders":
+            elif ingredient.model_type == "Cylinders":
                 self.displayIngrCylinders(
                     ingredient, {ingredient: verts}, {ingredient: radii}, visible=1
                 )
@@ -1246,7 +1246,7 @@ class AutopackViewer:
                 dejavui = not len(instances)
             if not hasattr(ingredient, "ipoly") or ingredient.ipoly is None or dejavui:
                 color = [ingredient.color] if ingredient.color is not None else None
-                axis = numpy.array(ingredient.principalVector[:])
+                axis = numpy.array(ingredient.principal_vector[:])
                 print("build ipoly ", ingredient.o_name)
                 ingredient.ipoly = self.vi.instancePolygon(
                     o.name + self.histo.FillName[self.histo.cFill] + ingredient.o_name,
@@ -1273,7 +1273,7 @@ class AutopackViewer:
                 )
             #                    self.vi.AddObject(parent)
             if not hasattr(ingredient, "ipoly") or ingredient.ipoly is None:
-                axis = numpy.array(ingredient.principalVector[:])
+                axis = numpy.array(ingredient.principal_vector[:])
                 #                if self.vi.host.find("blender") != -1 and self.vi.instance_dupliFace and ingredient.coordsystem == "left":
                 #                            if self.helper.getType(self.helper.getChilds(polygon)[0]) != self.helper.EMPTY:
                 #                    axis = self.vi.rotatePoint(axis,[0.,0.,0.],[0.0,1.0,0.0,-math.pi/2.0])
@@ -1301,11 +1301,11 @@ class AutopackViewer:
             for pos, rot, ingr, ptInd in self.histo.molecules:
                 level = ingr.deepest_level
                 px = ingr.transformPoints(pos, rot, ingr.positions[level])
-                if ingr.modelType == "Spheres":
+                if ingr.model_type == "Spheres":
                     for ii in range(len(ingr.radii[level])):
                         verts[ingr].append(px[ii])
                         radii[ingr].append(ingr.radii[level][ii])
-                elif ingr.modelType == "Cylinders":
+                elif ingr.model_type == "Cylinders":
                     px2 = ingr.transformPoints(pos, rot, ingr.positions2[level])
                     for ii in range(len(ingr.radii[level])):
                         verts[ingr].append(px[ii])
@@ -1319,9 +1319,9 @@ class AutopackViewer:
             if r:
                 for ingr in r.ingredients:
                     #                    self.displayIngrSpheres(ingr,verts,radii)
-                    if ingr.modelType == "Spheres":
+                    if ingr.model_type == "Spheres":
                         self.displayIngrSpheres(ingr, verts, radii, visible=1)
-                    elif ingr.modelType == "Cylinders":
+                    elif ingr.model_type == "Cylinders":
                         self.displayIngrCylinders(ingr, verts, radii, visible=1)
 
         # display cytoplasm meshes
@@ -1364,7 +1364,7 @@ class AutopackViewer:
                 if ingr not in meshGeoms:
                     print("ingr not in meshGeoms", ingr, meshGeoms)
                     continue
-                axis = numpy.array(ingr.principalVector[:])
+                axis = numpy.array(ingr.principal_vector[:])
                 ingr.ipoly = self.vi.instancePolygon(
                     "cyto_" + self.histo.FillName[self.histo.cFill] + ingr.o_name,
                     matrices=meshGeoms[ingr],
@@ -1413,11 +1413,11 @@ class AutopackViewer:
                 for pos, rot, ingr, ptInd in orga.molecules:
                     level = ingr.deepest_level
                     px = ingr.transformPoints(pos, rot, ingr.positions[level])
-                    if ingr.modelType == "Spheres":
+                    if ingr.model_type == "Spheres":
                         for ii in range(len(ingr.radii[level])):
                             verts[ingr].append(px[ii])
                             radii[ingr].append(ingr.radii[level][ii])
-                    elif ingr.modelType == "Cylinders":
+                    elif ingr.model_type == "Cylinders":
                         px2 = ingr.transformPoints(pos, rot, ingr.positions2[level])
                         for ii in range(len(ingr.radii[level])):
                             verts[ingr].append(px[ii])
@@ -1429,17 +1429,17 @@ class AutopackViewer:
                 if rs:
                     for ingr in rs.ingredients:
                         if len(verts[ingr]):
-                            if ingr.modelType == "Spheres":
+                            if ingr.model_type == "Spheres":
                                 self.displayIngrSpheres(ingr, verts, radii, visible=0)
-                            elif ingr.modelType == "Cylinders":
+                            elif ingr.model_type == "Cylinders":
                                 print("display", ingr.name)
                                 self.displayIngrCylinders(ingr, verts, radii, visible=1)
                 if ri:
                     for ingr in ri.ingredients:
                         if len(verts[ingr]):
-                            if ingr.modelType == "Spheres":
+                            if ingr.model_type == "Spheres":
                                 self.displayIngrSpheres(ingr, verts, radii, visible=0)
-                            elif ingr.modelType == "Cylinders":
+                            elif ingr.model_type == "Cylinders":
                                 self.displayIngrCylinders(ingr, verts, radii, visible=1)
 
             # Meshs
@@ -1492,7 +1492,7 @@ class AutopackViewer:
                         if self.helper.host == "dejavu":
                             parent = None
                         print("ri instanciation of polygon", polygon)
-                        axis = numpy.array(ingr.principalVector[:])
+                        axis = numpy.array(ingr.principal_vector[:])
                         #                        if self.vi.host.find("blender") != -1 and self.vi.instance_dupliFace and ingr.coordsystem == "left":
                         #                            if self.helper.getType(self.helper.getChilds(polygon)[0]) != self.helper.EMPTY:
                         #                            axis = self.vi.rotatePoint(axis,[0.,0.,0.],[0.0,1.0,0.0,-math.pi/2.0])
@@ -1543,7 +1543,7 @@ class AutopackViewer:
                         if self.helper.host == "dejavu":
                             parent = None
                         print("rs instanciation of polygon", polygon, parent)
-                        axis = numpy.array(ingr.principalVector[:])
+                        axis = numpy.array(ingr.principal_vector[:])
                         #                        if self.vi.host.find("blender") != -1 and self.vi.instance_dupliFace and ingr.coordsystem == "left":
                         #                            if self.helper.getType(self.helper.getChilds(polygon)[0]) != self.helper.EMPTY:
                         #                            axis = self.vi.rotatePoint(axis,[0.,0.,0.],[0.0,1.0,0.0,-math.pi/2.0])
@@ -1922,7 +1922,7 @@ class AutopackViewer:
                     positions=[numpy.array(positions)],
                     positions2=[numpy.array(positions2)],
                     meshObject=obj,
-                    principalVector=axis,
+                    principal_vector=axis,
                 )
             elif ingtype == self.helper.CUBE:
 
@@ -1964,12 +1964,12 @@ class AutopackViewer:
                 positions=[[[0, -h / 2.0, 0]]],
                 positions2=[[[0, h / 2.0, 0]]],
                 meshObject=ingrobj,
-                #                jitterMax=(1.,1.,1.),#how to customize
-                #                rotAxis=(0.,0.,1.0),#how to customize
-                #                nbJitter = 10,
+                #                max_jitter=(1.,1.,1.),#how to customize
+                #                rotation_axis=(0.,0.,1.0),#how to customize
+                #                jitter_attempts = 10,
                 #  CRITICAL !!! IF jitter is greater than radius of object,
                 # e.g. 5x(1,1,1) the point may not be consumed!!!
-                principalVector=axis,  # should come from the object
+                principal_vector=axis,  # should come from the object
             )
         elif self.helper.getType(obj) == self.helper.CUBE:
 
@@ -2630,7 +2630,7 @@ class AutopackViewer:
         )
 
     def checkIngrSpheres(self, ingr):
-        if ingr.modelType == "Spheres":
+        if ingr.model_type == "Spheres":
             name = "SpheresRep_" + ingr.name.replace(" ", "_")
             parent = self.vi.getObject(name)
             names = "SpheresRep_" + ingr.name.replace(" ", "_") + "S"

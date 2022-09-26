@@ -135,11 +135,10 @@ class BaseGrid:
         return nbFreePoints
 
     def __init__(
-        self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=True, lookup=0
+        self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), spacing=20, setup=True, lookup=0
     ):
         self.log = logging.getLogger("grid")
         self.log.propagate = False
-
         if None in boundingBox[0] or None in boundingBox[1]:
             boundingBox = ([0, 0, 0], [1000, 1000, 1000])
         # a grid is attached to an environnement
@@ -163,7 +162,7 @@ class BaseGrid:
         self.distToClosestSurf = []
         self.distToClosestSurf_store = []
         self.diag = self.getDiagonal()
-        self.gridSpacing = space  # * 1.1547#cubic grid with a diagonal spacing equal to that smallest packing radius
+        self.gridSpacing = spacing  # #cubic grid with a diagonal spacing equal to that smallest packing radius
         self.nbGridPoints = None
         self.nbSurfacePoints = 0
         self.gridVolume = 0  # will be the total number of grid points
@@ -188,17 +187,14 @@ class BaseGrid:
         self.center = None
         self.backup = None
         if setup:
-            self.setup(self.boundingBox, space)
+            self.setup(self.boundingBox)
             # use np.roll to have periodic condition
             # what about collision ?
 
-    def setup(self, boundingBox, space):
+    def setup(self, boundingBox):
         # TODO : verify the gridSpacing calculation / setup after reading the recipe
-        if space == 0:
-            space = 20
-        self.gridSpacing = space  # * 1.1547
-        self.boundingBox = boundingBox
 
+        self.boundingBox = boundingBox
         if self.lookup == 0:
             self.create3DPointLookupCover()
         elif self.lookup == 1:
@@ -211,7 +207,7 @@ class BaseGrid:
 
         self.getDiagonal()
         self.nbSurfacePoints = 0
-        self.log.info("SETUP BASE GRID %d %d", self.gridVolume, self.gridSpacing)
+        self.log.info(f"SETUP BASE GRID {self.gridVolume} {self.gridSpacing}")
         self.compartment_ids = numpy.zeros(self.gridVolume, "i")  # [0]*nbPoints
         # self.distToClosestSurf = [self.diag]*self.gridVolume#surface point too?
         self.distToClosestSurf = (
@@ -284,7 +280,7 @@ class BaseGrid:
                     pointArrayRaw[i] = (x, y, z)
                     self.ijkPtIndice[i] = (xi, yi, zi)
                     i += 1
-        self.log.info("grid spacing %d", space)
+        self.log.info(f"grid spacing {space}")
         self.masterGridPositions = pointArrayRaw
 
     def create3DPointLookup(self, boundingBox=None):
@@ -296,30 +292,23 @@ class BaseGrid:
         if boundingBox is None:
             boundingBox = self.boundingBox
         space = self.gridSpacing
-        # we want the diagonal of the voxel, not the diagonal of the plane, so the second 1.1547 is was incorrect
         environmentBoxEqualFillBox = False
 
         self.log.info("Using create3DPointLookup")
         if environmentBoxEqualFillBox:  # environment.environmentBoxEqualFillBox:
-            self._x = x = numpy.arange(
-                boundingBox[0][0], boundingBox[1][0], space
-            )  # *1.1547) gridspacing is already multiplied by 1.1547
-            self._y = y = numpy.arange(
-                boundingBox[0][1], boundingBox[1][1], space
-            )  # *1.1547)
-            self._z = z = numpy.arange(
-                boundingBox[0][2], boundingBox[1][2], space
-            )  # *1.1547)
+            self._x = x = numpy.arange(boundingBox[0][0], boundingBox[1][0], space)
+            self._y = y = numpy.arange(boundingBox[0][1], boundingBox[1][1], space)
+            self._z = z = numpy.arange(boundingBox[0][2], boundingBox[1][2], space)
         else:
             self._x = x = numpy.arange(
                 boundingBox[0][0] - space, boundingBox[1][0] + space, space
-            )  # *1.1547) gridspacing is already multiplied by 1.1547
+            )
             self._y = y = numpy.arange(
                 boundingBox[0][1] - space, boundingBox[1][1] + space, space
-            )  # *1.1547)
+            )
             self._z = z = numpy.arange(
                 boundingBox[0][2] - space, boundingBox[1][2] + space, space
-            )  # *1.1547)
+            )
         nx = len(
             x
         )  # sizes must be +1 or the right, top, and back edges don't get any points using this numpy.arange method
@@ -351,7 +340,7 @@ class BaseGrid:
             boundingBox = self.boundingBox
         space = self.gridSpacing
         S = numpy.array(boundingBox[1]) - numpy.array(boundingBox[0])
-        NX, NY, NZ = numpy.around(S / (self.gridSpacing))  # / 1.1547))
+        NX, NY, NZ = numpy.around(S / (self.gridSpacing))
         if NX == 0:
             NX = 1
         if NY == 0:
@@ -359,36 +348,29 @@ class BaseGrid:
         if NZ == 0:
             NZ = 1
         self.log.info("using create3DPointLookupCover")
-        # we want the diagonal of the voxel, not the diagonal of the plane, so the second 1.1547 is was incorrect
         environmentBoxEqualFillBox = True
         # np.linspace(2.0, 3.0, num=5)
         if environmentBoxEqualFillBox:  # environment.environmentBoxEqualFillBox:
-            self._x = x = numpy.linspace(
-                boundingBox[0][0], boundingBox[1][0], int(NX)
-            )  # *1.1547) gridspacing is already multiplied by 1.1547
-            self._y = y = numpy.linspace(
-                boundingBox[0][1], boundingBox[1][1], int(NY)
-            )  # *1.1547)
-            self._z = z = numpy.linspace(
-                boundingBox[0][2], boundingBox[1][2], int(NZ)
-            )  # *1.1547)
+            self._x = x = numpy.linspace(boundingBox[0][0], boundingBox[1][0], int(NX))
+            self._y = y = numpy.linspace(boundingBox[0][1], boundingBox[1][1], int(NY))
+            self._z = z = numpy.linspace(boundingBox[0][2], boundingBox[1][2], int(NZ))
         else:
             self._x = x = numpy.arange(
                 boundingBox[0][0], boundingBox[1][0] + space, space
-            )  # *1.1547) gridspacing is already multiplied by 1.1547
+            )
             self._y = y = numpy.arange(
                 boundingBox[0][1], boundingBox[1][1] + space, space
-            )  # *1.1547)
+            )
             self._z = z = numpy.arange(
                 boundingBox[0][2], boundingBox[1][2] + space, space
-            )  # *1.1547)
+            )
         xyz = numpy.meshgrid(x, y, z, copy=False)
         nx = len(
             x
         )  # sizes must be +1 or the right, top, and back edges don't get any points using this numpy.arange method
         ny = len(y)
         nz = len(z)
-        self.gridSpacing = (x[1] - x[0]) * 1.1547  # ? should I multiply here ?
+        self.gridSpacing = x[1] - x[0]
         self.nbGridPoints = [nx, ny, nz]
         self.gridVolume = nx * ny * nz
         self.ijkPtIndice = numpy.ndindex(nx, ny, nz)
@@ -639,7 +621,7 @@ class BaseGrid:
                 tr.append(pt3d + corner[i])
         return tr
 
-    def checkPointInside(self, pt3d, dist=None, jitter=[1, 1, 1], bb=None):
+    def is_point_inside_bb(self, pt3d, dist=None, jitter=[1, 1, 1], bb=None):
         """
         Check if the given 3d points is inside the grid
         """
@@ -873,7 +855,7 @@ class BaseGrid:
 class HaltonGrid(BaseGrid):
     def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=False):
         BaseGrid.__init__(
-            self, boundingBox=boundingBox, space=space, setup=setup, lookup=1
+            self, boundingBox=boundingBox, spacing=space, setup=setup, lookup=1
         )
         self.haltonseq = cHaltonSequence3()
         self.tree = None

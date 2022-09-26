@@ -114,8 +114,7 @@ if not os.path.exists(appdata):
 def checkURL(URL):
     try:
         response = urllib.urlopen(URL)
-    except Exception as e:
-        log.error("Error in checkURL ", URL, e)
+    except Exception:
         return False
     return response.code != 404
 
@@ -318,7 +317,6 @@ def updateReplacePath(newPaths):
 
 
 def retrieveFile(filename, destination="", cache="geometries", force=None):
-    #    helper = autopack.helper
     if force is None:
         force = forceFetch
     if filename.find("http") == -1 and filename.find("ftp") == -1:

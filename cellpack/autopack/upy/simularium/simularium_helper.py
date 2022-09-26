@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # standardmodule
 import os
+import matplotlib
 import numpy as np
 import trimesh
 
@@ -107,6 +108,16 @@ class simulariumHelper(hostHelper.Helper):
         self.nogui = True
         self.hext = "dae"
         self.max_fiber_length = 0
+
+    @staticmethod
+    def format_rgb_color(color):
+        need_to_divide = False
+        for ele in color:
+            if ele > 1:
+                need_to_divide = True
+        if need_to_divide:
+            color = np.array(color) / 255
+        return matplotlib.colors.to_hex(color)
 
     def clear(self):
         self.scene = {}
@@ -265,7 +276,7 @@ class simulariumHelper(hostHelper.Helper):
         sub_points=None,
     ):
         self.agent_id_counter += 1
-        if ingredient.Type == "Grow" or ingredient.Type == "Actine":
+        if ingredient.type == "Grow" or ingredient.type == "Actine":
             viz_type = VIZ_TYPE.FIBER
         else:
             viz_type = VIZ_TYPE.DEFAULT
@@ -273,7 +284,7 @@ class simulariumHelper(hostHelper.Helper):
             name,
             instance_id,
             self.agent_id_counter,
-            ingredient.encapsulatingRadius,
+            ingredient.encapsulating_radius,
             viz_type,
         )
         self.scene[instance_id] = new_instance
@@ -284,18 +295,18 @@ class simulariumHelper(hostHelper.Helper):
         name,
         ingredient,
         instance_id,
+        radius,
         position=None,
         rotation=None,
         sub_points=None,
         mesh=None,
     ):
         self.agent_id_counter += 1
-        if ingredient and self.is_fiber(ingredient.Type):
+        if ingredient and self.is_fiber(ingredient.type):
             viz_type = VIZ_TYPE.FIBER
         else:
             viz_type = VIZ_TYPE.DEFAULT
 
-        radius = ingredient.encapsulatingRadius if ingredient is not None else 10
         new_instance = Instance(
             name,
             instance_id,
@@ -321,6 +332,35 @@ class simulariumHelper(hostHelper.Helper):
     def GetAbsPosUntilRoot(self, obj):
         return [0, 0.0, 0.0]
 
+    def add_compartment_to_scene(
+        self,
+        compartment,
+    ):
+        display_type = DISPLAY_TYPE.SPHERE
+        url = ""
+        radius = compartment.encapsulating_radius
+        if compartment.meshType == "file":
+            _, extension = os.path.splitext(compartment.path)
+            if extension == ".obj":
+                display_type = DISPLAY_TYPE.OBJ
+                url = (
+                    compartment.path
+                    if not os.path.isfile(compartment.path)
+                    else os.path.basename(compartment.path)
+                )
+                radius = 1
+        self.display_data[compartment.name] = DisplayData(
+            name=compartment.name, display_type=display_type, url=url
+        )
+        self.add_instance(
+            compartment.name,
+            None,
+            compartment.number,
+            radius,
+            compartment.position,
+            np.identity(4),
+        )
+
     def add_object_to_scene(
         self,
         doc,
@@ -332,11 +372,11 @@ class simulariumHelper(hostHelper.Helper):
     ):
         display_type = DISPLAY_TYPE.SPHERE
 
-        if self.is_fiber(ingredient.Type):
+        if self.is_fiber(ingredient.type):
             if len(control_points) > self.max_fiber_length:
                 self.max_fiber_length = len(control_points)
             display_type = DISPLAY_TYPE.FIBER
-        elif ingredient.Type == "SingleCube":
+        elif ingredient.type == "SingleCube":
             display_type = DISPLAY_TYPE.CUBE
         self.display_data[ingredient.name] = DisplayData(
             name=ingredient.name, display_type=display_type
@@ -356,38 +396,23 @@ class simulariumHelper(hostHelper.Helper):
             self.place_object(instance_id, position, rotation)
 
     def get_display_data(self, ingredient):
-        ingr_name = ingredient.name
         display_type = DISPLAY_TYPE.SPHERE
         url = ""
-        if ingredient.Type == "SingleCube":
+        if ingredient.type == "single_cube":
             display_type = "CUBE"
-        elif ingredient.Type == "SingleSphere":
+        elif ingredient.type == "single_sphere":
             display_type = DISPLAY_TYPE.SPHERE
-        elif self.is_fiber(ingredient.Type):
+        elif self.is_fiber(ingredient.type):
             display_type = DISPLAY_TYPE.FIBER
         else:
-            pdb_file_name = ""
-            display_type = DISPLAY_TYPE.PDB
-            if ingredient.source is not None:
-                pdb_file_name = ingredient.source["pdb"]
-            elif ingredient.pdb is not None and ".map" not in ingredient.pdb:
-                pdb_file_name = ingredient.pdb
-            elif "meshFile" in ingredient:
-                meshType = (
-                    ingredient.meshType if ingredient.meshType is not None else "file"
-                )
-                if meshType == "file":
-                    file_path = os.path.basename(ingredient.meshFile)
-                    file_name, _ = os.path.splitext(file_path)
-
-                elif meshType == "raw":
-                    file_name = ingr_name
-                url = f"{simulariumHelper.DATABASE}/geometries/{file_name}.obj"
+            if ingredient.has_pdb():
+                display_type = DISPLAY_TYPE.PDB
+                url = ingredient.use_pdb()
+            elif ingredient.has_mesh():
                 display_type = DISPLAY_TYPE.OBJ
-            if ".pdb" in pdb_file_name:
-                url = f"{simulariumHelper.DATABASE}/other/{pdb_file_name}"
+                url = ingredient.use_mesh()
             else:
-                url = pdb_file_name
+                return DISPLAY_TYPE.SPHERE, ""
         return display_type, url
 
     @staticmethod
@@ -402,38 +427,66 @@ class simulariumHelper(hostHelper.Helper):
     def init_scene_with_objects(
         self,
         objects,
-        grid_point_positions,
-        grid_point_compartment_ids,
+        grid_point_positions=None,
+        grid_point_compartment_ids=None,
+        show_sphere_trees=False,
     ):
         self.time = 0
         for position, rotation, ingredient, ptInd in objects:
             ingr_name = ingredient.name
             sub_points = None
-            if self.is_fiber(ingredient.Type):
+            if self.is_fiber(ingredient.type):
                 if ingredient.nbCurve == 0:
                     continue
                 # TODO: get sub_points accurately
                 if ingredient.nbCurve > self.max_fiber_length:
                     self.max_fiber_length = ingredient.nbCurve
                 sub_points = ingredient.listePtLinear
-
             if ingr_name not in self.display_data:
                 display_type, url = self.get_display_data(ingredient)
                 self.display_data[ingredient.name] = DisplayData(
-                    name=ingr_name, display_type=display_type, url=url
+                    name=ingr_name,
+                    display_type=display_type,
+                    url=url,
+                    color=simulariumHelper.format_rgb_color(ingredient.color),
                 )
 
+            radius = ingredient.encapsulating_radius if ingredient is not None else 10
+            adj_pos = ingredient.representations.get_adjusted_position(
+                position, rotation
+            )
+
             self.add_instance(
-                ingredient.name,
+                ingr_name,
                 ingredient,
                 f"{ingr_name}-{ptInd}",
-                position,
+                radius,
+                adj_pos,
                 rotation,
                 sub_points,
             )
-        if grid_point_compartment_ids is not None:
+            if show_sphere_trees and hasattr(ingredient, "positions"):
+                if len(ingredient.positions) > 0:
+                    for level in range(len(ingredient.positions)):
+                        for i in range(len(ingredient.positions[level])):
+                            pos = ingredient.apply_rotation(
+                                rotation, ingredient.positions[level][i], position
+                            )
+
+                            self.add_instance(
+                                f"{ingredient.name}-spheres",
+                                ingredient,
+                                f"{ingredient.name}-{ptInd}-{i}",
+                                ingredient.radii[level][i],
+                                pos,
+                                rotation,
+                                None,
+                            )
+
+        if grid_point_positions is not None:
+
             for index in range(len(grid_point_compartment_ids)):
-                if index % 1 == 0:
+                if index % 10 == 0:
                     compartment_id = grid_point_compartment_ids[index]
                     point_pos = grid_point_positions[index]
                     if compartment_id < 0:
@@ -450,23 +503,9 @@ class simulariumHelper(hostHelper.Helper):
                         name,
                         None,
                         f"{name}-{index}",
+                        10,
                         point_pos,
-                        [
-                            [0, 0, 0, 0],
-                            [0, 0, 0, 0],
-                            [
-                                0,
-                                0,
-                                0,
-                                0,
-                            ],
-                            [
-                                0,
-                                0,
-                                0,
-                                0,
-                            ],
-                        ],
+                        np.identity(4),
                         None,
                     )
 
@@ -1173,7 +1212,7 @@ class simulariumHelper(hostHelper.Helper):
         x_size = bb[1][0] - bb[0][0]
         y_size = bb[1][1] - bb[0][1]
         z_size = bb[1][2] - bb[0][2]
-        box_adjustment = np.array(bb[0]) + np.array(bb[1])
+        box_adjustment = (np.array(bb[0]) + np.array(bb[1])) * self.scale_factor / 2
         box_size = [
             x_size * self.scale_factor,
             y_size * self.scale_factor,
@@ -1229,9 +1268,9 @@ class simulariumHelper(hostHelper.Helper):
                 else:
                     position = data_at_time["position"]
                     positions[t][n] = [
-                        position[0] * self.scale_factor - box_adjustment[0] / 2,
-                        position[1] * self.scale_factor - box_adjustment[1] / 2,
-                        position[2] * self.scale_factor - box_adjustment[2] / 2,
+                        position[0] * self.scale_factor - box_adjustment[0],
+                        position[1] * self.scale_factor - box_adjustment[1],
+                        position[2] * self.scale_factor - box_adjustment[2],
                     ]
                     rotation = data_at_time["rotation"]
                     rotations[t][n] = rotation
@@ -1245,7 +1284,7 @@ class simulariumHelper(hostHelper.Helper):
                 box_size=np.array(box_size),
                 camera_defaults=CameraData(
                     position=np.array([10.0, 0.0, camera_z_position]),
-                    look_at_position=np.array([10.0, 0.0, 0.0]),
+                    look_at_position=np.array([0.0, 0.0, 0.0]),
                     fov_degrees=60.0,
                 ),
             ),
@@ -1265,7 +1304,7 @@ class simulariumHelper(hostHelper.Helper):
             time_units=UnitData("ns"),  # nanoseconds
             spatial_units=UnitData("nm"),  # nanometers
         )
-        TrajectoryConverter(converted_data).write_JSON(file_name)
+        TrajectoryConverter(converted_data).save(file_name, False)
 
     def raycast(self, **kw):
         intersect = False

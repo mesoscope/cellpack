@@ -159,13 +159,13 @@ def main():
         recipe_path = os.path.join(os.getcwd(), args.recipe)
         do_analysis = args.analysis
         dim = args.dim
-        default_should_plot = args.dim == 2 and do_analysis
+        default_should_plot = do_analysis
         save_plot = (
             args.save_analysis_plot
             if args.save_analysis_plot is not None
             else default_should_plot
         )
-        show_plotly_plot = (
+        show_grid_data = (
             args.grid_plot if args.grid_plot is not None else default_should_plot
         )
         output = args.output
@@ -186,14 +186,14 @@ def main():
         env.saveResult = False
 
         def setCompartment(ingr):
-            # ingr.rejectionThreshold = 60  # [1,1,0]#
-            ingr.nbJitter = 6
-            ingr.rejectionThreshold = 100  # [1,1,0]#
-            ingr.cutoff_boundary = 0  # ingr.encapsulatingRadius/2.0
+            # ingr.rejection_threshold = 60  # [1,1,0]#
+            ingr.jitter_attempts = 6
+            ingr.rejection_threshold = 100  # [1,1,0]#
+            ingr.cutoff_boundary = 0  # ingr.encapsulating_radius/2.0
             if dim == 3:
-                ingr.jitterMax = [1, 1, 1]
+                ingr.max_jitter = [1, 1, 1]
             else:
-                ingr.jitterMax = [1, 1, 0]
+                ingr.max_jitter = [1, 1, 0]
 
         env.loopThroughIngr(setCompartment)
 
@@ -214,14 +214,14 @@ def main():
                     env.boundingBox,
                     output,
                     plot=save_plot,
-                    show_plotly_plot=show_plotly_plot,
+                    show_grid=show_grid_data,
                     twod=(dim == 2),
                 )
         else:
             for place_method in args.place_methods:
                 env.placeMethod = place_method
                 env.saveResult = True
-                env.innerGridMethod = "jordan"  # jordan pure python ? sdf ?
+                env.innerGridMethod = "raytrace"
                 env.boundingBox = [[-2482, -2389.0, 100.0], [2495, 2466, 2181.0]]
                 env.buildGrid(
                     boundingBox=env.boundingBox,
