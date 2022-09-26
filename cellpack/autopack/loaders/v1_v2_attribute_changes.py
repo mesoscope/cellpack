@@ -1,4 +1,4 @@
-from enum import Enum 
+from enum import Enum
 
 v1_to_v2_name_map = {
     "Type": "type",
@@ -43,6 +43,7 @@ attributes_move_to_composition = [
     "priority",
 ]
 
+
 class ingredient_types(Enum):
     SINGLE_SPHERE = "SingleSphere"
     MULTI_SPHERE = "MultiSphere"
@@ -52,9 +53,9 @@ class ingredient_types(Enum):
     GROW = "Grow"
 
     def convert(str):
-        for typeValue in ingredient_types:
-            if str == typeValue.value:
-                return typeValue
+        for type_value in ingredient_types:
+            if str == type_value.value:
+                return type_value
 
     def get_key_name(self):
         return self.name.lower()
