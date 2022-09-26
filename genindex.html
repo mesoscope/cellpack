@@ -36,6 +36,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -106,8 +107,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack.example">cellpack.example module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack.example">cellpack.example module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-contents">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -152,39 +159,39 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbmol">nbMol</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#count">count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#radii">radii</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions">positions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions2">positions2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-priority">packing_priority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pdb">pdb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#color">color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshfile">meshFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshname">meshName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principalvector">principalVector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principal-vector">principal_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jittermax">jitterMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbjitter">nbJitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#userotaxis">useRotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotaxis">rotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotrange">rotRange</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#max-jitter">max_jitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-axis">rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-range">rotation_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-binding">proba_binding</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#is-attractor">is_attractor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#weight">weight</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-name">partners_name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
@@ -346,14 +353,8 @@
         <li><a href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.addCameraToScene">(cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper method)</a>
 </li>
       </ul></li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.CompartmentList.addCompartment">addCompartment() (cellpack.autopack.Compartment.CompartmentList method)</a>
-
-      <ul>
-        <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.addCompartment">(cellpack.autopack.Environment.Environment method)</a>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.Serializable.sCompartment.addCompartment">addCompartment() (cellpack.autopack.Serializable.sCompartment method)</a>
 </li>
-        <li><a href="cellpack.autopack.html#cellpack.autopack.Serializable.sCompartment.addCompartment">(cellpack.autopack.Serializable.sCompartment method)</a>
-</li>
-      </ul></li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.addCompartmentFromGeom">addCompartmentFromGeom() (cellpack.autopack.Graphics.AutopackViewer method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.IOutils.addCompartments">addCompartments() (in module cellpack.autopack.IOutils)</a>
@@ -398,10 +399,10 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.addMeshRB">addMeshRB() (cellpack.autopack.Compartment.Compartment method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.addMeshRBOrganelle">addMeshRBOrganelle() (cellpack.autopack.Environment.Environment method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.addMeshVertice">addMeshVertice() (cellpack.autopack.upy.hostHelper.Helper method)</a>
 </li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.addMeshVertices">addMeshVertices() (cellpack.autopack.upy.hostHelper.Helper method)</a>
@@ -514,7 +515,11 @@
 </li>
       <li><a href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.box">box() (cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper method)</a>
 </li>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.build_compartment_grids">build_compartment_grids() (cellpack.autopack.Environment.Environment method)</a>
+</li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.build_grid">build_grid() (cellpack.autopack.Analysis.AnalyseAP method)</a>
+</li>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.build_grid_sphere">build_grid_sphere() (cellpack.autopack.Compartment.Compartment method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.build_mesh">build_mesh() (cellpack.autopack.MeshStore.MeshStore method)</a>
 </li>
@@ -532,10 +537,10 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_kevin">BuildGrid_kevin() (cellpack.autopack.Compartment.Compartment method)</a>
 </li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_multisdf">BuildGrid_multisdf() (cellpack.autopack.Compartment.Compartment method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_multisdf">BuildGrid_multisdf() (cellpack.autopack.Compartment.Compartment method)</a>
+</li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_pyray">BuildGrid_pyray() (cellpack.autopack.Compartment.Compartment method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_ray">BuildGrid_ray() (cellpack.autopack.Compartment.Compartment method)</a>
@@ -547,8 +552,6 @@
       <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_utsdf">BuildGrid_utsdf() (cellpack.autopack.Compartment.Compartment method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGridEnviroOnly">BuildGridEnviroOnly() (cellpack.autopack.Compartment.Compartment method)</a>
-</li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.BuildGrids">BuildGrids() (cellpack.autopack.Environment.Environment method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.buildIngrPrimitive">buildIngrPrimitive() (cellpack.autopack.Graphics.AutopackViewer method)</a>
 </li>
@@ -665,6 +668,13 @@
 </li>
       </ul></li>
       <li>
+    cellpack.autopack.Grid
+
+      <ul>
+        <li><a href="cellpack.autopack.html#module-cellpack.autopack.Grid">module</a>
+</li>
+      </ul></li>
+      <li>
     cellpack.autopack.ingredient
 
       <ul>
@@ -732,6 +742,20 @@
 
       <ul>
         <li><a href="cellpack.autopack.ingredient.html#module-cellpack.autopack.ingredient.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    cellpack.autopack.interface_objects
+
+      <ul>
+        <li><a href="cellpack.autopack.interface_objects.html#module-cellpack.autopack.interface_objects">module</a>
+</li>
+      </ul></li>
+      <li>
+    cellpack.autopack.interface_objects.representations
+
+      <ul>
+        <li><a href="cellpack.autopack.interface_objects.html#module-cellpack.autopack.interface_objects.representations">module</a>
 </li>
       </ul></li>
       <li>
@@ -913,14 +937,14 @@
         <li><a href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.changeObjColorMat">(cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.check_against_one_packed_ingr">check_against_one_packed_ingr() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.check_rectangle_oustide">check_rectangle_oustide() (cellpack.autopack.GeometryTools.GeometryTools method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.check_sphere_inside">check_sphere_inside() (cellpack.autopack.GeometryTools.GeometryTools method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.checkCompartment">checkCompartment() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.checkCreateEmpty">checkCreateEmpty() (cellpack.autopack.Graphics.AutopackViewer method)</a>
@@ -949,17 +973,7 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.checkPath">checkPath() (in module cellpack.autopack)</a>
 </li>
-      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.checkPointComp">checkPointComp() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
-</li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.checkPointInside">checkPointInside() (cellpack.autopack.BaseGrid.BaseGrid method)</a>
-
-      <ul>
-        <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.checkPointInside">(cellpack.autopack.Compartment.Compartment method)</a>
-</li>
-      </ul></li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.checkPointInsideBB">checkPointInsideBB() (cellpack.autopack.Compartment.Compartment method)</a>
-</li>
-      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.checkPointSurface">checkPointSurface() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.checkPtIndIngr">checkPtIndIngr() (cellpack.autopack.Environment.Environment method)</a>
 </li>
@@ -995,7 +1009,7 @@
 </li>
       <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.close_partner_check">close_partner_check() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
 </li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.cmp_to_key">cmp_to_key() (in module cellpack.autopack.Environment)</a>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.utils.cmp_to_key">cmp_to_key() (in module cellpack.autopack.utils)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Graphics.ColladaExporter">ColladaExporter (class in cellpack.autopack.Graphics)</a>
 </li>
@@ -1013,14 +1027,16 @@
         <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.collides_with_compartment">(cellpack.autopack.ingredient.single_sphere.SingleSphereIngr method)</a>
 </li>
       </ul></li>
-      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.collision_jitter">collision_jitter() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
+      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr.collision_jitter">collision_jitter() (cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr method)</a>
 
       <ul>
-        <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr.collision_jitter">(cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr method)</a>
+        <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.collision_jitter">(cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr method)</a>
 </li>
         <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_cube.SingleCubeIngr.collision_jitter">(cellpack.autopack.ingredient.single_cube.SingleCubeIngr method)</a>
 </li>
         <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr.collision_jitter">(cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr method)</a>
+</li>
+        <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.collision_jitter">(cellpack.autopack.ingredient.single_sphere.SingleSphereIngr method)</a>
 </li>
       </ul></li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.color">color() (cellpack.autopack.Graphics.AutopackViewer method)</a>
@@ -1041,9 +1057,13 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment">Compartment (class in cellpack.autopack.Compartment)</a>
 </li>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.compartment_id_for_nearest_grid_point">compartment_id_for_nearest_grid_point() (cellpack.autopack.Environment.Environment method)</a>
+</li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.CompartmentList">CompartmentList (class in cellpack.autopack.Compartment)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.completeMapping">completeMapping() (cellpack.autopack.trajectory.Trajectory method)</a>
+</li>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.compute_volume_and_set_count">compute_volume_and_set_count() (cellpack.autopack.Compartment.Compartment method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.computeExteriorVolume">computeExteriorVolume() (cellpack.autopack.BaseGrid.BaseGrid method)</a>
 </li>
@@ -1052,8 +1072,6 @@
       <li><a href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.computeStartEnd">computeStartEnd() (cellpack.autopack.Gradient.Gradient method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.computeVolume">computeVolume() (cellpack.autopack.BaseGrid.BaseGrid method)</a>
-</li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.computeVolumeAndSetNbMol">computeVolumeAndSetNbMol() (cellpack.autopack.Compartment.Compartment method)</a>
 </li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.concatObjectMatrix">concatObjectMatrix() (cellpack.autopack.upy.hostHelper.Helper method)</a>
 
@@ -1088,7 +1106,7 @@
 </li>
         <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.create3DPointLookup">(cellpack.autopack.Compartment.Compartment method)</a>
 </li>
-        <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Grid.create3DPointLookup">(cellpack.autopack.Environment.Grid method)</a>
+        <li><a href="cellpack.autopack.html#cellpack.autopack.Grid.Grid.create3DPointLookup">(cellpack.autopack.Grid.Grid method)</a>
 </li>
       </ul></li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.create3DPointLookup_loop">create3DPointLookup_loop() (cellpack.autopack.BaseGrid.BaseGrid method)</a>
@@ -1102,6 +1120,8 @@
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_ingredient">create_ingredient() (cellpack.autopack.Environment.Environment method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.create_mesh">create_mesh() (cellpack.autopack.MeshStore.MeshStore method)</a>
+</li>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_objects">create_objects() (cellpack.autopack.Environment.Environment method)</a>
 </li>
       <li><a href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.recipe_loader.RecipeLoader.create_output_dir">create_output_dir() (cellpack.autopack.loaders.recipe_loader.RecipeLoader static method)</a>
 </li>
@@ -1149,8 +1169,12 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.DATABASE">DATABASE (cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper attribute)</a>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.DATABASE">DATABASE (cellpack.autopack.interface_objects.representations.Representations attribute)</a>
+
+      <ul>
+        <li><a href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.DATABASE">(cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper attribute)</a>
 </li>
+      </ul></li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.trajectory.dcdTrajectory.dcd">dcd (cellpack.autopack.trajectory.dcdTrajectory attribute)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.trajectory.dcdTrajectory">dcdTrajectory (class in cellpack.autopack.trajectory)</a>
@@ -1169,6 +1193,8 @@
         <li><a href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.DecomposeMesh">(cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper method)</a>
 </li>
       </ul></li>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.utils.deep_merge">deep_merge() (in module cellpack.autopack.utils)</a>
+</li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.IOutils.NumpyArrayEncoder.default">default() (cellpack.autopack.IOutils.NumpyArrayEncoder method)</a>
 </li>
       <li><a href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.DEFAULT_GEO_TYPE">DEFAULT_GEO_TYPE (cellpack.bin.simularium_converter.ConvertToSimularium attribute)</a>
@@ -1229,14 +1255,14 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCytoplasmIngredients">displayCytoplasmIngredients() (cellpack.autopack.Graphics.AutopackViewer method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.displayDistance">displayDistance() (cellpack.autopack.Analysis.AnalyseAP method)</a>
 
       <ul>
         <li><a href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayDistance">(cellpack.autopack.Graphics.AutopackViewer method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.displayDistanceCube">displayDistanceCube() (cellpack.autopack.Analysis.AnalyseAP method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.displayDistancePlane">displayDistancePlane() (cellpack.autopack.Analysis.AnalyseAP method)</a>
@@ -1325,12 +1351,6 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment">Environment (class in cellpack.autopack.Environment)</a>
 </li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.estimateVolume">estimateVolume() (cellpack.autopack.Compartment.Compartment method)</a>
-
-      <ul>
-        <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.estimateVolume">(cellpack.autopack.Environment.Environment method)</a>
-</li>
-      </ul></li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.eulerToMatrix">eulerToMatrix() (cellpack.autopack.upy.hostHelper.Helper method)</a>
 </li>
       <li><a href="cellpack.html#cellpack.example.Example">Example (class in cellpack.example)</a>
@@ -1339,10 +1359,10 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.IOutils.ExportCollada">ExportCollada (class in cellpack.autopack.IOutils)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.exportIngredient">exportIngredient() (cellpack.autopack.Graphics.AutopackViewer method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.exportRecipeIngredients">exportRecipeIngredients() (cellpack.autopack.Graphics.AutopackViewer method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.exportToBD_BOX">exportToBD_BOX() (cellpack.autopack.Environment.Environment method)</a>
@@ -1366,6 +1386,8 @@
       <li><a href="cellpack.autopack.html#cellpack.autopack.ray.f_dot_product">f_dot_product() (in module cellpack.autopack.ray)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.ray.f_ray_intersect_polyhedron">f_ray_intersect_polyhedron() (in module cellpack.autopack.ray)</a>
+</li>
+      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.far_enough_from_surfaces">far_enough_from_surfaces() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
 </li>
       <li><a href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.fill_in_empty_fiber_data">fill_in_empty_fiber_data() (cellpack.bin.simularium_converter.ConvertToSimularium method)</a>
 </li>
@@ -1399,6 +1421,8 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.format_color">format_color() (cellpack.autopack.plotly_result.PlotlyAnalysis static method)</a>
 </li>
+      <li><a href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.format_rgb_color">format_rgb_color() (cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper static method)</a>
+</li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.frameAdvanced">frameAdvanced() (cellpack.autopack.upy.hostHelper.Helper method)</a>
 </li>
       <li><a href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.FromVec">FromVec() (cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper method)</a>
@@ -1418,6 +1442,12 @@
       <li><a href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools">GeometryTools (class in cellpack.autopack.GeometryTools)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.get">get() (cellpack.autopack.randomRot.RandomRot method)</a>
+</li>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_active">get_active() (cellpack.autopack.interface_objects.representations.Representations method)</a>
+</li>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_active_data">get_active_data() (cellpack.autopack.interface_objects.representations.Representations method)</a>
+</li>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_adjusted_position">get_adjusted_position() (cellpack.autopack.interface_objects.representations.Representations method)</a>
 </li>
       <li><a href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.recipe_loader.RecipeLoader.get_all_ingredients">get_all_ingredients() (cellpack.autopack.loaders.recipe_loader.RecipeLoader method)</a>
 </li>
@@ -1447,6 +1477,8 @@
         <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr.get_cuttoff_value">(cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr method)</a>
 </li>
       </ul></li>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_deepest_level">get_deepest_level() (cellpack.autopack.interface_objects.representations.Representations method)</a>
+</li>
       <li><a href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.get_display_data">get_display_data() (cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.utils.get_distance">get_distance() (in module cellpack.autopack.utils)</a>
@@ -1475,7 +1507,15 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_mesh_filepath_and_extension">get_mesh_filepath_and_extension() (cellpack.autopack.MeshStore.MeshStore static method)</a>
 </li>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_mesh_format">get_mesh_format() (cellpack.autopack.interface_objects.representations.Representations method)</a>
+</li>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_mesh_name">get_mesh_name() (cellpack.autopack.interface_objects.representations.Representations method)</a>
+</li>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_mesh_path">get_mesh_path() (cellpack.autopack.interface_objects.representations.Representations method)</a>
+</li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_midpoint">get_midpoint() (cellpack.autopack.MeshStore.MeshStore static method)</a>
+</li>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_min_max_radius">get_min_max_radius() (cellpack.autopack.interface_objects.representations.Representations method)</a>
 </li>
       <li><a href="cellpack.html#cellpack.get_module_version">get_module_version() (in module cellpack)</a>
 </li>
@@ -1503,9 +1543,15 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_object">get_object() (cellpack.autopack.MeshStore.MeshStore method)</a>
 </li>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_pdb_path">get_pdb_path() (cellpack.autopack.interface_objects.representations.Representations method)</a>
+</li>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_positions">get_positions() (cellpack.autopack.interface_objects.representations.Representations method)</a>
+</li>
       <li><a href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_positions_per_ingredient">get_positions_per_ingredient() (cellpack.bin.simularium_converter.ConvertToSimularium method)</a>
 </li>
       <li><a href="cellpack.html#cellpack.example.Example.get_previous_value">get_previous_value() (cellpack.example.Example method)</a>
+</li>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.get_radii">get_radii() (cellpack.autopack.interface_objects.representations.Representations method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.get_rb_model">get_rb_model() (cellpack.autopack.Compartment.Compartment method)</a>
 
@@ -1674,9 +1720,11 @@
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getIJK">getIJK() (cellpack.autopack.BaseGrid.BaseGrid method)</a>
 
       <ul>
-        <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Grid.getIJK">(cellpack.autopack.Environment.Grid method)</a>
+        <li><a href="cellpack.autopack.html#cellpack.autopack.Grid.Grid.getIJK">(cellpack.autopack.Grid.Grid method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.getImage">getImage() (cellpack.autopack.upy.hostHelper.Helper method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.getIndex">getIndex() (cellpack.autopack.binvox_rw.Voxels method)</a>
@@ -1687,8 +1735,6 @@
 </li>
       <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getIngredientsInBox">getIngredientsInBox() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getIngredientsInTree">getIngredientsInTree() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.getIngrFromName">getIngrFromName() (cellpack.autopack.Environment.Environment method)</a>
@@ -1825,8 +1871,6 @@
 </li>
       <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.agent.Agent.getPartnerweight">getPartnerweight() (cellpack.autopack.ingredient.agent.Agent method)</a>
 </li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.getPointCompartmentId">getPointCompartmentId() (cellpack.autopack.Environment.Environment method)</a>
-</li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPointFrom3D">getPointFrom3D() (cellpack.autopack.BaseGrid.BaseGrid method)</a>
 
       <ul>
@@ -1896,8 +1940,6 @@
       <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSizeXYZ">getSizeXYZ() (cellpack.autopack.Compartment.Compartment method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.getSortedActiveIngredients">getSortedActiveIngredients() (cellpack.autopack.Environment.Environment method)</a>
-</li>
-      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.getSpheres">getSpheres() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.IOutils.getStringValueOptions">getStringValueOptions() (in module cellpack.autopack.IOutils)</a>
 </li>
@@ -1969,7 +2011,7 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient">Gradient (class in cellpack.autopack.Gradient)</a>
 </li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Grid">Grid (class in cellpack.autopack.Environment)</a>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.Grid.Grid">Grid (class in cellpack.autopack.Grid)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.gridPoint">gridPoint (class in cellpack.autopack.BaseGrid)</a>
 </li>
@@ -1999,10 +2041,22 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.ldSequence.haltonterm">haltonterm() (in module cellpack.autopack.ldSequence)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.handle_real_time_visualization">handle_real_time_visualization() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
 </li>
+      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.has_mesh">has_mesh() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
+
+      <ul>
+        <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.has_mesh">(cellpack.autopack.interface_objects.representations.Representations method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.has_pdb">has_pdb() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
+
+      <ul>
+        <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.has_pdb">(cellpack.autopack.interface_objects.representations.Representations method)</a>
+</li>
+      </ul></li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper">Helper (class in cellpack.autopack.upy.hostHelper)</a>
 </li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.Hexahedron">Hexahedron() (cellpack.autopack.upy.hostHelper.Helper method)</a>
@@ -2055,11 +2109,11 @@
 </li>
       <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient">Ingredient (class in cellpack.autopack.ingredient.Ingredient)</a>
 </li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.ingredient_compare0">ingredient_compare0() (in module cellpack.autopack.Environment)</a>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.utils.ingredient_compare0">ingredient_compare0() (in module cellpack.autopack.utils)</a>
 </li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.ingredient_compare1">ingredient_compare1() (in module cellpack.autopack.Environment)</a>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.utils.ingredient_compare1">ingredient_compare1() (in module cellpack.autopack.utils)</a>
 </li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.ingredient_compare2">ingredient_compare2() (in module cellpack.autopack.Environment)</a>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.utils.ingredient_compare2">ingredient_compare2() (in module cellpack.autopack.utils)</a>
 </li>
       <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.IngredientInstanceDrop">IngredientInstanceDrop (class in cellpack.autopack.ingredient.Ingredient)</a>
 </li>
@@ -2067,17 +2121,15 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.ingrJsonNode">ingrJsonNode() (cellpack.autopack.IOutils.IOingredientTool method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.ingrPythonNode">ingrPythonNode() (cellpack.autopack.IOutils.IOingredientTool method)</a>
 </li>
       <li><a href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.init_scene_with_objects">init_scene_with_objects() (cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper method)</a>
 </li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.initialize_mesh">initialize_mesh() (cellpack.autopack.Compartment.Compartment method)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.initialize_mesh">initialize_mesh() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
 
       <ul>
-        <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.initialize_mesh">(cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
-</li>
         <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr.initialize_mesh">(cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr method)</a>
 </li>
         <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr.initialize_mesh">(cellpack.autopack.ingredient.single_cylinder.SingleCylinderIngr method)</a>
@@ -2085,6 +2137,8 @@
         <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.initialize_mesh">(cellpack.autopack.ingredient.single_sphere.SingleSphereIngr method)</a>
 </li>
       </ul></li>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.initialize_shape">initialize_shape() (cellpack.autopack.Compartment.Compartment method)</a>
+</li>
       <li><a href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.Inner_Grid_Methods">Inner_Grid_Methods (class in cellpack.autopack.loaders.config_loader)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.octree.Octree.insertNode">insertNode() (cellpack.autopack.octree.Octree method)</a>
@@ -2105,9 +2159,17 @@
 </li>
       <li><a href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.is_fiber">is_fiber() (cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper static method)</a>
 </li>
+      <li><a href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.recipe_loader.RecipeLoader.is_key">is_key() (cellpack.autopack.loaders.recipe_loader.RecipeLoader static method)</a>
+</li>
       <li><a href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.is_matrix">is_matrix() (cellpack.bin.simularium_converter.ConvertToSimularium method)</a>
 </li>
       <li><a href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.MetaEnum.is_member">is_member() (cellpack.autopack.loaders.config_loader.MetaEnum class method)</a>
+</li>
+      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.is_point_in_correct_region">is_point_in_correct_region() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
+</li>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.is_point_inside_bb">is_point_inside_bb() (cellpack.autopack.BaseGrid.BaseGrid method)</a>
+</li>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.is_point_inside_mesh">is_point_inside_mesh() (cellpack.autopack.Compartment.Compartment method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.is_two_d">is_two_d() (cellpack.autopack.Environment.Environment method)</a>
 </li>
@@ -2155,15 +2217,11 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.IOutils.load_MixedasJson">load_MixedasJson() (in module cellpack.autopack.IOutils)</a>
 </li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.load_recipe">load_recipe() (cellpack.autopack.Environment.Environment method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.loadFreePoint">loadFreePoint() (cellpack.autopack.Environment.Environment method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.loadJSON">loadJSON() (cellpack.autopack.Analysis.AnalyseAP method)</a>
-</li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.loadRecipeString">loadRecipeString() (cellpack.autopack.Environment.Environment method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.loadResult">loadResult() (cellpack.autopack.Environment.Environment method)</a>
 </li>
@@ -2255,6 +2313,8 @@
 </li>
         <li><a href="cellpack.autopack.html#module-cellpack.autopack.Graphics">cellpack.autopack.Graphics</a>
 </li>
+        <li><a href="cellpack.autopack.html#module-cellpack.autopack.Grid">cellpack.autopack.Grid</a>
+</li>
         <li><a href="cellpack.autopack.ingredient.html#module-cellpack.autopack.ingredient">cellpack.autopack.ingredient</a>
 </li>
         <li><a href="cellpack.autopack.ingredient.html#module-cellpack.autopack.ingredient.agent">cellpack.autopack.ingredient.agent</a>
@@ -2274,6 +2334,10 @@
         <li><a href="cellpack.autopack.ingredient.html#module-cellpack.autopack.ingredient.single_sphere">cellpack.autopack.ingredient.single_sphere</a>
 </li>
         <li><a href="cellpack.autopack.ingredient.html#module-cellpack.autopack.ingredient.utils">cellpack.autopack.ingredient.utils</a>
+</li>
+        <li><a href="cellpack.autopack.interface_objects.html#module-cellpack.autopack.interface_objects">cellpack.autopack.interface_objects</a>
+</li>
+        <li><a href="cellpack.autopack.interface_objects.html#module-cellpack.autopack.interface_objects.representations">cellpack.autopack.interface_objects.representations</a>
 </li>
         <li><a href="cellpack.autopack.html#module-cellpack.autopack.IOutils">cellpack.autopack.IOutils</a>
 </li>
@@ -2524,7 +2588,7 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.plotNResult2D">plotNResult2D() (cellpack.autopack.Analysis.AnalyseAP method)</a>
 </li>
-      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.point_is_not_available">point_is_not_available() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
+      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.point_is_available">point_is_available() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
 </li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.PointCloudObject">PointCloudObject() (cellpack.autopack.upy.hostHelper.Helper method)</a>
 </li>
@@ -2680,12 +2744,12 @@
 </li>
       <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.remove_from_realtime_display">remove_from_realtime_display() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.removeFreePoint">removeFreePoint() (cellpack.autopack.BaseGrid.BaseGrid method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.removeOnePoint">removeOnePoint() (cellpack.autopack.Environment.Environment method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.reorder_free_points">reorder_free_points() (cellpack.autopack.BaseGrid.BaseGrid static method)</a>
 </li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.reParent">reParent() (cellpack.autopack.upy.hostHelper.Helper method)</a>
@@ -2700,6 +2764,8 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.reportprogress">reportprogress() (cellpack.autopack.Environment.Environment method)</a>
 </li>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations">Representations (class in cellpack.autopack.interface_objects.representations)</a>
+</li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.rerieveAxis">rerieveAxis() (cellpack.autopack.upy.hostHelper.Helper method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.reset">reset() (cellpack.autopack.BaseGrid.BaseGrid method)</a>
@@ -2709,7 +2775,7 @@
 </li>
         <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.reset">(cellpack.autopack.Environment.Environment method)</a>
 </li>
-        <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Grid.reset">(cellpack.autopack.Environment.Grid method)</a>
+        <li><a href="cellpack.autopack.html#cellpack.autopack.Grid.Grid.reset">(cellpack.autopack.Grid.Grid method)</a>
 </li>
         <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.reset">(cellpack.autopack.ingredient.grow.GrowIngredient method)</a>
 </li>
@@ -2740,12 +2806,16 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.Resolution">Resolution (cellpack.autopack.GeometryTools.GeometryTools attribute)</a>
 </li>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.resolve_composition">resolve_composition() (cellpack.autopack.Recipe.Recipe static method)</a>
+</li>
+      <li><a href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.recipe_loader.RecipeLoader.resolve_inheritance">resolve_inheritance() (cellpack.autopack.loaders.recipe_loader.RecipeLoader static method)</a>
+</li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.restore">restore() (cellpack.autopack.BaseGrid.BaseGrid method)</a>
 
       <ul>
         <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.restore">(cellpack.autopack.Environment.Environment method)</a>
 </li>
-        <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Grid.restore">(cellpack.autopack.Environment.Grid method)</a>
+        <li><a href="cellpack.autopack.html#cellpack.autopack.Grid.Grid.restore">(cellpack.autopack.Grid.Grid method)</a>
 </li>
       </ul></li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.restore_molecules_array">restore_molecules_array() (cellpack.autopack.Environment.Environment method)</a>
@@ -2799,7 +2869,7 @@
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.save">save() (cellpack.autopack.BaseGrid.BaseGrid method)</a>
 
       <ul>
-        <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Grid.save">(cellpack.autopack.Environment.Grid method)</a>
+        <li><a href="cellpack.autopack.html#cellpack.autopack.Grid.Grid.save">(cellpack.autopack.Grid.Grid method)</a>
 </li>
         <li><a href="cellpack.autopack.html#cellpack.autopack.IOutils.save">(in module cellpack.autopack.IOutils)</a>
 </li>
@@ -2836,8 +2906,6 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.IOutils.saveResultBinaryDic">saveResultBinaryDic() (in module cellpack.autopack.IOutils)</a>
 </li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.IOutils.saveSphereTreeFile">saveSphereTreeFile() (in module cellpack.autopack.IOutils)</a>
-</li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.scalar">scalar() (cellpack.autopack.upy.hostHelper.Helper method)</a>
 </li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.scaleObj">scaleObj() (cellpack.autopack.upy.hostHelper.Helper method)</a>
@@ -2870,19 +2938,15 @@
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.IOutils.serializedRecipe_group_dic">serializedRecipe_group_dic() (in module cellpack.autopack.IOutils)</a>
 </li>
-      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.Set">Set() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.set_active">set_active() (cellpack.autopack.interface_objects.representations.Representations method)</a>
 </li>
       <li><a href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.set_object_static">set_object_static() (cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.set_partners_ingredient">set_partners_ingredient() (cellpack.autopack.Environment.Environment method)</a>
 </li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.set_recipe_ingredient">set_recipe_ingredient() (cellpack.autopack.Environment.Environment method)</a>
-
-      <ul>
-        <li><a href="cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.set_recipe_ingredient">(cellpack.autopack.IOutils.IOingredientTool method)</a>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.set_recipe_ingredient">set_recipe_ingredient() (cellpack.autopack.IOutils.IOingredientTool method)</a>
 </li>
-      </ul></li>
-      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.set_sphere_positions">set_sphere_positions() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
+      <li><a href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.set_sphere_positions">set_sphere_positions() (cellpack.autopack.interface_objects.representations.Representations method)</a>
 </li>
       <li><a href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.Instance.set_static">set_static() (cellpack.autopack.upy.simularium.simularium_helper.Instance method)</a>
 </li>
@@ -2891,8 +2955,6 @@
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.set_surfPtscht">set_surfPtscht() (cellpack.autopack.BaseGrid.BaseGrid method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.setCompartmentMesh">setCompartmentMesh() (cellpack.autopack.Environment.Environment method)</a>
-</li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.setCompatibility">setCompatibility() (cellpack.autopack.Environment.Environment method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setCount">setCount() (cellpack.autopack.Compartment.Compartment method)</a>
 
@@ -2938,12 +3000,10 @@
 </li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setMeshVertices">setMeshVertices() (cellpack.autopack.upy.hostHelper.Helper method)</a>
 </li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.setMinMaxProteinSize">setMinMaxProteinSize() (cellpack.autopack.Environment.Environment method)</a>
+      <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setName">setName() (cellpack.autopack.upy.hostHelper.Helper method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setName">setName() (cellpack.autopack.upy.hostHelper.Helper method)</a>
-</li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setNumber">setNumber() (cellpack.autopack.Compartment.Compartment method)</a>
 </li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.setObjectMatrix">setObjectMatrix() (cellpack.autopack.upy.hostHelper.Helper method)</a>
@@ -2989,8 +3049,6 @@
 </li>
       </ul></li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.setup">setup() (cellpack.autopack.BaseGrid.BaseGrid method)</a>
-</li>
-      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.Setup">Setup() (cellpack.autopack.Environment.Environment method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.setupBoundaryPeriodicity">setupBoundaryPeriodicity() (cellpack.autopack.BaseGrid.BaseGrid method)</a>
 </li>
@@ -3222,6 +3280,8 @@
 </li>
       <li><a href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.update_instance_positions_and_rotations">update_instance_positions_and_rotations() (cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper method)</a>
 </li>
+      <li><a href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.update_largest_smallest_size">update_largest_smallest_size() (cellpack.autopack.Environment.Environment method)</a>
+</li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.update_spline">update_spline() (cellpack.autopack.upy.hostHelper.Helper method)</a>
 
       <ul>
@@ -3244,10 +3304,10 @@
       </ul></li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.updateDistances">updateDistances() (cellpack.autopack.BaseGrid.BaseGrid static method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.ActinIngredient.updateFromBB">updateFromBB() (cellpack.autopack.ingredient.grow.ActinIngredient method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.updateGrid">updateGrid() (cellpack.autopack.ingredient.grow.GrowIngredient method)</a>
 </li>
       <li><a href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.updateMasterInstance">updateMasterInstance() (cellpack.autopack.upy.hostHelper.Helper method)</a>
@@ -3291,6 +3351,10 @@
       <li><a href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.UpperCircleFunction">UpperCircleFunction() (cellpack.autopack.GeometryTools.GeometryTools method)</a>
 </li>
       <li><a href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.UpperRectangleFunction">UpperRectangleFunction() (cellpack.autopack.GeometryTools.GeometryTools method)</a>
+</li>
+      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.use_mesh">use_mesh() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
+</li>
+      <li><a href="cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.use_pdb">use_pdb() (cellpack.autopack.ingredient.Ingredient.Ingredient method)</a>
 </li>
   </ul></td>
 </tr></table>

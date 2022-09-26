@@ -37,6 +37,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -109,8 +110,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack.example">cellpack.example module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack.example">cellpack.example module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-contents">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -155,39 +162,39 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbmol">nbMol</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#count">count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#radii">radii</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions">positions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions2">positions2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-priority">packing_priority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pdb">pdb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#color">color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshfile">meshFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshname">meshName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principalvector">principalVector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principal-vector">principal_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jittermax">jitterMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbjitter">nbJitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#userotaxis">useRotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotaxis">rotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotrange">rotRange</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#max-jitter">max_jitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-axis">rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-range">rotation_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-binding">proba_binding</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#is-attractor">is_attractor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#weight">weight</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-name">partners_name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
@@ -673,6 +680,11 @@ if the object is a mesh this function handle the color per vertex.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.deleteObject">
 <span class="sig-name descname"><span class="pre">deleteObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.deleteObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.deleteObject" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.format_rgb_color">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">format_rgb_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/simularium/simularium_helper.html#simulariumHelper.format_rgb_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.format_rgb_color" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1422,8 +1434,8 @@ This function can’t be call in a thread.</p>
 </dd></dl>
 
 </section>
-<section id="module-cellpack.autopack.upy.simularium">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.autopack.upy.simularium" title="Permalink to this heading">¶</a></h2>
+<section id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this heading">¶</a></h2>
 <p>Copyright (C) &lt;2010&gt;  Autin L. TSRI</p>
 <p>This file git_upy/dejavuTk/__init__.py is part of upy.</p>
 <p>upy is free software: you can redistribute it and/or modify
@@ -1436,7 +1448,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.</p>
 <p>You should have received a copy of the GNU General Public License
 along with upy.  If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/gpl-3.0.html">http://www.gnu.org/licenses/gpl-3.0.html</a>&gt;.</p>
-</section>
+<span class="target" id="module-cellpack.autopack.upy.simularium"></span></section>
 </section>
 
 

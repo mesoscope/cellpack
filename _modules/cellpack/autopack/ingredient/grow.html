@@ -36,6 +36,7 @@
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -106,8 +107,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-cellpack.example">cellpack.example module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.html#cellpack.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cellpack.html#module-contents">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -152,39 +159,39 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#id81">name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#nbmol">nbMol</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#count">count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#radii">radii</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#positions">positions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#positions2">positions2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packing-priority">packing_priority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#pdb">pdb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#color">color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#meshfile">meshFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#meshname">meshName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#principalvector">principalVector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#principal-vector">principal_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#type">type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#jittermax">jitterMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#nbjitter">nbJitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#userotaxis">useRotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rotaxis">rotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rotrange">rotRange</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#max-jitter">max_jitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rotation-axis">rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rotation-range">rotation_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradient">gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#proba-binding">proba_binding</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#is-attractor">is_attractor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#weight">weight</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#partners-name">partners_name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
@@ -317,110 +324,82 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;Grow&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Grow&quot;</span><span class="p">,</span>
         <span class="n">biased</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
         <span class="n">closed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">compMask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">constraintMarge</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">coordsystem</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span>
         <span class="n">cutoff_boundary</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
         <span class="n">cutoff_surface</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-        <span class="n">encapsulatingRadius</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">excluded_partners_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">gradient</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">isAttractor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">jitterMax</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">gradient</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">is_attractor</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">max_jitter</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
         <span class="n">length</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
         <span class="n">marge</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span>
         <span class="n">meshFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">meshObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">modelType</span><span class="o">=</span><span class="s2">&quot;Cylinders&quot;</span><span class="p">,</span>
+        <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;Cylinders&quot;</span><span class="p">,</span>
         <span class="n">molarity</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
         <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">nbJitter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-        <span class="n">nbMol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">jitter_attempts</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">orientation</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-        <span class="n">orientBiasRotRangeMax</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
-        <span class="n">orientBiasRotRangeMin</span><span class="o">=-</span><span class="n">pi</span><span class="p">,</span>
-        <span class="n">packingMode</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
-        <span class="n">packingPriority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">partners_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">partners_position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">pdb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">perturbAxisAmplitude</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-        <span class="n">placeType</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
+        <span class="n">orient_bias_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="n">pi</span><span class="p">,</span> <span class="n">pi</span><span class="p">],</span>
+        <span class="n">packing_priority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">partners</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">perturb_axis_amplitude</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">place_type</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
         <span class="n">positions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">positions2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">principalVector</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-        <span class="n">proba_binding</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-        <span class="n">proba_not_binding</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-        <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">principal_vector</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
         <span class="n">radii</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">rejectionThreshold</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
-        <span class="n">rotAxis</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-        <span class="n">rotRange</span><span class="o">=</span><span class="mf">6.2831</span><span class="p">,</span>
+        <span class="n">representations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">rejection_threshold</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">rotation_axis</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+        <span class="n">rotation_range</span><span class="o">=</span><span class="mf">6.2831</span><span class="p">,</span>
         <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">sphereFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">uLength</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">use_rbsphere</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">useHalton</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">useLength</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">useOrientBias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">useRotAxis</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">use_orient_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">use_rotation_axis</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">walkingMode</span><span class="o">=</span><span class="s2">&quot;sphere&quot;</span><span class="p">,</span>
         <span class="n">weight</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
     <span class="p">):</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">Type</span><span class="o">=</span><span class="n">Type</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
-            <span class="n">coordsystem</span><span class="o">=</span><span class="n">coordsystem</span><span class="p">,</span>
             <span class="n">cutoff_surface</span><span class="o">=</span><span class="n">cutoff_surface</span><span class="p">,</span>
-            <span class="n">encapsulatingRadius</span><span class="o">=</span><span class="n">encapsulatingRadius</span><span class="p">,</span>
-            <span class="n">excluded_partners_name</span><span class="o">=</span><span class="n">excluded_partners_name</span><span class="p">,</span>
             <span class="n">gradient</span><span class="o">=</span><span class="n">gradient</span><span class="p">,</span>
-            <span class="n">isAttractor</span><span class="o">=</span><span class="n">isAttractor</span><span class="p">,</span>
-            <span class="n">jitterMax</span><span class="o">=</span><span class="n">jitterMax</span><span class="p">,</span>
-            <span class="n">meshFile</span><span class="o">=</span><span class="n">meshFile</span><span class="p">,</span>
-            <span class="n">meshObject</span><span class="o">=</span><span class="n">meshObject</span><span class="p">,</span>
+            <span class="n">is_attractor</span><span class="o">=</span><span class="n">is_attractor</span><span class="p">,</span>
+            <span class="n">max_jitter</span><span class="o">=</span><span class="n">max_jitter</span><span class="p">,</span>
             <span class="n">molarity</span><span class="o">=</span><span class="n">molarity</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">nbJitter</span><span class="o">=</span><span class="n">nbJitter</span><span class="p">,</span>
-            <span class="n">nbMol</span><span class="o">=</span><span class="n">nbMol</span><span class="p">,</span>
-            <span class="n">orientBiasRotRangeMin</span><span class="o">=</span><span class="n">orientBiasRotRangeMin</span><span class="p">,</span>
-            <span class="n">packingMode</span><span class="o">=</span><span class="n">packingMode</span><span class="p">,</span>
-            <span class="n">packingPriority</span><span class="o">=</span><span class="n">packingPriority</span><span class="p">,</span>
-            <span class="n">partners_name</span><span class="o">=</span><span class="n">partners_name</span><span class="p">,</span>
-            <span class="n">partners_position</span><span class="o">=</span><span class="n">partners_position</span><span class="p">,</span>
-            <span class="n">pdb</span><span class="o">=</span><span class="n">pdb</span><span class="p">,</span>
-            <span class="n">perturbAxisAmplitude</span><span class="o">=</span><span class="n">perturbAxisAmplitude</span><span class="p">,</span>
-            <span class="n">placeType</span><span class="o">=</span><span class="n">placeType</span><span class="p">,</span>
-            <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span>
-            <span class="n">positions2</span><span class="o">=</span><span class="n">positions2</span><span class="p">,</span>
-            <span class="n">principalVector</span><span class="o">=</span><span class="n">principalVector</span><span class="p">,</span>
-            <span class="n">proba_binding</span><span class="o">=</span><span class="n">proba_binding</span><span class="p">,</span>
-            <span class="n">proba_not_binding</span><span class="o">=</span><span class="n">proba_not_binding</span><span class="p">,</span>
-            <span class="n">properties</span><span class="o">=</span><span class="n">properties</span><span class="p">,</span>
-            <span class="n">radii</span><span class="o">=</span><span class="n">radii</span><span class="p">,</span>
-            <span class="n">rejectionThreshold</span><span class="o">=</span><span class="n">rejectionThreshold</span><span class="p">,</span>
-            <span class="n">rotAxis</span><span class="o">=</span><span class="n">rotAxis</span><span class="p">,</span>
-            <span class="n">rotRange</span><span class="o">=</span><span class="n">rotRange</span><span class="p">,</span>
-            <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
-            <span class="n">sphereFile</span><span class="o">=</span><span class="n">sphereFile</span><span class="p">,</span>
-            <span class="n">uLength</span><span class="o">=</span><span class="n">uLength</span><span class="p">,</span>
-            <span class="n">useLength</span><span class="o">=</span><span class="n">useLength</span><span class="p">,</span>
-            <span class="n">useOrientBias</span><span class="o">=</span><span class="n">useOrientBias</span><span class="p">,</span>
-            <span class="n">useRotAxis</span><span class="o">=</span><span class="n">useRotAxis</span><span class="p">,</span>
+            <span class="n">jitter_attempts</span><span class="o">=</span><span class="n">jitter_attempts</span><span class="p">,</span>
+            <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">,</span>
+            <span class="n">orient_bias_range</span><span class="o">=</span><span class="n">orient_bias_range</span><span class="p">,</span>
+            <span class="n">packing_priority</span><span class="o">=</span><span class="n">packing_priority</span><span class="p">,</span>
+            <span class="n">partners</span><span class="o">=</span><span class="n">partners</span><span class="p">,</span>
+            <span class="n">perturb_axis_amplitude</span><span class="o">=</span><span class="n">perturb_axis_amplitude</span><span class="p">,</span>
+            <span class="n">place_type</span><span class="o">=</span><span class="n">place_type</span><span class="p">,</span>
+            <span class="n">principal_vector</span><span class="o">=</span><span class="n">principal_vector</span><span class="p">,</span>
+            <span class="n">representations</span><span class="o">=</span><span class="n">representations</span><span class="p">,</span>
+            <span class="n">rejection_threshold</span><span class="o">=</span><span class="n">rejection_threshold</span><span class="p">,</span>
+            <span class="n">rotation_axis</span><span class="o">=</span><span class="n">rotation_axis</span><span class="p">,</span>
+            <span class="n">rotation_range</span><span class="o">=</span><span class="n">rotation_range</span><span class="p">,</span>
+            <span class="n">use_orient_bias</span><span class="o">=</span><span class="n">use_orient_bias</span><span class="p">,</span>
+            <span class="n">use_rotation_axis</span><span class="o">=</span><span class="n">use_rotation_axis</span><span class="p">,</span>
             <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">radii</span><span class="p">),</span> <span class="n">molarity</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">singleSphere</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">modelType</span> <span class="o">=</span> <span class="n">modelType</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="n">model_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">collisionLevel</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">minRadius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">marge</span> <span class="o">=</span> <span class="n">marge</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">closed</span> <span class="o">=</span> <span class="n">closed</span>
@@ -440,7 +419,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">vector</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">principalVector</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span> <span class="o">/</span> <span class="mf">2.0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vector</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">principal_vector</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span> <span class="o">/</span> <span class="mf">2.0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">positions</span> <span class="o">=</span> <span class="p">[[(</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span> <span class="o">*</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">positions2</span> <span class="o">=</span> <span class="p">[[</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -451,7 +430,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingRadius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span> <span class="o">/</span> <span class="mf">2.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unitNumberF</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># number of unit pose so far forward</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unitNumberR</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># number of unit pose so far reverse</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">orientation</span>
@@ -650,10 +629,12 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="n">ptIndr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">pointsmask</span><span class="p">))</span>
         <span class="n">sp_pt_indice</span> <span class="o">=</span> <span class="n">pointsmask</span><span class="p">[</span><span class="n">ptIndr</span><span class="p">]</span>
-        <span class="n">np</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere_points</span><span class="p">[</span><span class="n">sp_pt_indice</span><span class="p">])</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jitterMax</span><span class="p">)</span>
+        <span class="n">np</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere_points</span><span class="p">[</span><span class="n">sp_pt_indice</span><span class="p">])</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">unit_vector</span><span class="p">(</span><span class="n">np</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span>
-        <span class="p">)</span>  <span class="c1"># biased by jitterMax ?</span></div>
+        <span class="p">)</span>  <span class="c1"># biased by max_jitter ?</span></div>
 
 <div class="viewcode-block" id="GrowIngredient.mask_sphere_points_boundary"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.mask_sphere_points_boundary">[docs]</a>    <span class="k">def</span> <span class="nf">mask_sphere_points_boundary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">boundingBox</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -661,7 +642,7 @@
         <span class="n">pts</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere_points</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span><span class="p">)</span> <span class="o">+</span> <span class="n">pt</span>
         <span class="n">points_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere_points_mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">points_mask</span><span class="p">):</span>
-            <span class="n">mask</span> <span class="o">=</span> <span class="p">[</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_is_not_available</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">pts</span><span class="p">[</span><span class="n">points_mask</span><span class="p">]]</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">point_is_available</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">pts</span><span class="p">[</span><span class="n">points_mask</span><span class="p">]]</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">sphere_points_mask</span><span class="p">[</span><span class="n">points_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
                     <span class="n">mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sphere_points_mask</span><span class="p">[</span><span class="n">points_mask</span><span class="p">]</span>
@@ -677,7 +658,7 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">listeclosest</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">points_mask</span><span class="p">):</span>
             <span class="n">points</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">listeclosest</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
             <span class="n">ingrs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">listeclosest</span><span class="p">)[:,</span> <span class="mi">3</span><span class="p">]</span>
-            <span class="n">radius</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">encapsulatingRadius</span><span class="p">)</span> <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ingrs</span><span class="p">]</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">encapsulating_radius</span><span class="p">)</span> <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ingrs</span><span class="p">]</span>
             <span class="c1"># this distance is between unit vector and 3d points...</span>
             <span class="c1"># translate and scale the spheres points</span>
             <span class="n">sp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sphere_points</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -689,7 +670,7 @@
             <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dp</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span>
             <span class="c1"># mas cumulative ?for</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">distances</span><span class="p">)):</span>
-                <span class="c1"># if distance is &gt;= to ingredient encapsulatingRadius we keep the point</span>
+                <span class="c1"># if distance is &gt;= to ingredient encapsulating_radius we keep the point</span>
                 <span class="n">m</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">greater_equal</span><span class="p">(</span><span class="n">distances</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">radius</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                 <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
             <span class="c1"># ponts to keep</span>
@@ -822,7 +803,7 @@
 <div class="viewcode-block" id="GrowIngredient.getNextPtIndCyl"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.getNextPtIndCyl">[docs]</a>    <span class="k">def</span> <span class="nf">getNextPtIndCyl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">freePoints</span><span class="p">,</span> <span class="n">histoVol</span><span class="p">):</span>
         <span class="c1">#        print jtrans, rotMatj</span>
         <span class="n">cent2T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">jx</span><span class="p">,</span> <span class="n">jy</span><span class="p">,</span> <span class="n">jz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">jitterMax</span>
+        <span class="n">jx</span><span class="p">,</span> <span class="n">jy</span><span class="p">,</span> <span class="n">jz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span>
         <span class="n">jitter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMaxJitter</span><span class="p">(</span><span class="n">histoVol</span><span class="o">.</span><span class="n">smallestProteinSize</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cent2T</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">cent2T</span> <span class="o">=</span> <span class="n">cent2T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -927,8 +908,8 @@
             <span class="n">angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">angle_between_vectors</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">posc</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
             <span class="n">v</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">measure_distance</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">posc</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">vec</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="n">marge</span><span class="p">:</span>
-                <span class="n">closeS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkPointSurface</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_surface</span><span class="p">)</span>
-                <span class="n">inComp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkPointComp</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="n">closeS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">far_enough_from_surfaces</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_surface</span><span class="p">)</span>
+                <span class="n">inComp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_point_in_correct_region</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">closeS</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">inComp</span><span class="p">:</span>  <span class="c1"># or d &gt; self.uLength:</span>
                     <span class="n">attempted</span> <span class="o">+=</span> <span class="mi">1</span>
                     <span class="k">continue</span>
@@ -1015,8 +996,8 @@
             <span class="n">angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">angle_between_vectors</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">posc</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
             <span class="n">v</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">measure_distance</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">posc</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">vec</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="n">marge</span><span class="p">:</span>
-                <span class="n">closeS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkPointSurface</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_surface</span><span class="p">)</span>
-                <span class="n">inComp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkPointComp</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="n">closeS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">far_enough_from_surfaces</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_surface</span><span class="p">)</span>
+                <span class="n">inComp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_point_in_correct_region</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">closeS</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">inComp</span><span class="p">:</span>  <span class="c1"># or d &gt; self.uLength:</span>
                     <span class="n">attempted</span> <span class="o">+=</span> <span class="mi">1</span>
                     <span class="k">continue</span>
@@ -1075,7 +1056,7 @@
                 <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">False</span>  <span class="c1"># numpy.array(pt2).flatten()+numpy.array(pt),False</span>
             <span class="n">pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">randpoint_onsphere</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span>
-            <span class="p">)</span>  <span class="c1"># *numpy.array(self.jitterMax)</span>
+            <span class="p">)</span>  <span class="c1"># *numpy.array(self.max_jitter)</span>
             <span class="c1"># the new position is the previous point (pt2) plus the random point</span>
             <span class="n">newPt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt2</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
 
@@ -1088,10 +1069,12 @@
             <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="n">marge</span><span class="p">:</span>
                 <span class="c1"># check if in bounding box</span>
                 <span class="n">inside</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">checkPointInside</span><span class="p">(</span>
-                    <span class="n">newPt</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_boundary</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">jitterMax</span>
+                    <span class="n">newPt</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_boundary</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span>
                 <span class="p">)</span>
-                <span class="n">closeS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkPointSurface</span><span class="p">(</span><span class="n">newPt</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_surface</span><span class="p">)</span>
-                <span class="n">inComp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkPointComp</span><span class="p">(</span><span class="n">newPt</span><span class="p">)</span>
+                <span class="n">closeS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">far_enough_from_surfaces</span><span class="p">(</span>
+                    <span class="n">newPt</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_surface</span>
+                <span class="p">)</span>
+                <span class="n">inComp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_point_in_correct_region</span><span class="p">(</span><span class="n">newPt</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">inside</span> <span class="ow">or</span> <span class="n">closeS</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">inComp</span><span class="p">:</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraintMarge</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">marge</span> <span class="o">&gt;=</span> <span class="mi">175</span><span class="p">:</span>
@@ -1102,7 +1085,7 @@
                     <span class="k">continue</span>
                 <span class="c1"># optionally check for collision</span>
                 <span class="k">if</span> <span class="n">checkcollision</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
                         <span class="c1"># outise is consider as collision...?</span>
                         <span class="c1">#                        rotMatj,jtrans=self.getJtransRot(numpy.array(pt2).flatten(),newPt)</span>
                         <span class="n">rot_mat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
@@ -1147,19 +1130,19 @@
 <div class="viewcode-block" id="GrowIngredient.getInterpolatedSphere"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.getInterpolatedSphere">[docs]</a>    <span class="k">def</span> <span class="nf">getInterpolatedSphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">):</span>
         <span class="n">v</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">measure_distance</span><span class="p">(</span><span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">vec</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1">#        d=self.uLength</span>
-        <span class="n">sps</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minRadius</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">sps</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_radius</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">r</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">p</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">pt1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt1</span><span class="p">)</span>
         <span class="n">pt2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt2</span><span class="p">)</span>
         <span class="n">vn</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>  <span class="c1"># normalized</span>
         <span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt1</span><span class="p">)</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minRadius</span><span class="p">)</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_radius</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sps</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-            <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minRadius</span><span class="p">)</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_radius</span><span class="p">)</span>
             <span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt1</span> <span class="o">+</span> <span class="p">(</span><span class="n">vn</span> <span class="o">*</span> <span class="n">sp</span><span class="p">))</span>
         <span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt2</span><span class="p">)</span>
-        <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minRadius</span><span class="p">)</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_radius</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="GrowIngredient.addRBsegment"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.addRBsegment">[docs]</a>    <span class="k">def</span> <span class="nf">addRBsegment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">nodeid</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
@@ -1188,9 +1171,9 @@
         <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">attempted</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">pt</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
-        <span class="n">safetycutoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rejectionThreshold</span>
+        <span class="n">safetycutoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rejection_threshold</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraintMarge</span><span class="p">:</span>
-            <span class="n">safetycutoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rejectionThreshold</span>
+            <span class="n">safetycutoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rejection_threshold</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runTimeDisplay</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;walking&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
             <span class="n">sp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -1344,21 +1327,24 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;no  points available&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">False</span>
             <span class="n">r</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span>
-            <span class="n">point_is_not_available</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_is_not_available</span><span class="p">(</span><span class="n">newPt</span><span class="p">)</span>
+            <span class="n">point_is_not_available</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_is_available</span><span class="p">(</span><span class="n">newPt</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span>
                 <span class="s2">&quot;point is available&quot;</span><span class="p">,</span>
                 <span class="n">point_is_not_available</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">constraintMarge</span><span class="p">,</span>
                 <span class="n">marge</span><span class="p">,</span>
                 <span class="n">attempted</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">rejectionThreshold</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rejection_threshold</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">point_is_not_available</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">constraintMarge</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">marge</span> <span class="o">&gt;=</span> <span class="mi">175</span><span class="p">:</span>
                         <span class="n">attempted</span> <span class="o">+=</span> <span class="mi">1</span>
                         <span class="k">continue</span>
-                    <span class="k">if</span> <span class="n">attempted</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rejectionThreshold</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">alternate</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">attempted</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rejection_threshold</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="n">alternate</span>
+                    <span class="p">):</span>
                         <span class="n">marge</span> <span class="o">+=</span> <span class="mi">1</span>
                         <span class="n">attempted</span> <span class="o">=</span> <span class="mi">0</span>
                         <span class="c1"># need to recompute the mask</span>
@@ -1410,7 +1396,7 @@
                     <span class="c1">#                    if self.use_rbsphere :</span>
                     <span class="c1">#                        rbnode = self.addRBsegment(numpy.array(pt2).flatten(),newPt)</span>
                     <span class="c1">#                    else :</span>
-                    <span class="c1">#                        rbnode = histoVol.callFunction(histoVol.addRB,(self, numpy.array(jtrans), numpy.array(rotMatj),),{&quot;rtype&quot;:self.Type},)#cylinder</span>
+                    <span class="c1">#                        rbnode = histoVol.callFunction(histoVol.addRB,(self, numpy.array(jtrans), numpy.array(rotMatj),),{&quot;rtype&quot;:self.type},)#cylinder</span>
                     <span class="c1">#                    #histoVol.callFunction(histoVol.moveRBnode,(rbnode, jtrans, rotMatj,))</span>
                     <span class="c1"># if inside organelle check for collision with it ?</span>
                     <span class="c1">#                    self.positions=oldpos1</span>
@@ -1547,7 +1533,7 @@
                             <span class="n">attempted</span> <span class="o">+=</span> <span class="mi">1</span>
                             <span class="k">continue</span>
                         <span class="k">if</span> <span class="p">(</span>
-                            <span class="n">attempted</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rejectionThreshold</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+                            <span class="n">attempted</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rejection_threshold</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
                             <span class="ow">and</span> <span class="ow">not</span> <span class="n">alternate</span>
                         <span class="p">):</span>
                             <span class="n">marge</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -1634,7 +1620,7 @@
                         <span class="kc">False</span><span class="p">,</span>
                     <span class="p">)</span>  <span class="c1"># numpy.array(pt2).flatten()+numpy.array(pt),False</span>
                 <span class="n">p</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span>
-                <span class="n">pt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jitterMax</span><span class="p">)</span>  <span class="c1"># ?</span>
+                <span class="n">pt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span><span class="p">)</span>  <span class="c1"># ?</span>
                 <span class="n">newPt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt2</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runTimeDisplay</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">setTranslation</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">newPt</span><span class="p">)</span>
@@ -1644,7 +1630,7 @@
                 <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">advance_randpoint_onsphere</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span><span class="p">,</span> <span class="n">marge</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">marge</span><span class="p">),</span> <span class="n">vector</span><span class="o">=</span><span class="n">v</span>
                 <span class="p">)</span>
-                <span class="n">pt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jitterMax</span><span class="p">)</span>  <span class="c1"># ?</span>
+                <span class="n">pt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span><span class="p">)</span>  <span class="c1"># ?</span>
                 <span class="c1"># the new position is the previous point (pt2) plus the random point</span>
                 <span class="n">newPt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt2</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runTimeDisplay</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
@@ -1659,13 +1645,13 @@
                 <span class="n">inComp</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">closeS</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="n">inside</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">checkPointInside</span><span class="p">(</span>
-                    <span class="n">newPt</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_boundary</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">jitterMax</span>
+                    <span class="n">newPt</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_boundary</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span>
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="n">inside</span><span class="p">:</span>
-                    <span class="n">inComp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkPointComp</span><span class="p">(</span><span class="n">newPt</span><span class="p">)</span>
+                    <span class="n">inComp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_point_in_correct_region</span><span class="p">(</span><span class="n">newPt</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">inComp</span><span class="p">:</span>
                         <span class="c1"># check how far from surface ?</span>
-                        <span class="n">closeS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkPointSurface</span><span class="p">(</span>
+                        <span class="n">closeS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">far_enough_from_surfaces</span><span class="p">(</span>
                             <span class="n">newPt</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_surface</span>
                         <span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">inside</span> <span class="ow">or</span> <span class="n">closeS</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">inComp</span><span class="p">:</span>
@@ -1711,7 +1697,7 @@
                                 <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">jtrans</span><span class="p">),</span>
                                 <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rotMatj</span><span class="p">),</span>
                             <span class="p">),</span>
-                            <span class="p">{</span><span class="s2">&quot;rtype&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Type</span><span class="p">},</span>
+                            <span class="p">{</span><span class="s2">&quot;rtype&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">},</span>
                         <span class="p">)</span>  <span class="c1"># cylinder</span>
                     <span class="c1"># histoVol.callFunction(histoVol.moveRBnode,(rbnode, jtrans, rotMatj,))</span>
                     <span class="c1"># if inside organelle check for collision with it ?</span>
@@ -1807,14 +1793,14 @@
         <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>  <span class="c1"># *self.uLength</span>
-        <span class="n">pt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>  <span class="c1"># *numpy.array(self.jitterMax)#?</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>  <span class="c1"># *numpy.array(self.max_jitter)#?</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt2</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GrowIngredient.pickRandomSphere"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.pickRandomSphere">[docs]</a>    <span class="k">def</span> <span class="nf">pickRandomSphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt1</span><span class="p">,</span> <span class="n">pt2</span><span class="p">,</span> <span class="n">marge</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
         <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">advance_randpoint_onsphere</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span><span class="p">,</span> <span class="n">marge</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">marge</span><span class="p">),</span> <span class="n">vector</span><span class="o">=</span><span class="n">v</span>
         <span class="p">)</span>
-        <span class="n">pt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jitterMax</span><span class="p">)</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span><span class="p">)</span>
         <span class="c1"># the new position is the previous point (pt2) plus the random point</span>
         <span class="n">newPt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt2</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
         <span class="c1"># compute the angle between the previous direction (pt1-&gt;pt2) and the new random one (pt)</span>
@@ -1907,7 +1893,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
             <span class="c1"># pick next point and test collision.</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">walkingMode</span> <span class="o">==</span> <span class="s2">&quot;sphere&quot;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">placeType</span> <span class="o">==</span> <span class="s2">&quot;pandaBullet&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_type</span> <span class="o">==</span> <span class="s2">&quot;pandaBullet&quot;</span><span class="p">:</span>
                     <span class="n">secondPoint</span><span class="p">,</span> <span class="n">success</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">walkSpherePanda</span><span class="p">(</span>
                         <span class="n">previousPoint</span><span class="p">,</span>
                         <span class="n">startingPoint</span><span class="p">,</span>
@@ -2035,7 +2021,7 @@
                     <span class="c1">#                        cent2T=cent2T[0]</span>
                     <span class="c1">#                    self.positions=[[cent1T],]</span>
                     <span class="c1">#                    self.positions2=[[cent2T],]</span>
-                    <span class="c1"># rbnode = histoVol.callFunction(histoVol.addRB,(self, numpy.array(jtrans), numpy.array(rotMatj),),{&quot;rtype&quot;:self.Type},)#cylinder</span>
+                    <span class="c1"># rbnode = histoVol.callFunction(histoVol.addRB,(self, numpy.array(jtrans), numpy.array(rotMatj),),{&quot;rtype&quot;:self.type},)#cylinder</span>
                     <span class="c1"># histoVol.callFunction(histoVol.moveRBnode,(rbnode, jtrans, rotMatj,))</span>
                     <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getInsidePoints</span><span class="p">(</span>
                         <span class="n">histoVol</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span>
@@ -2137,7 +2123,7 @@
                 <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>  <span class="c1"># TODO: revert to original implementation for 3D packing</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vector</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">jitterMax</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span>
             <span class="p">)</span>  <span class="c1"># = (1,0,0)self.vector.flatten()</span>
             <span class="n">secondPoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">startingpoint</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector</span>
             <span class="c1"># seed=&quot;F&quot;</span>
@@ -2147,12 +2133,14 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">seed</span> <span class="o">=</span> <span class="s2">&quot;F&quot;</span>
             <span class="n">inside</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">checkPointInside</span><span class="p">(</span>
-                <span class="n">secondPoint</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_boundary</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">jitterMax</span>
+                <span class="n">secondPoint</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_boundary</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span>
             <span class="p">)</span>
             <span class="n">closeS</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="n">inside</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="c1"># only if not surface ingredient</span>
-                <span class="n">closeS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkPointSurface</span><span class="p">(</span><span class="n">secondPoint</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_surface</span><span class="p">)</span>
+                <span class="n">closeS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">far_enough_from_surfaces</span><span class="p">(</span>
+                    <span class="n">secondPoint</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_surface</span>
+                <span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">inside</span> <span class="ow">or</span> <span class="n">closeS</span><span class="p">:</span>
                 <span class="n">safety</span> <span class="o">=</span> <span class="mi">30</span>
                 <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
@@ -2165,13 +2153,13 @@
                     <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">advance_randpoint_onsphere</span><span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span><span class="p">,</span> <span class="n">marge</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">marge</span><span class="p">),</span> <span class="n">vector</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vector</span>
                     <span class="p">)</span>
-                    <span class="n">pt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jitterMax</span><span class="p">)</span>
+                    <span class="n">pt</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span><span class="p">)</span>
                     <span class="n">secondPoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">startingpoint</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
                     <span class="n">inside</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">checkPointInside</span><span class="p">(</span>
-                        <span class="n">secondPoint</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_boundary</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">jitterMax</span>
+                        <span class="n">secondPoint</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_boundary</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span>
                     <span class="p">)</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="n">closeS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkPointSurface</span><span class="p">(</span>
+                        <span class="n">closeS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">far_enough_from_surfaces</span><span class="p">(</span>
                             <span class="n">secondPoint</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_surface</span>
                         <span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runTimeDisplay</span><span class="p">:</span>
@@ -2269,7 +2257,7 @@
         <span class="c1"># test for collision</span>
         <span class="c1"># return success, nbFreePoints</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">])</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">placeType</span> <span class="o">==</span> <span class="s2">&quot;pandaBullet&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_type</span> <span class="o">==</span> <span class="s2">&quot;pandaBullet&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">nb_ingredient</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">startingPoint</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rRot</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>  <span class="c1"># rotMatj</span>
@@ -2625,28 +2613,27 @@
         <span class="n">radii</span><span class="o">=</span><span class="p">[[</span><span class="mf">50.0</span><span class="p">]],</span>
         <span class="n">positions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">positions2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">sphereFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">packingPriority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">packing_priority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">pdb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">nbJitter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-        <span class="n">jitterMax</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="n">perturbAxisAmplitude</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">jitter_attempts</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">max_jitter</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">perturb_axis_amplitude</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
         <span class="n">length</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
         <span class="n">closed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">modelType</span><span class="o">=</span><span class="s2">&quot;Cylinders&quot;</span><span class="p">,</span>
         <span class="n">biased</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;Actine&quot;</span><span class="p">,</span>
-        <span class="n">principalVector</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Actine&quot;</span><span class="p">,</span>
+        <span class="n">principal_vector</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
         <span class="n">meshFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">packingMode</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
-        <span class="n">placeType</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
+        <span class="n">packing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">place_type</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
         <span class="n">marge</span><span class="o">=</span><span class="mf">35.0</span><span class="p">,</span>
         <span class="n">influenceRad</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span>
         <span class="n">meshObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">orientation</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-        <span class="n">nbMol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kw</span>
     <span class="p">):</span>
 
@@ -2656,32 +2643,31 @@
             <span class="n">radii</span><span class="p">,</span>
             <span class="n">positions</span><span class="p">,</span>
             <span class="n">positions2</span><span class="p">,</span>
-            <span class="n">sphereFile</span><span class="p">,</span>
-            <span class="n">packingPriority</span><span class="p">,</span>
+            <span class="n">packing_priority</span><span class="p">,</span>
             <span class="n">name</span><span class="p">,</span>
             <span class="n">pdb</span><span class="p">,</span>
             <span class="n">color</span><span class="p">,</span>
-            <span class="n">nbJitter</span><span class="p">,</span>
-            <span class="n">jitterMax</span><span class="p">,</span>
-            <span class="n">perturbAxisAmplitude</span><span class="p">,</span>
+            <span class="n">jitter_attempts</span><span class="p">,</span>
+            <span class="n">max_jitter</span><span class="p">,</span>
+            <span class="n">perturb_axis_amplitude</span><span class="p">,</span>
             <span class="n">length</span><span class="p">,</span>
             <span class="n">closed</span><span class="p">,</span>
             <span class="n">modelType</span><span class="p">,</span>
             <span class="n">biased</span><span class="p">,</span>
-            <span class="n">principalVector</span><span class="p">,</span>
+            <span class="n">principal_vector</span><span class="p">,</span>
             <span class="n">meshFile</span><span class="p">,</span>
-            <span class="n">packingMode</span><span class="p">,</span>
-            <span class="n">placeType</span><span class="p">,</span>
+            <span class="n">packing</span><span class="p">,</span>
+            <span class="n">place_type</span><span class="p">,</span>
             <span class="n">marge</span><span class="p">,</span>
             <span class="n">meshObject</span><span class="p">,</span>
             <span class="n">orientation</span><span class="p">,</span>
-            <span class="n">nbMol</span><span class="p">,</span>
-            <span class="n">Type</span><span class="p">,</span>
+            <span class="n">count</span><span class="p">,</span>
+            <span class="nb">type</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kw</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Actine_</span><span class="si">%s</span><span class="s2">_</span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">radii</span><span class="p">),</span> <span class="n">molarity</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">isAttractor</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_attractor</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">constraintMarge</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seedOnMinus</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">influenceRad</span> <span class="o">=</span> <span class="n">influenceRad</span>
@@ -2695,7 +2681,7 @@
         <span class="n">r</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">getRadius</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">positions</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">positions2</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">principalVector</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">principal_vector</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uLength</span> <span class="o">=</span> <span class="n">r</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">r</span></div></div>
 </pre></div>

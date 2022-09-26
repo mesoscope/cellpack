@@ -37,6 +37,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -107,8 +108,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack.example">cellpack.example module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack.example">cellpack.example module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-contents">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -153,39 +160,39 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbmol">nbMol</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#count">count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#radii">radii</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions">positions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions2">positions2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-priority">packing_priority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pdb">pdb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#color">color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshfile">meshFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshname">meshName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principalvector">principalVector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principal-vector">principal_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jittermax">jitterMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbjitter">nbJitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#userotaxis">useRotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotaxis">rotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotrange">rotRange</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#max-jitter">max_jitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-axis">rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-range">rotation_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-binding">proba_binding</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#is-attractor">is_attractor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#weight">weight</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-name">partners_name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
@@ -481,13 +488,13 @@
 <p><a href="#id84"><span class="problematic" id="id85">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id86"><span class="problematic" id="id87">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
 <p>Concentration of the ingredient.</p>
 </section>
-<section id="nbmol">
-<h3>nbMol<a class="headerlink" href="#nbmol" title="Permalink to this heading">¶</a></h3>
+<section id="count">
+<h3>count<a class="headerlink" href="#count" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id88"><span class="problematic" id="id89">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code>*</p>
 <p>Number to pack, additive with molarity.. Default: <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
 </section>
-<section id="encapsulatingradius">
-<h3>encapsulatingRadius<a class="headerlink" href="#encapsulatingradius" title="Permalink to this heading">¶</a></h3>
+<section id="encapsulating-radius">
+<h3>encapsulating_radius<a class="headerlink" href="#encapsulating-radius" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id90"><span class="problematic" id="id91">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id92"><span class="problematic" id="id93">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p>
 <p>Smallest radius that completely includes all the geometry.</p>
 </section>
@@ -509,8 +516,8 @@
 <p><a href="#id100"><span class="problematic" id="id101">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string</span></code>*</p>
 <p>Location of sphere file</p>
 </section>
-<section id="packingpriority">
-<h3>packingPriority<a class="headerlink" href="#packingpriority" title="Permalink to this heading">¶</a></h3>
+<section id="packing-priority">
+<h3>packing_priority<a class="headerlink" href="#packing-priority" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id102"><span class="problematic" id="id103">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code>* Default to <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
 <p>Order to pack, largest negative number gets packed first.</p>
 </section>
@@ -537,12 +544,12 @@
 <h3>coordsystem<a class="headerlink" href="#coordsystem" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id110"><span class="problematic" id="id111">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">enum.</span></code> One of <code class="docutils literal notranslate"><span class="pre">&quot;left&quot;</span></code> <code class="docutils literal notranslate"><span class="pre">&quot;right&quot;</span></code><a href="#id112"><span class="problematic" id="id113">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;left&quot;</span></code>.</p>
 </section>
-<section id="principalvector">
-<h3>principalVector<a class="headerlink" href="#principalvector" title="Permalink to this heading">¶</a></h3>
+<section id="principal-vector">
+<h3>principal_vector<a class="headerlink" href="#principal-vector" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id114"><span class="problematic" id="id115">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">[number,</span> <span class="pre">number,</span> <span class="pre">number]</span></code><a href="#id116"><span class="problematic" id="id117">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">[0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></code>.</p>
 </section>
 <section id="type">
-<h3>Type<a class="headerlink" href="#type" title="Permalink to this heading">¶</a></h3>
+<h3>type<a class="headerlink" href="#type" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id118"><span class="problematic" id="id119">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">enum</span></code>. One of <code class="docutils literal notranslate"><span class="pre">&quot;SingleSphere&quot;</span></code>,<code class="docutils literal notranslate"><span class="pre">&quot;SingleCube&quot;</span></code>,<code class="docutils literal notranslate"><span class="pre">&quot;MultiSphere&quot;</span></code>,<code class="docutils literal notranslate"><span class="pre">&quot;MultiCylinder&quot;</span></code>,<code class="docutils literal notranslate"><span class="pre">&quot;Grow&quot;</span></code>,<code class="docutils literal notranslate"><span class="pre">&quot;Mesh&quot;</span></code>*</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;SingleSphere&quot;</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;SingleCube&quot;</span></code></p>
@@ -555,33 +562,33 @@
 <h3>offset<a class="headerlink" href="#offset" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id120"><span class="problematic" id="id121">*</span></a>Optional  <code class="docutils literal notranslate"><span class="pre">[number,</span> <span class="pre">number,</span> <span class="pre">number]</span></code><a href="#id122"><span class="problematic" id="id123">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">[0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></code>.</p>
 </section>
-<section id="jittermax">
-<h3>jitterMax<a class="headerlink" href="#jittermax" title="Permalink to this heading">¶</a></h3>
+<section id="max-jitter">
+<h3>max_jitter<a class="headerlink" href="#max-jitter" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id124"><span class="problematic" id="id125">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">[number,</span> <span class="pre">number,</span> <span class="pre">number]</span></code><a href="#id126"><span class="problematic" id="id127">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">1,</span> <span class="pre">1]</span></code>.</p>
 </section>
-<section id="nbjitter">
-<h3>nbJitter<a class="headerlink" href="#nbjitter" title="Permalink to this heading">¶</a></h3>
+<section id="jitter-attempts">
+<h3>jitter_attempts<a class="headerlink" href="#jitter-attempts" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id128"><span class="problematic" id="id129">*</span></a>Required <code class="docutils literal notranslate"><span class="pre">number</span></code>* . Default: <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p>
 <p>How many times it will attempts to pack before rejecting the ingredient.</p>
 </section>
-<section id="perturbaxisamplitude">
-<h3>perturbAxisAmplitude<a class="headerlink" href="#perturbaxisamplitude" title="Permalink to this heading">¶</a></h3>
+<section id="perturb-axis-amplitude">
+<h3>perturb_axis_amplitude<a class="headerlink" href="#perturb-axis-amplitude" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id130"><span class="problematic" id="id131">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id132"><span class="problematic" id="id133">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p>
 </section>
-<section id="userotaxis">
-<h3>useRotAxis<a class="headerlink" href="#userotaxis" title="Permalink to this heading">¶</a></h3>
+<section id="use-rotation-axis">
+<h3>use_rotation_axis<a class="headerlink" href="#use-rotation-axis" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id134"><span class="problematic" id="id135">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">boolean</span></code><a href="#id136"><span class="problematic" id="id137">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
 </section>
-<section id="rotaxis">
-<h3>rotAxis<a class="headerlink" href="#rotaxis" title="Permalink to this heading">¶</a></h3>
+<section id="rotation-axis">
+<h3>rotation_axis<a class="headerlink" href="#rotation-axis" title="Permalink to this heading">¶</a></h3>
 <p><em>Optional [number, number, number]</em>. Default: <code class="docutils literal notranslate"><span class="pre">[0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0]</span></code>.</p>
 </section>
-<section id="rotrange">
-<h3>rotRange<a class="headerlink" href="#rotrange" title="Permalink to this heading">¶</a></h3>
+<section id="rotation-range">
+<h3>rotation_range<a class="headerlink" href="#rotation-range" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id138"><span class="problematic" id="id139">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id140"><span class="problematic" id="id141">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">6.2831</span></code>.</p>
 </section>
-<section id="useorientbias">
-<h3>useOrientBias<a class="headerlink" href="#useorientbias" title="Permalink to this heading">¶</a></h3>
+<section id="use-orient-bias">
+<h3>use_orient_bias<a class="headerlink" href="#use-orient-bias" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id142"><span class="problematic" id="id143">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">boolean</span></code><a href="#id144"><span class="problematic" id="id145">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
 </section>
 <section id="orientbiasrotrangemin">
@@ -601,19 +608,19 @@
 <h3>cutoff_surface<a class="headerlink" href="#cutoff-surface" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id158"><span class="problematic" id="id159">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id160"><span class="problematic" id="id161">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">5.0</span></code>.</p>
 </section>
-<section id="placetype">
-<h3>placeType<a class="headerlink" href="#placetype" title="Permalink to this heading">¶</a></h3>
+<section id="place-type">
+<h3>place_type<a class="headerlink" href="#place-type" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id162"><span class="problematic" id="id163">*</span></a>Optional enum. One of <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;spheresSST&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code><a href="#id164"><span class="problematic" id="id165">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code> uses a simple algorithm developed by GJ, M-A-A, MS, and LA to test if a single sphere, sphere-tree, or other primative (box and cylinder) are colliding with masked/unallowed points on the grid… I can’t recall all of the allowed types, but check the input parameters that it accepts. I believe there is also an option to perform simple collisions directly between primatives, e.g. sphere-sphere, sphere-box, sphere-cylinder, cylinder-box, and spheretree-others</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;spheresSST&quot;</span></code> gets the sphereTrees of the potential colliding neighbors, and does an efficient sphereTree-sphereTree collision detection of the sphereTree for the object being packed against the sphereTrees of each neighbor- returns false if a collision is detected</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code>  Python wrapper for Bullet Physics Engine (popular in ~2010 and used by C4D, Maya, Blender, etc) that provides a variety of object-object collision detection, including collision min/max overlap distance, etc. Allows relaxation in its own loop, springs, rejection, meshes, primitives, etc.</p>
 </section>
-<section id="rejectionthreshold">
-<h3>rejectionThreshold<a class="headerlink" href="#rejectionthreshold" title="Permalink to this heading">¶</a></h3>
+<section id="rejection-threshold">
+<h3>rejection_threshold<a class="headerlink" href="#rejection-threshold" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id166"><span class="problematic" id="id167">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id168"><span class="problematic" id="id169">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">30</span></code>.</p>
 </section>
-<section id="packingmode">
-<h3>packingMode<a class="headerlink" href="#packingmode" title="Permalink to this heading">¶</a></h3>
+<section id="packing-mode">
+<h3>packing_mode<a class="headerlink" href="#packing-mode" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id170"><span class="problematic" id="id171">*</span></a>Optional enum. One of <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;close&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;closePartner&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;randomPartner&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;gradient&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;hexatile&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;squaretile&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;triangletile&quot;</span></code><a href="#id172"><span class="problematic" id="id173">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code>.</p>
 </section>
 <section id="gradient">
@@ -629,8 +636,8 @@ Gradient name to use if <code class="docutils literal notranslate"><span class="
 <h3>proba_not_binding<a class="headerlink" href="#proba-not-binding" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id178"><span class="problematic" id="id179">*</span></a><code class="docutils literal notranslate"><span class="pre">number</span></code>*</p>
 </section>
-<section id="isattractor">
-<h3>isAttractor<a class="headerlink" href="#isattractor" title="Permalink to this heading">¶</a></h3>
+<section id="is-attractor">
+<h3>is_attractor<a class="headerlink" href="#is-attractor" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id180"><span class="problematic" id="id181">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">boolean</span></code><a href="#id182"><span class="problematic" id="id183">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
 </section>
 <section id="weight">
@@ -668,10 +675,10 @@ Gradient name to use if <code class="docutils literal notranslate"><span class="
 <section id="example-ingredient">
 <h3>example ingredient<a class="headerlink" href="#example-ingredient" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;Sphere_radius_100&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;nbJitter&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;jitter_attempts&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;molarity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;partners_position&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;rotRange&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">6.2831</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;rotation_range&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">6.2831</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="mf">0.498</span><span class="p">,</span><span class="w"> </span><span class="mf">0.498</span><span class="p">,</span><span class="w"> </span><span class="mf">0.498</span><span class="w"> </span><span class="p">],</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;meshFile&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;sphereFile&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"></span>
@@ -680,32 +687,32 @@ Gradient name to use if <code class="docutils literal notranslate"><span class="
 <span class="w">    </span><span class="nt">&quot;radii&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="mi">100</span><span class="p">]],</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;cutoff_boundary&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;coordsystem&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;left&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;jitterMax&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">],</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;perturbAxisAmplitude&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;encapsulatingRadius&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;max_jitter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;perturb_axis_amplitude&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;encapsulating_radius&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;positions2&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;useOrientBias&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;use_orient_bias&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;gradient&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;isAttractor&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;principalVector&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">],</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;is_attractor&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;principal_vector&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">],</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;partners_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;nbMol&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sphere_radius_100&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;orientBiasRotRangeMax&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-3.1415927</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;packingMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;random&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;Type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SingleSphere&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;packing_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;random&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SingleSphere&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;excluded_partners_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;rejectionThreshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;placeType&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;rejection_threshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;place_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;cutoff_surface&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;packingPriority&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;packing_priority&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;proba_binding&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;rotAxis&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;rotation_axis&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;positions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">],</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;proba_not_binding&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;pdb&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;useRotAxis&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;use_rotation_axis&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"></span>
 <span class="p">},</span><span class="w"></span>
 </pre></div>
 </div>

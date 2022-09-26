@@ -36,6 +36,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -106,8 +107,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack.example">cellpack.example module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.html#cellpack.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-contents">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -152,39 +159,39 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#id81">name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbmol">nbMol</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#count">count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#radii">radii</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#positions">positions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#positions2">positions2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packing-priority">packing_priority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pdb">pdb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#color">color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#meshfile">meshFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#meshname">meshName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#principalvector">principalVector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#principal-vector">principal_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#type">type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#jittermax">jitterMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbjitter">nbJitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#userotaxis">useRotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotaxis">rotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotrange">rotRange</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#max-jitter">max_jitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotation-axis">rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotation-range">rotation_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradient">gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#proba-binding">proba_binding</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#is-attractor">is_attractor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#weight">weight</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#partners-name">partners_name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
@@ -567,30 +574,23 @@
         <span class="k">if</span> <span class="n">boundingBox</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">boundingBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span>
         <span class="n">space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span>
-        <span class="c1"># we want the diagonal of the voxel, not the diagonal of the plane, so the second 1.1547 is was incorrect</span>
         <span class="n">environmentBoxEqualFillBox</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using create3DPointLookup&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">environmentBoxEqualFillBox</span><span class="p">:</span>  <span class="c1"># environment.environmentBoxEqualFillBox:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-                <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">space</span>
-            <span class="p">)</span>  <span class="c1"># *1.1547) gridspacing is already multiplied by 1.1547</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-                <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">space</span>
-            <span class="p">)</span>  <span class="c1"># *1.1547)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_z</span> <span class="o">=</span> <span class="n">z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-                <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">space</span>
-            <span class="p">)</span>  <span class="c1"># *1.1547)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">space</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">space</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_z</span> <span class="o">=</span> <span class="n">z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">space</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
                 <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">space</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">space</span><span class="p">,</span> <span class="n">space</span>
-            <span class="p">)</span>  <span class="c1"># *1.1547) gridspacing is already multiplied by 1.1547</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
                 <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">space</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">space</span><span class="p">,</span> <span class="n">space</span>
-            <span class="p">)</span>  <span class="c1"># *1.1547)</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_z</span> <span class="o">=</span> <span class="n">z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
                 <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">space</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">space</span><span class="p">,</span> <span class="n">space</span>
-            <span class="p">)</span>  <span class="c1"># *1.1547)</span>
+            <span class="p">)</span>
         <span class="n">nx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
             <span class="n">x</span>
         <span class="p">)</span>  <span class="c1"># sizes must be +1 or the right, top, and back edges don&#39;t get any points using this numpy.arange method</span>
@@ -622,7 +622,7 @@
             <span class="n">boundingBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span>
         <span class="n">space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span>
         <span class="n">S</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">NX</span><span class="p">,</span> <span class="n">NY</span><span class="p">,</span> <span class="n">NZ</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">S</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span><span class="p">))</span>  <span class="c1"># / 1.1547))</span>
+        <span class="n">NX</span><span class="p">,</span> <span class="n">NY</span><span class="p">,</span> <span class="n">NZ</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">S</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">NX</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">NX</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">NY</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -630,36 +630,29 @@
         <span class="k">if</span> <span class="n">NZ</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">NZ</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;using create3DPointLookupCover&quot;</span><span class="p">)</span>
-        <span class="c1"># we want the diagonal of the voxel, not the diagonal of the plane, so the second 1.1547 is was incorrect</span>
         <span class="n">environmentBoxEqualFillBox</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="c1"># np.linspace(2.0, 3.0, num=5)</span>
         <span class="k">if</span> <span class="n">environmentBoxEqualFillBox</span><span class="p">:</span>  <span class="c1"># environment.environmentBoxEqualFillBox:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
-                <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">NX</span><span class="p">)</span>
-            <span class="p">)</span>  <span class="c1"># *1.1547) gridspacing is already multiplied by 1.1547</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
-                <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">NY</span><span class="p">)</span>
-            <span class="p">)</span>  <span class="c1"># *1.1547)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_z</span> <span class="o">=</span> <span class="n">z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
-                <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">NZ</span><span class="p">)</span>
-            <span class="p">)</span>  <span class="c1"># *1.1547)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">NX</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">NY</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_z</span> <span class="o">=</span> <span class="n">z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="n">NZ</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
                 <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">space</span><span class="p">,</span> <span class="n">space</span>
-            <span class="p">)</span>  <span class="c1"># *1.1547) gridspacing is already multiplied by 1.1547</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
                 <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">space</span><span class="p">,</span> <span class="n">space</span>
-            <span class="p">)</span>  <span class="c1"># *1.1547)</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_z</span> <span class="o">=</span> <span class="n">z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
                 <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">space</span><span class="p">,</span> <span class="n">space</span>
-            <span class="p">)</span>  <span class="c1"># *1.1547)</span>
+            <span class="p">)</span>
         <span class="n">xyz</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">nx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
             <span class="n">x</span>
         <span class="p">)</span>  <span class="c1"># sizes must be +1 or the right, top, and back edges don&#39;t get any points using this numpy.arange method</span>
         <span class="n">ny</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
         <span class="n">nz</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1.1547</span>  <span class="c1"># ? should I multiply here ?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbGridPoints</span> <span class="o">=</span> <span class="p">[</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gridVolume</span> <span class="o">=</span> <span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span> <span class="o">*</span> <span class="n">nz</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ijkPtIndice</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndindex</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
@@ -910,7 +903,7 @@
                 <span class="n">tr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt3d</span> <span class="o">+</span> <span class="n">corner</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">tr</span></div>
 
-<div class="viewcode-block" id="BaseGrid.checkPointInside"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.checkPointInside">[docs]</a>    <span class="k">def</span> <span class="nf">checkPointInside</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">bb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseGrid.is_point_inside_bb"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.is_point_inside_bb">[docs]</a>    <span class="k">def</span> <span class="nf">is_point_inside_bb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">bb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the given 3d points is inside the grid</span>
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    cellpack.autopack.ingredient
+   cellpack.autopack.interface_objects
    cellpack.autopack.loaders
    cellpack.autopack.upy
 
@@ -66,6 +67,14 @@ cellpack.autopack.Graphics module
 ---------------------------------
 
 .. automodule:: cellpack.autopack.Graphics
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.Grid module
+-----------------------------
+
+.. automodule:: cellpack.autopack.Grid
    :members:
    :undoc-members:
    :show-inheritance:

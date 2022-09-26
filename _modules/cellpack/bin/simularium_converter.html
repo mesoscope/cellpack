@@ -36,6 +36,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -106,8 +107,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack.example">cellpack.example module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.html#cellpack.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-contents">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -152,39 +159,39 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#id81">name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbmol">nbMol</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#count">count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#radii">radii</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#positions">positions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#positions2">positions2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packing-priority">packing_priority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pdb">pdb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#color">color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#meshfile">meshFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#meshname">meshName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#principalvector">principalVector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#principal-vector">principal_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#type">type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#jittermax">jitterMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbjitter">nbJitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#userotaxis">useRotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotaxis">rotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotrange">rotRange</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#max-jitter">max_jitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotation-axis">rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotation-range">rotation_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradient">gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#proba-binding">proba_binding</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#is-attractor">is_attractor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#weight">weight</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#partners-name">partners_name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
@@ -452,7 +459,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">display_type</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">FIBER</span>
-                <span class="k">if</span> <span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span>
+                <span class="k">if</span> <span class="n">ingredient_data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span>
                 <span class="k">else</span> <span class="n">DISPLAY_TYPE</span><span class="o">.</span><span class="n">SPHERE</span>
             <span class="p">)</span>
             <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;display_type&quot;</span><span class="p">:</span> <span class="n">display_type</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span></div>
@@ -506,8 +513,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">type_names</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingredient_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unique_ids</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
         <span class="n">r</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;encapsulatingRadius&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
-            <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;encapsulatingRadius&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;encapsulating_radius&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;encapsulating_radius&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
             <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_radius</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
@@ -557,9 +564,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">data</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;radii&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="s2">&quot;encapsulatingRadius&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="s2">&quot;encapsulating_radius&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;encapsulatingRadius&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;encapsulating_radius&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">time_step_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_radius</span><span class="p">)</span>

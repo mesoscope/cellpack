@@ -36,6 +36,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -106,8 +107,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack.example">cellpack.example module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.html#cellpack.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-contents">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -152,39 +159,39 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#id81">name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbmol">nbMol</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#count">count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#radii">radii</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#positions">positions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#positions2">positions2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packing-priority">packing_priority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pdb">pdb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#color">color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#meshfile">meshFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#meshname">meshName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#principalvector">principalVector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#principal-vector">principal_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#type">type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#jittermax">jitterMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbjitter">nbJitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#userotaxis">useRotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotaxis">rotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotrange">rotRange</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#max-jitter">max_jitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotation-axis">rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotation-range">rotation_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradient">gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#proba-binding">proba_binding</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#is-attractor">is_attractor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#weight">weight</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#partners-name">partners_name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
@@ -600,12 +607,12 @@
             <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
             <span class="o">+</span> <span class="s2">&quot;.py&#39;,globals(),{&#39;recipe&#39;:recipe_variable_name})</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;MultiSphere&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;MultiSphere&quot;</span><span class="p">:</span>
             <span class="n">inrStr</span> <span class="o">+=</span> <span class="p">(</span>
                 <span class="s2">&quot;from autopack.Ingredient import SingleSphereIngr, MultiSphereIngr</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="p">)</span>
             <span class="n">inrStr</span> <span class="o">+=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;= MultiSphereIngr( </span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;MultiCylinder&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;MultiCylinder&quot;</span><span class="p">:</span>
             <span class="n">inrStr</span> <span class="o">+=</span> <span class="s2">&quot;from autopack.Ingredient import MultiCylindersIngr</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="n">inrStr</span> <span class="o">+=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;= MultiCylindersIngr( </span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ingr</span><span class="o">.</span><span class="n">KWDS</span><span class="p">:</span>
@@ -627,7 +634,7 @@
 
 <div class="viewcode-block" id="IOingredientTool.makeIngredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.makeIngredient">[docs]</a>    <span class="k">def</span> <span class="nf">makeIngredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="n">ingr</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">ingredient_type</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span>
+        <span class="n">ingredient_type</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span>
             <span class="ow">or</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;Actine&quot;</span>
@@ -1100,15 +1107,6 @@
     <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="saveSphereTreeFile"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.saveSphereTreeFile">[docs]</a><span class="k">def</span> <span class="nf">saveSphereTreeFile</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-    <span class="n">wrkingdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">setupfile</span><span class="p">)</span>
-    <span class="n">ingr</span><span class="o">.</span><span class="n">sphereFile</span> <span class="o">=</span> <span class="n">wrkingdir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">filename</span></div>
-    <span class="c1"># nbLevels = len(ingr.positions)</span>
-    <span class="c1"># nbLinker = 0</span>
-    <span class="c1"># mapping = None</span>
-    <span class="c1"># use a graph ?</span>
-
-
 <div class="viewcode-block" id="checkRotFormat"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.checkRotFormat">[docs]</a><span class="k">def</span> <span class="nf">checkRotFormat</span><span class="p">(</span><span class="n">rotation</span><span class="p">,</span> <span class="n">transpose</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">4</span><span class="p">,):</span>
         <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
@@ -1164,18 +1162,17 @@
         <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
             <span class="n">nbmol</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">nbmol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span>
+                <span class="n">nbmol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">count</span>
             <span class="n">toupdate</span> <span class="o">=</span> <span class="n">updatePositionsRadii</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
             <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;nbMol&quot;</span><span class="p">:</span> <span class="n">nbmol</span><span class="p">,</span>
-                <span class="s2">&quot;principalVector&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">principalVector</span><span class="p">,</span>
+                <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">nbmol</span><span class="p">,</span>
+                <span class="s2">&quot;principal_vector&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">principal_vector</span><span class="p">,</span>
                 <span class="s2">&quot;molarity&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">molarity</span><span class="p">,</span>
                 <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">source</span><span class="p">,</span>
                 <span class="s2">&quot;positions&quot;</span><span class="p">:</span> <span class="n">toupdate</span><span class="p">[</span><span class="s2">&quot;positions&quot;</span><span class="p">],</span>
                 <span class="s2">&quot;radii_lod&quot;</span><span class="p">:</span> <span class="n">toupdate</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">],</span>
             <span class="p">}</span>
-            <span class="c1"># &quot;sphereTree&quot;:ingr.sphereFile}</span>
-            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">fibers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">fibers</span> <span class="o">=</span> <span class="n">sIngredientGroup</span><span class="p">(</span><span class="s2">&quot;fibers&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
                 <span class="n">igr</span> <span class="o">=</span> <span class="n">sIngredient</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
@@ -1210,18 +1207,17 @@
             <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                 <span class="n">nbmol</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">nbmol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span>
+                    <span class="n">nbmol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">count</span>
                 <span class="n">toupdate</span> <span class="o">=</span> <span class="n">updatePositionsRadii</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
                 <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;nbMol&quot;</span><span class="p">:</span> <span class="n">nbmol</span><span class="p">,</span>
-                    <span class="s2">&quot;principalVector&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">principalVector</span><span class="p">,</span>
+                    <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">nbmol</span><span class="p">,</span>
+                    <span class="s2">&quot;principal_vector&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">principal_vector</span><span class="p">,</span>
                     <span class="s2">&quot;molarity&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">molarity</span><span class="p">,</span>
                     <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">source</span><span class="p">,</span>
                     <span class="s2">&quot;positions&quot;</span><span class="p">:</span> <span class="n">toupdate</span><span class="p">[</span><span class="s2">&quot;positions&quot;</span><span class="p">],</span>
                     <span class="s2">&quot;radii_lod&quot;</span><span class="p">:</span> <span class="n">toupdate</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">],</span>
                 <span class="p">}</span>
-                <span class="c1"># &quot;sphereTree&quot;:ingr.sphereFile}</span>
-                <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">fibers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">fibers</span> <span class="o">=</span> <span class="n">sIngredientGroup</span><span class="p">(</span><span class="s2">&quot;fibers&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
                     <span class="n">igr</span> <span class="o">=</span> <span class="n">sIngredient</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
@@ -1254,18 +1250,17 @@
             <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                 <span class="n">nbmol</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">nbmol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">nbMol</span>
+                    <span class="n">nbmol</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">count</span>
                 <span class="n">toupdate</span> <span class="o">=</span> <span class="n">updatePositionsRadii</span><span class="p">(</span><span class="n">ingr</span><span class="p">)</span>
                 <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;nbMol&quot;</span><span class="p">:</span> <span class="n">nbmol</span><span class="p">,</span>
-                    <span class="s2">&quot;principalVector&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">principalVector</span><span class="p">,</span>
+                    <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">nbmol</span><span class="p">,</span>
+                    <span class="s2">&quot;principal_vector&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">principal_vector</span><span class="p">,</span>
                     <span class="s2">&quot;molarity&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">molarity</span><span class="p">,</span>
                     <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">source</span><span class="p">,</span>
                     <span class="s2">&quot;positions&quot;</span><span class="p">:</span> <span class="n">toupdate</span><span class="p">[</span><span class="s2">&quot;positions&quot;</span><span class="p">],</span>
                     <span class="s2">&quot;radii_lod&quot;</span><span class="p">:</span> <span class="n">toupdate</span><span class="p">[</span><span class="s2">&quot;radii&quot;</span><span class="p">],</span>
                 <span class="p">}</span>
-                <span class="c1"># &quot;sphereTree&quot;:ingr.sphereFile}</span>
-                <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">fibers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">fibers</span> <span class="o">=</span> <span class="n">sIngredientGroup</span><span class="p">(</span><span class="s2">&quot;fibers&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
                     <span class="n">igr</span> <span class="o">=</span> <span class="n">sIngredient</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
@@ -1308,8 +1303,8 @@
         <span class="c1"># fibers = None  # sIngredientGroup(&quot;fibers&quot;, 1)</span>
         <span class="k">for</span> <span class="n">ingr_name</span> <span class="ow">in</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]:</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span><span class="n">ingr_name</span><span class="p">]</span>
-            <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nbMol&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]}</span>
-            <span class="c1">#            if ingr.Type == &quot;Grow&quot;:</span>
+            <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]}</span>
+            <span class="c1">#            if ingr.type == &quot;Grow&quot;:</span>
             <span class="c1">#                if fibers is None:</span>
             <span class="c1">#                    fibers = sIngredientGroup(&quot;fibers&quot;, 1)</span>
             <span class="c1">#                igr = sIngredient(ingr.o_name, 1, **kwds)</span>
@@ -1346,8 +1341,8 @@
                 <span class="n">proteins</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># sIngredientGroup(&quot;proteins&quot;, 0)</span>
                 <span class="k">for</span> <span class="n">ingr_name</span> <span class="ow">in</span> <span class="n">rs</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]:</span>
                     <span class="n">ingr</span> <span class="o">=</span> <span class="n">rs</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span><span class="n">ingr_name</span><span class="p">]</span>
-                    <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nbMol&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]}</span>
-                    <span class="c1">#                if ingr.Type == &quot;Grow&quot;:</span>
+                    <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]}</span>
+                    <span class="c1">#                if ingr.type == &quot;Grow&quot;:</span>
                     <span class="c1">#                    if fibers is None:</span>
                     <span class="c1">#                        fibers = sIngredientGroup(&quot;fibers&quot;, 1)</span>
                     <span class="c1">#                    igr = sIngredient(ingr.o_name, 1, **kwds)</span>
@@ -1380,8 +1375,8 @@
                 <span class="n">proteins</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># sIngredientGroup(&quot;proteins&quot;, 0)</span>
                 <span class="k">for</span> <span class="n">ingr_name</span> <span class="ow">in</span> <span class="n">ri</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]:</span>
                     <span class="n">ingr</span> <span class="o">=</span> <span class="n">ri</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span><span class="n">ingr_name</span><span class="p">]</span>
-                    <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nbMol&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]}</span>
-                    <span class="c1">#                if ingr.Type == &quot;Grow&quot;:</span>
+                    <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]}</span>
+                    <span class="c1">#                if ingr.type == &quot;Grow&quot;:</span>
                     <span class="c1">#                    if fibers is None:</span>
                     <span class="c1">#                        fibers = sIngredientGroup(&quot;fibers&quot;, 1)</span>
                     <span class="c1">#                    igr = sIngredient(ingr[&quot;name&quot;], 1, **kwds)</span>
@@ -1420,8 +1415,8 @@
         <span class="n">group</span> <span class="o">=</span> <span class="n">sIngredientGroup</span><span class="p">(</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ingr_name</span> <span class="ow">in</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]:</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span><span class="n">ingr_name</span><span class="p">]</span>
-            <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nbMol&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]}</span>
-            <span class="c1"># if ingr.Type == &quot;Grow&quot;:</span>
+            <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]}</span>
+            <span class="c1"># if ingr.type == &quot;Grow&quot;:</span>
             <span class="c1">#    igr = sIngredientFiber(ingr.o_name, **kwds)</span>
             <span class="c1">#    group.addIngredientFiber(igr)</span>
             <span class="c1"># else:</span>
@@ -1438,7 +1433,7 @@
             <span class="n">group</span> <span class="o">=</span> <span class="n">sIngredientGroup</span><span class="p">(</span><span class="s2">&quot;surface&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">ingr_name</span> <span class="ow">in</span> <span class="n">rs</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]:</span>
                 <span class="n">ingr</span> <span class="o">=</span> <span class="n">rs</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span><span class="n">ingr_name</span><span class="p">]</span>
-                <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nbMol&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]}</span>
+                <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]}</span>
                 <span class="n">igr</span> <span class="o">=</span> <span class="n">sIngredient</span><span class="p">(</span><span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
                 <span class="n">group</span><span class="o">.</span><span class="n">addIngredient</span><span class="p">(</span><span class="n">igr</span><span class="p">)</span>
 
@@ -1448,8 +1443,8 @@
             <span class="n">group</span> <span class="o">=</span> <span class="n">sIngredientGroup</span><span class="p">(</span><span class="s2">&quot;interior&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">ingr_name</span> <span class="ow">in</span> <span class="n">ri</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]:</span>
                 <span class="n">ingr</span> <span class="o">=</span> <span class="n">ri</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">][</span><span class="n">ingr_name</span><span class="p">]</span>
-                <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nbMol&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]}</span>
-                <span class="c1">#                if ingr.Type == &quot;Grow&quot;:</span>
+                <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]}</span>
+                <span class="c1">#                if ingr.type == &quot;Grow&quot;:</span>
                 <span class="c1">#                    igr = sIngredientFiber(ingr.o_name, **kwds)</span>
                 <span class="c1">#                    group.addIngredientFiber(igr)</span>
                 <span class="c1">#                else:</span>
@@ -1470,8 +1465,8 @@
     <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">sIngredientGroup</span><span class="p">(</span><span class="s2">&quot;cytoplasme&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-            <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nbMol&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">source</span><span class="p">}</span>
-            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
+            <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">source</span><span class="p">}</span>
+            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
                 <span class="n">igr</span> <span class="o">=</span> <span class="n">sIngredientFiber</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
                 <span class="n">group</span><span class="o">.</span><span class="n">addIngredientFiber</span><span class="p">(</span><span class="n">igr</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -1493,8 +1488,8 @@
         <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
             <span class="n">group</span> <span class="o">=</span> <span class="n">sIngredientGroup</span><span class="p">(</span><span class="s2">&quot;surface&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-                <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nbMol&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">source</span><span class="p">}</span>
-                <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
+                <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">source</span><span class="p">}</span>
+                <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
                     <span class="n">igr</span> <span class="o">=</span> <span class="n">sIngredientFiber</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
                     <span class="n">group</span><span class="o">.</span><span class="n">addIngredientFiber</span><span class="p">(</span><span class="n">igr</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -1514,8 +1509,8 @@
         <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
             <span class="n">group</span> <span class="o">=</span> <span class="n">sIngredientGroup</span><span class="p">(</span><span class="s2">&quot;interior&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
-                <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nbMol&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">source</span><span class="p">}</span>
-                <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">Type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
+                <span class="n">kwds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">results</span><span class="p">),</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">ingr</span><span class="o">.</span><span class="n">source</span><span class="p">}</span>
+                <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;Grow&quot;</span><span class="p">:</span>
                     <span class="n">igr</span> <span class="o">=</span> <span class="n">sIngredientFiber</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
                     <span class="n">group</span><span class="o">.</span><span class="n">addIngredientFiber</span><span class="p">(</span><span class="n">igr</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -1800,7 +1795,6 @@
                     <span class="n">ingrs_dic</span> <span class="o">=</span> <span class="n">snode</span><span class="p">[</span><span class="s2">&quot;ingredients&quot;</span><span class="p">]</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingrs_dic</span><span class="p">):</span>
                         <span class="n">rSurf</span> <span class="o">=</span> <span class="n">Recipe</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;surf_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
-                        <span class="c1">#                        rSurf = Recipe(name=o.name+&quot;_surf&quot;)</span>
                         <span class="k">for</span> <span class="n">ing_name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ingrs_dic</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">sortkey</span><span class="p">):</span>  <span class="c1"># ingrs_dic:</span>
                             <span class="c1"># either xref or defined</span>
                             <span class="n">ing_dic</span> <span class="o">=</span> <span class="n">ingrs_dic</span><span class="p">[</span><span class="n">ing_name</span><span class="p">]</span>
@@ -2010,7 +2004,6 @@
 <div class="viewcode-block" id="save"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.save">[docs]</a><span class="k">def</span> <span class="nf">save</span><span class="p">(</span>
     <span class="n">env</span><span class="p">,</span>
     <span class="n">setupfile</span><span class="p">,</span>
-    <span class="n">useXref</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">format_output</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">,</span>
     <span class="n">kwds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">result</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -2022,13 +2015,12 @@
     <span class="n">all_ingr_as_array</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">compartments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="k">if</span> <span class="n">useXref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">useXref</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">useXref</span>
+
     <span class="k">if</span> <span class="n">format_output</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
         <span class="n">save_Mixed_asJson</span><span class="p">(</span>
             <span class="n">env</span><span class="p">,</span>
             <span class="n">setupfile</span><span class="p">,</span>
-            <span class="n">useXref</span><span class="o">=</span><span class="n">useXref</span><span class="p">,</span>
+            <span class="n">useXref</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">kwds</span><span class="o">=</span><span class="n">kwds</span><span class="p">,</span>
             <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
             <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">,</span>
@@ -2041,7 +2033,7 @@
     <span class="k">elif</span> <span class="n">format_output</span> <span class="o">==</span> <span class="s2">&quot;simularium&quot;</span><span class="p">:</span>
         <span class="n">save_as_simularium</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">all_ingr_as_array</span><span class="p">,</span> <span class="n">compartments</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">format_output</span> <span class="o">==</span> <span class="s2">&quot;python&quot;</span><span class="p">:</span>
-        <span class="n">save_asPython</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">useXref</span><span class="o">=</span><span class="n">useXref</span><span class="p">)</span>
+        <span class="n">save_asPython</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">setupfile</span><span class="p">,</span> <span class="n">useXref</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;format output &quot;</span> <span class="o">+</span> <span class="n">format_output</span> <span class="o">+</span> <span class="s2">&quot; not recognized (json,python)&quot;</span><span class="p">)</span></div>
 </pre></div>

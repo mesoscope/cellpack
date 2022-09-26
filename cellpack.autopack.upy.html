@@ -37,6 +37,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -109,8 +110,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack.example">cellpack.example module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack.example">cellpack.example module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-contents">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -155,39 +162,39 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbmol">nbMol</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#count">count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#radii">radii</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions">positions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions2">positions2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-priority">packing_priority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pdb">pdb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#color">color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshfile">meshFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshname">meshName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principalvector">principalVector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principal-vector">principal_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jittermax">jitterMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbjitter">nbJitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#userotaxis">useRotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotaxis">rotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotrange">rotRange</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#max-jitter">max_jitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-axis">rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-range">rotation_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-binding">proba_binding</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#is-attractor">is_attractor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#weight">weight</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-name">partners_name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
@@ -296,8 +303,134 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cellpack.autopack.upy.simularium.html">cellpack.autopack.upy.simularium package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#module-cellpack.autopack.upy.simularium.simularium_helper">cellpack.autopack.upy.simularium.simularium_helper module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#module-cellpack.autopack.upy.simularium">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#module-cellpack.autopack.upy.simularium.simularium_helper">cellpack.autopack.upy.simularium.simularium_helper module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.Instance"><code class="docutils literal notranslate"><span class="pre">Instance</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.Instance.increment_static"><code class="docutils literal notranslate"><span class="pre">Instance.increment_static()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.Instance.move"><code class="docutils literal notranslate"><span class="pre">Instance.move()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.Instance.set_static"><code class="docutils literal notranslate"><span class="pre">Instance.set_static()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper"><code class="docutils literal notranslate"><span class="pre">simulariumHelper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Box"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.Box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Cube"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.Cube()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Cylinders"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.Cylinders()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.DATABASE"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.DATABASE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.DEBUG"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.DEBUG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.DecomposeMesh"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.DecomposeMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.EMPTY"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.EMPTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.FromVec"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.FromVec()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Geom"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.Geom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.GetAbsPosUntilRoot"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.GetAbsPosUntilRoot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.INSTANCE"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.INSTANCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.IndexedPolygons"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.IndexedPolygons()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Labels"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.Labels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.ObjectsSelection"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.ObjectsSelection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.POLYGON"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.POLYGON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Points"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.Points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Polylines"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.Polylines()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.SPHERE"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.SPHERE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.SPLINE"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.SPLINE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.Spheres"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.Spheres()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.TextureFaceCoordintesToVertexCoordinates"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.TextureFaceCoordintesToVertexCoordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.ToVec"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.ToVec()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.VERBOSE"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.VERBOSE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.addCameraToScene"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.addCameraToScene()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.addLampToScene"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.addLampToScene()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.addMaterial"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.addMaterial()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.add_compartment_to_scene"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.add_compartment_to_scene()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.add_instance"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.add_instance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.add_new_instance_and_update_time"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.add_new_instance_and_update_time()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.add_object_to_scene"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.add_object_to_scene()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.assignMaterial"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.assignMaterial()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.box"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.changeColor"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.changeColor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.changeColorO"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.changeColorO()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.changeObjColorMat"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.changeObjColorMat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.clear"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.clear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.concatObjectMatrix"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.concatObjectMatrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.createTexturedMaterial"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.createTexturedMaterial()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.cylinder"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.cylinder()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.decomposeColladaGeom"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.decomposeColladaGeom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.deleteInstance"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.deleteInstance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.deleteObject"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.deleteObject()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.format_rgb_color"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.format_rgb_color()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getAllMaterials"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getAllMaterials()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getChilds"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getChilds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getColladaMaterial"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getColladaMaterial()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getCornerPointCube"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getCornerPointCube()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getCurrentScene"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getCurrentScene()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getCurrentSelection"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getCurrentSelection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getFace"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getFace()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMaterial"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getMaterial()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMaterialName"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getMaterialName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMaterialObject"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getMaterialObject()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMesh"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMeshEdges"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getMeshEdges()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMeshFaces"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getMeshFaces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMeshNormales"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getMeshNormales()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getMeshVertices"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getMeshVertices()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getName"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getNormals"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getNormals()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getObject"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getObject()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getTransformation"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getTransformation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getTranslation"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getTranslation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getType"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getType()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.getVisibility"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.getVisibility()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.get_display_data"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.get_display_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.host"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.host</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.increment_static_objects"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.increment_static_objects()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.increment_time"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.increment_time()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.init_scene_with_objects"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.init_scene_with_objects()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.instancePolygon"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.instancePolygon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.instancesCylinder"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.instancesCylinder()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.instancesSphere"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.instancesSphere()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.isIndexedPolyon"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.isIndexedPolyon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.is_fiber"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.is_fiber()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.move_object"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.move_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.newEmpty"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.newEmpty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.nodeToGeom"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.nodeToGeom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.oneColladaGeom"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.oneColladaGeom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.oneCylinder"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.oneCylinder()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.pathDeform"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.pathDeform()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.pb"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.pb</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.place_object"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.place_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.plane"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.plane()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.progressBar"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.progressBar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.raycast"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.raycast()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.raycast_test"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.raycast_test()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.reParent"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.reParent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.resetProgressBar"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.resetProgressBar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.rotateObj"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.rotateObj()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.scaleObj"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.scaleObj()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.setInstance"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.setInstance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.setObjectMatrix"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.setObjectMatrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.setRigidBody"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.setRigidBody()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.setTranslation"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.setTranslation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.setViewer"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.setViewer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.set_object_static"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.set_object_static()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.sphere"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.sphere()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.spline"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.spline()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.toggleDisplay"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.toggleDisplay()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.transformNode"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.transformNode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.translateObj"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.translateObj()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.update"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updateAppli"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.updateAppli()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updateBox"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.updateBox()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updateMasterInstance"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.updateMasterInstance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updateMesh"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.updateMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updatePathDeform"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.updatePathDeform()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updatePoly"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.updatePoly()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.updateTubeMesh"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.updateTubeMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.update_instance_positions_and_rotations"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.update_instance_positions_and_rotations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.update_spline"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.update_spline()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.viewer"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.viewer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.write"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.write()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#cellpack.autopack.upy.simularium.simularium_helper.simulariumHelper.writeToFile"><code class="docutils literal notranslate"><span class="pre">simulariumHelper.writeToFile()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -306,8 +439,8 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="module-cellpack.autopack.upy.colors">
-<span id="cellpack-autopack-upy-colors-module"></span><h2>cellpack.autopack.upy.colors module<a class="headerlink" href="#module-cellpack.autopack.upy.colors" title="Permalink to this heading">¶</a></h2>
+<section id="cellpack-autopack-upy-colors-module">
+<h2>cellpack.autopack.upy.colors module<a class="headerlink" href="#cellpack-autopack-upy-colors-module" title="Permalink to this heading">¶</a></h2>
 <p>Copyright (C) &lt;2010&gt;  Autin L. TSRI</p>
 <p>This file git_upy/colors.py is part of upy.</p>
 <p>upy is free software: you can redistribute it and/or modify
@@ -320,7 +453,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.</p>
 <p>You should have received a copy of the GNU General Public License
 along with upy.  If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/gpl-3.0.html">http://www.gnu.org/licenses/gpl-3.0.html</a>&gt;.</p>
-<dl class="py function">
+<span class="target" id="module-cellpack.autopack.upy.colors"></span><dl class="py function">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.colors.RedWhiteBlueRamp">
 <span class="sig-prename descclassname"><span class="pre">cellpack.autopack.upy.colors.</span></span><span class="sig-name descname"><span class="pre">RedWhiteBlueRamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/upy/colors.html#RedWhiteBlueRamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.colors.RedWhiteBlueRamp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -364,8 +497,8 @@ in the form [[0.0, ‘rgb(222, 0, 0)’], …]</p>
 </dd></dl>
 
 </section>
-<section id="module-cellpack.autopack.upy.hostHelper">
-<span id="cellpack-autopack-upy-hosthelper-module"></span><h2>cellpack.autopack.upy.hostHelper module<a class="headerlink" href="#module-cellpack.autopack.upy.hostHelper" title="Permalink to this heading">¶</a></h2>
+<section id="cellpack-autopack-upy-hosthelper-module">
+<h2>cellpack.autopack.upy.hostHelper module<a class="headerlink" href="#cellpack-autopack-upy-hosthelper-module" title="Permalink to this heading">¶</a></h2>
 <p>Copyright (C) &lt;2010&gt;  Autin L. TSRI
 This file git_upy/hostHelper.py is part of upy.</p>
 <p>upy is free software: you can redistribute it and/or modify
@@ -378,7 +511,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.</p>
 <p>You should have received a copy of the GNU General Public License
 along with upy.  If not, see &lt;<a class="reference external" href="http://www.gnu.org/licenses/gpl-3.0.html">http://www.gnu.org/licenses/gpl-3.0.html</a>&gt;.</p>
-<dl class="py class">
+<span class="target" id="module-cellpack.autopack.upy.hostHelper"></span><dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.upy.hostHelper.Helper">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.upy.hostHelper.</span></span><span class="sig-name descname"><span class="pre">Helper</span></span><a class="reference internal" href="_modules/cellpack/autopack/upy/hostHelper.html#Helper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.upy.hostHelper.Helper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>

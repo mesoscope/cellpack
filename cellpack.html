@@ -37,6 +37,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -109,8 +110,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-cellpack.example">cellpack.example module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-cellpack">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-cellpack.example">cellpack.example module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cellpack.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-contents">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -155,39 +162,39 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id81">name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbmol">nbMol</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#count">count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#radii">radii</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions">positions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions2">positions2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-priority">packing_priority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pdb">pdb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#color">color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshfile">meshFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshname">meshName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principalvector">principalVector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#principal-vector">principal_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#type">type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jittermax">jitterMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#nbjitter">nbJitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#userotaxis">useRotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotaxis">rotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotrange">rotRange</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#max-jitter">max_jitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-axis">rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rotation-range">rotation_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-binding">proba_binding</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#is-attractor">is_attractor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#weight">weight</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#partners-name">partners_name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
@@ -306,53 +313,714 @@
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.ingredient.html#module-cellpack.autopack.ingredient">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.interface_objects.html">cellpack.autopack.interface_objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.interface_objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.interface_objects.html#module-cellpack.autopack.interface_objects.representations">cellpack.autopack.interface_objects.representations module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.interface_objects.html#module-contents">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.loaders.html">cellpack.autopack.loaders package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.loaders.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.loaders.html#module-cellpack.autopack.loaders.config_loader">cellpack.autopack.loaders.config_loader module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.loaders.html#module-cellpack.autopack.loaders.recipe_loader">cellpack.autopack.loaders.recipe_loader module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.loaders.html#module-cellpack.autopack.loaders">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.loaders.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.upy.html">cellpack.autopack.upy package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.html#module-cellpack.autopack.upy.colors">cellpack.autopack.upy.colors module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.html#module-cellpack.autopack.upy.hostHelper">cellpack.autopack.upy.hostHelper module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.html#cellpack-autopack-upy-colors-module">cellpack.autopack.upy.colors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.html#cellpack-autopack-upy-hosthelper-module">cellpack.autopack.upy.hostHelper module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.html#module-cellpack.autopack.upy">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.Analysis">cellpack.autopack.Analysis module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.BaseGrid">cellpack.autopack.BaseGrid module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.Compartment">cellpack.autopack.Compartment module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.Environment">cellpack.autopack.Environment module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.GeometryTools">cellpack.autopack.GeometryTools module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.Gradient">cellpack.autopack.Gradient module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.Graphics">cellpack.autopack.Graphics module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.IOutils">cellpack.autopack.IOutils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.MeshStore">cellpack.autopack.MeshStore module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-outputsimularium-module">cellpack.autopack.OutputSimularium module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.Recipe">cellpack.autopack.Recipe module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.Serializable">cellpack.autopack.Serializable module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.binvox_rw">cellpack.autopack.binvox_rw module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.ldSequence">cellpack.autopack.ldSequence module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.octree">cellpack.autopack.octree module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.plotly_result">cellpack.autopack.plotly_result module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.randomRot">cellpack.autopack.randomRot module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.ray">cellpack.autopack.ray module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#created-on-saturday-september-1-1-50-00-2012">Created on Saturday September 1 1:50:00 2012</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-analysis-module">cellpack.autopack.Analysis module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP"><code class="docutils literal notranslate"><span class="pre">AnalyseAP</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.PairCorrelationFunction_2D"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.PairCorrelationFunction_2D()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.PairCorrelationFunction_3D"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.PairCorrelationFunction_3D()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.axis_distribution"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.axis_distribution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.axis_distribution_total"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.axis_distribution_total()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.build_grid"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.build_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.calcDistanceMatrixFastEuclidean2"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.calcDistanceMatrixFastEuclidean2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.correlation"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.correlation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.displayDistance"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.displayDistance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.displayDistanceCube"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.displayDistanceCube()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.displayDistancePlane"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.displayDistancePlane()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.doloop"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.doloop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.flush"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.flush()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getAreaShell"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.getAreaShell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getAxeValue"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.getAxeValue()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getAxesValues"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.getAxesValues()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getClosestDistance"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.getClosestDistance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getDistance"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.getDistance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getDistanceAngle"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.getDistanceAngle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getDistanceFrom"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.getDistanceFrom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getHaltonUnique"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.getHaltonUnique()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getMinMaxProteinSize"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.getMinMaxProteinSize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getPositionsFromObject"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.getPositionsFromObject()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getPositionsFromResFile"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.getPositionsFromResFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.getVolumeShell"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.getVolumeShell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.grabResultFromJSON"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.grabResultFromJSON()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.grabResultFromTXT"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.grabResultFromTXT()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.histo"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.histo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.loadJSON"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.loadJSON()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.merge"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.merge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.occurence_distribution"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.occurence_distribution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.one_exp"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.one_exp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.pack"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.pack()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.plot"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.plotNResult2D"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.plotNResult2D()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.plot_one_result_2d"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.plot_one_result_2d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.plot_one_result_3D"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.plot_one_result_3D()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.rdf"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.rdf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.rdf_2d"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.rdf_2d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.rdf_3d"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.rdf_3d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.rectangle_circle_area"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.rectangle_circle_area()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.ripley"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.ripley()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.save_csv"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.save_csv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.simpleplot"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.simpleplot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.AnalyseAP.writeJSON"><code class="docutils literal notranslate"><span class="pre">AnalyseAP.writeJSON()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.trajectory">cellpack.autopack.trajectory module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.transformation">cellpack.autopack.transformation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.autolabel"><code class="docutils literal notranslate"><span class="pre">autolabel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.autolabels"><code class="docutils literal notranslate"><span class="pre">autolabels()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.autolabelyerr"><code class="docutils literal notranslate"><span class="pre">autolabelyerr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Analysis.getRndWeighted"><code class="docutils literal notranslate"><span class="pre">getRndWeighted()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-basegrid-module">cellpack.autopack.BaseGrid module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid"><code class="docutils literal notranslate"><span class="pre">BaseGrid</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.cartesian"><code class="docutils literal notranslate"><span class="pre">BaseGrid.cartesian()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.computeExteriorVolume"><code class="docutils literal notranslate"><span class="pre">BaseGrid.computeExteriorVolume()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.computeGridNumberOfPoint"><code class="docutils literal notranslate"><span class="pre">BaseGrid.computeGridNumberOfPoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.computeVolume"><code class="docutils literal notranslate"><span class="pre">BaseGrid.computeVolume()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.create3DPointLookup"><code class="docutils literal notranslate"><span class="pre">BaseGrid.create3DPointLookup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.create3DPointLookupCover"><code class="docutils literal notranslate"><span class="pre">BaseGrid.create3DPointLookupCover()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.create3DPointLookup_loop"><code class="docutils literal notranslate"><span class="pre">BaseGrid.create3DPointLookup_loop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getCenter"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getCenter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getClosestFreeGridPoint"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getClosestFreeGridPoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getClosestGridPoint"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getClosestGridPoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getDiagonal"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getDiagonal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getIJK"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getIJK()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPointFrom3D"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getPointFrom3D()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPointsInCube"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getPointsInCube()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPointsInCubeFillBB"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getPointsInCubeFillBB()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPointsInSphere"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getPointsInSphere()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getPositionPeridocity"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getPositionPeridocity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getRadius"><code class="docutils literal notranslate"><span class="pre">BaseGrid.getRadius()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.is_point_inside_bb"><code class="docutils literal notranslate"><span class="pre">BaseGrid.is_point_inside_bb()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.removeFreePoint"><code class="docutils literal notranslate"><span class="pre">BaseGrid.removeFreePoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.reorder_free_points"><code class="docutils literal notranslate"><span class="pre">BaseGrid.reorder_free_points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.reset"><code class="docutils literal notranslate"><span class="pre">BaseGrid.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.restore"><code class="docutils literal notranslate"><span class="pre">BaseGrid.restore()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.save"><code class="docutils literal notranslate"><span class="pre">BaseGrid.save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.set_surfPtsBht"><code class="docutils literal notranslate"><span class="pre">BaseGrid.set_surfPtsBht()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.set_surfPtscht"><code class="docutils literal notranslate"><span class="pre">BaseGrid.set_surfPtscht()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.setup"><code class="docutils literal notranslate"><span class="pre">BaseGrid.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.setupBoundaryPeriodicity"><code class="docutils literal notranslate"><span class="pre">BaseGrid.setupBoundaryPeriodicity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.test_points_in_bb"><code class="docutils literal notranslate"><span class="pre">BaseGrid.test_points_in_bb()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.updateDistances"><code class="docutils literal notranslate"><span class="pre">BaseGrid.updateDistances()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid"><code class="docutils literal notranslate"><span class="pre">HaltonGrid</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid.create3DPointLookup"><code class="docutils literal notranslate"><span class="pre">HaltonGrid.create3DPointLookup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid.getNBgridPoints"><code class="docutils literal notranslate"><span class="pre">HaltonGrid.getNBgridPoints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid.getPointFrom3D"><code class="docutils literal notranslate"><span class="pre">HaltonGrid.getPointFrom3D()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.HaltonGrid.getScale"><code class="docutils literal notranslate"><span class="pre">HaltonGrid.getScale()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.BaseGrid.gridPoint"><code class="docutils literal notranslate"><span class="pre">gridPoint</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.Compartment">cellpack.autopack.Compartment module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment"><code class="docutils literal notranslate"><span class="pre">Compartment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGridEnviroOnly"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGridEnviroOnly()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_bhtree"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_bhtree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_binvox"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_binvox()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_box"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_kevin"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_kevin()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_multisdf"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_multisdf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_pyray"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_pyray()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_ray"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_ray()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_scanline"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_scanline()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_trimesh"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_trimesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.BuildGrid_utsdf"><code class="docutils literal notranslate"><span class="pre">Compartment.BuildGrid_utsdf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.addMeshRB"><code class="docutils literal notranslate"><span class="pre">Compartment.addMeshRB()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.addShapeRB"><code class="docutils literal notranslate"><span class="pre">Compartment.addShapeRB()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.buildMesh"><code class="docutils literal notranslate"><span class="pre">Compartment.buildMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.buildSphere"><code class="docutils literal notranslate"><span class="pre">Compartment.buildSphere()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.build_grid_sphere"><code class="docutils literal notranslate"><span class="pre">Compartment.build_grid_sphere()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.checkPointInsideBB"><code class="docutils literal notranslate"><span class="pre">Compartment.checkPointInsideBB()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.compute_volume_and_set_count"><code class="docutils literal notranslate"><span class="pre">Compartment.compute_volume_and_set_count()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.create3DPointLookup"><code class="docutils literal notranslate"><span class="pre">Compartment.create3DPointLookup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.createSurfacePoints"><code class="docutils literal notranslate"><span class="pre">Compartment.createSurfacePoints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.create_rbnode"><code class="docutils literal notranslate"><span class="pre">Compartment.create_rbnode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.extendGridArrays"><code class="docutils literal notranslate"><span class="pre">Compartment.extendGridArrays()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.filter_surface_pts_to_fill_box"><code class="docutils literal notranslate"><span class="pre">Compartment.filter_surface_pts_to_fill_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.find_nearest"><code class="docutils literal notranslate"><span class="pre">Compartment.find_nearest()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getBoundingBox"><code class="docutils literal notranslate"><span class="pre">Compartment.getBoundingBox()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getCenter"><code class="docutils literal notranslate"><span class="pre">Compartment.getCenter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getFaceNormals"><code class="docutils literal notranslate"><span class="pre">Compartment.getFaceNormals()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getFacesNfromV"><code class="docutils literal notranslate"><span class="pre">Compartment.getFacesNfromV()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getInterpolatedNormal"><code class="docutils literal notranslate"><span class="pre">Compartment.getInterpolatedNormal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getMesh"><code class="docutils literal notranslate"><span class="pre">Compartment.getMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getMinMaxProteinSize"><code class="docutils literal notranslate"><span class="pre">Compartment.getMinMaxProteinSize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getRadius"><code class="docutils literal notranslate"><span class="pre">Compartment.getRadius()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSizeXYZ"><code class="docutils literal notranslate"><span class="pre">Compartment.getSizeXYZ()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints"><code class="docutils literal notranslate"><span class="pre">Compartment.getSurfaceInnerPoints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPointsPanda"><code class="docutils literal notranslate"><span class="pre">Compartment.getSurfaceInnerPointsPanda()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPointsPandaRay"><code class="docutils literal notranslate"><span class="pre">Compartment.getSurfaceInnerPointsPandaRay()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints_kevin"><code class="docutils literal notranslate"><span class="pre">Compartment.getSurfaceInnerPoints_kevin()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints_sdf"><code class="docutils literal notranslate"><span class="pre">Compartment.getSurfaceInnerPoints_sdf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfaceInnerPoints_sdf_interpolate"><code class="docutils literal notranslate"><span class="pre">Compartment.getSurfaceInnerPoints_sdf_interpolate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getSurfacePoint"><code class="docutils literal notranslate"><span class="pre">Compartment.getSurfacePoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getVNfromF"><code class="docutils literal notranslate"><span class="pre">Compartment.getVNfromF()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.getVertexNormals"><code class="docutils literal notranslate"><span class="pre">Compartment.getVertexNormals()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.get_bbox"><code class="docutils literal notranslate"><span class="pre">Compartment.get_bbox()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.get_normal_for_point"><code class="docutils literal notranslate"><span class="pre">Compartment.get_normal_for_point()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.get_rb_model"><code class="docutils literal notranslate"><span class="pre">Compartment.get_rb_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.inBox"><code class="docutils literal notranslate"><span class="pre">Compartment.inBox()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.inGrid"><code class="docutils literal notranslate"><span class="pre">Compartment.inGrid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.initialize_shape"><code class="docutils literal notranslate"><span class="pre">Compartment.initialize_shape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.is_point_inside_mesh"><code class="docutils literal notranslate"><span class="pre">Compartment.is_point_inside_mesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.prepare_buildgrid_box"><code class="docutils literal notranslate"><span class="pre">Compartment.prepare_buildgrid_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.printFillInfo"><code class="docutils literal notranslate"><span class="pre">Compartment.printFillInfo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.readGridFromFile"><code class="docutils literal notranslate"><span class="pre">Compartment.readGridFromFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.reset"><code class="docutils literal notranslate"><span class="pre">Compartment.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.saveGridToFile"><code class="docutils literal notranslate"><span class="pre">Compartment.saveGridToFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setCount"><code class="docutils literal notranslate"><span class="pre">Compartment.setCount()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setGeomFaces"><code class="docutils literal notranslate"><span class="pre">Compartment.setGeomFaces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setInnerRecipe"><code class="docutils literal notranslate"><span class="pre">Compartment.setInnerRecipe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setMesh"><code class="docutils literal notranslate"><span class="pre">Compartment.setMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setNumber"><code class="docutils literal notranslate"><span class="pre">Compartment.setNumber()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setSurfaceRecipe"><code class="docutils literal notranslate"><span class="pre">Compartment.setSurfaceRecipe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.transformMesh"><code class="docutils literal notranslate"><span class="pre">Compartment.transformMesh()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Compartment.CompartmentList"><code class="docutils literal notranslate"><span class="pre">CompartmentList</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-environment-module">cellpack.autopack.Environment module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment"><code class="docutils literal notranslate"><span class="pre">Environment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.BuildCompartmentsGrids"><code class="docutils literal notranslate"><span class="pre">Environment.BuildCompartmentsGrids()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.SetRBOptions"><code class="docutils literal notranslate"><span class="pre">Environment.SetRBOptions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.SetSpringOptions"><code class="docutils literal notranslate"><span class="pre">Environment.SetSpringOptions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.addMeshRBOrganelle"><code class="docutils literal notranslate"><span class="pre">Environment.addMeshRBOrganelle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.addRB"><code class="docutils literal notranslate"><span class="pre">Environment.addRB()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.add_rb_node"><code class="docutils literal notranslate"><span class="pre">Environment.add_rb_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.applyStep"><code class="docutils literal notranslate"><span class="pre">Environment.applyStep()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.buildGrid"><code class="docutils literal notranslate"><span class="pre">Environment.buildGrid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.build_compartment_grids"><code class="docutils literal notranslate"><span class="pre">Environment.build_compartment_grids()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.callFunction"><code class="docutils literal notranslate"><span class="pre">Environment.callFunction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.checkPtIndIngr"><code class="docutils literal notranslate"><span class="pre">Environment.checkPtIndIngr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.clear"><code class="docutils literal notranslate"><span class="pre">Environment.clear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.clearRBingredient"><code class="docutils literal notranslate"><span class="pre">Environment.clearRBingredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.collectResultPerIngredient"><code class="docutils literal notranslate"><span class="pre">Environment.collectResultPerIngredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.compartment_id_for_nearest_grid_point"><code class="docutils literal notranslate"><span class="pre">Environment.compartment_id_for_nearest_grid_point()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.convertPickleToText"><code class="docutils literal notranslate"><span class="pre">Environment.convertPickleToText()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_compartment"><code class="docutils literal notranslate"><span class="pre">Environment.create_compartment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_ingredient"><code class="docutils literal notranslate"><span class="pre">Environment.create_ingredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_objects"><code class="docutils literal notranslate"><span class="pre">Environment.create_objects()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.delRB"><code class="docutils literal notranslate"><span class="pre">Environment.delRB()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.displayCancelDialog"><code class="docutils literal notranslate"><span class="pre">Environment.displayCancelDialog()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.dropOneIngr"><code class="docutils literal notranslate"><span class="pre">Environment.dropOneIngr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.dropOneIngrJson"><code class="docutils literal notranslate"><span class="pre">Environment.dropOneIngrJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.exportToBD_BOX"><code class="docutils literal notranslate"><span class="pre">Environment.exportToBD_BOX()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.exportToReaDDy"><code class="docutils literal notranslate"><span class="pre">Environment.exportToReaDDy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.exportToTEM"><code class="docutils literal notranslate"><span class="pre">Environment.exportToTEM()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.exportToTEM_SIM"><code class="docutils literal notranslate"><span class="pre">Environment.exportToTEM_SIM()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.extractMeshComponent"><code class="docutils literal notranslate"><span class="pre">Environment.extractMeshComponent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.finishWithWater"><code class="docutils literal notranslate"><span class="pre">Environment.finishWithWater()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.getActiveIng"><code class="docutils literal notranslate"><span class="pre">Environment.getActiveIng()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.getIngrFromName"><code class="docutils literal notranslate"><span class="pre">Environment.getIngrFromName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.getIngrFromNameInRecipe"><code class="docutils literal notranslate"><span class="pre">Environment.getIngrFromNameInRecipe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.getOneIngr"><code class="docutils literal notranslate"><span class="pre">Environment.getOneIngr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.getOneIngrJson"><code class="docutils literal notranslate"><span class="pre">Environment.getOneIngrJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.getPointToDrop"><code class="docutils literal notranslate"><span class="pre">Environment.getPointToDrop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.getRotTransRB"><code class="docutils literal notranslate"><span class="pre">Environment.getRotTransRB()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.getSortedActiveIngredients"><code class="docutils literal notranslate"><span class="pre">Environment.getSortedActiveIngredients()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.getTotalNbObject"><code class="docutils literal notranslate"><span class="pre">Environment.getTotalNbObject()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.get_dpad"><code class="docutils literal notranslate"><span class="pre">Environment.get_dpad()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.includeIngrRecipe"><code class="docutils literal notranslate"><span class="pre">Environment.includeIngrRecipe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.includeIngrRecipes"><code class="docutils literal notranslate"><span class="pre">Environment.includeIngrRecipes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.includeIngredientRecipe"><code class="docutils literal notranslate"><span class="pre">Environment.includeIngredientRecipe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.is_two_d"><code class="docutils literal notranslate"><span class="pre">Environment.is_two_d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.linkTraj"><code class="docutils literal notranslate"><span class="pre">Environment.linkTraj()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.loadFreePoint"><code class="docutils literal notranslate"><span class="pre">Environment.loadFreePoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.loadResult"><code class="docutils literal notranslate"><span class="pre">Environment.loadResult()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.load_asJson"><code class="docutils literal notranslate"><span class="pre">Environment.load_asJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.load_asTxt"><code class="docutils literal notranslate"><span class="pre">Environment.load_asTxt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.longestIngrdientName"><code class="docutils literal notranslate"><span class="pre">Environment.longestIngrdientName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.loopThroughIngr"><code class="docutils literal notranslate"><span class="pre">Environment.loopThroughIngr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.moveRBnode"><code class="docutils literal notranslate"><span class="pre">Environment.moveRBnode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.onePrevIngredient"><code class="docutils literal notranslate"><span class="pre">Environment.onePrevIngredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.pack_grid"><code class="docutils literal notranslate"><span class="pre">Environment.pack_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.pickIngredient"><code class="docutils literal notranslate"><span class="pre">Environment.pickIngredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.printFillInfo"><code class="docutils literal notranslate"><span class="pre">Environment.printFillInfo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.readArraysFromFile"><code class="docutils literal notranslate"><span class="pre">Environment.readArraysFromFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.readTraj"><code class="docutils literal notranslate"><span class="pre">Environment.readTraj()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.removeOnePoint"><code class="docutils literal notranslate"><span class="pre">Environment.removeOnePoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.reportprogress"><code class="docutils literal notranslate"><span class="pre">Environment.reportprogress()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.reset"><code class="docutils literal notranslate"><span class="pre">Environment.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.resetIngrRecip"><code class="docutils literal notranslate"><span class="pre">Environment.resetIngrRecip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.restore"><code class="docutils literal notranslate"><span class="pre">Environment.restore()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.restoreFreePoints"><code class="docutils literal notranslate"><span class="pre">Environment.restoreFreePoints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.restoreGridFromFile"><code class="docutils literal notranslate"><span class="pre">Environment.restoreGridFromFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.restore_molecules_array"><code class="docutils literal notranslate"><span class="pre">Environment.restore_molecules_array()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.runBullet"><code class="docutils literal notranslate"><span class="pre">Environment.runBullet()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.saveGridLogsAsJson"><code class="docutils literal notranslate"><span class="pre">Environment.saveGridLogsAsJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.saveGridToFile"><code class="docutils literal notranslate"><span class="pre">Environment.saveGridToFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.saveNewRecipe"><code class="docutils literal notranslate"><span class="pre">Environment.saveNewRecipe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.save_result"><code class="docutils literal notranslate"><span class="pre">Environment.save_result()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.setCompartmentMesh"><code class="docutils literal notranslate"><span class="pre">Environment.setCompartmentMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.setExteriorRecipe"><code class="docutils literal notranslate"><span class="pre">Environment.setExteriorRecipe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.setGeomFaces"><code class="docutils literal notranslate"><span class="pre">Environment.setGeomFaces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.setGradient"><code class="docutils literal notranslate"><span class="pre">Environment.setGradient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.setSeed"><code class="docutils literal notranslate"><span class="pre">Environment.setSeed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.set_partners_ingredient"><code class="docutils literal notranslate"><span class="pre">Environment.set_partners_ingredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.setupOctree"><code class="docutils literal notranslate"><span class="pre">Environment.setupOctree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.setupPanda"><code class="docutils literal notranslate"><span class="pre">Environment.setupPanda()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.setupRBOptions"><code class="docutils literal notranslate"><span class="pre">Environment.setupRBOptions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.sortIngredient"><code class="docutils literal notranslate"><span class="pre">Environment.sortIngredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.store"><code class="docutils literal notranslate"><span class="pre">Environment.store()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.store_asJson"><code class="docutils literal notranslate"><span class="pre">Environment.store_asJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.store_asTxt"><code class="docutils literal notranslate"><span class="pre">Environment.store_asTxt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.timeFunction"><code class="docutils literal notranslate"><span class="pre">Environment.timeFunction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.unlinkTraj"><code class="docutils literal notranslate"><span class="pre">Environment.unlinkTraj()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.update_largest_smallest_size"><code class="docutils literal notranslate"><span class="pre">Environment.update_largest_smallest_size()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.Environment.writeArraysToFile"><code class="docutils literal notranslate"><span class="pre">Environment.writeArraysToFile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Environment.random"><code class="docutils literal notranslate"><span class="pre">random()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-geometrytools-module">cellpack.autopack.GeometryTools module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools"><code class="docutils literal notranslate"><span class="pre">GeometryTools</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.GetDistance"><code class="docutils literal notranslate"><span class="pre">GeometryTools.GetDistance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.LowerCircleFunction"><code class="docutils literal notranslate"><span class="pre">GeometryTools.LowerCircleFunction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.LowerRectangleFunction"><code class="docutils literal notranslate"><span class="pre">GeometryTools.LowerRectangleFunction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.Resolution"><code class="docutils literal notranslate"><span class="pre">GeometryTools.Resolution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.UpperCircleFunction"><code class="docutils literal notranslate"><span class="pre">GeometryTools.UpperCircleFunction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.UpperRectangleFunction"><code class="docutils literal notranslate"><span class="pre">GeometryTools.UpperRectangleFunction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.calc_volume"><code class="docutils literal notranslate"><span class="pre">GeometryTools.calc_volume()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.check_rectangle_oustide"><code class="docutils literal notranslate"><span class="pre">GeometryTools.check_rectangle_oustide()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.check_sphere_inside"><code class="docutils literal notranslate"><span class="pre">GeometryTools.check_sphere_inside()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.getBoundary"><code class="docutils literal notranslate"><span class="pre">GeometryTools.getBoundary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.get_rectangle_cercle_area"><code class="docutils literal notranslate"><span class="pre">GeometryTools.get_rectangle_cercle_area()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_1"><code class="docutils literal notranslate"><span class="pre">GeometryTools.region_1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_1_2_theta"><code class="docutils literal notranslate"><span class="pre">GeometryTools.region_1_2_theta()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_2"><code class="docutils literal notranslate"><span class="pre">GeometryTools.region_2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_2_integrand"><code class="docutils literal notranslate"><span class="pre">GeometryTools.region_2_integrand()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_3"><code class="docutils literal notranslate"><span class="pre">GeometryTools.region_3()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.GeometryTools.region_3_integrand"><code class="docutils literal notranslate"><span class="pre">GeometryTools.region_3_integrand()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.GeometryTools.Rectangle"><code class="docutils literal notranslate"><span class="pre">Rectangle</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-gradient-module">cellpack.autopack.Gradient module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient"><code class="docutils literal notranslate"><span class="pre">Gradient</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.buildWeigthMap"><code class="docutils literal notranslate"><span class="pre">Gradient.buildWeigthMap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.buildWeigthMapAxe"><code class="docutils literal notranslate"><span class="pre">Gradient.buildWeigthMapAxe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.buildWeigthMapDirection"><code class="docutils literal notranslate"><span class="pre">Gradient.buildWeigthMapDirection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.buildWeigthMapRadial"><code class="docutils literal notranslate"><span class="pre">Gradient.buildWeigthMapRadial()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.computeStartEnd"><code class="docutils literal notranslate"><span class="pre">Gradient.computeStartEnd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.defaultFunction"><code class="docutils literal notranslate"><span class="pre">Gradient.defaultFunction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getBinaryWeighted"><code class="docutils literal notranslate"><span class="pre">Gradient.getBinaryWeighted()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getCenter"><code class="docutils literal notranslate"><span class="pre">Gradient.getCenter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getDirectionLength"><code class="docutils literal notranslate"><span class="pre">Gradient.getDirectionLength()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getForwWeight"><code class="docutils literal notranslate"><span class="pre">Gradient.getForwWeight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getLinearWeighted"><code class="docutils literal notranslate"><span class="pre">Gradient.getLinearWeighted()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getMaxWeight"><code class="docutils literal notranslate"><span class="pre">Gradient.getMaxWeight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getMinWeight"><code class="docutils literal notranslate"><span class="pre">Gradient.getMinWeight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getRndWeighted"><code class="docutils literal notranslate"><span class="pre">Gradient.getRndWeighted()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.getSubWeighted"><code class="docutils literal notranslate"><span class="pre">Gradient.getSubWeighted()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.get_gauss_weights"><code class="docutils literal notranslate"><span class="pre">Gradient.get_gauss_weights()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.get_gauss_weights1"><code class="docutils literal notranslate"><span class="pre">Gradient.get_gauss_weights1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.Gradient.pickPoint"><code class="docutils literal notranslate"><span class="pre">Gradient.pickPoint()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Gradient.random"><code class="docutils literal notranslate"><span class="pre">random()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.Graphics">cellpack.autopack.Graphics module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer"><code class="docutils literal notranslate"><span class="pre">AutopackViewer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.SetHistoVol"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.SetHistoVol()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.addCompartmentFromGeom"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.addCompartmentFromGeom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.addIngredientFromGeom"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.addIngredientFromGeom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.addMasterIngr"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.addMasterIngr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.appendIngrInstance"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.appendIngrInstance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.buildIngrPrimitive"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.buildIngrPrimitive()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.callFunction"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.callFunction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.checkCreateEmpty"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.checkCreateEmpty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.checkIngrPartnerProperties"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.checkIngrPartnerProperties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.checkIngrSpheres"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.checkIngrSpheres()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.clearAll"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.clearAll()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.clearFill"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.clearFill()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.clearIngr"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.clearIngr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.clearRecipe"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.clearRecipe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.collectResult"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.collectResult()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.color"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.color()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.colorByDistanceFrom"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.colorByDistanceFrom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.colorByOrder"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.colorByOrder()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.colorPT"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.colorPT()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.createIngrMesh"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.createIngrMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.createOrganelMesh"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.createOrganelMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.createTemplate"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.createTemplate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.createTemplateCompartment"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.createTemplateCompartment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.delIngr"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.delIngr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.delIngredientGrow"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.delIngredientGrow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartment"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayCompartment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartmentPoints"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayCompartmentPoints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartments"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayCompartments()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartmentsIngredients"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayCompartmentsIngredients()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCompartmentsPoints"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayCompartmentsPoints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayCytoplasmIngredients"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayCytoplasmIngredients()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayDistance"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayDistance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayEnv"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayEnv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayFill"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayFill()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayFillBox"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayFillBox()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayFreePoints"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayFreePoints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayFreePointsAsPS"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayFreePointsAsPS()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayGradient"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayGradient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrCylinders"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayIngrCylinders()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrGrow"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayIngrGrow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrGrows"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayIngrGrows()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrMesh"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayIngrMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrResults"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayIngrResults()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrSpheres"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayIngrSpheres()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngredients"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayIngredients()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayInstancesIngredient"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayInstancesIngredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayLeafOctree"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayLeafOctree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayOctree"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayOctree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayOctreeLeaf"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayOctreeLeaf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayOneNodeOctree"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayOneNodeOctree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayParticleVolumeDistance"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayParticleVolumeDistance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayPoints"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayPoints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayPreFill"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayPreFill()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayRoot"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displayRoot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displaysubnode"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.displaysubnode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.dspMesh"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.dspMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.dspSph"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.dspSph()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.exportAsIndexedMeshs"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.exportAsIndexedMeshs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.exportIngredient"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.exportIngredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.exportRecipeIngredients"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.exportRecipeIngredients()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.hideIngrPrimitive"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.hideIngrPrimitive()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.prepareDynamic"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.prepareDynamic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.prepareIngredient"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.prepareIngredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.prepareMaster"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.prepareMaster()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.printIngredients"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.printIngredients()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.printOneIngr"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.printOneIngr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.replaceIngrMesh"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.replaceIngrMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.showHide"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.showHide()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.showIngrPrimitive"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.showIngrPrimitive()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.timeFunction"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.timeFunction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.toggleOrganelMatr"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.toggleOrganelMatr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.toggleOrganelMesh"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.toggleOrganelMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.toggleOrganelSurf"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.toggleOrganelSurf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.undspMesh"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.undspMesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.undspSph"><code class="docutils literal notranslate"><span class="pre">AutopackViewer.undspSph()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Graphics.ColladaExporter"><code class="docutils literal notranslate"><span class="pre">ColladaExporter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.Grid">cellpack.autopack.Grid module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Grid.Grid"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Grid.Grid.create3DPointLookup"><code class="docutils literal notranslate"><span class="pre">Grid.create3DPointLookup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Grid.Grid.getIJK"><code class="docutils literal notranslate"><span class="pre">Grid.getIJK()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Grid.Grid.reset"><code class="docutils literal notranslate"><span class="pre">Grid.reset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Grid.Grid.restore"><code class="docutils literal notranslate"><span class="pre">Grid.restore()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Grid.Grid.save"><code class="docutils literal notranslate"><span class="pre">Grid.save()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-ioutils-module">cellpack.autopack.IOutils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.ExportCollada"><code class="docutils literal notranslate"><span class="pre">ExportCollada</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.GrabResult"><code class="docutils literal notranslate"><span class="pre">GrabResult</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.GrabResult.grab"><code class="docutils literal notranslate"><span class="pre">GrabResult.grab()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.GrabResult.reset"><code class="docutils literal notranslate"><span class="pre">GrabResult.reset()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool"><code class="docutils literal notranslate"><span class="pre">IOingredientTool</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.clean_arguments"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.clean_arguments()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.ingrJsonNode"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.ingrJsonNode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.ingrPythonNode"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.ingrPythonNode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.makeIngredient"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.makeIngredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.makeIngredientFromJson"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.makeIngredientFromJson()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.read"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.read()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.set_recipe_ingredient"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.set_recipe_ingredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.IOingredientTool.write"><code class="docutils literal notranslate"><span class="pre">IOingredientTool.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.NumpyArrayEncoder"><code class="docutils literal notranslate"><span class="pre">NumpyArrayEncoder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.NumpyArrayEncoder.default"><code class="docutils literal notranslate"><span class="pre">NumpyArrayEncoder.default()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.addCompartments"><code class="docutils literal notranslate"><span class="pre">addCompartments()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.checkRotFormat"><code class="docutils literal notranslate"><span class="pre">checkRotFormat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.gatherResult"><code class="docutils literal notranslate"><span class="pre">gatherResult()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.getAllPosRot"><code class="docutils literal notranslate"><span class="pre">getAllPosRot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.getStringValueOptions"><code class="docutils literal notranslate"><span class="pre">getStringValueOptions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.getValueToXMLNode"><code class="docutils literal notranslate"><span class="pre">getValueToXMLNode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.load_Json"><code class="docutils literal notranslate"><span class="pre">load_Json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.load_JsonString"><code class="docutils literal notranslate"><span class="pre">load_JsonString()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.load_MixedasJson"><code class="docutils literal notranslate"><span class="pre">load_MixedasJson()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.save"><code class="docutils literal notranslate"><span class="pre">save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.saveResultBinary"><code class="docutils literal notranslate"><span class="pre">saveResultBinary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.saveResultBinaryDic"><code class="docutils literal notranslate"><span class="pre">saveResultBinaryDic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.save_Mixed_asJson"><code class="docutils literal notranslate"><span class="pre">save_Mixed_asJson()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.save_asPython"><code class="docutils literal notranslate"><span class="pre">save_asPython()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.save_as_simularium"><code class="docutils literal notranslate"><span class="pre">save_as_simularium()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.serializedFromResult"><code class="docutils literal notranslate"><span class="pre">serializedFromResult()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.serializedRecipe"><code class="docutils literal notranslate"><span class="pre">serializedRecipe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.serializedRecipe_group"><code class="docutils literal notranslate"><span class="pre">serializedRecipe_group()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.serializedRecipe_group_dic"><code class="docutils literal notranslate"><span class="pre">serializedRecipe_group_dic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.setValueToJsonNode"><code class="docutils literal notranslate"><span class="pre">setValueToJsonNode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.setValueToPythonStr"><code class="docutils literal notranslate"><span class="pre">setValueToPythonStr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.setValueToXMLNode"><code class="docutils literal notranslate"><span class="pre">setValueToXMLNode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.setupFromJsonDic"><code class="docutils literal notranslate"><span class="pre">setupFromJsonDic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.toBinary"><code class="docutils literal notranslate"><span class="pre">toBinary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.IOutils.updatePositionsRadii"><code class="docutils literal notranslate"><span class="pre">updatePositionsRadii()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.MeshStore">cellpack.autopack.MeshStore module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore"><code class="docutils literal notranslate"><span class="pre">MeshStore</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.add_mesh_to_scene"><code class="docutils literal notranslate"><span class="pre">MeshStore.add_mesh_to_scene()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.build_mesh"><code class="docutils literal notranslate"><span class="pre">MeshStore.build_mesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.contains_point"><code class="docutils literal notranslate"><span class="pre">MeshStore.contains_point()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.contains_points"><code class="docutils literal notranslate"><span class="pre">MeshStore.contains_points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.contains_points_slow"><code class="docutils literal notranslate"><span class="pre">MeshStore.contains_points_slow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.create_mesh"><code class="docutils literal notranslate"><span class="pre">MeshStore.create_mesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.create_sphere"><code class="docutils literal notranslate"><span class="pre">MeshStore.create_sphere()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.create_sphere_data"><code class="docutils literal notranslate"><span class="pre">MeshStore.create_sphere_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.decompose_mesh"><code class="docutils literal notranslate"><span class="pre">MeshStore.decompose_mesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_centroid"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_centroid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_collada_material"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_collada_material()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_mesh"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_mesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_mesh_filepath_and_extension"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_mesh_filepath_and_extension()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_midpoint"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_midpoint()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_normal"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_normal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_nsphere"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_nsphere()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_object"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_smallest_radius"><code class="docutils literal notranslate"><span class="pre">MeshStore.get_smallest_radius()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.norm"><code class="docutils literal notranslate"><span class="pre">MeshStore.norm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.normal_array"><code class="docutils literal notranslate"><span class="pre">MeshStore.normal_array()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.normalize"><code class="docutils literal notranslate"><span class="pre">MeshStore.normalize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.normalize_v3"><code class="docutils literal notranslate"><span class="pre">MeshStore.normalize_v3()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.read_mesh_file"><code class="docutils literal notranslate"><span class="pre">MeshStore.read_mesh_file()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-outputsimularium-module">cellpack.autopack.OutputSimularium module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-recipe-module">cellpack.autopack.Recipe module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Recipe.Recipe"><code class="docutils literal notranslate"><span class="pre">Recipe</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.addIngredient"><code class="docutils literal notranslate"><span class="pre">Recipe.addIngredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.delIngredient"><code class="docutils literal notranslate"><span class="pre">Recipe.delIngredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.getMinMaxProteinSize"><code class="docutils literal notranslate"><span class="pre">Recipe.getMinMaxProteinSize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.printFillInfo"><code class="docutils literal notranslate"><span class="pre">Recipe.printFillInfo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.resetIngrs"><code class="docutils literal notranslate"><span class="pre">Recipe.resetIngrs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.resolve_composition"><code class="docutils literal notranslate"><span class="pre">Recipe.resolve_composition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.setCount"><code class="docutils literal notranslate"><span class="pre">Recipe.setCount()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.sort"><code class="docutils literal notranslate"><span class="pre">Recipe.sort()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Recipe.random"><code class="docutils literal notranslate"><span class="pre">random()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-serializable-module">cellpack.autopack.Serializable module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sCompartment"><code class="docutils literal notranslate"><span class="pre">sCompartment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sCompartment.addCompartment"><code class="docutils literal notranslate"><span class="pre">sCompartment.addCompartment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sCompartment.addIngredientGroup"><code class="docutils literal notranslate"><span class="pre">sCompartment.addIngredientGroup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sCompartment.static_id"><code class="docutils literal notranslate"><span class="pre">sCompartment.static_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sCompartment.to_JSON"><code class="docutils literal notranslate"><span class="pre">sCompartment.to_JSON()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sIngredient"><code class="docutils literal notranslate"><span class="pre">sIngredient</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sIngredient.static_id"><code class="docutils literal notranslate"><span class="pre">sIngredient.static_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sIngredient.to_JSON"><code class="docutils literal notranslate"><span class="pre">sIngredient.to_JSON()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sIngredientFiber"><code class="docutils literal notranslate"><span class="pre">sIngredientFiber</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sIngredientFiber.static_id"><code class="docutils literal notranslate"><span class="pre">sIngredientFiber.static_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sIngredientFiber.to_JSON"><code class="docutils literal notranslate"><span class="pre">sIngredientFiber.to_JSON()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sIngredientGroup"><code class="docutils literal notranslate"><span class="pre">sIngredientGroup</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sIngredientGroup.addIngredient"><code class="docutils literal notranslate"><span class="pre">sIngredientGroup.addIngredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sIngredientGroup.static_id"><code class="docutils literal notranslate"><span class="pre">sIngredientGroup.static_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.Serializable.sIngredientGroup.to_JSON"><code class="docutils literal notranslate"><span class="pre">sIngredientGroup.to_JSON()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-binvox-rw-module">cellpack.autopack.binvox_rw module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels"><code class="docutils literal notranslate"><span class="pre">Voxels</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.cartesian"><code class="docutils literal notranslate"><span class="pre">Voxels.cartesian()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.clone"><code class="docutils literal notranslate"><span class="pre">Voxels.clone()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.getIndex"><code class="docutils literal notranslate"><span class="pre">Voxels.getIndex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.getIndexData"><code class="docutils literal notranslate"><span class="pre">Voxels.getIndexData()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.ijkToIndex"><code class="docutils literal notranslate"><span class="pre">Voxels.ijkToIndex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.ijkToxyz"><code class="docutils literal notranslate"><span class="pre">Voxels.ijkToxyz()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.write"><code class="docutils literal notranslate"><span class="pre">Voxels.write()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.Voxels.xyzToijk"><code class="docutils literal notranslate"><span class="pre">Voxels.xyzToijk()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.dense_to_sparse"><code class="docutils literal notranslate"><span class="pre">dense_to_sparse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.read"><code class="docutils literal notranslate"><span class="pre">read()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.read_as_3d_array"><code class="docutils literal notranslate"><span class="pre">read_as_3d_array()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.read_as_coord_array"><code class="docutils literal notranslate"><span class="pre">read_as_coord_array()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.read_header"><code class="docutils literal notranslate"><span class="pre">read_header()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.sparse_to_dense"><code class="docutils literal notranslate"><span class="pre">sparse_to_dense()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.binvox_rw.write"><code class="docutils literal notranslate"><span class="pre">write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-ldsequence-module">cellpack.autopack.ldSequence module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ldSequence.HaltonSequence"><code class="docutils literal notranslate"><span class="pre">HaltonSequence</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ldSequence.SphereHalton"><code class="docutils literal notranslate"><span class="pre">SphereHalton()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ldSequence.cHaltonSequence3"><code class="docutils literal notranslate"><span class="pre">cHaltonSequence3</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ldSequence.cHaltonSequence3.inc"><code class="docutils literal notranslate"><span class="pre">cHaltonSequence3.inc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ldSequence.cHaltonSequence3.reset"><code class="docutils literal notranslate"><span class="pre">cHaltonSequence3.reset()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ldSequence.halton"><code class="docutils literal notranslate"><span class="pre">halton()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ldSequence.halton2"><code class="docutils literal notranslate"><span class="pre">halton2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ldSequence.halton3"><code class="docutils literal notranslate"><span class="pre">halton3()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ldSequence.halton_sequence"><code class="docutils literal notranslate"><span class="pre">halton_sequence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ldSequence.haltonterm"><code class="docutils literal notranslate"><span class="pre">haltonterm()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.octree">cellpack.autopack.octree module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.octree.OctNode"><code class="docutils literal notranslate"><span class="pre">OctNode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.octree.Octree"><code class="docutils literal notranslate"><span class="pre">Octree</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.octree.Octree.addNode"><code class="docutils literal notranslate"><span class="pre">Octree.addNode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.octree.Octree.findBranch"><code class="docutils literal notranslate"><span class="pre">Octree.findBranch()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.octree.Octree.findPosition"><code class="docutils literal notranslate"><span class="pre">Octree.findPosition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.octree.Octree.insertNode"><code class="docutils literal notranslate"><span class="pre">Octree.insertNode()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.plotly_result">cellpack.autopack.plotly_result module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.add_circle"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.add_circle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.add_ingredient_positions"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.add_ingredient_positions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.add_square"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.add_square()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.format_color"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.format_color()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.make_and_show_heatmap"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.make_and_show_heatmap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.make_grid_heatmap"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.make_grid_heatmap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.show"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.show()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.transformPoints2D"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.transformPoints2D()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.plotly_result.PlotlyAnalysis.update_title"><code class="docutils literal notranslate"><span class="pre">PlotlyAnalysis.update_title()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-randomrot-module">cellpack.autopack.randomRot module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot"><code class="docutils literal notranslate"><span class="pre">RandomRot</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.get"><code class="docutils literal notranslate"><span class="pre">RandomRot.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.getOld"><code class="docutils literal notranslate"><span class="pre">RandomRot.getOld()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.quaternion_matrix"><code class="docutils literal notranslate"><span class="pre">RandomRot.quaternion_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.random_quaternion"><code class="docutils literal notranslate"><span class="pre">RandomRot.random_quaternion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.random_rotation_matrix"><code class="docutils literal notranslate"><span class="pre">RandomRot.random_rotation_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.randomRot.RandomRot.setSeed"><code class="docutils literal notranslate"><span class="pre">RandomRot.setSeed()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-ray-module">cellpack.autopack.ray module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#created-on-saturday-september-1-1-50-00-2012">Created on Saturday September 1 1:50:00 2012</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ray.dot"><code class="docutils literal notranslate"><span class="pre">dot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ray.f_dot_product"><code class="docutils literal notranslate"><span class="pre">f_dot_product()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ray.f_ray_intersect_polyhedron"><code class="docutils literal notranslate"><span class="pre">f_ray_intersect_polyhedron()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ray.findPointsCenter"><code class="docutils literal notranslate"><span class="pre">findPointsCenter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ray.makeMarchingCube"><code class="docutils literal notranslate"><span class="pre">makeMarchingCube()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ray.ray_intersect_polygon"><code class="docutils literal notranslate"><span class="pre">ray_intersect_polygon()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ray.ray_intersect_polyhedron"><code class="docutils literal notranslate"><span class="pre">ray_intersect_polyhedron()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ray.vcross"><code class="docutils literal notranslate"><span class="pre">vcross()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ray.vdiff"><code class="docutils literal notranslate"><span class="pre">vdiff()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ray.vlen"><code class="docutils literal notranslate"><span class="pre">vlen()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.ray.vnorm"><code class="docutils literal notranslate"><span class="pre">vnorm()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-trajectory-module">cellpack.autopack.trajectory module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory"><code class="docutils literal notranslate"><span class="pre">Trajectory</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.applyState"><code class="docutils literal notranslate"><span class="pre">Trajectory.applyState()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.applyState_cb"><code class="docutils literal notranslate"><span class="pre">Trajectory.applyState_cb()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.applyState_name"><code class="docutils literal notranslate"><span class="pre">Trajectory.applyState_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.applyState_primitive_name"><code class="docutils literal notranslate"><span class="pre">Trajectory.applyState_primitive_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.completeMapping"><code class="docutils literal notranslate"><span class="pre">Trajectory.completeMapping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.generalApply"><code class="docutils literal notranslate"><span class="pre">Trajectory.generalApply()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.getIngredientInstancePos"><code class="docutils literal notranslate"><span class="pre">Trajectory.getIngredientInstancePos()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.makeIngrMapping"><code class="docutils literal notranslate"><span class="pre">Trajectory.makeIngrMapping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.reg"><code class="docutils literal notranslate"><span class="pre">Trajectory.reg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.Trajectory.traj_type"><code class="docutils literal notranslate"><span class="pre">Trajectory.traj_type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.dcdTrajectory"><code class="docutils literal notranslate"><span class="pre">dcdTrajectory</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.dcdTrajectory.dcd"><code class="docutils literal notranslate"><span class="pre">dcdTrajectory.dcd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.dcdTrajectory.getPosAt"><code class="docutils literal notranslate"><span class="pre">dcdTrajectory.getPosAt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.dcdTrajectory.parse"><code class="docutils literal notranslate"><span class="pre">dcdTrajectory.parse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.dcdTrajectory.traj_type"><code class="docutils literal notranslate"><span class="pre">dcdTrajectory.traj_type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.molbTrajectory"><code class="docutils literal notranslate"><span class="pre">molbTrajectory</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.molbTrajectory.applyState_name"><code class="docutils literal notranslate"><span class="pre">molbTrajectory.applyState_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.molbTrajectory.applyState_primitive_name"><code class="docutils literal notranslate"><span class="pre">molbTrajectory.applyState_primitive_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.molbTrajectory.getPosAt"><code class="docutils literal notranslate"><span class="pre">molbTrajectory.getPosAt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.molbTrajectory.parse"><code class="docutils literal notranslate"><span class="pre">molbTrajectory.parse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.molbTrajectory.parse_one_mol"><code class="docutils literal notranslate"><span class="pre">molbTrajectory.parse_one_mol()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.molbTrajectory.traj_type"><code class="docutils literal notranslate"><span class="pre">molbTrajectory.traj_type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.xyzTrajectory"><code class="docutils literal notranslate"><span class="pre">xyzTrajectory</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.xyzTrajectory.getPosAt"><code class="docutils literal notranslate"><span class="pre">xyzTrajectory.getPosAt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.xyzTrajectory.getPosLine"><code class="docutils literal notranslate"><span class="pre">xyzTrajectory.getPosLine()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.xyzTrajectory.parse"><code class="docutils literal notranslate"><span class="pre">xyzTrajectory.parse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.trajectory.xyzTrajectory.traj_type"><code class="docutils literal notranslate"><span class="pre">xyzTrajectory.traj_type</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#cellpack-autopack-transformation-module">cellpack.autopack.transformation module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#requirements">Requirements</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.utils">cellpack.autopack.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack">Module contents</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-cellpack.autopack.utils">cellpack.autopack.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.utils.cmp_to_key"><code class="docutils literal notranslate"><span class="pre">cmp_to_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.utils.deep_merge"><code class="docutils literal notranslate"><span class="pre">deep_merge()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.utils.get_distance"><code class="docutils literal notranslate"><span class="pre">get_distance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.utils.ingredient_compare0"><code class="docutils literal notranslate"><span class="pre">ingredient_compare0()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.utils.ingredient_compare1"><code class="docutils literal notranslate"><span class="pre">ingredient_compare1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.utils.ingredient_compare2"><code class="docutils literal notranslate"><span class="pre">ingredient_compare2()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.html#module-contents">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#created-on-fri-jul-20-23-53-00-2012">Created on Fri Jul 20 23:53:00 2012</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.checkErrorInPath"><code class="docutils literal notranslate"><span class="pre">checkErrorInPath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.checkPath"><code class="docutils literal notranslate"><span class="pre">checkPath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.checkRecipeAvailable"><code class="docutils literal notranslate"><span class="pre">checkRecipeAvailable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.checkURL"><code class="docutils literal notranslate"><span class="pre">checkURL()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.clearCaches"><code class="docutils literal notranslate"><span class="pre">clearCaches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.fixOnePath"><code class="docutils literal notranslate"><span class="pre">fixOnePath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.fixPath"><code class="docutils literal notranslate"><span class="pre">fixPath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.resetDefault"><code class="docutils literal notranslate"><span class="pre">resetDefault()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.retrieveFile"><code class="docutils literal notranslate"><span class="pre">retrieveFile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.revertOnePath"><code class="docutils literal notranslate"><span class="pre">revertOnePath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.saveRecipeAvailable"><code class="docutils literal notranslate"><span class="pre">saveRecipeAvailable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.saveRecipeAvailableJSON"><code class="docutils literal notranslate"><span class="pre">saveRecipeAvailableJSON()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.updatePath"><code class="docutils literal notranslate"><span class="pre">updatePath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.updatePathJSON"><code class="docutils literal notranslate"><span class="pre">updatePathJSON()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.updateRecipAvailable"><code class="docutils literal notranslate"><span class="pre">updateRecipAvailable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.updateRecipAvailableJSON"><code class="docutils literal notranslate"><span class="pre">updateRecipAvailableJSON()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.updateRecipAvailableXML"><code class="docutils literal notranslate"><span class="pre">updateRecipAvailableXML()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.html#cellpack.autopack.updateReplacePath"><code class="docutils literal notranslate"><span class="pre">updateReplacePath()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -362,8 +1030,32 @@
 <li class="toctree-l2"><a class="reference internal" href="cellpack.bin.html#cellpack-bin-analyze-module">cellpack.bin.analyze module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.bin.html#cellpack-bin-get-pdb-offset-module">cellpack.bin.get-pdb-offset module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.bin.html#cellpack-bin-pack-module">cellpack.bin.pack module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.bin.html#module-cellpack.bin.simularium_converter">cellpack.bin.simularium_converter module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.bin.html#module-cellpack.bin">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.bin.html#module-cellpack.bin.simularium_converter">cellpack.bin.simularium_converter module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.DEFAULT_GEO_TYPE"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.DEFAULT_GEO_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.DEFAULT_INPUT_RECIPE"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.DEFAULT_INPUT_RECIPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.DEFAULT_OUTPUT_DIRECTORY"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.DEFAULT_OUTPUT_DIRECTORY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.DEFAULT_PACKING_RESULT"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.DEFAULT_PACKING_RESULT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.DEFAULT_SCALE_FACTOR"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.DEFAULT_SCALE_FACTOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.fill_in_empty_fiber_data"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.fill_in_empty_fiber_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_bounding_box"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.get_bounding_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_euler"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.get_euler()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_euler_from_matrix"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.get_euler_from_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_euler_from_quat"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.get_euler_from_quat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_ingredient_data"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.get_ingredient_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_ingredient_display_data"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.get_ingredient_display_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_mesh_data"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.get_mesh_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.get_positions_per_ingredient"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.get_positions_per_ingredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.is_matrix"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.is_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.process_one_ingredient"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.process_one_ingredient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.unpack_curve"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.unpack_curve()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.ConvertToSimularium.unpack_positions"><code class="docutils literal notranslate"><span class="pre">ConvertToSimularium.unpack_positions()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.bin.html#cellpack.bin.simularium_converter.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.bin.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -449,10 +1141,10 @@ order.</p>
 </dd></dl>
 
 </section>
-<section id="module-cellpack">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack" title="Permalink to this heading">¶</a></h2>
+<section id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this heading">¶</a></h2>
 <p>Top-level package for cellPack.</p>
-<dl class="py function">
+<span class="target" id="module-cellpack"></span><dl class="py function">
 <dt class="sig sig-object py" id="cellpack.get_module_version">
 <span class="sig-prename descclassname"><span class="pre">cellpack.</span></span><span class="sig-name descname"><span class="pre">get_module_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack.html#get_module_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.get_module_version" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>

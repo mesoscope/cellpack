@@ -36,6 +36,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -106,8 +107,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack.example">cellpack.example module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack.example">cellpack.example module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.html#cellpack.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-contents">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -152,39 +159,39 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#ingredient-properties">Ingredient Properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#id81">name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#molarity">molarity</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbmol">nbMol</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#encapsulatingradius">encapsulatingRadius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#count">count</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#encapsulating-radius">encapsulating_radius</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#radii">radii</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#positions">positions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#positions2">positions2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingpriority">packingPriority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packing-priority">packing_priority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pdb">pdb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#color">color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#meshfile">meshFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#meshname">meshName</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#coordsystem">coordsystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#principalvector">principalVector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#type">Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#principal-vector">principal_vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#type">type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#offset">offset</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#jittermax">jitterMax</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#nbjitter">nbJitter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#perturbaxisamplitude">perturbAxisAmplitude</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#userotaxis">useRotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotaxis">rotAxis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotrange">rotRange</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#useorientbias">useOrientBias</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#max-jitter">max_jitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#jitter-attempts">jitter_attempts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#perturb-axis-amplitude">perturb_axis_amplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-rotation-axis">use_rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotation-axis">rotation_axis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rotation-range">rotation_range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-orient-bias">use_orient_bias</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemin">orientBiasRotRangeMin</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#placetype">placeType</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejectionthreshold">rejectionThreshold</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packingmode">packingMode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradient">gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#proba-binding">proba_binding</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#proba-not-binding">proba_not_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#isattractor">isAttractor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#is-attractor">is_attractor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#weight">weight</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#partners-name">partners_name</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#excluded-partners-name">excluded_partners_name</a></li>
@@ -655,7 +662,7 @@
             <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">addMasterIngr</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">gc</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">orga</span><span class="o">.</span><span class="n">isOrthogonalBoundingBox</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">orga</span><span class="o">.</span><span class="n">is_orthogonal_bounding_box</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="c1"># create the mesh for the compartment</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_Mesh&quot;</span> <span class="o">%</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span>
             <span class="n">tet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -689,7 +696,7 @@
                 <span class="c1">#        orga.ref_obj = name</span>
 
 <div class="viewcode-block" id="AutopackViewer.createOrganelMesh"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.createOrganelMesh">[docs]</a>    <span class="k">def</span> <span class="nf">createOrganelMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">orga</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">orga</span><span class="o">.</span><span class="n">isOrthogonalBoundingBox</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">orga</span><span class="o">.</span><span class="n">is_orthogonal_bounding_box</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_Mesh&quot;</span> <span class="o">%</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;maya&quot;</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;mesh_&quot;</span> <span class="o">+</span> <span class="n">name</span>  <span class="c1"># TODO fix this in maya</span>
@@ -937,7 +944,7 @@
             <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">Polylines</span><span class="p">(</span><span class="s2">&quot;normals&quot;</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="n">verts</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">AddObject</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">orgaToMasterGeom</span><span class="p">[</span><span class="n">orga</span><span class="p">])</span>
 
-        <span class="k">if</span> <span class="n">orga</span><span class="o">.</span><span class="n">isOrthogonalBoundingBox</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">orga</span><span class="o">.</span><span class="n">is_orthogonal_bounding_box</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">orga</span><span class="p">,</span> <span class="s2">&quot;ogsurfacePoints&quot;</span><span class="p">):</span>
                 <span class="c1"># display off grid surface grid points</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">displayPoints</span><span class="p">(</span>
@@ -1038,13 +1045,13 @@
                         <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span>
                         <span class="n">delete</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="p">)</span></div>
-                <span class="c1">#        else : #cylinder or growingredient#if ingr.modelType==&#39;Spheres&#39;:</span>
+                <span class="c1">#        else : #cylinder or growingredient#if ingrmodel_type==&#39;Spheres&#39;:</span>
                 <span class="c1">#            pass</span>
 
 <div class="viewcode-block" id="AutopackViewer.displayIngrSpheres"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.displayIngrSpheres">[docs]</a>    <span class="k">def</span> <span class="nf">displayIngrSpheres</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">verts</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">o</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">recipe</span><span class="o">.</span><span class="n">compartment</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">[</span><span class="n">ingr</span><span class="p">]):</span>
-            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_Spheres_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ViewerType</span> <span class="o">==</span> <span class="s2">&quot;dejavu&quot;</span><span class="p">:</span>
                     <span class="n">sph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">Spheres</span><span class="p">(</span>
@@ -1268,7 +1275,7 @@
                     <span class="c1"># is that not correctly scaled ?</span>
                     <span class="n">circle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">build_2dshape</span><span class="p">(</span>
                         <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_shape&quot;</span><span class="p">,</span>
-                        <span class="n">opts</span><span class="o">=</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">encapsulatingRadius</span><span class="p">],</span>
+                        <span class="n">opts</span><span class="o">=</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">encapsulating_radius</span><span class="p">],</span>
                     <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">extruder</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">extrudeSpline</span><span class="p">(</span>
                         <span class="n">snake</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">circle</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span>
@@ -1408,9 +1415,9 @@
             <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">molarity</span><span class="p">,</span>
             <span class="n">ingr</span><span class="o">.</span><span class="n">pdb</span><span class="p">,</span>
-            <span class="n">ingr</span><span class="o">.</span><span class="n">principalVector</span><span class="p">,</span>
-            <span class="n">ingr</span><span class="o">.</span><span class="n">packingPriority</span><span class="p">,</span>
-            <span class="n">ingr</span><span class="o">.</span><span class="n">jitterMax</span><span class="p">,</span>
+            <span class="n">ingr</span><span class="o">.</span><span class="n">principal_vector</span><span class="p">,</span>
+            <span class="n">ingr</span><span class="o">.</span><span class="n">packing_priority</span><span class="p">,</span>
+            <span class="n">ingr</span><span class="o">.</span><span class="n">max_jitter</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.printIngredients"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.printIngredients">[docs]</a>    <span class="k">def</span> <span class="nf">printIngredients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1430,11 +1437,11 @@
         <span class="n">radii</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">level</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">deepest_level</span>
         <span class="n">px</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">])):</span>
                 <span class="n">verts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">px</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span>
                 <span class="n">radii</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">][</span><span class="n">ii</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
             <span class="n">px2</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">positions2</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
             <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">])):</span>
                 <span class="n">verts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">px</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span>
@@ -1495,11 +1502,11 @@
             <span class="n">matrices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;collected &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrices</span><span class="p">),</span> <span class="n">doMesh</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">doSphere</span> <span class="ow">and</span> <span class="n">verts</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">displayIngrSpheres</span><span class="p">(</span>
                     <span class="n">ingredient</span><span class="p">,</span> <span class="p">{</span><span class="n">ingredient</span><span class="p">:</span> <span class="n">verts</span><span class="p">},</span> <span class="p">{</span><span class="n">ingredient</span><span class="p">:</span> <span class="n">radii</span><span class="p">},</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span>
                 <span class="p">)</span>
-            <span class="k">elif</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">displayIngrCylinders</span><span class="p">(</span>
                     <span class="n">ingredient</span><span class="p">,</span> <span class="p">{</span><span class="n">ingredient</span><span class="p">:</span> <span class="n">verts</span><span class="p">},</span> <span class="p">{</span><span class="n">ingredient</span><span class="p">:</span> <span class="n">radii</span><span class="p">},</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span>
                 <span class="p">)</span>
@@ -1521,7 +1528,7 @@
                 <span class="n">dejavui</span> <span class="o">=</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ingredient</span><span class="p">,</span> <span class="s2">&quot;ipoly&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">ipoly</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">dejavui</span><span class="p">:</span>
                 <span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="n">ingredient</span><span class="o">.</span><span class="n">color</span><span class="p">]</span> <span class="k">if</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
-                <span class="n">axis</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">principalVector</span><span class="p">[:])</span>
+                <span class="n">axis</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">principal_vector</span><span class="p">[:])</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;build ipoly &quot;</span><span class="p">,</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">o_name</span><span class="p">)</span>
                 <span class="n">ingredient</span><span class="o">.</span><span class="n">ipoly</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">instancePolygon</span><span class="p">(</span>
                     <span class="n">o</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">FillName</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">cFill</span><span class="p">]</span> <span class="o">+</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">o_name</span><span class="p">,</span>
@@ -1548,7 +1555,7 @@
                 <span class="p">)</span>
             <span class="c1">#                    self.vi.AddObject(parent)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ingredient</span><span class="p">,</span> <span class="s2">&quot;ipoly&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">ipoly</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">axis</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">principalVector</span><span class="p">[:])</span>
+                <span class="n">axis</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingredient</span><span class="o">.</span><span class="n">principal_vector</span><span class="p">[:])</span>
                 <span class="c1">#                if self.vi.host.find(&quot;blender&quot;) != -1 and self.vi.instance_dupliFace and ingredient.coordsystem == &quot;left&quot;:</span>
                 <span class="c1">#                            if self.helper.getType(self.helper.getChilds(polygon)[0]) != self.helper.EMPTY:</span>
                 <span class="c1">#                    axis = self.vi.rotatePoint(axis,[0.,0.,0.],[0.0,1.0,0.0,-math.pi/2.0])</span>
@@ -1576,11 +1583,11 @@
             <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">molecules</span><span class="p">:</span>
                 <span class="n">level</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">deepest_level</span>
                 <span class="n">px</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
-                <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
                     <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">])):</span>
                         <span class="n">verts</span><span class="p">[</span><span class="n">ingr</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">px</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span>
                         <span class="n">radii</span><span class="p">[</span><span class="n">ingr</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">][</span><span class="n">ii</span><span class="p">])</span>
-                <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
                     <span class="n">px2</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">positions2</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
                     <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">])):</span>
                         <span class="n">verts</span><span class="p">[</span><span class="n">ingr</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">px</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span>
@@ -1594,9 +1601,9 @@
             <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                     <span class="c1">#                    self.displayIngrSpheres(ingr,verts,radii)</span>
-                    <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">displayIngrSpheres</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">verts</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-                    <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
+                    <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">displayIngrCylinders</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">verts</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># display cytoplasm meshes</span>
@@ -1639,7 +1646,7 @@
                 <span class="k">if</span> <span class="n">ingr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">meshGeoms</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ingr not in meshGeoms&quot;</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">meshGeoms</span><span class="p">)</span>
                     <span class="k">continue</span>
-                <span class="n">axis</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">principalVector</span><span class="p">[:])</span>
+                <span class="n">axis</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">principal_vector</span><span class="p">[:])</span>
                 <span class="n">ingr</span><span class="o">.</span><span class="n">ipoly</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">instancePolygon</span><span class="p">(</span>
                     <span class="s2">&quot;cyto_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">FillName</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">histo</span><span class="o">.</span><span class="n">cFill</span><span class="p">]</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span><span class="p">,</span>
                     <span class="n">matrices</span><span class="o">=</span><span class="n">meshGeoms</span><span class="p">[</span><span class="n">ingr</span><span class="p">],</span>
@@ -1688,11 +1695,11 @@
                 <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="n">orga</span><span class="o">.</span><span class="n">molecules</span><span class="p">:</span>
                     <span class="n">level</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">deepest_level</span>
                     <span class="n">px</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
-                    <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
                         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">])):</span>
                             <span class="n">verts</span><span class="p">[</span><span class="n">ingr</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">px</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span>
                             <span class="n">radii</span><span class="p">[</span><span class="n">ingr</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">][</span><span class="n">ii</span><span class="p">])</span>
-                    <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
+                    <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
                         <span class="n">px2</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">positions2</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
                         <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">])):</span>
                             <span class="n">verts</span><span class="p">[</span><span class="n">ingr</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">px</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span>
@@ -1704,17 +1711,17 @@
                 <span class="k">if</span> <span class="n">rs</span><span class="p">:</span>
                     <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">rs</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">[</span><span class="n">ingr</span><span class="p">]):</span>
-                            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">displayIngrSpheres</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">verts</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-                            <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
+                            <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
                                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;display&quot;</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">displayIngrCylinders</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">verts</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">ri</span><span class="p">:</span>
                     <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">verts</span><span class="p">[</span><span class="n">ingr</span><span class="p">]):</span>
-                            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">displayIngrSpheres</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">verts</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-                            <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
+                            <span class="k">elif</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Cylinders&quot;</span><span class="p">:</span>
                                 <span class="bp">self</span><span class="o">.</span><span class="n">displayIngrCylinders</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">verts</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
             <span class="c1"># Meshs</span>
@@ -1767,7 +1774,7 @@
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;dejavu&quot;</span><span class="p">:</span>
                             <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
                         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ri instanciation of polygon&quot;</span><span class="p">,</span> <span class="n">polygon</span><span class="p">)</span>
-                        <span class="n">axis</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">principalVector</span><span class="p">[:])</span>
+                        <span class="n">axis</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">principal_vector</span><span class="p">[:])</span>
                         <span class="c1">#                        if self.vi.host.find(&quot;blender&quot;) != -1 and self.vi.instance_dupliFace and ingr.coordsystem == &quot;left&quot;:</span>
                         <span class="c1">#                            if self.helper.getType(self.helper.getChilds(polygon)[0]) != self.helper.EMPTY:</span>
                         <span class="c1">#                            axis = self.vi.rotatePoint(axis,[0.,0.,0.],[0.0,1.0,0.0,-math.pi/2.0])</span>
@@ -1818,7 +1825,7 @@
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;dejavu&quot;</span><span class="p">:</span>
                             <span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
                         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;rs instanciation of polygon&quot;</span><span class="p">,</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
-                        <span class="n">axis</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">principalVector</span><span class="p">[:])</span>
+                        <span class="n">axis</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">principal_vector</span><span class="p">[:])</span>
                         <span class="c1">#                        if self.vi.host.find(&quot;blender&quot;) != -1 and self.vi.instance_dupliFace and ingr.coordsystem == &quot;left&quot;:</span>
                         <span class="c1">#                            if self.helper.getType(self.helper.getChilds(polygon)[0]) != self.helper.EMPTY:</span>
                         <span class="c1">#                            axis = self.vi.rotatePoint(axis,[0.,0.,0.],[0.0,1.0,0.0,-math.pi/2.0])</span>
@@ -2197,7 +2204,7 @@
                     <span class="n">positions</span><span class="o">=</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">positions</span><span class="p">)],</span>
                     <span class="n">positions2</span><span class="o">=</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">positions2</span><span class="p">)],</span>
                     <span class="n">meshObject</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span>
-                    <span class="n">principalVector</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>
+                    <span class="n">principal_vector</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">elif</span> <span class="n">ingtype</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">CUBE</span><span class="p">:</span>
 
@@ -2239,12 +2246,12 @@
                 <span class="n">positions</span><span class="o">=</span><span class="p">[[[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">h</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]],</span>
                 <span class="n">positions2</span><span class="o">=</span><span class="p">[[[</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]],</span>
                 <span class="n">meshObject</span><span class="o">=</span><span class="n">ingrobj</span><span class="p">,</span>
-                <span class="c1">#                jitterMax=(1.,1.,1.),#how to customize</span>
-                <span class="c1">#                rotAxis=(0.,0.,1.0),#how to customize</span>
-                <span class="c1">#                nbJitter = 10,</span>
+                <span class="c1">#                max_jitter=(1.,1.,1.),#how to customize</span>
+                <span class="c1">#                rotation_axis=(0.,0.,1.0),#how to customize</span>
+                <span class="c1">#                jitter_attempts = 10,</span>
                 <span class="c1">#  CRITICAL !!! IF jitter is greater than radius of object,</span>
                 <span class="c1"># e.g. 5x(1,1,1) the point may not be consumed!!!</span>
-                <span class="n">principalVector</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>  <span class="c1"># should come from the object</span>
+                <span class="n">principal_vector</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>  <span class="c1"># should come from the object</span>
             <span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">getType</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">CUBE</span><span class="p">:</span>
 
@@ -2905,7 +2912,7 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="AutopackViewer.checkIngrSpheres"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Graphics.AutopackViewer.checkIngrSpheres">[docs]</a>    <span class="k">def</span> <span class="nf">checkIngrSpheres</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ingr</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">modelType</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;Spheres&quot;</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;SpheresRep_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
             <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="n">names</span> <span class="o">=</span> <span class="s2">&quot;SpheresRep_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;S&quot;</span>

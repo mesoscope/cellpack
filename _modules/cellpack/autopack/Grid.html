@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cellpack.autopack.upy &mdash; cellPack 1.0.3 documentation</title>
+  <title>cellpack.autopack.Grid &mdash; cellPack 1.0.3 documentation</title>
   
 
   
@@ -264,7 +264,7 @@
         
           <li><a href="../autopack.html">cellpack.autopack</a> &raquo;</li>
         
-      <li>cellpack.autopack.upy</li>
+      <li>cellpack.autopack.Grid</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -279,58 +279,91 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for cellpack.autopack.upy</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="getHClass"><a class="viewcode-back" href="../../../cellpack.autopack.upy.html#cellpack.autopack.upy.getHClass">[docs]</a><span></span><span class="k">def</span> <span class="nf">getHClass</span><span class="p">(</span><span class="n">host</span><span class="p">):</span>
+  <h1>Source code for cellpack.autopack.Grid</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">cellpack.autopack.BaseGrid</span> <span class="kn">import</span> <span class="n">BaseGrid</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+
+<div class="viewcode-block" id="Grid"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid">[docs]</a><span class="k">class</span> <span class="nc">Grid</span><span class="p">(</span><span class="n">BaseGrid</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return the base class for modelling design according the provide host.</span>
-
-<span class="sd">    @type  host: string</span>
-<span class="sd">    @param host: name of the host application</span>
-
-<span class="sd">    @rtype:   Class</span>
-<span class="sd">    @return:  the specific ui class</span>
+<span class="sd">    The Grid class</span>
+<span class="sd">    ==========================</span>
+<span class="sd">    This class handle the use of grid to control the packing. The grid keep information</span>
+<span class="sd">    of 3d positions, distances, freePoints and inside/surface points from organelles.</span>
+<span class="sd">    NOTE : this class could be completely replaced if openvdb is wrapped to python.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># print globals()</span>
 
-    <span class="k">if</span> <span class="n">host</span> <span class="o">==</span> <span class="s2">&quot;simularium&quot;</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">.simularium.simularium_helper</span> <span class="kn">import</span> <span class="n">simulariumHelper</span> <span class="k">as</span> <span class="n">helper</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]),</span> <span class="n">space</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">lookup</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="c1"># a grid is attached to an environnement</span>
+        <span class="n">BaseGrid</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="n">space</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lookup</span><span class="o">=</span><span class="n">lookup</span>
+        <span class="p">)</span>
 
-        <span class="c1"># from .dejavuTk.dejavuHelper import dejavuHelper as helper</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">helper</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">return</span> <span class="n">helper</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span> <span class="o">=</span> <span class="n">space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encapsulatingGrid</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gridVolume</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbGridPoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computeGridNumberOfPoint</span><span class="p">(</span>
+            <span class="n">boundingBox</span><span class="p">,</span> <span class="n">space</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create3DPointLookup</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gridVolume</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span><span class="p">)</span>
 
+<div class="viewcode-block" id="Grid.reset"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># reset the  distToClosestSurf and the freePoints</span>
+        <span class="c1"># boundingBox shoud be the same otherwise why keeping the grid</span>
 
-<div class="viewcode-block" id="retrieveHost"><a class="viewcode-back" href="../../../cellpack.autopack.upy.html#cellpack.autopack.upy.retrieveHost">[docs]</a><span class="k">def</span> <span class="nf">retrieveHost</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Retrieve the 3d host application where the script is running.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distToClosestSurf</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distancesAfterFill</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freePointsAfterFill</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePointsAfterFill</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distanceAfterFill</span> <span class="o">=</span> <span class="p">[]</span></div>
 
-<span class="sd">    @rtype:   string</span>
-<span class="sd">    @return:  the name of the host, ie blender, maya or c4d</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">host</span>
-    <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;simularium&quot;</span>
-    <span class="k">return</span> <span class="n">host</span></div>
+<div class="viewcode-block" id="Grid.create3DPointLookup"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.create3DPointLookup">[docs]</a>    <span class="k">def</span> <span class="nf">create3DPointLookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fill the orthogonal bounding box described by two global corners</span>
+<span class="sd">        with an array of points spaces pGridSpacing apart.:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">boundingBox</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">boundingBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span>
+        <span class="n">xl</span><span class="p">,</span> <span class="n">yl</span><span class="p">,</span> <span class="n">zl</span> <span class="o">=</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">xr</span><span class="p">,</span> <span class="n">yr</span><span class="p">,</span> <span class="n">zr</span> <span class="o">=</span> <span class="n">boundingBox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
+        <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbGridPoints</span>
+        <span class="n">pointArrayRaw</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span> <span class="o">*</span> <span class="n">nz</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ijkPtIndice</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span> <span class="o">*</span> <span class="n">nz</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;i&quot;</span><span class="p">)</span>
+        <span class="n">space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridSpacing</span>
+        <span class="c1"># Vector for lower left broken into real of only the z coord.</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">zi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nz</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">yi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ny</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nx</span><span class="p">):</span>
+                    <span class="n">pointArrayRaw</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">xl</span> <span class="o">+</span> <span class="n">xi</span> <span class="o">*</span> <span class="n">space</span><span class="p">,</span>
+                        <span class="n">yl</span> <span class="o">+</span> <span class="n">yi</span> <span class="o">*</span> <span class="n">space</span><span class="p">,</span>
+                        <span class="n">zl</span> <span class="o">+</span> <span class="n">zi</span> <span class="o">*</span> <span class="n">space</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ijkPtIndice</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">)</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">masterGridPositions</span> <span class="o">=</span> <span class="n">pointArrayRaw</span></div>
 
-<div class="viewcode-block" id="getHelperClass"><a class="viewcode-back" href="../../../cellpack.autopack.upy.html#cellpack.autopack.upy.getHelperClass">[docs]</a><span class="k">def</span> <span class="nf">getHelperClass</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return the base class for modelling design according the provide host.</span>
-<span class="sd">    If the host is not provide,retrieveHost() will be called to guess the host.</span>
+<div class="viewcode-block" id="Grid.getIJK"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.getIJK">[docs]</a>    <span class="k">def</span> <span class="nf">getIJK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        get i,j,k (3d) indices from u (1d)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># ptInd = k*(sizex)*(sizey)+j*(sizex)+i;#want i,j,k</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ijkPtIndice</span><span class="p">[</span><span class="n">ptInd</span><span class="p">]</span></div>
+        <span class="c1"># ==============================================================================</span>
 
-<span class="sd">    @type  host: string</span>
-<span class="sd">    @param host: name of the host application</span>
+    <span class="c1"># TO DO File IO</span>
+    <span class="c1"># ==============================================================================</span>
+<div class="viewcode-block" id="Grid.save"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
 
-<span class="sd">    @rtype:   Class</span>
-<span class="sd">    @return:  the specific ui class</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">global</span> <span class="n">helper</span>
-    <span class="k">if</span> <span class="n">host</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">host</span> <span class="o">=</span> <span class="n">retrieveHost</span><span class="p">()</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">host</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>
-    <span class="n">helper</span> <span class="o">=</span> <span class="n">getHClass</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">helper</span></div>
+<div class="viewcode-block" id="Grid.restore"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.restore">[docs]</a>    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
 </pre></div>
 
            </div>
