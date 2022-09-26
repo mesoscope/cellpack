@@ -243,7 +243,7 @@ class Compartment(CompartmentList):
 
     def _get_volume(self, mesh_store):
         if self.is_sphere:
-            return 4 * math.pi * self.radius ** 3 / 3
+            return 4 * math.pi * self.radius**3 / 3
 
     def initialize_shape(self, mesh_store):
         if self.is_sphere:
