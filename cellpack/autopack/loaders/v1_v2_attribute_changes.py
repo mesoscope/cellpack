@@ -1,4 +1,4 @@
-from enum import Enum
+from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 
 v1_to_v2_name_map = {
     "Type": "type",
@@ -43,19 +43,11 @@ attributes_move_to_composition = [
     "priority",
 ]
 
-
-class ingredient_types(Enum):
-    SINGLE_SPHERE = "SingleSphere"
-    MULTI_SPHERE = "MultiSphere"
-    SINGLE_CUBE = "SingleCube"
-    SINGLE_CYLINDER = "SingleCylinder"
-    MULTI_CYLINDER = "MultiCylinder"
-    GROW = "Grow"
-
-    def convert(str):
-        for type_value in ingredient_types:
-            if str == type_value.value:
-                return type_value
-
-    def get_key_name(self):
-        return self.name.lower()
+ingredient_types_map = {
+    "SingleSphere": INGREDIENT_TYPE.SINGLE_SPHERE,
+    "MultiSphere": INGREDIENT_TYPE.MULTI_SPHERE,
+    "SingleCube": INGREDIENT_TYPE.SINGLE_CUBE,
+    "SingleCylinder": INGREDIENT_TYPE.SINGLE_CYLINDER,
+    "MultiCylinder": INGREDIENT_TYPE.MULTI_CYLINDER,
+    "Grow": INGREDIENT_TYPE.GROW,
+}
