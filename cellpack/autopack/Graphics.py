@@ -380,7 +380,7 @@ class AutopackViewer:
             for ingr in r.ingredients:
                 self.addMasterIngr(ingr, parent=gc)
 
-        if orga.isOrthogonalBoundingBox != 1:
+        if orga.is_orthogonal_bounding_box != 1:
             # create the mesh for the compartment
             name = "%s_Mesh" % orga.name
             tet = self.helper.getObject(name)
@@ -414,7 +414,7 @@ class AutopackViewer:
                 #        orga.ref_obj = name
 
     def createOrganelMesh(self, orga):
-        if orga.isOrthogonalBoundingBox != 1:
+        if orga.is_orthogonal_bounding_box != 1:
             name = "%s_Mesh" % orga.name
             if self.helper.host == "maya":
                 name = "mesh_" + name  # TODO fix this in maya
@@ -662,7 +662,7 @@ class AutopackViewer:
             n = self.vi.Polylines("normals", vertices=verts, visible=0)
             self.vi.AddObject(n, parent=self.orgaToMasterGeom[orga])
 
-        if orga.isOrthogonalBoundingBox != 1:
+        if orga.is_orthogonal_bounding_box != 1:
             if hasattr(orga, "ogsurfacePoints"):
                 # display off grid surface grid points
                 self.displayPoints(
