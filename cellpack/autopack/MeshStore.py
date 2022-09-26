@@ -230,6 +230,24 @@ class MeshStore:
         mesh = trimesh.creation.icosphere(radius=radius)
         self.add_mesh_to_scene(mesh, name)
         return mesh
+    
+    def create_cylinder(self, name, radius, height):
+        """
+        Create the mesh data and the mesh object of a cylinder of a given radius
+
+        @type  name: string
+        @param name: name for the cylinder
+        @type  radius: float
+        @param radius: radius of the sphere
+        @type  height: float
+        @param height: height of the sphere
+
+        @rtype:   Mesh
+        @return:  Mesh
+        """
+        mesh = trimesh.creation.cylinder(radius=radius, height=height)
+        self.add_mesh_to_scene(mesh, name)
+        return mesh
 
     def contains_point(self, geomname, point):
         mesh = self.get_object(geomname)

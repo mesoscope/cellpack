@@ -420,8 +420,8 @@ class simulariumHelper(hostHelper.Helper):
         return ingr_type in [
             "Grow",
             "Actine",
-            "MultiCylinders",
-            "SingleCylinder",
+            "multi_cylinder",
+            "single_cylinder",
         ]
 
     def init_scene_with_objects(
@@ -432,6 +432,7 @@ class simulariumHelper(hostHelper.Helper):
         show_sphere_trees=False,
     ):
         self.time = 0
+        
         for position, rotation, ingredient, ptInd in objects:
             ingr_name = ingredient.name
             sub_points = None
@@ -712,17 +713,17 @@ class simulariumHelper(hostHelper.Helper):
         **kw,
     ):
         #        QualitySph={"0":16,"1":3,"2":4,"3":8,"4":16,"5":32}
-        if "axis" in kw:
-            if kw["axis"] is not None:
-                axis = kw["axis"]
+        if "principal_vector" in kw:
+            if kw["principal_vector"] is not None:
+                principal_vector = kw["principal_vector"]
             else:
-                axis = [0.0, 1.0, 0.0]
+                principal_vector = [0.0, 1.0, 0.0]
 
         pos = np.array(pos)
 
-        principal_vector = np.array(length * axis)
+        axis = np.array(length * principal_vector)
 
-        control_points = np.array([pos, pos + principal_vector])
+        control_points = np.array([pos, pos + axis])
 
         baseCyl = self.Cylinders(
             name,

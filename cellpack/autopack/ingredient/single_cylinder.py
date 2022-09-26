@@ -45,6 +45,7 @@ class SingleCylinderIngr(Ingredient):
         perturb_axis_amplitude=0.1,
         place_type="jitter",
         principal_vector=(1, 0, 0),
+        representations=None,
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=6.2831,
         rejection_threshold=30,
@@ -76,6 +77,7 @@ class SingleCylinderIngr(Ingredient):
             place_type=place_type,
             principal_vector=principal_vector,
             rejection_threshold=rejection_threshold,
+            representations=representations,
             rotation_axis=rotation_axis,
             rotation_range=rotation_range,
             use_orient_bias=use_orient_bias,
@@ -88,35 +90,32 @@ class SingleCylinderIngr(Ingredient):
         self.name = name
         self.model_type = "Cylinders"
         self.collisionLevel = 0
-        self.min_radius = self.radius
-        self.length = get_distance(bounds[1], bounds[0])
+        self.min_radius = radius
         self.nbCurve = 2
-        bottom_cent = numpy.array(bounds[0])
-        top_cent = numpy.array(bounds[1])
-
-        self.axis = top_cent - bottom_cent
+        self.bottom_cent = numpy.array(bounds[0])
+        self.top_cent = numpy.array(bounds[1])
+        self.length = get_distance(self.top_cent, self.bottom_cent)
+        self.radius = radius
+        self.axis = self.top_cent - self.bottom_cent
         self.principal_vector = self.axis / self.length
         self.center = (
-            bottom_cent + (top_cent - bottom_cent) / 2
+            self.bottom_cent + (self.top_cent - self.bottom_cent) / 2
         )  # location of center based on top and bottom
 
         self.encapsulating_radius = numpy.sqrt(radius**2 + (self.length / 2.0) ** 2)
 
         self.listePtLinear = [
-            bottom_cent,
-            bottom_cent + self.axis,
+            self.bottom_cent,
+            self.bottom_cent + self.axis,
         ]
 
     def initialize_mesh(self, mesh_store):
-        if self.mesh is None and autopack.helper is not None:
-            self.mesh = autopack.helper.Cylinder(
-                self.name + "_basic",
-                radius=self.radii[0][0] * 1.24,
-                length=self.length,
-                res=5,
-                parent="autopackHider",
-                axis=self.principal_vector,
-            )[0]
+        if self.mesh is None:
+            self.mesh = mesh_store.create_cylinder(
+                self.name + "_basic", radius=self.radius, height=self.length,
+            )
+
+            self.getData()
 
     def get_cuttoff_value(self, spacing):
         """Returns the min value a grid point needs to be away from a surfance
@@ -228,14 +227,11 @@ class SingleCylinderIngr(Ingredient):
         positions denotes the center of the cylinder base surface
         positions2 denotes the center of the cylinder top surface
         """
-        bottom_cent = numpy.array(self.positions[0][0] - self.axis / 2)
-        top_cent = numpy.array(self.positions2[0][0] - self.axis / 2)
-
         bottom_cent = numpy.array(
-            self.transformPoints(packing_location, rotation_matrix, [bottom_cent])[0]
+            self.transformPoints(packing_location, rotation_matrix, [self.bottom_cent])[0]
         )
         top_cent = numpy.array(
-            self.transformPoints(packing_location, rotation_matrix, [top_cent])[0]
+            self.transformPoints(packing_location, rotation_matrix, [self.top_cent])[0]
         )
 
         center_trans = (top_cent + bottom_cent) / 2
@@ -243,7 +239,7 @@ class SingleCylinderIngr(Ingredient):
         insidePoints = {}
         newDistPoints = {}
 
-        search_radius = 2 * self.encapsulatingRadius + dpad
+        search_radius = 2 * self.encapsulating_radius + dpad
 
         bb = self.correctBB(
             bottom_cent, top_cent, search_radius
@@ -308,7 +304,7 @@ class SingleCylinderIngr(Ingredient):
                     )
                 else:
                     newDistPoints[grid_point_index] = signed_distance_to_cyl_surface
-
+        self.listePtLinear = self.transformPoints(packing_location, rotation_matrix, self.listePtLinear)
         return False, insidePoints, newDistPoints
 
     def add_rb_node(self, worldNP):
@@ -480,18 +476,15 @@ class SingleCylinderIngr(Ingredient):
         # a rotation matrix rotation_matrix is applied to the cylinder
         # bottom_cent = center point of cylinder bottom surface (positions)
         # top_cent = center point of cylinder top surface (positions2)
-        radius = self.radii[0][0]
+        radius = self.radius
 
-        length = self.length
-
-        bottom_cent = numpy.array(self.positions[0][0] - self.axis / 2)
-        top_cent = numpy.array(self.positions2[0][0] - self.axis / 2)
+        length = self.length 
 
         bottom_cent = numpy.array(
-            self.transformPoints(packing_location, rotation_matrix, [bottom_cent])[0]
+            self.transformPoints(packing_location, rotation_matrix, [self.bottom_cent])[0]
         )
         top_cent = numpy.array(
-            self.transformPoints(packing_location, rotation_matrix, [top_cent])[0]
+            self.transformPoints(packing_location, rotation_matrix, [self.top_cent])[0]
         )
 
         axis_vect = top_cent - bottom_cent
