@@ -40,6 +40,7 @@ class ConfigLoader(object):
         "format": "simularium",
         "inner_grid_method": "raytrace",
         "live_packing": False,
+        "num_trials": 1,
         "ordered_packing": False,
         "out": "out/",
         "overwrite_place_method": False,
