@@ -43,7 +43,7 @@ def pack(recipe, config):
         analyze = AnalyseAP(env=env, viewer=afviewer, result_file=None)
         log.info(f"saving to {output}")
         analyze.doloop(
-            1,
+            config_data["num_trials"],
             env.boundingBox,
             output,
             plot=True,

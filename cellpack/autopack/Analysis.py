@@ -1156,6 +1156,7 @@ class AnalyseAP:
         numpy.savetxt(output + os.sep + "seeds", seeds_i, delimiter=",")
         angle_file = output + os.sep + "angle"
         position_file = output + os.sep + "pos"
+        all_pos_file = output + os.sep + "all_pos"
         distance_file = output + os.sep + "dist"
         occurences_file = output + os.sep + "occurence"
         rangeseed = range(n)
@@ -1163,6 +1164,7 @@ class AnalyseAP:
         ingrpositions = {}
         anglesingr = {}
         occurences = {}
+        all_pos_dict = {}
         total_positions = []
         total_distances = []
         total_angles = []
@@ -1395,6 +1397,7 @@ class AnalyseAP:
                                         )
                                     )
                 # write
+                all_pos_dict[seed_index] = ingrpositions
                 if use_file:
                     self.writeJSON(
                         output + os.sep + "_posIngr_" + str(seed_index) + ".json",
@@ -1408,6 +1411,7 @@ class AnalyseAP:
                         output + os.sep + "_angleIngr_" + str(seed_index) + ".json",
                         anglesingr,
                     )
+
                 if plot and two_d:
                     ax.set_aspect(1.0)
                     pyplot.axhline(y=bbox[0][1], color="k")
@@ -1438,6 +1442,7 @@ class AnalyseAP:
                     output + os.sep + "_angleIngr_" + str(i) + ".json"
                 )
                 anglesingr = dict(self.merge(anglesingr, dict1))
+        self.writeJSON(all_pos_file, all_pos_dict)
         self.writeJSON(occurences_file, occurences)
         self.env.ingrpositions = ingrpositions
         self.env.distances = distances
