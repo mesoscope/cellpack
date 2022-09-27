@@ -3,6 +3,7 @@
 
 from math import pi
 import pytest
+from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 
 """
 Docs: https://docs.pytest.org/en/latest/example/simple.html
@@ -159,7 +160,7 @@ def test_create_packing_atomic_representation(
                 "orient_bias_range": [-pi, 12],
                 "representations": RecipeLoader.default_values["representations"],
                 "partners": {"probability_binding": 0.5},
-                "type": "multi_sphere",
+                "type": INGREDIENT_TYPE.MULTI_SPHERE,
             },
         ),
         (
@@ -173,7 +174,7 @@ def test_create_packing_atomic_representation(
                 "count": 15,
                 "orient_bias_range": [6, pi],
                 "representations": RecipeLoader.default_values["representations"],
-                "type": "grow",
+                "type": INGREDIENT_TYPE.GROW,
             },
         ),
         (
@@ -246,7 +247,7 @@ def test_get_v1_ingredient():
     region_list = []
     objects_dict = {}
     expected_object_data = {
-        "type": "single_sphere",
+        "type": INGREDIENT_TYPE.SINGLE_SPHERE,
         "representations": RecipeLoader.default_values["representations"],
         "orient_bias_range": [6, 12],
     }
@@ -269,7 +270,7 @@ def test_get_v1_ingredient():
             old_recipe_test_data,
             {
                 "A": {
-                    "type": "single_sphere",
+                    "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                     "representations": RecipeLoader.default_values["representations"],
                     "orient_bias_range": [6, 12],
                 },
@@ -326,7 +327,7 @@ def test_convert_v1_to_v2(
                 "bounding_box": [[0, 0, 0], [1000, 1000, 1000]],
                 "objects": {
                     "A": {
-                        "type": "single_sphere",
+                        "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                         "representations": RecipeLoader.default_values[
                             "representations"
                         ],
