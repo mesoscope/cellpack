@@ -20,18 +20,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install .[test]
         
-    - run: mkdir -p output/
-    - run: echo "This is a fancy comment" > output/results.txt
-    - uses: actions/upload-artifact@v1
-      with:
-        name: results
-        path: output
-    - uses: actions/download-artifact@v1
-      with:
-        name: results
+    - run: pack -r cellpack/tests/recipes/test_spheres.json -c cellpack/tests/packing-configs/test_config.json
     - name: comment PR
       uses: machine-learning-apps/pr-comment@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        path: results/results.txt
+        path: cellpack/tests/outputs/test_spheres/jitter/results_seed_0ext__A_histo_X.png
