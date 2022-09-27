@@ -555,7 +555,7 @@ class Environment(CompartmentList):
                 self.log.info("Volume Used   = %d", usedPts * unitVol)
                 self.log.info("Volume Unused = %d", unUsedPts * unitVol)
                 self.log.info("vTestid = %d", vTestid)
-                self.log.info("self.nbGridPoints = %r", self.grid.nbGridPoints)
+                self.log.info("self.grid.nbGridPoints = %r", self.grid.nbGridPoints)
                 self.log.info("self.gridVolume = %d", self.grid.gridVolume)
 
         self.log.info("self.compartments In Environment = %d", len(self.compartments))
@@ -589,8 +589,8 @@ class Environment(CompartmentList):
             self.log.info("Volume Used   = %d", usedPts * unitVol)
             self.log.info("Volume Unused = %d", unUsedPts * unitVol)
             self.log.info("vTestid = %s", vTestid)
-            self.log.info("self.nbGridPoints = %r", self.nbGridPoints)
-            self.log.info("self.gridVolume = %d", self.gridVolume)
+            self.log.info("self.nbGridPoints = %r", self.grid.nbGridPoints)
+            self.log.info("self.gridVolume = %d", self.grid.gridVolume)
             self.log.info("histoVol.timeUpDistLoopTotal = %d", self.timeUpDistLoopTotal)
 
             #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code

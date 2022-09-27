@@ -1227,7 +1227,7 @@ class AnalyseAP:
                             # also mesure the angle pos>center pcpalVector
                             ingrpos, d, angles = self.getDistanceAngle(ingr, center)
                             if use_file:
-                                f_handle = open(angle_file, "a")
+                                f_handle = open(angle_file, "a" if seed_index else "w")
                                 numpy.savetxt(f_handle, angles, delimiter=",")
                                 f_handle.close()
                             else:
@@ -1237,10 +1237,10 @@ class AnalyseAP:
                             ingrpos, d = self.getDistance(ingr.name, center)
                         occurences[ingr.name].append(len(ingrpos))
                         if use_file:
-                            f_handle = open(position_file, "a")
+                            f_handle = open(position_file, "a" if seed_index else "w")
                             numpy.savetxt(f_handle, ingrpos, delimiter=",")
                             f_handle.close()
-                            f_handle = open(distance_file, "a")
+                            f_handle = open(distance_file, "a" if seed_index else "w")
                             numpy.savetxt(f_handle, d, delimiter=",")
                             f_handle.close()
                             distances[ingr.name] = d
@@ -1442,17 +1442,17 @@ class AnalyseAP:
                     output + os.sep + "_angleIngr_" + str(i) + ".json"
                 )
                 anglesingr = dict(self.merge(anglesingr, dict1))
-        self.writeJSON(all_pos_file, all_pos_dict)
+        self.writeJSON(all_pos_file + ".json", all_pos_dict)
         self.writeJSON(occurences_file, occurences)
         self.env.ingrpositions = ingrpositions
         self.env.distances = distances
         self.env.basename = basename
         self.env.occurences = occurences
         self.env.angles = total_angles
-        if plot and two_d:
-            self.env.loopThroughIngr(self.axis_distribution)
-            self.env.loopThroughIngr(self.occurence_distribution)
-            self.axis_distribution_total(total_positions)
+        # if plot and two_d:
+        self.env.loopThroughIngr(self.axis_distribution)
+        self.env.loopThroughIngr(self.occurence_distribution)
+        self.axis_distribution_total(total_positions)
         # plot the angle
         if len(total_angles):
             self.histo(

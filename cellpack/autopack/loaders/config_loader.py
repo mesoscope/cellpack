@@ -45,6 +45,7 @@ class ConfigLoader(object):
         "out": "out/",
         "overwrite_place_method": False,
         "place_method": "jitter",
+        "rng_seed": None,
         "save_analyze_result": False,
         "show_grid_plot": False,
         "spacing": None,
