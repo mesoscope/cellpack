@@ -1442,7 +1442,7 @@ class AnalyseAP:
                     output + os.sep + "_angleIngr_" + str(i) + ".json"
                 )
                 anglesingr = dict(self.merge(anglesingr, dict1))
-        self.writeJSON(all_pos_file, all_pos_dict)
+        self.writeJSON(all_pos_file + ".json", all_pos_dict)
         self.writeJSON(occurences_file, occurences)
         self.env.ingrpositions = ingrpositions
         self.env.distances = distances

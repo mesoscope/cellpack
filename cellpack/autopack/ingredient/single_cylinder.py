@@ -304,7 +304,6 @@ class SingleCylinderIngr(Ingredient):
                     )
                 else:
                     newDistPoints[grid_point_index] = signed_distance_to_cyl_surface
-        self.listePtLinear = self.transformPoints(packing_location, rotation_matrix, self.listePtLinear)
         return False, insidePoints, newDistPoints
 
     def add_rb_node(self, worldNP):
