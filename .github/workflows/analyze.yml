@@ -18,7 +18,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install .[test]
+        pip install .
         
     - run: pack -r cellpack/tests/recipes/test_spheres.json -c cellpack/tests/packing-configs/test_config.json
     - name: comment PR
