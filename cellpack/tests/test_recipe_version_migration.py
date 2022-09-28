@@ -338,8 +338,8 @@ def test_convert_v1_to_v2(
             {
                 "version": "1.0",
                 "format_version": "2.0",
-                "name": "test_recipe",
-                "bounding_box": [[0, 0, 0], [1000, 1000, 1000]],
+                "name": "test_single_sphere",
+                "bounding_box": [[0, 0, 0], [500, 500, 500]],
                 "objects": {
                     "A": {
                         "orient_bias_range": [6, 12],
@@ -376,9 +376,9 @@ def test_convert_v1_to_v2(
                     "space": {
                         "regions": {
                             "interior": [
-                                {"object": "A", "count": 15},
-                                {"object": "B", "priority": 0},
-                                {"object": "C", "priority": 0},
+                                {"object": "A", "count": 50},
+                                {"object": "B", "count": 30, "priority": 0},
+                                {"object": "C", "count": 3, "priority": 0},
                             ]
                         }
                     }
@@ -388,7 +388,6 @@ def test_convert_v1_to_v2(
     ],
 )
 def test_migrate_version(converted_data, expected_data):
-    assert converted_data["composition"] == expected_data["composition"]
     assert converted_data["composition"] == expected_data["composition"]
     assert converted_data["version"] == expected_data["version"]
     assert converted_data["format_version"] == expected_data["format_version"]
