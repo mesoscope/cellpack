@@ -16,7 +16,7 @@ from .v1_v2_attribute_changes import (
     unused_attributes_list,
     convert_to_partners_map,
     attributes_move_to_composition,
-    required_attributes
+    required_attributes,
 )
 from cellpack.autopack.interface_objects.representations import Representations
 
@@ -283,9 +283,7 @@ class RecipeLoader(object):
                 if "format_version" in recipe_data
                 else "1.0"
             )
-            recipe_data = self._migrate_version(
-                recipe_data, input_format_version
-            )
+            recipe_data = self._migrate_version(recipe_data, input_format_version)
 
         # TODO: request any external data before returning
         if "objects" in recipe_data:
