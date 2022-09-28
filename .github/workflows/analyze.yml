@@ -20,8 +20,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install .
     - name: Analyze packing
-      run: cd ${GITHUB_WORKSPACE}
-      run: pack -r tests/recipes/test_spheres.json -c tests/packing-configs/test_config.json
+      run: |
+        cd ${GITHUB_WORKSPACE}
+        pack -r tests/recipes/test_spheres.json -c tests/packing-configs/test_config.json
       working-directory: cellpack/
     - name: comment PR
       uses: machine-learning-apps/pr-comment@master
