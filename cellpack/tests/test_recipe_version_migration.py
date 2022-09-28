@@ -3,6 +3,7 @@
 
 from math import pi
 import pytest
+from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 
 """
 Docs: https://docs.pytest.org/en/latest/example/simple.html
@@ -152,20 +153,28 @@ def test_create_packing_atomic_representation(
                 "encapsulatingRadius": 100,
                 "orientBiasRotRangeMax": 12,
                 "proba_binding": 0.5,
+                "Type": "MultiSphere",
             },
             {
                 "count": 15,
                 "orient_bias_range": [-pi, 12],
                 "representations": RecipeLoader.default_values["representations"],
                 "partners": {"probability_binding": 0.5},
+                "type": INGREDIENT_TYPE.MULTI_SPHERE,
             },
         ),
         (
-            {"nbMol": 15, "encapsulatingRadius": 100, "orientBiasRotRangeMin": 6},
+            {
+                "nbMol": 15,
+                "encapsulatingRadius": 100,
+                "orientBiasRotRangeMin": 6,
+                "Type": "Grow",
+            },
             {
                 "count": 15,
                 "orient_bias_range": [6, pi],
                 "representations": RecipeLoader.default_values["representations"],
+                "type": INGREDIENT_TYPE.GROW,
             },
         ),
         (
@@ -238,7 +247,7 @@ def test_get_v1_ingredient():
     region_list = []
     objects_dict = {}
     expected_object_data = {
-        "type": "SingleSphere",
+        "type": INGREDIENT_TYPE.SINGLE_SPHERE,
         "representations": RecipeLoader.default_values["representations"],
         "orient_bias_range": [6, 12],
     }
@@ -261,7 +270,7 @@ def test_get_v1_ingredient():
             old_recipe_test_data,
             {
                 "A": {
-                    "type": "SingleSphere",
+                    "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                     "representations": RecipeLoader.default_values["representations"],
                     "orient_bias_range": [6, 12],
                 },
@@ -306,9 +315,6 @@ def test_convert_v1_to_v2(
     assert composition == expected_composition_dict
 
 
-# format_version = "1.0"
-
-
 @pytest.mark.parametrize(
     "old_recipe_test_data, expected_header_data",
     [
@@ -321,7 +327,7 @@ def test_convert_v1_to_v2(
                 "bounding_box": [[0, 0, 0], [1000, 1000, 1000]],
                 "objects": {
                     "A": {
-                        "type": "SingleSphere",
+                        "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                         "representations": RecipeLoader.default_values[
                             "representations"
                         ],
