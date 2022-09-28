@@ -266,7 +266,6 @@ class Compartment(CompartmentList):
                 self.center = center
                 self.encapsulating_radius = radius
                 self.radius = mesh_store.get_smallest_radius(self.gname, center)
-                print(self.name, center, radius, self.radius)
 
     def addShapeRB(self):
         # in case our shape is a regular primitive
