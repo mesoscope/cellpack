@@ -1106,7 +1106,7 @@ class Ingredient(Agent):
             if point_in_correct_region:
                 # check how far from surface ?
                 far_from_surfaces = self.far_enough_from_surfaces(
-                    newPt, cutoff=(self.cutoff_surface)
+                    newPt, cutoff=self.cutoff_surface
                 )
 
                 return far_from_surfaces
