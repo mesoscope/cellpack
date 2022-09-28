@@ -90,7 +90,14 @@ setup(
     keywords="cellpack",
     name="cellpack",
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*"]),
-    python_requires=">=3.7",
+    package_data={
+        '': [
+            'cellpack/tests/packing-configs/*',
+            'cellpack/tests/recipes/*',
+            'logging.conf'
+        ]
+    },
+    python_requires=">=3.8",
     setup_requires=setup_requirements,
     test_suite="cellpack/tests",
     tests_require=test_requirements,
