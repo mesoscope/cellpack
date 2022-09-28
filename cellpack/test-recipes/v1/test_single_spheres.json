@@ -1,7 +1,7 @@
 {
     "recipe": {
         "version": "1.0",
-        "name": "test_recipe"
+        "name": "test_single_sphere"
     },
     "options": {
         "windowsSize": 10,
@@ -12,9 +12,9 @@
                 0
             ],
             [
-                1000,
-                1000,
-                1000
+                500,
+                500,
+                500
             ]
         ]
     },
@@ -22,14 +22,14 @@
         "ingredients": {
             "A": {
                 "Type": "SingleSphere",
-                "nbMol": 15,
+                "nbMol": 50,
                 "meshType": "file",
                 "properties": {},
                 "orientBiasRotRangeMin": 6,
                 "orientBiasRotRangeMax": 12,
                 "radii": [
                     [
-                        10
+                        20
                     ]
                 ]
             },
@@ -37,25 +37,26 @@
                 "Type": "SingleSphere",
                 "packingMode": "random",
                 "packingPriority": 0,
+                "nbMol": 30,
                 "encapsulatingRadius": 100,
-                "name": "Sphere_radius_100",
+                "name": "Sphere_radius_40",
                 "orientBiasRotRangeMin": 6,
                 "radii": [
                     [
-                        12
+                        40
                     ]
                 ]
             },
             "C": {
                 "Type": "SingleSphere",
+                "nbMol": 3,
                 "packingPriority": 0,
                 "proba_binding": 0.5,
                 "name": "Sphere_radius_200",
                 "orientBiasRotRangeMax": 12,
-                "sphereFile": "/fibrinogen.sph",
                 "radii": [
                     [
-                        100
+                        200
                     ]
                 ]
             }
