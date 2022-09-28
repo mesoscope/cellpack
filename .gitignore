@@ -117,3 +117,6 @@ test-recipes/
 
 # packing configs
 packing-configs/
+
+# test outputs
+cellpack/tests/outputs/

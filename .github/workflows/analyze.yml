@@ -1,0 +1,36 @@
+name: Analyze
+
+on: pull_request
+
+jobs:
+  analyze:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python-version: [3.8]
+        os: [ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install .
+    - name: Analyze packing
+      run: |
+        echo ${GITHUB_WORKSPACE}
+        cd ${GITHUB_WORKSPACE}
+        conda init bash
+        exec bash
+        conda activate autopack
+        pack -r tests/recipes/test_spheres.json -c tests/packing-configs/test_config.json
+      working-directory: cellpack/
+    - name: comment PR
+      uses: machine-learning-apps/pr-comment@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        path: cellpack/tests/outputs/test_spheres/jitter/results_seed_0ext__A_histo_X.png
