@@ -12,7 +12,11 @@ from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 ###############################################################################
+<<<<<<< HEAD
 log_file_path = path.abspath(path.join(__file__, "../../../logging.conf"))
+=======
+log_file_path = path.join(path.abspath(__file__), "../../../logging.conf")
+>>>>>>> 61f07ef7aa2e705697e975b704e25013586f8597
 logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
 log = logging.getLogger()
 ###############################################################################
