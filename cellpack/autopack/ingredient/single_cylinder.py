@@ -28,7 +28,7 @@ class SingleCylinderIngr(Ingredient):
         color=None,
         count=0,
         cutoff_boundary=None,
-        cutoff_surface=None,
+        cutoff_surface=0.0,
         distance_expression=None,
         distance_function=None,
         force_random=False,  # avoid any binding

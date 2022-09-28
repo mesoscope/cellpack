@@ -621,7 +621,7 @@ class BaseGrid:
                 tr.append(pt3d + corner[i])
         return tr
 
-    def checkPointInside(self, pt3d, dist=None, jitter=[1, 1, 1], bb=None):
+    def is_point_inside_bb(self, pt3d, dist=None, jitter=[1, 1, 1], bb=None):
         """
         Check if the given 3d points is inside the grid
         """

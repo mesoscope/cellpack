@@ -48,6 +48,8 @@ class RecipeLoader(object):
         is_key = not isinstance(key_or_dict, dict)
         if is_key:
             key = key_or_dict
+            if key not in composition_dict:
+                raise ValueError(f"{key} is not in composition dictionary")
             composition_info = composition_dict[key]
         else:
             composition_info = key_or_dict

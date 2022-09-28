@@ -164,7 +164,7 @@ class Ingredient(Agent):
         color=None,
         count=0,
         cutoff_boundary=None,
-        cutoff_surface=None,
+        cutoff_surface=0.0,
         distance_expression=None,
         distance_function=None,
         force_random=False,  # avoid any binding
@@ -1038,107 +1038,95 @@ class Ingredient(Agent):
                 new_dist_points[grid_point_index] = signed_distance_to_surface
         return inside_points, new_dist_points
 
-    def checkPointComp(self, point):
-        # if grid too sparse this will not work.
-        # ptID = self.env.grid.getPointFrom3D(point)
-        cID = self.env.getPointCompartmentId(point)  # offset ?
-        # dist,ptID = self.env.grid.getClosestGridPoint(point)
-        if self.compNum == 0:
-            organelle = self.env
+    def is_point_in_correct_region(self, point):
+        # crude location check (using nearest grid point)
+        nearest_grid_point_compartment_id = (
+            self.env.compartment_id_for_nearest_grid_point(point)
+        )  # offset ?
+        compartment_ingr_belongs_in = self.compNum
+        if compartment_ingr_belongs_in == 0:
+            compartment = self.env
         else:
-            organelle = self.env.compartments[abs(self.compNum) - 1]
-        if self.compNum > 0:  # surface ingredient
+            # env isn't included in the compartment list
+            # getting the compartment, regardless of the region
+            compartment = self.env.compartments[abs(compartment_ingr_belongs_in) - 1]
+        if compartment_ingr_belongs_in > 0:  # surface ingredient
             if self.type == "Grow":
                 # need a list of accepted compNum
                 check = False
                 if len(self.compMask):
-                    if cID not in self.compMask:
-                        check = False
-                    else:
-                        check = True
+                    check = nearest_grid_point_compartment_id in self.compMask
                 else:
                     check = True
-                # if cID > 0 : #surface point look at surface cutoff
-                #                    if dist < self.cutoff_surface :
-                #                        check = False
-                #                    else :
-                #                        check = True #grid probably too sparse, need to check where we are
                 return check
             return True
-        # for i,o in self.env.compartments:
-        #        if self.compNum != cID:
-        #            return False
-        #        else :
-        #            return True
-        if self.compNum < 0:
-            inside = organelle.checkPointInside(
+
+        elif compartment_ingr_belongs_in < 0:
+            # check if point is inside the compartment this ingr belongs in
+            # more detailed check that just the nearest grid point
+            inside = compartment.is_point_inside_mesh(
                 point, self.env.grid.diag, self.env.mesh_store, ray=3
             )
-            if inside:  # and cID < 0:
-                return True
-            else:
-                return False
-                #            if inside and self.compNum >=0 :
-                #                return False
-                #            if not inside and self.compNum < 0 :
-                #                return False
-        if self.compNum == 0:  # shouldnt be in any compartments
+            return inside
+        elif compartment_ingr_belongs_in == 0:  # shouldnt be in any compartments
             for o in self.env.compartments:
-                inside = o.checkPointInside(
+                inside = o.is_point_inside_mesh(
                     point, self.env.grid.diag, self.env.mesh_store, ray=3
                 )
+                # if inside a compartment, we can't pack here.
                 if inside:
                     return False
-        if self.compNum != cID:
-            return False
-        else:
-            return True
+            return compartment_ingr_belongs_in == nearest_grid_point_compartment_id
 
-    def checkPointSurface(self, point, cutoff):
-        if not hasattr(self, "histoVol"):
-            return False
+    def far_enough_from_surfaces(self, point, cutoff):
+        # check if clear of all other compartment surfaces
         if self.compNum == 0:
-            compartment = self.env
+            ingredient_compartment = self.env
         else:
-            compartment = self.env.compartments[abs(self.compNum) - 1]
-        compNum = self.compNum
-        for o in self.env.compartments:
-            if self.compNum > 0 and o.name == compartment.name:
+            ingredient_compartment = self.env.compartments[abs(self.compNum) - 1]
+        ingredient_compartment_id = self.compNum
+        for compartment in self.env.compartments:
+            if (
+                ingredient_compartment_id > 0
+                and ingredient_compartment.name == compartment.name
+            ):
                 continue
-            self.log.info("test compartment %s %r", o.name, o.OGsrfPtsBht)
-            res = o.OGsrfPtsBht.query(tuple(numpy.array([point])))
+            self.log.info(
+                "test compartment %s %r", compartment.name, compartment.OGsrfPtsBht
+            )
+            # checking compartments I don't belong to
+            res = compartment.OGsrfPtsBht.query(tuple(numpy.array([point])))
             if len(res) == 2:
                 d = res[0][0]
-                # pt=res[1][0]
                 self.log.info(
                     "distance is %r %r", d, cutoff
                 )  # d can be wrond for some reason,
                 if d < cutoff:
-                    return True
-                if compNum < 0 and o.name == compartment.name:
-                    inside = o.checkPointInside(
-                        numpy.array(point), self.env.grid.diag, self.env.mesh_store
-                    )
-                    self.log.info("inside ? %r", inside)
-                    if not inside:
-                        return True
-        return False
+                    # too close to a surface
+                    return False
+        return True
 
-    def point_is_not_available(self, newPt):
+    def point_is_available(self, newPt):
         """Takes in a vector returns a boolean"""
-        inComp = True
-        closeS = False
-        inside = self.env.grid.checkPointInside(
+        point_in_correct_region = True
+        far_from_surfaces = False
+        on_grid = self.env.grid.is_point_inside_bb(
             newPt,
             dist=self.cutoff_boundary,
             jitter=getNormedVectorOnes(self.max_jitter),
         )
-        if inside:
-            inComp = self.checkPointComp(newPt)
-            if inComp:
+        if on_grid:
+            point_in_correct_region = self.is_point_in_correct_region(newPt)
+            if point_in_correct_region:
                 # check how far from surface ?
-                closeS = self.checkPointSurface(newPt, cutoff=self.cutoff_surface)
-        return not inside or closeS or not inComp
+                far_from_surfaces = self.far_enough_from_surfaces(
+                    newPt, cutoff=self.cutoff_surface
+                )
+                return far_from_surfaces
+            else:
+                return False
+        else:
+            return False
 
     def oneJitter(self, env, trans, rotMat):
         jtrans = self.randomize_translation(env, trans, rotMat)
@@ -1715,7 +1703,7 @@ class Ingredient(Agent):
             env.grid.masterGridPositions[ptInd],
         )
         compartment = self.get_compartment(env)
-        gridPointsCoords = env.masterGridPositions
+        gridPointsCoords = env.grid.masterGridPositions
         rotation_matrix = self.get_rotation(ptInd, env, compartment)
         target_grid_point_position = gridPointsCoords[
             ptInd
@@ -2206,11 +2194,10 @@ class Ingredient(Agent):
                 self.update_display_rt(moving, packing_location, packing_rotation)
                 self.vi.update()
 
-            if self.point_is_not_available(packing_location):
+            if not self.point_is_available(packing_location):
                 # jittered out of container or too close to boundary
                 # check next random jitter
                 continue
-
             collision_results = []
             points_to_check = self.get_all_positions_to_check(packing_location)
 
@@ -2223,7 +2210,7 @@ class Ingredient(Agent):
                     pt,
                     packing_rotation,
                     level,
-                    env.masterGridPositions,
+                    env.grid.masterGridPositions,
                     distance,
                     env,
                     dpad,
@@ -2440,7 +2427,7 @@ class Ingredient(Agent):
             if is_realtime:
                 self.update_display_rt(moving, target_point, rot_matrix)
 
-            if self.point_is_not_available(packing_location):
+            if not self.point_is_available(packing_location):
                 # jittered into wrong compartment,
                 # go to next jitter
                 continue
@@ -2627,7 +2614,7 @@ class Ingredient(Agent):
                 if collision:
                     break
             t = time()
-            if self.point_is_not_available(packing_location):
+            if not self.point_is_available(packing_location):
                 continue
             if True in collision_results:
                 continue

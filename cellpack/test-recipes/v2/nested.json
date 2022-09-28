@@ -1,216 +1,102 @@
 {
-  "version": "2.2.2",
-  "format_version": "2.0",
-  "name": "nested_compartment_test",
-  "bounding_box": [[0, 0, 0], [100, 100, 100]],
-  "gradients": {
-    "grad_rad_spike": {
-      "direction": [
-        -480,
-        -480,
-        0
-      ],
-      "radius": 1380,
-      "description": "",
-      "weight_mode": "linear",
-      "pick_mode": "rnd",
-      "gblob": 4,
-      "mode": "radial",
-    },
-    "grad_rad_ma": {
-      "direction": [
-        480,
-        480,
-        0
-      ],
-      "radius": 1380,
-      "description": "",
-      "weight_mode": "linear",
-      "pick_mode": "rnd",
-      "gblob": 4,
-      "mode": "radial"
-    }
-  },
-  "objects": {
-    "base": {
-      "jitter_attempts": 10,
-      "orient_bias_range": [-3.1415927, 3.1415927],
-      "rotation_range": 6.2831,
-      "cutoff_boundary": 0,
-      "max_jitter": [
-        0.2,
-        0.2,
-        0.01
-      ],
-      "perturb_axis_amplitude": 0.1,
-      "encapsulating_radius": 100,
-      "packing": {
-        "mode": "random" // instead of "packing_mode": "random",
-      },
-      "principal_vector": [
-        0,
-        0,
-        1
-      ],
-      "rejection_threshold": 50,
-      "place_type": "panda_bullet",
-      "cutoff_surface": 42,
-      "rotation_axis": [0, 0, 1],
-      "available_regions": {
-        "interior": {
-          "how do you define regions?": "not sure"},
-        "surface": {},
-        "outer_leaflet": {},
-        "inner_leaflet": {}
-      }
-    },
-    "sphere_tree_A": {
-      "type": "multi_sphere",
-      "inherit": "base",
-      "representations": {
-        "collision": {
-          "path": "autoPACKserver/collisionTrees/",
-          "name": "sphere_tree_A.sph",
-          "format": "",
-          "radii": [],
-          "positions": []
-        }
-      }
-    },
-    "sphere_25": {
-      "type": "single_sphere",
-      "inherit": "base",
-      "color": [
-        0.5,
-        0.5,
-        0.5
-      ],
-      "weight": 0.25,
-      "radius": 25,
-      "coordinate_system": "left",
-      "jitterMax": [
-        1,
-        1,
-        0
-      ]
-    },
-    "sphere_50": {
-      "inherit": "sphere_25",
-      "color": [
-        0.3,
-        0.5,
-        0.8
-      ],
-      "weight": 0.5,
-      "radius": 50,
-    },
-    "sphere_75": {
-      "inherit": "sphere_25",
-      "color": [
-        0.5,
-        0.8,
-        0.3
-      ],
-      "weight": 0.75,
-      "radius": 75,
-    },
-    "sphere_100": {
-      "inherit": "sphere_25",
-      "color": [
-        0.8,
-        0.3,
-        0.5
-      ],
-      "weight": 1.0,
-      "radius": 100,
-    },
-  },
-  "composition": {
-    "space": {
-      "regions": {
-        "interior": [
-          "tree", "A", "B", "C"
+    "version": "1.0.0",
+    "format_version": "2.0.0",
+    "name": "nested_test",
+    "bounding_box": [
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            1000,
+            1000,
+            1000
         ]
-      }
+    ],
+    "objects": {
+        "common_settings": {
+            "type": "single_sphere",
+            "jitter_attempts": 10,
+            "packing_mode": "random",
+            "place_type": "jitter",
+            "available_regions": {
+                "interior": {},
+                "surface": {}
+            }
+        },
+        "large_sphere": {
+            "inherit": "common_settings",
+            "color": [
+                0.5,
+                0.5,
+                0.5
+            ],
+            "radius": 600
+        },
+        "medium_sphere": {
+            "inherit": "common_settings",
+            "color": [
+                0.25,
+                0.25,
+                0.25
+            ],
+            "radius": 100
+        },
+        "green_sphere": {
+            "inherit": "common_settings",
+            "color": [
+                0.20,
+                0.70,
+                0.10
+            ],
+            "radius": 30
+        },
+        "red_sphere": {
+            "inherit": "common_settings",
+            "color": [
+                0.90,
+                0.10,
+                0.10
+            ],
+            "radius": 25
+        }
     },
-    "tree": {
-      "object": "sphere_tree_A",
-      "molarity": 1,
-      // do we want to expand this into "amount"?
-      // "amount": {
-      //   "type": "molarity",
-      //   "value": 1,
-      // }
-    },
-    "A": {
-      "object": "sphere_100",
-      "regions": {
-        "surface": [{
-          "object": "sphere_50",
-          "count": 5,
-        },{
-          "object": "sphere_75",
-          "count": 1,
-        }],
-        "interior": [{
-          "object": "sphere_25",
-          "count": 30,
-          "priority": -1
-        }],
-      }
-    },
-    "B": {
-      "object": "sphere_100",
-      "regions": {
-        "surface": ["B_sphere_75"],
-        "interior": [
-          // "B_interior_ribosomes",
-          // "B_interior_transcripts",
-          "B_sphere_50"],
-      }
-    },
-    "B_sphere_50": {
-      "object": "sphere_50",
-      "count": 8,
-      "priority": -1
-    },
-    "B_sphere_75": {
-      "object": "sphere_75",
-      "count": 3,
-    },
-    "C": {
-      "object": "sphere_100",
-      "regions": {
-        "interior": [
-          // provide option to specify ingredients directly
-          // if they don't have regions?
-          "C_interior",
-          {"object": "sphere_50", "count": 5},
-          {"object": "ribosome", "count": 11},
-          "D"],
-      }
-    },
-    "C_interior": {
-      "object": "sphere_25",
-      "count": 10,
-      "priority": -3
-    },
-    "D": {
-      "object": "sphere_50",
-      "regions": {
-        "outer_leaflet": [
-          {"object": "ribosome", "count": 5},
-          "D_outer"]
-        "interior": ["D_interior"]
-      }
-    },
-    "D_outer": {
-      "object": "sphere_75",
-    },
-    "D_interior": {
-      "object": "sphere_25",
-      "count": 3,
-      "priority": -5
-    },
-  }
+    "composition": {
+        "bounding_area": {
+            "regions": {
+                "interior": [
+                    "outer_sphere",
+                    {
+                        "object": "green_sphere",
+                        "count": 5
+                    }
+                ]
+            }
+        },
+        "outer_sphere": {
+            "object": "large_sphere",
+            "count": 1,
+            "regions": {
+                "interior": [
+                    "inner_sphere",
+                    {
+                        "object": "red_sphere",
+                        "count": 40
+                    }
+                ]
+            }
+        },
+        "inner_sphere": {
+            "object": "medium_sphere",
+            "regions": {
+                "interior": [
+                    {
+                        "object": "green_sphere",
+                        "count": 20
+                    }
+                ]
+            }
+        }
+    }
 }
