@@ -344,7 +344,6 @@ class Environment(CompartmentList):
                 "regions", {}
             ).items():  # check if entry in compositions has regions
                 for key_or_dict in obj_keys:
-                    print(key_or_dict)
                     is_key, composition_info = RecipeLoader.is_key(
                         key_or_dict, composition_dict
                     )
