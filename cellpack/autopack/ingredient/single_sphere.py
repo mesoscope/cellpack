@@ -162,26 +162,18 @@ class SingleSphereIngr(Ingredient):
     def collides_with_compartment(
         self,
         jtrans,
-        rotMat,
-        level,
-        gridPointsCoords,
         env,
     ):
         """
         Check spheres for collision
         TODO improve the testwhen grid stepSize is larger that size of the ingredient
         """
-        centers = self.positions[level]
-        radii = (self.radii[level],)
-        centT = self.transformPoints(jtrans, rotMat, centers)  # this should be jtrans
-        for radc, posc in zip(radii, centT):
-            ptsInSphere = env.grid.getPointsInSphere(posc, radc[0])  # indices
-            compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphere, 0)
-            if self.compNum <= 0:
-                wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
-                if len(wrongPt):
-                    print("OK false compartment", len(wrongPt))
-                    return True
+        ptsInSphere = env.grid.getPointsInSphere(jtrans, self.radius)  # indices
+        compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphere, 0)
+        if self.compNum <= 0:
+            wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
+            if len(wrongPt):
+                return True
         return False
 
     def get_signed_distance(

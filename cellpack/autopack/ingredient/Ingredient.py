@@ -964,15 +964,6 @@ class Ingredient(Agent):
             return True
         return False
 
-    def compareCompartmentPrimitive(
-        self, level, jtrans, rotMatj, gridPointsCoords, distance
-    ):
-        collisionComp = self.collides_with_compartment(
-            jtrans, rotMatj, level, gridPointsCoords, self.env
-        )
-
-        return collisionComp
-
     def checkCompartment(self, ptsInSphere, nbs=None):
         trigger = False
         if self.compareCompartment:
@@ -1080,27 +1071,22 @@ class Ingredient(Agent):
 
     def far_enough_from_surfaces(self, point, cutoff):
         # check if clear of all other compartment surfaces
-        if self.compNum == 0:
-            ingredient_compartment = self.env
-        else:
-            ingredient_compartment = self.env.compartments[abs(self.compNum) - 1]
+
+        ingredient_compartment = self.get_compartment(self.env)
         ingredient_compartment_id = self.compNum
+        compartment_collision = self.collides_with_compartment(point, self.env)
+        if compartment_collision:
+            return False
         for compartment in self.env.compartments:
             if (
                 ingredient_compartment_id > 0
                 and ingredient_compartment.name == compartment.name
             ):
                 continue
-            self.log.info(
-                "test compartment %s %r", compartment.name, compartment.OGsrfPtsBht
-            )
             # checking compartments I don't belong to
             res = compartment.OGsrfPtsBht.query(tuple(numpy.array([point])))
             if len(res) == 2:
                 d = res[0][0]
-                self.log.info(
-                    "distance is %r %r", d, cutoff
-                )  # d can be wrond for some reason,
                 if d < cutoff:
                     # too close to a surface
                     return False
@@ -1120,8 +1106,9 @@ class Ingredient(Agent):
             if point_in_correct_region:
                 # check how far from surface ?
                 far_from_surfaces = self.far_enough_from_surfaces(
-                    newPt, cutoff=self.cutoff_surface
+                    newPt, cutoff=(self.cutoff_surface)
                 )
+
                 return far_from_surfaces
             else:
                 return False
@@ -2198,6 +2185,7 @@ class Ingredient(Agent):
                 # jittered out of container or too close to boundary
                 # check next random jitter
                 continue
+
             collision_results = []
             points_to_check = self.get_all_positions_to_check(packing_location)
 
