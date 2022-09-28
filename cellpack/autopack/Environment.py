@@ -142,8 +142,9 @@ class Environment(CompartmentList):
         self.use_periodicity = config["use_periodicity"]
         self.pickRandPt = not config["ordered_packing"]
         self.show_sphere_trees = config["show_sphere_trees"]
-
+        self.show_grid_spheres = config["show_grid_plot"]
         self.boundingBox = numpy.array(recipe["bounding_box"])
+        self.spacing = config["spacing"]
         self.name = name
 
         # saving/pickle option
@@ -987,7 +988,6 @@ class Environment(CompartmentList):
 
     def create_ingredient(self, recipe, arguments):
         ingredient_type = arguments["type"]
-
         if ingredient_type == "single_sphere":
             radius = arguments["radius"]
             arguments = IOutils.IOingredientTool.clean_arguments(
@@ -1025,6 +1025,13 @@ class Environment(CompartmentList):
                 GrowIngredient.ARGUMENTS, **arguments
             )
             ingr = ActinIngredient(**arguments)
+        else:
+            radius = arguments["radius"]
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
+            arguments["type"] = "single_sphere"
+            ingr = SingleSphereIngr(radius, **arguments)
         if (
             "gradient" in arguments
             and arguments["gradient"] != ""
@@ -1063,11 +1070,6 @@ class Environment(CompartmentList):
         """
         compartment.setNumber(self.nbCompartments)
         self.nbCompartments += 1
-
-        fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
-
-        if not fits:
-            self.boundingBox = bb
         CompartmentList._add_compartment(self, compartment)
 
     def compartment_id_for_nearest_grid_point(self, point):
@@ -1251,6 +1253,10 @@ class Environment(CompartmentList):
         compartment grid. The setup is de novo or using previously built grid
         or restored using given file.
         """
+        for _, compartment in enumerate(self.compartments):
+            fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
+            if not fits:
+                self.boundingBox = bb
         boundingBox = self.boundingBox
         if self.use_halton:
             from cellpack.autopack.BaseGrid import HaltonGrid as Grid
@@ -1266,7 +1272,7 @@ class Environment(CompartmentList):
         if self.grid is None or self.nFill == 0:
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
-            spacing = self.smallestProteinSize
+            spacing = self.spacing or self.smallestProteinSize
             self.grid = Grid(boundingBox=boundingBox, spacing=spacing, lookup=lookup)
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
@@ -1835,7 +1841,6 @@ class Environment(CompartmentList):
         name=None,
         vTestid=3,
         vAnalysis=0,
-        show_grid_spheres=False,
         **kw,
     ):
         """
@@ -1845,7 +1850,6 @@ class Environment(CompartmentList):
         # set periodicity
         autopack.testPeriodicity = self.use_periodicity
         t1 = time()
-        self.show_grid_spheres = show_grid_spheres
         self.timeUpDistLoopTotal = 0
         self.static = []
         if self.grid is None:
@@ -2191,6 +2195,7 @@ class Environment(CompartmentList):
                 ingredients[ingr.name][3].append(numpy.array(mat))
                 all_ingr_as_array.append([pos, rot, ingr, ptInd])
         self.ingr_result = ingredients
+        print(f"placed {len(self.molecules)}")
         if self.saveResult:
             self.save_result(
                 freePoints,

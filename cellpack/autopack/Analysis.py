@@ -984,7 +984,6 @@ class AnalyseAP:
         vAnalysis=0,
         fbox_bb=None,
         show_plotly_plot=True,
-        show_grid_spheres=False,
     ):
         if show_plotly_plot:
             self.plotly.update_title(self.env.placeMethod)
@@ -995,7 +994,6 @@ class AnalyseAP:
             vTestid=vTestid,
             vAnalysis=vAnalysis,
             fbox=fbox_bb,
-            show_grid_spheres=show_grid_spheres,
         )
         t2 = time()
         print("time to run pack_grid", self.env.placeMethod, t2 - t1)
@@ -1188,7 +1186,6 @@ class AnalyseAP:
                 vAnalysis=1,
                 fbox_bb=fbox_bb,
                 show_plotly_plot=(show_grid and two_d),
-                show_grid_spheres=(show_grid and not two_d),
             )
             self.center = self.env.grid.getCenter()
             if render:
