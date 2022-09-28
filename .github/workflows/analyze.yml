@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [3.8]
+        python-version: [3.9]
         os: [ubuntu-latest]
     steps:
     - uses: actions/checkout@v1
@@ -21,11 +21,6 @@ jobs:
         pip install .
     - name: Analyze packing
       run: |
-        echo ${GITHUB_WORKSPACE}
-        cd ${GITHUB_WORKSPACE}
-        conda init bash
-        exec bash
-        conda activate autopack
         pack -r tests/recipes/test_spheres.json -c tests/packing-configs/test_config.json
       working-directory: cellpack/
     - name: comment PR
