@@ -42,7 +42,7 @@ class SingleSphereIngr(Ingredient):
         packing_priority=0,
         partners=None,
         perturb_axis_amplitude=0.1,
-        place_type="jitter",
+        place_method="jitter",
         principal_vector=(1, 0, 0),
         representations=None,
         rejection_threshold=30,
@@ -73,7 +73,7 @@ class SingleSphereIngr(Ingredient):
             packing_priority=packing_priority,
             partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
-            place_type=place_type,
+            place_method=place_method,
             principal_vector=principal_vector,
             representations=representations,
             rotation_axis=rotation_axis,
@@ -122,7 +122,6 @@ class SingleSphereIngr(Ingredient):
         delta = numpy.take(gridPointsCoords, pointsToCheck, 0) - position
         delta *= delta
         distA = numpy.sqrt(delta.sum(1))
-
         for pti in range(len(pointsToCheck)):
             grid_point_index = pointsToCheck[
                 pti
@@ -147,7 +146,7 @@ class SingleSphereIngr(Ingredient):
                 distance_to_packing_location - radius_of_ing_being_packed
             )
 
-            (insidePoints, newDistPoints,) = self.get_new_distances_and_inside_points(
+            (insidePoints, newDistPoints) = self.get_new_distances_and_inside_points(
                 env,
                 jtrans,
                 rotMat,

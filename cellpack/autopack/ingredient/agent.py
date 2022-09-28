@@ -80,7 +80,7 @@ class Agent:
         overwrite_distance_function=True,  # overWrite
         packing_mode="random",
         partners=None,
-        place_type="jitter",
+        place_method="jitter",
         weight=0.2,  # use for affinity ie partner.weight
     ):
         self.name = name
@@ -109,8 +109,8 @@ class Agent:
         ]
         partners_weight = 0
         self.partners_weight = partners_weight
-        # assert place_type in ['jitter', 'spring','rigid-body']
-        self.place_type = place_type
+        # assert place_method in ['jitter', 'spring','rigid-body']
+        self.place_method = place_method
         self.mesh_3d = None
         self.is_attractor = is_attractor
         self.weight = weight
@@ -293,7 +293,7 @@ class Agent:
             )
         else:
             # get closestFreePoint using freePoint and masterGridPosition
-            # if self.place_type == "rigid-body" or self.place_type == "jitter":
+            # if self.place_method == "rigid-body" or self.place_method == "jitter":
             # the new point is actually tPt -normalise(tPt-current)*radius
             self.log.info(
                 "tP %r %s %r %d", ing_indice, ing.name, targetPoint, ing.radii[0][0]

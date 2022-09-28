@@ -136,7 +136,7 @@ class Environment(CompartmentList):
 
         # From config file
         self.runTimeDisplay = config["live_packing"]
-        self.placeMethod = config["place_method"]
+        self.place_method = config["place_method"]
         self.innerGridMethod = config["inner_grid_method"]
         self.format_output = config["format"]
         self.use_periodicity = config["use_periodicity"]
@@ -987,6 +987,8 @@ class Environment(CompartmentList):
             self.smallestProteinSize = ingr.min_radius
 
     def create_ingredient(self, recipe, arguments):
+        if "place_method" not in arguments:
+            arguments["place_method"] = self.place_method
         ingredient_type = arguments["type"]
         if ingredient_type == "single_sphere":
             radius = arguments["radius"]
@@ -1357,7 +1359,7 @@ class Environment(CompartmentList):
             rotMatj=rotMatj,
         )
         # update free points
-        if len(insidePoints) and self.placeMethod.find("panda") != -1:
+        if len(insidePoints) and self.place_method.find("panda") != -1:
             print(ingr.name, " is inside")
             self.checkPtIndIngr(ingr, insidePoints, i, ptInd, marray)
             # ingr.inside_current_grid = True
@@ -1887,7 +1889,7 @@ class Environment(CompartmentList):
         compartment_ids = self.grid.compartment_ids
         # why a copy? --> can we split ?
         distances = self.grid.distToClosestSurf[:]
-        spacing = self.smallestProteinSize
+        spacing = self.spacing or self.smallestProteinSize
 
         # DEBUG stuff, should be removed later
         self.jitterVectors = []
@@ -1963,7 +1965,7 @@ class Environment(CompartmentList):
         vThreshStart = 0.0  # Added back by Graham on July 5, 2012 from Sept 25, 2011 thesis version
 
         # if bullet build the organel rbnode
-        if self.placeMethod == "pandaBullet":
+        if self.place_method == "pandaBullet":
             self.setupPanda()
 
         # ==============================================================================
@@ -2059,7 +2061,7 @@ class Environment(CompartmentList):
             # NOTE: should we do the close partner check here instead of in the place functions?
             # place the ingredient
             if self.overwritePlaceMethod:
-                ingr.place_type = self.placeMethod
+                ingr.place_method = self.place_method
 
             if ingr.encapsulating_radius > self.largestProteinSize:
                 self.largestProteinSize = ingr.encapsulating_radius

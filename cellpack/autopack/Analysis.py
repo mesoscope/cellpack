@@ -986,7 +986,7 @@ class AnalyseAP:
         show_plotly_plot=True,
     ):
         if show_plotly_plot:
-            self.plotly.update_title(self.env.placeMethod)
+            self.plotly.update_title(self.env.place_method)
 
         t1 = time()
         self.env.pack_grid(
@@ -996,11 +996,11 @@ class AnalyseAP:
             fbox=fbox_bb,
         )
         t2 = time()
-        print("time to run pack_grid", self.env.placeMethod, t2 - t1)
+        print("time to run pack_grid", self.env.place_method, t2 - t1)
         print("num placed", len(self.env.molecules))
         if show_plotly_plot:
             self.plotly.update_title(
-                f"{self.env.placeMethod} took {str(round(t2 - t1, 2))}s, packed {len(self.env.molecules)}"
+                f"{self.env.place_method} took {str(round(t2 - t1, 2))}s, packed {len(self.env.molecules)}"
             )
             self.plotly.make_grid_heatmap(self.env)
             self.plotly.add_ingredient_positions(self.env)
