@@ -28,8 +28,7 @@
                     "name": "mean-membrane.obj",
                     "format": "obj"
                 }
-            },
-            "radius": 1
+            }
         },
         "mean_nucleus": {
             "type": "mesh",
@@ -44,8 +43,7 @@
                     "name": "mean-nuc.obj",
                     "format": "obj"
                 }
-            },
-            "radius": 10
+            }
         },
         "peroxisome": {
             "jitter_attempts": 300,
@@ -55,7 +53,7 @@
                 0.70,
                 0.10
             ],
-            "radius": 1
+            "radius": 0.88
         }
     },
     "composition": {
