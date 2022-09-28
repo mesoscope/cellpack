@@ -1,3 +1,5 @@
+from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
+
 v1_to_v2_name_map = {
     "Type": "type",
     "distExpression": "distance_expression",
@@ -42,5 +44,14 @@ attributes_move_to_composition = [
 ]
 
 required_attributes = {
-    "SingleSphere": ["radii"]
+   "SingleSphere": ["radii"]
+}
+
+ingredient_types_map = {
+    "SingleSphere": INGREDIENT_TYPE.SINGLE_SPHERE,
+    "MultiSphere": INGREDIENT_TYPE.MULTI_SPHERE,
+    "SingleCube": INGREDIENT_TYPE.SINGLE_CUBE,
+    "SingleCylinder": INGREDIENT_TYPE.SINGLE_CYLINDER,
+    "MultiCylinder": INGREDIENT_TYPE.MULTI_CYLINDER,
+    "Grow": INGREDIENT_TYPE.GROW,
 }
