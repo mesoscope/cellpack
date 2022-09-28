@@ -18,7 +18,6 @@ logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
 log = logging.getLogger()
 ###############################################################################
 
-
 def pack(recipe, config):
     """
     Initializes an autopack packing from the command line
