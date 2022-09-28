@@ -23,6 +23,7 @@ jobs:
       run: |
         echo ${GITHUB_WORKSPACE}
         cd ${GITHUB_WORKSPACE}
+        conda activate autopack
         pack -r tests/recipes/test_spheres.json -c tests/packing-configs/test_config.json
       working-directory: cellpack/
     - name: comment PR
