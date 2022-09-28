@@ -917,19 +917,19 @@ class Compartment(CompartmentList):
         # # dist2 = numpy.zeros(len(srfPts),'f')
 
         master_grid_positions = env.grid.masterGridPositions
-        # new_distances, indexes = ctree.query(
-        #     tuple(master_grid_positions)
-        # )  # return both indices and distances
+        new_distances, indexes = ctree.query(
+            tuple(master_grid_positions)
+        )  # return both indices and distances
 
-        # self.closestId = indexes
-        # mask = distances[: len(master_grid_positions)] > new_distances
-        # grid_point_indexes = numpy.nonzero(mask)
-        # distances[grid_point_indexes] = new_distances[grid_point_indexes]
+        self.closestId = indexes
+        mask = distances[: len(master_grid_positions)] > new_distances
+        grid_point_indexes = numpy.nonzero(mask)
+        distances[grid_point_indexes] = new_distances[grid_point_indexes]
         # set all grid points close to the surface as surface points
-        # indexes_of_grid_surface_points = numpy.nonzero(
-        #     new_distances < env.grid.gridSpacing
-        # )
-        # compartment_ids[indexes_of_grid_surface_points] = self.number
+        indexes_of_grid_surface_points = numpy.nonzero(
+            new_distances < env.grid.gridSpacing
+        )
+        compartment_ids[indexes_of_grid_surface_points] = self.number
         self.log.info("into method")
         if (
             env.innerGridMethod == "sdf" and self.is_orthogonal_bounding_box != 1
