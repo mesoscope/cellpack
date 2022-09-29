@@ -105,7 +105,7 @@ except ImportError:
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
-SEED = 14
+SEED = 1
 LOG = False
 verbose = 0
 
@@ -152,8 +152,12 @@ class Environment(CompartmentList):
         self.out_folder = RecipeLoader.create_output_dir(
             config["out"], name, config["place_method"]
         )
-        self.resultfile = self.out_folder + "/" + config["name"]
+        self.resultfile = self.out_folder + "/" + f"{self.name}-{config['name']}"
+        self.grid_file_out = f"{self.resultfile}_grid"
+        self.load_from_grid_file = config["load_from_grid_file"]
 
+        should_load_grid_file = os.path.isfile(self.grid_file_out) and self.load_from_grid_file 
+        self.previous_grid_file = self.grid_file_out if should_load_grid_file else None
         self.setupfile = ""
         self.current_path = None  # the path of the recipe file
         self.custom_paths = None
@@ -408,9 +412,9 @@ class Environment(CompartmentList):
         self.grid.freePoints = freePoints[:]
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
-        self.saveGridToFile(self.resultfile + "grid")
+        self.saveGridToFile(self.grid_file_out)
         self.saveGridLogsAsJson(self.resultfile + "_grid-data.json")
-        self.grid.result_filename = self.resultfile + "grid"
+        self.grid.result_filename = self.grid_file_out
         self.collectResultPerIngredient()
         self.store()
         self.store_asTxt()
@@ -852,6 +856,7 @@ class Environment(CompartmentList):
         Save the current grid and the compartment grid information in a file. (pickle)
         """
         d = os.path.dirname(gridFileOut)
+        print("SAVED GRID TO ", gridFileOut)
         if not os.path.exists(d):
             print("gridfilename path problem", gridFileOut)
             return
@@ -878,6 +883,7 @@ class Environment(CompartmentList):
                     str(self.grid.masterGridPositions[i][2]),
                 ],
                 "distance": str(self.grid.distToClosestSurf[i]),
+                "compartment": str(self.grid.compartment_ids[i])
             }
         # data = {
         #     # "gridPositions": json.loads(self.grid.masterGridPositions),
@@ -902,7 +908,7 @@ class Environment(CompartmentList):
             compartment.OGsrfPtsBht = spatial.cKDTree(
                 tuple(compartment.vertices), leafsize=10
             )
-            compartment.computeVolumeAndSetNbMol(
+            compartment.compute_volume_and_set_count(
                 self, compartment.surfacePoints, compartment.insidePoints, areas=None
             )
         f.close()
@@ -1240,14 +1246,16 @@ class Environment(CompartmentList):
             self.grid.set_surfPtsBht(
                 verts.tolist()
             )  # should do it only on inside grid point
+    
+    def extend_bounding_box_for_compartments(self):
+        for _, compartment in enumerate(self.compartments):
+            fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
+            if not fits:
+                self.boundingBox = bb
 
     def buildGrid(
         self,
-        gridFileIn=None,
         rebuild=True,
-        gridFileOut=None,
-        previousFill=False,
-        previousfreePoint=None,
         lookup=2,
     ):
         """
@@ -1255,10 +1263,8 @@ class Environment(CompartmentList):
         compartment grid. The setup is de novo or using previously built grid
         or restored using given file.
         """
-        for _, compartment in enumerate(self.compartments):
-            fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
-            if not fits:
-                self.boundingBox = bb
+        self.extend_bounding_box_for_compartments()
+
         boundingBox = self.boundingBox
         if self.use_halton:
             from cellpack.autopack.BaseGrid import HaltonGrid as Grid
@@ -1268,9 +1274,6 @@ class Environment(CompartmentList):
             from cellpack.autopack.BaseGrid import BaseGrid as Grid
 
         self.sortIngredient(reset=True)
-        if gridFileIn is not None:
-            if not os.path.isfile(gridFileIn):
-                gridFileIn = None
         if self.grid is None or self.nFill == 0:
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
@@ -1282,18 +1285,17 @@ class Environment(CompartmentList):
                 self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
                 nbPoints = self.grid.gridVolume
 
-        else:
+        elif self.grid is not None:
             self.log.info("$$$$$$$$  reset the grid")
             self.grid.reset()
             nbPoints = len(self.grid.freePoints)
             self.log.info("$$$$$$$$  reset the grid")
 
-        if gridFileIn is not None:
-            self.log.warning("file in for building grid but it doesnt work well")
-            self.grid.filename = gridFileIn
+        if self.previous_grid_file is not None:
+            self.grid.filename = self.previous_grid_file
             if self.nFill == 0:  # first fill, after we can just reset
                 self.log.info("restore from file")
-                self.restoreGridFromFile(gridFileIn)
+                self.restoreGridFromFile(self.previous_grid_file)
         else:
             self.build_compartment_grids()
 
@@ -1302,9 +1304,9 @@ class Environment(CompartmentList):
             space=self.smallestProteinSize,
             fbox_bb=self.fbox_bb,
         )
-        if gridFileOut is not None and gridFileIn is None:
-            self.saveGridToFile(gridFileOut)
-            self.grid.filename = gridFileOut
+        if self.previous_grid_file is None:
+            self.saveGridToFile(self.grid_file_out)
+            self.grid.filename = self.grid_file_out
 
         r = self.exteriorRecipe
         if r:
@@ -1319,7 +1321,7 @@ class Environment(CompartmentList):
                 self.gradients[g].buildWeigthMap(
                     boundingBox, self.grid.masterGridPositions
                 )
-        if previousFill:
+        if self.previous_grid_file is not None:
             distance = self.grid.distToClosestSurf  # [:]
             nbFreePoints = nbPoints  # -1              #Graham turned this off on 5/16/12 to match August Repair for May Hybrid
             for i, mingrs in enumerate(

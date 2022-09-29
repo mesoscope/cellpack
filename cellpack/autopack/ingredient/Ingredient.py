@@ -1353,29 +1353,6 @@ class Ingredient(Agent):
                         # found collision at lowest level, break all the way out
                         return True
                 del search_tree_for_new_ingr
-
-        # the compartment the ingr belongs to
-        current_ingr_compartment = self.get_compartment()
-        for compartment in self.env.compartments:
-            if current_ingr_compartment.name == compartment.name:
-                continue
-            distances, ingr_indexes = compartment.OGsrfPtsBht.query(packing_location)
-
-            # NOTE: this could be optimized by walking down the sphere tree representation
-            # of the instead of going right to the bottom
-            if distances < self.encapsulating_radius + compartment.encapsulating_radius:
-                # pos_of_attempting_ingr = self.get_new_pos(
-                #     self, packing_location, rotation, self.positions[total_levels - 1]
-                # )
-                distances, ingr_indexes = compartment.OGsrfPtsBht.query(
-                    [packing_location]
-                )
-
-                radii = [self.radius]
-                overlap_distance = distances - numpy.array(radii)
-                overlap_indexes = numpy.nonzero(overlap_distance < 0.0)[0]
-                if len(overlap_indexes) != 0:
-                    return True
         return has_collision
 
     def checkDistance(self, liste_nodes, point, cutoff):
@@ -2596,7 +2573,6 @@ class Ingredient(Agent):
                     break
             t = time()
             if not self.point_is_available(packing_location):
-                print("NOT AVAILABLE")
                 continue
             if True in collision_results:
                 continue

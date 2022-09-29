@@ -11,5 +11,6 @@
     "show_grid_plot": false,
     "spacing": 10,
     "use_periodicity": false,
-    "show_sphere_trees": false
+    "show_sphere_trees": false,
+    "load_from_grid_file": true
 }
