@@ -105,7 +105,7 @@ except ImportError:
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
-SEED = 1
+SEED = 15
 LOG = False
 verbose = 0
 
