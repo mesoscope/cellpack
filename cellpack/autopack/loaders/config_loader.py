@@ -54,6 +54,7 @@ class ConfigLoader(object):
         "version": 1.0,
     }
 
+    # TODO: fall back to default values if config file is not provided
     def __init__(self, input_file_path):
         _, file_extension = os.path.splitext(input_file_path)
         self.latest_version = 1.0

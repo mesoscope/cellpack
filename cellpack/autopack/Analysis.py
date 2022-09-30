@@ -13,6 +13,7 @@ import csv
 import json
 from time import time
 from PIL import Image
+import copy
 
 import matplotlib
 from matplotlib import pylab
@@ -146,6 +147,24 @@ class AnalyseAP:
         self.plotly = PlotlyAnalysis()
 
         autopack._colors = None
+
+    @staticmethod
+    def get_xyz_dict_from_all_pos_dict(all_pos_dict):
+        """
+        returns array of x, y, and z positions for each seed for runs
+        in all_pos_dict
+        """
+        all_objs = {}
+        for seed, object_dict in all_pos_dict.items():
+            for obj, positions in object_dict.items():
+                positions = numpy.array(positions)
+                if obj not in all_objs:
+                    all_objs[obj] = {}
+                if seed not in all_objs[obj]:
+                    all_objs[obj][seed] = {}
+                for ct, dim in enumerate(["x", "y", "z"]):
+                    all_objs[obj][seed][dim] = positions[:, ct]
+        return all_objs
 
     def getMinMaxProteinSize(self):
         smallest = 999999.0
@@ -757,9 +776,9 @@ class AnalyseAP:
     def axis_distribution(self, ingr):
         basename = self.env.basename
         px, py, pz = self.getAxesValues(self.env.ingrpositions[ingr.name])
-        self.histo(px, basename + ingr.name + "_histo_X.png", bins=10)
-        self.histo(py, basename + ingr.name + "_histo_Y.png", bins=10)
-        self.histo(pz, basename + ingr.name + "_histo_Z.png", bins=10)
+        self.histo(px, basename + "_" + ingr.name + "_histo_X.png", bins=10)
+        self.histo(py, basename + "_" + ingr.name + "_histo_Y.png", bins=10)
+        self.histo(pz, basename + "_" + ingr.name + "_histo_Z.png", bins=10)
         # do it for all ingredient cumulate?
 
     def occurence_distribution(self, ingr):
@@ -965,11 +984,7 @@ class AnalyseAP:
         forceBuild=True,
     ):
         t1 = time()
-        gridFileIn = None
-        gridFileOut = None
-        self.env.buildGrid(
-            rebuild=True,
-        )
+        self.env.buildGrid()
         t2 = time()
         gridTime = t2 - t1
         print("time to Build Grid", gridTime)
@@ -1392,7 +1407,7 @@ class AnalyseAP:
                                         )
                                     )
                 # write
-                all_pos_dict[seed_index] = ingrpositions
+                all_pos_dict[seed_index] = copy.deepcopy(ingrpositions)
                 if use_file:
                     self.writeJSON(
                         output + os.sep + "_posIngr_" + str(seed_index) + ".json",

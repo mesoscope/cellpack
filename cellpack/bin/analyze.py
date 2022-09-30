@@ -14,17 +14,15 @@ import logging.config
 import traceback
 
 # Third party
-import numpy
+import json
 import argparse
 
 # Relative
-import cellpack.autopack.upy as upy
-from cellpack import autopack, get_module_version
+from cellpack import get_module_version
 from cellpack.autopack.Environment import Environment
-from cellpack.autopack.Analysis import AnalyseAP
+import cellpack.autopack.Analysis as analysis
 
 ###############################################################################
-
 log_file_path = path.join(path.dirname(path.abspath(__file__)), "../../logging.conf")
 logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
 log = logging.getLogger()
@@ -33,36 +31,21 @@ log = logging.getLogger()
 
 class Args(argparse.Namespace):
 
-    DEFAULT_DIM = 2
-    DEFAULT_ANALYSIS = True
-    DEFAULT_RECIPE_FILE = "cellpack/test-recipes/NM_Analysis_FigureB1.0.json"
-    DEFAULT_FORMAT = "simularium"
-    DEFAULT_OUTPUT_FOLDER = "out/"
-    DEFAULT_PLACE_METHODS = [
-        "jitter",
-        "pandaBulletRelax",
-        "pandaBullet",
-        "spheresSST",
-    ]
+    DEFAULT_INPUT_FOLDER = "out/analyze/test_analyze/jitter/"
+    DEFAULT_OUTPUT_FOLDER = "out/analyze/test_analyze/jitter/"
 
     def __init__(self):
         # Arguments that could be passed in through the command line
-        self.dim = self.DEFAULT_DIM
-        self.analysis = self.DEFAULT_ANALYSIS
-        self.recipe = self.DEFAULT_RECIPE_FILE
+        self.input = self.DEFAULT_INPUT_FOLDER
         self.output = self.DEFAULT_OUTPUT_FOLDER
-        self.place_methods = self.DEFAULT_PLACE_METHODS
-        self.format = self.DEFAULT_FORMAT
-        self.save_analysis_plot = None
-        self.grid_plot = None
         self.debug = True
         #
         self.__parse()
 
     def __parse(self):
         p = argparse.ArgumentParser(
-            prog="run_example",
-            description="A simple example of a bin script",
+            prog="analyze",
+            description="Analyze packings from cellPACK",
         )
 
         p.add_argument(
@@ -72,13 +55,13 @@ class Args(argparse.Namespace):
             version="%(prog)s " + get_module_version(),
         )
         p.add_argument(
-            "-r",
-            "--recipe",
+            "-i",
+            "--input",
             action="store",
-            dest="recipe",
+            dest="input",
             type=str,
-            default=self.recipe,
-            help="Relative path to the recipe file for packing",
+            default=self.input,
+            help="Relative path to the folder containing cellPACK packing outputs",
         )
         p.add_argument(
             "-o",
@@ -87,58 +70,7 @@ class Args(argparse.Namespace):
             dest="output",
             type=str,
             default=self.output,
-            help="Full path to the folder where to store the results file",
-        )
-        p.add_argument(
-            "-d",
-            "--dim",
-            action="store",
-            dest="dim",
-            type=int,
-            default=self.dim,
-            help="The dimensions of the packing",
-        )
-        p.add_argument(
-            "-na",
-            "--no-analysis",
-            action="store_false",
-            dest="analysis",
-            default=self.analysis,
-            help="Turn off analysis script",
-        )
-        p.add_argument(
-            "-p",
-            "--place-methods",
-            action="store",
-            dest="place_methods",
-            nargs="+",
-            default=self.place_methods,
-            help="The place methods to test, can be an array",
-        )
-        p.add_argument(
-            "-f",
-            "--format",
-            action="store",
-            dest="format",
-            type=str,
-            default=self.format,
-            help="Format to save the recipe in",
-        )
-        p.add_argument(
-            "-np",
-            "--no-plot",
-            action="store_false",
-            dest="save_analysis_plot",
-            default=self.dim == 2 and self.analysis,
-            help="Turn off the save plot function, defaults to True if analysis is True and 2D",
-        )
-        p.add_argument(
-            "-ng",
-            "--no-grid-plot",
-            action="store_false",
-            dest="grid_plot",
-            default=self.dim == 2 and self.analysis,
-            help="Turn off plotly plot, defaults to True if analysis is True and 2D",
+            help="Relative path to the folder to store outputs from the analysis",
         )
         p.add_argument(
             "--debug",
@@ -147,8 +79,6 @@ class Args(argparse.Namespace):
             help=argparse.SUPPRESS,
         )
         p.parse_args(namespace=self)
-
-
 ###############################################################################
 
 
@@ -156,80 +86,17 @@ def main():
     args = Args()
     dbg = args.debug
     try:
-        recipe_path = os.path.join(os.getcwd(), args.recipe)
-        do_analysis = args.analysis
-        dim = args.dim
-        default_should_plot = do_analysis
-        save_plot = (
-            args.save_analysis_plot
-            if args.save_analysis_plot is not None
-            else default_should_plot
-        )
-        show_grid_data = (
-            args.grid_plot if args.grid_plot is not None else default_should_plot
-        )
-        output = args.output
-        os.makedirs(output, exist_ok=True)
-        log.info("Recipe : {}\n".format(args.recipe))
-        helperClass = upy.getHelperClass()
-        helper = helperClass(vi="nogui")
+        input_path = os.path.join(os.getcwd(), args.input)
+        output_path = args.output
+        os.makedirs(output_path, exist_ok=True)
+        log.info("Input : {}\n".format(args.recipe))
+        
+        all_pos_file = path.abspath(path.join(input_path, "all_positions.json"))
+        with open(all_pos_file, 'r') as j:
+            all_pos = json.loads(j.read())
 
-        autopack.helper = helper
+        all_objs = analysis.get_xyz_dict_from_all_pos_dict(all_pos)
 
-        fileName = os.path.basename(recipe_path)
-        env = Environment(name=fileName, format_output=args.format)
-
-        env.helper = helper
-        env.load_recipe(recipe_path)
-        afviewer = None
-
-        env.saveResult = False
-
-        def setCompartment(ingr):
-            # ingr.rejection_threshold = 60  # [1,1,0]#
-            ingr.jitter_attempts = 6
-            ingr.rejection_threshold = 100  # [1,1,0]#
-            ingr.cutoff_boundary = 0  # ingr.encapsulating_radius/2.0
-            if dim == 3:
-                ingr.max_jitter = [1, 1, 1]
-            else:
-                ingr.max_jitter = [1, 1, 0]
-
-        env.loopThroughIngr(setCompartment)
-
-        if do_analysis:
-            for place_method in args.place_methods:
-                log.info(f"starting {place_method}")
-                env.place_method = place_method
-                env.encapsulatingGrid = 0
-                analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
-                analyse.g.Resolution = 1.0
-                env.boundingBox = numpy.array(env.boundingBox)
-                output_folder = os.path.join(args.output, env.name)
-                output = os.path.join(output_folder, place_method)
-                os.makedirs(output, exist_ok=True)
-                log.info(f"saving to {output}")
-                analyse.doloop(
-                    1,
-                    env.boundingBox,
-                    output,
-                    plot=save_plot,
-                    show_grid=show_grid_data,
-                    twod=(dim == 2),
-                )
-        else:
-            for place_method in args.place_methods:
-                env.place_method = place_method
-                env.saveResult = True
-                env.innerGridMethod = "raytrace"
-                env.boundingBox = [[-2482, -2389.0, 100.0], [2495, 2466, 2181.0]]
-                env.buildGrid(
-                    boundingBox=env.boundingBox,
-                    rebuild=True,
-                    gridFileOut=None,
-                    previousFill=False,
-                )
-                env.pack_grid(verbose=0, usePP=False)
 
     except Exception as e:
         log.error("=============================================")
