@@ -38,7 +38,7 @@
                 1
             ],
             "rejection_threshold": 50,
-            "place_type": "jitter",
+            "place_method": "jitter",
             "cutoff_surface": 42,
             "rotation_axis": [
                 0,
