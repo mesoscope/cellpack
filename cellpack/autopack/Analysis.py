@@ -984,14 +984,7 @@ class AnalyseAP:
         forceBuild=True,
     ):
         t1 = time()
-        gridFileIn = None
-        gridFileOut = None
-        self.env.buildGrid(
-            gridFileIn=gridFileIn,
-            rebuild=forceBuild,
-            gridFileOut=gridFileOut,
-            previousFill=False,
-        )
+        self.env.buildGrid()
         t2 = time()
         gridTime = t2 - t1
         print("time to Build Grid", gridTime)
