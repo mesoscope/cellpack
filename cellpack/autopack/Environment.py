@@ -129,7 +129,6 @@ class Environment(CompartmentList):
 
         self.config_data = config
         self.recipe_data = recipe
-
         name = recipe["name"]
         self.log = logging.getLogger("env")
         self.log.propagate = False
@@ -165,7 +164,6 @@ class Environment(CompartmentList):
         self.grid_result_filename = None  # str(gridn.getAttribute("grid_result"))
 
         self.timeUpDistLoopTotal = 0
-        self.name = name
         self.exteriorRecipe = None
         self.hgrid = []
         self.world = None  # panda world for collision
@@ -176,7 +174,6 @@ class Environment(CompartmentList):
         )
         # 0 is the exterior, 1 is compartment 1 surface, -1 is compartment 1 interior
         self.nbCompartments = 1
-        self.name = "out"
 
         self.order = {}  # give the order of drop ingredient by ptInd from molecules
         self.lastrank = 0

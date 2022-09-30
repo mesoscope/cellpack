@@ -13,8 +13,6 @@ from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 ###############################################################################
 log_file_path = path.abspath(path.join(__file__, "../../../logging.conf"))
-print(f"__file__: {__file__}")
-print(f"Log path: {log_file_path}")
 logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
 log = logging.getLogger()
 ###############################################################################
@@ -48,7 +46,8 @@ def pack(recipe, config):
             output,
             plot=True,
             show_grid=config_data["show_grid_plot"],
-            seeds_i=config_data["rng_seed"]
+            seeds_i=config_data["rng_seed"],
+            config_name=config_data['name']
         )
     else:
         env.buildGrid(rebuild=True)

@@ -968,10 +968,7 @@ class AnalyseAP:
         gridFileIn = None
         gridFileOut = None
         self.env.buildGrid(
-            gridFileIn=gridFileIn,
-            rebuild=forceBuild,
-            gridFileOut=gridFileOut,
-            previousFill=False,
+            rebuild=True,
         )
         t2 = time()
         gridTime = t2 - t1
@@ -1140,6 +1137,7 @@ class AnalyseAP:
         fbox_bb=None,
         use_file=True,
         seeds_i=None,
+        config_name="default"
     ):
         # doLoop automatically produces result files, images, and documents from the recipe while adjusting parameters
         # To run doLoop, 1) in your host's python console type:
@@ -1154,7 +1152,7 @@ class AnalyseAP:
         numpy.savetxt(output + os.sep + "seeds", seeds_i, delimiter=",")
         angle_file = output + os.sep + "angle"
         position_file = output + os.sep + "pos"
-        all_pos_file = output + os.sep + "all_pos"
+        all_pos_file = output + os.sep + "all_positions"
         distance_file = output + os.sep + "dist"
         occurences_file = output + os.sep + "occurence"
         rangeseed = range(n)
@@ -1169,7 +1167,7 @@ class AnalyseAP:
         angles = None
         rebuild = True
         for seed_index in range(n):
-            basename = output + os.sep + "results_seed_" + str(seed_index)
+            basename = self.env.out_folder + "/" + f"{self.env.name}-{config_name}"
             # Clear
             if self.afviewer:
                 self.afviewer.clearFill("Test_Spheres2D")
@@ -1416,7 +1414,7 @@ class AnalyseAP:
                     pyplot.axvline(x=bbox[0][0], color="k")
                     pyplot.axvline(x=bbox[1][0], color="k")
                     pyplot.axis([bbox[0][0], bbox[1][0], bbox[0][1], bbox[1][1]])
-                    pyplot.savefig(basename + ".png")
+                    pyplot.savefig(f"{basename}_{seed_index}.png")
                     pylab.close()  # closes the current figure
 
         numpy.savetxt(output + os.sep + "seeds", seeds_i, delimiter=",")
