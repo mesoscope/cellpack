@@ -74,7 +74,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
     ],
-    description="algorthim to pack molecular recipes",
+    description="algorithm to pack molecular recipes",
     entry_points={
         "console_scripts": [
             "analyze=cellpack.bin.analyze:main",
