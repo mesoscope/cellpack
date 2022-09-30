@@ -145,7 +145,7 @@ class Ingredient(Agent):
         "packing_priority",
         "partners",
         "perturb_axis_amplitude",
-        "place_type",
+        "place_method",
         "principal_vector",
         "rejection_threshold",
         "representations",
@@ -181,7 +181,7 @@ class Ingredient(Agent):
         packing_priority=0,
         partners=None,
         perturb_axis_amplitude=0.1,
-        place_type="jitter",
+        place_method="jitter",
         principal_vector=(1, 0, 0),
         rejection_threshold=30,
         representations=None,
@@ -203,7 +203,7 @@ class Ingredient(Agent):
             overwrite_distance_function=overwrite_distance_function,
             packing_mode=packing_mode,
             partners=partners,
-            place_type=place_type,
+            place_method=place_method,
             weight=weight,
         )
         self.log = logging.getLogger("ingredient")
@@ -964,15 +964,6 @@ class Ingredient(Agent):
             return True
         return False
 
-    def compareCompartmentPrimitive(
-        self, level, jtrans, rotMatj, gridPointsCoords, distance
-    ):
-        collisionComp = self.collides_with_compartment(
-            jtrans, rotMatj, level, gridPointsCoords, self.env
-        )
-
-        return collisionComp
-
     def checkCompartment(self, ptsInSphere, nbs=None):
         trigger = False
         if self.compareCompartment:
@@ -1080,27 +1071,22 @@ class Ingredient(Agent):
 
     def far_enough_from_surfaces(self, point, cutoff):
         # check if clear of all other compartment surfaces
-        if self.compNum == 0:
-            ingredient_compartment = self.env
-        else:
-            ingredient_compartment = self.env.compartments[abs(self.compNum) - 1]
+
+        ingredient_compartment = self.get_compartment(self.env)
         ingredient_compartment_id = self.compNum
+        compartment_collision = self.collides_with_compartment(point, self.env)
+        if compartment_collision:
+            return False
         for compartment in self.env.compartments:
             if (
                 ingredient_compartment_id > 0
                 and ingredient_compartment.name == compartment.name
             ):
                 continue
-            self.log.info(
-                "test compartment %s %r", compartment.name, compartment.OGsrfPtsBht
-            )
             # checking compartments I don't belong to
             res = compartment.OGsrfPtsBht.query(tuple(numpy.array([point])))
             if len(res) == 2:
                 d = res[0][0]
-                self.log.info(
-                    "distance is %r %r", d, cutoff
-                )  # d can be wrond for some reason,
                 if d < cutoff:
                     # too close to a surface
                     return False
@@ -1122,6 +1108,7 @@ class Ingredient(Agent):
                 far_from_surfaces = self.far_enough_from_surfaces(
                     newPt, cutoff=self.cutoff_surface
                 )
+
                 return far_from_surfaces
             else:
                 return False
@@ -1323,7 +1310,7 @@ class Ingredient(Agent):
                 )
         # starting at level 0, check encapsulating radii
         level = 0
-        total_levels = len(self.positions)
+        total_levels = 0 if not hasattr(self, "positions") else len(self.positions)
         (
             distances_from_packing_location_to_all_ingr,
             ingr_indexes,
@@ -1340,7 +1327,7 @@ class Ingredient(Agent):
         if len(overlap_indexes) != 0:
             level = level + 1
             # single sphere ingr will exit here.
-            if level == total_levels:
+            if level >= total_levels:
                 has_collision = True
             # for each packed ingredient that had a collision, we want to check the more
             # detailed geometry, ie walk down the sphere tree file.
@@ -1366,35 +1353,6 @@ class Ingredient(Agent):
                         # found collision at lowest level, break all the way out
                         return True
                 del search_tree_for_new_ingr
-
-        # the compartment the ingr belongs to
-        if self.compNum == 0:
-            current_ingr_compartment = self.env
-        else:
-            # NOTE: env.compartments only includes compartments >=1, ie not the
-            # bounding box/comp==0. So need to subtrack 1 from the id of the compartment
-            # to index into this list.
-            current_ingr_compartment = self.env.compartments[abs(self.compNum) - 1]
-        for compartment in self.env.compartments:
-            if current_ingr_compartment.name == compartment.name:
-                continue
-            distances, ingr_indexes = compartment.OGsrfPtsBht.query(packing_location)
-
-            # NOTE: this could be optimized by walking down the sphere tree representation
-            # of the instead of going right to the bottom
-            if distances < self.encapsulating_radius + compartment.encapsulating_radius:
-                pos_of_attempting_ingr = self.get_new_pos(
-                    self, packing_location, rotation, self.positions[total_levels - 1]
-                )
-                distances, ingr_indexes = compartment.OGsrfPtsBht.query(
-                    pos_of_attempting_ingr
-                )
-
-                radii = self.radii[total_levels - 1][ingr_indexes]
-                overlap_distance = distances - numpy.array(radii)
-                overlap_indexes = numpy.nonzero(overlap_distance < 0.0)[0]
-                if len(overlap_indexes) != 0:
-                    return True
         return has_collision
 
     def checkDistance(self, liste_nodes, point, cutoff):
@@ -1696,9 +1654,9 @@ class Ingredient(Agent):
         self.vi = autopack.helper
         self.env = env  # NOTE: do we need to store the env on the ingredient?
         self.log.info(
-            "PLACING INGREDIENT %s, place_type=%s, index=%d, position=%r",
+            "PLACING INGREDIENT %s, place_method=%s, index=%d, position=%r",
             self.name,
-            self.place_type,
+            self.place_method,
             ptInd,
             env.grid.masterGridPositions[ptInd],
         )
@@ -1746,7 +1704,7 @@ class Ingredient(Agent):
                     grid_point_distances,
                     dpad,
                 )
-            elif self.place_type == "jitter":
+            elif self.place_method == "jitter":
                 (
                     success,
                     jtrans,
@@ -1763,7 +1721,7 @@ class Ingredient(Agent):
                     dpad,
                     env.afviewer,
                 )
-            elif self.place_type == "spheresSST":
+            elif self.place_method == "spheresSST":
                 (
                     success,
                     jtrans,
@@ -1780,7 +1738,7 @@ class Ingredient(Agent):
                     grid_point_distances,
                     dpad,
                 )
-            elif self.place_type == "pandaBullet":
+            elif self.place_method == "pandaBullet":
                 (
                     success,
                     jtrans,
@@ -1801,8 +1759,8 @@ class Ingredient(Agent):
                     usePP=usePP,
                 )
             elif (
-                self.place_type == "pandaBulletRelax"
-                or self.place_type == "pandaBulletSpring"
+                self.place_method == "pandaBulletRelax"
+                or self.place_method == "pandaBulletSpring"
             ):
                 (
                     success,
@@ -1822,7 +1780,7 @@ class Ingredient(Agent):
                     dpad,
                 )
             else:
-                self.log.error("Can't pack using this method %s", self.place_type)
+                self.log.error("Can't pack using this method %s", self.place_method)
                 self.reject()
                 return False, {}, {}
         else:
@@ -2034,7 +1992,7 @@ class Ingredient(Agent):
             else:
                 targetPoint = jtrans
         # setup the target position
-        if self.place_type == "spring":
+        if self.place_method == "spring":
             afvi.vi.setRigidBody(afvi.movingMesh, **histoVol.dynamicOptions["spring"])
             # target can be partner position?
             target = afvi.vi.getObject("target" + name)
@@ -2198,6 +2156,7 @@ class Ingredient(Agent):
                 # jittered out of container or too close to boundary
                 # check next random jitter
                 continue
+
             collision_results = []
             points_to_check = self.get_all_positions_to_check(packing_location)
 
@@ -2537,7 +2496,7 @@ class Ingredient(Agent):
 
     def pandaBullet_placeBHT(
         self,
-        histoVol,
+        env,
         compartment,
         ptInd,
         target_grid_point_position,
@@ -2549,10 +2508,10 @@ class Ingredient(Agent):
         """
         drop the ingredient on grid point ptInd
         """
-        histoVol.setupPanda()
+        env.setupPanda()
         is_realtime = moving is not None
 
-        gridPointsCoords = histoVol.masterGridPositions
+        gridPointsCoords = env.grid.masterGridPositions
 
         targetPoint = target_grid_point_position
 
@@ -2580,23 +2539,22 @@ class Ingredient(Agent):
 
                     return False, None, None, {}, {}
             else:
-                self.tilling.init_seed(histoVol.seed_used)
+                self.tilling.init_seed(env.seed_used)
         # we may increase the jitter, or pick from xyz->Id free for its radius
         # create the rb only once and not at ever jitter
         # rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMat,),{"rtype":self.type},)
         # jitter loop
         level = self.collisionLevel
-
         for attempt_number in range(self.jitter_attempts):
             insidePoints = {}
             newDistPoints = {}
-            histoVol.totnbJitter += 1
+            env.totnbJitter += 1
 
             (
                 packing_location,
                 packing_rotation,
             ) = self.get_new_jitter_location_and_rotation(
-                histoVol,
+                env,
                 targetPoint,
                 rotation_matrix,
             )
@@ -2621,15 +2579,15 @@ class Ingredient(Agent):
 
             # need to check compartment too
             self.log.info("no collision")
-            if self.compareCompartment:
-                collision = self.compareCompartmentPrimitive(
-                    level,
-                    packing_location,
-                    packing_rotation,
-                    gridPointsCoords,
-                    distance,
-                )
-                collision_results.extend([collision])
+            # if self.compareCompartment:
+            #     collision = self.compareCompartmentPrimitive(
+            #         level,
+            #         packing_location,
+            #         packing_rotation,
+            #         gridPointsCoords,
+            #         distance,
+            #     )
+            #     collision_results.extend([collision])
             if True not in collision_results:
                 # self.update_data_tree(jtrans,rotMatj,ptInd=ptInd)?
                 self.env.static.append(rbnode)

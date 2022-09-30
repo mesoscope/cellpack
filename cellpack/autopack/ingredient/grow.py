@@ -67,7 +67,7 @@ class GrowIngredient(MultiCylindersIngr):
         packing_priority=0,
         partners=None,
         perturb_axis_amplitude=0.1,
-        place_type="jitter",
+        place_method="jitter",
         positions=None,
         positions2=None,
         principal_vector=(1, 0, 0),
@@ -102,7 +102,7 @@ class GrowIngredient(MultiCylindersIngr):
             packing_priority=packing_priority,
             partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
-            place_type=place_type,
+            place_method=place_method,
             principal_vector=principal_vector,
             representations=representations,
             rejection_threshold=rejection_threshold,
@@ -1611,7 +1611,7 @@ class GrowIngredient(MultiCylindersIngr):
                 self.vi.update()
             # pick next point and test collision.
             if self.walkingMode == "sphere":
-                if self.place_type == "pandaBullet":
+                if self.place_method == "pandaBullet":
                     secondPoint, success = self.walkSpherePanda(
                         previousPoint,
                         startingPoint,
@@ -1975,7 +1975,7 @@ class GrowIngredient(MultiCylindersIngr):
         # test for collision
         # return success, nbFreePoints
         self.results.append([jtrans, rotMatj])
-        if self.place_type == "pandaBullet":
+        if self.place_method == "pandaBullet":
             self.env.nb_ingredient += 1
             self.env.rTrans.append(numpy.array(startingPoint).flatten())
             self.env.rRot.append(numpy.array(numpy.identity(4)))  # rotMatj
@@ -2346,7 +2346,7 @@ class ActinIngredient(GrowIngredient):
         principal_vector=(1, 0, 0),
         meshFile=None,
         packing=None,
-        place_type="jitter",
+        place_method="jitter",
         marge=35.0,
         influenceRad=100.0,
         meshObject=None,
@@ -2375,7 +2375,7 @@ class ActinIngredient(GrowIngredient):
             principal_vector,
             meshFile,
             packing,
-            place_type,
+            place_method,
             marge,
             meshObject,
             orientation,

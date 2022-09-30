@@ -35,12 +35,12 @@ class Inner_Grid_Methods(MetaEnum):
 
 class ConfigLoader(object):
     default_values = {
-        "version": 1.0,
-        "name": "default",
         "format": "simularium",
-        "inner_grid_method": "raytrace",
+        "load_from_grid_file": False,
+        "inner_grid_method": "trimesh",
         "live_packing": False,
         "num_trials": 1,
+        "name": "default",
         "ordered_packing": False,
         "out": "out/",
         "overwrite_place_method": False,
@@ -48,9 +48,10 @@ class ConfigLoader(object):
         "rng_seed": None,
         "save_analyze_result": False,
         "show_grid_plot": False,
+        "show_sphere_trees": False,
         "spacing": None,
         "use_periodicity": False,
-        "show_sphere_trees": False,
+        "version": 1.0,
     }
 
     # TODO: fall back to default values if config file is not provided

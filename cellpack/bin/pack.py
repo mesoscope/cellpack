@@ -51,7 +51,7 @@ def pack(recipe, config):
             seeds_i=config_data["rng_seed"]
         )
     else:
-        env.buildGrid(rebuild=True, gridFileOut=None, previousFill=False)
+        env.buildGrid(rebuild=True)
         env.pack_grid(verbose=0, usePP=False)
 
 

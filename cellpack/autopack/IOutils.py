@@ -1543,7 +1543,7 @@ def setupFromJsonDic(
     env.loopThroughIngr(env.restore_molecules_array)
 
 
-#        if env.placeMethod.find("panda") != -1 :
+#        if env.place_method.find("panda") != -1 :
 #            env.setupPanda()
 
 

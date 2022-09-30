@@ -42,7 +42,7 @@ class SingleSphereIngr(Ingredient):
         packing_priority=0,
         partners=None,
         perturb_axis_amplitude=0.1,
-        place_type="jitter",
+        place_method="jitter",
         principal_vector=(1, 0, 0),
         representations=None,
         rejection_threshold=30,
@@ -73,7 +73,7 @@ class SingleSphereIngr(Ingredient):
             packing_priority=packing_priority,
             partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
-            place_type=place_type,
+            place_method=place_method,
             principal_vector=principal_vector,
             representations=representations,
             rotation_axis=rotation_axis,
@@ -122,7 +122,6 @@ class SingleSphereIngr(Ingredient):
         delta = numpy.take(gridPointsCoords, pointsToCheck, 0) - position
         delta *= delta
         distA = numpy.sqrt(delta.sum(1))
-
         for pti in range(len(pointsToCheck)):
             grid_point_index = pointsToCheck[
                 pti
@@ -147,7 +146,7 @@ class SingleSphereIngr(Ingredient):
                 distance_to_packing_location - radius_of_ing_being_packed
             )
 
-            (insidePoints, newDistPoints,) = self.get_new_distances_and_inside_points(
+            (insidePoints, newDistPoints) = self.get_new_distances_and_inside_points(
                 env,
                 jtrans,
                 rotMat,
@@ -162,26 +161,18 @@ class SingleSphereIngr(Ingredient):
     def collides_with_compartment(
         self,
         jtrans,
-        rotMat,
-        level,
-        gridPointsCoords,
         env,
     ):
         """
         Check spheres for collision
         TODO improve the testwhen grid stepSize is larger that size of the ingredient
         """
-        centers = self.positions[level]
-        radii = (self.radii[level],)
-        centT = self.transformPoints(jtrans, rotMat, centers)  # this should be jtrans
-        for radc, posc in zip(radii, centT):
-            ptsInSphere = env.grid.getPointsInSphere(posc, radc[0])  # indices
-            compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphere, 0)
-            if self.compNum <= 0:
-                wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
-                if len(wrongPt):
-                    print("OK false compartment", len(wrongPt))
-                    return True
+        ptsInSphere = env.grid.getPointsInSphere(jtrans, self.radius)  # indices
+        compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphere, 0)
+        if self.compNum <= 0:
+            wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
+            if len(wrongPt):
+                return True
         return False
 
     def get_signed_distance(
