@@ -53,11 +53,14 @@ class ConfigLoader(object):
         "show_sphere_trees": False,
     }
 
-    def __init__(self, input_file_path):
-        _, file_extension = os.path.splitext(input_file_path)
+    def __init__(self, input_file_path=None):
+        if input_file_path is not None:
+            _, file_extension = os.path.splitext(input_file_path)
+            self.file_path = input_file_path
+            self.file_extension = file_extension
+        else:
+            self.file_path = None
         self.latest_version = 1.0
-        self.file_path = input_file_path
-        self.file_extension = file_extension
         self.config = self._read()
 
     @staticmethod
@@ -99,9 +102,12 @@ class ConfigLoader(object):
         """
         Read in a Json Config file.
         """
-        new_values = json.load(open(self.file_path, "r"))
-        config = ConfigLoader.default_values.copy()
-        config.update(new_values)
+        if self.file_path is None:
+            config = ConfigLoader.default_values.copy()
+        else:
+            new_values = json.load(open(self.file_path, "r"))
+            config = ConfigLoader.default_values.copy()
+            config.update(new_values)
         if config["version"] != self.latest_version:
             config = ConfigLoader._migrate_version(config)
         ConfigLoader._test_types(config)
