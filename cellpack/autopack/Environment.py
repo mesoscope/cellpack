@@ -145,6 +145,7 @@ class Environment(CompartmentList):
         self.show_grid_spheres = config["show_grid_plot"]
         self.boundingBox = numpy.array(recipe["bounding_box"])
         self.spacing = config["spacing"]
+        self.load_from_grid_file = config["load_from_grid_file"]
         self.name = name
 
         # saving/pickle option
@@ -154,7 +155,6 @@ class Environment(CompartmentList):
         )
         self.resultfile = self.out_folder + "/" + f"{self.name}-{config['name']}"
         self.grid_file_out = f"{self.resultfile}_grid"
-        self.load_from_grid_file = config["load_from_grid_file"]
 
         should_load_grid_file = (
             os.path.isfile(self.grid_file_out) and self.load_from_grid_file
