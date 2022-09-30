@@ -7,6 +7,7 @@ import json
 from json import encoder
 
 import cellpack.autopack as autopack
+from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 from cellpack.autopack.loaders.util import create_file_info_object_from_full_path
 from cellpack.autopack.utils import deep_merge
 from .v1_v2_attribute_changes import (
@@ -15,6 +16,7 @@ from .v1_v2_attribute_changes import (
     unused_attributes_list,
     convert_to_partners_map,
     attributes_move_to_composition,
+    required_attributes,
 )
 from cellpack.autopack.interface_objects.representations import Representations
 
@@ -200,7 +202,19 @@ class RecipeLoader(object):
         new_ingredient["representations"] = RecipeLoader._convert_to_representations(
             old_ingredient
         )
+        if new_ingredient["type"] == INGREDIENT_TYPE.SINGLE_SPHERE:
+            new_ingredient["radius"] = old_ingredient["radii"][0][0]
         return new_ingredient
+
+    @staticmethod
+    def _check_required_attributes(old_ingredient_data):
+        if "Type" not in old_ingredient_data:
+            old_ingredient_data["Type"] = "SingleSphere"
+        ingr_type = old_ingredient_data["Type"]
+        required = required_attributes[ingr_type]
+        for attr in required:
+            if attr not in old_ingredient_data:
+                raise ValueError(f"{ingr_type} data needs {attr}")
 
     @staticmethod
     def _split_ingredient_data(object_key, ingredient_data):
@@ -214,6 +228,7 @@ class RecipeLoader(object):
 
     @staticmethod
     def _get_v1_ingredient(ingredient_key, ingredient_data, region_list, objects_dict):
+        RecipeLoader._check_required_attributes(ingredient_data)
         converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
         object_info, composition_info = RecipeLoader._split_ingredient_data(
             ingredient_key, converted_ingredient
@@ -240,12 +255,13 @@ class RecipeLoader(object):
                 )
         return objects_dict, composition
 
-    @staticmethod
-    def _migrate_version(recipe, current_version, format_version="1.0"):
+    def _migrate_version(self, recipe, format_version="1.0"):
         new_recipe = {}
+
         if format_version == "1.0":
+
             new_recipe["version"] = recipe["recipe"]["version"]
-            new_recipe["format_version"] = current_version
+            new_recipe["format_version"] = self.current_version
             new_recipe["name"] = recipe["recipe"]["name"]
             new_recipe["bounding_box"] = recipe["options"]["boundingBox"]
             (
@@ -258,7 +274,6 @@ class RecipeLoader(object):
         new_values = json.load(open(self.file_path, "r"))
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
-
         if (
             "format_version" not in recipe_data
             or recipe_data["format_version"] != self.current_version
@@ -268,9 +283,7 @@ class RecipeLoader(object):
                 if "format_version" in recipe_data
                 else "1.0"
             )
-            recipe_data = RecipeLoader._migrate_version(
-                recipe_data, input_format_version, self.current_version
-            )
+            recipe_data = self._migrate_version(recipe_data, input_format_version)
 
         # TODO: request any external data before returning
         if "objects" in recipe_data:

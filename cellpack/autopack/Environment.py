@@ -69,6 +69,7 @@ from panda3d.bullet import BulletRigidBodyNode
 import cellpack.autopack as autopack
 from cellpack.autopack.MeshStore import MeshStore
 from cellpack.autopack.ingredient import Ingredient
+from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.autopack.utils import (
     cmp_to_key,
@@ -589,8 +590,8 @@ class Environment(CompartmentList):
             self.log.info("Volume Used   = %d", usedPts * unitVol)
             self.log.info("Volume Unused = %d", unUsedPts * unitVol)
             self.log.info("vTestid = %s", vTestid)
-            self.log.info("self.nbGridPoints = %r", self.nbGridPoints)
-            self.log.info("self.gridVolume = %d", self.gridVolume)
+            self.log.info("self.nbGridPoints = %r", self.grid.nbGridPoints)
+            self.log.info("self.gridVolume = %d", self.grid.gridVolume)
             self.log.info("histoVol.timeUpDistLoopTotal = %d", self.timeUpDistLoopTotal)
 
             #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
@@ -988,43 +989,50 @@ class Environment(CompartmentList):
     def create_ingredient(self, recipe, arguments):
         ingredient_type = arguments["type"]
 
-        if ingredient_type == "single_sphere":
+        if ingredient_type == INGREDIENT_TYPE.SINGLE_SPHERE:
             radius = arguments["radius"]
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = SingleSphereIngr(radius, **arguments)
-        elif ingredient_type == "multi_sphere":
+        elif ingredient_type == INGREDIENT_TYPE.MULTI_SPHERE:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = MultiSphereIngr(**arguments)
-        elif ingredient_type == "multi_cylinder":
+        elif ingredient_type == INGREDIENT_TYPE.MULTI_CYLINDER:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = MultiCylindersIngr(**arguments)
-        elif ingredient_type == "single_cube":
+        elif ingredient_type == INGREDIENT_TYPE.SINGLE_CUBE:
             bounds = arguments["bounds"]
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = SingleCubeIngr(bounds, **arguments)
-        elif ingredient_type == "single_cylinder":
+        elif ingredient_type == INGREDIENT_TYPE.SINGLE_CYLINDER:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = SingleCylinderIngr(**arguments)
-        elif ingredient_type == "grow":
+        elif ingredient_type == INGREDIENT_TYPE.GROW:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 GrowIngredient.ARGUMENTS, **arguments
             )
             ingr = GrowIngredient(**arguments)
-        elif ingredient_type == "actine":
+        elif ingredient_type == INGREDIENT_TYPE.GROW:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 GrowIngredient.ARGUMENTS, **arguments
             )
             ingr = ActinIngredient(**arguments)
+        else:
+            radius = arguments["radius"]
+            arguments = IOutils.IOingredientTool.clean_arguments(
+                Ingredient.ARGUMENTS, **arguments
+            )
+            ingr = SingleSphereIngr(radius, **arguments)
+
         if (
             "gradient" in arguments
             and arguments["gradient"] != ""
