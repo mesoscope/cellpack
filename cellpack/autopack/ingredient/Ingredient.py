@@ -2544,7 +2544,6 @@ class Ingredient(Agent):
         # create the rb only once and not at ever jitter
         # rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMat,),{"rtype":self.type},)
         # jitter loop
-        level = self.collisionLevel
         for attempt_number in range(self.jitter_attempts):
             insidePoints = {}
             newDistPoints = {}

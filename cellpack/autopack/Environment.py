@@ -156,7 +156,9 @@ class Environment(CompartmentList):
         self.grid_file_out = f"{self.resultfile}_grid"
         self.load_from_grid_file = config["load_from_grid_file"]
 
-        should_load_grid_file = os.path.isfile(self.grid_file_out) and self.load_from_grid_file 
+        should_load_grid_file = (
+            os.path.isfile(self.grid_file_out) and self.load_from_grid_file
+        )
         self.previous_grid_file = self.grid_file_out if should_load_grid_file else None
         self.setupfile = ""
         self.current_path = None  # the path of the recipe file
@@ -883,7 +885,7 @@ class Environment(CompartmentList):
                     str(self.grid.masterGridPositions[i][2]),
                 ],
                 "distance": str(self.grid.distToClosestSurf[i]),
-                "compartment": str(self.grid.compartment_ids[i])
+                "compartment": str(self.grid.compartment_ids[i]),
             }
         # data = {
         #     # "gridPositions": json.loads(self.grid.masterGridPositions),
@@ -1246,7 +1248,7 @@ class Environment(CompartmentList):
             self.grid.set_surfPtsBht(
                 verts.tolist()
             )  # should do it only on inside grid point
-    
+
     def extend_bounding_box_for_compartments(self):
         for _, compartment in enumerate(self.compartments):
             fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
