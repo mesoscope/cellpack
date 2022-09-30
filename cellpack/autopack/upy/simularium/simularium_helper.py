@@ -487,7 +487,7 @@ class simulariumHelper(hostHelper.Helper):
 
         if grid_point_positions is not None:
 
-            for index in range(54250):
+            for index in range(len(grid_point_compartment_ids)):
                 if index % 1 == 0:
                     compartment_id = grid_point_compartment_ids[index]
                     point_pos = grid_point_positions[index]
