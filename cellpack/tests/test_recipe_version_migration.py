@@ -325,7 +325,7 @@ def test_get_v1_ingredient():
 def test_convert_v1_to_v2(
     old_recipe_test_data, expected_object_dict, expected_composition_dict
 ):
-    objects_dict, composition = convert_v1_to_v2(old_recipe_test_data)
+    objects_dict, composition = convert(old_recipe_test_data)
     assert objects_dict == expected_object_dict
     assert composition == expected_composition_dict
 
