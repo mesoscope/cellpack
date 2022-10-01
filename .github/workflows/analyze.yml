@@ -26,7 +26,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: results_seed_0ext__A_histo_X
-        path: out/test_spheres/jitter/
+        path: cellpack/tests/outputs/test_spheres/jitter/
   Download:
     runs-on: ubuntu-latest
     needs: [Analyze]
