@@ -3,7 +3,7 @@ name: Analyze
 on: pull_request
 
 jobs:
-  analyze:
+  Analyze:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -21,7 +21,7 @@ jobs:
         pip install .[test]
     - name: Analyze packing
       run: |
-        pack -r cellpack/tests/recipes/test_spheres.json
+        pack -r cellpack/tests/recipes/test_spheres.json -c cellpack/tests/packing-configs/test_config.json
     - name: Upload
       uses: actions/upload-artifact@v3
       with:
@@ -29,13 +29,13 @@ jobs:
         path: out/test_spheres/jitter/
   Download:
     runs-on: ubuntu-latest
-    needs: [analyze]
+    needs: [Analyze]
     steps:
     - uses: actions/download-artifact@v3
     - name: Display structure of downloaded files
       run: ls -R
   Comment:
-    needs: [analyze]
+    needs: [Download]
     runs-on: ubuntu-latest
     steps:
     - uses: machine-learning-apps/pr-comment@master
