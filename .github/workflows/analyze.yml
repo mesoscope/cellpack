@@ -25,21 +25,17 @@ jobs:
     - name: Upload
       uses: actions/upload-artifact@v3
       with:
-        name: results_seed_0ext__A_histo_X
+        name: results
         path: cellpack/tests/outputs/test_spheres/jitter/
-  Download:
+  Comment:
     runs-on: ubuntu-latest
     needs: [Analyze]
     steps:
     - uses: actions/download-artifact@v3
     - name: Display structure of downloaded files
       run: ls -R
-  Comment:
-    needs: [Download]
-    runs-on: ubuntu-latest
-    steps:
     - uses: machine-learning-apps/pr-comment@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        path: cellpack/tests/outputs/test_spheres/jitter/results_seed_0ext__A_histo_X.png
+        path: results/results_seed_0ext__A_histo_X.png
