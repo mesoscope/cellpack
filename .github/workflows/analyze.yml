@@ -35,8 +35,7 @@ jobs:
     - name: Display structure of downloaded files
       run: ls -R
     - name: Report
-      uses: actions/checkout@v3
-    - run: | 
+      run: | 
         echo "## Metrics report" > report.md
         cml-publish results/results_seed_0ext__A_histo_X.png --md >> report.md
         cml-send-comment report.md
