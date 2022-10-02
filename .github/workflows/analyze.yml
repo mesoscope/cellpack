@@ -34,8 +34,8 @@ jobs:
     - uses: actions/download-artifact@v3
     - name: Display structure of downloaded files
       run: ls -R
-    - uses: machine-learning-apps/pr-comment@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        path: results/results_seed_0.txt
+    - name: Report
+    - run: | 
+        echo "## Metrics report" > report.md
+        cml-publish results/results_seed_0ext__A_histo_X.png --md >> report.md
+        cml-send-comment report.md
