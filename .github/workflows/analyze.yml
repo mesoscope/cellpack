@@ -38,4 +38,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        path: results/results_seed_0ext__A_histo_X.png
+        path: results/results_seed_0.txt
