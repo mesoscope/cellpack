@@ -36,7 +36,9 @@ jobs:
       run: ls -R
     - uses: iterative/setup-cml@v1
     - name: Report
+      env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: | 
         echo "## Metrics report"  >> report.md
         echo '![](./results/results_seed_0ext__A_histo_X.png)' >> report.md
-        cml comment create --publish report.md
+        cml send-comment report.md
