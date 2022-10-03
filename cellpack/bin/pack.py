@@ -49,7 +49,7 @@ def pack(recipe, config=None):
             output,
             plot=True,
             show_grid=config_data["show_grid_plot"],
-            seeds_i=config_data["rng_seed"]
+            seeds_i=config_data["rng_seed"],
         )
     else:
         env.buildGrid(rebuild=True, gridFileOut=None, previousFill=False)
