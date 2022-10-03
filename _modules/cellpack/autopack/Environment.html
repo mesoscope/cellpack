@@ -111,7 +111,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../cellpack.html#cellpack.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-contents">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cellpack.html#module-cellpack">Module contents</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
 </ul>
 </li>
@@ -165,7 +165,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#positions">positions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#positions2">positions2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packing-priority">packing_priority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#priority">priority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pdb">pdb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#color">color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#meshfile">meshFile</a></li>
@@ -351,6 +351,7 @@
 <span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.MeshStore</span> <span class="kn">import</span> <span class="n">MeshStore</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.ingredient</span> <span class="kn">import</span> <span class="n">Ingredient</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.ingredient_types</span> <span class="kn">import</span> <span class="n">INGREDIENT_TYPE</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.recipe_loader</span> <span class="kn">import</span> <span class="n">RecipeLoader</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">cmp_to_key</span><span class="p">,</span>
@@ -871,8 +872,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Volume Used   = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">usedPts</span> <span class="o">*</span> <span class="n">unitVol</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Volume Unused = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">unUsedPts</span> <span class="o">*</span> <span class="n">unitVol</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;vTestid = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">vTestid</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;self.nbGridPoints = </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbGridPoints</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;self.gridVolume = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridVolume</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;self.nbGridPoints = </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">nbGridPoints</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;self.gridVolume = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridVolume</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;histoVol.timeUpDistLoopTotal = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeUpDistLoopTotal</span><span class="p">)</span>
 
             <span class="c1">#    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code</span>
@@ -1270,43 +1271,50 @@
 <div class="viewcode-block" id="Environment.create_ingredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_ingredient">[docs]</a>    <span class="k">def</span> <span class="nf">create_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
         <span class="n">ingredient_type</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;single_sphere&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">SINGLE_SPHERE</span><span class="p">:</span>
             <span class="n">radius</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;radius&quot;</span><span class="p">]</span>
             <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
                 <span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
             <span class="p">)</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleSphereIngr</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;multi_sphere&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">MULTI_SPHERE</span><span class="p">:</span>
             <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
                 <span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
             <span class="p">)</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">MultiSphereIngr</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;multi_cylinder&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">MULTI_CYLINDER</span><span class="p">:</span>
             <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
                 <span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
             <span class="p">)</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">MultiCylindersIngr</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;single_cube&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">SINGLE_CUBE</span><span class="p">:</span>
             <span class="n">bounds</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;bounds&quot;</span><span class="p">]</span>
             <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
                 <span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
             <span class="p">)</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleCubeIngr</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;single_cylinder&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">SINGLE_CYLINDER</span><span class="p">:</span>
             <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
                 <span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
             <span class="p">)</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleCylinderIngr</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;grow&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">GROW</span><span class="p">:</span>
             <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
                 <span class="n">GrowIngredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
             <span class="p">)</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">GrowIngredient</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="s2">&quot;actine&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">GROW</span><span class="p">:</span>
             <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
                 <span class="n">GrowIngredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
             <span class="p">)</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">ActinIngredient</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;radius&quot;</span><span class="p">]</span>
+            <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
+                <span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
+            <span class="p">)</span>
+            <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleSphereIngr</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="p">(</span>
             <span class="s2">&quot;gradient&quot;</span> <span class="ow">in</span> <span class="n">arguments</span>
             <span class="ow">and</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
@@ -1720,21 +1728,21 @@
         <span class="n">priorities1</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">ingr2</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># priority = 0 or none and will be assigned based on complexity</span>
         <span class="n">priorities2</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">ingr0</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># negative values will pack first in order of abs[packing_priority]</span>
+        <span class="n">ingr0</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># negative values will pack first in order of abs[priority]</span>
         <span class="n">priorities0</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">ing</span> <span class="ow">in</span> <span class="n">allIngredients</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ing</span><span class="o">.</span><span class="n">completion</span> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">:</span>
                 <span class="k">continue</span>  <span class="c1"># ignore completed ingredients</span>
-            <span class="k">if</span> <span class="n">ing</span><span class="o">.</span><span class="n">packing_priority</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">ing</span><span class="o">.</span><span class="n">packing_priority</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ing</span><span class="o">.</span><span class="n">priority</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">ing</span><span class="o">.</span><span class="n">priority</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">ingr2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ing</span><span class="p">)</span>
-                <span class="n">priorities2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ing</span><span class="o">.</span><span class="n">packing_priority</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">ing</span><span class="o">.</span><span class="n">packing_priority</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">priorities2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ing</span><span class="o">.</span><span class="n">priority</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">ing</span><span class="o">.</span><span class="n">priority</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">ingr1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ing</span><span class="p">)</span>
-                <span class="n">priorities1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ing</span><span class="o">.</span><span class="n">packing_priority</span><span class="p">)</span>
+                <span class="n">priorities1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ing</span><span class="o">.</span><span class="n">priority</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># ing.packing_priority    = -ing.packing_priority</span>
+                <span class="c1"># ing.priority    = -ing.priority</span>
                 <span class="n">ingr0</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ing</span><span class="p">)</span>
-                <span class="n">priorities0</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ing</span><span class="o">.</span><span class="n">packing_priority</span><span class="p">)</span>
+                <span class="n">priorities0</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ing</span><span class="o">.</span><span class="n">priority</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickWeightedIngr</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -1746,7 +1754,7 @@
         <span class="c1"># GrahamAdded this stuff in summer 2011, beware!</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ingr1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">lowestIng</span> <span class="o">=</span> <span class="n">ingr1</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">ingr1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">lowestPriority</span> <span class="o">=</span> <span class="n">lowestIng</span><span class="o">.</span><span class="n">packing_priority</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lowestPriority</span> <span class="o">=</span> <span class="n">lowestIng</span><span class="o">.</span><span class="n">priority</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lowestPriority</span> <span class="o">=</span> <span class="mf">1.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;self.lowestPriority for Ing1 = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lowestPriority</span><span class="p">)</span>
@@ -1772,7 +1780,7 @@
                 <span class="n">r</span> <span class="o">=</span> <span class="n">priors2</span><span class="o">.</span><span class="n">min_radius</span>
             <span class="n">np</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">totalRadii</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lowestPriority</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">normalizedPriorities0</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="p">)</span>
-            <span class="n">priors2</span><span class="o">.</span><span class="n">packing_priority</span> <span class="o">=</span> <span class="n">np</span>
+            <span class="n">priors2</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">np</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;self.normalizedPriorities0 = </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalizedPriorities0</span><span class="p">)</span>
         <span class="n">activeIngr0</span> <span class="o">=</span> <span class="n">ingr0</span>  <span class="c1"># +ingr1+ingr2  #cropped to 0 on 7/20/10</span>
 
@@ -2003,7 +2011,7 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 0.00001</span>
             <span class="k">for</span> <span class="n">priors</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">activeIngr12</span><span class="p">:</span>
-                <span class="n">pp</span> <span class="o">=</span> <span class="n">priors</span><span class="o">.</span><span class="n">packing_priority</span>
+                <span class="n">pp</span> <span class="o">=</span> <span class="n">priors</span><span class="o">.</span><span class="n">priority</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span> <span class="o">+</span> <span class="n">pp</span>
             <span class="n">previousThresh</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">normalizedPriorities</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2017,7 +2025,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">thresholdPriorities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">priors</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">activeIngr12</span><span class="p">:</span>
                 <span class="c1"># pp1 = 0</span>
-                <span class="n">pp</span> <span class="o">=</span> <span class="n">priors</span><span class="o">.</span><span class="n">packing_priority</span>
+                <span class="n">pp</span> <span class="o">=</span> <span class="n">priors</span><span class="o">.</span><span class="n">priority</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">np</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pp</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -2187,7 +2195,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 0.00001</span>
         <span class="k">for</span> <span class="n">priors</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">activeIngr12</span><span class="p">:</span>
-            <span class="n">pp</span> <span class="o">=</span> <span class="n">priors</span><span class="o">.</span><span class="n">packing_priority</span>
+            <span class="n">pp</span> <span class="o">=</span> <span class="n">priors</span><span class="o">.</span><span class="n">priority</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span> <span class="o">+</span> <span class="n">pp</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;totalPriorities = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span><span class="p">)</span>
         <span class="n">previousThresh</span> <span class="o">=</span> <span class="mi">0</span>
@@ -2202,7 +2210,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">thresholdPriorities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">priors</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">activeIngr12</span><span class="p">:</span>
             <span class="c1"># pp1 = 0</span>
-            <span class="n">pp</span> <span class="o">=</span> <span class="n">priors</span><span class="o">.</span><span class="n">packing_priority</span>
+            <span class="n">pp</span> <span class="o">=</span> <span class="n">priors</span><span class="o">.</span><span class="n">priority</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">np</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pp</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -2409,7 +2417,7 @@
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 0.00001</span>
                 <span class="k">for</span> <span class="n">priors</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">activeIngr12</span><span class="p">:</span>
-                    <span class="n">pp</span> <span class="o">=</span> <span class="n">priors</span><span class="o">.</span><span class="n">packing_priority</span>
+                    <span class="n">pp</span> <span class="o">=</span> <span class="n">priors</span><span class="o">.</span><span class="n">priority</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span> <span class="o">+</span> <span class="n">pp</span>
                 <span class="c1">#                    print (&#39;totalPriorities = &#39;, self.totalPriorities)</span>
                 <span class="n">previousThresh</span> <span class="o">=</span> <span class="mi">0</span>
@@ -2424,7 +2432,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">thresholdPriorities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">priors</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">activeIngr12</span><span class="p">:</span>
                     <span class="c1"># pp1 = 0</span>
-                    <span class="n">pp</span> <span class="o">=</span> <span class="n">priors</span><span class="o">.</span><span class="n">packing_priority</span>
+                    <span class="n">pp</span> <span class="o">=</span> <span class="n">priors</span><span class="o">.</span><span class="n">priority</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
                         <span class="n">np</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pp</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">totalPriorities</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cellpack.autopack.loaders.config_loader &mdash; cellPack 1.0.3 documentation</title>
+  <title>cellpack.autopack.loaders.util &mdash; cellPack 1.0.3 documentation</title>
   
 
   
@@ -264,7 +264,7 @@
         
           <li><a href="../../autopack.html">cellpack.autopack</a> &raquo;</li>
         
-      <li>cellpack.autopack.loaders.config_loader</li>
+      <li>cellpack.autopack.loaders.util</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -279,113 +279,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for cellpack.autopack.loaders.config_loader</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">import</span> <span class="nn">os</span>
-
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">encoder</span>
-
-<span class="n">encoder</span><span class="o">.</span><span class="n">FLOAT_REPR</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s2">&quot;.8g&quot;</span><span class="p">)</span>
+  <h1>Source code for cellpack.autopack.loaders.util</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
 
 
-<div class="viewcode-block" id="MetaEnum"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.MetaEnum">[docs]</a><span class="k">class</span> <span class="nc">MetaEnum</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<div class="viewcode-block" id="MetaEnum.values"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.MetaEnum.values">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">member</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">]</span></div>
-
-<div class="viewcode-block" id="MetaEnum.is_member"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.MetaEnum.is_member">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">is_member</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">values</span></div></div>
-
-
-<div class="viewcode-block" id="Place_Methods"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.Place_Methods">[docs]</a><span class="k">class</span> <span class="nc">Place_Methods</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
-    <span class="n">JITTER</span> <span class="o">=</span> <span class="s2">&quot;jitter&quot;</span>
-    <span class="n">SPHERES_SST</span> <span class="o">=</span> <span class="s2">&quot;spheresSST&quot;</span>
-    <span class="n">PANDA_BULLET</span> <span class="o">=</span> <span class="s2">&quot;pandaBullet&quot;</span>
-    <span class="n">PANDA_BULLET_RELAX</span> <span class="o">=</span> <span class="s2">&quot;pandaBulletRelax&quot;</span></div>
-
-
-<div class="viewcode-block" id="Inner_Grid_Methods"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.Inner_Grid_Methods">[docs]</a><span class="k">class</span> <span class="nc">Inner_Grid_Methods</span><span class="p">(</span><span class="n">MetaEnum</span><span class="p">):</span>
-    <span class="c1"># Working inner grid methods</span>
-    <span class="n">RAYTRACE</span> <span class="o">=</span> <span class="s2">&quot;raytrace&quot;</span>
-    <span class="n">SCANLINE</span> <span class="o">=</span> <span class="s2">&quot;scanline&quot;</span>
-    <span class="n">TRIMESH</span> <span class="o">=</span> <span class="s2">&quot;trimesh&quot;</span></div>
-
-
-<div class="viewcode-block" id="ConfigLoader"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.ConfigLoader">[docs]</a><span class="k">class</span> <span class="nc">ConfigLoader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="n">default_values</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;simularium&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;inner_grid_method&quot;</span><span class="p">:</span> <span class="s2">&quot;raytrace&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;live_packing&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;ordered_packing&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;out&quot;</span><span class="p">:</span> <span class="s2">&quot;out/&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;overwrite_place_method&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;place_method&quot;</span><span class="p">:</span> <span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;save_analyze_result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;show_grid_plot&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;spacing&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s2">&quot;use_periodicity&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;show_sphere_trees&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="p">}</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">):</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">file_extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">latest_version</span> <span class="o">=</span> <span class="mf">1.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="n">input_file_path</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">file_extension</span> <span class="o">=</span> <span class="n">file_extension</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_test_types</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">Place_Methods</span><span class="o">.</span><span class="n">is_member</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;place_method&quot;</span><span class="p">]):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;place_method must be one of </span><span class="si">{</span><span class="n">Place_Methods</span><span class="o">.</span><span class="n">values</span><span class="p">()</span><span class="si">}</span><span class="s2">, not </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;place_method&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">Inner_Grid_Methods</span><span class="o">.</span><span class="n">is_member</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;inner_grid_method&quot;</span><span class="p">]):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;inner_grid_method must be one of </span><span class="si">{</span><span class="n">Inner_Grid_Methods</span><span class="o">.</span><span class="n">values</span><span class="p">()</span><span class="si">}</span><span class="s2">, not </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;inner_grid_method&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-        <span class="n">bools</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;live_packing&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;ordered_packing&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;overwrite_place_method&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;save_analyze_result&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;show_grid_plot&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;use_periodicity&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;show_sphere_trees&quot;</span><span class="p">,</span>
-        <span class="p">]</span>
-        <span class="k">for</span> <span class="n">should_be_bool</span> <span class="ow">in</span> <span class="n">bools</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="n">should_be_bool</span><span class="p">],</span> <span class="nb">bool</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                    <span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">should_be_bool</span><span class="si">}</span><span class="s2"> should be a boolean, not </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="n">should_be_bool</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_migrate_version</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">config</span>
-
-    <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Read in a Json Config file.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">new_values</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigLoader</span><span class="o">.</span><span class="n">default_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_values</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">latest_version</span><span class="p">:</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigLoader</span><span class="o">.</span><span class="n">_migrate_version</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-        <span class="n">ConfigLoader</span><span class="o">.</span><span class="n">_test_types</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">config</span></div>
+<div class="viewcode-block" id="create_file_info_object_from_full_path"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.util.create_file_info_object_from_full_path">[docs]</a><span class="k">def</span> <span class="nf">create_file_info_object_from_full_path</span><span class="p">(</span><span class="n">full_path</span><span class="p">):</span>
+    <span class="n">path</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span>
+        <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="n">extension</span><span class="p">,</span>
+    <span class="p">}</span></div>
 </pre></div>
 
            </div>

@@ -114,7 +114,7 @@
 <li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-contents">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack">Module contents</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
 </ul>
 </li>
@@ -168,7 +168,7 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions">positions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions2">positions2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-priority">packing_priority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#priority">priority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pdb">pdb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#color">color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshfile">meshFile</a></li>
@@ -545,6 +545,18 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cellpack.autopack.interface_objects.html">cellpack.autopack.interface_objects package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.interface_objects.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.interface_objects.html#module-cellpack.autopack.interface_objects.ingredient_types">cellpack.autopack.interface_objects.ingredient_types module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.GROW"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE.GROW</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.MULTI_CYLINDER"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE.MULTI_CYLINDER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.MULTI_SPHERE"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE.MULTI_SPHERE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_CUBE"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE.SINGLE_CUBE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_CYLINDER"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE.SINGLE_CYLINDER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.ingredient_types.INGREDIENT_TYPE.SINGLE_SPHERE"><code class="docutils literal notranslate"><span class="pre">INGREDIENT_TYPE.SINGLE_SPHERE</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.interface_objects.html#module-cellpack.autopack.interface_objects.representations">cellpack.autopack.interface_objects.representations module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations"><code class="docutils literal notranslate"><span class="pre">Representations</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.interface_objects.html#cellpack.autopack.interface_objects.representations.Representations.DATABASE"><code class="docutils literal notranslate"><span class="pre">Representations.DATABASE</span></code></a></li>
@@ -567,7 +579,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.interface_objects.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.interface_objects.html#module-cellpack.autopack.interface_objects">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cellpack.autopack.loaders.html">cellpack.autopack.loaders package</a><ul>
@@ -608,7 +620,12 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.loaders.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.loaders.html#module-cellpack.autopack.loaders.util">cellpack.autopack.loaders.util module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.util.create_file_info_object_from_full_path"><code class="docutils literal notranslate"><span class="pre">create_file_info_object_from_full_path()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.loaders.html#module-cellpack.autopack.loaders.v1_v2_attribute_changes">cellpack.autopack.loaders.v1_v2_attribute_changes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.loaders.html#module-cellpack.autopack.loaders">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cellpack.autopack.upy.html">cellpack.autopack.upy package</a><ul>
@@ -616,13 +633,13 @@
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.upy.simularium.html">cellpack.autopack.upy.simularium package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#module-cellpack.autopack.upy.simularium.simularium_helper">cellpack.autopack.upy.simularium.simularium_helper module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#module-contents">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.simularium.html#module-cellpack.autopack.upy.simularium">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.upy.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.upy.html#cellpack-autopack-upy-colors-module">cellpack.autopack.upy.colors module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.upy.html#module-cellpack.autopack.upy.colors">cellpack.autopack.upy.colors module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.upy.html#cellpack.autopack.upy.colors.RedWhiteBlueRamp"><code class="docutils literal notranslate"><span class="pre">RedWhiteBlueRamp()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.upy.html#cellpack.autopack.upy.colors.ThreeColorRamp"><code class="docutils literal notranslate"><span class="pre">ThreeColorRamp()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.upy.html#cellpack.autopack.upy.colors.TwoColorRamp"><code class="docutils literal notranslate"><span class="pre">TwoColorRamp()</span></code></a></li>
@@ -632,7 +649,7 @@
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.upy.html#cellpack.autopack.upy.colors.map_colors"><code class="docutils literal notranslate"><span class="pre">map_colors()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.upy.html#cellpack-autopack-upy-hosthelper-module">cellpack.autopack.upy.hostHelper module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.upy.html#module-cellpack.autopack.upy.hostHelper">cellpack.autopack.upy.hostHelper module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper"><code class="docutils literal notranslate"><span class="pre">Helper</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.AddObject"><code class="docutils literal notranslate"><span class="pre">Helper.AddObject()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.upy.html#cellpack.autopack.upy.hostHelper.Helper.ApplyMatrix"><code class="docutils literal notranslate"><span class="pre">Helper.ApplyMatrix()</span></code></a></li>
@@ -875,11 +892,11 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="cellpack-autopack-analysis-module">
-<h2>cellpack.autopack.Analysis module<a class="headerlink" href="#cellpack-autopack-analysis-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.Analysis">
+<span id="cellpack-autopack-analysis-module"></span><h2>cellpack.autopack.Analysis module<a class="headerlink" href="#module-cellpack.autopack.Analysis" title="Permalink to this heading">¶</a></h2>
 <p>Created on Mon May  6 22:58:44 2013</p>
 <p>&#64;author: ludo</p>
-<span class="target" id="module-cellpack.autopack.Analysis"></span><dl class="py class">
+<dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.Analysis.AnalyseAP">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Analysis.</span></span><span class="sig-name descname"><span class="pre">AnalyseAP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Analysis.html#AnalyseAP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Analysis.AnalyseAP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -1172,8 +1189,8 @@ objects : list of object or list of points</p>
 <dd></dd></dl>
 
 </section>
-<section id="cellpack-autopack-basegrid-module">
-<h2>cellpack.autopack.BaseGrid module<a class="headerlink" href="#cellpack-autopack-basegrid-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.BaseGrid">
+<span id="cellpack-autopack-basegrid-module"></span><h2>cellpack.autopack.BaseGrid module<a class="headerlink" href="#module-cellpack.autopack.BaseGrid" title="Permalink to this heading">¶</a></h2>
 <p># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
 #   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
 #   with assistance from Mostafa Al-Alusi in 2009 and periodic input
@@ -1206,7 +1223,7 @@ objects : list of object or list of points</p>
 #
 ###############################################################################
 &#64;author: Ludovic Autin, Graham Johnson,  &amp; Michel Sanner</p>
-<span class="target" id="module-cellpack.autopack.BaseGrid"></span><dl class="py class">
+<dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.BaseGrid.</span></span><span class="sig-name descname"><span class="pre">BaseGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">([0,</span> <span class="pre">0,</span> <span class="pre">0],</span> <span class="pre">[0.1,</span> <span class="pre">0.1,</span> <span class="pre">0.1])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -1867,8 +1884,8 @@ did not fit</p>
 </dd></dl>
 
 </section>
-<section id="cellpack-autopack-environment-module">
-<h2>cellpack.autopack.Environment module<a class="headerlink" href="#cellpack-autopack-environment-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.Environment">
+<span id="cellpack-autopack-environment-module"></span><h2>cellpack.autopack.Environment module<a class="headerlink" href="#module-cellpack.autopack.Environment" title="Permalink to this heading">¶</a></h2>
 <p># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
 #   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
 #   with assistance from Mostafa Al-Alusi in 2009 and periodic input
@@ -1909,7 +1926,7 @@ did not fit</p>
 # Updated with final thesis HistoVol.py file from Sept 25, 2012 on July 5, 2012
 # with correct analysis tools</p>
 <p># TODO: fix the save/restore grid</p>
-<span class="target" id="module-cellpack.autopack.Environment"></span><dl class="py class">
+<dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.Environment.Environment">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Environment.</span></span><span class="sig-name descname"><span class="pre">Environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Environment.html#Environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Environment.Environment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.Compartment.CompartmentList" title="cellpack.autopack.Compartment.CompartmentList"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompartmentList</span></code></a></p>
@@ -2448,8 +2465,8 @@ listingredient influenced</p>
 <dd></dd></dl>
 
 </section>
-<section id="cellpack-autopack-geometrytools-module">
-<h2>cellpack.autopack.GeometryTools module<a class="headerlink" href="#cellpack-autopack-geometrytools-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.GeometryTools">
+<span id="cellpack-autopack-geometrytools-module"></span><h2>cellpack.autopack.GeometryTools module<a class="headerlink" href="#module-cellpack.autopack.GeometryTools" title="Permalink to this heading">¶</a></h2>
 <p>Created on Mon Jun 24 15:27:52 2013</p>
 <p>&#64;author: ludovic Autin</p>
 <p>2D integration of circle rectangle intersection area from
@@ -2459,7 +2476,7 @@ reative Commons Attribution-ShareAlike</p>
 <p>3D integration sphee cube intersection volume from
 <a class="reference external" href="http://crowsandcats.blogspot.com/2013/04/cube-sphere-intersection-volume.html">http://crowsandcats.blogspot.com/2013/04/cube-sphere-intersection-volume.html</a>
 Copyright ©  Andrew White</p>
-<span class="target" id="module-cellpack.autopack.GeometryTools"></span><dl class="py class">
+<dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.GeometryTools.GeometryTools">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.GeometryTools.</span></span><span class="sig-name descname"><span class="pre">GeometryTools</span></span><a class="reference internal" href="_modules/cellpack/autopack/GeometryTools.html#GeometryTools"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.GeometryTools.GeometryTools" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -2559,8 +2576,8 @@ check if the four corner are more than radius away from circle center</p>
 </dd></dl>
 
 </section>
-<section id="cellpack-autopack-gradient-module">
-<h2>cellpack.autopack.Gradient module<a class="headerlink" href="#cellpack-autopack-gradient-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.Gradient">
+<span id="cellpack-autopack-gradient-module"></span><h2>cellpack.autopack.Gradient module<a class="headerlink" href="#module-cellpack.autopack.Gradient" title="Permalink to this heading">¶</a></h2>
 <p># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
 #   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
 #   with assistance from Mostafa Al-Alusi in 2009 and periodic input
@@ -2601,7 +2618,7 @@ check if the four corner are more than radius away from circle center</p>
 # Updated with final thesis HistoVol.py file from Sept 25, 2012 on July 5, 2012
 # with correct analysis tools</p>
 <p># TODO: fix the save/restore grid</p>
-<span class="target" id="module-cellpack.autopack.Gradient"></span><dl class="py class">
+<dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.Gradient.Gradient">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Gradient.</span></span><span class="sig-name descname"><span class="pre">Gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'X'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Gradient.html#Gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Gradient.Gradient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -3249,11 +3266,11 @@ with an array of points spaces pGridSpacing apart.:</p>
 </dd></dl>
 
 </section>
-<section id="cellpack-autopack-ioutils-module">
-<h2>cellpack.autopack.IOutils module<a class="headerlink" href="#cellpack-autopack-ioutils-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.IOutils">
+<span id="cellpack-autopack-ioutils-module"></span><h2>cellpack.autopack.IOutils module<a class="headerlink" href="#module-cellpack.autopack.IOutils" title="Permalink to this heading">¶</a></h2>
 <p>Created on Sun Jan 27 09:04:10 2013</p>
 <p>&#64;author: Ludovic Autin</p>
-<span class="target" id="module-cellpack.autopack.IOutils"></span><dl class="py class">
+<dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.IOutils.ExportCollada">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.IOutils.</span></span><span class="sig-name descname"><span class="pre">ExportCollada</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/IOutils.html#ExportCollada"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.IOutils.ExportCollada" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -3682,8 +3699,8 @@ env is the environment / recipe to be exported.</p>
 <section id="cellpack-autopack-outputsimularium-module">
 <h2>cellpack.autopack.OutputSimularium module<a class="headerlink" href="#cellpack-autopack-outputsimularium-module" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="cellpack-autopack-recipe-module">
-<h2>cellpack.autopack.Recipe module<a class="headerlink" href="#cellpack-autopack-recipe-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.Recipe">
+<span id="cellpack-autopack-recipe-module"></span><h2>cellpack.autopack.Recipe module<a class="headerlink" href="#module-cellpack.autopack.Recipe" title="Permalink to this heading">¶</a></h2>
 <p># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin,
 # and Michel Sanner
 #   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
@@ -3718,7 +3735,7 @@ env is the environment / recipe to be exported.</p>
 &#64;author: Graham Johnson, Ludovic Autin, &amp; Michel Sanner</p>
 <p># Hybrid version merged from Graham’s Sept 6, 2011 and Ludo’s April 2012
 #version on May 16, 2012, re-merged on July 5, 2012 with thesis versions</p>
-<span class="target" id="module-cellpack.autopack.Recipe"></span><dl class="py class">
+<dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.Recipe.Recipe">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Recipe.</span></span><span class="sig-name descname"><span class="pre">Recipe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ext'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Recipe.html#Recipe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Recipe.Recipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -3799,11 +3816,11 @@ see <a class="reference external" href="http://molbiol.edu.ru/eng/scripts/01_04.
 <dd></dd></dl>
 
 </section>
-<section id="cellpack-autopack-serializable-module">
-<h2>cellpack.autopack.Serializable module<a class="headerlink" href="#cellpack-autopack-serializable-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.Serializable">
+<span id="cellpack-autopack-serializable-module"></span><h2>cellpack.autopack.Serializable module<a class="headerlink" href="#module-cellpack.autopack.Serializable" title="Permalink to this heading">¶</a></h2>
 <p>Created on Tue Jan 19 15:55:27 2016</p>
 <p>&#64;author: ludo</p>
-<span class="target" id="module-cellpack.autopack.Serializable"></span><dl class="py class">
+<dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.Serializable.sCompartment">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Serializable.</span></span><span class="sig-name descname"><span class="pre">sCompartment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Serializable.html#sCompartment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Serializable.sCompartment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -3883,8 +3900,8 @@ see <a class="reference external" href="http://molbiol.edu.ru/eng/scripts/01_04.
 </dd></dl>
 
 </section>
-<section id="cellpack-autopack-binvox-rw-module">
-<h2>cellpack.autopack.binvox_rw module<a class="headerlink" href="#cellpack-autopack-binvox-rw-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.binvox_rw">
+<span id="cellpack-autopack-binvox-rw-module"></span><h2>cellpack.autopack.binvox_rw module<a class="headerlink" href="#module-cellpack.autopack.binvox_rw" title="Permalink to this heading">¶</a></h2>
 <p>Binvox to Numpy and back.</p>
 <p>binvox argument
 Usage: binvox [-d &lt;voxel dimension&gt;] [-t &lt;voxel file type&gt;] [-c] [-v] &lt;model filespec&gt;</p>
@@ -3962,7 +3979,7 @@ binvox -c -d 200 -t mira plane.wrl</p>
 <span class="go">True</span>
 </pre></div>
 </div>
-<span class="target" id="module-cellpack.autopack.binvox_rw"></span><dl class="py class">
+<dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.binvox_rw.Voxels">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.binvox_rw.</span></span><span class="sig-name descname"><span class="pre">Voxels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/binvox_rw.html#Voxels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.binvox_rw.Voxels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -4120,8 +4137,8 @@ converted to dense format.</p>
 </dd></dl>
 
 </section>
-<section id="cellpack-autopack-ldsequence-module">
-<h2>cellpack.autopack.ldSequence module<a class="headerlink" href="#cellpack-autopack-ldsequence-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.ldSequence">
+<span id="cellpack-autopack-ldsequence-module"></span><h2>cellpack.autopack.ldSequence module<a class="headerlink" href="#module-cellpack.autopack.ldSequence" title="Permalink to this heading">¶</a></h2>
 <p># autoPACK Authors: Graham T. Johnson, Mostafa Al-Alusi, Ludovic Autin, Michel Sanner
 #   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
 #   with assistance from Mostafa Al-Alusi in 2009 and periodic input
@@ -4130,7 +4147,7 @@ converted to dense format.</p>
 # ldSequence.py Authors: Ludovic Autin
 ###############################################################################
 &#64;author: Ludovic Autin, Graham Johnson,  &amp; Michel Sanner</p>
-<span class="target" id="module-cellpack.autopack.ldSequence"></span><dl class="py class">
+<dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.ldSequence.HaltonSequence">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.ldSequence.</span></span><span class="sig-name descname"><span class="pre">HaltonSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atmost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ldSequence.html#HaltonSequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ldSequence.HaltonSequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -4274,8 +4291,8 @@ This one gives the same results as the other.</p>
 </dd></dl>
 
 </section>
-<section id="cellpack-autopack-randomrot-module">
-<h2>cellpack.autopack.randomRot module<a class="headerlink" href="#cellpack-autopack-randomrot-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.randomRot">
+<span id="cellpack-autopack-randomrot-module"></span><h2>cellpack.autopack.randomRot module<a class="headerlink" href="#module-cellpack.autopack.randomRot" title="Permalink to this heading">¶</a></h2>
 <p>Created 2012</p>
 <p># autoPACK Authors: Graham T. Johnson, Ludovic Autin, Mostafa Al-Alusi, Michel Sanner
 #   Based on COFFEE Script developed by Graham Johnson between 2005 and 2010
@@ -4350,7 +4367,7 @@ This one gives the same results as the other.</p>
 #    Laboratory for Fluorescence Dynamics, University of California, Irvine
 #
 #   :Version: 2012.10.18</p>
-<span class="target" id="module-cellpack.autopack.randomRot"></span><dl class="py class">
+<dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.randomRot.RandomRot">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.randomRot.</span></span><span class="sig-name descname"><span class="pre">RandomRot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/randomRot.html#RandomRot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.randomRot.RandomRot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -4424,8 +4441,8 @@ between 0 and 1 for each returned quaternion.</p>
 </dd></dl>
 
 </section>
-<section id="cellpack-autopack-ray-module">
-<h2>cellpack.autopack.ray module<a class="headerlink" href="#cellpack-autopack-ray-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.ray">
+<span id="cellpack-autopack-ray-module"></span><h2>cellpack.autopack.ray module<a class="headerlink" href="#module-cellpack.autopack.ray" title="Permalink to this heading">¶</a></h2>
 <section id="created-on-saturday-september-1-1-50-00-2012">
 <h3>Created on Saturday September 1 1:50:00 2012<a class="headerlink" href="#created-on-saturday-september-1-1-50-00-2012" title="Permalink to this heading">¶</a></h3>
 <p>#
@@ -4458,7 +4475,7 @@ between 0 and 1 for each returned quaternion.</p>
 Name: -
 &#64;author: Graham Johnson, Michel Sanner, Ludovic Autin, Kevin Wu</p>
 </section>
-<span class="target" id="module-cellpack.autopack.ray"></span><dl class="py function">
+<dl class="py function">
 <dt class="sig sig-object py" id="cellpack.autopack.ray.dot">
 <span class="sig-prename descclassname"><span class="pre">cellpack.autopack.ray.</span></span><span class="sig-name descname"><span class="pre">dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/ray.html#dot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.ray.dot" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -4528,11 +4545,11 @@ for the cube of points surrounding our center point.</p>
 <dd></dd></dl>
 
 </section>
-<section id="cellpack-autopack-trajectory-module">
-<h2>cellpack.autopack.trajectory module<a class="headerlink" href="#cellpack-autopack-trajectory-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.trajectory">
+<span id="cellpack-autopack-trajectory-module"></span><h2>cellpack.autopack.trajectory module<a class="headerlink" href="#module-cellpack.autopack.trajectory" title="Permalink to this heading">¶</a></h2>
 <p>Created on Wed Mar 19 11:50:35 2014</p>
 <p>&#64;author: ludo</p>
-<span class="target" id="module-cellpack.autopack.trajectory"></span><dl class="py class">
+<dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.trajectory.Trajectory">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.trajectory.</span></span><span class="sig-name descname"><span class="pre">Trajectory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbIngredients</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/trajectory.html#Trajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.trajectory.Trajectory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -4677,8 +4694,8 @@ for the cube of points surrounding our center point.</p>
 </dd></dl>
 
 </section>
-<section id="cellpack-autopack-transformation-module">
-<h2>cellpack.autopack.transformation module<a class="headerlink" href="#cellpack-autopack-transformation-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.transformation">
+<span id="cellpack-autopack-transformation-module"></span><h2>cellpack.autopack.transformation module<a class="headerlink" href="#module-cellpack.autopack.transformation" title="Permalink to this heading">¶</a></h2>
 <p>Homogeneous Transformation Matrices and Quaternions.</p>
 <p>A library for calculating 4x4 matrices for translating, rotating, reflecting,
 scaling, shearing, projecting, orthogonalizing, and superimposing arrays of
@@ -4826,7 +4843,7 @@ Cambridge University Press; 2nd Ed. 2004. Chapter 4, Algorithm 4.7, p 130.</p></
 </pre></div>
 </div>
 </section>
-<span class="target" id="module-cellpack.autopack.transformation"></span></section>
+</section>
 <section id="module-cellpack.autopack.utils">
 <span id="cellpack-autopack-utils-module"></span><h2>cellpack.autopack.utils module<a class="headerlink" href="#module-cellpack.autopack.utils" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
@@ -4873,8 +4890,8 @@ priority = 0</p>
 </dd></dl>
 
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cellpack.autopack" title="Permalink to this heading">¶</a></h2>
 <section id="created-on-fri-jul-20-23-53-00-2012">
 <h3>Created on Fri Jul 20 23:53:00 2012<a class="headerlink" href="#created-on-fri-jul-20-23-53-00-2012" title="Permalink to this heading">¶</a></h3>
 <p>#
@@ -4909,7 +4926,7 @@ Define here some usefull variable and setup filename path that facilitate
 AF
 &#64;author: Ludovic Autin with editing by Graham Johnson</p>
 </section>
-<span class="target" id="module-cellpack.autopack"></span><dl class="py function">
+<dl class="py function">
 <dt class="sig sig-object py" id="cellpack.autopack.checkErrorInPath">
 <span class="sig-prename descclassname"><span class="pre">cellpack.autopack.</span></span><span class="sig-name descname"><span class="pre">checkErrorInPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toreplace</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack.html#checkErrorInPath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.checkErrorInPath" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>

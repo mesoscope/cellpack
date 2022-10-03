@@ -112,7 +112,7 @@
 <li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.example.Example"><code class="docutils literal notranslate"><span class="pre">Example</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-contents">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.html#module-cellpack">Module contents</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.html#cellpack.get_module_version"><code class="docutils literal notranslate"><span class="pre">get_module_version()</span></code></a></li>
 </ul>
 </li>
@@ -166,7 +166,7 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions">positions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#positions2">positions2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#spherefile">sphereFile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-priority">packing_priority</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#priority">priority</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#pdb">pdb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#color">color</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#meshfile">meshFile</a></li>
@@ -516,8 +516,8 @@
 <p><a href="#id100"><span class="problematic" id="id101">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string</span></code>*</p>
 <p>Location of sphere file</p>
 </section>
-<section id="packing-priority">
-<h3>packing_priority<a class="headerlink" href="#packing-priority" title="Permalink to this heading">¶</a></h3>
+<section id="priority">
+<h3>priority<a class="headerlink" href="#priority" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id102"><span class="problematic" id="id103">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code>* Default to <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
 <p>Order to pack, largest negative number gets packed first.</p>
 </section>
@@ -706,7 +706,7 @@ Gradient name to use if <code class="docutils literal notranslate"><span class="
 <span class="w">    </span><span class="nt">&quot;rejection_threshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;place_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;cutoff_surface&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;packing_priority&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;priority&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;proba_binding&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;rotation_axis&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;positions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="p">],</span><span class="w"></span>

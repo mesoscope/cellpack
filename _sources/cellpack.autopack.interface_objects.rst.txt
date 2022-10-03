@@ -4,6 +4,14 @@ cellpack.autopack.interface\_objects package
 Submodules
 ----------
 
+cellpack.autopack.interface\_objects.ingredient\_types module
+-------------------------------------------------------------
+
+.. automodule:: cellpack.autopack.interface_objects.ingredient_types
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.interface\_objects.representations module
 -----------------------------------------------------------
 

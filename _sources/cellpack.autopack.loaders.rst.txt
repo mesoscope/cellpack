@@ -20,6 +20,22 @@ cellpack.autopack.loaders.recipe\_loader module
    :undoc-members:
    :show-inheritance:
 
+cellpack.autopack.loaders.util module
+-------------------------------------
+
+.. automodule:: cellpack.autopack.loaders.util
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cellpack.autopack.loaders.v1\_v2\_attribute\_changes module
+-----------------------------------------------------------
+
+.. automodule:: cellpack.autopack.loaders.v1_v2_attribute_changes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 
