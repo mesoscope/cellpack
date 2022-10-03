@@ -42,4 +42,4 @@ jobs:
       run: | 
         echo "## Metrics report"  >> report.md
         echo '![](./results/results_seed_0ext__A_histo_X.png)' >> report.md
-        cml send-github-check report.md
+        cml send-comment report.md
