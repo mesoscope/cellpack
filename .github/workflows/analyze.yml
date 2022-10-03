@@ -41,5 +41,5 @@ jobs:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: | 
         echo "## Metrics report"  >> report.md
-        echo '![](results/results_seed_0ext__A_histo_X.png)' >> report.md
+        publish results/results_seed_0ext__A_histo_X.png)' --md >> report.md
         cml send-comment report.md
