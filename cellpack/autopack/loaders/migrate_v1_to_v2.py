@@ -9,7 +9,7 @@ from .v1_v2_attribute_changes import (
     v1_to_v2_name_map,
     attributes_move_to_composition,
     ingredient_types_map,
-    unused_attributes_list
+    unused_attributes_list,
 )
 
 

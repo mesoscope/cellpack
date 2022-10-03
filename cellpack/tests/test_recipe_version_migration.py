@@ -11,8 +11,12 @@ import pytest
 from cellpack.autopack.interface_objects.representations import Representations
 from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
-from cellpack.autopack.loaders.migrate_v1_to_v2 import *
-
+from cellpack.autopack.loaders.migrate_v1_to_v2 import (
+    convert,
+    convert_to_representations,
+    migrate_ingredient,
+    get_v1_ingredient,
+)
 
 
 @pytest.mark.parametrize(
@@ -57,9 +61,7 @@ from cellpack.autopack.loaders.migrate_v1_to_v2 import *
     ],
 )
 def test_create_packing_sphere_representation(sphereFile_data, sphereFile_result):
-    assert sphereFile_result == convert_to_representations(
-        sphereFile_data
-    )
+    assert sphereFile_result == convert_to_representations(sphereFile_data)
 
 
 @pytest.mark.parametrize(
@@ -141,9 +143,7 @@ def test_create_packing_atomic_representation(
     atomic_test_data,
     expected_atomic_result,
 ):
-    assert expected_atomic_result == convert_to_representations(
-        atomic_test_data
-    )
+    assert expected_atomic_result == convert_to_representations(atomic_test_data)
 
 
 @pytest.mark.parametrize(
@@ -265,9 +265,7 @@ def test_get_v1_ingredient():
         "object": ingredient_key,
         "count": 15,
     }
-    get_v1_ingredient(
-        ingredient_key, ingredient_data, region_list, objects_dict
-    )
+    get_v1_ingredient(ingredient_key, ingredient_data, region_list, objects_dict)
     assert len(region_list) == 1
     assert objects_dict[ingredient_key] == expected_object_data
     assert region_list[0] == expected_composition_data
