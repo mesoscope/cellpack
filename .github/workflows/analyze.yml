@@ -35,6 +35,7 @@ jobs:
     - name: Display structure of downloaded files
       run: ls -R
     - uses: iterative/setup-cml@v1
+    - uses: actions/checkout@v2
     - name: Report
       env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
