@@ -111,6 +111,8 @@ class simulariumHelper(hostHelper.Helper):
 
     @staticmethod
     def format_rgb_color(color):
+        if color is None:
+            return
         need_to_divide = False
         for ele in color:
             if ele > 1:
