@@ -235,7 +235,7 @@ _Optional `string`_
 
 Location of sphere file 
 
-### packing_priority
+### priority
 _Optional `number`_ Default to `0.0`.
 
 Order to pack, largest negative number gets packed first. 
@@ -407,7 +407,7 @@ _Optional `string`_
     "rejection_threshold": 60,
     "place_method": "jitter",
     "cutoff_surface": 100,
-    "packing_priority": 0, 
+    "priority": 0, 
     "proba_binding": 0.5,
     "rotation_axis": null,
     "positions": [ [ [ 0, 0, 0] ] ],

@@ -36,7 +36,7 @@ class SingleCubeIngr(Ingredient):
         offset=None,
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
-        packing_priority=0,
+        priority=0,
         partners=None,
         perturb_axis_amplitude=0.1,
         place_method="jitter",
@@ -66,7 +66,7 @@ class SingleCubeIngr(Ingredient):
             name=name,
             jitter_attempts=jitter_attempts,
             overwrite_distance_function=overwrite_distance_function,
-            packing_priority=packing_priority,
+            priority=priority,
             partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
             place_method=place_method,
