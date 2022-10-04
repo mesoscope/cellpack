@@ -120,3 +120,6 @@ packing-configs/
 
 # test outputs
 cellpack/tests/outputs/
+
+# data
+data/

@@ -17,6 +17,7 @@ logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
 log = logging.getLogger()
 ###############################################################################
 
+
 def pack(recipe, config):
     """
     Initializes an autopack packing from the command line
@@ -37,13 +38,11 @@ def pack(recipe, config):
 
     afviewer = None
     if config_data["save_analyze_result"]:
-        output = env.out_folder
         analyze = AnalyseAP(env=env, viewer=afviewer, result_file=None)
-        log.info(f"saving to {output}")
+        log.info(f"saving to {env.out_folder}")
         analyze.doloop(
             config_data["num_trials"],
             env.boundingBox,
-            output,
             plot=True,
             show_grid=config_data["show_grid_plot"],
             seeds_i=config_data["rng_seed"],
