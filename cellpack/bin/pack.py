@@ -28,7 +28,6 @@ def pack(recipe, config):
     """
     config_data = ConfigLoader(config).config
     recipe_data = RecipeLoader(recipe).recipe_data
-
     helper_class = upy.getHelperClass()
     helper = helper_class(vi="nogui")
     autopack.helper = helper

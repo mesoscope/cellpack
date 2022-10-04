@@ -1102,6 +1102,7 @@ class AnalyseAP:
             columns=pd.MultiIndex.from_product([["x", "y", "z"], key_list]),
             dtype=float,
         )
+        print("Running similarity analysis...")
         similarity_df["packing_id"] = 0
 
         for rc, (seed1, pos_dict1) in enumerate(all_objs[ingr_key].items()):

@@ -132,8 +132,8 @@ def main():
             input_path=input_path,
             output_path=output_path,
             ingr_key=args.ingr_key,
-            run_similarity_analysis=False,
-            get_parametrized_representation=True,
+            run_similarity_analysis=True,
+            get_parametrized_representation=False,
         )
 
     except Exception as e:
