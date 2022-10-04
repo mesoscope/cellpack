@@ -1144,31 +1144,79 @@ class AnalyseAP:
         inner_mesh_path=None,
         outer_mesh_path=None,
     ):
-        theta_vals = numpy.arange(0, numpy.pi, angular_spacing)
-        phi_vals = numpy.arange(0, 2 * numpy.pi, angular_spacing)
+        theta_vals = numpy.linspace(
+            0, numpy.pi, 1 + int(numpy.pi / angular_spacing)
+        )
+        phi_vals = numpy.linspace(
+            0, 2 * numpy.pi, 1 + int(2 * numpy.pi / angular_spacing)
+        )
+        rad_vals = numpy.linspace(0, 1, 1 + int(numpy.pi / angular_spacing))
 
         inner_mesh = trimesh.load_mesh(inner_mesh_path)
         outer_mesh = trimesh.load_mesh(outer_mesh_path)
 
-        for packing_dict in all_pos_list:
-            for seed, pos_dict in packing_dict.items():
+        num_packings = len(all_pos_list)
+        num_seeds = numpy.array(
+            [len(packing_dict) for packing_dict in all_pos_list]
+        )
+        all_spilr_scaled = numpy.full(
+            (
+                num_packings,
+                numpy.max(num_seeds),
+                len(rad_vals),
+                len(theta_vals) * len(phi_vals),
+            ),
+            numpy.nan,
+        )
+        all_spilr_raw = copy.deepcopy(all_spilr_scaled)
+
+        for pc, packing_dict in enumerate(all_pos_list):
+            for sc, (_, pos_dict) in enumerate(packing_dict.items()):
+                trial_spilr_scaled = numpy.zeros(
+                    (len(rad_vals), len(theta_vals), len(phi_vals))
+                )
+                trial_spilr_raw = copy.deepcopy(trial_spilr_scaled)
+
                 pos_list = numpy.array(pos_dict[self.ingr_key])
                 sph_pts = self.cartesian_to_sph(pos_list)
-                origins = numpy.zeros(sph_pts.shape)
 
-                inner_loc, _, _ = inner_mesh.ray.intersects_location(
-                    ray_origins=origins, ray_directions=pos_list
+                inner_loc = numpy.zeros(pos_list.shape)
+                outer_loc = numpy.zeros(pos_list.shape)
+
+                for i in range(inner_loc.shape[0]):
+                    inner_loc[i], _, _ = inner_mesh.ray.intersects_location(
+                        ray_origins=[[0, 0, 0]], ray_directions=[pos_list[i]]
+                    )
+                    outer_loc[i], _, _ = outer_mesh.ray.intersects_location(
+                        ray_origins=[[0, 0, 0]], ray_directions=[pos_list[i]]
+                    )
+
+                rad_vals_raw = numpy.linspace(
+                    0, outer_loc.max(), len(rad_vals)
                 )
-                outer_loc, _, _ = outer_mesh.ray.intersects_location(
-                    ray_origins=origins, ray_directions=pos_list
-                )
+
                 inner_sph_pts = self.cartesian_to_sph(inner_loc)
                 outer_sph_pts = self.cartesian_to_sph(outer_loc)
-                scaled_sph_pts = sph_pts
-                scaled_sph_pts[:, 0] = (
-                    sph_pts[:, 0] - inner_sph_pts[:, 0]
-                ) / (outer_sph_pts[:, 0] - inner_sph_pts[:, 0])
-                import ipdb; ipdb.set_trace()
+                scaled_rad = (sph_pts[:, 0] - inner_sph_pts[:, 0]) / (
+                    outer_sph_pts[:, 0] - inner_sph_pts[:, 0]
+                )
+
+                if numpy.any(scaled_rad > 1) or numpy.any(scaled_rad < 0):
+                    raise ValueError("Check ray-mesh intersections!")
+
+                rad_inds_raw = numpy.digitize(sph_pts[:, 0], rad_vals_raw)
+                rad_inds_scaled = numpy.digitize(scaled_rad, rad_vals)
+                theta_inds = numpy.digitize(sph_pts[:, 1], theta_vals)
+                phi_inds = numpy.digitize(sph_pts[:, 2], phi_vals)
+
+                trial_spilr_scaled[rad_inds_scaled, theta_inds, phi_inds] = 1
+                trial_spilr_raw[rad_inds_raw, theta_inds, phi_inds] = 1
+
+                all_spilr_raw[pc, sc] = trial_spilr_raw.reshape((len(rad_vals_raw), -1))
+                all_spilr_scaled[pc, sc] = trial_spilr_scaled.reshape((len(rad_vals), -1))
+        
+        return all_spilr_scaled, all_spilr_raw
+
 
     @staticmethod
     def cartesian_to_sph(xyz):
