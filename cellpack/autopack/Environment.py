@@ -69,6 +69,7 @@ from panda3d.bullet import BulletRigidBodyNode
 import cellpack.autopack as autopack
 from cellpack.autopack.MeshStore import MeshStore
 from cellpack.autopack.ingredient import Ingredient
+from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.autopack.utils import (
     cmp_to_key,
@@ -596,8 +597,8 @@ class Environment(CompartmentList):
             self.log.info("Volume Used   = %d", usedPts * unitVol)
             self.log.info("Volume Unused = %d", unUsedPts * unitVol)
             self.log.info("vTestid = %s", vTestid)
-            self.log.info("self.nbGridPoints = %r", self.nbGridPoints)
-            self.log.info("self.gridVolume = %d", self.gridVolume)
+            self.log.info("self.nbGridPoints = %r", self.grid.nbGridPoints)
+            self.log.info("self.gridVolume = %d", self.grid.gridVolume)
             self.log.info("histoVol.timeUpDistLoopTotal = %d", self.timeUpDistLoopTotal)
 
             #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
@@ -998,39 +999,40 @@ class Environment(CompartmentList):
         if "place_method" not in arguments:
             arguments["place_method"] = self.place_method
         ingredient_type = arguments["type"]
-        if ingredient_type == "single_sphere":
+
+        if ingredient_type == INGREDIENT_TYPE.SINGLE_SPHERE:
             radius = arguments["radius"]
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = SingleSphereIngr(radius, **arguments)
-        elif ingredient_type == "multi_sphere":
+        elif ingredient_type == INGREDIENT_TYPE.MULTI_SPHERE:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = MultiSphereIngr(**arguments)
-        elif ingredient_type == "multi_cylinder":
+        elif ingredient_type == INGREDIENT_TYPE.MULTI_CYLINDER:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = MultiCylindersIngr(**arguments)
-        elif ingredient_type == "single_cube":
+        elif ingredient_type == INGREDIENT_TYPE.SINGLE_CUBE:
             bounds = arguments["bounds"]
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = SingleCubeIngr(bounds, **arguments)
-        elif ingredient_type == "single_cylinder":
+        elif ingredient_type == INGREDIENT_TYPE.SINGLE_CYLINDER:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = SingleCylinderIngr(**arguments)
-        elif ingredient_type == "grow":
+        elif ingredient_type == INGREDIENT_TYPE.GROW:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 GrowIngredient.ARGUMENTS, **arguments
             )
             ingr = GrowIngredient(**arguments)
-        elif ingredient_type == "actine":
+        elif ingredient_type == INGREDIENT_TYPE.GROW:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 GrowIngredient.ARGUMENTS, **arguments
             )
@@ -1040,7 +1042,7 @@ class Environment(CompartmentList):
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
-            arguments["type"] = "single_sphere"
+            arguments["type"] = INGREDIENT_TYPE.SINGLE_SPHERE
             ingr = SingleSphereIngr(radius, **arguments)
         if (
             "gradient" in arguments
@@ -1450,21 +1452,21 @@ class Environment(CompartmentList):
         priorities1 = []
         ingr2 = []  # priority = 0 or none and will be assigned based on complexity
         priorities2 = []
-        ingr0 = []  # negative values will pack first in order of abs[packing_priority]
+        ingr0 = []  # negative values will pack first in order of abs[priority]
         priorities0 = []
         for ing in allIngredients:
             if ing.completion >= 1.0:
                 continue  # ignore completed ingredients
-            if ing.packing_priority is None or ing.packing_priority == 0:
+            if ing.priority is None or ing.priority == 0:
                 ingr2.append(ing)
-                priorities2.append(ing.packing_priority)
-            elif ing.packing_priority > 0:
+                priorities2.append(ing.priority)
+            elif ing.priority > 0:
                 ingr1.append(ing)
-                priorities1.append(ing.packing_priority)
+                priorities1.append(ing.priority)
             else:
-                # ing.packing_priority    = -ing.packing_priority
+                # ing.priority    = -ing.priority
                 ingr0.append(ing)
-                priorities0.append(ing.packing_priority)
+                priorities0.append(ing.priority)
 
         if self.pickWeightedIngr:
             try:
@@ -1476,7 +1478,7 @@ class Environment(CompartmentList):
         # GrahamAdded this stuff in summer 2011, beware!
         if len(ingr1) != 0:
             lowestIng = ingr1[len(ingr1) - 1]
-            self.lowestPriority = lowestIng.packing_priority
+            self.lowestPriority = lowestIng.priority
         else:
             self.lowestPriority = 1.0
         self.log.info("self.lowestPriority for Ing1 = %d", self.lowestPriority)
@@ -1502,7 +1504,7 @@ class Environment(CompartmentList):
                 r = priors2.min_radius
             np = float(r) / float(self.totalRadii) * self.lowestPriority
             self.normalizedPriorities0.append(np)
-            priors2.packing_priority = np
+            priors2.priority = np
             self.log.info("self.normalizedPriorities0 = %r", self.normalizedPriorities0)
         activeIngr0 = ingr0  # +ingr1+ingr2  #cropped to 0 on 7/20/10
 
@@ -1733,7 +1735,7 @@ class Environment(CompartmentList):
 
             self.totalPriorities = 0  # 0.00001
             for priors in self.activeIngr12:
-                pp = priors.packing_priority
+                pp = priors.priority
                 self.totalPriorities = self.totalPriorities + pp
             previousThresh = 0
             self.normalizedPriorities = []
@@ -1747,7 +1749,7 @@ class Environment(CompartmentList):
                     self.thresholdPriorities.append(2)
             for priors in self.activeIngr12:
                 # pp1 = 0
-                pp = priors.packing_priority
+                pp = priors.priority
                 if self.totalPriorities != 0:
                     np = float(pp) / float(self.totalPriorities)
                 else:
@@ -1915,7 +1917,7 @@ class Environment(CompartmentList):
 
         self.totalPriorities = 0  # 0.00001
         for priors in self.activeIngr12:
-            pp = priors.packing_priority
+            pp = priors.priority
             self.totalPriorities = self.totalPriorities + pp
             self.log.info("totalPriorities = %d", self.totalPriorities)
         previousThresh = 0
@@ -1930,7 +1932,7 @@ class Environment(CompartmentList):
                 self.thresholdPriorities.append(2)
         for priors in self.activeIngr12:
             # pp1 = 0
-            pp = priors.packing_priority
+            pp = priors.priority
             if self.totalPriorities != 0:
                 np = float(pp) / float(self.totalPriorities)
             else:
@@ -2137,7 +2139,7 @@ class Environment(CompartmentList):
 
                 self.totalPriorities = 0  # 0.00001
                 for priors in self.activeIngr12:
-                    pp = priors.packing_priority
+                    pp = priors.priority
                     self.totalPriorities = self.totalPriorities + pp
                 #                    print ('totalPriorities = ', self.totalPriorities)
                 previousThresh = 0
@@ -2152,7 +2154,7 @@ class Environment(CompartmentList):
                         self.thresholdPriorities.append(2)
                 for priors in self.activeIngr12:
                     # pp1 = 0
-                    pp = priors.packing_priority
+                    pp = priors.priority
                     if self.totalPriorities != 0:
                         np = float(pp) / float(self.totalPriorities)
                     else:

@@ -1134,7 +1134,7 @@ class AutopackViewer:
             ingr.molarity,
             ingr.pdb,
             ingr.principal_vector,
-            ingr.packing_priority,
+            ingr.priority,
             ingr.max_jitter,
         )
 
