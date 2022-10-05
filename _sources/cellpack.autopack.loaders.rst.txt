@@ -12,6 +12,14 @@ cellpack.autopack.loaders.config\_loader module
    :undoc-members:
    :show-inheritance:
 
+cellpack.autopack.loaders.migrate\_v1\_to\_v2 module
+----------------------------------------------------
+
+.. automodule:: cellpack.autopack.loaders.migrate_v1_to_v2
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.loaders.recipe\_loader module
 -----------------------------------------------
 
