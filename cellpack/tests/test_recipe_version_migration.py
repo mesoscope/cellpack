@@ -11,6 +11,12 @@ import pytest
 from cellpack.autopack.interface_objects.representations import Representations
 from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
+from cellpack.autopack.loaders.migrate_v1_to_v2 import (
+    convert,
+    convert_to_representations,
+    migrate_ingredient,
+    get_v1_ingredient,
+)
 
 
 @pytest.mark.parametrize(
@@ -55,9 +61,7 @@ from cellpack.autopack.loaders.recipe_loader import RecipeLoader
     ],
 )
 def test_create_packing_sphere_representation(sphereFile_data, sphereFile_result):
-    assert sphereFile_result == RecipeLoader._convert_to_representations(
-        sphereFile_data
-    )
+    assert sphereFile_result == convert_to_representations(sphereFile_data)
 
 
 @pytest.mark.parametrize(
@@ -100,7 +104,7 @@ def test_create_packing_mesh_representation(
     mesh_data,
     mesh_result,
 ):
-    assert mesh_result == RecipeLoader._convert_to_representations(mesh_data)
+    assert mesh_result == convert_to_representations(mesh_data)
 
 
 @pytest.mark.parametrize(
@@ -139,9 +143,7 @@ def test_create_packing_atomic_representation(
     atomic_test_data,
     expected_atomic_result,
 ):
-    assert expected_atomic_result == RecipeLoader._convert_to_representations(
-        atomic_test_data
-    )
+    assert expected_atomic_result == convert_to_representations(atomic_test_data)
 
 
 @pytest.mark.parametrize(
@@ -202,7 +204,7 @@ def test_migrate_ingredient(
     old_ingredient,
     expected_result,
 ):
-    assert expected_result == RecipeLoader._migrate_ingredient(old_ingredient)
+    assert expected_result == migrate_ingredient(old_ingredient)
     assert "encapsulatingRadius" not in expected_result
 
 
@@ -263,9 +265,7 @@ def test_get_v1_ingredient():
         "object": ingredient_key,
         "count": 15,
     }
-    RecipeLoader._get_v1_ingredient(
-        ingredient_key, ingredient_data, region_list, objects_dict
-    )
+    get_v1_ingredient(ingredient_key, ingredient_data, region_list, objects_dict)
     assert len(region_list) == 1
     assert objects_dict[ingredient_key] == expected_object_data
     assert region_list[0] == expected_composition_data
@@ -323,7 +323,7 @@ def test_get_v1_ingredient():
 def test_convert_v1_to_v2(
     old_recipe_test_data, expected_object_dict, expected_composition_dict
 ):
-    objects_dict, composition = RecipeLoader._convert_v1_to_v2(old_recipe_test_data)
+    objects_dict, composition = convert(old_recipe_test_data)
     assert objects_dict == expected_object_dict
     assert composition == expected_composition_dict
 
