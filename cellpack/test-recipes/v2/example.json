@@ -44,10 +44,7 @@
       ],
       "perturb_axis_amplitude": 0.1,
       "encapsulating_radius": 100,
-      "packing": {
-        "packing_mode": "random" // instead of "packing_mode": "random",
-      },
-      // we decided to keep "packing_mode", 10/6/22 Ruge
+      "packing_mode": "random",
       "principal_vector": [
         0,
         0,
