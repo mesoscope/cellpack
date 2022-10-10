@@ -162,7 +162,7 @@ def test_create_packing_atomic_representation(
                 "orient_bias_range": [-pi, 12],
                 "partners": {"probability_binding": 0.5},
                 "representations": RecipeLoader.default_values["representations"],
-                "type": INGREDIENT_TYPE.MULTI_SPHERE,
+                "type": INGREDIENT_TYPE.MULTI_SPHERE.value,
             },
         ),
         (
@@ -176,7 +176,7 @@ def test_create_packing_atomic_representation(
                 "count": 15,
                 "orient_bias_range": [6, pi],
                 "representations": RecipeLoader.default_values["representations"],
-                "type": INGREDIENT_TYPE.GROW,
+                "type": INGREDIENT_TYPE.GROW.value,
             },
         ),
         (
@@ -195,7 +195,7 @@ def test_create_packing_atomic_representation(
                 "partners": {"probability_binding": 0.5},
                 "radius": 100,
                 "representations": RecipeLoader.default_values["representations"],
-                "type": INGREDIENT_TYPE.SINGLE_SPHERE,
+                "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
             },
         ),
     ],
@@ -257,7 +257,7 @@ def test_get_v1_ingredient():
     objects_dict = {}
     expected_object_data = {
         "radius": 10,
-        "type": INGREDIENT_TYPE.SINGLE_SPHERE,
+        "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
         "representations": RecipeLoader.default_values["representations"],
         "orient_bias_range": [6, 12],
     }
@@ -278,13 +278,13 @@ def test_get_v1_ingredient():
             old_recipe_test_data,
             {
                 "A": {
-                    "type": INGREDIENT_TYPE.SINGLE_SPHERE,
+                    "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
                     "radius": 10,
                     "representations": RecipeLoader.default_values["representations"],
                     "orient_bias_range": [6, 12],
                 },
                 "B": {
-                    "type": INGREDIENT_TYPE.SINGLE_SPHERE,
+                    "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
                     "radius": 10,
                     "packing_mode": "random",
                     "representations": RecipeLoader.default_values["representations"],
@@ -303,7 +303,7 @@ def test_get_v1_ingredient():
                         "atomic": None,
                         "mesh": None,
                     },
-                    "type": INGREDIENT_TYPE.SINGLE_SPHERE,
+                    "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
                 },
             },
             {
@@ -347,7 +347,7 @@ def test_convert_v1_to_v2(
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
                         ),
-                        "type": INGREDIENT_TYPE.SINGLE_SPHERE,
+                        "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
                     },
                     "B": {
                         "orient_bias_range": [6, pi],
@@ -356,7 +356,7 @@ def test_convert_v1_to_v2(
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
                         ),
-                        "type": INGREDIENT_TYPE.SINGLE_SPHERE,
+                        "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
                     },
                     "C": {
                         "type": "SingleSphere",
