@@ -118,6 +118,7 @@ class RecipeLoader(object):
 
     def _migrate_version(self, recipe, format_version="1.0"):
         new_recipe = {}
+        path = "out/"
 
         if format_version == "1.0":
 
@@ -129,7 +130,20 @@ class RecipeLoader(object):
                 new_recipe["objects"],
                 new_recipe["composition"],
             ) = convert(recipe)
+            print(new_recipe)
+            self._save_converted_recipe(path, new_recipe)
         return new_recipe
+
+    def _save_converted_recipe(self, path, data):
+        """
+        Save converted recipe into a json file
+        """
+        filename = data["name"]
+        with open(path + filename + "-v2.json", "w") as f:
+            json.dump(data, f, indent=4)
+        f.close()
+    # _save_converted_recipe("out/", {"name": "cell"})
+
 
     def _read(self):
         new_values = json.load(open(self.file_path, "r"))
