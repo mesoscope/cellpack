@@ -19,13 +19,14 @@ class RecipeLoader(object):
     # TODO: add all default values here
     default_values = default_recipe_values.copy()
 
-    def __init__(self, input_file_path):
+    def __init__(self, input_file_path, save_converted_recipe=True):
         _, file_extension = os.path.splitext(input_file_path)
         self.current_version = CURRENT_VERSION
         self.file_path = input_file_path
         self.file_extension = file_extension
         self.ingredient_list = []
         self.compartment_list = []
+        self.save_converted_recipe = save_converted_recipe
         autopack.current_recipe_path = os.path.dirname(self.file_path)
         self.recipe_data = self._read()
 
@@ -116,12 +117,11 @@ class RecipeLoader(object):
             return None
         return data
 
-    def _migrate_version(self, recipe, format_version="1.0"):
+    def _migrate_version(self, recipe,save_converted_recipe,format_version="1.0"):
         new_recipe = {}
-        path = "out/"
 
         if format_version == "1.0":
-
+            # new_recipe["converted_from"] = format_version
             new_recipe["version"] = recipe["recipe"]["version"]
             new_recipe["format_version"] = self.current_version
             new_recipe["name"] = recipe["recipe"]["name"]
@@ -130,15 +130,17 @@ class RecipeLoader(object):
                 new_recipe["objects"],
                 new_recipe["composition"],
             ) = convert(recipe)
-            self._save_converted_recipe(path, new_recipe)
+            if save_converted_recipe is True:
+                self._save_converted_recipe(new_recipe)
         return new_recipe
 
-    def _save_converted_recipe(self, path, data):
+    def _save_converted_recipe(self, data):
         """
         Save converted recipe into a json file
         """
-        filename = data["name"]
-        with open(path + filename + "-v2.json", "w") as f:
+        # filename = data["name"]
+        full_file_path = os.path.splitext(self.file_path)[0] + "_converted_v2.json"
+        with open(full_file_path, "w") as f:
             json.dump(data, f, indent=4)
         f.close()
 

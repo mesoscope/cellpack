@@ -1,0 +1,71 @@
+{
+    "version": "1.0",
+    "format_version": "2.0",
+    "name": "one_sphere",
+    "bounding_box": [
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            1000,
+            1000,
+            1
+        ]
+    ],
+    "objects": {
+        "Sphere_radius_100": {
+            "type": "single_sphere",
+            "partners": {
+                "excluded_names": [],
+                "names": [],
+                "positions": [],
+                "probability_binding": 0.5,
+                "probability_repelled": 0.5
+            },
+            "is_attractor": false,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ],
+            "jitter_attempts": 20,
+            "packing_mode": "random",
+            "perturb_axis_amplitude": 0.1,
+            "place_type": "jitter",
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "rejection_threshold": 100,
+            "rotation_axis": null,
+            "rotation_range": 6.2831,
+            "use_rotation_axis": false,
+            "orient_bias_range": [
+                -3.1415927,
+                -3.1415927
+            ],
+            "representations": {
+                "atomic": null,
+                "packing": null,
+                "mesh": null
+            },
+            "radius": 100
+        }
+    },
+    "composition": {
+        "space": {
+            "regions": {
+                "interior": [
+                    {
+                        "object": "Sphere_radius_100",
+                        "count": 1,
+                        "priority": 0
+                    }
+                ]
+            }
+        }
+    }
+}
