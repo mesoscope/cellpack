@@ -129,4 +129,31 @@ def convert(recipe_data):
                 outer_most_region_array,
                 objects_dict,
             )
+    if "compartments" in recipe_data:
+        for compartment_name in recipe_data["compartments"]:
+            compartment_array = []
+            compartment = recipe_data["compartments"][compartment_name]
+            # create a compartment object and add to the objects dictionary
+            # using the compartment_name as a key
+            # add the compartment to the composition dictionary 
+            get_v1_ingredient(
+                compartment_name,
+                compartment,
+                outer_most_region_array,
+                objects_dict,
+            )
+            for region_name in compartment:
+                # add region to composition 
+                composition[compartment_name]["regions"][region_name]
+                # walk through ingredients and add them as objects
+                # link them in composition
+                for ingredient_key in compartment[region_name]["ingredients"]:
+                    # make them 
+                    # get_v1_ingredient(
+                    #     ingredient_key,
+                    #     ingredient_data,
+                    #     compartment_array,
+                    #     objects_dict,
+                    # )
+                    pass
     return objects_dict, composition
