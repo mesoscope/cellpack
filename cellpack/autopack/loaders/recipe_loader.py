@@ -19,7 +19,7 @@ class RecipeLoader(object):
     # TODO: add all default values here
     default_values = default_recipe_values.copy()
 
-    def __init__(self, input_file_path, save_converted_recipe=True):
+    def __init__(self, input_file_path, save_converted_recipe=False):
         _, file_extension = os.path.splitext(input_file_path)
         self.current_version = CURRENT_VERSION
         self.file_path = input_file_path
@@ -117,15 +117,22 @@ class RecipeLoader(object):
             return None
         return data
 
-    def _get_output_file_path(self):
-        with open("packing-configs/run.json") as f:
-            data = json.load(f)
-            path = data["out"]
-        return path
+    def _save_converted_recipe(self, data):
+        """
+        Save converted recipe into a json file
+        """
+        path = autopack.current_recipe_path
+        filename = data["name"]
+        out_directory = f"{path}/converted/"
+        if not os.path.exists(out_directory):
+            os.makedirs(out_directory)
+        full_path = f"{out_directory}/{filename}_fv{self.current_version}.json"
+        with open(full_path, "w") as f:
+            json.dump(data, f, indent=4)
+        f.close()
 
-    def _migrate_version(self,recipe,save_converted_recipe,format_version="1.0"):
+    def _migrate_version(self, recipe, format_version="1.0"):
         new_recipe = {}
-        path = self._get_output_file_path()
 
         if format_version == "1.0":
             new_recipe["version"] = recipe["recipe"]["version"]
@@ -136,19 +143,9 @@ class RecipeLoader(object):
                 new_recipe["objects"],
                 new_recipe["composition"],
             ) = convert(recipe)
-            if save_converted_recipe:
-                self._save_converted_recipe(path, new_recipe)
+            if self.save_converted_recipe:
+                self._save_converted_recipe(new_recipe)
         return new_recipe
-
-    def _save_converted_recipe(self, path, data):
-        """
-        Save converted recipe into a json file
-        """
-        # import ipdb; ipdb.set_trace()
-        filename = data["name"]
-        with open(path + filename + "_v2.json", "w") as f:
-            json.dump(data, f, indent=4)
-        f.close()
 
     def _read(self):
         new_values = json.load(open(self.file_path, "r"))
