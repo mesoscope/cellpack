@@ -117,11 +117,17 @@ class RecipeLoader(object):
             return None
         return data
 
-    def _migrate_version(self, recipe,save_converted_recipe,format_version="1.0"):
+    def _get_output_file_path(self):
+        with open("packing-configs/run.json") as f:
+            data = json.load(f)
+            path = data["out"]
+        return path
+
+    def _migrate_version(self,recipe,save_converted_recipe,format_version="1.0"):
         new_recipe = {}
+        path = self._get_output_file_path()
 
         if format_version == "1.0":
-            # new_recipe["converted_from"] = format_version
             new_recipe["version"] = recipe["recipe"]["version"]
             new_recipe["format_version"] = self.current_version
             new_recipe["name"] = recipe["recipe"]["name"]
@@ -130,17 +136,17 @@ class RecipeLoader(object):
                 new_recipe["objects"],
                 new_recipe["composition"],
             ) = convert(recipe)
-            if save_converted_recipe is True:
-                self._save_converted_recipe(new_recipe)
+            if save_converted_recipe:
+                self._save_converted_recipe(path, new_recipe)
         return new_recipe
 
-    def _save_converted_recipe(self, data):
+    def _save_converted_recipe(self, path, data):
         """
         Save converted recipe into a json file
         """
-        # filename = data["name"]
-        full_file_path = os.path.splitext(self.file_path)[0] + "_converted_v2.json"
-        with open(full_file_path, "w") as f:
+        # import ipdb; ipdb.set_trace()
+        filename = data["name"]
+        with open(path + filename + "_v2.json", "w") as f:
             json.dump(data, f, indent=4)
         f.close()
 

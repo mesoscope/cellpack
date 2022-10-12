@@ -333,7 +333,7 @@ def test_convert_v1_to_v2(
     [
         (
             RecipeLoader(
-                input_file_path="cellpack/test-recipes/v1/test_single_spheres.json",save_converted_recipe=False,
+                input_file_path="cellpack/test-recipes/v1/test_single_spheres.json"
             ).recipe_data,
             {
                 "version": "1.0",
