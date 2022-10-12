@@ -35,20 +35,21 @@ class Inner_Grid_Methods(MetaEnum):
 
 class ConfigLoader(object):
     default_values = {
-        "version": 1.0,
-        "name": "default",
         "format": "simularium",
         "inner_grid_method": "raytrace",
         "live_packing": False,
+        "name": "default",
         "ordered_packing": False,
         "out": "out/",
         "overwrite_place_method": False,
         "place_method": "jitter",
         "save_analyze_result": False,
+        "save_converted_recipe": False,
         "show_grid_plot": False,
+        "show_sphere_trees": False,
         "spacing": None,
         "use_periodicity": False,
-        "show_sphere_trees": False,
+        "version": 1.0,
     }
 
     def __init__(self, input_file_path):

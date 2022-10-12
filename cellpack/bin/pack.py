@@ -28,7 +28,9 @@ def pack(recipe, config):
     :return: void
     """
     config_data = ConfigLoader(config).config
-    recipe_data = RecipeLoader(recipe).recipe_data
+    recipe_data = RecipeLoader(
+        recipe, config_data["save_converted_recipe"]
+    ).recipe_data
 
     helper_class = upy.getHelperClass()
     helper = helper_class(vi="nogui")
