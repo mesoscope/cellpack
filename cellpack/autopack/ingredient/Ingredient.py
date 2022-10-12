@@ -379,7 +379,7 @@ class Ingredient(Agent):
         self.mesh = None
         if mesh_path is not None:
             if meshType == "file":
-                self.mesh = self.getMesh(mesh_path, meshName)  # self.name)
+                self.mesh = self.getMesh(mesh_path, meshName, mesh_store)  # self.name)
                 self.log.info("OK got", self.mesh)
                 if self.mesh is None:
                     # display a message ?
@@ -544,6 +544,7 @@ class Ingredient(Agent):
         elif file_extension == ".dae":
             self.log.info("read dae withHelper", filename, helper, autopack.helper)
             # use the host helper if any to read
+            return None
             if helper is None:
 
                 # need to get the mesh directly. Only possible if dae or dejavu format
