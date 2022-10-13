@@ -143,6 +143,8 @@ class RecipeLoader(object):
                 new_recipe["objects"],
                 new_recipe["composition"],
             ) = convert(recipe)
+        else: 
+            raise ValueError(f"{recipe['format_version']} is not a format vesion we support")
         return new_recipe
 
     def _read(self):

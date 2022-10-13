@@ -393,3 +393,8 @@ def test_migrate_version(converted_data, expected_data):
     assert converted_data["format_version"] == expected_data["format_version"]
     assert converted_data["name"] == expected_data["name"]
     assert converted_data["bounding_box"] == expected_data["bounding_box"]
+
+
+def test_migrate_version_error():
+    with pytest.raises(ValueError, match="0.0 is not a format vesion we support"):
+        RecipeLoader._migrate_version(None, {"format_version": "0.0"})
