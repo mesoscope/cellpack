@@ -6,7 +6,6 @@ Docs: https://docs.pytest.org/en/latest/example/simple.html
       https://docs.pytest.org/en/latest/plugins.html#requiring-loading-plugins-in-a-test-module-or-conftest-file
 """
 
-import os
 import json
 from cellpack import autopack
 from cellpack.autopack import upy
@@ -24,7 +23,7 @@ def test_packing_bias():
 
     config_data = ConfigLoader("cellpack/tests/packing-configs/test_config.json").config
     recipe_data = RecipeLoader("cellpack/tests/recipes/test_spheres.json").recipe_data
-    
+
     helper_class = upy.getHelperClass()
     helper = helper_class(vi="nogui")
     autopack.helper = helper
@@ -42,4 +41,4 @@ def test_packing_bias():
         seeds_i=config_data["rng_seed"],
     )
     # string indices because the data came from a json file
-    assert all_pos['0'] == analyze.all_pos_dict[0]
+    assert all_pos["0"] == analyze.all_pos_dict[0]
