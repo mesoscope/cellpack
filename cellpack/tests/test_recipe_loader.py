@@ -96,4 +96,3 @@ def test_resolve_objects():
 )
 def test_sanitize_format_version(expected_result, input_recipe_data):
     assert expected_result == RecipeLoader._sanitize_format_version(input_recipe_data)
-

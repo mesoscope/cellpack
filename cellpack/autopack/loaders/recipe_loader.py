@@ -115,11 +115,11 @@ class RecipeLoader(object):
             print("filename is None and not ingredient dictionary provided")
             return None
         return data
-    
+
     @staticmethod
     def _sanitize_format_version(recipe_data):
         if "format_version" not in recipe_data:
-            format_version = "1.0" # all recipes before we introduced versioning
+            format_version = "1.0"  # all recipes before we introduced versioning
         elif len(recipe_data["format_version"].split(".")) > 2:
             # We only use two places for format version, but people
             # might accidently include a third number
@@ -143,15 +143,19 @@ class RecipeLoader(object):
                 new_recipe["objects"],
                 new_recipe["composition"],
             ) = convert(recipe)
-        else: 
-            raise ValueError(f"{recipe['format_version']} is not a format vesion we support")
+        else:
+            raise ValueError(
+                f"{recipe['format_version']} is not a format vesion we support"
+            )
         return new_recipe
 
     def _read(self):
         new_values = json.load(open(self.file_path, "r"))
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
-        recipe_data["format_version"] = RecipeLoader._sanitize_format_version(recipe_data)
+        recipe_data["format_version"] = RecipeLoader._sanitize_format_version(
+            recipe_data
+        )
 
         if recipe_data["format_version"] != self.current_version:
             recipe_data = self._migrate_version(recipe_data)
