@@ -396,5 +396,8 @@ def test_migrate_version(converted_data, expected_data):
 
 
 def test_migrate_version_error():
-    with pytest.raises(ValueError, match="0.0 is not a format vesion we support"):
-        RecipeLoader._migrate_version(None, {"format_version": "0.0"})
+    not_a_format_version = "0.0"
+    with pytest.raises(
+        ValueError, match=f"{not_a_format_version} is not a format vesion we support"
+    ):
+        RecipeLoader._migrate_version(None, {"format_version": not_a_format_version})
