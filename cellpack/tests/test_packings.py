@@ -18,7 +18,7 @@ from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 
 def test_packing_bias():
-    all_pos_path = "cellpack/tests/outputs/test_spheres/jitter/all_pos.json"
+    all_pos_path = "cellpack/tests/data/all_pos.json"
     with open(all_pos_path, "r") as j:
         all_pos = json.loads(j.read())
 
