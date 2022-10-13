@@ -115,11 +115,25 @@ class RecipeLoader(object):
             print("filename is None and not ingredient dictionary provided")
             return None
         return data
+    
+    @staticmethod
+    def _sanitize_format_version(recipe_data):
+        if "format_version" not in recipe_data:
+            format_version = "1.0" # all recipes before we introduced versioning
+        elif len(recipe_data["format_version"].split(".")) > 2:
+            # We only use two places for format version, but people
+            # might accidently include a third number
+            # ie 2.0.0 instead of 2.0
+            split_numbers = recipe_data["format_version"].split(".")
+            format_version = ".".join([split_numbers[0], split_numbers[1]])
+        else:
+            format_version = recipe_data["format_version"]
+        return format_version
 
-    def _migrate_version(self, recipe, format_version="1.0"):
+    def _migrate_version(self, recipe):
         new_recipe = {}
 
-        if format_version == "1.0":
+        if recipe["format_version"] == "1.0":
 
             new_recipe["version"] = recipe["recipe"]["version"]
             new_recipe["format_version"] = self.current_version
@@ -135,16 +149,10 @@ class RecipeLoader(object):
         new_values = json.load(open(self.file_path, "r"))
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
-        if (
-            "format_version" not in recipe_data
-            or recipe_data["format_version"] != self.current_version
-        ):
-            input_format_version = (
-                recipe_data["format_version"]
-                if "format_version" in recipe_data
-                else "1.0"
-            )
-            recipe_data = self._migrate_version(recipe_data, input_format_version)
+        recipe_data["format_version"] = RecipeLoader._sanitize_format_version(recipe_data)
+
+        if recipe_data["format_version"] != self.current_version:
+            recipe_data = self._migrate_version(recipe_data)
 
         # TODO: request any external data before returning
         if "objects" in recipe_data:
