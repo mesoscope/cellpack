@@ -1164,7 +1164,7 @@ class AnalyseAP:
         ingrpositions = {}
         anglesingr = {}
         occurences = {}
-        all_pos_dict = {}
+        self.all_pos_dict = {}
         total_positions = []
         total_distances = []
         total_angles = []
@@ -1397,7 +1397,7 @@ class AnalyseAP:
                                         )
                                     )
                 # write
-                all_pos_dict[seed_index] = ingrpositions
+                self.all_pos_dict[seed_index] = ingrpositions
                 if use_file:
                     self.writeJSON(
                         output + os.sep + "_posIngr_" + str(seed_index) + ".json",
@@ -1442,7 +1442,7 @@ class AnalyseAP:
                     output + os.sep + "_angleIngr_" + str(i) + ".json"
                 )
                 anglesingr = dict(self.merge(anglesingr, dict1))
-        self.writeJSON(all_pos_file + ".json", all_pos_dict)
+        self.writeJSON(all_pos_file + ".json", self.all_pos_dict)
         self.writeJSON(occurences_file, occurences)
         self.env.ingrpositions = ingrpositions
         self.env.distances = distances
