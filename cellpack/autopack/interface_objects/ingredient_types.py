@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class INGREDIENT_TYPE(Enum):
+class INGREDIENT_TYPE(str, Enum):
     SINGLE_SPHERE = "single_sphere"
     MULTI_SPHERE = "multi_sphere"
     SINGLE_CUBE = "single_cube"

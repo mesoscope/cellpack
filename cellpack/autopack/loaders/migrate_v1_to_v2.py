@@ -67,7 +67,7 @@ def migrate_ingredient(old_ingredient):
     for attribute in list(old_ingredient):
         if attribute in v1_to_v2_name_map:
             if attribute == "Type":
-                value = ingredient_types_map[old_ingredient[attribute]].value
+                value = ingredient_types_map[old_ingredient[attribute]]
             else:
                 value = old_ingredient[attribute]
             new_ingredient[v1_to_v2_name_map[attribute]] = value
