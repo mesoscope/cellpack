@@ -20,6 +20,14 @@ cellpack.autopack.interface\_objects.ingredient\_types module
    :undoc-members:
    :show-inheritance:
 
+cellpack.autopack.interface\_objects.meta\_enum module
+------------------------------------------------------
+
+.. automodule:: cellpack.autopack.interface_objects.meta_enum
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.interface\_objects.representations module
 -----------------------------------------------------------
 
