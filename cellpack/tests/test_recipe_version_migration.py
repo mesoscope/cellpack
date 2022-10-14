@@ -459,11 +459,9 @@ def test_migrate_version_error():
                             -3.1415927,
                             -3.1415927
                         ],
-                        "representations": {
-                            "atomic": None,
-                            "packing": None,
-                            "mesh": None
-                        },
+                        "representations":Representations(
+                            **RecipeLoader.default_values["representations"]
+                        ),
                         "radius": 1
                     },
                     "compartment_A": {
@@ -472,15 +470,13 @@ def test_migrate_version_error():
                             -3.141592653589793,
                             3.141592653589793
                         ],
-                        "representations": {
-                            "atomic": None,
-                            "packing": None,
-                            "mesh": {
+                        "representations": Representations(
+                            packing={
                                 "path": "cellpack/test-geometry",
                                 "name": "membrane_1.obj",
                                 "format": ".obj"
                             }
-                        }
+                        ),
                     },
                     "sphere_surface": {
                         "jitter_attempts": 20,
@@ -514,11 +510,9 @@ def test_migrate_version_error():
                             -3.1415927,
                             -3.1415927
                         ],
-                        "representations": {
-                            "atomic": None,
-                            "packing": None,
-                            "mesh": None
-                        },
+                        "representations": Representations(
+                            **RecipeLoader.default_values["representations"]
+                        ),
                         "radius": 1.0
                     },
                     "sphere_inside": {
