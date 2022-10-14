@@ -132,28 +132,60 @@ def convert(recipe_data):
     if "compartments" in recipe_data:
         for compartment_name in recipe_data["compartments"]:
             compartment_array = []
-            compartment = recipe_data["compartments"][compartment_name]
+            compartment_data = recipe_data["compartments"][compartment_name]
+            #we want to add comp name in + object dict in interior, how? 
+            # composition["space"]["regions"]["interior"].append(compartment_name)
+            composition[compartment_name] = {"object": compartment_name, "regions": {} }
             # create a compartment object and add to the objects dictionary
             # using the compartment_name as a key
-            # add the compartment to the composition dictionary 
-            get_v1_ingredient(
-                compartment_name,
-                compartment,
-                outer_most_region_array,
-                objects_dict,
-            )
-            for region_name in compartment:
-                # add region to composition 
-                composition[compartment_name]["regions"][region_name]
+            # add the compartment to the composition dictionary
+            # get_v1_ingredient(
+            #     compartment_name,
+            #     compartment_data,
+            #     compartment_array,
+            #     objects_dict,
+            # )
+            for region_name in compartment_data:
+                # add region to composition
+                if region_name == "surface":
+                    surface_array = []
+                    composition[compartment_name]["regions"][
+                        region_name
+                    ] = surface_array
+                    for ingredient_key in compartment_data[region_name]["ingredients"]:
+                        ingredient_data = compartment_data[region_name]["ingredients"][
+                            ingredient_key
+                        ]
+                        get_v1_ingredient(
+                            ingredient_key,
+                            ingredient_data,
+                            surface_array,
+                            objects_dict,
+                        )
+
+                if region_name == "interior":
+                    interior_array = []
                 # walk through ingredients and add them as objects
                 # link them in composition
-                for ingredient_key in compartment[region_name]["ingredients"]:
-                    # make them 
+                    composition[compartment_name]["regions"][
+                        region_name
+                    ] = interior_array
+                    for ingredient_key in compartment_data[region_name]["ingredients"]:
+                        ingredient_data = compartment_data[region_name]["ingredients"][
+                            ingredient_key
+                        ]
+                        get_v1_ingredient(
+                            ingredient_key,
+                            ingredient_data,
+                            interior_array,
+                            objects_dict,
+                        )
+                    # make them
                     # get_v1_ingredient(
                     #     ingredient_key,
                     #     ingredient_data,
                     #     compartment_array,
                     #     objects_dict,
                     # )
-                    pass
+    import ipdb; ipdb.set_trace()
     return objects_dict, composition
