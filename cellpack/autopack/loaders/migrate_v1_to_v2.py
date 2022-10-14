@@ -86,6 +86,7 @@ def migrate_ingredient(old_ingredient):
             partners[convert_to_partners_map[attribute]] = old_ingredient[attribute]
     new_ingredient["orient_bias_range"] = convert_rotation_range(old_ingredient)
     new_ingredient["representations"] = get_representations(old_ingredient)
+
     if new_ingredient["type"] == INGREDIENT_TYPE.SINGLE_SPHERE.value:
         new_ingredient["radius"] = old_ingredient["radii"][0][0]
     return new_ingredient
@@ -143,6 +144,7 @@ def convert(recipe_data):
         for compartment_name in recipe_data["compartments"]:
             compartment_data = recipe_data["compartments"][compartment_name]
             compartment_data["Type"] = "mesh"
+
             composition[compartment_name] = {"object": compartment_name, "regions": {} }
             # create a compartment object and add to the objects dictionary
             # using the compartment_name as a key
@@ -153,6 +155,7 @@ def convert(recipe_data):
                 outer_most_region_array,
                 objects_dict,
             )
+
             for region_name in compartment_data:
                 # add region to composition
                 if region_name == "surface":
@@ -188,6 +191,5 @@ def convert(recipe_data):
                             interior_array,
                             objects_dict,
                         )
-
     import ipdb; ipdb.set_trace()
     return objects_dict, composition
