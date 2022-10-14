@@ -347,7 +347,7 @@ def test_convert_v1_to_v2(
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
                         ),
-                        "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
+                        "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                     },
                     "B": {
                         "orient_bias_range": [6, pi],
@@ -356,7 +356,7 @@ def test_convert_v1_to_v2(
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
                         ),
-                        "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
+                        "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                     },
                     "C": {
                         "type": "SingleSphere",

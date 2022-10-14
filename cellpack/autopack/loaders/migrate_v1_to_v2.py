@@ -80,7 +80,7 @@ def migrate_ingredient(old_ingredient):
             partners[convert_to_partners_map[attribute]] = old_ingredient[attribute]
     new_ingredient["orient_bias_range"] = convert_rotation_range(old_ingredient)
     new_ingredient["representations"] = convert_to_representations(old_ingredient)
-    if new_ingredient["type"] == INGREDIENT_TYPE.SINGLE_SPHERE.value:
+    if new_ingredient["type"] == INGREDIENT_TYPE.SINGLE_SPHERE:
         new_ingredient["radius"] = old_ingredient["radii"][0][0]
     return new_ingredient
 
