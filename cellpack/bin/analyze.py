@@ -109,6 +109,8 @@ class Args(argparse.Namespace):
             help=argparse.SUPPRESS,
         )
         p.parse_args(namespace=self)
+
+
 ###############################################################################
 
 
@@ -126,7 +128,7 @@ def main():
             input_path=input_path,
             output_path=output_path,
             inner_mesh_path=args.inner_mesh_path,
-            outer_mesh_path=args.outer_mesh_path
+            outer_mesh_path=args.outer_mesh_path,
         )
         analysis.run_analysis_workflow(
             input_path=input_path,

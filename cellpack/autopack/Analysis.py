@@ -130,9 +130,7 @@ def autolabels(loci1, loci2, loci3, ax, yerr1, yerr2, yerr3):
 
 
 def getRndWeighted(listPts, weight, yerr):
-    w = [
-        yerr[i] * numpy.random.random() + weight[i] for i in range(len(weight))
-    ]
+    w = [yerr[i] * numpy.random.random() + weight[i] for i in range(len(weight))]
     t = numpy.cumsum(w)
     s = numpy.sum(w)
     i = numpy.searchsorted(t, numpy.random.rand(1) * s)[0]
@@ -224,9 +222,7 @@ class AnalyseAP:
             children = self.helper.getChilds(obparent)
             for ch in children:
                 ingr_name = self.helper.getName(ch)
-                meshp = self.helper.getObject(
-                    "Meshs_" + ingr_name.split("_")[0]
-                )
+                meshp = self.helper.getObject("Meshs_" + ingr_name.split("_")[0])
                 if meshp is None:
                     c = self.helper.getChilds(ch)
                     if not len(c):
@@ -256,15 +252,11 @@ class AnalyseAP:
         elif type(target) == str:
             o = self.helper.getObject(target)
             if o is not None:
-                targetPos = self.helper.ToVec(
-                    self.helper.getTranslation(o)
-                )  # hostForm
+                targetPos = self.helper.ToVec(self.helper.getTranslation(o))  # hostForm
         else:
             o = self.helper.getObject(target)
             if o is not None:
-                targetPos = self.helper.ToVec(
-                    self.helper.getTranslation(o)
-                )  # hostForm
+                targetPos = self.helper.ToVec(self.helper.getTranslation(o))  # hostForm
         listCenters = []
         if self.result_file is None:
             if parents is None and self.result_file is None:
@@ -301,9 +293,7 @@ class AnalyseAP:
         for i in range(len(listeCenters)):
             for j in range(i + 1, len(listeCenters)):
                 # should use point
-                d = self.helper.measure_distance(
-                    listeCenters[i], listeCenters[j]
-                )
+                d = self.helper.measure_distance(listeCenters[i], listeCenters[j])
                 if d < listeDistance[i]:
                     listeDistance[i] = d
         return listeDistance
@@ -475,9 +465,7 @@ class AnalyseAP:
             ]
         if doanalyze:
             for ingrname in ingrrot:
-                eulers3 = [
-                    t.euler_from_matrix(m, "rxyz") for m in ingrrot[ingrname]
-                ]
+                eulers3 = [t.euler_from_matrix(m, "rxyz") for m in ingrrot[ingrname]]
                 e3 = numpy.degrees(numpy.array(eulers3)).transpose()
                 numpy.savetxt(
                     ingrname + "_euler_X.csv",
@@ -494,15 +482,9 @@ class AnalyseAP:
                     numpy.array(e3[2]),
                     delimiter=",",
                 )
-                self.histo(
-                    e3[0], ingrname + "_euler_X.png", bins=12, size=max(e3[0])
-                )
-                self.histo(
-                    e3[1], ingrname + "_euler_Y.png", bins=12, size=max(e3[1])
-                )
-                self.histo(
-                    e3[2], ingrname + "_euler_Z.png", bins=12, size=max(e3[2])
-                )
+                self.histo(e3[0], ingrname + "_euler_X.png", bins=12, size=max(e3[0]))
+                self.histo(e3[1], ingrname + "_euler_Y.png", bins=12, size=max(e3[1]))
+                self.histo(e3[2], ingrname + "_euler_Z.png", bins=12, size=max(e3[2]))
         #                ingredient_positions,distA,angles3=self.getDistanceAngle(ingrpos3, ingrrot3)
         #                numpy.savetxt(ingrname+"_angle_X.csv", numpy.array(angles3[1]), delimiter=",")
         #                numpy.savetxt(ingrname+"_angle_Y.csv", numpy.array(angles3[2]), delimiter=",")
@@ -680,13 +662,9 @@ class AnalyseAP:
             * self.env.grid.nbGridPoints[2]
             * self.env.grid.gridSpacing**3
         )
-        Vshell = numpy.array(
-            self.getVolumeShell(self.bbox, radii, self.center)
-        )
+        Vshell = numpy.array(self.getVolumeShell(self.bbox, radii, self.center))
         gr = (dnr * V) / (N * Vshell)
-        numpy.savetxt(
-            basename + ingr.name + "_rdf.csv", numpy.array(gr), delimiter=","
-        )
+        numpy.savetxt(basename + ingr.name + "_rdf.csv", numpy.array(gr), delimiter=",")
         self.plot(gr, radii[:-1], basename + ingr.name + "_rdf.png")
 
     def getAreaShell(self, bbox, radii, center):
@@ -698,9 +676,7 @@ class AnalyseAP:
             area1 = self.rectangle_circle_area(bbox, center, r1)
             area2 = self.rectangle_circle_area(bbox, center, r2)
             if area1 == 0 or area2 == 0:
-                areas.append(
-                    numpy.pi * (numpy.power(r2, 2) - numpy.power(r1, 2))
-                )
+                areas.append(numpy.pi * (numpy.power(r2, 2) - numpy.power(r1, 2)))
             else:
                 areas.append(area2 - area1)
         return areas
@@ -805,9 +781,7 @@ class AnalyseAP:
         #        print Vshell1
         #        print radii
         gr = (dnr * V) / (N * Vshell)
-        numpy.savetxt(
-            basename + ingr.name + "_rdf.csv", numpy.array(gr), delimiter=","
-        )
+        numpy.savetxt(basename + ingr.name + "_rdf.csv", numpy.array(gr), delimiter=",")
         self.plot(gr, radii[:-1], basename + ingr.name + "_rdf.png")
         # simpl approach Ni/Areai
         G = dnr / Vshell
@@ -850,9 +824,7 @@ class AnalyseAP:
         )
 
     def axis_distribution(self, ingr):
-        px, py, pz = self.getAxesValues(
-            self.env.ingredient_positions[ingr.name]
-        )
+        px, py, pz = self.getAxesValues(self.env.ingredient_positions[ingr.name])
         self.histo(
             px,
             f"{self.env.out_folder}/{ingr.name}_histo_X_{self.env.basename}.png",
@@ -880,9 +852,7 @@ class AnalyseAP:
 
     def correlation(self, ingr):
         basename = self.env.basename
-        posxyz = numpy.array(
-            self.env.ingredient_positions[ingr.name]
-        ).transpose()
+        posxyz = numpy.array(self.env.ingredient_positions[ingr.name]).transpose()
         g_average, radii, x, y, z = self.PairCorrelationFunction_3D(
             posxyz, 1000, 900, 100
         )
@@ -925,9 +895,7 @@ class AnalyseAP:
         bools5 = z > rMax
         bools6 = z < (S - rMax)
 
-        (interior_indices,) = where(
-            bools1 * bools2 * bools3 * bools4 * bools5 * bools6
-        )
+        (interior_indices,) = where(bools1 * bools2 * bools3 * bools4 * bools5 * bools6)
         num_interior_particles = len(interior_indices)
 
         if num_interior_particles < 1:
@@ -946,9 +914,7 @@ class AnalyseAP:
         # Compute pairwise correlation for each interior particle
         for p in range(num_interior_particles):
             index = interior_indices[p]
-            d = sqrt(
-                (x[index] - x) ** 2 + (y[index] - y) ** 2 + (z[index] - z) ** 2
-            )
+            d = sqrt((x[index] - x) ** 2 + (y[index] - y) ** 2 + (z[index] - z) ** 2)
             d[index] = 2 * rMax
 
             (result, bins) = histogram(d, bins=edges, normed=False)
@@ -1040,9 +1006,7 @@ class AnalyseAP:
             rOuter = edges[i + 1]
             rInner = edges[i]
             # divide by the area of sphere cut by sqyare
-            g_average[i] = average(g[:, i]) / (
-                pi * (rOuter**2 - rInner**2)
-            )
+            g_average[i] = average(g[:, i]) / (pi * (rOuter**2 - rInner**2))
 
         return (g_average, radii, interior_indices)
 
@@ -1114,9 +1078,7 @@ class AnalyseAP:
 
         for rc, (seed1, pos_dict1) in enumerate(all_objs[ingr_key].items()):
             similarity_df.loc[seed1, "packing_id"] = seed1.split("_")[-1]
-            for cc, (seed2, pos_dict2) in enumerate(
-                all_objs[ingr_key].items()
-            ):
+            for cc, (seed2, pos_dict2) in enumerate(all_objs[ingr_key].items()):
                 for dc, dim in enumerate(["x", "y", "z"]):
                     arr1 = pos_dict1[dim]
                     arr2 = pos_dict2[dim]
@@ -1141,9 +1103,7 @@ class AnalyseAP:
                 cbar_kws={"label": "similarity score"},
             )
             g.ax_heatmap.set_xlabel(f"{ingr_key}_{dim}")
-            g.savefig(
-                f"{self.output_path}clustermap_{ingr_key}_{dim}", dpi=300
-            )
+            g.savefig(f"{self.output_path}clustermap_{ingr_key}_{dim}", dpi=300)
 
     def get_parametrized_representation(
         self,
@@ -1156,9 +1116,7 @@ class AnalyseAP:
         get_correlations=False,
     ):
         print("creating parametrized representations...")
-        theta_vals = numpy.linspace(
-            0, numpy.pi, 1 + int(numpy.pi / angular_spacing)
-        )
+        theta_vals = numpy.linspace(0, numpy.pi, 1 + int(numpy.pi / angular_spacing))
         phi_vals = numpy.linspace(
             0, 2 * numpy.pi, 1 + int(2 * numpy.pi / angular_spacing)
         )
@@ -1168,9 +1126,7 @@ class AnalyseAP:
         outer_mesh = trimesh.load_mesh(outer_mesh_path)
 
         num_packings = len(all_pos_list)
-        num_seeds = numpy.array(
-            [len(packing_dict) for packing_dict in all_pos_list]
-        )
+        num_seeds = numpy.array([len(packing_dict) for packing_dict in all_pos_list])
         all_spilr_scaled = numpy.full(
             (
                 num_packings,
@@ -1246,9 +1202,7 @@ class AnalyseAP:
                 trial_spilr_scaled[rad_inds_scaled, theta_inds, phi_inds] = 1
                 trial_spilr_raw[rad_inds_raw, theta_inds, phi_inds] = 1
 
-                all_spilr_raw[pc, sc] = trial_spilr_raw.reshape(
-                    (len(rad_vals_raw), -1)
-                )
+                all_spilr_raw[pc, sc] = trial_spilr_raw.reshape((len(rad_vals_raw), -1))
                 all_spilr_scaled[pc, sc] = trial_spilr_scaled.reshape(
                     (len(rad_vals), -1)
                 )
@@ -1261,9 +1215,7 @@ class AnalyseAP:
                         yticklabels=False,
                     )
                     g_raw.set_xlabel("Angular coordinates")
-                    g_raw.set_ylabel(
-                        f"Distance from Nuclear Surface, {pc}_{sc}"
-                    )
+                    g_raw.set_ylabel(f"Distance from Nuclear Surface, {pc}_{sc}")
                     g_raw.invert_yaxis()
 
                     g_scaled = sns.heatmap(
@@ -1313,9 +1265,9 @@ class AnalyseAP:
                                 all_spilr_scaled[pc1, sc1],
                                 all_spilr_scaled[pc2, sc2],
                             )
-                            corr_df.loc[
-                                f"{pc2}_{sc2}", f"{pc1}_{sc1}"
-                            ] = corr_df.loc[f"{pc1}_{sc1}", f"{pc2}_{sc2}"]
+                            corr_df.loc[f"{pc2}_{sc2}", f"{pc1}_{sc1}"] = corr_df.loc[
+                                f"{pc1}_{sc1}", f"{pc2}_{sc2}"
+                            ]
             df_packing = corr_df.pop("packing_id")
             lut = dict(zip(df_packing.unique(), sns.color_palette()))
             row_colors = df_packing.map(lut)
@@ -1325,9 +1277,7 @@ class AnalyseAP:
                 row_colors=row_colors,
                 cbar_kws={"label": "spilr correlation"},
             )
-            g.savefig(
-                f"{self.output_path}spilr_correlation_{self.ingr_key}", dpi=300
-            )
+            g.savefig(f"{self.output_path}spilr_correlation_{self.ingr_key}", dpi=300)
 
         average_spilr_raw = numpy.nanmean(all_spilr_raw, axis=1)
         average_spilr_scaled = numpy.nanmean(all_spilr_scaled, axis=1)
@@ -1354,9 +1304,7 @@ class AnalyseAP:
                     ax=ax_scaled,
                 )
                 g_scaled.set_xlabel("Angular coordinates")
-                g_scaled.set_ylabel(
-                    "Scaled distance from Nuclear Surface, avg"
-                )
+                g_scaled.set_ylabel("Scaled distance from Nuclear Surface, avg")
                 g_scaled.invert_yaxis()
 
                 fig_raw = g_raw.get_figure()
@@ -1376,9 +1324,7 @@ class AnalyseAP:
         """
         Calculates the Matthews correlation between spilrs
         """
-        return matthews_corrcoef(
-            spilr_list_1.flatten(), spilr_list_2.flatten()
-        )
+        return matthews_corrcoef(spilr_list_1.flatten(), spilr_list_2.flatten())
 
     @staticmethod
     def cartesian_to_sph(xyz):
@@ -1526,12 +1472,8 @@ class AnalyseAP:
                         radius[ingrname] = data[recipe][ingrname][
                             "encapsulating_radius"
                         ]
-                    ingrrot[ingrname].append(
-                        data[recipe][ingrname]["results"][k][1]
-                    )
-                    ingrpos[ingrname].append(
-                        data[recipe][ingrname]["results"][k][0]
-                    )
+                    ingrrot[ingrname].append(data[recipe][ingrname]["results"][k][1])
+                    ingrpos[ingrname].append(data[recipe][ingrname]["results"][k][0])
         for ingr in ingrpos:
             for i, p in enumerate(ingrpos[ingr]):
                 ax.add_patch(
@@ -1575,9 +1517,7 @@ class AnalyseAP:
         plt.savefig(filename)
         return x, y, z, s, c
 
-    def one_exp(
-        self, seed, output_path, eid=0, nmol=1, periodicity=True, dim=2
-    ):
+    def one_exp(self, seed, output_path, eid=0, nmol=1, periodicity=True, dim=2):
         output = output_path + str(nmol)
         if periodicity:
             self.env.use_periodicity = True
@@ -1679,9 +1619,7 @@ class AnalyseAP:
                 ax = fig.add_subplot(111)
 
             if rdf:
-                center = (
-                    self.env.grid.getCenter()
-                )  # [500,500,0.5]#center of the grid
+                center = self.env.grid.getCenter()  # [500,500,0.5]#center of the grid
                 r = self.env.exteriorRecipe
                 d = {}
                 if r:
@@ -1699,21 +1637,14 @@ class AnalyseAP:
                             ingredient_positions[ingr.name] = []
                             ingredient_angles[ingr.name] = []
                             occurences[ingr.name] = []
-                        if (
-                            ingr.packing_mode == "gradient"
-                            and self.env.use_gradient
-                        ):
+                        if ingr.packing_mode == "gradient" and self.env.use_gradient:
                             self.center = center = self.env.gradients[
                                 ingr.gradient
                             ].direction
                             # also mesure the angle pos>center pcpalVector
-                            ingrpos, d, angles = self.getDistanceAngle(
-                                ingr, center
-                            )
+                            ingrpos, d, angles = self.getDistanceAngle(ingr, center)
                             if use_file:
-                                f_handle = open(
-                                    angle_file, "a" if seed_index else "w"
-                                )
+                                f_handle = open(angle_file, "a" if seed_index else "w")
                                 numpy.savetxt(f_handle, angles, delimiter=",")
                                 f_handle.close()
                             else:
@@ -1723,14 +1654,10 @@ class AnalyseAP:
                             ingrpos, d = self.getDistance(ingr.name, center)
                         occurences[ingr.name].append(len(ingrpos))
                         if use_file:
-                            f_handle = open(
-                                position_file, "a" if seed_index else "w"
-                            )
+                            f_handle = open(position_file, "a" if seed_index else "w")
                             numpy.savetxt(f_handle, ingrpos, delimiter=",")
                             f_handle.close()
-                            f_handle = open(
-                                distance_file, "a" if seed_index else "w"
-                            )
+                            f_handle = open(distance_file, "a" if seed_index else "w")
                             numpy.savetxt(f_handle, d, delimiter=",")
                             f_handle.close()
                             distances[ingr.name] = d
@@ -1821,9 +1748,7 @@ class AnalyseAP:
                                 ingr.packing_mode == "gradient"
                                 and self.env.use_gradient
                             ):
-                                center = self.env.gradients[
-                                    ingr.gradient
-                                ].direction
+                                center = self.env.gradients[ingr.gradient].direction
                             ingrpos, d = self.getDistance(ingr.name, center)
                             occurences[ingr.name].append(len(ingrpos))
                             if use_file:
@@ -1834,9 +1759,7 @@ class AnalyseAP:
                                 numpy.savetxt(f_handle, d, delimiter=",")
                                 f_handle.close()
                                 distances[ingr.name] = d
-                                ingredient_positions[
-                                    ingr.name
-                                ] = ingrpos.tolist()
+                                ingredient_positions[ingr.name] = ingrpos.tolist()
                             else:
                                 distances[ingr.name].extend(d)
                                 ingredient_positions[ingr.name].extend(ingrpos)
@@ -1863,9 +1786,7 @@ class AnalyseAP:
                                 ingr.packing_mode == "gradient"
                                 and self.env.use_gradient
                             ):
-                                center = self.env.gradients[
-                                    ingr.gradient
-                                ].direction
+                                center = self.env.gradients[ingr.gradient].direction
                             ingrpos, d = self.getDistance(ingr.name, center)
                             occurences[ingr.name].append(len(ingrpos))
                             if use_file:
@@ -1876,9 +1797,7 @@ class AnalyseAP:
                                 numpy.savetxt(f_handle, d, delimiter=",")
                                 f_handle.close()
                                 distances[ingr.name] = d
-                                ingredient_positions[
-                                    ingr.name
-                                ] = ingrpos.tolist()
+                                ingredient_positions[ingr.name] = ingrpos.tolist()
                             else:
                                 distances[ingr.name].extend(d)
                                 ingredient_positions[ingr.name].extend(ingrpos)
@@ -1956,9 +1875,7 @@ class AnalyseAP:
                 dict1 = self.loadJSON(
                     f"{self.env.out_folder}/ingredient_angles_{basename}.json"
                 )
-                all_ingredient_angles = dict(
-                    self.merge(all_ingredient_angles, dict1)
-                )
+                all_ingredient_angles = dict(self.merge(all_ingredient_angles, dict1))
 
         self.writeJSON(all_pos_file + ".json", all_pos_dict)
         self.writeJSON(occurences_file, occurences)

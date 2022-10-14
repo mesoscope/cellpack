@@ -45,7 +45,7 @@ def pack(recipe, config):
             plot=True,
             show_grid=config_data["show_grid_plot"],
             seeds_i=config_data["rng_seed"],
-            config_name=config_data['name']
+            config_name=config_data["name"],
         )
     else:
         env.buildGrid(rebuild=True)
