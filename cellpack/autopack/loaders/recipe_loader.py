@@ -1,24 +1,15 @@
 # -*- coding: utf-8 -*-
 import copy
-from math import pi
 import os
 
 import json
 from json import encoder
 
 import cellpack.autopack as autopack
-from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
-from cellpack.autopack.loaders.util import create_file_info_object_from_full_path
 from cellpack.autopack.utils import deep_merge
-from .v1_v2_attribute_changes import (
-    ingredient_types_map,
-    v1_to_v2_name_map,
-    unused_attributes_list,
-    convert_to_partners_map,
-    attributes_move_to_composition,
-    required_attributes,
-)
 from cellpack.autopack.interface_objects.representations import Representations
+from cellpack.autopack.interface_objects.default_values import default_recipe_values
+from cellpack.autopack.loaders.migrate_v1_to_v2 import convert
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 CURRENT_VERSION = "2.0"
@@ -26,10 +17,7 @@ CURRENT_VERSION = "2.0"
 
 class RecipeLoader(object):
     # TODO: add all default values here
-    default_values = {
-        "bounding_box": [[0, 0, 0], [100, 100, 100]],
-        "representations": {"atomic": None, "packing": None, "mesh": None},
-    }
+    default_values = default_recipe_values.copy()
 
     def __init__(self, input_file_path):
         _, file_extension = os.path.splitext(input_file_path)
@@ -129,136 +117,29 @@ class RecipeLoader(object):
         return data
 
     @staticmethod
-    def _convert_to_representations(old_ingredient):
-        representations = RecipeLoader.default_values["representations"].copy()
-        if "sphereFile" in old_ingredient and old_ingredient["sphereFile"] is not None:
-            representations["packing"] = create_file_info_object_from_full_path(
-                old_ingredient["sphereFile"]
-            )
-        if "meshFile" in old_ingredient and old_ingredient["meshFile"] is not None:
-            representations["mesh"] = create_file_info_object_from_full_path(
-                old_ingredient["meshFile"]
-            )
-            if (
-                "coordsystem" in old_ingredient
-                and old_ingredient["coordsystem"] is not None
-            ):
-                representations["mesh"]["coordinate_system"] = old_ingredient[
-                    "coordsystem"
-                ]
-        if "pdb" in old_ingredient and old_ingredient["pdb"] is not None:
-            if ".pdb" in old_ingredient["pdb"]:
-                representations["atomic"] = {
-                    "path": "default",
-                    "name": old_ingredient["pdb"],
-                    "format": ".pdb",
-                }
-            else:
-                representations["atomic"] = {
-                    "id": old_ingredient["pdb"],
-                    "format": ".pdb",
-                }
-            if "source" in old_ingredient and "transform" in old_ingredient["source"]:
-                representations["atomic"]["transform"] = old_ingredient["source"][
-                    "transform"
-                ]
+    def _sanitize_format_version(recipe_data):
+        if "format_version" not in recipe_data:
+            format_version = "1.0"  # all recipes before we introduced versioning
+        elif len(recipe_data["format_version"].split(".")) > 2:
+            # We only use two places for format version, but people
+            # might accidently include a third number
+            # ie 2.0.0 instead of 2.0
+            split_numbers = recipe_data["format_version"].split(".")
+            format_version = f"{split_numbers[0]}.{split_numbers[1]}"
+        elif len(recipe_data["format_version"].split(".")) == 1:
+            # We only use two places for format version, but people
+            # might accidently include a third number
+            # ie 2.0.0 instead of 2.0
+            split_numbers = recipe_data["format_version"].split(".")
+            format_version = f"{split_numbers[0]}.0"
+        else:
+            format_version = recipe_data["format_version"]
+        return format_version
 
-        return representations
-
-    @staticmethod
-    def _convert_rotation_range(old_ingredient):
-        range_min = (
-            old_ingredient["orientBiasRotRangeMin"]
-            if "orientBiasRotRangeMin" in old_ingredient
-            else -pi
-        )
-        range_max = (
-            old_ingredient["orientBiasRotRangeMax"]
-            if "orientBiasRotRangeMax" in old_ingredient
-            else pi
-        )
-        return [range_min, range_max]
-
-    @staticmethod
-    def _migrate_ingredient(old_ingredient):
-        new_ingredient = {}
-        for attribute in list(old_ingredient):
-            if attribute in v1_to_v2_name_map:
-                if attribute == "Type":
-                    value = ingredient_types_map[old_ingredient[attribute]]
-                else:
-                    value = old_ingredient[attribute]
-                new_ingredient[v1_to_v2_name_map[attribute]] = value
-            elif attribute in unused_attributes_list:
-                del old_ingredient[attribute]
-            elif attribute in convert_to_partners_map:
-                if "partners" not in new_ingredient:
-                    partners = {}
-                    new_ingredient["partners"] = partners
-                partners[convert_to_partners_map[attribute]] = old_ingredient[attribute]
-        new_ingredient["orient_bias_range"] = RecipeLoader._convert_rotation_range(
-            old_ingredient
-        )
-        new_ingredient["representations"] = RecipeLoader._convert_to_representations(
-            old_ingredient
-        )
-        if new_ingredient["type"] == INGREDIENT_TYPE.SINGLE_SPHERE:
-            new_ingredient["radius"] = old_ingredient["radii"][0][0]
-        return new_ingredient
-
-    @staticmethod
-    def _check_required_attributes(old_ingredient_data):
-        if "Type" not in old_ingredient_data:
-            old_ingredient_data["Type"] = "SingleSphere"
-        ingr_type = old_ingredient_data["Type"]
-        required = required_attributes[ingr_type]
-        for attr in required:
-            if attr not in old_ingredient_data:
-                raise ValueError(f"{ingr_type} data needs {attr}")
-
-    @staticmethod
-    def _split_ingredient_data(object_key, ingredient_data):
-        composition_info = {"object": object_key}
-        object_info = ingredient_data.copy()
-        for attribute in attributes_move_to_composition:
-            if attribute in ingredient_data:
-                composition_info[attribute] = ingredient_data[attribute]
-                del object_info[attribute]
-        return object_info, composition_info
-
-    @staticmethod
-    def _get_v1_ingredient(ingredient_key, ingredient_data, region_list, objects_dict):
-        RecipeLoader._check_required_attributes(ingredient_data)
-        converted_ingredient = RecipeLoader._migrate_ingredient(ingredient_data)
-        object_info, composition_info = RecipeLoader._split_ingredient_data(
-            ingredient_key, converted_ingredient
-        )
-        region_list.append(composition_info)
-        objects_dict[ingredient_key] = object_info
-
-    @staticmethod
-    def _convert_v1_to_v2(recipe_data):
-        objects_dict = {}
-        composition = {"space": {"regions": {}}}
-        if "cytoplasme" in recipe_data:
-            outer_most_region_array = []
-            composition["space"]["regions"]["interior"] = outer_most_region_array
-            for ingredient_key in recipe_data["cytoplasme"]["ingredients"]:
-                ingredient_data = recipe_data["cytoplasme"]["ingredients"][
-                    ingredient_key
-                ]
-                RecipeLoader._get_v1_ingredient(
-                    ingredient_key,
-                    ingredient_data,
-                    outer_most_region_array,
-                    objects_dict,
-                )
-        return objects_dict, composition
-
-    def _migrate_version(self, recipe, format_version="1.0"):
+    def _migrate_version(self, recipe):
         new_recipe = {}
 
-        if format_version == "1.0":
+        if recipe["format_version"] == "1.0":
 
             new_recipe["version"] = recipe["recipe"]["version"]
             new_recipe["format_version"] = self.current_version
@@ -267,23 +148,23 @@ class RecipeLoader(object):
             (
                 new_recipe["objects"],
                 new_recipe["composition"],
-            ) = RecipeLoader._convert_v1_to_v2(recipe)
+            ) = convert(recipe)
+        else:
+            raise ValueError(
+                f"{recipe['format_version']} is not a format vesion we support"
+            )
         return new_recipe
 
     def _read(self):
         new_values = json.load(open(self.file_path, "r"))
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
-        if (
-            "format_version" not in recipe_data
-            or recipe_data["format_version"] != self.current_version
-        ):
-            input_format_version = (
-                recipe_data["format_version"]
-                if "format_version" in recipe_data
-                else "1.0"
-            )
-            recipe_data = self._migrate_version(recipe_data, input_format_version)
+        recipe_data["format_version"] = RecipeLoader._sanitize_format_version(
+            recipe_data
+        )
+
+        if recipe_data["format_version"] != self.current_version:
+            recipe_data = self._migrate_version(recipe_data)
 
         # TODO: request any external data before returning
         if "objects" in recipe_data:
