@@ -60,6 +60,22 @@ class Recipe:
         self.name = name
 
     @staticmethod
+    def is_key(key_or_dict, composition_dict):
+        """
+        Helper function to find if data in composition list
+        is a key or an object
+        """
+        is_key = not isinstance(key_or_dict, dict)
+        if is_key:
+            key = key_or_dict
+            if key not in composition_dict:
+                raise ValueError(f"{key} is not in composition dictionary")
+            composition_info = composition_dict[key]
+        else:
+            composition_info = key_or_dict
+        return is_key, composition_info
+
+    @staticmethod
     def resolve_composition(recipe_data):
         composition_dict = recipe_data["composition"]
         # keys in reference_dict are downstream objects,

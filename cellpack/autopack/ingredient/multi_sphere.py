@@ -18,6 +18,7 @@ class MultiSphereIngr(Ingredient):
     def __init__(
         self,
         representations,  # required because the representations.packing dictionary will have the spheres
+        available_regions=None,
         color=None,
         count=0,
         cutoff_boundary=None,

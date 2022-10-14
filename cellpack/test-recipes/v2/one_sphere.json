@@ -29,9 +29,7 @@
                 0.01
             ],
             "perturb_axis_amplitude": 0.1,
-            "packing": {
-                "mode": "random"
-            },
+            "packing_mode": "random",
             "principal_vector": [
                 0,
                 0,

@@ -19,6 +19,7 @@ class SingleCubeIngr(Ingredient):
     def __init__(
         self,
         bounds,
+        available_regions=None,
         type="single_cube",
         color=None,
         count=0,

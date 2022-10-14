@@ -42,6 +42,7 @@ class GrowIngredient(MultiCylindersIngr):
 
     def __init__(
         self,
+        available_regions=None,
         type="Grow",
         biased=1.0,
         closed=False,
