@@ -50,7 +50,7 @@ def pack(recipe, config):
             show_grid=config_data["show_grid_plot"],
         )
     else:
-        env.buildGrid(rebuild=True, gridFileOut=None, previousFill=False)
+        env.buildGrid(rebuild=True)
         env.pack_grid(verbose=0, usePP=False)
 
 

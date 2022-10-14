@@ -200,7 +200,7 @@ def main():
         if do_analysis:
             for place_method in args.place_methods:
                 log.info(f"starting {place_method}")
-                env.placeMethod = place_method
+                env.place_method = place_method
                 env.encapsulatingGrid = 0
                 analyse = AnalyseAP(env=env, viewer=afviewer, result_file=None)
                 analyse.g.Resolution = 1.0
@@ -219,7 +219,7 @@ def main():
                 )
         else:
             for place_method in args.place_methods:
-                env.placeMethod = place_method
+                env.place_method = place_method
                 env.saveResult = True
                 env.innerGridMethod = "raytrace"
                 env.boundingBox = [[-2482, -2389.0, 100.0], [2495, 2466, 2181.0]]
