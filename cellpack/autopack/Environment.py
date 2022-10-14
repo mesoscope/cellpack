@@ -46,7 +46,6 @@
 # TODO: fix the save/restore grid
 """
 
-import copy
 import os
 from time import time
 from random import random, uniform, seed
