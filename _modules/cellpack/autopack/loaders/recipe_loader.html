@@ -398,10 +398,30 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">data</span>
 
-    <span class="k">def</span> <span class="nf">_migrate_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="n">format_version</span><span class="o">=</span><span class="s2">&quot;1.0&quot;</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_sanitize_format_version</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;format_version&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">recipe_data</span><span class="p">:</span>
+            <span class="n">format_version</span> <span class="o">=</span> <span class="s2">&quot;1.0&quot;</span>  <span class="c1"># all recipes before we introduced versioning</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># We only use two places for format version, but people</span>
+            <span class="c1"># might accidently include a third number</span>
+            <span class="c1"># ie 2.0.0 instead of 2.0</span>
+            <span class="n">split_numbers</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+            <span class="n">format_version</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">split_numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">split_numbers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># We only use two places for format version, but people</span>
+            <span class="c1"># might accidently include a third number</span>
+            <span class="c1"># ie 2.0.0 instead of 2.0</span>
+            <span class="n">split_numbers</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+            <span class="n">format_version</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">split_numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.0&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">format_version</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">format_version</span>
+
+    <span class="k">def</span> <span class="nf">_migrate_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
         <span class="n">new_recipe</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">if</span> <span class="n">format_version</span> <span class="o">==</span> <span class="s2">&quot;1.0&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">recipe</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1.0&quot;</span><span class="p">:</span>
 
             <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">recipe</span><span class="p">[</span><span class="s2">&quot;recipe&quot;</span><span class="p">][</span><span class="s2">&quot;version&quot;</span><span class="p">]</span>
             <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_version</span>
@@ -411,22 +431,22 @@
                 <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">],</span>
                 <span class="n">new_recipe</span><span class="p">[</span><span class="s2">&quot;composition&quot;</span><span class="p">],</span>
             <span class="p">)</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">recipe</span><span class="p">[</span><span class="s1">&#39;format_version&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> is not a format vesion we support&quot;</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">new_recipe</span>
 
     <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">new_values</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span>
         <span class="n">recipe_data</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="o">.</span><span class="n">default_values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">recipe_data</span> <span class="o">=</span> <span class="n">deep_merge</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">,</span> <span class="n">new_values</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span>
-            <span class="s2">&quot;format_version&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">recipe_data</span>
-            <span class="ow">or</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_version</span>
-        <span class="p">):</span>
-            <span class="n">input_format_version</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span>
-                <span class="k">if</span> <span class="s2">&quot;format_version&quot;</span> <span class="ow">in</span> <span class="n">recipe_data</span>
-                <span class="k">else</span> <span class="s2">&quot;1.0&quot;</span>
-            <span class="p">)</span>
-            <span class="n">recipe_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_migrate_version</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">,</span> <span class="n">input_format_version</span><span class="p">)</span>
+        <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="o">.</span><span class="n">_sanitize_format_version</span><span class="p">(</span>
+            <span class="n">recipe_data</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;format_version&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_version</span><span class="p">:</span>
+            <span class="n">recipe_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_migrate_version</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">)</span>
 
         <span class="c1"># TODO: request any external data before returning</span>
         <span class="k">if</span> <span class="s2">&quot;objects&quot;</span> <span class="ow">in</span> <span class="n">recipe_data</span><span class="p">:</span>
