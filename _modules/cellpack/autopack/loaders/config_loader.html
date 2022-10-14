@@ -143,7 +143,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#computegridparams">computeGridParams</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#windowssize">windowsSize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#placemethod">placeMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#place-method">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-gradient">use_gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradients">gradients</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#innergridmethod">innerGridMethod</a></li>
@@ -185,7 +185,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#id162">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradient">gradient</a></li>
@@ -317,20 +317,21 @@
 
 <div class="viewcode-block" id="ConfigLoader"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.config_loader.ConfigLoader">[docs]</a><span class="k">class</span> <span class="nc">ConfigLoader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">default_values</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
         <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;simularium&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;inner_grid_method&quot;</span><span class="p">:</span> <span class="s2">&quot;raytrace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;load_from_grid_file&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;inner_grid_method&quot;</span><span class="p">:</span> <span class="s2">&quot;trimesh&quot;</span><span class="p">,</span>
         <span class="s2">&quot;live_packing&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
         <span class="s2">&quot;ordered_packing&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;out&quot;</span><span class="p">:</span> <span class="s2">&quot;out/&quot;</span><span class="p">,</span>
         <span class="s2">&quot;overwrite_place_method&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;place_method&quot;</span><span class="p">:</span> <span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
         <span class="s2">&quot;save_analyze_result&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;show_grid_plot&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;show_sphere_trees&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;spacing&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
         <span class="s2">&quot;use_periodicity&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;show_sphere_trees&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file_path</span><span class="p">):</span>

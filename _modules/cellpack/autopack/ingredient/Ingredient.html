@@ -143,7 +143,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#computegridparams">computeGridParams</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#windowssize">windowsSize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#placemethod">placeMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#place-method">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-gradient">use_gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradients">gradients</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#innergridmethod">innerGridMethod</a></li>
@@ -185,7 +185,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#id162">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradient">gradient</a></li>
@@ -427,7 +427,7 @@
         <span class="s2">&quot;priority&quot;</span><span class="p">,</span>
         <span class="s2">&quot;partners&quot;</span><span class="p">,</span>
         <span class="s2">&quot;perturb_axis_amplitude&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;place_type&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;place_method&quot;</span><span class="p">,</span>
         <span class="s2">&quot;principal_vector&quot;</span><span class="p">,</span>
         <span class="s2">&quot;rejection_threshold&quot;</span><span class="p">,</span>
         <span class="s2">&quot;representations&quot;</span><span class="p">,</span>
@@ -463,7 +463,7 @@
         <span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">partners</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">perturb_axis_amplitude</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-        <span class="n">place_type</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
+        <span class="n">place_method</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
         <span class="n">principal_vector</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
         <span class="n">rejection_threshold</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
         <span class="n">representations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -485,7 +485,7 @@
             <span class="n">overwrite_distance_function</span><span class="o">=</span><span class="n">overwrite_distance_function</span><span class="p">,</span>
             <span class="n">packing_mode</span><span class="o">=</span><span class="n">packing_mode</span><span class="p">,</span>
             <span class="n">partners</span><span class="o">=</span><span class="n">partners</span><span class="p">,</span>
-            <span class="n">place_type</span><span class="o">=</span><span class="n">place_type</span><span class="p">,</span>
+            <span class="n">place_method</span><span class="o">=</span><span class="n">place_method</span><span class="p">,</span>
             <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;ingredient&quot;</span><span class="p">)</span>
@@ -1246,15 +1246,6 @@
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="Ingredient.compareCompartmentPrimitive"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.compareCompartmentPrimitive">[docs]</a>    <span class="k">def</span> <span class="nf">compareCompartmentPrimitive</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">distance</span>
-    <span class="p">):</span>
-        <span class="n">collisionComp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collides_with_compartment</span><span class="p">(</span>
-            <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">gridPointsCoords</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">collisionComp</span></div>
-
 <div class="viewcode-block" id="Ingredient.checkCompartment"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.checkCompartment">[docs]</a>    <span class="k">def</span> <span class="nf">checkCompartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptsInSphere</span><span class="p">,</span> <span class="n">nbs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">trigger</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compareCompartment</span><span class="p">:</span>
@@ -1362,27 +1353,22 @@
 
 <div class="viewcode-block" id="Ingredient.far_enough_from_surfaces"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.far_enough_from_surfaces">[docs]</a>    <span class="k">def</span> <span class="nf">far_enough_from_surfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
         <span class="c1"># check if clear of all other compartment surfaces</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">ingredient_compartment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ingredient_compartment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">ingredient_compartment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_compartment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">)</span>
         <span class="n">ingredient_compartment_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span>
+        <span class="n">compartment_collision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collides_with_compartment</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">compartment_collision</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span>
                 <span class="n">ingredient_compartment_id</span> <span class="o">&gt;</span> <span class="mi">0</span>
                 <span class="ow">and</span> <span class="n">ingredient_compartment</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">compartment</span><span class="o">.</span><span class="n">name</span>
             <span class="p">):</span>
                 <span class="k">continue</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s2">&quot;test compartment </span><span class="si">%s</span><span class="s2"> </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">compartment</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">compartment</span><span class="o">.</span><span class="n">OGsrfPtsBht</span>
-            <span class="p">)</span>
             <span class="c1"># checking compartments I don&#39;t belong to</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">OGsrfPtsBht</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">point</span><span class="p">])))</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="n">d</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="s2">&quot;distance is </span><span class="si">%r</span><span class="s2"> </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">cutoff</span>
-                <span class="p">)</span>  <span class="c1"># d can be wrond for some reason,</span>
                 <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">cutoff</span><span class="p">:</span>
                     <span class="c1"># too close to a surface</span>
                     <span class="k">return</span> <span class="kc">False</span>
@@ -1404,6 +1390,7 @@
                 <span class="n">far_from_surfaces</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">far_enough_from_surfaces</span><span class="p">(</span>
                     <span class="n">newPt</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff_surface</span>
                 <span class="p">)</span>
+
                 <span class="k">return</span> <span class="n">far_from_surfaces</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
@@ -1605,7 +1592,7 @@
                 <span class="p">)</span>
         <span class="c1"># starting at level 0, check encapsulating radii</span>
         <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">total_levels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span>
+        <span class="n">total_levels</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;positions&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span>
         <span class="p">(</span>
             <span class="n">distances_from_packing_location_to_all_ingr</span><span class="p">,</span>
             <span class="n">ingr_indexes</span><span class="p">,</span>
@@ -1622,7 +1609,7 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">overlap_indexes</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">level</span> <span class="o">=</span> <span class="n">level</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="c1"># single sphere ingr will exit here.</span>
-            <span class="k">if</span> <span class="n">level</span> <span class="o">==</span> <span class="n">total_levels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">level</span> <span class="o">&gt;=</span> <span class="n">total_levels</span><span class="p">:</span>
                 <span class="n">has_collision</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="c1"># for each packed ingredient that had a collision, we want to check the more</span>
             <span class="c1"># detailed geometry, ie walk down the sphere tree file.</span>
@@ -1648,35 +1635,6 @@
                         <span class="c1"># found collision at lowest level, break all the way out</span>
                         <span class="k">return</span> <span class="kc">True</span>
                 <span class="k">del</span> <span class="n">search_tree_for_new_ingr</span>
-
-        <span class="c1"># the compartment the ingr belongs to</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">current_ingr_compartment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># NOTE: env.compartments only includes compartments &gt;=1, ie not the</span>
-            <span class="c1"># bounding box/comp==0. So need to subtrack 1 from the id of the compartment</span>
-            <span class="c1"># to index into this list.</span>
-            <span class="n">current_ingr_compartment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">current_ingr_compartment</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">compartment</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="n">distances</span><span class="p">,</span> <span class="n">ingr_indexes</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">OGsrfPtsBht</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">packing_location</span><span class="p">)</span>
-
-            <span class="c1"># NOTE: this could be optimized by walking down the sphere tree representation</span>
-            <span class="c1"># of the instead of going right to the bottom</span>
-            <span class="k">if</span> <span class="n">distances</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">+</span> <span class="n">compartment</span><span class="o">.</span><span class="n">encapsulating_radius</span><span class="p">:</span>
-                <span class="n">pos_of_attempting_ingr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_pos</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="p">,</span> <span class="n">packing_location</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">total_levels</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-                <span class="p">)</span>
-                <span class="n">distances</span><span class="p">,</span> <span class="n">ingr_indexes</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">OGsrfPtsBht</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
-                    <span class="n">pos_of_attempting_ingr</span>
-                <span class="p">)</span>
-
-                <span class="n">radii</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">total_levels</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="n">ingr_indexes</span><span class="p">]</span>
-                <span class="n">overlap_distance</span> <span class="o">=</span> <span class="n">distances</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">radii</span><span class="p">)</span>
-                <span class="n">overlap_indexes</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">overlap_distance</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">overlap_indexes</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">has_collision</span></div>
 
 <div class="viewcode-block" id="Ingredient.checkDistance"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.checkDistance">[docs]</a>    <span class="k">def</span> <span class="nf">checkDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">liste_nodes</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
@@ -1978,9 +1936,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">vi</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>  <span class="c1"># NOTE: do we need to store the env on the ingredient?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="s2">&quot;PLACING INGREDIENT </span><span class="si">%s</span><span class="s2">, place_type=</span><span class="si">%s</span><span class="s2">, index=</span><span class="si">%d</span><span class="s2">, position=</span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;PLACING INGREDIENT </span><span class="si">%s</span><span class="s2">, place_method=</span><span class="si">%s</span><span class="s2">, index=</span><span class="si">%d</span><span class="s2">, position=</span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">place_type</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span><span class="p">,</span>
             <span class="n">ptInd</span><span class="p">,</span>
             <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">ptInd</span><span class="p">],</span>
         <span class="p">)</span>
@@ -2028,7 +1986,7 @@
                     <span class="n">grid_point_distances</span><span class="p">,</span>
                     <span class="n">dpad</span><span class="p">,</span>
                 <span class="p">)</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_type</span> <span class="o">==</span> <span class="s2">&quot;jitter&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span> <span class="o">==</span> <span class="s2">&quot;jitter&quot;</span><span class="p">:</span>
                 <span class="p">(</span>
                     <span class="n">success</span><span class="p">,</span>
                     <span class="n">jtrans</span><span class="p">,</span>
@@ -2045,7 +2003,7 @@
                     <span class="n">dpad</span><span class="p">,</span>
                     <span class="n">env</span><span class="o">.</span><span class="n">afviewer</span><span class="p">,</span>
                 <span class="p">)</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_type</span> <span class="o">==</span> <span class="s2">&quot;spheresSST&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span> <span class="o">==</span> <span class="s2">&quot;spheresSST&quot;</span><span class="p">:</span>
                 <span class="p">(</span>
                     <span class="n">success</span><span class="p">,</span>
                     <span class="n">jtrans</span><span class="p">,</span>
@@ -2062,7 +2020,7 @@
                     <span class="n">grid_point_distances</span><span class="p">,</span>
                     <span class="n">dpad</span><span class="p">,</span>
                 <span class="p">)</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_type</span> <span class="o">==</span> <span class="s2">&quot;pandaBullet&quot;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span> <span class="o">==</span> <span class="s2">&quot;pandaBullet&quot;</span><span class="p">:</span>
                 <span class="p">(</span>
                     <span class="n">success</span><span class="p">,</span>
                     <span class="n">jtrans</span><span class="p">,</span>
@@ -2083,8 +2041,8 @@
                     <span class="n">usePP</span><span class="o">=</span><span class="n">usePP</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">elif</span> <span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">place_type</span> <span class="o">==</span> <span class="s2">&quot;pandaBulletRelax&quot;</span>
-                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_type</span> <span class="o">==</span> <span class="s2">&quot;pandaBulletSpring&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span> <span class="o">==</span> <span class="s2">&quot;pandaBulletRelax&quot;</span>
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span> <span class="o">==</span> <span class="s2">&quot;pandaBulletSpring&quot;</span>
             <span class="p">):</span>
                 <span class="p">(</span>
                     <span class="n">success</span><span class="p">,</span>
@@ -2104,7 +2062,7 @@
                     <span class="n">dpad</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Can&#39;t pack using this method </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_type</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Can&#39;t pack using this method </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">reject</span><span class="p">()</span>
                 <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{}</span>
         <span class="k">else</span><span class="p">:</span>
@@ -2316,7 +2274,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">targetPoint</span> <span class="o">=</span> <span class="n">jtrans</span>
         <span class="c1"># setup the target position</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_type</span> <span class="o">==</span> <span class="s2">&quot;spring&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span> <span class="o">==</span> <span class="s2">&quot;spring&quot;</span><span class="p">:</span>
             <span class="n">afvi</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">setRigidBody</span><span class="p">(</span><span class="n">afvi</span><span class="o">.</span><span class="n">movingMesh</span><span class="p">,</span> <span class="o">**</span><span class="n">histoVol</span><span class="o">.</span><span class="n">dynamicOptions</span><span class="p">[</span><span class="s2">&quot;spring&quot;</span><span class="p">])</span>
             <span class="c1"># target can be partner position?</span>
             <span class="n">target</span> <span class="o">=</span> <span class="n">afvi</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="s2">&quot;target&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
@@ -2480,6 +2438,7 @@
                 <span class="c1"># jittered out of container or too close to boundary</span>
                 <span class="c1"># check next random jitter</span>
                 <span class="k">continue</span>
+
             <span class="n">collision_results</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">points_to_check</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_positions_to_check</span><span class="p">(</span><span class="n">packing_location</span><span class="p">)</span>
 
@@ -2819,7 +2778,7 @@
 
 <div class="viewcode-block" id="Ingredient.pandaBullet_placeBHT"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.pandaBullet_placeBHT">[docs]</a>    <span class="k">def</span> <span class="nf">pandaBullet_placeBHT</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">histoVol</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">,</span>
         <span class="n">compartment</span><span class="p">,</span>
         <span class="n">ptInd</span><span class="p">,</span>
         <span class="n">target_grid_point_position</span><span class="p">,</span>
@@ -2831,10 +2790,10 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        drop the ingredient on grid point ptInd</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">histoVol</span><span class="o">.</span><span class="n">setupPanda</span><span class="p">()</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">setupPanda</span><span class="p">()</span>
         <span class="n">is_realtime</span> <span class="o">=</span> <span class="n">moving</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-        <span class="n">gridPointsCoords</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">masterGridPositions</span>
+        <span class="n">gridPointsCoords</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span>
 
         <span class="n">targetPoint</span> <span class="o">=</span> <span class="n">target_grid_point_position</span>
 
@@ -2862,23 +2821,21 @@
 
                     <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{}</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">tilling</span><span class="o">.</span><span class="n">init_seed</span><span class="p">(</span><span class="n">histoVol</span><span class="o">.</span><span class="n">seed_used</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tilling</span><span class="o">.</span><span class="n">init_seed</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">seed_used</span><span class="p">)</span>
         <span class="c1"># we may increase the jitter, or pick from xyz-&gt;Id free for its radius</span>
         <span class="c1"># create the rb only once and not at ever jitter</span>
         <span class="c1"># rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMat,),{&quot;rtype&quot;:self.type},)</span>
         <span class="c1"># jitter loop</span>
-        <span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collisionLevel</span>
-
         <span class="k">for</span> <span class="n">attempt_number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jitter_attempts</span><span class="p">):</span>
             <span class="n">insidePoints</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">newDistPoints</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="n">histoVol</span><span class="o">.</span><span class="n">totnbJitter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">totnbJitter</span> <span class="o">+=</span> <span class="mi">1</span>
 
             <span class="p">(</span>
                 <span class="n">packing_location</span><span class="p">,</span>
                 <span class="n">packing_rotation</span><span class="p">,</span>
             <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_jitter_location_and_rotation</span><span class="p">(</span>
-                <span class="n">histoVol</span><span class="p">,</span>
+                <span class="n">env</span><span class="p">,</span>
                 <span class="n">targetPoint</span><span class="p">,</span>
                 <span class="n">rotation_matrix</span><span class="p">,</span>
             <span class="p">)</span>
@@ -2903,15 +2860,15 @@
 
             <span class="c1"># need to check compartment too</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;no collision&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compareCompartment</span><span class="p">:</span>
-                <span class="n">collision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compareCompartmentPrimitive</span><span class="p">(</span>
-                    <span class="n">level</span><span class="p">,</span>
-                    <span class="n">packing_location</span><span class="p">,</span>
-                    <span class="n">packing_rotation</span><span class="p">,</span>
-                    <span class="n">gridPointsCoords</span><span class="p">,</span>
-                    <span class="n">distance</span><span class="p">,</span>
-                <span class="p">)</span>
-                <span class="n">collision_results</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">collision</span><span class="p">])</span>
+            <span class="c1"># if self.compareCompartment:</span>
+            <span class="c1">#     collision = self.compareCompartmentPrimitive(</span>
+            <span class="c1">#         level,</span>
+            <span class="c1">#         packing_location,</span>
+            <span class="c1">#         packing_rotation,</span>
+            <span class="c1">#         gridPointsCoords,</span>
+            <span class="c1">#         distance,</span>
+            <span class="c1">#     )</span>
+            <span class="c1">#     collision_results.extend([collision])</span>
             <span class="k">if</span> <span class="kc">True</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">collision_results</span><span class="p">:</span>
                 <span class="c1"># self.update_data_tree(jtrans,rotMatj,ptInd=ptInd)?</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">static</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rbnode</span><span class="p">)</span>

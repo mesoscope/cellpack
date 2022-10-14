@@ -143,7 +143,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#computegridparams">computeGridParams</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#windowssize">windowsSize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#placemethod">placeMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#place-method">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-gradient">use_gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradients">gradients</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#innergridmethod">innerGridMethod</a></li>
@@ -185,7 +185,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#id162">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradient">gradient</a></li>
@@ -349,7 +349,7 @@
         <span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">partners</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">perturb_axis_amplitude</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-        <span class="n">place_type</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
+        <span class="n">place_method</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
         <span class="n">positions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">positions2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">principal_vector</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
@@ -384,7 +384,7 @@
             <span class="n">priority</span><span class="o">=</span><span class="n">priority</span><span class="p">,</span>
             <span class="n">partners</span><span class="o">=</span><span class="n">partners</span><span class="p">,</span>
             <span class="n">perturb_axis_amplitude</span><span class="o">=</span><span class="n">perturb_axis_amplitude</span><span class="p">,</span>
-            <span class="n">place_type</span><span class="o">=</span><span class="n">place_type</span><span class="p">,</span>
+            <span class="n">place_method</span><span class="o">=</span><span class="n">place_method</span><span class="p">,</span>
             <span class="n">principal_vector</span><span class="o">=</span><span class="n">principal_vector</span><span class="p">,</span>
             <span class="n">representations</span><span class="o">=</span><span class="n">representations</span><span class="p">,</span>
             <span class="n">rejection_threshold</span><span class="o">=</span><span class="n">rejection_threshold</span><span class="p">,</span>
@@ -1893,7 +1893,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
             <span class="c1"># pick next point and test collision.</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">walkingMode</span> <span class="o">==</span> <span class="s2">&quot;sphere&quot;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_type</span> <span class="o">==</span> <span class="s2">&quot;pandaBullet&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span> <span class="o">==</span> <span class="s2">&quot;pandaBullet&quot;</span><span class="p">:</span>
                     <span class="n">secondPoint</span><span class="p">,</span> <span class="n">success</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">walkSpherePanda</span><span class="p">(</span>
                         <span class="n">previousPoint</span><span class="p">,</span>
                         <span class="n">startingPoint</span><span class="p">,</span>
@@ -2257,7 +2257,7 @@
         <span class="c1"># test for collision</span>
         <span class="c1"># return success, nbFreePoints</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">])</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_type</span> <span class="o">==</span> <span class="s2">&quot;pandaBullet&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span> <span class="o">==</span> <span class="s2">&quot;pandaBullet&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">nb_ingredient</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rTrans</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">startingPoint</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">rRot</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>  <span class="c1"># rotMatj</span>
@@ -2628,7 +2628,7 @@
         <span class="n">principal_vector</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
         <span class="n">meshFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">packing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">place_type</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
+        <span class="n">place_method</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
         <span class="n">marge</span><span class="o">=</span><span class="mf">35.0</span><span class="p">,</span>
         <span class="n">influenceRad</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span>
         <span class="n">meshObject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -2657,7 +2657,7 @@
             <span class="n">principal_vector</span><span class="p">,</span>
             <span class="n">meshFile</span><span class="p">,</span>
             <span class="n">packing</span><span class="p">,</span>
-            <span class="n">place_type</span><span class="p">,</span>
+            <span class="n">place_method</span><span class="p">,</span>
             <span class="n">marge</span><span class="p">,</span>
             <span class="n">meshObject</span><span class="p">,</span>
             <span class="n">orientation</span><span class="p">,</span>

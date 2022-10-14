@@ -144,7 +144,7 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#computegridparams">computeGridParams</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#windowssize">windowsSize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#placemethod">placeMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#place-method">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#use-gradient">use_gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradients">gradients</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#innergridmethod">innerGridMethod</a></li>
@@ -186,7 +186,7 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#id162">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe-schema.html#gradient">gradient</a></li>
@@ -342,7 +342,7 @@
 <section id="overwriteplacemethod">
 <h3>overwritePlaceMethod<a class="headerlink" href="#overwriteplacemethod" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id29"><span class="problematic" id="id30">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">boolean</span></code><a href="#id31"><span class="problematic" id="id32">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">true</span></code>, the Enviro-level placeMethod will overwrite all of the ingredient-level place method in a recipe</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">true</span></code>, the Enviro-level place_method will overwrite all of the ingredient-level place method in a recipe</p>
 </section>
 <section id="boundingbox">
 <h3>boundingBox<a class="headerlink" href="#boundingbox" title="Permalink to this heading">¶</a></h3>
@@ -372,10 +372,10 @@
 <p><a href="#id51"><span class="problematic" id="id52">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">boolean</span></code><a href="#id53"><span class="problematic" id="id54">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
 <p>Display packing in realtime (slow)</p>
 </section>
-<section id="placemethod">
-<h3>placeMethod<a class="headerlink" href="#placemethod" title="Permalink to this heading">¶</a></h3>
+<section id="place-method">
+<h3>place_method<a class="headerlink" href="#place-method" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id55"><span class="problematic" id="id56">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">enum</span></code><a href="#id57"><span class="problematic" id="id58">*</span></a>. One of <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;spheresSST&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code>.. Default: <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>.</p>
-<p>Will be use if placeMethod isn’t in an ingredient setup</p>
+<p>Will be use if place_method isn’t in an ingredient setup</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code> uses a simple algorithm developed by GJ, M-A-A, MS, and LA to test if a single sphere, sphere-tree, or other primative (box and cylinder) are colliding with masked/unallowed points on the grid… I can’t recall all of the allowed types, but check the input parameters that it accepts. I believe there is also an option to perform simple collisions directly between primatives, e.g. sphere-sphere, sphere-box, sphere-cylinder, cylinder-box, and spheretree-others</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;spheresSST&quot;</span></code> gets the sphereTrees of the potential colliding neighbors, and does an efficient sphereTree-sphereTree collision detection of the sphereTree for the object being packed against the sphereTrees of each neighbor- returns false if a collision is detected</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code>  Python wrapper for Bullet Physics Engine (popular in ~2010 and used by C4D, Maya, Blender, etc) that provides a variety of object-object collision detection, including collision min/max overlap distance, etc. Allows relaxation in its own loop, springs, rejection, meshes, primitives, etc.</p>
@@ -451,7 +451,7 @@
 <span class="w">    </span><span class="nt">&quot;\_hackFreepts&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;windowsSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;use_gradient&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;placeMethod&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;place_method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;saveResult&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;runTimeDisplay&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;overwritePlaceMethod&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
@@ -608,20 +608,20 @@
 <h3>cutoff_surface<a class="headerlink" href="#cutoff-surface" title="Permalink to this heading">¶</a></h3>
 <p><a href="#id158"><span class="problematic" id="id159">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id160"><span class="problematic" id="id161">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">5.0</span></code>.</p>
 </section>
-<section id="place-type">
-<h3>place_type<a class="headerlink" href="#place-type" title="Permalink to this heading">¶</a></h3>
-<p><a href="#id162"><span class="problematic" id="id163">*</span></a>Optional enum. One of <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;spheresSST&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code><a href="#id164"><span class="problematic" id="id165">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>.</p>
+<section id="id162">
+<h3>place_method<a class="headerlink" href="#id162" title="Permalink to this heading">¶</a></h3>
+<p><a href="#id163"><span class="problematic" id="id164">*</span></a>Optional enum. One of <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;spheresSST&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code><a href="#id165"><span class="problematic" id="id166">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;jitter&quot;</span></code> uses a simple algorithm developed by GJ, M-A-A, MS, and LA to test if a single sphere, sphere-tree, or other primative (box and cylinder) are colliding with masked/unallowed points on the grid… I can’t recall all of the allowed types, but check the input parameters that it accepts. I believe there is also an option to perform simple collisions directly between primatives, e.g. sphere-sphere, sphere-box, sphere-cylinder, cylinder-box, and spheretree-others</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;spheresSST&quot;</span></code> gets the sphereTrees of the potential colliding neighbors, and does an efficient sphereTree-sphereTree collision detection of the sphereTree for the object being packed against the sphereTrees of each neighbor- returns false if a collision is detected</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;pandaBullet&quot;</span></code>  Python wrapper for Bullet Physics Engine (popular in ~2010 and used by C4D, Maya, Blender, etc) that provides a variety of object-object collision detection, including collision min/max overlap distance, etc. Allows relaxation in its own loop, springs, rejection, meshes, primitives, etc.</p>
 </section>
 <section id="rejection-threshold">
 <h3>rejection_threshold<a class="headerlink" href="#rejection-threshold" title="Permalink to this heading">¶</a></h3>
-<p><a href="#id166"><span class="problematic" id="id167">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id168"><span class="problematic" id="id169">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">30</span></code>.</p>
+<p><a href="#id167"><span class="problematic" id="id168">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id169"><span class="problematic" id="id170">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">30</span></code>.</p>
 </section>
 <section id="packing-mode">
 <h3>packing_mode<a class="headerlink" href="#packing-mode" title="Permalink to this heading">¶</a></h3>
-<p><a href="#id170"><span class="problematic" id="id171">*</span></a>Optional enum. One of <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;close&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;closePartner&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;randomPartner&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;gradient&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;hexatile&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;squaretile&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;triangletile&quot;</span></code><a href="#id172"><span class="problematic" id="id173">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code>.</p>
+<p><a href="#id171"><span class="problematic" id="id172">*</span></a>Optional enum. One of <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;close&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;closePartner&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;randomPartner&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;gradient&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;hexatile&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;squaretile&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;triangletile&quot;</span></code><a href="#id173"><span class="problematic" id="id174">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code>.</p>
 </section>
 <section id="gradient">
 <h3>gradient<a class="headerlink" href="#gradient" title="Permalink to this heading">¶</a></h3>
@@ -630,35 +630,35 @@ Gradient name to use if <code class="docutils literal notranslate"><span class="
 </section>
 <section id="proba-binding">
 <h3>proba_binding<a class="headerlink" href="#proba-binding" title="Permalink to this heading">¶</a></h3>
-<p><a href="#id174"><span class="problematic" id="id175">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code> between <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code><a href="#id176"><span class="problematic" id="id177">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+<p><a href="#id175"><span class="problematic" id="id176">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code> between <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code><a href="#id177"><span class="problematic" id="id178">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
 </section>
 <section id="proba-not-binding">
 <h3>proba_not_binding<a class="headerlink" href="#proba-not-binding" title="Permalink to this heading">¶</a></h3>
-<p><a href="#id178"><span class="problematic" id="id179">*</span></a><code class="docutils literal notranslate"><span class="pre">number</span></code>*</p>
+<p><a href="#id179"><span class="problematic" id="id180">*</span></a><code class="docutils literal notranslate"><span class="pre">number</span></code>*</p>
 </section>
 <section id="is-attractor">
 <h3>is_attractor<a class="headerlink" href="#is-attractor" title="Permalink to this heading">¶</a></h3>
-<p><a href="#id180"><span class="problematic" id="id181">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">boolean</span></code><a href="#id182"><span class="problematic" id="id183">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
+<p><a href="#id181"><span class="problematic" id="id182">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">boolean</span></code><a href="#id183"><span class="problematic" id="id184">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
 </section>
 <section id="weight">
 <h3>weight<a class="headerlink" href="#weight" title="Permalink to this heading">¶</a></h3>
-<p><a href="#id184"><span class="problematic" id="id185">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id186"><span class="problematic" id="id187">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p>
+<p><a href="#id185"><span class="problematic" id="id186">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id187"><span class="problematic" id="id188">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">0.2</span></code>.</p>
 </section>
 <section id="partners-name">
 <h3>partners_name<a class="headerlink" href="#partners-name" title="Permalink to this heading">¶</a></h3>
-<p><a href="#id188"><span class="problematic" id="id189">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string[]</span></code>*</p>
+<p><a href="#id189"><span class="problematic" id="id190">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string[]</span></code>*</p>
 </section>
 <section id="excluded-partners-name">
 <h3>excluded_partners_name<a class="headerlink" href="#excluded-partners-name" title="Permalink to this heading">¶</a></h3>
-<p><a href="#id190"><span class="problematic" id="id191">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string[]</span></code>*</p>
+<p><a href="#id191"><span class="problematic" id="id192">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string[]</span></code>*</p>
 </section>
 <section id="partners-position">
 <h3>partners_position<a class="headerlink" href="#partners-position" title="Permalink to this heading">¶</a></h3>
-<p><a href="#id192"><span class="problematic" id="id193">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number[][]</span></code>*</p>
+<p><a href="#id193"><span class="problematic" id="id194">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number[][]</span></code>*</p>
 </section>
 <section id="partners-weight">
 <h3>partners_weight<a class="headerlink" href="#partners-weight" title="Permalink to this heading">¶</a></h3>
-<p><a href="#id194"><span class="problematic" id="id195">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id196"><span class="problematic" id="id197">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+<p><a href="#id195"><span class="problematic" id="id196">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">number</span></code><a href="#id197"><span class="problematic" id="id198">*</span></a>. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
 </section>
 <section id="properties">
 <h3>properties<a class="headerlink" href="#properties" title="Permalink to this heading">¶</a></h3>
@@ -666,11 +666,11 @@ Gradient name to use if <code class="docutils literal notranslate"><span class="
 </section>
 <section id="score">
 <h3>score<a class="headerlink" href="#score" title="Permalink to this heading">¶</a></h3>
-<p><a href="#id198"><span class="problematic" id="id199">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string</span></code>*</p>
+<p><a href="#id199"><span class="problematic" id="id200">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string</span></code>*</p>
 </section>
 <section id="organism">
 <h3>organism<a class="headerlink" href="#organism" title="Permalink to this heading">¶</a></h3>
-<p><a href="#id200"><span class="problematic" id="id201">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string</span></code>*</p>
+<p><a href="#id201"><span class="problematic" id="id202">*</span></a>Optional <code class="docutils literal notranslate"><span class="pre">string</span></code>*</p>
 </section>
 <section id="example-ingredient">
 <h3>example ingredient<a class="headerlink" href="#example-ingredient" title="Permalink to this heading">¶</a></h3>
@@ -704,7 +704,7 @@ Gradient name to use if <code class="docutils literal notranslate"><span class="
 <span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SingleSphere&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;excluded_partners_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;rejection_threshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="nt">&quot;place_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="nt">&quot;place_method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;cutoff_surface&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;priority&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"></span>
 <span class="w">    </span><span class="nt">&quot;proba_binding&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w"></span>

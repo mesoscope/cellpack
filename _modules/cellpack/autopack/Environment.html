@@ -143,7 +143,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#computegridparams">computeGridParams</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#windowssize">windowsSize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#placemethod">placeMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#place-method">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-gradient">use_gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradients">gradients</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#innergridmethod">innerGridMethod</a></li>
@@ -185,7 +185,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#id162">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradient">gradient</a></li>
@@ -388,7 +388,7 @@
 
 <span class="n">encoder</span><span class="o">.</span><span class="n">FLOAT_REPR</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="nb">format</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s2">&quot;.8g&quot;</span><span class="p">)</span>
 
-<span class="n">SEED</span> <span class="o">=</span> <span class="mi">14</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">15</span>
 <span class="n">LOG</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">verbose</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -419,14 +419,16 @@
 
         <span class="c1"># From config file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runTimeDisplay</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;live_packing&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">placeMethod</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;place_method&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;place_method&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">innerGridMethod</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;inner_grid_method&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">format_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;format&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_periodicity</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;use_periodicity&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pickRandPt</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ordered_packing&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">show_sphere_trees</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;show_sphere_trees&quot;</span><span class="p">]</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_grid_spheres</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;show_grid_plot&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">recipe</span><span class="p">[</span><span class="s2">&quot;bounding_box&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spacing</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;spacing&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_from_grid_file</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;load_from_grid_file&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
         <span class="c1"># saving/pickle option</span>
@@ -434,8 +436,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="o">.</span><span class="n">create_output_dir</span><span class="p">(</span>
             <span class="n">config</span><span class="p">[</span><span class="s2">&quot;out&quot;</span><span class="p">],</span> <span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;place_method&quot;</span><span class="p">]</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span><span class="si">}</span><span class="s2">_grid&quot;</span>
 
+        <span class="n">should_load_grid_file</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_from_grid_file</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">previous_grid_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span> <span class="k">if</span> <span class="n">should_load_grid_file</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setupfile</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_path</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the path of the recipe file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">custom_paths</span> <span class="o">=</span> <span class="kc">None</span>
@@ -690,9 +697,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">freePoints</span> <span class="o">=</span> <span class="n">freePoints</span><span class="p">[:]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:]</span>
         <span class="c1"># should check extension filename for type of saved file</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">saveGridToFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span> <span class="o">+</span> <span class="s2">&quot;grid&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveGridToFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveGridLogsAsJson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span> <span class="o">+</span> <span class="s2">&quot;_grid-data.json&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">result_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span> <span class="o">+</span> <span class="s2">&quot;grid&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">result_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">collectResultPerIngredient</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_asTxt</span><span class="p">()</span>
@@ -1134,6 +1141,7 @@
 <span class="sd">        Save the current grid and the compartment grid information in a file. (pickle)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">gridFileOut</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SAVED GRID TO &quot;</span><span class="p">,</span> <span class="n">gridFileOut</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;gridfilename path problem&quot;</span><span class="p">,</span> <span class="n">gridFileOut</span><span class="p">)</span>
             <span class="k">return</span>
@@ -1160,6 +1168,7 @@
                     <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]),</span>
                 <span class="p">],</span>
                 <span class="s2">&quot;distance&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
+                <span class="s2">&quot;compartment&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
             <span class="p">}</span>
         <span class="c1"># data = {</span>
         <span class="c1">#     # &quot;gridPositions&quot;: json.loads(self.grid.masterGridPositions),</span>
@@ -1184,7 +1193,7 @@
             <span class="n">compartment</span><span class="o">.</span><span class="n">OGsrfPtsBht</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span>
                 <span class="nb">tuple</span><span class="p">(</span><span class="n">compartment</span><span class="o">.</span><span class="n">vertices</span><span class="p">),</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span>
             <span class="p">)</span>
-            <span class="n">compartment</span><span class="o">.</span><span class="n">computeVolumeAndSetNbMol</span><span class="p">(</span>
+            <span class="n">compartment</span><span class="o">.</span><span class="n">compute_volume_and_set_count</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">compartment</span><span class="o">.</span><span class="n">surfacePoints</span><span class="p">,</span> <span class="n">compartment</span><span class="o">.</span><span class="n">insidePoints</span><span class="p">,</span> <span class="n">areas</span><span class="o">=</span><span class="kc">None</span>
             <span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -1269,6 +1278,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">smallestProteinSize</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">min_radius</span></div>
 
 <div class="viewcode-block" id="Environment.create_ingredient"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.create_ingredient">[docs]</a>    <span class="k">def</span> <span class="nf">create_ingredient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="n">arguments</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;place_method&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
+            <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;place_method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span>
         <span class="n">ingredient_type</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">SINGLE_SPHERE</span><span class="p">:</span>
@@ -1313,8 +1324,8 @@
             <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
                 <span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
             <span class="p">)</span>
+            <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">SINGLE_SPHERE</span>
             <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleSphereIngr</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="p">(</span>
             <span class="s2">&quot;gradient&quot;</span> <span class="ow">in</span> <span class="n">arguments</span>
             <span class="ow">and</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
@@ -1353,11 +1364,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">compartment</span><span class="o">.</span><span class="n">setNumber</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbCompartments</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbCompartments</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="n">fits</span><span class="p">,</span> <span class="n">bb</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">inBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallestProteinSize</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">fits</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span> <span class="o">=</span> <span class="n">bb</span>
         <span class="n">CompartmentList</span><span class="o">.</span><span class="n">_add_compartment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compartment</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Environment.compartment_id_for_nearest_grid_point"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.compartment_id_for_nearest_grid_point">[docs]</a>    <span class="k">def</span> <span class="nf">compartment_id_for_nearest_grid_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
@@ -1527,13 +1533,15 @@
                 <span class="n">verts</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             <span class="p">)</span>  <span class="c1"># should do it only on inside grid point</span></div>
 
+<div class="viewcode-block" id="Environment.extend_bounding_box_for_compartments"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.extend_bounding_box_for_compartments">[docs]</a>    <span class="k">def</span> <span class="nf">extend_bounding_box_for_compartments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">):</span>
+            <span class="n">fits</span><span class="p">,</span> <span class="n">bb</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">inBox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallestProteinSize</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">fits</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span> <span class="o">=</span> <span class="n">bb</span></div>
+
 <div class="viewcode-block" id="Environment.buildGrid"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.buildGrid">[docs]</a>    <span class="k">def</span> <span class="nf">buildGrid</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">gridFileIn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">rebuild</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">gridFileOut</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">previousFill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">previousfreePoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">lookup</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1541,6 +1549,8 @@
 <span class="sd">        compartment grid. The setup is de novo or using previously built grid</span>
 <span class="sd">        or restored using given file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extend_bounding_box_for_compartments</span><span class="p">()</span>
+
         <span class="n">boundingBox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_halton</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">cellpack.autopack.BaseGrid</span> <span class="kn">import</span> <span class="n">HaltonGrid</span> <span class="k">as</span> <span class="n">Grid</span>
@@ -1550,13 +1560,10 @@
             <span class="kn">from</span> <span class="nn">cellpack.autopack.BaseGrid</span> <span class="kn">import</span> <span class="n">BaseGrid</span> <span class="k">as</span> <span class="n">Grid</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sortIngredient</span><span class="p">(</span><span class="n">reset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">gridFileIn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">gridFileIn</span><span class="p">):</span>
-                <span class="n">gridFileIn</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">nFill</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;####BUILD GRID - step </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallestProteinSize</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fillBB</span> <span class="o">=</span> <span class="n">boundingBox</span>
-            <span class="n">spacing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallestProteinSize</span>
+            <span class="n">spacing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spacing</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallestProteinSize</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">(</span><span class="n">boundingBox</span><span class="o">=</span><span class="n">boundingBox</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="n">spacing</span><span class="p">,</span> <span class="n">lookup</span><span class="o">=</span><span class="n">lookup</span><span class="p">)</span>
             <span class="n">nbPoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridVolume</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;new Grid with </span><span class="si">%r</span><span class="s2"> </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridVolume</span><span class="p">)</span>
@@ -1564,18 +1571,17 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf_store</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span><span class="p">[:]</span>
                 <span class="n">nbPoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridVolume</span>
 
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;$$$$$$$$  reset the grid&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
             <span class="n">nbPoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">freePoints</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;$$$$$$$$  reset the grid&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">gridFileIn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;file in for building grid but it doesnt work well&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">gridFileIn</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_grid_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_grid_file</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nFill</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># first fill, after we can just reset</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;restore from file&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">restoreGridFromFile</span><span class="p">(</span><span class="n">gridFileIn</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">restoreGridFromFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">previous_grid_file</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">build_compartment_grids</span><span class="p">()</span>
 
@@ -1584,9 +1590,9 @@
             <span class="n">space</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">smallestProteinSize</span><span class="p">,</span>
             <span class="n">fbox_bb</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fbox_bb</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="n">gridFileOut</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">gridFileIn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">saveGridToFile</span><span class="p">(</span><span class="n">gridFileOut</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">gridFileOut</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_grid_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">saveGridToFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span>
 
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exteriorRecipe</span>
         <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
@@ -1601,7 +1607,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">gradients</span><span class="p">[</span><span class="n">g</span><span class="p">]</span><span class="o">.</span><span class="n">buildWeigthMap</span><span class="p">(</span>
                     <span class="n">boundingBox</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span>
                 <span class="p">)</span>
-        <span class="k">if</span> <span class="n">previousFill</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_grid_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">distance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span>  <span class="c1"># [:]</span>
             <span class="n">nbFreePoints</span> <span class="o">=</span> <span class="n">nbPoints</span>  <span class="c1"># -1              #Graham turned this off on 5/16/12 to match August Repair for May Hybrid</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">mingrs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
@@ -1641,7 +1647,7 @@
             <span class="n">rotMatj</span><span class="o">=</span><span class="n">rotMatj</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># update free points</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">insidePoints</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">placeMethod</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;panda&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">insidePoints</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;panda&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot; is inside&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">checkPtIndIngr</span><span class="p">(</span><span class="n">ingr</span><span class="p">,</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">marray</span><span class="p">)</span>
             <span class="c1"># ingr.inside_current_grid = True</span>
@@ -2125,7 +2131,6 @@
         <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">vTestid</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
         <span class="n">vAnalysis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">show_grid_spheres</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kw</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -2135,7 +2140,6 @@
         <span class="c1"># set periodicity</span>
         <span class="n">autopack</span><span class="o">.</span><span class="n">testPeriodicity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_periodicity</span>
         <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">show_grid_spheres</span> <span class="o">=</span> <span class="n">show_grid_spheres</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">timeUpDistLoopTotal</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">static</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -2173,7 +2177,7 @@
         <span class="n">compartment_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span>
         <span class="c1"># why a copy? --&gt; can we split ?</span>
         <span class="n">distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span><span class="p">[:]</span>
-        <span class="n">spacing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallestProteinSize</span>
+        <span class="n">spacing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spacing</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">smallestProteinSize</span>
 
         <span class="c1"># DEBUG stuff, should be removed later</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">jitterVectors</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2249,7 +2253,7 @@
         <span class="n">vThreshStart</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Added back by Graham on July 5, 2012 from Sept 25, 2011 thesis version</span>
 
         <span class="c1"># if bullet build the organel rbnode</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">placeMethod</span> <span class="o">==</span> <span class="s2">&quot;pandaBullet&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span> <span class="o">==</span> <span class="s2">&quot;pandaBullet&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setupPanda</span><span class="p">()</span>
 
         <span class="c1"># ==============================================================================</span>
@@ -2345,7 +2349,7 @@
             <span class="c1"># NOTE: should we do the close partner check here instead of in the place functions?</span>
             <span class="c1"># place the ingredient</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwritePlaceMethod</span><span class="p">:</span>
-                <span class="n">ingr</span><span class="o">.</span><span class="n">place_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">placeMethod</span>
+                <span class="n">ingr</span><span class="o">.</span><span class="n">place_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span>
 
             <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">largestProteinSize</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">largestProteinSize</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulating_radius</span>
@@ -2481,6 +2485,7 @@
                 <span class="n">ingredients</span><span class="p">[</span><span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mat</span><span class="p">))</span>
                 <span class="n">all_ingr_as_array</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ingr_result</span> <span class="o">=</span> <span class="n">ingredients</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;placed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">molecules</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveResult</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">save_result</span><span class="p">(</span>
                 <span class="n">freePoints</span><span class="p">,</span>

@@ -143,7 +143,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#computegridparams">computeGridParams</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#windowssize">windowsSize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#placemethod">placeMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#place-method">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-gradient">use_gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradients">gradients</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#innergridmethod">innerGridMethod</a></li>
@@ -185,7 +185,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#id162">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradient">gradient</a></li>
@@ -324,7 +324,7 @@
         <span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">partners</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">perturb_axis_amplitude</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-        <span class="n">place_type</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
+        <span class="n">place_method</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
         <span class="n">principal_vector</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
         <span class="n">representations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">rejection_threshold</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
@@ -355,7 +355,7 @@
             <span class="n">priority</span><span class="o">=</span><span class="n">priority</span><span class="p">,</span>
             <span class="n">partners</span><span class="o">=</span><span class="n">partners</span><span class="p">,</span>
             <span class="n">perturb_axis_amplitude</span><span class="o">=</span><span class="n">perturb_axis_amplitude</span><span class="p">,</span>
-            <span class="n">place_type</span><span class="o">=</span><span class="n">place_type</span><span class="p">,</span>
+            <span class="n">place_method</span><span class="o">=</span><span class="n">place_method</span><span class="p">,</span>
             <span class="n">principal_vector</span><span class="o">=</span><span class="n">principal_vector</span><span class="p">,</span>
             <span class="n">representations</span><span class="o">=</span><span class="n">representations</span><span class="p">,</span>
             <span class="n">rotation_axis</span><span class="o">=</span><span class="n">rotation_axis</span><span class="p">,</span>
@@ -404,7 +404,6 @@
         <span class="n">delta</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">pointsToCheck</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">position</span>
         <span class="n">delta</span> <span class="o">*=</span> <span class="n">delta</span>
         <span class="n">distA</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-
         <span class="k">for</span> <span class="n">pti</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pointsToCheck</span><span class="p">)):</span>
             <span class="n">grid_point_index</span> <span class="o">=</span> <span class="n">pointsToCheck</span><span class="p">[</span>
                 <span class="n">pti</span>
@@ -429,7 +428,7 @@
                 <span class="n">distance_to_packing_location</span> <span class="o">-</span> <span class="n">radius_of_ing_being_packed</span>
             <span class="p">)</span>
 
-            <span class="p">(</span><span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">,)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_distances_and_inside_points</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_distances_and_inside_points</span><span class="p">(</span>
                 <span class="n">env</span><span class="p">,</span>
                 <span class="n">jtrans</span><span class="p">,</span>
                 <span class="n">rotMat</span><span class="p">,</span>
@@ -444,26 +443,18 @@
 <div class="viewcode-block" id="SingleSphereIngr.collides_with_compartment"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.collides_with_compartment">[docs]</a>    <span class="k">def</span> <span class="nf">collides_with_compartment</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">jtrans</span><span class="p">,</span>
-        <span class="n">rotMat</span><span class="p">,</span>
-        <span class="n">level</span><span class="p">,</span>
-        <span class="n">gridPointsCoords</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check spheres for collision</span>
 <span class="sd">        TODO improve the testwhen grid stepSize is larger that size of the ingredient</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
-        <span class="n">radii</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">],)</span>
-        <span class="n">centT</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">centers</span><span class="p">)</span>  <span class="c1"># this should be jtrans</span>
-        <span class="k">for</span> <span class="n">radc</span><span class="p">,</span> <span class="n">posc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">centT</span><span class="p">):</span>
-            <span class="n">ptsInSphere</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span><span class="n">posc</span><span class="p">,</span> <span class="n">radc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># indices</span>
-            <span class="n">compIdsSphere</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="n">ptsInSphere</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">wrongPt</span> <span class="o">=</span> <span class="p">[</span><span class="n">cid</span> <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">compIdsSphere</span> <span class="k">if</span> <span class="n">cid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">]</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrongPt</span><span class="p">):</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;OK false compartment&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrongPt</span><span class="p">))</span>
-                    <span class="k">return</span> <span class="kc">True</span>
+        <span class="n">ptsInSphere</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>  <span class="c1"># indices</span>
+        <span class="n">compIdsSphere</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="n">ptsInSphere</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">wrongPt</span> <span class="o">=</span> <span class="p">[</span><span class="n">cid</span> <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">compIdsSphere</span> <span class="k">if</span> <span class="n">cid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrongPt</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="SingleSphereIngr.get_signed_distance"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.single_sphere.SingleSphereIngr.get_signed_distance">[docs]</a>    <span class="k">def</span> <span class="nf">get_signed_distance</span><span class="p">(</span>

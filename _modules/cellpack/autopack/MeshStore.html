@@ -143,7 +143,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#computegridparams">computeGridParams</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#windowssize">windowsSize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#placemethod">placeMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#place-method">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-gradient">use_gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradients">gradients</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#innergridmethod">innerGridMethod</a></li>
@@ -185,7 +185,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#id162">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradient">gradient</a></li>
@@ -493,7 +493,10 @@
 <div class="viewcode-block" id="MeshStore.get_nsphere"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_nsphere">[docs]</a>    <span class="k">def</span> <span class="nf">get_nsphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">):</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">nsphere</span><span class="o">.</span><span class="n">minimum_nsphere</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">nsphere</span><span class="o">.</span><span class="n">minimum_nsphere</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;didnt find mesh, </span><span class="si">{</span><span class="n">geomname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="MeshStore.create_sphere"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.create_sphere">[docs]</a>    <span class="k">def</span> <span class="nf">create_sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -539,7 +542,8 @@
         <span class="k">if</span> <span class="n">mesh</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">query</span> <span class="o">=</span> <span class="n">trimesh</span><span class="o">.</span><span class="n">proximity</span><span class="o">.</span><span class="n">ProximityQuery</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
             <span class="p">(</span><span class="n">closet_point</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">triangle_id</span><span class="p">)</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">on_surface</span><span class="p">([</span><span class="n">center</span><span class="p">])</span>
-            <span class="k">return</span> <span class="n">distance</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+            <span class="k">return</span> <span class="n">distance</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="mf">1.0</span></div>
 
 <div class="viewcode-block" id="MeshStore.get_normal"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.MeshStore.MeshStore.get_normal">[docs]</a>    <span class="k">def</span> <span class="nf">get_normal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geomname</span><span class="p">,</span> <span class="n">point_pos</span><span class="p">):</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_object</span><span class="p">(</span><span class="n">geomname</span><span class="p">)</span>

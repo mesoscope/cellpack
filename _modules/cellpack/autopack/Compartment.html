@@ -143,7 +143,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#computegridparams">computeGridParams</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#windowssize">windowsSize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#placemethod">placeMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#place-method">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#use-gradient">use_gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradients">gradients</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#innergridmethod">innerGridMethod</a></li>
@@ -185,7 +185,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#id162">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#gradient">gradient</a></li>
@@ -425,7 +425,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">meshType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">representations</span><span class="o">.</span><span class="n">get_mesh_format</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">representations</span><span class="o">.</span><span class="n">get_mesh_path</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">fixOnePath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">stype</span> <span class="o">=</span> <span class="s2">&quot;mesh&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">object_info</span><span class="p">[</span><span class="s2">&quot;radius&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;radius&quot;</span> <span class="ow">in</span> <span class="n">object_info</span> <span class="k">else</span> <span class="mf">200.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -465,6 +464,7 @@
         <span class="c1"># not the one provides</span>
         <span class="c1"># to compute inside points.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_sphere</span> <span class="o">=</span> <span class="n">object_info</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;single_sphere&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">object_info</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_box</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;bounding_box&quot;</span> <span class="ow">in</span> <span class="n">object_info</span> <span class="ow">and</span> <span class="n">object_info</span><span class="p">[</span><span class="s2">&quot;bounding_box&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="p">)</span>
@@ -531,23 +531,23 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_sphere</span><span class="p">:</span>
             <span class="c1"># one sphere, geom is a dictionary</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">buildSphere</span><span class="p">(</span><span class="n">mesh_store</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshType</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;mesh&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vnormals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMesh</span><span class="p">(</span><span class="n">mesh_store</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ref_obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshType</span> <span class="o">==</span> <span class="s2">&quot;raw&quot;</span><span class="p">:</span>
             <span class="c1"># need to build the mesh from v,f,n</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">buildMesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFile</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshType</span> <span class="o">==</span> <span class="s2">&quot;mb&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;mb&quot;</span><span class="p">:</span>
             <span class="c1"># one sphere, geom is a dictionary</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">buildSphere</span><span class="p">(</span><span class="n">mesh_store</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">):</span>
             <span class="c1"># can be dae/fbx file, object name that have to be in the scene or dejaVu indexedpolygon file</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getBoundingBox</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_sphere</span><span class="p">:</span>
-                <span class="n">center</span><span class="p">,</span> <span class="n">radius</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">get_nsphere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">center</span><span class="p">,</span> <span class="n">radius</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">get_nsphere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">center</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">=</span> <span class="n">radius</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">get_smallest_radius</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">center</span><span class="p">)</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">get_smallest_radius</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="p">,</span> <span class="n">center</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Compartment.addShapeRB"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.addShapeRB">[docs]</a>    <span class="k">def</span> <span class="nf">addShapeRB</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># in case our shape is a regular primitive</span>
@@ -853,6 +853,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ghost</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span>
         <span class="n">bb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bb</span>
+
         <span class="n">xm</span><span class="p">,</span> <span class="n">ym</span><span class="p">,</span> <span class="n">zm</span> <span class="o">=</span> <span class="n">box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">xM</span><span class="p">,</span> <span class="n">yM</span><span class="p">,</span> <span class="n">zM</span> <span class="o">=</span> <span class="n">box</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="c1"># padding 50 shows problem</span>
@@ -1202,14 +1203,11 @@
         <span class="p">)</span>  <span class="c1"># return both indices and distances</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">closestId</span> <span class="o">=</span> <span class="n">indexes</span>
+        <span class="c1"># TODO: do this to the actual closest point on the mesh, not the closet vertex</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">master_grid_positions</span><span class="p">)]</span> <span class="o">&gt;</span> <span class="n">new_distances</span>
         <span class="n">grid_point_indexes</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
         <span class="n">distances</span><span class="p">[</span><span class="n">grid_point_indexes</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_distances</span><span class="p">[</span><span class="n">grid_point_indexes</span><span class="p">]</span>
-        <span class="c1"># set all grid points close to the surface as surface points</span>
-        <span class="c1"># indexes_of_grid_surface_points = numpy.nonzero(</span>
-        <span class="c1">#     new_distances &lt; env.grid.gridSpacing</span>
-        <span class="c1"># )</span>
-        <span class="c1"># compartment_ids[indexes_of_grid_surface_points] = self.number</span>
+
         <span class="k">if</span> <span class="p">(</span>
             <span class="n">env</span><span class="o">.</span><span class="n">innerGridMethod</span> <span class="o">==</span> <span class="s2">&quot;sdf&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_orthogonal_bounding_box</span> <span class="o">!=</span> <span class="mi">1</span>
         <span class="p">):</span>  <span class="c1"># A fillSelection can now be a mesh too... it can use either of these methods</span>
@@ -1221,7 +1219,6 @@
                 <span class="n">env</span><span class="p">,</span>
                 <span class="n">ctree</span><span class="p">,</span>
                 <span class="n">master_grid_positions</span><span class="p">,</span>
-                <span class="n">new_distances</span><span class="p">,</span>
                 <span class="n">diag</span><span class="p">,</span>
                 <span class="n">vSurfaceArea</span><span class="p">,</span>
                 <span class="n">off_grid_surface_points</span><span class="p">,</span>
@@ -1514,10 +1511,9 @@
         <span class="c1"># build trimer mesh</span>
         <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">get_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="p">)</span>
         <span class="c1"># voxelized</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;CREATED MESH&quot;</span><span class="p">)</span>
-        <span class="n">trimesh_grid</span> <span class="o">=</span> <span class="n">creation</span><span class="o">.</span><span class="n">voxelize</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridSpacing</span><span class="p">)</span><span class="o">.</span><span class="n">hollow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: CREATED MESH&quot;</span><span class="p">)</span>
+        <span class="n">trimesh_grid_surface</span> <span class="o">=</span> <span class="n">creation</span><span class="o">.</span><span class="n">voxelize</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridSpacing</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;VOXELIZED MESH&quot;</span><span class="p">)</span>
-
         <span class="c1"># the main loop</span>
         <span class="n">tree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">grdPos</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="n">points_in_encap_sphere</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">query_ball_point</span><span class="p">(</span>
@@ -1525,23 +1521,27 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">+</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridSpacing</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
             <span class="n">return_sorted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;GOT POINTS IN SPHERE&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;GOT POINTS IN SPHERE </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">points_in_encap_sphere</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="n">points_in_encap_sphere</span><span class="p">:</span>
             <span class="n">coord</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">grdPos</span><span class="o">.</span><span class="n">item</span><span class="p">((</span><span class="n">ptInd</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
                 <span class="n">grdPos</span><span class="o">.</span><span class="n">item</span><span class="p">((</span><span class="n">ptInd</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
                 <span class="n">grdPos</span><span class="o">.</span><span class="n">item</span><span class="p">((</span><span class="n">ptInd</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
             <span class="p">]</span>
-            <span class="k">if</span> <span class="n">trimesh_grid</span><span class="o">.</span><span class="n">is_filled</span><span class="p">(</span><span class="n">coord</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">trimesh_grid_surface</span><span class="o">.</span><span class="n">is_filled</span><span class="p">(</span><span class="n">coord</span><span class="p">):</span>
                 <span class="n">idarray</span><span class="o">.</span><span class="n">itemset</span><span class="p">(</span><span class="n">ptInd</span><span class="p">,</span> <span class="n">number</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="p">,</span> <span class="n">coord</span><span class="p">):</span>
                 <span class="n">insidePoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ptInd</span><span class="p">)</span>
                 <span class="n">idarray</span><span class="o">.</span><span class="n">itemset</span><span class="p">(</span><span class="n">ptInd</span><span class="p">,</span> <span class="o">-</span><span class="n">number</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;ASSIGNED INSIDE OUTSIDE&quot;</span><span class="p">)</span>
 
         <span class="n">nbGridPoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">)</span>
 
-        <span class="n">surfPtsBB</span><span class="p">,</span> <span class="n">surfPtsBBNorms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_surface_pts_to_fill_box</span><span class="p">(</span><span class="n">srfPts</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
-        <span class="n">srfPts</span> <span class="o">=</span> <span class="n">surfPtsBB</span>
+        <span class="p">(</span>
+            <span class="n">surface_points_in_bounding_box</span><span class="p">,</span>
+            <span class="n">surfPtsBBNorms</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_surface_pts_to_fill_box</span><span class="p">(</span><span class="n">srfPts</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+        <span class="n">srfPts</span> <span class="o">=</span> <span class="n">surface_points_in_bounding_box</span>
 
         <span class="n">ex</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># True if nbGridPoints == len(idarray) else False</span>
         <span class="n">surfacePoints</span><span class="p">,</span> <span class="n">surfacePointsNormals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extendGridArrays</span><span class="p">(</span>
@@ -1555,7 +1555,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">insidePoints</span> <span class="o">=</span> <span class="n">insidePoints</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surfacePoints</span> <span class="o">=</span> <span class="n">surfacePoints</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">surfacePointsCoords</span> <span class="o">=</span> <span class="n">surfPtsBB</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">surfacePointsCoords</span> <span class="o">=</span> <span class="n">surface_points_in_bounding_box</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surfacePointsNormals</span> <span class="o">=</span> <span class="n">surfacePointsNormals</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">insidePoints</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">surfacePoints</span></div>
 
@@ -2535,9 +2535,6 @@
         <span class="n">allNormals</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">idarray</span> <span class="o">=</span> <span class="n">histoVol</span><span class="o">.</span><span class="n">compartment_ids</span>
         <span class="c1"># surfaceCutOff = histoVol.gridSpacing*.5</span>
-        <span class="c1"># print &#39;BBBBBBBBBBBBBB&#39;, surfaceCutOff, min(distFromSurf), max(distFromSurf)</span>
-        <span class="c1"># print &#39;We should get&#39;, len(filter(lambda x:fabs(x)&lt;surfaceCutOff, distance))</span>
-
         <span class="c1"># import pdb</span>
         <span class="c1"># pdb.set_trace()</span>
 
@@ -2593,7 +2590,9 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">surfaceVolume</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">interiorVolume</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2"> interior volume&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interiorVolume</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">interiorVolume</span><span class="si">}</span><span class="s2"> interior volume&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setCount</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Compartment.setCount"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Compartment.Compartment.setCount">[docs]</a>    <span class="k">def</span> <span class="nf">setCount</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -2682,7 +2681,6 @@
 <span class="sd">        Only compute the inner point. No grid.</span>
 <span class="sd">        This is independant from the packing. Help build ingredient sphere tree and representation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;beforea import&quot;</span><span class="p">)</span>
         <span class="kn">from</span> <span class="nn">autopack.Environment</span> <span class="kn">import</span> <span class="n">Grid</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="p">()</span>

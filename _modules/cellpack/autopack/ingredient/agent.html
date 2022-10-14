@@ -143,7 +143,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#computegridparams">computeGridParams</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#windowssize">windowsSize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#runtimedisplay">runTimeDisplay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#placemethod">placeMethod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#place-method">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#use-gradient">use_gradient</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradients">gradients</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#innergridmethod">innerGridMethod</a></li>
@@ -185,7 +185,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#orientbiasrotrangemax">orientBiasRotRangeMax</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-boundary">cutoff_boundary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#cutoff-surface">cutoff_surface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#place-type">place_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#id162">place_method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#rejection-threshold">rejection_threshold</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#packing-mode">packing_mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#gradient">gradient</a></li>
@@ -362,7 +362,7 @@
         <span class="n">overwrite_distance_function</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># overWrite</span>
         <span class="n">packing_mode</span><span class="o">=</span><span class="s2">&quot;random&quot;</span><span class="p">,</span>
         <span class="n">partners</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">place_type</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
+        <span class="n">place_method</span><span class="o">=</span><span class="s2">&quot;jitter&quot;</span><span class="p">,</span>
         <span class="n">weight</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>  <span class="c1"># use for affinity ie partner.weight</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -391,8 +391,8 @@
         <span class="p">]</span>
         <span class="n">partners_weight</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">partners_weight</span> <span class="o">=</span> <span class="n">partners_weight</span>
-        <span class="c1"># assert place_type in [&#39;jitter&#39;, &#39;spring&#39;,&#39;rigid-body&#39;]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">place_type</span> <span class="o">=</span> <span class="n">place_type</span>
+        <span class="c1"># assert place_method in [&#39;jitter&#39;, &#39;spring&#39;,&#39;rigid-body&#39;]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span> <span class="o">=</span> <span class="n">place_method</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh_3d</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_attractor</span> <span class="o">=</span> <span class="n">is_attractor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
@@ -575,7 +575,7 @@
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># get closestFreePoint using freePoint and masterGridPosition</span>
-            <span class="c1"># if self.place_type == &quot;rigid-body&quot; or self.place_type == &quot;jitter&quot;:</span>
+            <span class="c1"># if self.place_method == &quot;rigid-body&quot; or self.place_method == &quot;jitter&quot;:</span>
             <span class="c1"># the new point is actually tPt -normalise(tPt-current)*radius</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="s2">&quot;tP </span><span class="si">%r</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%r</span><span class="s2"> </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ing_indice</span><span class="p">,</span> <span class="n">ing</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">targetPoint</span><span class="p">,</span> <span class="n">ing</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
