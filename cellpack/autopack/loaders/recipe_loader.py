@@ -33,7 +33,7 @@ class RecipeLoader(object):
     @staticmethod
     def _resolve_object(key, objects):
         current_object = objects[key]
-        new_object = expand_object_using_key(current_object,"inherit",objects )
+        new_object = expand_object_using_key(current_object, "inherit", objects)
         objects[key] = new_object
 
     @staticmethod

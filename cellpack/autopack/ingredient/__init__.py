@@ -19,6 +19,6 @@ type_to_class_map = {
     INGREDIENT_TYPE.GROW: GrowIngredient,
 }
 
-def get_ingredient_class(ingredient_type):
-        return type_to_class_map[ingredient_type]
 
+def get_ingredient_class(ingredient_type):
+    return type_to_class_map[ingredient_type]

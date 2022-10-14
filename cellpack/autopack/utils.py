@@ -139,6 +139,7 @@ def deep_merge(dct, merge_dct):
             dct[k] = merge_dct[k]
     return dct
 
+
 def expand_object_using_key(current_object, expand_on, lookup_dict):
     object_key = current_object[expand_on]
     base_object = lookup_dict[object_key]

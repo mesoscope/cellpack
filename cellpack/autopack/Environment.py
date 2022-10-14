@@ -143,9 +143,7 @@ class Environment(CompartmentList):
 
         # saving/pickle option
         self.saveResult = "out" in config
-        self.out_folder = create_output_dir(
-            config["out"], name, config["place_method"]
-        )
+        self.out_folder = create_output_dir(config["out"], name, config["place_method"])
         self.resultfile = self.out_folder + "/" + f"{self.name}-{config['name']}"
         self.grid_file_out = f"{self.resultfile}_grid"
 
@@ -297,7 +295,9 @@ class Environment(CompartmentList):
     def _prep_ingredient_info(self, composition_info, ingredient_name=None):
         objects_dict = self.recipe_data["objects"]
         object_key = composition_info["object"]
-        ingredient_info = expand_object_using_key(composition_info, "object", objects_dict)
+        ingredient_info = expand_object_using_key(
+            composition_info, "object", objects_dict
+        )
         ingredient_info["name"] = (
             ingredient_name if ingredient_name is not None else object_key
         )
@@ -312,9 +312,7 @@ class Environment(CompartmentList):
         ).items():  # check if entry in compositions has regions
             recipe = Recipe(name=f"{compartment_key}_{region_name}")
             for key_or_dict in obj_keys:
-                is_key, composition_info = Recipe.is_key(
-                    key_or_dict, composition_dict
-                )
+                is_key, composition_info = Recipe.is_key(key_or_dict, composition_dict)
                 if is_key and key_or_dict in self.compartment_keys:
                     key = key_or_dict
                     self._step_down(key)
