@@ -8,3 +8,4 @@ class INGREDIENT_TYPE(Enum):
     SINGLE_CYLINDER = "single_cylinder"
     MULTI_CYLINDER = "multi_cylinder"
     GROW = "grow"
+    MESH = "mesh"

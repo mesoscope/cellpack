@@ -13,7 +13,7 @@ from .v1_v2_attribute_changes import (
 )
 
 
-def convert_to_representations(old_ingredient):
+def get_representations(old_ingredient):
     representations = default_recipe_values["representations"].copy()
     if "sphereFile" in old_ingredient and old_ingredient["sphereFile"] is not None:
         representations["packing"] = create_file_info_object_from_full_path(
@@ -28,6 +28,12 @@ def convert_to_representations(old_ingredient):
             and old_ingredient["coordsystem"] is not None
         ):
             representations["mesh"]["coordinate_system"] = old_ingredient["coordsystem"]
+    # compartment value
+    if "geom" in old_ingredient or "rep_file" in old_ingredient:
+        full_path = old_ingredient["geom"] if "geom" in old_ingredient else old_ingredient["rep_file"]
+        representations["mesh"] = create_file_info_object_from_full_path(
+            full_path
+        )
     if "pdb" in old_ingredient and old_ingredient["pdb"] is not None:
         if ".pdb" in old_ingredient["pdb"]:
             representations["atomic"] = {
@@ -79,7 +85,7 @@ def migrate_ingredient(old_ingredient):
                 new_ingredient["partners"] = partners
             partners[convert_to_partners_map[attribute]] = old_ingredient[attribute]
     new_ingredient["orient_bias_range"] = convert_rotation_range(old_ingredient)
-    new_ingredient["representations"] = convert_to_representations(old_ingredient)
+    new_ingredient["representations"] = get_representations(old_ingredient)
     if new_ingredient["type"] == INGREDIENT_TYPE.SINGLE_SPHERE.value:
         new_ingredient["radius"] = old_ingredient["radii"][0][0]
     return new_ingredient
@@ -105,13 +111,17 @@ def split_ingredient_data(object_key, ingredient_data):
     return object_info, composition_info
 
 
-def get_v1_ingredient(ingredient_key, ingredient_data, region_list, objects_dict):
+def get_and_store_v2_object(ingredient_key, ingredient_data, region_list, objects_dict):
     check_required_attributes(ingredient_data)
     converted_ingredient = migrate_ingredient(ingredient_data)
     object_info, composition_info = split_ingredient_data(
         ingredient_key, converted_ingredient
     )
-    region_list.append(composition_info)
+    if len(composition_info) == 1:
+        # most likey a comparment
+        region_list.append(ingredient_key)
+    else:
+        region_list.append(composition_info)
     objects_dict[ingredient_key] = object_info
 
 
@@ -123,7 +133,7 @@ def convert(recipe_data):
         composition["space"]["regions"]["interior"] = outer_most_region_array
         for ingredient_key in recipe_data["cytoplasme"]["ingredients"]:
             ingredient_data = recipe_data["cytoplasme"]["ingredients"][ingredient_key]
-            get_v1_ingredient(
+            get_and_store_v2_object(
                 ingredient_key,
                 ingredient_data,
                 outer_most_region_array,
@@ -131,20 +141,18 @@ def convert(recipe_data):
             )
     if "compartments" in recipe_data:
         for compartment_name in recipe_data["compartments"]:
-            compartment_array = []
             compartment_data = recipe_data["compartments"][compartment_name]
-            #we want to add comp name in + object dict in interior, how? 
-            # composition["space"]["regions"]["interior"].append(compartment_name)
+            compartment_data["Type"] = "mesh"
             composition[compartment_name] = {"object": compartment_name, "regions": {} }
             # create a compartment object and add to the objects dictionary
             # using the compartment_name as a key
             # add the compartment to the composition dictionary
-            # get_v1_ingredient(
-            #     compartment_name,
-            #     compartment_data,
-            #     compartment_array,
-            #     objects_dict,
-            # )
+            get_and_store_v2_object(
+                compartment_name,
+                compartment_data,
+                outer_most_region_array,
+                objects_dict,
+            )
             for region_name in compartment_data:
                 # add region to composition
                 if region_name == "surface":
@@ -156,7 +164,7 @@ def convert(recipe_data):
                         ingredient_data = compartment_data[region_name]["ingredients"][
                             ingredient_key
                         ]
-                        get_v1_ingredient(
+                        get_and_store_v2_object(
                             ingredient_key,
                             ingredient_data,
                             surface_array,
@@ -174,18 +182,12 @@ def convert(recipe_data):
                         ingredient_data = compartment_data[region_name]["ingredients"][
                             ingredient_key
                         ]
-                        get_v1_ingredient(
+                        get_and_store_v2_object(
                             ingredient_key,
                             ingredient_data,
                             interior_array,
                             objects_dict,
                         )
-                    # make them
-                    # get_v1_ingredient(
-                    #     ingredient_key,
-                    #     ingredient_data,
-                    #     compartment_array,
-                    #     objects_dict,
-                    # )
+
     import ipdb; ipdb.set_trace()
     return objects_dict, composition
