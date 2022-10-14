@@ -1,22 +1,12 @@
 # -*- coding: utf-8 -*-
-from enum import Enum
 import os
 
 import json
 from json import encoder
 
+from cellpack.autopack.interface_objects.meta_enum import MetaEnum
+
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
-
-
-class MetaEnum(Enum):
-    @classmethod
-    def values(cls):
-        return [member.value for member in cls]
-
-    @classmethod
-    def is_member(cls, item):
-        values = cls.values()
-        return item in values
 
 
 class Place_Methods(MetaEnum):
