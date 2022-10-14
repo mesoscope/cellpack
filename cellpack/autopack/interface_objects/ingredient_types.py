@@ -1,7 +1,7 @@
-from enum import Enum
+from cellpack.autopack.interface_objects.meta_enum import MetaEnum
 
 
-class INGREDIENT_TYPE(Enum):
+class INGREDIENT_TYPE(str, MetaEnum):
     SINGLE_SPHERE = "single_sphere"
     MULTI_SPHERE = "multi_sphere"
     SINGLE_CUBE = "single_cube"
