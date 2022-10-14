@@ -111,7 +111,7 @@ class Representations:
         if not self.has_mesh():
             return None
         else:
-            self.mesh["name"]
+            return self.mesh["name"]
 
     def get_mesh_path(self):
         if not self.has_mesh():

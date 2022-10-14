@@ -1,6 +1,6 @@
 {
     "version": "1.0.0",
-    "format_version": "2.0.0",
+    "format_version": "2.0",
     "name": "nested_test",
     "bounding_box": [
         [
@@ -19,7 +19,7 @@
             "type": "single_sphere",
             "jitter_attempts": 10,
             "packing_mode": "random",
-            "place_type": "jitter",
+            "place_method": "jitter",
             "available_regions": {
                 "interior": {},
                 "surface": {}

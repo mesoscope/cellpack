@@ -18,6 +18,7 @@ test_config = {
     "format": "simularium",
     "inner_grid_method": "raytrace",
     "live_packing": False,
+    "load_from_grid_file": False,
     "name": "test",
     "ordered_packing": False,
     "out": "out/",
@@ -26,9 +27,9 @@ test_config = {
     "save_analyze_result": True,
     "show_grid_plot": False,
     "show_sphere_trees": False,
+    "show_sphere_trees": False,
     "spacing": None,
     "use_periodicity": False,
-    "show_sphere_trees": False,
 }
 
 

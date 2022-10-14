@@ -1,6 +1,6 @@
 {
   "version": "2.2.2",
-  "format_version": "2.0.0",
+  "format_version": "2.0",
   "name": "nested_compartment_test",
   "bounding_box": [[0, 0, 0], [100, 100, 100]],
   "gradients": {
@@ -44,16 +44,14 @@
       ],
       "perturb_axis_amplitude": 0.1,
       "encapsulating_radius": 100,
-      "packing": {
-        "mode": "random" // instead of "packing_mode": "random",
-      },
+      "packing_mode": "random",
       "principal_vector": [
         0,
         0,
         1
       ],
       "rejection_threshold": 50,
-      "place_type": "panda_bullet",
+      "place_method": "panda_bullet",
       "cutoff_surface": 42,
       "rotation_axis": [0, 0, 1],
       "available_regions": {
