@@ -131,10 +131,31 @@ class RecipeLoader(object):
             json.dump(data, f, indent=4)
         f.close()
 
-    def _migrate_version(self, recipe, format_version="1.0"):
+    @staticmethod
+    def _sanitize_format_version(recipe_data):
+        if "format_version" not in recipe_data:
+            format_version = "1.0"  # all recipes before we introduced versioning
+        elif len(recipe_data["format_version"].split(".")) > 2:
+            # We only use two places for format version, but people
+            # might accidently include a third number
+            # ie 2.0.0 instead of 2.0
+            split_numbers = recipe_data["format_version"].split(".")
+            format_version = f"{split_numbers[0]}.{split_numbers[1]}"
+        elif len(recipe_data["format_version"].split(".")) == 1:
+            # We only use two places for format version, but people
+            # might accidently include a third number
+            # ie 2.0.0 instead of 2.0
+            split_numbers = recipe_data["format_version"].split(".")
+            format_version = f"{split_numbers[0]}.0"
+        else:
+            format_version = recipe_data["format_version"]
+        return format_version
+
+    def _migrate_version(self, recipe):
         new_recipe = {}
 
-        if format_version == "1.0":
+        if recipe["format_version"] == "1.0":
+
             new_recipe["version"] = recipe["recipe"]["version"]
             new_recipe["format_version"] = self.current_version
             new_recipe["name"] = recipe["recipe"]["name"]
@@ -145,22 +166,22 @@ class RecipeLoader(object):
             ) = convert(recipe)
             if self.save_converted_recipe:
                 self._save_converted_recipe(new_recipe)
+        else:
+            raise ValueError(
+                f"{recipe['format_version']} is not a format vesion we support"
+            )
         return new_recipe
 
     def _read(self):
         new_values = json.load(open(self.file_path, "r"))
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
-        if (
-            "format_version" not in recipe_data
-            or recipe_data["format_version"] != self.current_version
-        ):
-            input_format_version = (
-                recipe_data["format_version"]
-                if "format_version" in recipe_data
-                else "1.0"
-            )
-            recipe_data = self._migrate_version(recipe_data, input_format_version)
+        recipe_data["format_version"] = RecipeLoader._sanitize_format_version(
+            recipe_data
+        )
+
+        if recipe_data["format_version"] != self.current_version:
+            recipe_data = self._migrate_version(recipe_data)
 
         # TODO: request any external data before returning
         if "objects" in recipe_data:
