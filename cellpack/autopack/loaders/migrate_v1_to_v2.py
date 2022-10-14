@@ -191,5 +191,4 @@ def convert(recipe_data):
                             interior_array,
                             objects_dict,
                         )
-    import ipdb; ipdb.set_trace()
     return objects_dict, composition
