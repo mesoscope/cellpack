@@ -14,6 +14,7 @@ import json
 from time import time
 from PIL import Image
 import copy
+from tqdm import tqdm
 
 import matplotlib
 from matplotlib import pylab
@@ -24,6 +25,7 @@ import seaborn as sns
 import trimesh
 from pathlib import Path
 import pandas as pd
+from sklearn.metrics import matthews_corrcoef
 
 from cellpack.autopack.upy import colors as col
 import cellpack.autopack as autopack
@@ -1051,6 +1053,8 @@ class AnalyseAP:
         ingr_key,
         run_similarity_analysis=True,
         get_parametrized_representation=True,
+        save_plots=False,
+        get_correlations=False,
     ):
         all_objs, all_pos_list = self.get_obj_dict(input_path)
         self.ingr_key = ingr_key
@@ -1066,10 +1070,11 @@ class AnalyseAP:
                 angular_spacing=numpy.pi / 64,
                 inner_mesh_path=self.inner_mesh_path,
                 outer_mesh_path=self.outer_mesh_path,
+                save_plots=save_plots,
+                get_correlations=get_correlations,
             )
 
-    @staticmethod
-    def get_obj_dict(input_path):
+    def get_obj_dict(self, input_path):
         """
         Returns the object dictionary from the input path folder.
         TODO: add description of object dictionary
@@ -1092,6 +1097,8 @@ class AnalyseAP:
                         all_objs[obj][seed_key] = {}
                     for ct, dim in enumerate(["x", "y", "z"]):
                         all_objs[obj][seed_key][dim] = positions[:, ct]
+        self.all_objs = all_objs
+        self.all_pos_list = all_pos_list
         return all_objs, all_pos_list
 
     def run_similarity_analysis(self, all_objs):
@@ -1144,7 +1151,11 @@ class AnalyseAP:
         angular_spacing=numpy.pi / 64,
         inner_mesh_path=None,
         outer_mesh_path=None,
+        save_plots=False,
+        save_indiv_plots=1,
+        get_correlations=False,
     ):
+        print("creating parametrized representations...")
         theta_vals = numpy.linspace(
             0, numpy.pi, 1 + int(numpy.pi / angular_spacing)
         )
@@ -1171,7 +1182,24 @@ class AnalyseAP:
         )
         all_spilr_raw = copy.deepcopy(all_spilr_scaled)
 
+        if save_plots:
+            save_dir = f"{self.output_path}/heatmaps/"
+            os.makedirs(save_dir, exist_ok=True)
+
+        if get_correlations:
+            key_list = [
+                f"{pc}_{sc}"
+                for pc in range(num_packings)
+                for sc in range(num_seeds[pc])
+            ]
+            corr_df = pd.DataFrame(
+                index=key_list,
+                columns=key_list,
+                dtype=float,
+            )
+
         for pc, packing_dict in enumerate(all_pos_list):
+            saved_plots = 0
             for sc, (_, pos_dict) in enumerate(packing_dict.items()):
                 trial_spilr_scaled = numpy.zeros(
                     (len(rad_vals), len(theta_vals), len(phi_vals))
@@ -1192,17 +1220,22 @@ class AnalyseAP:
                         ray_origins=[[0, 0, 0]], ray_directions=[pos_list[i]]
                     )
 
-                rad_vals_raw = numpy.linspace(
-                    0, outer_loc.max(), len(rad_vals)
-                )
-
                 inner_sph_pts = self.cartesian_to_sph(inner_loc)
                 outer_sph_pts = self.cartesian_to_sph(outer_loc)
                 scaled_rad = (sph_pts[:, 0] - inner_sph_pts[:, 0]) / (
                     outer_sph_pts[:, 0] - inner_sph_pts[:, 0]
                 )
 
-                if numpy.any(scaled_rad > 1) or numpy.any(scaled_rad < 0):
+                rad_vals_raw = numpy.linspace(
+                    0, outer_sph_pts[:, 0].max(), len(rad_vals)
+                )
+
+                if (
+                    numpy.any(scaled_rad > 1)
+                    or numpy.any(scaled_rad < 0)
+                    or numpy.any(sph_pts[:, 0] > outer_sph_pts[:, 0].max())
+                    or numpy.any(sph_pts[:, 0] < 0)
+                ):
                     raise ValueError("Check ray-mesh intersections!")
 
                 rad_inds_raw = numpy.digitize(sph_pts[:, 0], rad_vals_raw)
@@ -1213,11 +1246,139 @@ class AnalyseAP:
                 trial_spilr_scaled[rad_inds_scaled, theta_inds, phi_inds] = 1
                 trial_spilr_raw[rad_inds_raw, theta_inds, phi_inds] = 1
 
-                all_spilr_raw[pc, sc] = trial_spilr_raw.reshape((len(rad_vals_raw), -1))
-                all_spilr_scaled[pc, sc] = trial_spilr_scaled.reshape((len(rad_vals), -1))
-        
+                all_spilr_raw[pc, sc] = trial_spilr_raw.reshape(
+                    (len(rad_vals_raw), -1)
+                )
+                all_spilr_scaled[pc, sc] = trial_spilr_scaled.reshape(
+                    (len(rad_vals), -1)
+                )
+
+                if saved_plots <= save_indiv_plots:
+                    g_raw = sns.heatmap(
+                        all_spilr_raw[pc, sc],
+                        cbar=False,
+                        xticklabels=False,
+                        yticklabels=False,
+                    )
+                    g_raw.set_xlabel("Angular coordinates")
+                    g_raw.set_ylabel(
+                        f"Distance from Nuclear Surface, {pc}_{sc}"
+                    )
+                    g_raw.invert_yaxis()
+
+                    g_scaled = sns.heatmap(
+                        all_spilr_scaled[pc, sc],
+                        cbar=False,
+                        xticklabels=False,
+                        yticklabels=False,
+                    )
+                    g_scaled.set_xlabel("Angular coordinates")
+                    g_scaled.set_ylabel(
+                        f"Scaled distance from Nuclear Surface, {pc}_{sc}"
+                    )
+                    g_scaled.invert_yaxis()
+
+                    fig_raw = g_raw.get_figure()
+                    fig_scaled = g_scaled.get_figure()
+                    fig_raw.savefig(
+                        f"{save_dir}heatmap_raw_{pc}_{sc}_{self.ingr_key}",
+                        dpi=300,
+                    )
+                    fig_scaled.savefig(
+                        f"{save_dir}heatmap_scaled_{pc}_{sc}_{self.ingr_key}",
+                        dpi=300,
+                    )
+                    saved_plots += 1
+
+        if get_correlations:
+            print("calculating correlations...")
+            corr_df["packing_id"] = numpy.nan
+            for pc1 in range(num_packings):
+                for sc1 in tqdm(range(num_seeds[pc1])):
+                    for pc2 in range(num_packings):
+                        for sc2 in range(num_seeds[pc2]):
+                            corr_df.loc[f"{pc1}_{sc1}", "packing_id"] = pc1
+                            # do not calculate if:
+                            # a) already calculated
+                            # b) calculating for same packing
+                            if (
+                                not numpy.isnan(
+                                    corr_df.loc[f"{pc1}_{sc1}", f"{pc2}_{sc2}"]
+                                )
+                            ) or ((pc1 == pc2) and (sc1 == sc2)):
+                                continue
+                            corr_df.loc[
+                                f"{pc1}_{sc1}", f"{pc2}_{sc2}"
+                            ] = self.get_spilr_correlations(
+                                all_spilr_scaled[pc1, sc1],
+                                all_spilr_scaled[pc2, sc2],
+                            )
+                            corr_df.loc[
+                                f"{pc2}_{sc2}", f"{pc1}_{sc1}"
+                            ] = corr_df.loc[f"{pc1}_{sc1}", f"{pc2}_{sc2}"]
+            df_packing = corr_df.pop("packing_id")
+            lut = dict(zip(df_packing.unique(), sns.color_palette()))
+            row_colors = df_packing.map(lut)
+            corr_df.fillna(0, inplace=True)
+            g = sns.clustermap(
+                corr_df,
+                row_colors=row_colors,
+                cbar_kws={"label": "spilr correlation"},
+            )
+            g.savefig(
+                f"{self.output_path}spilr_correlation_{self.ingr_key}", dpi=300
+            )
+
+        average_spilr_raw = numpy.nanmean(all_spilr_raw, axis=1)
+        average_spilr_scaled = numpy.nanmean(all_spilr_scaled, axis=1)
+        if save_plots:
+            fig_raw, ax_raw = plt.subplots()
+            fig_scaled, ax_scaled = plt.subplots()
+            for pc in range(average_spilr_raw.shape[0]):
+                g_raw = sns.heatmap(
+                    average_spilr_raw[pc],
+                    cbar=False,
+                    xticklabels=False,
+                    yticklabels=False,
+                    ax=ax_raw,
+                )
+                g_raw.set_xlabel("Angular coordinates")
+                g_raw.set_ylabel("Distance from Nuclear Surface, avg")
+                g_raw.invert_yaxis()
+
+                g_scaled = sns.heatmap(
+                    average_spilr_scaled[pc],
+                    cbar=False,
+                    xticklabels=False,
+                    yticklabels=False,
+                    ax=ax_scaled,
+                )
+                g_scaled.set_xlabel("Angular coordinates")
+                g_scaled.set_ylabel(
+                    "Scaled distance from Nuclear Surface, avg"
+                )
+                g_scaled.invert_yaxis()
+
+                fig_raw = g_raw.get_figure()
+                fig_scaled = g_scaled.get_figure()
+                fig_raw.savefig(
+                    f"{save_dir}avg_heatmap_raw_{pc}_{self.ingr_key}", dpi=300
+                )
+                fig_scaled.savefig(
+                    f"{save_dir}avg_heatmap_scaled_{pc}_{self.ingr_key}",
+                    dpi=300,
+                )
+
         return all_spilr_scaled, all_spilr_raw
 
+    @staticmethod
+    def get_spilr_correlations(spilr_list_1, spilr_list_2):
+        """
+        Calculates the Matthews correlation between spilrs
+        """
+        return matthews_corrcoef(
+            spilr_list_1.flatten(), spilr_list_2.flatten()
+        )
 
     @staticmethod
     def cartesian_to_sph(xyz):
