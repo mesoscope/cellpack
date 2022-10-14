@@ -19,7 +19,7 @@
             "type": "single_sphere",
             "jitter_attempts": 10,
             "packing_mode": "random",
-            "place_type": "jitter",
+            "place_method": "jitter",
             "available_regions": {
                 "interior": {},
                 "surface": {}

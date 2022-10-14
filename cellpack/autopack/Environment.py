@@ -106,7 +106,7 @@ except ImportError:
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
-SEED = 14
+SEED = 15
 LOG = False
 verbose = 0
 
@@ -137,14 +137,16 @@ class Environment(CompartmentList):
 
         # From config file
         self.runTimeDisplay = config["live_packing"]
-        self.placeMethod = config["place_method"]
+        self.place_method = config["place_method"]
         self.innerGridMethod = config["inner_grid_method"]
         self.format_output = config["format"]
         self.use_periodicity = config["use_periodicity"]
         self.pickRandPt = not config["ordered_packing"]
         self.show_sphere_trees = config["show_sphere_trees"]
-
+        self.show_grid_spheres = config["show_grid_plot"]
         self.boundingBox = numpy.array(recipe["bounding_box"])
+        self.spacing = config["spacing"]
+        self.load_from_grid_file = config["load_from_grid_file"]
         self.name = name
 
         # saving/pickle option
@@ -152,8 +154,13 @@ class Environment(CompartmentList):
         self.out_folder = RecipeLoader.create_output_dir(
             config["out"], name, config["place_method"]
         )
-        self.resultfile = self.out_folder + "/" + config["name"]
+        self.resultfile = self.out_folder + "/" + f"{self.name}-{config['name']}"
+        self.grid_file_out = f"{self.resultfile}_grid"
 
+        should_load_grid_file = (
+            os.path.isfile(self.grid_file_out) and self.load_from_grid_file
+        )
+        self.previous_grid_file = self.grid_file_out if should_load_grid_file else None
         self.setupfile = ""
         self.current_path = None  # the path of the recipe file
         self.custom_paths = None
@@ -408,9 +415,9 @@ class Environment(CompartmentList):
         self.grid.freePoints = freePoints[:]
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
-        self.saveGridToFile(self.resultfile + "grid")
+        self.saveGridToFile(self.grid_file_out)
         self.saveGridLogsAsJson(self.resultfile + "_grid-data.json")
-        self.grid.result_filename = self.resultfile + "grid"
+        self.grid.result_filename = self.grid_file_out
         self.collectResultPerIngredient()
         self.store()
         self.store_asTxt()
@@ -852,6 +859,7 @@ class Environment(CompartmentList):
         Save the current grid and the compartment grid information in a file. (pickle)
         """
         d = os.path.dirname(gridFileOut)
+        print("SAVED GRID TO ", gridFileOut)
         if not os.path.exists(d):
             print("gridfilename path problem", gridFileOut)
             return
@@ -878,6 +886,7 @@ class Environment(CompartmentList):
                     str(self.grid.masterGridPositions[i][2]),
                 ],
                 "distance": str(self.grid.distToClosestSurf[i]),
+                "compartment": str(self.grid.compartment_ids[i]),
             }
         # data = {
         #     # "gridPositions": json.loads(self.grid.masterGridPositions),
@@ -902,7 +911,7 @@ class Environment(CompartmentList):
             compartment.OGsrfPtsBht = spatial.cKDTree(
                 tuple(compartment.vertices), leafsize=10
             )
-            compartment.computeVolumeAndSetNbMol(
+            compartment.compute_volume_and_set_count(
                 self, compartment.surfacePoints, compartment.insidePoints, areas=None
             )
         f.close()
@@ -987,6 +996,8 @@ class Environment(CompartmentList):
             self.smallestProteinSize = ingr.min_radius
 
     def create_ingredient(self, recipe, arguments):
+        if "place_method" not in arguments:
+            arguments["place_method"] = self.place_method
         ingredient_type = arguments["type"]
 
         if ingredient_type == INGREDIENT_TYPE.SINGLE_SPHERE:
@@ -1031,8 +1042,8 @@ class Environment(CompartmentList):
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
+            arguments["type"] = INGREDIENT_TYPE.SINGLE_SPHERE
             ingr = SingleSphereIngr(radius, **arguments)
-
         if (
             "gradient" in arguments
             and arguments["gradient"] != ""
@@ -1071,11 +1082,6 @@ class Environment(CompartmentList):
         """
         compartment.setNumber(self.nbCompartments)
         self.nbCompartments += 1
-
-        fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
-
-        if not fits:
-            self.boundingBox = bb
         CompartmentList._add_compartment(self, compartment)
 
     def compartment_id_for_nearest_grid_point(self, point):
@@ -1245,13 +1251,15 @@ class Environment(CompartmentList):
                 verts.tolist()
             )  # should do it only on inside grid point
 
+    def extend_bounding_box_for_compartments(self):
+        for _, compartment in enumerate(self.compartments):
+            fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
+            if not fits:
+                self.boundingBox = bb
+
     def buildGrid(
         self,
-        gridFileIn=None,
         rebuild=True,
-        gridFileOut=None,
-        previousFill=False,
-        previousfreePoint=None,
         lookup=2,
     ):
         """
@@ -1259,6 +1267,8 @@ class Environment(CompartmentList):
         compartment grid. The setup is de novo or using previously built grid
         or restored using given file.
         """
+        self.extend_bounding_box_for_compartments()
+
         boundingBox = self.boundingBox
         if self.use_halton:
             from cellpack.autopack.BaseGrid import HaltonGrid as Grid
@@ -1268,13 +1278,10 @@ class Environment(CompartmentList):
             from cellpack.autopack.BaseGrid import BaseGrid as Grid
 
         self.sortIngredient(reset=True)
-        if gridFileIn is not None:
-            if not os.path.isfile(gridFileIn):
-                gridFileIn = None
         if self.grid is None or self.nFill == 0:
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
-            spacing = self.smallestProteinSize
+            spacing = self.spacing or self.smallestProteinSize
             self.grid = Grid(boundingBox=boundingBox, spacing=spacing, lookup=lookup)
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
@@ -1282,18 +1289,17 @@ class Environment(CompartmentList):
                 self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
                 nbPoints = self.grid.gridVolume
 
-        else:
+        elif self.grid is not None:
             self.log.info("$$$$$$$$  reset the grid")
             self.grid.reset()
             nbPoints = len(self.grid.freePoints)
             self.log.info("$$$$$$$$  reset the grid")
 
-        if gridFileIn is not None:
-            self.log.warning("file in for building grid but it doesnt work well")
-            self.grid.filename = gridFileIn
+        if self.previous_grid_file is not None:
+            self.grid.filename = self.previous_grid_file
             if self.nFill == 0:  # first fill, after we can just reset
                 self.log.info("restore from file")
-                self.restoreGridFromFile(gridFileIn)
+                self.restoreGridFromFile(self.previous_grid_file)
         else:
             self.build_compartment_grids()
 
@@ -1302,9 +1308,9 @@ class Environment(CompartmentList):
             space=self.smallestProteinSize,
             fbox_bb=self.fbox_bb,
         )
-        if gridFileOut is not None and gridFileIn is None:
-            self.saveGridToFile(gridFileOut)
-            self.grid.filename = gridFileOut
+        if self.previous_grid_file is None:
+            self.saveGridToFile(self.grid_file_out)
+            self.grid.filename = self.grid_file_out
 
         r = self.exteriorRecipe
         if r:
@@ -1319,7 +1325,7 @@ class Environment(CompartmentList):
                 self.gradients[g].buildWeigthMap(
                     boundingBox, self.grid.masterGridPositions
                 )
-        if previousFill:
+        if self.previous_grid_file is not None:
             distance = self.grid.distToClosestSurf  # [:]
             nbFreePoints = nbPoints  # -1              #Graham turned this off on 5/16/12 to match August Repair for May Hybrid
             for i, mingrs in enumerate(
@@ -1359,7 +1365,7 @@ class Environment(CompartmentList):
             rotMatj=rotMatj,
         )
         # update free points
-        if len(insidePoints) and self.placeMethod.find("panda") != -1:
+        if len(insidePoints) and self.place_method.find("panda") != -1:
             print(ingr.name, " is inside")
             self.checkPtIndIngr(ingr, insidePoints, i, ptInd, marray)
             # ingr.inside_current_grid = True
@@ -1843,7 +1849,6 @@ class Environment(CompartmentList):
         name=None,
         vTestid=3,
         vAnalysis=0,
-        show_grid_spheres=False,
         **kw,
     ):
         """
@@ -1853,7 +1858,6 @@ class Environment(CompartmentList):
         # set periodicity
         autopack.testPeriodicity = self.use_periodicity
         t1 = time()
-        self.show_grid_spheres = show_grid_spheres
         self.timeUpDistLoopTotal = 0
         self.static = []
         if self.grid is None:
@@ -1891,7 +1895,7 @@ class Environment(CompartmentList):
         compartment_ids = self.grid.compartment_ids
         # why a copy? --> can we split ?
         distances = self.grid.distToClosestSurf[:]
-        spacing = self.smallestProteinSize
+        spacing = self.spacing or self.smallestProteinSize
 
         # DEBUG stuff, should be removed later
         self.jitterVectors = []
@@ -1967,7 +1971,7 @@ class Environment(CompartmentList):
         vThreshStart = 0.0  # Added back by Graham on July 5, 2012 from Sept 25, 2011 thesis version
 
         # if bullet build the organel rbnode
-        if self.placeMethod == "pandaBullet":
+        if self.place_method == "pandaBullet":
             self.setupPanda()
 
         # ==============================================================================
@@ -2063,7 +2067,7 @@ class Environment(CompartmentList):
             # NOTE: should we do the close partner check here instead of in the place functions?
             # place the ingredient
             if self.overwritePlaceMethod:
-                ingr.place_type = self.placeMethod
+                ingr.place_method = self.place_method
 
             if ingr.encapsulating_radius > self.largestProteinSize:
                 self.largestProteinSize = ingr.encapsulating_radius
@@ -2199,6 +2203,7 @@ class Environment(CompartmentList):
                 ingredients[ingr.name][3].append(numpy.array(mat))
                 all_ingr_as_array.append([pos, rot, ingr, ptInd])
         self.ingr_result = ingredients
+        print(f"placed {len(self.molecules)}")
         if self.saveResult:
             self.save_result(
                 freePoints,
