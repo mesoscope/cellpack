@@ -125,7 +125,13 @@ class RecipeLoader(object):
             # might accidently include a third number
             # ie 2.0.0 instead of 2.0
             split_numbers = recipe_data["format_version"].split(".")
-            format_version = ".".join([split_numbers[0], split_numbers[1]])
+            format_version = f"{split_numbers[0]}.{split_numbers[1]}"
+        elif len(recipe_data["format_version"].split(".")) == 1:
+            # We only use two places for format version, but people
+            # might accidently include a third number
+            # ie 2.0.0 instead of 2.0
+            split_numbers = recipe_data["format_version"].split(".")
+            format_version = f"{split_numbers[0]}.0"
         else:
             format_version = recipe_data["format_version"]
         return format_version

@@ -92,6 +92,14 @@ def test_resolve_objects():
             {"format_version": "2.105"},
             "2.105",
         ),
+        (
+            {"format_version": "2"},
+            "2.0",
+        ),
+        (
+            {"format_version": "1"},
+            "1.0",
+        ),
     ],
 )
 def test_sanitize_format_version(expected_result, input_recipe_data):
