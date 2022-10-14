@@ -14,12 +14,11 @@ import logging.config
 import traceback
 
 # Third party
-import json
+from time import time
 import argparse
 
 # Relative
 from cellpack import get_module_version
-from cellpack.autopack.Environment import Environment
 from cellpack.autopack.Analysis import AnalyseAP
 
 ###############################################################################
@@ -117,6 +116,7 @@ def main():
     args = Args()
     dbg = args.debug
     try:
+        t1 = time()
         input_path = os.path.join(os.getcwd(), args.input)
         output_path = args.output
         os.makedirs(output_path, exist_ok=True)
@@ -133,8 +133,12 @@ def main():
             output_path=output_path,
             ingr_key=args.ingr_key,
             run_similarity_analysis=True,
-            get_parametrized_representation=False,
+            get_parametrized_representation=True,
+            save_plots=True,
+            get_correlations=True,
         )
+        t2 = time()
+        print(f"time to run analysis: {t2 - t1}")
 
     except Exception as e:
         log.error("=============================================")
