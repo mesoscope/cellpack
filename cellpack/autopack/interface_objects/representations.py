@@ -119,7 +119,7 @@ class Representations:
         else:
             if self.mesh["path"] == "default":
                 return f"{self.DATABASE}/geometries/{self.mesh['name']}"
-            return f"{self.mesh['path']}{self.mesh['name']}"
+            return f"{self.mesh['path']}/{self.mesh['name']}"
 
     def get_mesh_format(self):
         if not self.has_mesh():

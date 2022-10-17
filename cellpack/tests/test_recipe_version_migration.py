@@ -359,7 +359,7 @@ def test_convert_v1_to_v2(
                         "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
                     },
                     "C": {
-                        "type": "SingleSphere",
+                        "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
                         "radius": 100,
                         "partners": {"probability_binding": 0.5},
                         "orient_bias_range": [-pi, 12],
@@ -450,7 +450,7 @@ def test_migrate_version_error():
                             0
                         ],
                         "packing_mode": "random",
-                        "type": "single_sphere",
+                        "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
                         "rejection_threshold": 100,
                         "place_type": "jitter",
                         "rotation_axis": None,
@@ -465,7 +465,7 @@ def test_migrate_version_error():
                         "radius": 1
                     },
                     "compartment_A": {
-                        "type": "mesh",
+                        "type": INGREDIENT_TYPE.MESH.value,
                         "orient_bias_range": [
                             -3.141592653589793,
                             3.141592653589793
@@ -501,7 +501,7 @@ def test_migrate_version_error():
                             0
                         ],
                         "packing_mode": "random",
-                        "type": "single_sphere",
+                        "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
                         "rejection_threshold": 100,
                         "place_type": "jitter",
                         "rotation_axis": None,
@@ -538,7 +538,7 @@ def test_migrate_version_error():
                             0
                         ],
                         "packing_mode": "random",
-                        "type": "single_sphere",
+                        "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
                         "rejection_threshold": 100,
                         "place_type": "jitter",
                         "rotation_axis": None,
@@ -547,11 +547,9 @@ def test_migrate_version_error():
                             -3.1415927,
                             -3.1415927
                         ],
-                        "representations": {
-                            "atomic": None,
-                            "packing": None,
-                            "mesh": None
-                        },
+                        "representations": Representations(
+                            **RecipeLoader.default_values["representations"]
+                        ),
                         "radius": 1.25
                     }
                 },
