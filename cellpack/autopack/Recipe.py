@@ -87,6 +87,8 @@ class Recipe:
         root = set(composition_dict.keys()).difference(set(reference_dict.keys()))
 
         if len(root) > 1:
+            root = list(root)
+            root.sort()  # alphabetize for consisent testing
             raise Exception(f"Composition has multiple roots {root}")
 
         return (list(root)[0], compartment_keys, reference_dict, referenced_objects)
