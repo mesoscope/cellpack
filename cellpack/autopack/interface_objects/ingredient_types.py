@@ -1,4 +1,4 @@
-from enum import Enum
+from cellpack.autopack.interface_objects.meta_enum import MetaEnum
 
 
 class INGREDIENT_TYPE(str, Enum):

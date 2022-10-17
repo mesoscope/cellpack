@@ -6,6 +6,7 @@ import json
 from json import encoder
 
 import cellpack.autopack as autopack
+from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 from cellpack.autopack.utils import deep_merge
 from cellpack.autopack.interface_objects.representations import Representations
 from cellpack.autopack.interface_objects.default_values import default_recipe_values
@@ -194,6 +195,9 @@ class RecipeLoader(object):
                     atomic=reps.get("atomic", None),
                     packing=reps.get("packing", None),
                 )
+            if not INGREDIENT_TYPE.is_member(obj["type"]):
+                raise TypeError(f"{obj['type']} is not an allowed type")
+
         return recipe_data
 
     def _load_json(self):
