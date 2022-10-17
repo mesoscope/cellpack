@@ -1083,7 +1083,7 @@ class AnalyseAP:
                     arr1 = pos_dict1[dim]
                     arr2 = pos_dict2[dim]
                     if len(arr1) == 1 or len(arr2) == 1:
-                        scaled_sig = 0.25
+                        scaled_sig = 0
                     else:
                         ad_stat = scipy.stats.anderson_ksamp([arr1, arr2])
                         scaled_sig = (ad_stat.significance_level - 0.001) / (
