@@ -73,7 +73,7 @@ def migrate_ingredient(old_ingredient):
     for attribute in list(old_ingredient):
         if attribute in v1_to_v2_name_map:
             if attribute == "Type":
-                value = ingredient_types_map[old_ingredient[attribute]].value
+                value = ingredient_types_map[old_ingredient[attribute]]
             else:
                 value = old_ingredient[attribute]
             new_ingredient[v1_to_v2_name_map[attribute]] = value
@@ -85,9 +85,8 @@ def migrate_ingredient(old_ingredient):
                 new_ingredient["partners"] = partners
             partners[convert_to_partners_map[attribute]] = old_ingredient[attribute]
     new_ingredient["orient_bias_range"] = convert_rotation_range(old_ingredient)
-    new_ingredient["representations"] = get_representations(old_ingredient)
-
-    if new_ingredient["type"] == INGREDIENT_TYPE.SINGLE_SPHERE.value:
+    new_ingredient["representations"] = convert_to_representations(old_ingredient)
+    if new_ingredient["type"] == INGREDIENT_TYPE.SINGLE_SPHERE:
         new_ingredient["radius"] = old_ingredient["radii"][0][0]
     return new_ingredient
 

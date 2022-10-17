@@ -1000,39 +1000,39 @@ class Environment(CompartmentList):
             arguments["place_method"] = self.place_method
         ingredient_type = arguments["type"]
 
-        if ingredient_type == INGREDIENT_TYPE.SINGLE_SPHERE.value:
+        if ingredient_type == INGREDIENT_TYPE.SINGLE_SPHERE:
             radius = arguments["radius"]
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = SingleSphereIngr(radius, **arguments)
-        elif ingredient_type == INGREDIENT_TYPE.MULTI_SPHERE.value:
+        elif ingredient_type == INGREDIENT_TYPE.MULTI_SPHERE:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = MultiSphereIngr(**arguments)
-        elif ingredient_type == INGREDIENT_TYPE.MULTI_CYLINDER.value:
+        elif ingredient_type == INGREDIENT_TYPE.MULTI_CYLINDER:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = MultiCylindersIngr(**arguments)
-        elif ingredient_type == INGREDIENT_TYPE.SINGLE_CUBE.value:
+        elif ingredient_type == INGREDIENT_TYPE.SINGLE_CUBE:
             bounds = arguments["bounds"]
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = SingleCubeIngr(bounds, **arguments)
-        elif ingredient_type == INGREDIENT_TYPE.SINGLE_CYLINDER.value:
+        elif ingredient_type == INGREDIENT_TYPE.SINGLE_CYLINDER:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 Ingredient.ARGUMENTS, **arguments
             )
             ingr = SingleCylinderIngr(**arguments)
-        elif ingredient_type == INGREDIENT_TYPE.GROW.value:
+        elif ingredient_type == INGREDIENT_TYPE.GROW:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 GrowIngredient.ARGUMENTS, **arguments
             )
             ingr = GrowIngredient(**arguments)
-        elif ingredient_type == INGREDIENT_TYPE.GROW.value:
+        elif ingredient_type == INGREDIENT_TYPE.GROW:
             arguments = IOutils.IOingredientTool.clean_arguments(
                 GrowIngredient.ARGUMENTS, **arguments
             )

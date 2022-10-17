@@ -156,7 +156,6 @@ class RecipeLoader(object):
         new_recipe = {}
 
         if recipe["format_version"] == "1.0":
-
             new_recipe["version"] = recipe["recipe"]["version"]
             new_recipe["format_version"] = self.current_version
             new_recipe["name"] = recipe["recipe"]["name"]
