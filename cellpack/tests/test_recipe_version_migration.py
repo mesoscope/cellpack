@@ -6,6 +6,7 @@ Docs: https://docs.pytest.org/en/latest/example/simple.html
     https://docs.pytest.org/en/latest/plugins.html#requiring-loading-plugins-in-a-test-module-or-conftest-file
 """
 from math import pi
+from unittest.mock import MagicMock
 import pytest
 
 from cellpack.autopack.interface_objects.representations import Representations
@@ -594,5 +595,10 @@ def test_migrate_version_error():
 def test_convert_compartment(converted_compartment_data, expected_compartment_data):
     assert converted_compartment_data["version"] == expected_compartment_data["version"]
     assert converted_compartment_data["composition"] == expected_compartment_data["composition"]
-    assert converted_compartment_data["objects"] == expected_compartment_data["objects"]
     assert converted_compartment_data["name"] == expected_compartment_data["name"]
+    for obj in converted_compartment_data["objects"]:
+        data = converted_compartment_data["objects"][obj]
+        mock_rep = MagicMock()
+        data["representations"] = mock_rep
+        expected_compartment_data["objects"][obj]["representations"] = mock_rep
+        assert converted_compartment_data["objects"][obj] == expected_compartment_data["objects"][obj]
