@@ -68,7 +68,7 @@ from panda3d.bullet import BulletRigidBodyNode
 import cellpack.autopack as autopack
 from cellpack.autopack.MeshStore import MeshStore
 import cellpack.autopack.ingredient as ingredient
-from cellpack.autopack.loaders.util import create_output_dir
+from cellpack.autopack.loaders.utils import create_output_dir
 from cellpack.autopack.utils import (
     cmp_to_key,
     expand_object_using_key,
