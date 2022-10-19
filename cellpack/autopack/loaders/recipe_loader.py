@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import copy
 import os
 
 import json
@@ -7,7 +6,7 @@ from json import encoder
 
 import cellpack.autopack as autopack
 from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
-from cellpack.autopack.utils import deep_merge
+from cellpack.autopack.utils import deep_merge, expand_object_using_key
 from cellpack.autopack.interface_objects.representations import Representations
 from cellpack.autopack.interface_objects.default_values import default_recipe_values
 from cellpack.autopack.loaders.migrate_v1_to_v2 import convert
@@ -32,36 +31,9 @@ class RecipeLoader(object):
         self.recipe_data = self._read()
 
     @staticmethod
-    def is_key(key_or_dict, composition_dict):
-        """
-        Helper function to find if data in composition list
-        is a key or an object
-        """
-        is_key = not isinstance(key_or_dict, dict)
-        if is_key:
-            key = key_or_dict
-            if key not in composition_dict:
-                raise ValueError(f"{key} is not in composition dictionary")
-            composition_info = composition_dict[key]
-        else:
-            composition_info = key_or_dict
-        return is_key, composition_info
-
-    @staticmethod
-    def create_output_dir(out_base_folder, recipe_name, sub_dir=None):
-        os.makedirs(out_base_folder, exist_ok=True)
-        output_folder = os.path.join(out_base_folder, recipe_name)
-        if sub_dir is not None:
-            output_folder = os.path.join(output_folder, sub_dir)
-        os.makedirs(output_folder, exist_ok=True)
-        return output_folder
-
-    @staticmethod
     def _resolve_object(key, objects):
         current_object = objects[key]
-        inherit_key = current_object["inherit"]
-        base_object = objects[inherit_key]
-        new_object = deep_merge(copy.deepcopy(base_object), current_object)
+        new_object = expand_object_using_key(current_object, "inherit", objects)
         objects[key] = new_object
 
     @staticmethod

@@ -24,6 +24,7 @@ class SingleCylinderIngr(Ingredient):
         self,
         bounds,
         radius,
+        available_regions=None,
         type="single_cylinder",
         color=None,
         count=0,

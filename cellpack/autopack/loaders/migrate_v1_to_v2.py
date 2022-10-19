@@ -1,7 +1,7 @@
 from math import pi
 
 from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
-from cellpack.autopack.loaders.util import create_file_info_object_from_full_path
+from cellpack.autopack.loaders.utils import create_file_info_object_from_full_path
 from cellpack.autopack.interface_objects.default_values import default_recipe_values
 from .v1_v2_attribute_changes import (
     convert_to_partners_map,

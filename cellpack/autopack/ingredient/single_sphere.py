@@ -21,6 +21,7 @@ class SingleSphereIngr(Ingredient):
     def __init__(
         self,
         radius,
+        available_regions=None,
         type="single_sphere",
         color=None,
         count=0,

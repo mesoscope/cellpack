@@ -40,7 +40,6 @@ def test_resolve_objects():
     expected_result = {
         "sphere_25": {
             "color": [0.5, 0.5, 0.5],
-            "inherit": "base",
             "jitter_attempts": 10,
             "max_jitter": [1, 1, 0],
             "radius": 25,
@@ -49,7 +48,6 @@ def test_resolve_objects():
         "base": {"jitter_attempts": 10},
         "sphere_75": {
             "color": [0.3, 0.5, 0.8],
-            "inherit": "sphere_50",
             "jitter_attempts": 10,
             "max_jitter": [1, 1, 0],
             "radius": 75,
@@ -57,7 +55,6 @@ def test_resolve_objects():
         },
         "sphere_50": {
             "color": [0.3, 0.5, 0.8],
-            "inherit": "sphere_25",
             "jitter_attempts": 10,
             "max_jitter": [1, 1, 0],
             "radius": 50,
