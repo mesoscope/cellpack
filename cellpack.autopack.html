@@ -1240,6 +1240,8 @@ objects : list of object or list of points</p>
 <dt class="sig sig-object py" id="cellpack.autopack.BaseGrid.BaseGrid">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.BaseGrid.</span></span><span class="sig-name descname"><span class="pre">BaseGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">([0,</span> <span class="pre">0,</span> <span class="pre">0],</span> <span class="pre">[0.1,</span> <span class="pre">0.1,</span> <span class="pre">0.1])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<section id="the-grid-class">
+<h3>The Grid class<a class="headerlink" href="#the-grid-class" title="Permalink to this heading">¶</a></h3>
 <p>This class handle the use of grid to control the packing. The grid keep information of
 3d positions, distances, freePoints and inside/surface points from organelles.
 NOTE : thi class could be completely replace if openvdb is wrapped to python.</p>
@@ -1444,6 +1446,7 @@ NOTE : need to fix with grid build with numpy arrange</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">updateDistances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">insidePoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newDistPoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freePoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbFreePoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/BaseGrid.html#BaseGrid.updateDistances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.BaseGrid.BaseGrid.updateDistances" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</section>
 </dd></dl>
 
 <dl class="py class">
@@ -1489,6 +1492,8 @@ numpy broadcasting</p>
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.Compartment">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Compartment.</span></span><span class="sig-name descname"><span class="pre">Compartment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.Compartment.CompartmentList" title="cellpack.autopack.Compartment.CompartmentList"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompartmentList</span></code></a></p>
+<section id="the-compartment-class">
+<h3>The Compartment class<a class="headerlink" href="#the-compartment-class" title="Permalink to this heading">¶</a></h3>
 <p>This class represents a sub volume delimited by a polyhedral
 surface. Compartment can be nested</p>
 <dl class="py method">
@@ -1887,13 +1892,17 @@ did not fit</p>
 <span class="sig-name descname"><span class="pre">transformMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#Compartment.transformMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.Compartment.transformMesh" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</section>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cellpack.autopack.Compartment.CompartmentList">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Compartment.</span></span><span class="sig-name descname"><span class="pre">CompartmentList</span></span><a class="reference internal" href="_modules/cellpack/autopack/Compartment.html#CompartmentList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Compartment.CompartmentList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<section id="the-compartmentlist-class">
+<h3>The CompartmentList class<a class="headerlink" href="#the-compartmentlist-class" title="Permalink to this heading">¶</a></h3>
 <p>Handle a list of compartments.</p>
+</section>
 </dd></dl>
 
 </section>
@@ -1943,6 +1952,8 @@ did not fit</p>
 <dt class="sig sig-object py" id="cellpack.autopack.Environment.Environment">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Environment.</span></span><span class="sig-name descname"><span class="pre">Environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Environment.html#Environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Environment.Environment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.Compartment.CompartmentList" title="cellpack.autopack.Compartment.CompartmentList"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompartmentList</span></code></a></p>
+<section id="the-environment-class">
+<h3>The Environment class<a class="headerlink" href="#the-environment-class" title="Permalink to this heading">¶</a></h3>
 <p>This class is main class in autopack. The class handle all the setup, initialization
 and process of the packing. We use xml or python for the setup.
 A environments is made of :</p>
@@ -2475,6 +2486,7 @@ listingredient influenced</p>
 <dd><p>write self.compartment_ids and self.distToClosestSurf to file. (pickle)</p>
 </dd></dl>
 
+</section>
 </dd></dl>
 
 <dl class="py function">
@@ -2640,6 +2652,8 @@ check if the four corner are more than radius away from circle center</p>
 <dt class="sig sig-object py" id="cellpack.autopack.Gradient.Gradient">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Gradient.</span></span><span class="sig-name descname"><span class="pre">Gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'X'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Gradient.html#Gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Gradient.Gradient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<section id="the-gradient-class">
+<h3>The Gradient class<a class="headerlink" href="#the-gradient-class" title="Permalink to this heading">¶</a></h3>
 <p>This class handle the use of gradient to control the packing.
 The class define different and setup type of gradient,
 as well as the sampling function</p>
@@ -2783,6 +2797,7 @@ the total weight will be skipped in the beginning.</p>
 <dd><p>pick next random point according to the chosen function</p>
 </dd></dl>
 
+</section>
 </dd></dl>
 
 <dl class="py function">
@@ -3250,6 +3265,8 @@ geometry such as spheres and cylinders</p>
 <dt class="sig sig-object py" id="cellpack.autopack.Grid.Grid">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.Grid.</span></span><span class="sig-name descname"><span class="pre">Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundingBox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">([0,</span> <span class="pre">0,</span> <span class="pre">0],</span> <span class="pre">[0.1,</span> <span class="pre">0.1,</span> <span class="pre">0.1])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Grid.html#Grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Grid.Grid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cellpack.autopack.BaseGrid.BaseGrid" title="cellpack.autopack.BaseGrid.BaseGrid"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGrid</span></code></a></p>
+<section id="id1">
+<h3>The Grid class<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <p>This class handle the use of grid to control the packing. The grid keep information
 of 3d positions, distances, freePoints and inside/surface points from organelles.
 NOTE : this class could be completely replaced if openvdb is wrapped to python.</p>
@@ -3281,6 +3298,7 @@ with an array of points spaces pGridSpacing apart.:</p>
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Grid.html#Grid.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Grid.Grid.save" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</section>
 </dd></dl>
 
 </section>
