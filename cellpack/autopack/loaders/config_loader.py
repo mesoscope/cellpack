@@ -35,6 +35,7 @@ class ConfigLoader(object):
         "overwrite_place_method": False,
         "place_method": "jitter",
         "save_analyze_result": False,
+        "save_converted_recipe": False,
         "show_grid_plot": False,
         "show_sphere_trees": False,
         "spacing": None,
