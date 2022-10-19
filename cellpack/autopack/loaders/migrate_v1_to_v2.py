@@ -30,10 +30,12 @@ def get_representations(old_ingredient):
             representations["mesh"]["coordinate_system"] = old_ingredient["coordsystem"]
     # compartment value
     if "geom" in old_ingredient or "rep_file" in old_ingredient:
-        full_path = old_ingredient["geom"] if "geom" in old_ingredient else old_ingredient["rep_file"]
-        representations["mesh"] = create_file_info_object_from_full_path(
-            full_path
+        full_path = (
+            old_ingredient["geom"]
+            if "geom" in old_ingredient
+            else old_ingredient["rep_file"]
         )
+        representations["mesh"] = create_file_info_object_from_full_path(full_path)
     if "pdb" in old_ingredient and old_ingredient["pdb"] is not None:
         if ".pdb" in old_ingredient["pdb"]:
             representations["atomic"] = {
@@ -118,7 +120,7 @@ def get_and_store_v2_object(ingredient_key, ingredient_data, region_list, object
         ingredient_key, converted_ingredient
     )
     if len(composition_info) == 1:
-        # most likey a comparment
+        # most likely a compartment
         region_list.append(ingredient_key)
     else:
         region_list.append(composition_info)
@@ -141,13 +143,11 @@ def convert(recipe_data):
             )
     if "compartments" in recipe_data:
         for compartment_name in recipe_data["compartments"]:
+            # add the compartment to composition
             compartment_data = recipe_data["compartments"][compartment_name]
             compartment_data["Type"] = "mesh"
 
-            composition[compartment_name] = {"object": compartment_name, "regions": {} }
-            # create a compartment object and add to the objects dictionary
-            # using the compartment_name as a key
-            # add the compartment to the composition dictionary
+            composition[compartment_name] = {"object": compartment_name, "regions": {}}
             get_and_store_v2_object(
                 compartment_name,
                 compartment_data,
@@ -175,8 +175,6 @@ def convert(recipe_data):
 
                 if region_name == "interior":
                     interior_array = []
-                # walk through ingredients and add them as objects
-                # link them in composition
                     composition[compartment_name]["regions"][
                         region_name
                     ] = interior_array

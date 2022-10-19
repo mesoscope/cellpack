@@ -54,5 +54,5 @@ ingredient_types_map = {
     "SingleCylinder": INGREDIENT_TYPE.SINGLE_CYLINDER,
     "MultiCylinder": INGREDIENT_TYPE.MULTI_CYLINDER,
     "Grow": INGREDIENT_TYPE.GROW,
-    "mesh": INGREDIENT_TYPE.MESH
+    "mesh": INGREDIENT_TYPE.MESH,
 }

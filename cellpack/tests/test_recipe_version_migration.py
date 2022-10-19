@@ -415,18 +415,7 @@ def test_migrate_version_error():
                 "version": "1.0",
                 "format_version": "2.0",
                 "name": "test_compartment",
-                "bounding_box": [
-                    [
-                        -0.6,
-                        -0.5,
-                        -0.25
-                    ],
-                    [
-                        0.6,
-                        0.5,
-                        0.15
-                    ]
-                ],
+                "bounding_box": [[-0.6, -0.5, -0.25], [0.6, 0.5, 0.15]],
                 "objects": {
                     "sphere_exterior": {
                         "jitter_attempts": 20,
@@ -435,47 +424,33 @@ def test_migrate_version_error():
                             "names": [],
                             "excluded_names": [],
                             "probability_binding": 0.5,
-                            "probability_repelled": 0.5
+                            "probability_repelled": 0.5,
                         },
                         "rotation_range": 6.2831,
-                        "max_jitter": [
-                            1,
-                            1,
-                            0
-                        ],
+                        "max_jitter": [1, 1, 0],
                         "perturb_axis_amplitude": 0.1,
                         "is_attractor": False,
-                        "principal_vector": [
-                            1,
-                            0,
-                            0
-                        ],
+                        "principal_vector": [1, 0, 0],
                         "packing_mode": "random",
                         "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                         "rejection_threshold": 100,
                         "place_type": "jitter",
                         "rotation_axis": None,
                         "use_rotation_axis": False,
-                        "orient_bias_range": [
-                            -3.1415927,
-                            -3.1415927
-                        ],
-                        "representations":Representations(
+                        "orient_bias_range": [-3.1415927, -3.1415927],
+                        "representations": Representations(
                             **RecipeLoader.default_values["representations"]
                         ),
-                        "radius": 1
+                        "radius": 1,
                     },
                     "compartment_A": {
                         "type": INGREDIENT_TYPE.MESH,
-                        "orient_bias_range": [
-                            -3.141592653589793,
-                            3.141592653589793
-                        ],
+                        "orient_bias_range": [-3.141592653589793, 3.141592653589793],
                         "representations": Representations(
                             mesh={
                                 "path": "cellpack/test-geometry",
                                 "name": "membrane_1.obj",
-                                "format": ".obj"
+                                "format": ".obj",
                             }
                         ),
                     },
@@ -486,35 +461,24 @@ def test_migrate_version_error():
                             "names": [],
                             "excluded_names": [],
                             "probability_binding": 0.5,
-                            "probability_repelled": 0.5
+                            "probability_repelled": 0.5,
                         },
                         "rotation_range": 6.2831,
-                        "max_jitter": [
-                            1,
-                            1,
-                            0
-                        ],
+                        "max_jitter": [1, 1, 0],
                         "perturb_axis_amplitude": 0.1,
                         "is_attractor": False,
-                        "principal_vector": [
-                            1,
-                            0,
-                            0
-                        ],
+                        "principal_vector": [1, 0, 0],
                         "packing_mode": "random",
                         "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                         "rejection_threshold": 100,
                         "place_type": "jitter",
                         "rotation_axis": None,
                         "use_rotation_axis": False,
-                        "orient_bias_range": [
-                            -3.1415927,
-                            -3.1415927
-                        ],
+                        "orient_bias_range": [-3.1415927, -3.1415927],
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
                         ),
-                        "radius": 1.0
+                        "radius": 1.0,
                     },
                     "sphere_inside": {
                         "jitter_attempts": 20,
@@ -523,36 +487,25 @@ def test_migrate_version_error():
                             "names": [],
                             "excluded_names": [],
                             "probability_binding": 0.5,
-                            "probability_repelled": 0.5
+                            "probability_repelled": 0.5,
                         },
                         "rotation_range": 6.2831,
-                        "max_jitter": [
-                            1,
-                            1,
-                            0
-                        ],
+                        "max_jitter": [1, 1, 0],
                         "perturb_axis_amplitude": 0.1,
                         "is_attractor": False,
-                        "principal_vector": [
-                            1,
-                            0,
-                            0
-                        ],
+                        "principal_vector": [1, 0, 0],
                         "packing_mode": "random",
                         "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                         "rejection_threshold": 100,
                         "place_type": "jitter",
                         "rotation_axis": None,
                         "use_rotation_axis": False,
-                        "orient_bias_range": [
-                            -3.1415927,
-                            -3.1415927
-                        ],
+                        "orient_bias_range": [-3.1415927, -3.1415927],
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
                         ),
-                        "radius": 1.25
-                    }
+                        "radius": 1.25,
+                    },
                 },
                 "composition": {
                     "space": {
@@ -561,9 +514,9 @@ def test_migrate_version_error():
                                 {
                                     "object": "sphere_exterior",
                                     "count": 20,
-                                    "priority": 0
+                                    "priority": 0,
                                 },
-                                "compartment_A"
+                                "compartment_A",
                             ]
                         }
                     },
@@ -571,34 +524,31 @@ def test_migrate_version_error():
                         "object": "compartment_A",
                         "regions": {
                             "surface": [
-                                {
-                                    "object": "sphere_surface",
-                                    "count": 20,
-                                    "priority": 0
-                                }
+                                {"object": "sphere_surface", "count": 20, "priority": 0}
                             ],
                             "interior": [
-                                {
-                                    "object": "sphere_inside",
-                                    "count": 200,
-                                    "priority": 0
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
+                                {"object": "sphere_inside", "count": 200, "priority": 0}
+                            ],
+                        },
+                    },
+                },
+            },
         )
-    ]
+    ],
 )
-
 def test_convert_compartment(converted_compartment_data, expected_compartment_data):
     assert converted_compartment_data["version"] == expected_compartment_data["version"]
-    assert converted_compartment_data["composition"] == expected_compartment_data["composition"]
+    assert (
+        converted_compartment_data["composition"]
+        == expected_compartment_data["composition"]
+    )
     assert converted_compartment_data["name"] == expected_compartment_data["name"]
     for obj in converted_compartment_data["objects"]:
         data = converted_compartment_data["objects"][obj]
         mock_rep = MagicMock()
         data["representations"] = mock_rep
         expected_compartment_data["objects"][obj]["representations"] = mock_rep
-        assert converted_compartment_data["objects"][obj] == expected_compartment_data["objects"][obj]
+        assert (
+            converted_compartment_data["objects"][obj]
+            == expected_compartment_data["objects"][obj]
+        )
