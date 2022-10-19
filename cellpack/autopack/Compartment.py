@@ -1230,7 +1230,9 @@ class Compartment(CompartmentList):
         mesh = mesh_store.get_mesh(self.gname)
         # voxelized
         self.log.info(f"{self.name}: CREATED MESH")
-        trimesh_grid_surface = creation.voxelize(mesh, pitch=env.grid.gridSpacing / 2).hollow()
+        trimesh_grid_surface = creation.voxelize(
+            mesh, pitch=env.grid.gridSpacing / 2
+        ).hollow()
         self.log.info("VOXELIZED MESH")
         # the main loop
         tree = spatial.cKDTree(grdPos, leafsize=10)
