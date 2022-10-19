@@ -169,7 +169,7 @@ class RecipeLoader(object):
         else:
             raise ValueError(
                 f"{recipe['format_version']} is not a format version we support"
-            ) from None
+            )
         return new_recipe
 
     def _read(self):
