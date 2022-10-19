@@ -379,7 +379,7 @@ class Ingredient(Agent):
         self.mesh = None
         if mesh_path is not None:
             if meshType == "file":
-                self.mesh = self.getMesh(mesh_path, meshName, mesh_store)  # self.name)
+                self.mesh = self.getMesh(mesh_path, meshName, mesh_store)
                 self.log.info("OK got", self.mesh)
                 if self.mesh is None:
                     # display a message ?
