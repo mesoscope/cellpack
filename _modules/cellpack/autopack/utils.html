@@ -281,6 +281,7 @@
             
   <h1>Source code for cellpack.autopack.utils</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 
 
@@ -419,6 +420,14 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">dct</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">merge_dct</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">dct</span></div>
+
+
+<div class="viewcode-block" id="expand_object_using_key"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.utils.expand_object_using_key">[docs]</a><span class="k">def</span> <span class="nf">expand_object_using_key</span><span class="p">(</span><span class="n">current_object</span><span class="p">,</span> <span class="n">expand_on</span><span class="p">,</span> <span class="n">lookup_dict</span><span class="p">):</span>
+    <span class="n">object_key</span> <span class="o">=</span> <span class="n">current_object</span><span class="p">[</span><span class="n">expand_on</span><span class="p">]</span>
+    <span class="n">base_object</span> <span class="o">=</span> <span class="n">lookup_dict</span><span class="p">[</span><span class="n">object_key</span><span class="p">]</span>
+    <span class="n">new_object</span> <span class="o">=</span> <span class="n">deep_merge</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">base_object</span><span class="p">),</span> <span class="n">current_object</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">new_object</span><span class="p">[</span><span class="n">expand_on</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">new_object</span></div>
 </pre></div>
 
            </div>

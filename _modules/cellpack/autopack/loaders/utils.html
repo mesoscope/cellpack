@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cellpack.autopack.loaders.util &mdash; cellPack 1.0.3 documentation</title>
+  <title>cellpack.autopack.loaders.utils &mdash; cellPack 1.0.3 documentation</title>
   
 
   
@@ -264,7 +264,7 @@
         
           <li><a href="../../autopack.html">cellpack.autopack</a> &raquo;</li>
         
-      <li>cellpack.autopack.loaders.util</li>
+      <li>cellpack.autopack.loaders.utils</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -279,11 +279,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for cellpack.autopack.loaders.util</h1><div class="highlight"><pre>
+  <h1>Source code for cellpack.autopack.loaders.utils</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 
 
-<div class="viewcode-block" id="create_file_info_object_from_full_path"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.util.create_file_info_object_from_full_path">[docs]</a><span class="k">def</span> <span class="nf">create_file_info_object_from_full_path</span><span class="p">(</span><span class="n">full_path</span><span class="p">):</span>
+<div class="viewcode-block" id="create_file_info_object_from_full_path"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.utils.create_file_info_object_from_full_path">[docs]</a><span class="k">def</span> <span class="nf">create_file_info_object_from_full_path</span><span class="p">(</span><span class="n">full_path</span><span class="p">):</span>
     <span class="n">path</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
@@ -291,6 +291,15 @@
         <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span>
         <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="n">extension</span><span class="p">,</span>
     <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="create_output_dir"><a class="viewcode-back" href="../../../../cellpack.autopack.loaders.html#cellpack.autopack.loaders.utils.create_output_dir">[docs]</a><span class="k">def</span> <span class="nf">create_output_dir</span><span class="p">(</span><span class="n">out_base_folder</span><span class="p">,</span> <span class="n">recipe_name</span><span class="p">,</span> <span class="n">sub_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_base_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_base_folder</span><span class="p">,</span> <span class="n">recipe_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sub_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">sub_dir</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_folder</span></div>
 </pre></div>
 
            </div>

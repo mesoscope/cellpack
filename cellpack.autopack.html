@@ -624,17 +624,16 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.loaders.html#module-cellpack.autopack.loaders.recipe_loader">cellpack.autopack.loaders.recipe_loader module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.recipe_loader.RecipeLoader"><code class="docutils literal notranslate"><span class="pre">RecipeLoader</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.recipe_loader.RecipeLoader.create_output_dir"><code class="docutils literal notranslate"><span class="pre">RecipeLoader.create_output_dir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.recipe_loader.RecipeLoader.default_values"><code class="docutils literal notranslate"><span class="pre">RecipeLoader.default_values</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.recipe_loader.RecipeLoader.get_all_ingredients"><code class="docutils literal notranslate"><span class="pre">RecipeLoader.get_all_ingredients()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.recipe_loader.RecipeLoader.is_key"><code class="docutils literal notranslate"><span class="pre">RecipeLoader.is_key()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.recipe_loader.RecipeLoader.resolve_inheritance"><code class="docutils literal notranslate"><span class="pre">RecipeLoader.resolve_inheritance()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.loaders.html#module-cellpack.autopack.loaders.util">cellpack.autopack.loaders.util module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.util.create_file_info_object_from_full_path"><code class="docutils literal notranslate"><span class="pre">create_file_info_object_from_full_path()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.loaders.html#module-cellpack.autopack.loaders.utils">cellpack.autopack.loaders.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.utils.create_file_info_object_from_full_path"><code class="docutils literal notranslate"><span class="pre">create_file_info_object_from_full_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cellpack.autopack.loaders.html#cellpack.autopack.loaders.utils.create_output_dir"><code class="docutils literal notranslate"><span class="pre">create_output_dir()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cellpack.autopack.loaders.html#module-cellpack.autopack.loaders.v1_v2_attribute_changes">cellpack.autopack.loaders.v1_v2_attribute_changes module</a></li>
@@ -3796,6 +3795,13 @@ along with radius and molarity for this protein.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cellpack.autopack.Recipe.Recipe.is_key">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_or_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">composition_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Recipe.html#Recipe.is_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Recipe.Recipe.is_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to find if data in composition list
+is a key or an object</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.Recipe.Recipe.printFillInfo">
 <span class="sig-name descname"><span class="pre">printFillInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/Recipe.html#Recipe.printFillInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.Recipe.Recipe.printFillInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>print the states of all recipe ingredients</p>
@@ -4895,6 +4901,11 @@ Cambridge University Press; 2nd Ed. 2004. Chapter 4, Algorithm 4.7, p 130.</p></
 <p>This mutates dct - the contents of merge_dct are added to dct (which is also returned).
 If you want to keep dct you could call it like deep_merge(copy.deepcopy(dct), merge_dct)</p>
 </dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cellpack.autopack.utils.expand_object_using_key">
+<span class="sig-prename descclassname"><span class="pre">cellpack.autopack.utils.</span></span><span class="sig-name descname"><span class="pre">expand_object_using_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_on</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/utils.html#expand_object_using_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.utils.expand_object_using_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cellpack.autopack.utils.get_distance">

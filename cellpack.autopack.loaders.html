@@ -407,11 +407,6 @@
 <dt class="sig sig-object py" id="cellpack.autopack.loaders.recipe_loader.RecipeLoader">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cellpack.autopack.loaders.recipe_loader.</span></span><span class="sig-name descname"><span class="pre">RecipeLoader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_converted_recipe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/loaders/recipe_loader.html#RecipeLoader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.loaders.recipe_loader.RecipeLoader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.loaders.recipe_loader.RecipeLoader.create_output_dir">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_output_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_base_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/loaders/recipe_loader.html#RecipeLoader.create_output_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.loaders.recipe_loader.RecipeLoader.create_output_dir" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cellpack.autopack.loaders.recipe_loader.RecipeLoader.default_values">
 <span class="sig-name descname"><span class="pre">default_values</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'bounding_box':</span> <span class="pre">[[0,</span> <span class="pre">0,</span> <span class="pre">0],</span> <span class="pre">[100,</span> <span class="pre">100,</span> <span class="pre">100]],</span> <span class="pre">'representations':</span> <span class="pre">{'atomic':</span> <span class="pre">None,</span> <span class="pre">'mesh':</span> <span class="pre">None,</span> <span class="pre">'packing':</span> <span class="pre">None}}</span></em><a class="headerlink" href="#cellpack.autopack.loaders.recipe_loader.RecipeLoader.default_values" title="Permalink to this definition">¶</a></dt>
@@ -423,13 +418,6 @@
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cellpack.autopack.loaders.recipe_loader.RecipeLoader.is_key">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_or_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">composition_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/loaders/recipe_loader.html#RecipeLoader.is_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.loaders.recipe_loader.RecipeLoader.is_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper function to find if data in composition list
-is a key or an object</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="cellpack.autopack.loaders.recipe_loader.RecipeLoader.resolve_inheritance">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">resolve_inheritance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objects</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/loaders/recipe_loader.html#RecipeLoader.resolve_inheritance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.loaders.recipe_loader.RecipeLoader.resolve_inheritance" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -437,11 +425,16 @@ is a key or an object</p>
 </dd></dl>
 
 </section>
-<section id="module-cellpack.autopack.loaders.util">
-<span id="cellpack-autopack-loaders-util-module"></span><h2>cellpack.autopack.loaders.util module<a class="headerlink" href="#module-cellpack.autopack.loaders.util" title="Permalink to this heading">¶</a></h2>
+<section id="module-cellpack.autopack.loaders.utils">
+<span id="cellpack-autopack-loaders-utils-module"></span><h2>cellpack.autopack.loaders.utils module<a class="headerlink" href="#module-cellpack.autopack.loaders.utils" title="Permalink to this heading">¶</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="cellpack.autopack.loaders.util.create_file_info_object_from_full_path">
-<span class="sig-prename descclassname"><span class="pre">cellpack.autopack.loaders.util.</span></span><span class="sig-name descname"><span class="pre">create_file_info_object_from_full_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/loaders/util.html#create_file_info_object_from_full_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.loaders.util.create_file_info_object_from_full_path" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cellpack.autopack.loaders.utils.create_file_info_object_from_full_path">
+<span class="sig-prename descclassname"><span class="pre">cellpack.autopack.loaders.utils.</span></span><span class="sig-name descname"><span class="pre">create_file_info_object_from_full_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/loaders/utils.html#create_file_info_object_from_full_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.loaders.utils.create_file_info_object_from_full_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cellpack.autopack.loaders.utils.create_output_dir">
+<span class="sig-prename descclassname"><span class="pre">cellpack.autopack.loaders.utils.</span></span><span class="sig-name descname"><span class="pre">create_output_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_base_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cellpack/autopack/loaders/utils.html#create_output_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cellpack.autopack.loaders.utils.create_output_dir" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </section>

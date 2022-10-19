@@ -328,7 +328,6 @@
 <span class="sd"># TODO: fix the save/restore grid</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span><span class="p">,</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">seed</span>
@@ -350,12 +349,11 @@
 
 <span class="kn">import</span> <span class="nn">cellpack.autopack</span> <span class="k">as</span> <span class="nn">autopack</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.MeshStore</span> <span class="kn">import</span> <span class="n">MeshStore</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.ingredient</span> <span class="kn">import</span> <span class="n">Ingredient</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.interface_objects.ingredient_types</span> <span class="kn">import</span> <span class="n">INGREDIENT_TYPE</span>
-<span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.recipe_loader</span> <span class="kn">import</span> <span class="n">RecipeLoader</span>
+<span class="kn">import</span> <span class="nn">cellpack.autopack.ingredient</span> <span class="k">as</span> <span class="nn">ingredient</span>
+<span class="kn">from</span> <span class="nn">cellpack.autopack.loaders.utils</span> <span class="kn">import</span> <span class="n">create_output_dir</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">cmp_to_key</span><span class="p">,</span>
-    <span class="n">deep_merge</span><span class="p">,</span>
+    <span class="n">expand_object_using_key</span><span class="p">,</span>
     <span class="n">ingredient_compare0</span><span class="p">,</span>
     <span class="n">ingredient_compare1</span><span class="p">,</span>
     <span class="n">ingredient_compare2</span><span class="p">,</span>
@@ -367,13 +365,6 @@
 <span class="kn">from</span> <span class="nn">.octree</span> <span class="kn">import</span> <span class="n">Octree</span>
 <span class="kn">from</span> <span class="nn">.Gradient</span> <span class="kn">import</span> <span class="n">Gradient</span>
 <span class="kn">from</span> <span class="nn">.transformation</span> <span class="kn">import</span> <span class="n">euler_from_matrix</span>
-<span class="kn">from</span> <span class="nn">.ingredient</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">MultiSphereIngr</span><span class="p">,</span>
-    <span class="n">MultiCylindersIngr</span><span class="p">,</span>
-    <span class="n">SingleSphereIngr</span><span class="p">,</span>
-    <span class="n">SingleCubeIngr</span><span class="p">,</span>
-    <span class="n">SingleCylinderIngr</span><span class="p">,</span>
-<span class="p">)</span>
 
 <span class="c1"># backward compatibility with kevin method</span>
 <span class="kn">from</span> <span class="nn">cellpack.autopack.BaseGrid</span> <span class="kn">import</span> <span class="n">BaseGrid</span> <span class="k">as</span> <span class="n">BaseGrid</span>
@@ -433,9 +424,7 @@
 
         <span class="c1"># saving/pickle option</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveResult</span> <span class="o">=</span> <span class="s2">&quot;out&quot;</span> <span class="ow">in</span> <span class="n">config</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="o">.</span><span class="n">create_output_dir</span><span class="p">(</span>
-            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;out&quot;</span><span class="p">],</span> <span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;place_method&quot;</span><span class="p">]</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">=</span> <span class="n">create_output_dir</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;out&quot;</span><span class="p">],</span> <span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;place_method&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span><span class="si">}</span><span class="s2">_grid&quot;</span>
 
@@ -587,8 +576,9 @@
     <span class="k">def</span> <span class="nf">_prep_ingredient_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">composition_info</span><span class="p">,</span> <span class="n">ingredient_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">objects_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;objects&quot;</span><span class="p">]</span>
         <span class="n">object_key</span> <span class="o">=</span> <span class="n">composition_info</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">]</span>
-        <span class="n">base_object</span> <span class="o">=</span> <span class="n">objects_dict</span><span class="p">[</span><span class="n">object_key</span><span class="p">]</span>
-        <span class="n">ingredient_info</span> <span class="o">=</span> <span class="n">deep_merge</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">base_object</span><span class="p">),</span> <span class="n">composition_info</span><span class="p">)</span>
+        <span class="n">ingredient_info</span> <span class="o">=</span> <span class="n">expand_object_using_key</span><span class="p">(</span>
+            <span class="n">composition_info</span><span class="p">,</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="n">objects_dict</span>
+        <span class="p">)</span>
         <span class="n">ingredient_info</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">ingredient_name</span> <span class="k">if</span> <span class="n">ingredient_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">object_key</span>
         <span class="p">)</span>
@@ -603,9 +593,7 @@
         <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>  <span class="c1"># check if entry in compositions has regions</span>
             <span class="n">recipe</span> <span class="o">=</span> <span class="n">Recipe</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">compartment_key</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">key_or_dict</span> <span class="ow">in</span> <span class="n">obj_keys</span><span class="p">:</span>
-                <span class="n">is_key</span><span class="p">,</span> <span class="n">composition_info</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="o">.</span><span class="n">is_key</span><span class="p">(</span>
-                    <span class="n">key_or_dict</span><span class="p">,</span> <span class="n">composition_dict</span>
-                <span class="p">)</span>
+                <span class="n">is_key</span><span class="p">,</span> <span class="n">composition_info</span> <span class="o">=</span> <span class="n">Recipe</span><span class="o">.</span><span class="n">is_key</span><span class="p">(</span><span class="n">key_or_dict</span><span class="p">,</span> <span class="n">composition_dict</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">is_key</span> <span class="ow">and</span> <span class="n">key_or_dict</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_keys</span><span class="p">:</span>
                     <span class="n">key</span> <span class="o">=</span> <span class="n">key_or_dict</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_step_down</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -633,7 +621,7 @@
                 <span class="s2">&quot;regions&quot;</span><span class="p">,</span> <span class="p">{}</span>
             <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>  <span class="c1"># check if entry in compositions has regions</span>
                 <span class="k">for</span> <span class="n">key_or_dict</span> <span class="ow">in</span> <span class="n">obj_keys</span><span class="p">:</span>
-                    <span class="n">is_key</span><span class="p">,</span> <span class="n">composition_info</span> <span class="o">=</span> <span class="n">RecipeLoader</span><span class="o">.</span><span class="n">is_key</span><span class="p">(</span>
+                    <span class="n">is_key</span><span class="p">,</span> <span class="n">composition_info</span> <span class="o">=</span> <span class="n">Recipe</span><span class="o">.</span><span class="n">is_key</span><span class="p">(</span>
                         <span class="n">key_or_dict</span><span class="p">,</span> <span class="n">composition_dict</span>
                     <span class="p">)</span>
                     <span class="k">if</span> <span class="n">is_key</span> <span class="ow">and</span> <span class="n">key_or_dict</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_keys</span><span class="p">:</span>
@@ -1281,51 +1269,8 @@
         <span class="k">if</span> <span class="s2">&quot;place_method&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">arguments</span><span class="p">:</span>
             <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;place_method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_method</span>
         <span class="n">ingredient_type</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">SINGLE_SPHERE</span><span class="p">:</span>
-            <span class="n">radius</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;radius&quot;</span><span class="p">]</span>
-            <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
-                <span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
-            <span class="p">)</span>
-            <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleSphereIngr</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">MULTI_SPHERE</span><span class="p">:</span>
-            <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
-                <span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
-            <span class="p">)</span>
-            <span class="n">ingr</span> <span class="o">=</span> <span class="n">MultiSphereIngr</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">MULTI_CYLINDER</span><span class="p">:</span>
-            <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
-                <span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
-            <span class="p">)</span>
-            <span class="n">ingr</span> <span class="o">=</span> <span class="n">MultiCylindersIngr</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">SINGLE_CUBE</span><span class="p">:</span>
-            <span class="n">bounds</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;bounds&quot;</span><span class="p">]</span>
-            <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
-                <span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
-            <span class="p">)</span>
-            <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleCubeIngr</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">SINGLE_CYLINDER</span><span class="p">:</span>
-            <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
-                <span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
-            <span class="p">)</span>
-            <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleCylinderIngr</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">GROW</span><span class="p">:</span>
-            <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
-                <span class="n">GrowIngredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
-            <span class="p">)</span>
-            <span class="n">ingr</span> <span class="o">=</span> <span class="n">GrowIngredient</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ingredient_type</span> <span class="o">==</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">GROW</span><span class="p">:</span>
-            <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
-                <span class="n">GrowIngredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
-            <span class="p">)</span>
-            <span class="n">ingr</span> <span class="o">=</span> <span class="n">ActinIngredient</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">radius</span> <span class="o">=</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;radius&quot;</span><span class="p">]</span>
-            <span class="n">arguments</span> <span class="o">=</span> <span class="n">IOutils</span><span class="o">.</span><span class="n">IOingredientTool</span><span class="o">.</span><span class="n">clean_arguments</span><span class="p">(</span>
-                <span class="n">Ingredient</span><span class="o">.</span><span class="n">ARGUMENTS</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span>
-            <span class="p">)</span>
-            <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">INGREDIENT_TYPE</span><span class="o">.</span><span class="n">SINGLE_SPHERE</span>
-            <span class="n">ingr</span> <span class="o">=</span> <span class="n">SingleSphereIngr</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="n">ingredient_class</span> <span class="o">=</span> <span class="n">ingredient</span><span class="o">.</span><span class="n">get_ingredient_class</span><span class="p">(</span><span class="n">ingredient_type</span><span class="p">)</span>
+        <span class="n">ingr</span> <span class="o">=</span> <span class="n">ingredient_class</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="s2">&quot;gradient&quot;</span> <span class="ow">in</span> <span class="n">arguments</span>
             <span class="ow">and</span> <span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;gradient&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>

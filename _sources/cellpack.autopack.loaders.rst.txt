@@ -28,10 +28,10 @@ cellpack.autopack.loaders.recipe\_loader module
    :undoc-members:
    :show-inheritance:
 
-cellpack.autopack.loaders.util module
--------------------------------------
+cellpack.autopack.loaders.utils module
+--------------------------------------
 
-.. automodule:: cellpack.autopack.loaders.util
+.. automodule:: cellpack.autopack.loaders.utils
    :members:
    :undoc-members:
    :show-inheritance:

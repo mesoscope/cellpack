@@ -341,6 +341,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
+<div class="viewcode-block" id="Recipe.is_key"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.is_key">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_key</span><span class="p">(</span><span class="n">key_or_dict</span><span class="p">,</span> <span class="n">composition_dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function to find if data in composition list</span>
+<span class="sd">        is a key or an object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">is_key</span> <span class="o">=</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key_or_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_key</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">key_or_dict</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">composition_dict</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> is not in composition dictionary&quot;</span><span class="p">)</span>
+            <span class="n">composition_info</span> <span class="o">=</span> <span class="n">composition_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">composition_info</span> <span class="o">=</span> <span class="n">key_or_dict</span>
+        <span class="k">return</span> <span class="n">is_key</span><span class="p">,</span> <span class="n">composition_info</span></div>
+
 <div class="viewcode-block" id="Recipe.resolve_composition"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Recipe.Recipe.resolve_composition">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">resolve_composition</span><span class="p">(</span><span class="n">recipe_data</span><span class="p">):</span>
         <span class="n">composition_dict</span> <span class="o">=</span> <span class="n">recipe_data</span><span class="p">[</span><span class="s2">&quot;composition&quot;</span><span class="p">]</span>
