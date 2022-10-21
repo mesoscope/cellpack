@@ -1,4 +1,5 @@
 import collections
+import copy
 import numpy
 
 
@@ -137,3 +138,11 @@ def deep_merge(dct, merge_dct):
         else:
             dct[k] = merge_dct[k]
     return dct
+
+
+def expand_object_using_key(current_object, expand_on, lookup_dict):
+    object_key = current_object[expand_on]
+    base_object = lookup_dict[object_key]
+    new_object = deep_merge(copy.deepcopy(base_object), current_object)
+    del new_object[expand_on]
+    return new_object

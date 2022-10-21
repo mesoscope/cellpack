@@ -1,4 +1,4 @@
-from cellpack.autopack.interface_objects.meta_enum import MetaEnum
+from .meta_enum import MetaEnum
 
 
 class INGREDIENT_TYPE(MetaEnum):

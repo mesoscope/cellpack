@@ -43,7 +43,7 @@ attributes_move_to_composition = [
     "priority",
 ]
 
-required_attributes = {"SingleSphere": ["radii"]}
+required_attributes = {"SingleSphere": ["radii"], "MultiSphere": ["radii"]}
 
 ingredient_types_map = {
     "SingleSphere": INGREDIENT_TYPE.SINGLE_SPHERE,

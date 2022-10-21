@@ -37,6 +37,7 @@ class ConfigLoader(object):
         "place_method": "jitter",
         "rng_seed": None,
         "save_analyze_result": False,
+        "save_converted_recipe": False,
         "show_grid_plot": False,
         "show_sphere_trees": False,
         "spacing": None,

@@ -46,7 +46,6 @@
 # TODO: fix the save/restore grid
 """
 
-import copy
 import os
 from time import time
 from random import random, uniform, seed
@@ -68,12 +67,11 @@ from panda3d.bullet import BulletRigidBodyNode
 
 import cellpack.autopack as autopack
 from cellpack.autopack.MeshStore import MeshStore
-from cellpack.autopack.ingredient import Ingredient
-from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
-from cellpack.autopack.loaders.recipe_loader import RecipeLoader
+import cellpack.autopack.ingredient as ingredient
+from cellpack.autopack.loaders.utils import create_output_dir
 from cellpack.autopack.utils import (
     cmp_to_key,
-    deep_merge,
+    expand_object_using_key,
     ingredient_compare0,
     ingredient_compare1,
     ingredient_compare2,
@@ -85,13 +83,6 @@ from cellpack.autopack import IOutils
 from .octree import Octree
 from .Gradient import Gradient
 from .transformation import euler_from_matrix
-from .ingredient import (
-    MultiSphereIngr,
-    MultiCylindersIngr,
-    SingleSphereIngr,
-    SingleCubeIngr,
-    SingleCylinderIngr,
-)
 
 # backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
@@ -302,8 +293,9 @@ class Environment(CompartmentList):
     def _prep_ingredient_info(self, composition_info, ingredient_name=None):
         objects_dict = self.recipe_data["objects"]
         object_key = composition_info["object"]
-        base_object = objects_dict[object_key]
-        ingredient_info = deep_merge(copy.deepcopy(base_object), composition_info)
+        ingredient_info = expand_object_using_key(
+            composition_info, "object", objects_dict
+        )
         ingredient_info["name"] = (
             ingredient_name if ingredient_name is not None else object_key
         )
@@ -318,9 +310,7 @@ class Environment(CompartmentList):
         ).items():  # check if entry in compositions has regions
             recipe = Recipe(name=f"{compartment_key}_{region_name}")
             for key_or_dict in obj_keys:
-                is_key, composition_info = RecipeLoader.is_key(
-                    key_or_dict, composition_dict
-                )
+                is_key, composition_info = Recipe.is_key(key_or_dict, composition_dict)
                 if is_key and key_or_dict in self.compartment_keys:
                     key = key_or_dict
                     self._step_down(key)
@@ -348,7 +338,7 @@ class Environment(CompartmentList):
                 "regions", {}
             ).items():  # check if entry in compositions has regions
                 for key_or_dict in obj_keys:
-                    is_key, composition_info = RecipeLoader.is_key(
+                    is_key, composition_info = Recipe.is_key(
                         key_or_dict, composition_dict
                     )
                     if is_key and key_or_dict in self.compartment_keys:
@@ -997,51 +987,8 @@ class Environment(CompartmentList):
         if "place_method" not in arguments:
             arguments["place_method"] = self.place_method
         ingredient_type = arguments["type"]
-
-        if ingredient_type == INGREDIENT_TYPE.SINGLE_SPHERE:
-            radius = arguments["radius"]
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                Ingredient.ARGUMENTS, **arguments
-            )
-            ingr = SingleSphereIngr(radius, **arguments)
-        elif ingredient_type == INGREDIENT_TYPE.MULTI_SPHERE:
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                Ingredient.ARGUMENTS, **arguments
-            )
-            ingr = MultiSphereIngr(**arguments)
-        elif ingredient_type == INGREDIENT_TYPE.MULTI_CYLINDER:
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                Ingredient.ARGUMENTS, **arguments
-            )
-            ingr = MultiCylindersIngr(**arguments)
-        elif ingredient_type == INGREDIENT_TYPE.SINGLE_CUBE:
-            bounds = arguments["bounds"]
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                Ingredient.ARGUMENTS, **arguments
-            )
-            ingr = SingleCubeIngr(bounds, **arguments)
-        elif ingredient_type == INGREDIENT_TYPE.SINGLE_CYLINDER:
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                Ingredient.ARGUMENTS, **arguments
-            )
-            ingr = SingleCylinderIngr(**arguments)
-        elif ingredient_type == INGREDIENT_TYPE.GROW:
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                GrowIngredient.ARGUMENTS, **arguments
-            )
-            ingr = GrowIngredient(**arguments)
-        elif ingredient_type == INGREDIENT_TYPE.GROW:
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                GrowIngredient.ARGUMENTS, **arguments
-            )
-            ingr = ActinIngredient(**arguments)
-        else:
-            radius = arguments["radius"]
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                Ingredient.ARGUMENTS, **arguments
-            )
-            arguments["type"] = INGREDIENT_TYPE.SINGLE_SPHERE
-            ingr = SingleSphereIngr(radius, **arguments)
+        ingredient_class = ingredient.get_ingredient_class(ingredient_type)
+        ingr = ingredient_class(**arguments)
         if (
             "gradient" in arguments
             and arguments["gradient"] != ""
