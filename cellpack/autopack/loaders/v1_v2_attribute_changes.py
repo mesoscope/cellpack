@@ -12,7 +12,7 @@ v1_to_v2_name_map = {
     "packingMode": "packing_mode",
     "packingPriority": "priority",
     "perturbAxisAmplitude": "perturb_axis_amplitude",
-    "placeType": "place_type",
+    "placeType": "place_method",
     "principalVector": "principal_vector",
     "rejectionThreshold": "rejection_threshold",
     "rotAxis": "rotation_axis",
