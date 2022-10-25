@@ -12,6 +12,10 @@ from .v1_v2_attribute_changes import (
     unused_attributes_list,
 )
 
+"""
+we will be able to load older version recipes by migrating them to the new schema.
+we are converting each part of older version data to the new structure in this file
+"""
 
 def get_representations(old_ingredient):
     representations = default_recipe_values["representations"].copy()
