@@ -17,6 +17,7 @@ we will be able to load older version recipes by migrating them to the new schem
 we are converting each part of older version data to the new structure in this file
 """
 
+
 def get_representations(old_ingredient):
     representations = default_recipe_values["representations"].copy()
     if "sphereFile" in old_ingredient and old_ingredient["sphereFile"] is not None:
