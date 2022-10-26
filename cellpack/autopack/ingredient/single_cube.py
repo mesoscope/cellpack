@@ -209,10 +209,9 @@ class SingleCubeIngr(Ingredient):
 
     def collides_with_compartment(
         self,
-        jtrans,
-        rotMat,
-        gridPointsCoords,
         env,
+        jtrans,
+        rotation_matrix,
     ):
         """
         Check cube for collision
@@ -222,9 +221,9 @@ class SingleCubeIngr(Ingredient):
         centers1 = self.lower_bound
         centers2 = self.upper_bound
         edges = self.edges
-        cent1T = self.transformPoints(jtrans, rotMat, centers1)[0]  # bb1
-        cent2T = self.transformPoints(jtrans, rotMat, centers2)[0]  # bb2
-        center = self.transformPoints(jtrans, rotMat, [self.center])[0]
+        cent1T = self.transformPoints(jtrans, rotation_matrix, centers1)[0]  # bb1
+        cent2T = self.transformPoints(jtrans, rotation_matrix, centers2)[0]  # bb2
+        center = self.transformPoints(jtrans, rotation_matrix, [self.center])[0]
 
         x1, y1, z1 = cent1T
         x2, y2, z2 = cent2T

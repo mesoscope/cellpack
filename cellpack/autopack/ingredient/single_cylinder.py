@@ -164,11 +164,9 @@ class SingleCylinderIngr(Ingredient):
 
     def collides_with_compartment(
         self,
-        jtrans,
-        rotMat,
-        level,
-        gridPointsCoords,
         env,
+        jtrans,
+        rotation_matrix=None,
     ):
         """
         Check cylinders for collision
@@ -176,8 +174,8 @@ class SingleCylinderIngr(Ingredient):
         centers1 = (self.positions[level],)
         centers2 = (self.positions2[level],)
         radii = (self.radii[level],)
-        cent1T = self.transformPoints(jtrans, rotMat, centers1)
-        cent2T = self.transformPoints(jtrans, rotMat, centers2)
+        cent1T = self.transformPoints(jtrans, rotation_matrix, centers1)
+        cent2T = self.transformPoints(jtrans, rotation_matrix, centers2)
 
         cylNum = 0
         for radc, p1, p2 in zip(radii, cent1T, cent2T):
@@ -193,7 +191,7 @@ class SingleCylinderIngr(Ingredient):
             pointsInCube = env.grid.getPointsInCube(bb, posc, radt, info=True)
 
             # check for collisions with cylinder
-            pd = numpy.take(gridPointsCoords, pointsInCube, 0) - p1
+            pd = numpy.take(env.grid.gridPointsCoords, pointsInCube, 0) - p1
             dotp = numpy.dot(pd, vect)
             #            rad2 = radc*radc
             #            dsq = numpy.sum(pd*pd, 1) - dotp*dotp/lengthsq

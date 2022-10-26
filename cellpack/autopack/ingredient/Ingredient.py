@@ -380,7 +380,7 @@ class Ingredient(Agent):
         if mesh_path is not None:
             if meshType == "file":
                 self.mesh = self.getMesh(mesh_path, meshName, mesh_store)
-                self.log.info("OK got", self.mesh)
+                self.log.info(f"OK got {self.mesh}")
                 if self.mesh is None:
                     # display a message ?
                     self.log.warning("no geometries for ingredient " + self.name)
@@ -767,13 +767,13 @@ class Ingredient(Agent):
             # and less than the cutoff. Ie an array where the distances are all very small.
             # this also masks the array to only include points in the current commpartment
             all_distances = numpy.array(distances)[free_points]
-            mask = numpy.logical_and(
+            distance_mask = numpy.logical_and(
                 numpy.less_equal(all_distances, cuttoff),
                 numpy.greater_equal(all_distances, cuttoff / 2.0),
             )
             # mask compartments Id as well
-            mask_comp = numpy.array(comp_ids)[free_points] == current_comp_id
-            mask_ind = numpy.nonzero(numpy.logical_and(mask, mask_comp))[0]
+            compartment_mask = numpy.array(comp_ids)[free_points] == current_comp_id
+            mask_ind = numpy.nonzero(numpy.logical_and(distance_mask, compartment_mask))[0]
             allIngrPts = numpy.array(free_points)[mask_ind].tolist()
             allIngrDist = numpy.array(distances)[mask_ind].tolist()
         else:
@@ -789,14 +789,21 @@ class Ingredient(Agent):
 
             # use periodic update according size ratio grid
             update = self.checkIfUpdate(nbFreePoints, threshold)
+            self.log.info(f"check if update: {update}")
             if update:
                 # Only return points that aren't so close to a surface that we know the
                 # ingredient won't fit
-                for i in range(array_length):
-                    pt_index = starting_array[i]
-                    d = distances[pt_index]
-                    if comp_ids[pt_index] == current_comp_id and d >= cuttoff:
-                        allIngrPts.append(pt_index)
+                all_distances = numpy.array(distances)[free_points]
+                distance_mask = numpy.greater_equal(all_distances, cuttoff)
+                compartment_mask = numpy.array(comp_ids)[free_points] == current_comp_id
+                mask_ind = numpy.nonzero(numpy.logical_and(distance_mask, compartment_mask))[0]
+                allIngrPts = numpy.array(free_points)[mask_ind].tolist()
+
+                # for i in range(array_length):
+                #     pt_index = starting_array[i]
+                #     d = distances[pt_index]
+                #     if comp_ids[pt_index] == current_comp_id and d >= cuttoff:
+                #         allIngrPts.append(pt_index)
                 self.allIngrPts = allIngrPts
             else:
                 if len(self.allIngrPts) > 0:
@@ -1072,12 +1079,8 @@ class Ingredient(Agent):
 
     def far_enough_from_surfaces(self, point, cutoff):
         # check if clear of all other compartment surfaces
-
         ingredient_compartment = self.get_compartment(self.env)
         ingredient_compartment_id = self.compNum
-        compartment_collision = self.collides_with_compartment(point, self.env)
-        if compartment_collision:
-            return False
         for compartment in self.env.compartments:
             if (
                 ingredient_compartment_id > 0
@@ -2195,6 +2198,8 @@ class Ingredient(Agent):
                         new_dist_points,
                         newDistPoints,
                     )
+            if self.collides_with_compartment(env, packing_location, packing_rotation):
+                continue
 
             if is_realtime:
                 box = self.vi.getObject("collBox")
@@ -2333,7 +2338,7 @@ class Ingredient(Agent):
 
     def pandaBullet_place(
         self,
-        histoVol,
+        env,
         ptInd,
         distance,
         dpad,
@@ -2348,7 +2353,7 @@ class Ingredient(Agent):
         """
         drop the ingredient on grid point ptInd
         """
-        histoVol.setupPanda()
+        env.setupPanda()
         is_realtime = moving is not None
         # we need to change here in case tilling, the pos,rot ade deduced fromte tilling.
         if self.packing_mode[-4:] == "tile":
@@ -2367,19 +2372,19 @@ class Ingredient(Agent):
                 else:
                     return False, None, None, {}, {}  # ,targetPoint, rotMat
             else:
-                self.tilling.init_seed(histoVol.seed_used)
+                self.tilling.init_seed(env.seed_used)
 
         packing_location = None
         level = self.collisionLevel
 
         for jitter_attempt in range(self.jitter_attempts):
-            histoVol.totnbJitter += 1
+            env.totnbJitter += 1
 
             (
                 packing_location,
                 packing_rotation,
             ) = self.get_new_jitter_location_and_rotation(
-                histoVol,
+                env,
                 target_point,
                 rot_matrix,
             )
@@ -2399,8 +2404,8 @@ class Ingredient(Agent):
                 packing_location
             )  # includes periodic points, if appropriate
             for pt in points_to_check:
-                histoVol.callFunction(
-                    histoVol.moveRBnode,
+                env.callFunction(
+                    env.moveRBnode,
                     (
                         rbnode,
                         pt,
@@ -2430,6 +2435,8 @@ class Ingredient(Agent):
                     distance,
                 )
                 collision_results.extend([collisionComp])
+            if self.collides_with_compartment(env, packing_location, packing_rotation):
+                continue
 
             # got all the way through the checks with no collision
             if True not in collision_results:

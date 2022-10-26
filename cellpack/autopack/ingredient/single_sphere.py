@@ -160,8 +160,9 @@ class SingleSphereIngr(Ingredient):
 
     def collides_with_compartment(
         self,
-        jtrans,
         env,
+        jtrans,
+        rotation_matrix=None,
     ):
         """
         Check spheres for collision

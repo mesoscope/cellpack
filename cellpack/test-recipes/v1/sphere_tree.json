@@ -51,7 +51,7 @@
                     0.972
                 ],
                 "meshFile": null,
-                "sphereFile": "./test.sph",
+                "sphereFile": "cellpack/test-geometry/test.sph",
                 "weight": 0.2,
                 "orientBiasRotRangeMin": -3.1415927,
                 "radii": [
