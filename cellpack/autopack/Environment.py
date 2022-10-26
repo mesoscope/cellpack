@@ -415,7 +415,6 @@ class Environment(CompartmentList):
         self.grid.freePoints = freePoints[:]
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
-        self.saveGridToFile(self.grid_file_out)
         self.saveGridLogsAsJson(self.resultfile + "_grid-data.json")
         self.grid.result_filename = self.grid_file_out
         self.collectResultPerIngredient()
