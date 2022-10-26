@@ -1230,7 +1230,9 @@ class Compartment(CompartmentList):
         mesh = mesh_store.get_mesh(self.gname)
         # voxelized
         self.log.info(f"{self.name}: CREATED MESH")
-        trimesh_grid_surface = creation.voxelize(mesh, pitch=env.grid.gridSpacing)
+        trimesh_grid_surface = creation.voxelize(
+            mesh, pitch=env.grid.gridSpacing / 2
+        ).hollow()
         self.log.info("VOXELIZED MESH")
         # the main loop
         tree = spatial.cKDTree(grdPos, leafsize=10)
@@ -1246,6 +1248,8 @@ class Compartment(CompartmentList):
                 grdPos.item((ptInd, 1)),
                 grdPos.item((ptInd, 2)),
             ]
+            if idarray[ptInd] > 0:
+                continue
             if trimesh_grid_surface.is_filled(coord):
                 idarray.itemset(ptInd, number)
             elif mesh_store.contains_point(self.gname, coord):

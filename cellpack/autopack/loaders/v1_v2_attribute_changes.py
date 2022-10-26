@@ -44,8 +44,7 @@ attributes_move_to_composition = [
 ]
 
 
-required_attributes = {"SingleSphere": ["radii"], "MultiSphere": ["radii"], "mesh": []}
-
+required_attributes = {"SingleSphere": ["radii"],  "MultiSphere": ["sphereFile"], "mesh": []}
 
 ingredient_types_map = {
     "SingleSphere": INGREDIENT_TYPE.SINGLE_SPHERE,
