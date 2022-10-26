@@ -125,7 +125,7 @@ def get_and_store_v2_object(ingredient_key, ingredient_data, region_list, object
         ingredient_key, converted_ingredient
     )
     if len(composition_info) == 1:
-        # Compartments will always be a key referencing another 
+        # Compartments will always be a key referencing another
         # object within the composition dictionary
         # Ingredients will be small dictionaries stored in an array
         region_list.append(ingredient_key)
