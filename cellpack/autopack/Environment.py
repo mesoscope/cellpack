@@ -403,7 +403,6 @@ class Environment(CompartmentList):
         self.grid.freePoints = freePoints[:]
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
-        self.saveGridToFile(self.grid_file_out)
         self.saveGridLogsAsJson(self.resultfile + "_grid-data.json")
         self.grid.result_filename = self.grid_file_out
         self.collectResultPerIngredient()
@@ -1205,7 +1204,7 @@ class Environment(CompartmentList):
     def buildGrid(
         self,
         rebuild=True,
-        lookup=2,
+        lookup=0,
     ):
         """
         The main build grid function. Setup the main grid and merge the
