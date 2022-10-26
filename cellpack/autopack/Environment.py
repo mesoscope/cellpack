@@ -1260,7 +1260,7 @@ class Environment(CompartmentList):
     def buildGrid(
         self,
         rebuild=True,
-        lookup=2,
+        lookup=0,
     ):
         """
         The main build grid function. Setup the main grid and merge the
