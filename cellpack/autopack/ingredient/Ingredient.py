@@ -773,7 +773,9 @@ class Ingredient(Agent):
             )
             # mask compartments Id as well
             compartment_mask = numpy.array(comp_ids)[free_points] == current_comp_id
-            mask_ind = numpy.nonzero(numpy.logical_and(distance_mask, compartment_mask))[0]
+            mask_ind = numpy.nonzero(
+                numpy.logical_and(distance_mask, compartment_mask)
+            )[0]
             allIngrPts = numpy.array(free_points)[mask_ind].tolist()
             allIngrDist = numpy.array(distances)[mask_ind].tolist()
         else:
@@ -793,17 +795,11 @@ class Ingredient(Agent):
             if update:
                 # Only return points that aren't so close to a surface that we know the
                 # ingredient won't fit
-                all_distances = numpy.array(distances)[free_points]
-                distance_mask = numpy.greater_equal(all_distances, cuttoff)
-                compartment_mask = numpy.array(comp_ids)[free_points] == current_comp_id
-                mask_ind = numpy.nonzero(numpy.logical_and(distance_mask, compartment_mask))[0]
-                allIngrPts = numpy.array(free_points)[mask_ind].tolist()
-
-                # for i in range(array_length):
-                #     pt_index = starting_array[i]
-                #     d = distances[pt_index]
-                #     if comp_ids[pt_index] == current_comp_id and d >= cuttoff:
-                #         allIngrPts.append(pt_index)
+                for i in range(array_length):
+                    pt_index = starting_array[i]
+                    d = distances[pt_index]
+                    if comp_ids[pt_index] == current_comp_id and d >= cuttoff:
+                        allIngrPts.append(pt_index)
                 self.allIngrPts = allIngrPts
             else:
                 if len(self.allIngrPts) > 0:

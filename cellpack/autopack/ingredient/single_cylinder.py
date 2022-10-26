@@ -171,6 +171,7 @@ class SingleCylinderIngr(Ingredient):
         """
         Check cylinders for collision
         """
+        level = self.deepest_level
         centers1 = (self.positions[level],)
         centers2 = (self.positions2[level],)
         radii = (self.radii[level],)

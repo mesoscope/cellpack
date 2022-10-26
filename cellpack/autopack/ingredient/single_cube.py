@@ -237,8 +237,8 @@ class SingleCubeIngr(Ingredient):
 
         pointsInCube = env.grid.getPointsInCube(bb, posc, radt)
 
-        pd = numpy.take(gridPointsCoords, pointsInCube, 0) - center
-        m = numpy.matrix(numpy.array(rotMat).reshape(4, 4))  #
+        pd = numpy.take(env.grid.gridPointsCoords, pointsInCube, 0) - center
+        m = numpy.matrix(numpy.array(rotation_matrix).reshape(4, 4))  #
         mat = m.I
         rpd = ApplyMatrix(pd, mat)
         res = numpy.less_equal(numpy.fabs(rpd), edges / 2.0)
