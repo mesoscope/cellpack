@@ -661,8 +661,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">mesh_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">meshType</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMesh</span><span class="p">(</span><span class="n">mesh_path</span><span class="p">,</span> <span class="n">meshName</span><span class="p">)</span>  <span class="c1"># self.name)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;OK got&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getMesh</span><span class="p">(</span><span class="n">mesh_path</span><span class="p">,</span> <span class="n">meshName</span><span class="p">,</span> <span class="n">mesh_store</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OK got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="c1"># display a message ?</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;no geometries for ingredient &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -826,6 +826,7 @@
         <span class="k">elif</span> <span class="n">file_extension</span> <span class="o">==</span> <span class="s2">&quot;.dae&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;read dae withHelper&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">helper</span><span class="p">,</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="p">)</span>
             <span class="c1"># use the host helper if any to read</span>
+            <span class="k">return</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="n">helper</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 
                 <span class="c1"># need to get the mesh directly. Only possible if dae or dejavu format</span>
@@ -1048,13 +1049,15 @@
             <span class="c1"># and less than the cutoff. Ie an array where the distances are all very small.</span>
             <span class="c1"># this also masks the array to only include points in the current commpartment</span>
             <span class="n">all_distances</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">distances</span><span class="p">)[</span><span class="n">free_points</span><span class="p">]</span>
-            <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+            <span class="n">distance_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
                 <span class="n">numpy</span><span class="o">.</span><span class="n">less_equal</span><span class="p">(</span><span class="n">all_distances</span><span class="p">,</span> <span class="n">cuttoff</span><span class="p">),</span>
                 <span class="n">numpy</span><span class="o">.</span><span class="n">greater_equal</span><span class="p">(</span><span class="n">all_distances</span><span class="p">,</span> <span class="n">cuttoff</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">),</span>
             <span class="p">)</span>
             <span class="c1"># mask compartments Id as well</span>
-            <span class="n">mask_comp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">comp_ids</span><span class="p">)[</span><span class="n">free_points</span><span class="p">]</span> <span class="o">==</span> <span class="n">current_comp_id</span>
-            <span class="n">mask_ind</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">mask_comp</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">compartment_mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">comp_ids</span><span class="p">)[</span><span class="n">free_points</span><span class="p">]</span> <span class="o">==</span> <span class="n">current_comp_id</span>
+            <span class="n">mask_ind</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">distance_mask</span><span class="p">,</span> <span class="n">compartment_mask</span><span class="p">)</span>
+            <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">allIngrPts</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">free_points</span><span class="p">)[</span><span class="n">mask_ind</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             <span class="n">allIngrDist</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">distances</span><span class="p">)[</span><span class="n">mask_ind</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1070,6 +1073,7 @@
 
             <span class="c1"># use periodic update according size ratio grid</span>
             <span class="n">update</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkIfUpdate</span><span class="p">(</span><span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;check if update: </span><span class="si">{</span><span class="n">update</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
                 <span class="c1"># Only return points that aren&#39;t so close to a surface that we know the</span>
                 <span class="c1"># ingredient won&#39;t fit</span>
@@ -1353,12 +1357,8 @@
 
 <div class="viewcode-block" id="Ingredient.far_enough_from_surfaces"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.far_enough_from_surfaces">[docs]</a>    <span class="k">def</span> <span class="nf">far_enough_from_surfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
         <span class="c1"># check if clear of all other compartment surfaces</span>
-
         <span class="n">ingredient_compartment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_compartment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">)</span>
         <span class="n">ingredient_compartment_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span>
-        <span class="n">compartment_collision</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collides_with_compartment</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">compartment_collision</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">compartment</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span>
                 <span class="n">ingredient_compartment_id</span> <span class="o">&gt;</span> <span class="mi">0</span>
@@ -2476,6 +2476,8 @@
                         <span class="n">new_dist_points</span><span class="p">,</span>
                         <span class="n">newDistPoints</span><span class="p">,</span>
                     <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">collides_with_compartment</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">packing_location</span><span class="p">,</span> <span class="n">packing_rotation</span><span class="p">):</span>
+                <span class="k">continue</span>
 
             <span class="k">if</span> <span class="n">is_realtime</span><span class="p">:</span>
                 <span class="n">box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">getObject</span><span class="p">(</span><span class="s2">&quot;collBox&quot;</span><span class="p">)</span>
@@ -2614,7 +2616,7 @@
 
 <div class="viewcode-block" id="Ingredient.pandaBullet_place"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.Ingredient.Ingredient.pandaBullet_place">[docs]</a>    <span class="k">def</span> <span class="nf">pandaBullet_place</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">histoVol</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">,</span>
         <span class="n">ptInd</span><span class="p">,</span>
         <span class="n">distance</span><span class="p">,</span>
         <span class="n">dpad</span><span class="p">,</span>
@@ -2629,7 +2631,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        drop the ingredient on grid point ptInd</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">histoVol</span><span class="o">.</span><span class="n">setupPanda</span><span class="p">()</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">setupPanda</span><span class="p">()</span>
         <span class="n">is_realtime</span> <span class="o">=</span> <span class="n">moving</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="c1"># we need to change here in case tilling, the pos,rot ade deduced fromte tilling.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing_mode</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;tile&quot;</span><span class="p">:</span>
@@ -2648,19 +2650,19 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{}</span>  <span class="c1"># ,targetPoint, rotMat</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">tilling</span><span class="o">.</span><span class="n">init_seed</span><span class="p">(</span><span class="n">histoVol</span><span class="o">.</span><span class="n">seed_used</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tilling</span><span class="o">.</span><span class="n">init_seed</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">seed_used</span><span class="p">)</span>
 
         <span class="n">packing_location</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collisionLevel</span>
 
         <span class="k">for</span> <span class="n">jitter_attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">jitter_attempts</span><span class="p">):</span>
-            <span class="n">histoVol</span><span class="o">.</span><span class="n">totnbJitter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">totnbJitter</span> <span class="o">+=</span> <span class="mi">1</span>
 
             <span class="p">(</span>
                 <span class="n">packing_location</span><span class="p">,</span>
                 <span class="n">packing_rotation</span><span class="p">,</span>
             <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_jitter_location_and_rotation</span><span class="p">(</span>
-                <span class="n">histoVol</span><span class="p">,</span>
+                <span class="n">env</span><span class="p">,</span>
                 <span class="n">target_point</span><span class="p">,</span>
                 <span class="n">rot_matrix</span><span class="p">,</span>
             <span class="p">)</span>
@@ -2680,8 +2682,8 @@
                 <span class="n">packing_location</span>
             <span class="p">)</span>  <span class="c1"># includes periodic points, if appropriate</span>
             <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">points_to_check</span><span class="p">:</span>
-                <span class="n">histoVol</span><span class="o">.</span><span class="n">callFunction</span><span class="p">(</span>
-                    <span class="n">histoVol</span><span class="o">.</span><span class="n">moveRBnode</span><span class="p">,</span>
+                <span class="n">env</span><span class="o">.</span><span class="n">callFunction</span><span class="p">(</span>
+                    <span class="n">env</span><span class="o">.</span><span class="n">moveRBnode</span><span class="p">,</span>
                     <span class="p">(</span>
                         <span class="n">rbnode</span><span class="p">,</span>
                         <span class="n">pt</span><span class="p">,</span>
@@ -2711,6 +2713,8 @@
                     <span class="n">distance</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="n">collision_results</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">collisionComp</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">collides_with_compartment</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">packing_location</span><span class="p">,</span> <span class="n">packing_rotation</span><span class="p">):</span>
+                <span class="k">continue</span>
 
             <span class="c1"># got all the way through the checks with no collision</span>
             <span class="k">if</span> <span class="kc">True</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">collision_results</span><span class="p">:</span>

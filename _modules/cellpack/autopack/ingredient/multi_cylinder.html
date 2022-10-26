@@ -446,20 +446,19 @@
 
 <div class="viewcode-block" id="MultiCylindersIngr.collides_with_compartment"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.multi_cylinder.MultiCylindersIngr.collides_with_compartment">[docs]</a>    <span class="k">def</span> <span class="nf">collides_with_compartment</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">jtrans</span><span class="p">,</span>
-        <span class="n">rotMat</span><span class="p">,</span>
-        <span class="n">level</span><span class="p">,</span>
-        <span class="n">gridPointsCoords</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
+        <span class="n">jtrans</span><span class="p">,</span>
+        <span class="n">rotation_matrix</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check cylinders for collision</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deepest_level</span>
         <span class="n">centers1</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">],)</span>
         <span class="n">centers2</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions2</span><span class="p">[</span><span class="n">level</span><span class="p">],)</span>
         <span class="n">radii</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">],)</span>
-        <span class="n">cent1T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">centers1</span><span class="p">)</span>
-        <span class="n">cent2T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMat</span><span class="p">,</span> <span class="n">centers2</span><span class="p">)</span>
+        <span class="n">cent1T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">centers1</span><span class="p">)</span>
+        <span class="n">cent2T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">centers2</span><span class="p">)</span>
 
         <span class="n">cylNum</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">radc</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">cent1T</span><span class="p">,</span> <span class="n">cent2T</span><span class="p">):</span>
@@ -475,7 +474,7 @@
             <span class="n">pointsInCube</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInCube</span><span class="p">(</span><span class="n">bb</span><span class="p">,</span> <span class="n">posc</span><span class="p">,</span> <span class="n">radt</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="c1"># check for collisions with cylinder</span>
-            <span class="n">pd</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">pointsInCube</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">p1</span>
+            <span class="n">pd</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridPointsCoords</span><span class="p">,</span> <span class="n">pointsInCube</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">p1</span>
             <span class="n">dotp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pd</span><span class="p">,</span> <span class="n">vect</span><span class="p">)</span>
             <span class="c1">#            rad2 = radc*radc</span>
             <span class="c1">#            dsq = numpy.sum(pd*pd, 1) - dotp*dotp/lengthsq</span>

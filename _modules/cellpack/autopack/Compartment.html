@@ -1512,7 +1512,9 @@
         <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">get_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="p">)</span>
         <span class="c1"># voxelized</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: CREATED MESH&quot;</span><span class="p">)</span>
-        <span class="n">trimesh_grid_surface</span> <span class="o">=</span> <span class="n">creation</span><span class="o">.</span><span class="n">voxelize</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridSpacing</span><span class="p">)</span>
+        <span class="n">trimesh_grid_surface</span> <span class="o">=</span> <span class="n">creation</span><span class="o">.</span><span class="n">voxelize</span><span class="p">(</span>
+            <span class="n">mesh</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridSpacing</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">hollow</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;VOXELIZED MESH&quot;</span><span class="p">)</span>
         <span class="c1"># the main loop</span>
         <span class="n">tree</span> <span class="o">=</span> <span class="n">spatial</span><span class="o">.</span><span class="n">cKDTree</span><span class="p">(</span><span class="n">grdPos</span><span class="p">,</span> <span class="n">leafsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
@@ -1528,6 +1530,8 @@
                 <span class="n">grdPos</span><span class="o">.</span><span class="n">item</span><span class="p">((</span><span class="n">ptInd</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
                 <span class="n">grdPos</span><span class="o">.</span><span class="n">item</span><span class="p">((</span><span class="n">ptInd</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
             <span class="p">]</span>
+            <span class="k">if</span> <span class="n">idarray</span><span class="p">[</span><span class="n">ptInd</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="k">if</span> <span class="n">trimesh_grid_surface</span><span class="o">.</span><span class="n">is_filled</span><span class="p">(</span><span class="n">coord</span><span class="p">):</span>
                 <span class="n">idarray</span><span class="o">.</span><span class="n">itemset</span><span class="p">(</span><span class="n">ptInd</span><span class="p">,</span> <span class="n">number</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">mesh_store</span><span class="o">.</span><span class="n">contains_point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="p">,</span> <span class="n">coord</span><span class="p">):</span>

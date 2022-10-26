@@ -575,7 +575,29 @@
                     <span class="n">signed_distance_to_sphere_surface</span><span class="p">,</span>
                 <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span></div></div>
+        <span class="k">return</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span></div>
+
+<div class="viewcode-block" id="MultiSphereIngr.collides_with_compartment"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.multi_sphere.MultiSphereIngr.collides_with_compartment">[docs]</a>    <span class="k">def</span> <span class="nf">collides_with_compartment</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">env</span><span class="p">,</span>
+        <span class="n">jtrans</span><span class="p">,</span>
+        <span class="n">rotation_matrix</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check spheres for collision</span>
+<span class="sd">        TODO improve the testwhen grid stepSize is larger that size of the ingredient</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deepest_level</span>
+        <span class="n">centers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
+        <span class="n">radii</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radii</span><span class="p">[</span><span class="n">level</span><span class="p">],)</span>
+        <span class="n">centT</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">centers</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">radc</span><span class="p">,</span> <span class="n">posc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">centT</span><span class="p">):</span>
+            <span class="n">ptsInSphere</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">getPointsInSphere</span><span class="p">(</span><span class="n">posc</span><span class="p">,</span> <span class="n">radc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># indices</span>
+            <span class="n">compIdsSphere</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">,</span> <span class="n">ptsInSphere</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">wrongPt</span> <span class="o">=</span> <span class="p">[</span><span class="n">cid</span> <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">compIdsSphere</span> <span class="k">if</span> <span class="n">cid</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrongPt</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div></div>
 </pre></div>
 
            </div>
