@@ -239,8 +239,7 @@ class Environment(CompartmentList):
 
         # gradient
         self.gradients = {}
-
-        self.use_gradient = False  # gradient control is also per ingredient
+        self.use_gradient = len(recipe.get("gradients", {})) > 0
         self.use_halton = False  # use halton for grid point distribution
 
         self.ingrLookForNeighbours = False  # Old Features to be test
@@ -282,6 +281,12 @@ class Environment(CompartmentList):
                 self.referenced_objects,
             ) = Recipe.resolve_composition(self.recipe_data)
             self.create_objects()
+        if self.use_gradient:
+            gradients = self.recipe_data["gradients"]
+            for gradient_name in gradients:
+                gradient_data = gradients[gradient_name]
+            for gradient_name in gradients:
+                self.set_gradient(gradient_name, gradient_data)
 
     def setSeed(self, seedNum):
         SEED = int(seedNum)
@@ -697,19 +702,16 @@ class Environment(CompartmentList):
             if o.surfaceRecipe:
                 o.surfaceRecipe.sort()
 
-    def setGradient(self, **kw):
+    def set_gradient(self, name, gradient_data):
         """
         create a grdaient
         assign weight to point
         listorganelle influenced
         listingredient influenced
         """
-        if "name" not in kw:
-            print("name kw is required")
-            return
-        gradient = Gradient(**kw)
+        gradient = Gradient(name=name, **gradient_data)
         # default gradient 1-linear Decoy X
-        self.gradients[kw["name"]] = gradient
+        self.gradients[name] = gradient
 
     def callFunction(self, function, args=[], kw={}):
         """
@@ -994,6 +996,7 @@ class Environment(CompartmentList):
             and arguments["gradient"] != "None"
         ):
             ingr.gradient = arguments["gradient"]
+            # TODO: allow ingrdients to have multiple gradients
         if "results" in arguments:
             ingr.results = arguments["results"]
         ingr.initialize_mesh(self.mesh_store)
@@ -1266,7 +1269,7 @@ class Environment(CompartmentList):
             self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
         if self.use_gradient and len(self.gradients) and rebuild:
             for g in self.gradients:
-                self.gradients[g].buildWeigthMap(
+                self.gradients[g].buildWeightMap(
                     boundingBox, self.grid.masterGridPositions
                 )
         if self.previous_grid_file is not None:
