@@ -401,6 +401,7 @@ class Environment(CompartmentList):
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
         if not os.path.isfile(self.grid_file_out) and self.load_from_grid_file:
+            # do not overwrite if grid was loaded from file
             self.grid.result_filename = self.grid_file_out
             self.saveGridToFile(self.grid_file_out)
         self.saveGridLogsAsJson(self.result_file + "_grid-data.json")
@@ -1203,7 +1204,7 @@ class Environment(CompartmentList):
     def buildGrid(
         self,
         rebuild=True,
-        lookup=2,
+        lookup=0,
     ):
         """
         The main build grid function. Setup the main grid and merge the

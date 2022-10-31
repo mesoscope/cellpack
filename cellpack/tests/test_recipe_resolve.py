@@ -32,7 +32,7 @@ def test_multiple_roots():
     recipe.recipe_data["composition"]["other_root"] = {
         "regions": {"interior": ["tree", "A", "B", "C"]}
     }
-    err_root = set(["space", "other_root"])
+    err_root = ["other_root", "space"]
     try:
         Recipe.resolve_composition(recipe.recipe_data)
     except Exception as err:
