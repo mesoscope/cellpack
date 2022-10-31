@@ -140,7 +140,7 @@ class RecipeLoader(object):
                 self._save_converted_recipe(new_recipe)
         else:
             raise ValueError(
-                f"{recipe['format_version']} is not a format vesion we support"
+                f"{recipe['format_version']} is not a format version we support"
             )
         return new_recipe
 

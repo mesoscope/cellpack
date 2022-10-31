@@ -6,6 +6,7 @@ Docs: https://docs.pytest.org/en/latest/example/simple.html
     https://docs.pytest.org/en/latest/plugins.html#requiring-loading-plugins-in-a-test-module-or-conftest-file
 """
 from math import pi
+from unittest.mock import MagicMock
 import pytest
 
 from cellpack.autopack.interface_objects.representations import Representations
@@ -13,9 +14,9 @@ from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 from cellpack.autopack.loaders.migrate_v1_to_v2 import (
     convert,
-    convert_to_representations,
+    get_representations,
     migrate_ingredient,
-    get_v1_ingredient,
+    get_and_store_v2_object,
 )
 
 
@@ -61,7 +62,7 @@ from cellpack.autopack.loaders.migrate_v1_to_v2 import (
     ],
 )
 def test_create_packing_sphere_representation(sphereFile_data, sphereFile_result):
-    assert sphereFile_result == convert_to_representations(sphereFile_data)
+    assert sphereFile_result == get_representations(sphereFile_data)
 
 
 @pytest.mark.parametrize(
@@ -104,7 +105,7 @@ def test_create_packing_mesh_representation(
     mesh_data,
     mesh_result,
 ):
-    assert mesh_result == convert_to_representations(mesh_data)
+    assert mesh_result == get_representations(mesh_data)
 
 
 @pytest.mark.parametrize(
@@ -143,7 +144,7 @@ def test_create_packing_atomic_representation(
     atomic_test_data,
     expected_atomic_result,
 ):
-    assert expected_atomic_result == convert_to_representations(atomic_test_data)
+    assert expected_atomic_result == get_representations(atomic_test_data)
 
 
 @pytest.mark.parametrize(
@@ -265,7 +266,7 @@ def test_get_v1_ingredient():
         "object": ingredient_key,
         "count": 15,
     }
-    get_v1_ingredient(ingredient_key, ingredient_data, region_list, objects_dict)
+    get_and_store_v2_object(ingredient_key, ingredient_data, region_list, objects_dict)
     assert len(region_list) == 1
     assert objects_dict[ingredient_key] == expected_object_data
     assert region_list[0] == expected_composition_data
@@ -359,7 +360,7 @@ def test_convert_v1_to_v2(
                         "type": INGREDIENT_TYPE.SINGLE_SPHERE,
                     },
                     "C": {
-                        "type": "SingleSphere",
+                        "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
                         "radius": 100,
                         "partners": {"probability_binding": 0.5},
                         "orient_bias_range": [-pi, 12],
@@ -398,6 +399,156 @@ def test_migrate_version(converted_data, expected_data):
 def test_migrate_version_error():
     not_a_format_version = "0.0"
     with pytest.raises(
-        ValueError, match=f"{not_a_format_version} is not a format vesion we support"
+        ValueError, match=f"{not_a_format_version} is not a format version we support"
     ):
         RecipeLoader._migrate_version(None, {"format_version": not_a_format_version})
+
+
+@pytest.mark.parametrize(
+    "converted_compartment_data, expected_compartment_data",
+    [
+        (
+            RecipeLoader(
+                input_file_path="cellpack/test-recipes/v1/test_compartment.json"
+            ).recipe_data,
+            {
+                "version": "1.0",
+                "format_version": "2.0",
+                "name": "test_compartment",
+                "bounding_box": [[-0.6, -0.5, -0.25], [0.6, 0.5, 0.15]],
+                "objects": {
+                    "sphere_exterior": {
+                        "jitter_attempts": 20,
+                        "partners": {
+                            "positions": [],
+                            "names": [],
+                            "excluded_names": [],
+                            "probability_binding": 0.5,
+                            "probability_repelled": 0.5,
+                        },
+                        "rotation_range": 6.2831,
+                        "max_jitter": [1, 1, 0],
+                        "perturb_axis_amplitude": 0.1,
+                        "is_attractor": False,
+                        "principal_vector": [1, 0, 0],
+                        "packing_mode": "random",
+                        "type": INGREDIENT_TYPE.SINGLE_SPHERE,
+                        "rejection_threshold": 100,
+                        "place_method": "jitter",
+                        "rotation_axis": None,
+                        "use_rotation_axis": False,
+                        "orient_bias_range": [-3.1415927, -3.1415927],
+                        "representations": Representations(
+                            **RecipeLoader.default_values["representations"]
+                        ),
+                        "radius": 1,
+                    },
+                    "compartment_A": {
+                        "type": INGREDIENT_TYPE.MESH,
+                        "orient_bias_range": [-3.141592653589793, 3.141592653589793],
+                        "representations": Representations(
+                            mesh={
+                                "path": "cellpack/test-geometry",
+                                "name": "membrane_1.obj",
+                                "format": ".obj",
+                            }
+                        ),
+                    },
+                    "sphere_surface": {
+                        "jitter_attempts": 20,
+                        "partners": {
+                            "positions": [],
+                            "names": [],
+                            "excluded_names": [],
+                            "probability_binding": 0.5,
+                            "probability_repelled": 0.5,
+                        },
+                        "rotation_range": 6.2831,
+                        "max_jitter": [1, 1, 0],
+                        "perturb_axis_amplitude": 0.1,
+                        "is_attractor": False,
+                        "principal_vector": [1, 0, 0],
+                        "packing_mode": "random",
+                        "type": INGREDIENT_TYPE.SINGLE_SPHERE,
+                        "rejection_threshold": 100,
+                        "place_method": "jitter",
+                        "rotation_axis": None,
+                        "use_rotation_axis": False,
+                        "orient_bias_range": [-3.1415927, -3.1415927],
+                        "representations": Representations(
+                            **RecipeLoader.default_values["representations"]
+                        ),
+                        "radius": 1.0,
+                    },
+                    "sphere_inside": {
+                        "jitter_attempts": 20,
+                        "partners": {
+                            "positions": [],
+                            "names": [],
+                            "excluded_names": [],
+                            "probability_binding": 0.5,
+                            "probability_repelled": 0.5,
+                        },
+                        "rotation_range": 6.2831,
+                        "max_jitter": [1, 1, 0],
+                        "perturb_axis_amplitude": 0.1,
+                        "is_attractor": False,
+                        "principal_vector": [1, 0, 0],
+                        "packing_mode": "random",
+                        "type": INGREDIENT_TYPE.SINGLE_SPHERE,
+                        "rejection_threshold": 100,
+                        "place_method": "jitter",
+                        "rotation_axis": None,
+                        "use_rotation_axis": False,
+                        "orient_bias_range": [-3.1415927, -3.1415927],
+                        "representations": Representations(
+                            **RecipeLoader.default_values["representations"]
+                        ),
+                        "radius": 1.25,
+                    },
+                },
+                "composition": {
+                    "space": {
+                        "regions": {
+                            "interior": [
+                                {
+                                    "object": "sphere_exterior",
+                                    "count": 20,
+                                    "priority": 0,
+                                },
+                                "compartment_A",
+                            ]
+                        }
+                    },
+                    "compartment_A": {
+                        "object": "compartment_A",
+                        "regions": {
+                            "surface": [
+                                {"object": "sphere_surface", "count": 20, "priority": 0}
+                            ],
+                            "interior": [
+                                {"object": "sphere_inside", "count": 200, "priority": 0}
+                            ],
+                        },
+                    },
+                },
+            },
+        )
+    ],
+)
+def test_convert_compartment(converted_compartment_data, expected_compartment_data):
+    assert converted_compartment_data["version"] == expected_compartment_data["version"]
+    assert (
+        converted_compartment_data["composition"]
+        == expected_compartment_data["composition"]
+    )
+    assert converted_compartment_data["name"] == expected_compartment_data["name"]
+    for obj in converted_compartment_data["objects"]:
+        data = converted_compartment_data["objects"][obj]
+        mock_rep = MagicMock()
+        data["representations"] = mock_rep
+        expected_compartment_data["objects"][obj]["representations"] = mock_rep
+        assert (
+            converted_compartment_data["objects"][obj]
+            == expected_compartment_data["objects"][obj]
+        )

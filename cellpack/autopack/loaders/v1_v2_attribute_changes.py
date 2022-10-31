@@ -12,7 +12,7 @@ v1_to_v2_name_map = {
     "packingMode": "packing_mode",
     "packingPriority": "priority",
     "perturbAxisAmplitude": "perturb_axis_amplitude",
-    "placeType": "place_type",
+    "placeType": "place_method",
     "principalVector": "principal_vector",
     "rejectionThreshold": "rejection_threshold",
     "rotAxis": "rotation_axis",
@@ -43,7 +43,12 @@ attributes_move_to_composition = [
     "priority",
 ]
 
-required_attributes = {"SingleSphere": ["radii"], "MultiSphere": ["sphereFile"]}
+
+required_attributes = {
+    "SingleSphere": ["radii"],
+    "MultiSphere": ["sphereFile"],
+    "mesh": [],
+}
 
 ingredient_types_map = {
     "SingleSphere": INGREDIENT_TYPE.SINGLE_SPHERE,
@@ -52,4 +57,5 @@ ingredient_types_map = {
     "SingleCylinder": INGREDIENT_TYPE.SINGLE_CYLINDER,
     "MultiCylinder": INGREDIENT_TYPE.MULTI_CYLINDER,
     "Grow": INGREDIENT_TYPE.GROW,
+    "mesh": INGREDIENT_TYPE.MESH,
 }
