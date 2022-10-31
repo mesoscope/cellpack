@@ -2101,7 +2101,7 @@
             <span class="c1"># aligns the principal_vector with the surface normal</span>
             <span class="n">v1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">principal_vector</span>
             <span class="n">v2</span> <span class="o">=</span> <span class="n">compartment</span><span class="o">.</span><span class="n">get_normal_for_point</span><span class="p">(</span>
-                <span class="n">pt_ind</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">pt_ind</span><span class="p">],</span> <span class="n">env</span><span class="o">.</span><span class="n">mesh_store</span>
+                <span class="n">pt_ind</span><span class="p">,</span> <span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">pt_ind</span><span class="p">],</span> <span class="n">env</span><span class="o">.</span><span class="n">mesh_store</span>
             <span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">rot_mat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rotVectToVect</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
@@ -2116,7 +2116,7 @@
                 <span class="k">elif</span> <span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">use_orient_bias</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">packing_mode</span> <span class="o">==</span> <span class="s2">&quot;gradient&quot;</span>
                 <span class="p">):</span>  <span class="c1"># you need a gradient here</span>
-                    <span class="n">rot_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alignRotation</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">pt_ind</span><span class="p">])</span>
+                    <span class="n">rot_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alignRotation</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">pt_ind</span><span class="p">])</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">rot_mat</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">rotation_matrix</span><span class="p">(</span>
                         <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation_axis</span>
