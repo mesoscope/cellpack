@@ -45,7 +45,7 @@ def pack(recipe, config):
             env.boundingBox,
             plot=True,
             show_grid=config_data["show_grid_plot"],
-            seeds_i=config_data["rng_seed"],
+            seeds_i=config_data["randomness_seed"],
             config_name=config_data["name"],
         )
     else:
