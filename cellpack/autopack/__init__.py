@@ -254,13 +254,6 @@ def resetDefault():
         os.remove(autopack_user_path_pref_file)
 
 
-def revertOnePath(p):
-    for _, v in enumerate(replace_path):
-        v = str(v)
-        p = p.replace(v[1], v[0])
-    return p
-
-
 def checkErrorInPath(p, toreplace):
     # if in p we already have part of the replace path
     part = p.split(os.sep)
@@ -302,7 +295,7 @@ def download_file(url, local_file_path, reporthook):
         try:
             urllib.urlretrieve(url, local_file_path, reporthook=reporthook)
         except Exception as e:
-            log.error("error fetching file %r", e)
+            log.error(f"error fetching file {e}, {url}")
     else:
         raise Exception(f"Url does not exist {url}")
 
@@ -320,7 +313,7 @@ def retrieveFile(filename, destination="", cache="geometries", force=False):
     if not is_full_url(filename):
         # replace short code, ie 'autoPACKserver' with full url
         filename = fixOnePath(filename)
-    log.info("autopack retrieve file %s", filename)
+    log.info(f"autopack retrieve file {filename}")
     if is_full_url(str(filename)):
         url = filename
         reporthook = None

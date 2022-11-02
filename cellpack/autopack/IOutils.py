@@ -567,7 +567,7 @@ def save_Mixed_asJson(
                 # use reference file : str(pathout+os.sep+ingr.o_name+".json")
                 ing_filename = (
                     ingr.o_name + ".json"
-                )  # autopack.revertOnePath(pathout+os.sep+ingr.o_name+".json")
+                )
                 env.jsondic["cytoplasme"]["ingredients"][ingr.o_name] = {
                     "name": ingr.o_name,
                     "include": ing_filename,
