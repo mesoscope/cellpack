@@ -122,22 +122,16 @@ def checkURL(URL):
 # ==============================================================================
 # setup the cache directory inside the app data folder
 # ==============================================================================
-cache_results = appdata + os.sep + "cache_results"
-if not os.path.exists(cache_results):
-    os.makedirs(cache_results)
-cache_geoms = appdata + os.sep + "cache_geometries"
-if not os.path.exists(cache_geoms):
-    os.makedirs(cache_geoms)
-cache_sphere = appdata + os.sep + "cache_collisionTrees"
-if not os.path.exists(cache_sphere):
-    os.makedirs(cache_sphere)
-cache_recipes = appdata + os.sep + "cache_recipes"
-if not os.path.exists(cache_recipes):
-    os.makedirs(cache_recipes)
 
+def make_directory_if_needed(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+cache_results = appdata + os.sep + "cache_results"
+cache_geoms = appdata + os.sep + "cache_geometries"
+cache_sphere = appdata + os.sep + "cache_collisionTrees"
+cache_recipes = appdata + os.sep + "cache_recipes"
 preferences = appdata + os.sep + "preferences"
-if not os.path.exists(preferences):
-    os.makedirs(preferences)
 # we can now use some json/xml file for storing preferences and options.
 # need others ?
 cache_dir = {
@@ -147,6 +141,9 @@ cache_dir = {
     "recipes": cache_recipes,
     "prefs": preferences,
 }
+
+for _, dir in enumerate(cache_dir):
+    make_directory_if_needed(dir)
 
 usePP = False
 helper = None
@@ -315,44 +312,46 @@ def updateReplacePath(newPaths):
         if not found:
             replace_path.append(w)
 
+def is_full_url(file_path):
+    return file_path.find("http") != -1 or file_path.find("ftp") != -1
 
 def retrieveFile(filename, destination="", cache="geometries", force=None):
     if force is None:
+        # download even if found in the local cache and overwrite local cached version
+        # defaults to False
         force = forceFetch
-    if filename.find("http") == -1 and filename.find("ftp") == -1:
+    if not is_full_url(filename):
+        # replace short code, ie 'autoPACKserver' with full url
         filename = fixOnePath(filename)
     log.info("autopack retrieve file %s", filename)
-    if filename.find("http") != -1 or filename.find("ftp") != -1:
-        # check if using autoPACKserver
-        useAPServer = False
-        if filename.find(autoPACKserver) != -1:
-            useAPServer = True
+    if is_full_url(filename):
         reporthook = None
         if helper is not None:
             reporthook = helper.reporthook
+
         name = filename.split("/")[-1]  # the recipe name
-        tmpFileName = cache_dir[cache] + os.sep + destination + name
-        if not os.path.exists(cache_dir[cache] + os.sep + destination):
-            os.makedirs(cache_dir[cache] + os.sep + destination)
+        local_file_directory = cache_dir[cache] + os.sep + destination
+        local_file_path = local_file_directory + name
+        make_directory_if_needed(local_file_directory)
         # check if exist first
-        if not os.path.isfile(tmpFileName) or force:
+        if not os.path.isfile(local_file_path) or force:
             if checkURL(filename):
                 try:
-                    urllib.urlretrieve(filename, tmpFileName, reporthook=reporthook)
+                    urllib.urlretrieve(filename, local_file_path, reporthook=reporthook)
                 except Exception as e:
                     log.error("error fetching file %r", e)
                     if useAPServer:
                         log.info("try alternate server")
                         urllib.urlretrieve(
                             autoPACKserver_alt + "/" + cache + "/" + name,
-                            tmpFileName,
+                            local_file_path,
                             reporthook=reporthook,
                         )
             else:
-                if not os.path.isfile(tmpFileName):
-                    log.error("not isfile %s", tmpFileName)
+                if not os.path.isfile(local_file_path):
+                    log.error("not isfile %s", local_file_path)
                     return None
-        filename = tmpFileName
+        filename = local_file_path
         log.info("autopack return grabbed %s", filename)
         # check the file is not an error
         return filename
@@ -366,41 +365,44 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
         if helper is not None:
             reporthook = helper.reporthook
         name = filename.split("/")[-1]  # the recipe name
-        tmpFileName = cache_dir[cache] + os.sep + destination + name
+        local_file_path = cache_dir[cache] + os.sep + destination + name
         try:
             urllib.urlretrieve(
                 autoPACKserver + "/" + cache + "/" + filename,
-                tmpFileName,
+                local_file_path,
                 reporthook=reporthook,
             )
-            return tmpFileName
+            return local_file_path
         except:  # noqa: E722
             urllib.urlretrieve(
                 autoPACKserver_alt + "/" + cache + "/" + filename,
-                tmpFileName,
+                local_file_path,
                 reporthook=reporthook,
             )
             # check the file is not an error
-            return tmpFileName
+            return local_file_path
     if checkURL(autoPACKserver_alt + "/" + cache + "/" + filename):
         reporthook = None
         if helper is not None:
             reporthook = helper.reporthook
         name = filename.split("/")[-1]  # the recipe name
-        tmpFileName = cache_dir[cache] + os.sep + destination + name
+        local_file_path = cache_dir[cache] + os.sep + destination + name
         try:
             urllib.urlretrieve(
                 autoPACKserver_alt + "/" + cache + "/" + filename,
-                tmpFileName,
+                local_file_path,
                 reporthook=reporthook,
             )
         except:  # noqa: E722
             return None
         # check the file is not an error
-        return tmpFileName
+        return local_file_path
     log.error("not found %s", filename)
     return filename
 
+def load_remote_file(filename, destination="", cache="geometries", force=None):
+    local_file_path = retrieveFile(filename, destination=destination, cache=cache, force=force)
+    return json.load(open(local_file_path), "r")
 
 def fixPath(adict):  # , k, v):
     for key in list(adict.keys()):
