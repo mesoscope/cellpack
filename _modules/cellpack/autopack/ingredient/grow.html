@@ -130,7 +130,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../recipe-schema.html#options-properties">Options properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#saveresult">saveResult</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#resultfile">resultfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#result-file">result_file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#enviroonly">EnviroOnly</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#canceldialog">cancelDialog</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
@@ -801,7 +801,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">currentLength</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># snakelength</span></div>
         <span class="c1"># update he cylinder ?</span>
 
-<div class="viewcode-block" id="GrowIngredient.getNextPtIndCyl"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.getNextPtIndCyl">[docs]</a>    <span class="k">def</span> <span class="nf">getNextPtIndCyl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">freePoints</span><span class="p">,</span> <span class="n">histoVol</span><span class="p">):</span>
+<div class="viewcode-block" id="GrowIngredient.getNextPtIndCyl"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.getNextPtIndCyl">[docs]</a>    <span class="k">def</span> <span class="nf">getNextPtIndCyl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">histoVol</span><span class="p">):</span>
         <span class="c1">#        print jtrans, rotMatj</span>
         <span class="n">cent2T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformPoints</span><span class="p">(</span><span class="n">jtrans</span><span class="p">,</span> <span class="n">rotMatj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">jx</span><span class="p">,</span> <span class="n">jy</span><span class="p">,</span> <span class="n">jz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_jitter</span>
@@ -1844,7 +1844,7 @@
         <span class="n">listePtLinear</span><span class="p">,</span>
         <span class="n">histoVol</span><span class="p">,</span>
         <span class="n">ptInd</span><span class="p">,</span>
-        <span class="n">freePoints</span><span class="p">,</span>
+        <span class="n">free_points</span><span class="p">,</span>
         <span class="n">nbFreePoints</span><span class="p">,</span>
         <span class="n">distance</span><span class="p">,</span>
         <span class="n">dpad</span><span class="p">,</span>
@@ -1880,7 +1880,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;attempt K &quot;</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="n">safetycutoff</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;break safetycutoff&quot;</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">success</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">freePoints</span>
+                <span class="k">return</span> <span class="n">success</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">free_points</span>
             <span class="k">if</span> <span class="n">runTimeDisplay</span><span class="p">:</span>  <span class="c1"># or histoVol.afviewer.doSpheres:</span>
                 <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">listePtLinear</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;sp&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ptInd</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
@@ -1905,7 +1905,7 @@
                         <span class="n">usePP</span><span class="o">=</span><span class="n">usePP</span><span class="p">,</span>
                     <span class="p">)</span>
                     <span class="k">if</span> <span class="n">secondPoint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">freePoints</span>
+                        <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">free_points</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">secondPoint</span><span class="p">,</span> <span class="n">success</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">walkSphere</span><span class="p">(</span>
                         <span class="n">previousPoint</span><span class="p">,</span>
@@ -2037,7 +2037,7 @@
                     <span class="n">nbFreePoints</span> <span class="o">=</span> <span class="n">BaseGrid</span><span class="o">.</span><span class="n">updateDistances</span><span class="p">(</span>
                         <span class="n">insidePoints</span><span class="p">,</span>
                         <span class="n">newDistPoints</span><span class="p">,</span>
-                        <span class="n">freePoints</span><span class="p">,</span>
+                        <span class="n">free_points</span><span class="p">,</span>
                         <span class="n">nbFreePoints</span><span class="p">,</span>
                         <span class="n">distance</span><span class="p">,</span>
                     <span class="p">)</span>
@@ -2073,14 +2073,14 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">secondPoint</span> <span class="o">=</span> <span class="n">startingPoint</span>
                 <span class="k">break</span>
-        <span class="k">return</span> <span class="n">success</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">freePoints</span></div>
+        <span class="k">return</span> <span class="n">success</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">free_points</span></div>
 
 <div class="viewcode-block" id="GrowIngredient.updateGrid"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.updateGrid">[docs]</a>    <span class="k">def</span> <span class="nf">updateGrid</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">rg</span><span class="p">,</span>
         <span class="n">histoVol</span><span class="p">,</span>
         <span class="n">dpad</span><span class="p">,</span>
-        <span class="n">freePoints</span><span class="p">,</span>
+        <span class="n">free_points</span><span class="p">,</span>
         <span class="n">nbFreePoints</span><span class="p">,</span>
         <span class="n">distance</span><span class="p">,</span>
         <span class="n">gridPointsCoords</span><span class="p">,</span>
@@ -2103,9 +2103,9 @@
             <span class="n">newDistPoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_place_results</span><span class="p">(</span><span class="n">new_dist_points</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">)</span>
             <span class="c1"># update free points</span>
             <span class="n">nbFreePoints</span> <span class="o">=</span> <span class="n">BaseGrid</span><span class="o">.</span><span class="n">updateDistances</span><span class="p">(</span>
-                <span class="n">new_inside_pts</span><span class="p">,</span> <span class="n">new_dist_points</span><span class="p">,</span> <span class="n">freePoints</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">distance</span>
+                <span class="n">new_inside_pts</span><span class="p">,</span> <span class="n">new_dist_points</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">distance</span>
             <span class="p">)</span>
-        <span class="k">return</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">freePoints</span></div>
+        <span class="k">return</span> <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">free_points</span></div>
 
 <div class="viewcode-block" id="GrowIngredient.getFirstPoint"><a class="viewcode-back" href="../../../../cellpack.autopack.ingredient.html#cellpack.autopack.ingredient.grow.GrowIngredient.getFirstPoint">[docs]</a>    <span class="k">def</span> <span class="nf">getFirstPoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compNum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># surfacegrowing: first point is aling to the normal:</span>
@@ -2202,7 +2202,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">env</span><span class="p">,</span>
         <span class="n">ptInd</span><span class="p">,</span>
-        <span class="n">freePoints</span><span class="p">,</span>
+        <span class="n">free_points</span><span class="p">,</span>
         <span class="n">nbFreePoints</span><span class="p">,</span>
         <span class="n">distance</span><span class="p">,</span>
         <span class="n">dpad</span><span class="p">,</span>
@@ -2279,7 +2279,7 @@
         <span class="n">listePtLinear</span> <span class="o">=</span> <span class="p">[</span><span class="n">startingPoint</span><span class="p">,</span> <span class="n">secondPoint</span><span class="p">]</span>
         <span class="c1"># grow until reach self.currentLength &gt;= self.length</span>
         <span class="c1"># or attempt &gt; safety</span>
-        <span class="n">success</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">freePoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grow</span><span class="p">(</span>
+        <span class="n">success</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">free_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grow</span><span class="p">(</span>
             <span class="n">previousPoint</span><span class="p">,</span>
             <span class="n">startingPoint</span><span class="p">,</span>
             <span class="n">secondPoint</span><span class="p">,</span>
@@ -2287,24 +2287,24 @@
             <span class="n">listePtLinear</span><span class="p">,</span>
             <span class="n">env</span><span class="p">,</span>
             <span class="n">ptInd</span><span class="p">,</span>
-            <span class="n">freePoints</span><span class="p">,</span>
+            <span class="n">free_points</span><span class="p">,</span>
             <span class="n">nbFreePoints</span><span class="p">,</span>
             <span class="n">distance</span><span class="p">,</span>
             <span class="n">dpad</span><span class="p">,</span>
             <span class="n">stepByStep</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">usePP</span><span class="o">=</span><span class="n">usePP</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">freePoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updateGrid</span><span class="p">(</span>
+        <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">free_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updateGrid</span><span class="p">(</span>
             <span class="mi">2</span><span class="p">,</span>
             <span class="n">env</span><span class="p">,</span>
             <span class="n">dpad</span><span class="p">,</span>
-            <span class="n">freePoints</span><span class="p">,</span>
+            <span class="n">free_points</span><span class="p">,</span>
             <span class="n">nbFreePoints</span><span class="p">,</span>
             <span class="n">distance</span><span class="p">,</span>
             <span class="n">gridPointsCoords</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seedOnMinus</span><span class="p">:</span>
-            <span class="n">success</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">freePoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grow</span><span class="p">(</span>
+            <span class="n">success</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">free_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grow</span><span class="p">(</span>
                 <span class="n">previousPoint</span><span class="p">,</span>
                 <span class="n">listePtLinear</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                 <span class="n">listePtLinear</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -2312,18 +2312,18 @@
                 <span class="n">listePtLinear</span><span class="p">,</span>
                 <span class="n">env</span><span class="p">,</span>
                 <span class="n">ptInd</span><span class="p">,</span>
-                <span class="n">freePoints</span><span class="p">,</span>
+                <span class="n">free_points</span><span class="p">,</span>
                 <span class="n">nbFreePoints</span><span class="p">,</span>
                 <span class="n">distance</span><span class="p">,</span>
                 <span class="n">dpad</span><span class="p">,</span>
                 <span class="n">stepByStep</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">r</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">freePoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updateGrid</span><span class="p">(</span>
+            <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">free_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updateGrid</span><span class="p">(</span>
                 <span class="mi">2</span><span class="p">,</span>
                 <span class="n">env</span><span class="p">,</span>
                 <span class="n">dpad</span><span class="p">,</span>
-                <span class="n">freePoints</span><span class="p">,</span>
+                <span class="n">free_points</span><span class="p">,</span>
                 <span class="n">nbFreePoints</span><span class="p">,</span>
                 <span class="n">distance</span><span class="p">,</span>
                 <span class="n">gridPointsCoords</span><span class="p">,</span>

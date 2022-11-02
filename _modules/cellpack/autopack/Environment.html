@@ -130,7 +130,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#options-properties">Options properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#saveresult">saveResult</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#resultfile">resultfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#result-file">result_file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#enviroonly">EnviroOnly</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#canceldialog">cancelDialog</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
@@ -403,7 +403,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">config_data</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">recipe_data</span> <span class="o">=</span> <span class="n">recipe</span>
-
         <span class="n">name</span> <span class="o">=</span> <span class="n">recipe</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;env&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
@@ -425,8 +424,8 @@
         <span class="c1"># saving/pickle option</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">saveResult</span> <span class="o">=</span> <span class="s2">&quot;out&quot;</span> <span class="ow">in</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">=</span> <span class="n">create_output_dir</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;out&quot;</span><span class="p">],</span> <span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;place_method&quot;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_folder</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span><span class="si">}</span><span class="s2">_grid&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_grid&quot;</span>
 
         <span class="n">should_load_grid_file</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_from_grid_file</span>
@@ -439,7 +438,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">grid_result_filename</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># str(gridn.getAttribute(&quot;grid_result&quot;))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">timeUpDistLoopTotal</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exteriorRecipe</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hgrid</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># panda world for collision</span>
@@ -450,7 +448,6 @@
         <span class="p">)</span>
         <span class="c1"># 0 is the exterior, 1 is compartment 1 surface, -1 is compartment 1 interior</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbCompartments</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;out&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># give the order of drop ingredient by ptInd from molecules</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lastrank</span> <span class="o">=</span> <span class="mi">0</span>
@@ -680,19 +677,22 @@
     <span class="c1">#     for key, value in objects.items():</span>
 
 <div class="viewcode-block" id="Environment.save_result"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.save_result">[docs]</a>    <span class="k">def</span> <span class="nf">save_result</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">freePoints</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">vAnalysis</span><span class="p">,</span> <span class="n">vTestid</span><span class="p">,</span> <span class="n">seedNum</span><span class="p">,</span> <span class="n">all_ingr_as_array</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">vAnalysis</span><span class="p">,</span> <span class="n">vTestid</span><span class="p">,</span> <span class="n">seedNum</span><span class="p">,</span> <span class="n">all_ingr_as_array</span>
     <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">freePoints</span> <span class="o">=</span> <span class="n">freePoints</span><span class="p">[:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">free_points</span> <span class="o">=</span> <span class="n">free_points</span><span class="p">[:]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:]</span>
         <span class="c1"># should check extension filename for type of saved file</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">saveGridLogsAsJson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span> <span class="o">+</span> <span class="s2">&quot;_grid-data.json&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">result_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_from_grid_file</span><span class="p">:</span>
+            <span class="c1"># do not overwrite if grid was loaded from file</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">result_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">saveGridToFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saveGridLogsAsJson</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_file</span> <span class="o">+</span> <span class="s2">&quot;_grid-data.json&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">collectResultPerIngredient</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_asTxt</span><span class="p">()</span>
         <span class="n">IOutils</span><span class="o">.</span><span class="n">save</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span><span class="p">,</span>
             <span class="n">format_output</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">format_output</span><span class="p">,</span>
             <span class="n">kwds</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;compNum&quot;</span><span class="p">],</span>
             <span class="n">result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -705,7 +705,7 @@
             <span class="c1">#    START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code</span>
             <span class="c1"># totalVolume = self.grid.gridVolume*unitVol</span>
             <span class="n">unitVol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridSpacing</span><span class="o">**</span><span class="mi">3</span>
-            <span class="n">wrkDirRes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span> <span class="o">+</span> <span class="s2">&quot;_analyze_&quot;</span>
+            <span class="n">wrkDirRes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span> <span class="o">+</span> <span class="s2">&quot;_analyze_&quot;</span>
             <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>  <span class="c1"># only for compartment ?</span>
                 <span class="c1"># totalVolume -= o.surfaceVolume</span>
                 <span class="c1"># totalVolume -= o.interiorVolume</span>
@@ -748,7 +748,7 @@
 
                 <span class="c1"># result is [pos,rot,ingr.name,ingr.compNum,ptInd]</span>
                 <span class="c1"># if resultfilename == None:</span>
-                <span class="c1"># resultfilename = self.resultfile</span>
+                <span class="c1"># resultfilename = self.result_file</span>
                 <span class="n">resultfilenameT</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="n">wrkDirRes</span>
                     <span class="o">+</span> <span class="s2">&quot;vResultMatrix1&quot;</span>
@@ -832,13 +832,13 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Volume Used   = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">usedPts</span> <span class="o">*</span> <span class="n">unitVol</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Volume Unused = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">unUsedPts</span> <span class="o">*</span> <span class="n">unitVol</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;vTestid = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">vTestid</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;self.nbGridPoints = </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">nbGridPoints</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;self.grid.nbGridPoints = </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">nbGridPoints</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;self.gridVolume = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridVolume</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;self.compartments In Environment = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span> <span class="o">==</span> <span class="p">[]:</span>
             <span class="n">unitVol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">gridSpacing</span><span class="o">**</span><span class="mi">3</span>
-            <span class="n">innerPointNum</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">freePoints</span><span class="p">)</span>
+            <span class="n">innerPointNum</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">free_points</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  .  .  .  . &quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;inner Point Count = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">innerPointNum</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;innerVolume temp Confirm = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">innerPointNum</span> <span class="o">*</span> <span class="n">unitVol</span><span class="p">)</span>
@@ -847,7 +847,7 @@
             <span class="c1"># fpts = self.freePointsAfterFill</span>
             <span class="n">vDistanceString</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">innerPointNum</span><span class="p">):</span>
-                <span class="n">pt</span> <span class="o">=</span> <span class="n">freePoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>  <span class="c1"># fpts[i]</span>
+                <span class="n">pt</span> <span class="o">=</span> <span class="n">free_points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>  <span class="c1"># fpts[i]</span>
                 <span class="c1"># for pt in self.histo.freePointsAfterFill:#[:self.histo.nbFreePointsAfterFill]:</span>
                 <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distancesAfterFill</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span>
                 <span class="n">vDistanceString</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -891,7 +891,7 @@
     <span class="p">):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">resultfilename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span>
+            <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
             <span class="c1"># check the extension of the filename none, txt or json</span>
             <span class="c1"># resultfilename = autopack.retrieveFile(resultfilename,cache=&quot;results&quot;)</span>
         <span class="n">fileName</span><span class="p">,</span> <span class="n">fileExtension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">resultfilename</span><span class="p">)</span>
@@ -1121,7 +1121,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf_store</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span><span class="p">[:]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span> <span class="o">=</span> <span class="n">dist</span>  <span class="c1"># grid+organelle+surf</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">freePoints</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">id</span><span class="p">)))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">free_points</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">id</span><span class="p">)))</span></div>
 
 <div class="viewcode-block" id="Environment.saveGridToFile"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.saveGridToFile">[docs]</a>    <span class="k">def</span> <span class="nf">saveGridToFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gridFileOut</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1518,7 +1518,7 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;$$$$$$$$  reset the grid&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-            <span class="n">nbPoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">freePoints</span><span class="p">)</span>
+            <span class="n">nbPoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">free_points</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;$$$$$$$$  reset the grid&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_grid_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1537,6 +1537,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">previous_grid_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">saveGridToFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">previous_grid_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_file_out</span>
 
         <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exteriorRecipe</span>
         <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
@@ -1607,7 +1608,7 @@
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">insidePoints</span><span class="p">,</span>
             <span class="n">newDistPoints</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">freePoints</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">free_points</span><span class="p">,</span>
             <span class="n">nbFreePoints</span><span class="p">,</span>
             <span class="n">distance</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">,</span>
@@ -1912,7 +1913,7 @@
 <div class="viewcode-block" id="Environment.getPointToDrop"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.getPointToDrop">[docs]</a>    <span class="k">def</span> <span class="nf">getPointToDrop</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">ingr</span><span class="p">,</span>
-        <span class="n">freePoints</span><span class="p">,</span>
+        <span class="n">free_points</span><span class="p">,</span>
         <span class="n">nbFreePoints</span><span class="p">,</span>
         <span class="n">distance</span><span class="p">,</span>
         <span class="n">spacing</span><span class="p">,</span>
@@ -1927,7 +1928,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">allIngrPts</span><span class="p">,</span> <span class="n">allIngrDist</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">get_list_of_free_indices</span><span class="p">(</span>
             <span class="n">distance</span><span class="p">,</span>
-            <span class="n">freePoints</span><span class="p">,</span>
+            <span class="n">free_points</span><span class="p">,</span>
             <span class="n">nbFreePoints</span><span class="p">,</span>
             <span class="n">spacing</span><span class="p">,</span>
             <span class="n">compId</span><span class="p">,</span>
@@ -2043,14 +2044,14 @@
             <span class="n">ptInd</span> <span class="o">=</span> <span class="n">allIngrPts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">ptInd</span></div>
 
-<div class="viewcode-block" id="Environment.removeOnePoint"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.removeOnePoint">[docs]</a>    <span class="k">def</span> <span class="nf">removeOnePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">freePoints</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">):</span>
+<div class="viewcode-block" id="Environment.removeOnePoint"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.removeOnePoint">[docs]</a>    <span class="k">def</span> <span class="nf">removeOnePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pt</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># New system replaced by Graham on Aug 18, 2012</span>
             <span class="n">nbFreePoints</span> <span class="o">-=</span> <span class="mi">1</span>
-            <span class="n">vKill</span> <span class="o">=</span> <span class="n">freePoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span>
-            <span class="n">vLastFree</span> <span class="o">=</span> <span class="n">freePoints</span><span class="p">[</span><span class="n">nbFreePoints</span><span class="p">]</span>
-            <span class="n">freePoints</span><span class="p">[</span><span class="n">vKill</span><span class="p">]</span> <span class="o">=</span> <span class="n">vLastFree</span>
-            <span class="n">freePoints</span><span class="p">[</span><span class="n">vLastFree</span><span class="p">]</span> <span class="o">=</span> <span class="n">vKill</span>
+            <span class="n">vKill</span> <span class="o">=</span> <span class="n">free_points</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span>
+            <span class="n">vLastFree</span> <span class="o">=</span> <span class="n">free_points</span><span class="p">[</span><span class="n">nbFreePoints</span><span class="p">]</span>
+            <span class="n">free_points</span><span class="p">[</span><span class="n">vKill</span><span class="p">]</span> <span class="o">=</span> <span class="n">vLastFree</span>
+            <span class="n">free_points</span><span class="p">[</span><span class="n">vLastFree</span><span class="p">]</span> <span class="o">=</span> <span class="n">vKill</span>
             <span class="c1"># End New replaced by Graham on Aug 18, 2012</span>
         <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
             <span class="k">pass</span>
@@ -2108,8 +2109,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setSeed</span><span class="p">(</span><span class="n">seedNum</span><span class="p">)</span>
         <span class="c1"># create copies of the distance array as they change when molecules</span>
         <span class="c1"># are added, this array can be restored/saved before filling</span>
-        <span class="n">freePoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">freePoints</span><span class="p">[:]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">freePoints</span><span class="p">)</span>  <span class="c1"># -1</span>
+        <span class="n">free_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">free_points</span><span class="p">[:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">free_points</span><span class="p">)</span>  <span class="c1"># -1</span>
         <span class="k">if</span> <span class="s2">&quot;fbox&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fbox</span> <span class="o">=</span> <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;fbox&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fbox</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">EnviroOnly</span><span class="p">:</span>
@@ -2270,7 +2271,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getPointToDrop</span><span class="p">(</span>
                     <span class="n">ingr</span><span class="p">,</span>
-                    <span class="n">freePoints</span><span class="p">,</span>
+                    <span class="n">free_points</span><span class="p">,</span>
                     <span class="n">nbFreePoints</span><span class="p">,</span>
                     <span class="n">distances</span><span class="p">,</span>
                     <span class="n">spacing</span><span class="p">,</span>
@@ -2319,15 +2320,15 @@
                 <span class="s2">&quot;after place attempt, placed: </span><span class="si">%r</span><span class="s2">, number of free points:</span><span class="si">%d</span><span class="s2">, length of free points=</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
                 <span class="n">success</span><span class="p">,</span>
                 <span class="n">nbFreePoints</span><span class="p">,</span>
-                <span class="nb">len</span><span class="p">(</span><span class="n">freePoints</span><span class="p">),</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">free_points</span><span class="p">),</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
                 <span class="n">nbFreePoints</span> <span class="o">=</span> <span class="n">BaseGrid</span><span class="o">.</span><span class="n">updateDistances</span><span class="p">(</span>
-                    <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">,</span> <span class="n">freePoints</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">distances</span>
+                    <span class="n">insidePoints</span><span class="p">,</span> <span class="n">newDistPoints</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">,</span> <span class="n">distances</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">distances</span><span class="p">[:])</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">freePoints</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">freePoints</span><span class="p">[:])</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">freePoints</span><span class="p">)</span>  <span class="c1"># -1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">free_points</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">free_points</span><span class="p">[:])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">free_points</span><span class="p">)</span>  <span class="c1"># -1</span>
                 <span class="c1"># update largest protein size</span>
                 <span class="c1"># problem when the encapsulating_radius is actually wrong</span>
                 <span class="k">if</span> <span class="n">ingr</span><span class="o">.</span><span class="n">encapsulating_radius</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">largestProteinSize</span><span class="p">:</span>
@@ -2392,12 +2393,12 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">activeIngr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activeIngr0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">activeIngr12</span>
             <span class="k">if</span> <span class="n">dump</span> <span class="ow">and</span> <span class="p">((</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">stime</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">dump_freq</span><span class="p">):</span>
                 <span class="c1"># self.collectResultPerIngredient()</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SAVING&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SAVING&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span><span class="p">)</span>
                 <span class="c1"># TODO: save out intermediate simularium files</span>
                 <span class="n">stime</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">distancesAfterFill</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">freePointsAfterFill</span> <span class="o">=</span> <span class="n">freePoints</span><span class="p">[:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freePointsAfterFill</span> <span class="o">=</span> <span class="n">free_points</span><span class="p">[:]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePointsAfterFill</span> <span class="o">=</span> <span class="n">nbFreePoints</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">distanceAfterFill</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:]</span>
         <span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
@@ -2432,7 +2433,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;placed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">molecules</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">saveResult</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">save_result</span><span class="p">(</span>
-                <span class="n">freePoints</span><span class="p">,</span>
+                <span class="n">free_points</span><span class="p">,</span>
                 <span class="n">distances</span><span class="o">=</span><span class="n">distances</span><span class="p">,</span>
                 <span class="n">t0</span><span class="o">=</span><span class="n">t2</span><span class="p">,</span>
                 <span class="n">vAnalysis</span><span class="o">=</span><span class="n">vAnalysis</span><span class="p">,</span>
@@ -2514,20 +2515,20 @@
         <span class="k">return</span> <span class="n">ingredients</span></div>
 
 <div class="viewcode-block" id="Environment.restoreFreePoints"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.restoreFreePoints">[docs]</a>    <span class="k">def</span> <span class="nf">restoreFreePoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freePoint</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">freePointsAfterFill</span> <span class="o">=</span> <span class="n">freePoint</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">freePointsAfterFill</span> <span class="o">=</span> <span class="n">freePoint</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePointsAfterFill</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">freePoint</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">distanceAfterFill</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">distancesAfterFill</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">distToClosestSurf</span></div>
 
 <div class="viewcode-block" id="Environment.loadFreePoint"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.loadFreePoint">[docs]</a>    <span class="k">def</span> <span class="nf">loadFreePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="p">):</span>
-        <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;freePoints&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+        <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;free_points&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
         <span class="n">freePoint</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">rfile</span><span class="p">)</span>
         <span class="n">rfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">freePoint</span></div>
 
 <div class="viewcode-block" id="Environment.store"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.store">[docs]</a>    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">resultfilename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span>
+            <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
         <span class="n">resultfilename</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">fixOnePath</span><span class="p">(</span><span class="n">resultfilename</span><span class="p">)</span>
         <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
         <span class="c1"># pickle.dump(self.molecules, rfile)</span>
@@ -2538,15 +2539,15 @@
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">rfile</span><span class="p">)</span>
         <span class="n">rfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">orga</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">):</span>
-            <span class="n">orfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;ogra&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
+            <span class="n">orfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;organelle&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="n">orga</span><span class="o">.</span><span class="n">molecules</span><span class="p">:</span>
                 <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">ingr</span><span class="o">.</span><span class="n">compNum</span><span class="p">,</span> <span class="n">ptInd</span><span class="p">])</span>
             <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">orfile</span><span class="p">)</span>
             <span class="c1">#            pickle.dump(orga.molecules, orfile)</span>
             <span class="n">orfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;freePoints&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
-        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">freePoints</span><span class="p">,</span> <span class="n">rfile</span><span class="p">)</span>
+        <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;free_points&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">free_points</span><span class="p">,</span> <span class="n">rfile</span><span class="p">)</span>
         <span class="n">rfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Environment.dropOneIngr"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.dropOneIngr">[docs]</a>    <span class="nd">@classmethod</span>
@@ -2596,7 +2597,7 @@
 
 <div class="viewcode-block" id="Environment.load_asTxt"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.load_asTxt">[docs]</a>    <span class="k">def</span> <span class="nf">load_asTxt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">resultfilename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span>
+            <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
         <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
         <span class="c1"># needto parse</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2630,10 +2631,10 @@
             <span class="c1">#            orgaresult.append(pickle.load(orfile))</span>
             <span class="c1">#            orfile.close()</span>
             <span class="c1">#        rfile.close()</span>
-            <span class="c1">#        rfile = open(resultfilename+&quot;freePoints&quot;,&#39;rb&#39;)</span>
+            <span class="c1">#        rfile = open(resultfilename+&quot;free_points&quot;,&#39;rb&#39;)</span>
         <span class="n">freePoint</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># pickle.load(rfile)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;freePoints&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+            <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;free_points&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
             <span class="n">freePoint</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">rfile</span><span class="p">)</span>
             <span class="n">rfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
@@ -2661,7 +2662,7 @@
 
 <div class="viewcode-block" id="Environment.load_asJson"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.load_asJson">[docs]</a>    <span class="k">def</span> <span class="nf">load_asJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">resultfilename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span>
+            <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>  <span class="c1"># doesnt work with symbol link ?</span>
             <span class="k">if</span> <span class="n">autopack</span><span class="o">.</span><span class="n">use_json_hook</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
@@ -2706,10 +2707,10 @@
                         <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
                         <span class="c1"># replace number by name ?</span>
                         <span class="k">if</span> <span class="p">(</span>
-                            <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surf__&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                            <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surf_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
                             <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surfaceRecipe&quot;</span><span class="p">]</span>
                         <span class="p">):</span>
-                            <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surf__&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                            <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surf_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
                         <span class="k">if</span> <span class="p">(</span>
                             <span class="n">name_ingr</span>
                             <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surfaceRecipe&quot;</span><span class="p">]</span>
@@ -2748,10 +2749,10 @@
                     <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                         <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
                         <span class="k">if</span> <span class="p">(</span>
-                            <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_int__&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                            <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_int_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
                             <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_innerRecipe&quot;</span><span class="p">]</span>
                         <span class="p">):</span>
-                            <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_int__&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                            <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_int_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
                         <span class="k">if</span> <span class="p">(</span>
                             <span class="n">name_ingr</span>
                             <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_innerRecipe&quot;</span><span class="p">]</span>
@@ -2785,7 +2786,7 @@
                             <span class="p">)</span>
         <span class="n">freePoint</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># pickle.load(rfile)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;freePoints&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+            <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;free_points&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
             <span class="n">freePoint</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">rfile</span><span class="p">)</span>
             <span class="n">rfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>
@@ -2814,7 +2815,7 @@
 
 <div class="viewcode-block" id="Environment.store_asJson"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.store_asJson">[docs]</a>    <span class="k">def</span> <span class="nf">store_asJson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">resultfilename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span>
+            <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
             <span class="n">resultfilename</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">fixOnePath</span><span class="p">(</span><span class="n">resultfilename</span><span class="p">)</span>  <span class="c1"># retireve?</span>
         <span class="c1"># if result file_name start with http?</span>
         <span class="k">if</span> <span class="n">resultfilename</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">resultfilename</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;ftp&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
@@ -2868,7 +2869,7 @@
 
 <div class="viewcode-block" id="Environment.store_asTxt"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.store_asTxt">[docs]</a>    <span class="k">def</span> <span class="nf">store_asTxt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">resultfilename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span>
+            <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
         <span class="n">resultfilename</span> <span class="o">=</span> <span class="n">autopack</span><span class="o">.</span><span class="n">fixOnePath</span><span class="p">(</span><span class="n">resultfilename</span><span class="p">)</span>
         <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>  <span class="c1"># doesnt work with symbol link ?</span>
         <span class="c1"># pickle.dump(self.molecules, rfile)</span>
@@ -2885,7 +2886,7 @@
 
         <span class="n">rfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">orga</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">):</span>
-            <span class="n">orfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;ogra&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+            <span class="n">orfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;_organelle_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
             <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
             <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingr</span><span class="p">,</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="n">orga</span><span class="o">.</span><span class="n">molecules</span><span class="p">:</span>
                 <span class="n">line</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropOneIngr</span><span class="p">(</span>
@@ -2899,23 +2900,23 @@
             <span class="n">orfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
             <span class="c1">#            pickle.dump(orga.molecules, orfile)</span>
             <span class="n">orfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-        <span class="c1">#        rfile = open(resultfilename+&quot;freePoints&quot;, &#39;w&#39;)</span>
-        <span class="c1">#        pickle.dump(self.freePoints, rfile)</span>
+        <span class="c1">#        rfile = open(resultfilename+&quot;free_points&quot;, &#39;w&#39;)</span>
+        <span class="c1">#        pickle.dump(self.free_points, rfile)</span>
         <span class="c1">#        rfile.close()</span>
 
 <div class="viewcode-block" id="Environment.convertPickleToText"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.convertPickleToText">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">convertPickleToText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">norga</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">resultfilename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span>
+            <span class="n">resultfilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
         <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">rfile</span><span class="p">)</span>
         <span class="n">orgaresult</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">norga</span><span class="p">):</span>
-            <span class="n">orfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;ogra&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">orfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;_organelle_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
             <span class="n">orgaresult</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">orfile</span><span class="p">))</span>
             <span class="n">orfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">rfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;freePoints&quot;</span><span class="p">)</span>
+        <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;free_points&quot;</span><span class="p">)</span>
         <span class="n">rfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
         <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -2925,7 +2926,7 @@
         <span class="n">rfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
         <span class="n">rfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">norga</span><span class="p">):</span>
-            <span class="n">orfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;ogra&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+            <span class="n">orfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;_organelle_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
             <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">rot</span><span class="p">,</span> <span class="n">ingrName</span><span class="p">,</span> <span class="n">compNum</span><span class="p">,</span> <span class="n">ptInd</span> <span class="ow">in</span> <span class="n">orgaresult</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
@@ -2944,11 +2945,11 @@
         <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartments</span><span class="p">:</span>
             <span class="n">o</span><span class="o">.</span><span class="n">printFillInfo</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Environment.finishWithWater"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.finishWithWater">[docs]</a>    <span class="k">def</span> <span class="nf">finishWithWater</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freePoints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Environment.finishWithWater"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Environment.Environment.finishWithWater">[docs]</a>    <span class="k">def</span> <span class="nf">finishWithWater</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">free_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># self.freePointsAfterFill[:self.nbFreePointsAfterFill]</span>
         <span class="c1"># sphere sphere of 2.9A</span>
-        <span class="k">if</span> <span class="n">freePoints</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">freePoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">freePointsAfterFill</span>
+        <span class="k">if</span> <span class="n">free_points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">free_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">freePointsAfterFill</span>
         <span class="k">if</span> <span class="n">nbFreePoints</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">nbFreePoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePointsAfterFill</span></div>
         <span class="c1"># a freepoint is a voxel, how many water in the voxel</span>
@@ -3294,7 +3295,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">bd_box</span> <span class="kn">import</span> <span class="n">rigid_box</span> <span class="k">as</span> <span class="n">bd_box</span>
         <span class="k">if</span> <span class="n">res_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">res_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span>
+            <span class="n">res_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bd</span> <span class="o">=</span> <span class="n">bd_box</span><span class="p">(</span><span class="n">res_filename</span><span class="p">,</span> <span class="n">bounding_box</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bd</span><span class="o">.</span><span class="n">makePrmFile</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">collectResultPerIngredient</span><span class="p">()</span>
@@ -3322,7 +3323,7 @@
         <span class="kn">from</span> <span class="nn">tem_sim</span> <span class="kn">import</span> <span class="n">tem_sim</span>
 
         <span class="k">if</span> <span class="n">res_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">res_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resultfile</span>
+            <span class="n">res_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tem</span> <span class="o">=</span> <span class="n">tem_sim</span><span class="p">(</span><span class="n">res_filename</span><span class="p">,</span> <span class="n">bounding_box</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boundingBox</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tem</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">collectResultPerIngredient</span><span class="p">()</span>

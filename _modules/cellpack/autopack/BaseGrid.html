@@ -130,7 +130,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#options-properties">Options properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#saveresult">saveResult</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#resultfile">resultfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#result-file">result_file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#enviroonly">EnviroOnly</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#canceldialog">cancelDialog</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
@@ -352,12 +352,12 @@
 <span class="sd">    The Grid class</span>
 <span class="sd">    ==========================</span>
 <span class="sd">    This class handle the use of grid to control the packing. The grid keep information of</span>
-<span class="sd">    3d positions, distances, freePoints and inside/surface points from organelles.</span>
+<span class="sd">    3d positions, distances, free_points and inside/surface points from organelles.</span>
 <span class="sd">    NOTE : thi class could be completely replace if openvdb is wrapped to python.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="BaseGrid.reorder_free_points"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.reorder_free_points">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">reorder_free_points</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span> <span class="n">freePoints</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">reorder_free_points</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span><span class="p">):</span>
         <span class="c1"># TODO: move this to env class, ing shouldn&#39;t aware of the whole grid</span>
         <span class="c1"># Swap the newly inside point value with the value of the last free point</span>
         <span class="c1"># Point will no longer be considered &quot;free&quot; because it will be beyond the range of</span>
@@ -365,29 +365,29 @@
         <span class="c1"># so any future swaps will still result in the correct index being move into the range</span>
         <span class="c1"># of nbFreePoints</span>
         <span class="n">nbFreePoints</span> <span class="o">-=</span> <span class="mi">1</span>
-        <span class="n">vKill</span> <span class="o">=</span> <span class="n">freePoints</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span>
-        <span class="n">vLastFree</span> <span class="o">=</span> <span class="n">freePoints</span><span class="p">[</span><span class="n">nbFreePoints</span><span class="p">]</span>
-        <span class="n">freePoints</span><span class="p">[</span><span class="n">vKill</span><span class="p">]</span> <span class="o">=</span> <span class="n">vLastFree</span>
-        <span class="n">freePoints</span><span class="p">[</span><span class="n">vLastFree</span><span class="p">]</span> <span class="o">=</span> <span class="n">vKill</span>
+        <span class="n">vKill</span> <span class="o">=</span> <span class="n">free_points</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span>
+        <span class="n">vLastFree</span> <span class="o">=</span> <span class="n">free_points</span><span class="p">[</span><span class="n">nbFreePoints</span><span class="p">]</span>
+        <span class="n">free_points</span><span class="p">[</span><span class="n">vKill</span><span class="p">]</span> <span class="o">=</span> <span class="n">vLastFree</span>
+        <span class="n">free_points</span><span class="p">[</span><span class="n">vLastFree</span><span class="p">]</span> <span class="o">=</span> <span class="n">vKill</span>
         <span class="c1"># Turn on these printlines if there is a problem with incorrect points showing in display points</span>
         <span class="c1"># self.log.debug(&quot;*************pt = masterGridPointValue = %d&quot;, pt)</span>
         <span class="c1"># self.log.debug(&quot;nbFreePointAfter = %d&quot;, nbFreePoints)</span>
         <span class="c1"># self.log.debug(&quot;vKill = %d&quot;, vKill)</span>
         <span class="c1"># self.log.debug(&quot;vLastFree = %d&quot;, vLastFree)</span>
-        <span class="c1"># self.log.debug(&quot;freePoints[vKill] = %d&quot;, freePoints[vKill])</span>
-        <span class="c1"># self.log.debug(&quot;freePoints[vLastFree] = %d&quot;, freePoints[vLastFree])</span>
+        <span class="c1"># self.log.debug(&quot;free_points[vKill] = %d&quot;, free_points[vKill])</span>
+        <span class="c1"># self.log.debug(&quot;free_points[vLastFree] = %d&quot;, free_points[vLastFree])</span>
         <span class="c1"># self.log.debug(&quot;pt = masterGridPointValue = %d&quot;, pt)</span>
-        <span class="c1"># self.log.debug(&quot;freePoints[nbFreePoints-1] = %d&quot;, freePoints[nbFreePoints])</span>
-        <span class="c1"># self.log.debug(&quot;freePoints[pt] = %d&quot;, freePoints[pt])</span>
-        <span class="c1"># freePoints will now have all the available indices between 0 and nbFreePoints in</span>
-        <span class="c1"># freePoints[nbFreePoints:] won&#39;t necessarily be the indices of inside points</span>
-        <span class="k">return</span> <span class="n">freePoints</span><span class="p">,</span> <span class="n">nbFreePoints</span></div>
+        <span class="c1"># self.log.debug(&quot;free_points[nbFreePoints-1] = %d&quot;, free_points[nbFreePoints])</span>
+        <span class="c1"># self.log.debug(&quot;free_points[pt] = %d&quot;, free_points[pt])</span>
+        <span class="c1"># free_points will now have all the available indices between 0 and nbFreePoints in</span>
+        <span class="c1"># free_points[nbFreePoints:] won&#39;t necessarily be the indices of inside points</span>
+        <span class="k">return</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span></div>
 
 <div class="viewcode-block" id="BaseGrid.updateDistances"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.updateDistances">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">updateDistances</span><span class="p">(</span>
         <span class="n">insidePoints</span><span class="p">,</span>
         <span class="n">newDistPoints</span><span class="p">,</span>
-        <span class="n">freePoints</span><span class="p">,</span>
+        <span class="n">free_points</span><span class="p">,</span>
         <span class="n">nbFreePoints</span><span class="p">,</span>
         <span class="n">distance</span><span class="p">,</span>
     <span class="p">):</span>
@@ -400,8 +400,8 @@
         <span class="c1"># distChanges = {}</span>
         <span class="k">for</span> <span class="n">pt</span><span class="p">,</span> <span class="n">dist</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">insidePoints</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">freePoints</span><span class="p">,</span> <span class="n">nbFreePoints</span> <span class="o">=</span> <span class="n">BaseGrid</span><span class="o">.</span><span class="n">reorder_free_points</span><span class="p">(</span>
-                    <span class="n">pt</span><span class="p">,</span> <span class="n">freePoints</span><span class="p">,</span> <span class="n">nbFreePoints</span>
+                <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span> <span class="o">=</span> <span class="n">BaseGrid</span><span class="o">.</span><span class="n">reorder_free_points</span><span class="p">(</span>
+                    <span class="n">pt</span><span class="p">,</span> <span class="n">free_points</span><span class="p">,</span> <span class="n">nbFreePoints</span>
                 <span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">pt</span><span class="p">,</span> <span class="s2">&quot;not in freeePoints********************************&quot;</span><span class="p">)</span>
@@ -436,9 +436,9 @@
         <span class="c1"># entries are removed from this list as grid points are used up</span>
         <span class="c1"># during hte fill. This list is used to pick points randomly during</span>
         <span class="c1"># the fill</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1"># this list evolves in parallel with self.freePoints and provides</span>
+        <span class="c1"># this list evolves in parallel with self.free_points and provides</span>
         <span class="c1"># the distance to the closest surface (either an already placed</span>
         <span class="c1"># object (or an compartment surface NOT IMPLEMENTED)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">distToClosestSurf</span> <span class="o">=</span> <span class="p">[]</span>
@@ -495,8 +495,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">distToClosestSurf</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gridVolume</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">diag</span>
         <span class="p">)</span>  <span class="c1"># (self.distToClosestSurf)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gridVolume</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gridVolume</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">&quot;Lookup: </span><span class="si">%d</span><span class="s2">, bounding box: </span><span class="si">%r</span><span class="s2">, gridSpacing </span><span class="si">%r</span><span class="s2">, length compartment_ids </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">,</span>
@@ -510,20 +510,20 @@
 <div class="viewcode-block" id="BaseGrid.reset"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="c1"># reset the  distToClosestSurf and the freePoints</span>
+        <span class="c1"># reset the  distToClosestSurf and the free_points</span>
         <span class="c1"># boundingBox should be the same otherwise why keeping the grid</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;reset Grid distance to closest surface and freePoints&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;reset Grid distance to closest surface and free_points&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">distToClosestSurf</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distToClosestSurf</span><span class="p">[:])</span> <span class="o">*</span> <span class="mf">0.0</span>
         <span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">diag</span>
         <span class="c1"># self.distToClosestSurf[:] = self.diag  # numpy.array([self.diag]*len(self.distToClosestSurf))#surface point too?</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span><span class="p">)))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseGrid.removeFreePoint"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.removeFreePoint">[docs]</a>    <span class="k">def</span> <span class="nf">removeFreePoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pti</span><span class="p">):</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span><span class="p">]</span>  <span class="c1"># last one</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span><span class="p">]</span> <span class="o">=</span> <span class="n">pti</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span><span class="p">]</span>  <span class="c1"># last one</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span><span class="p">]</span> <span class="o">=</span> <span class="n">pti</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">[</span><span class="n">pti</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">-=</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="BaseGrid.getDiagonal"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getDiagonal">[docs]</a>    <span class="k">def</span> <span class="nf">getDiagonal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">boundingBox</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -667,7 +667,7 @@
 <div class="viewcode-block" id="BaseGrid.getClosestFreeGridPoint"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.BaseGrid.BaseGrid.getClosestFreeGridPoint">[docs]</a>    <span class="k">def</span> <span class="nf">getClosestFreeGridPoint</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">pt3d</span><span class="p">,</span> <span class="n">compId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">updateTree</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ball</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mf">0.0</span>
     <span class="p">):</span>
-        <span class="n">free_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span><span class="p">]</span>
+        <span class="n">free_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span><span class="p">]</span>
         <span class="n">arr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">free_indices</span><span class="p">])</span>
         <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartment_ids</span><span class="p">[</span><span class="n">free_indices</span><span class="p">],</span> <span class="n">compId</span><span class="p">))</span>
         <span class="n">distances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">distToClosestSurf</span><span class="p">[</span><span class="n">free_indices</span><span class="p">]</span>
@@ -695,7 +695,7 @@
         <span class="p">]</span>  <span class="c1"># randomly pick free surface point at given distance</span>
         <span class="k">return</span> <span class="n">targetPoint</span>
 
-        <span class="n">free_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span><span class="p">]</span>
+        <span class="n">free_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">[:</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span><span class="p">]</span>
         <span class="n">arr</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">masterGridPositions</span><span class="p">[</span><span class="n">free_indices</span><span class="p">])</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree_free</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">updateTree</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">compId</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>

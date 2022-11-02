@@ -130,7 +130,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#options-properties">Options properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#saveresult">saveResult</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#resultfile">resultfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#result-file">result_file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#enviroonly">EnviroOnly</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#canceldialog">cancelDialog</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
@@ -1832,7 +1832,7 @@
 <div class="viewcode-block" id="load_MixedasJson"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.IOutils.load_MixedasJson">[docs]</a><span class="k">def</span> <span class="nf">load_MixedasJson</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">resultfilename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="c1">#        from upy.hostHelper import Helper as helper</span>
     <span class="k">if</span> <span class="n">resultfilename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">resultfilename</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">resultfile</span>
+        <span class="n">resultfilename</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">result_file</span>
     <span class="c1"># use the current dictionary ?jsondic</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>  <span class="c1"># doesnt work with symbol link ?</span>
         <span class="k">if</span> <span class="n">autopack</span><span class="o">.</span><span class="n">use_json_hook</span><span class="p">:</span>
@@ -1892,12 +1892,12 @@
                     <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
                     <span class="c1"># replace number by name ?</span>
                     <span class="k">if</span> <span class="p">(</span>
-                        <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surf__&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                        <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surf_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
                         <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="s2">&quot;surface&quot;</span><span class="p">][</span>
                             <span class="s2">&quot;ingredients&quot;</span>
                         <span class="p">]</span>
                     <span class="p">):</span>
-                        <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surf__&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                        <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_surf_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
                     <span class="k">if</span> <span class="p">(</span>
                         <span class="n">name_ingr</span>
                         <span class="ow">not</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="s2">&quot;surface&quot;</span><span class="p">][</span>
@@ -1945,12 +1945,12 @@
                 <span class="k">for</span> <span class="n">ingr</span> <span class="ow">in</span> <span class="n">ri</span><span class="o">.</span><span class="n">ingredients</span><span class="p">:</span>
                     <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">ingr</span><span class="o">.</span><span class="n">name</span>
                     <span class="k">if</span> <span class="p">(</span>
-                        <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_int__&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                        <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_int_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
                         <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="s2">&quot;interior&quot;</span><span class="p">][</span>
                             <span class="s2">&quot;ingredients&quot;</span>
                         <span class="p">]</span>
                     <span class="p">):</span>
-                        <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_int__&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
+                        <span class="n">name_ingr</span> <span class="o">=</span> <span class="n">orga</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_int_&quot;</span> <span class="o">+</span> <span class="n">ingr</span><span class="o">.</span><span class="n">o_name</span>
                     <span class="k">if</span> <span class="p">(</span>
                         <span class="n">name_ingr</span>
                         <span class="ow">not</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">result_json</span><span class="p">[</span><span class="s2">&quot;compartments&quot;</span><span class="p">][</span><span class="n">orga</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="s2">&quot;interior&quot;</span><span class="p">][</span>
@@ -1993,7 +1993,7 @@
                         <span class="p">)</span>
     <span class="n">freePoint</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># pickle.load(rfile)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;freePoints&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+        <span class="n">rfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">resultfilename</span> <span class="o">+</span> <span class="s2">&quot;free_points&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
         <span class="n">freePoint</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">rfile</span><span class="p">)</span>
         <span class="n">rfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa: E722</span>

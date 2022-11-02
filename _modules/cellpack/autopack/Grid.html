@@ -130,7 +130,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../recipe-schema.html#options-properties">Options properties</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#saveresult">saveResult</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#resultfile">resultfile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#result-file">result_file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#enviroonly">EnviroOnly</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#canceldialog">cancelDialog</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../recipe-schema.html#pickweightedingr">pickWeightedIngr</a></li>
@@ -290,7 +290,7 @@
 <span class="sd">    The Grid class</span>
 <span class="sd">    ==========================</span>
 <span class="sd">    This class handle the use of grid to control the packing. The grid keep information</span>
-<span class="sd">    of 3d positions, distances, freePoints and inside/surface points from organelles.</span>
+<span class="sd">    of 3d positions, distances, free_points and inside/surface points from organelles.</span>
 <span class="sd">    NOTE : this class could be completely replaced if openvdb is wrapped to python.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -306,16 +306,16 @@
             <span class="n">boundingBox</span><span class="p">,</span> <span class="n">space</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create3DPointLookup</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gridVolume</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gridVolume</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Grid.reset"><a class="viewcode-back" href="../../../cellpack.autopack.html#cellpack.autopack.Grid.Grid.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># reset the  distToClosestSurf and the freePoints</span>
+        <span class="c1"># reset the  distToClosestSurf and the free_points</span>
         <span class="c1"># boundingBox shoud be the same otherwise why keeping the grid</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">distToClosestSurf</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diag</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span><span class="p">)))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">freePoints</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">free_points</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePoints</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">free_points</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">distancesAfterFill</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">freePointsAfterFill</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nbFreePointsAfterFill</span> <span class="o">=</span> <span class="p">[]</span>
