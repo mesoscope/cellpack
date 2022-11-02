@@ -34,8 +34,8 @@ Define here some usefull variable and setup filename path that facilitate
 AF
 @author: Ludovic Autin with editing by Graham Johnson
 """
-
 import logging
+import logging.config
 import sys
 import os
 import re
@@ -61,6 +61,12 @@ ssl._create_default_https_context = ssl._create_unverified_context
 use_json_hook = True
 afdir = Path(os.path.abspath(__path__[0]))
 
+###############################################################################
+log_file_path = path.join(path.dirname(path.abspath(__file__)), "../../logging.conf")
+logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
+log = logging.getLogger("autopack")
+log.propagate = False
+###############################################################################
 
 def make_directory_if_needed(directory):
     if not os.path.exists(directory):
@@ -70,7 +76,9 @@ def make_directory_if_needed(directory):
 # ==============================================================================
 # the dir will have all the recipe + cache.
 APPNAME = "autoPACK"
-log = logging.getLogger("autopack")
+# log = logging.getLogger("autopack")
+# log.propagate = False
+
 if sys.platform == "darwin":
     # from AppKit import NSSearchPathForDirectoriesInDomains
     # http://developer.apple.com/DOCUMENTATION/Cocoa/Reference/Foundation/Miscellaneous/Foundation_Functions/Reference/reference.html#//apple_ref/c/func/NSSearchPathForDirectoriesInDomains
@@ -132,8 +140,6 @@ except ImportError:
 
 
 ncpus = 2
-# forceFetch is for any file not only recipe/ingredient etc...
-forceFetch = False
 checkAtstartup = True
 testPeriodicity = False
 biasedPeriodicity = None  # [1,1,1]
@@ -269,6 +275,7 @@ def checkErrorInPath(p, toreplace):
 
 
 def fixOnePath(path):
+    path = str(path)
     for old_value, new_value in replace_path.items():
         # fix before
         new_value = str(new_value)
@@ -297,85 +304,48 @@ def download_file(url, local_file_path, reporthook):
         except Exception as e:
             log.error("error fetching file %r", e)
     else:
-        raise Exception("Url does not exist")
+        raise Exception(f"Url does not exist {url}")
 
 
 def is_full_url(file_path):
     return file_path.find("http") != -1 or file_path.find("ftp") != -1
 
-def retrieveFile(filename, destination="", cache="geometries", force=None):
-    if force is None:
-        # download even if found in the local cache and overwrite local cached version
-        # defaults to False
-        force = forceFetch
+def retrieveFile(filename, destination="", cache="geometries", force=False):
+    """
+        Options:
+        1. Find file locally, return the file path
+        2. Download file to local cache, return path (might involve replacing short-code in url)
+        3. Force download even though you have a local copy 
+    """
     if not is_full_url(filename):
         # replace short code, ie 'autoPACKserver' with full url
         filename = fixOnePath(filename)
     log.info("autopack retrieve file %s", filename)
-    if is_full_url(filename):
+    if is_full_url(str(filename)):
+        url = filename
         reporthook = None
         if helper is not None:
             reporthook = helper.reporthook
 
-
-        name = filename.split("/")[-1]  # the recipe name
+        name = url.split("/")[-1]  # the recipe name
         local_file_directory = cache_dir[cache] / destination
         local_file_path = local_file_directory / name
         make_directory_if_needed(local_file_directory)
         # check if exist first
         if not os.path.isfile(local_file_path) or force:
-            download_file(filename, local_file_path, reporthook)
-        filename = local_file_path
-        log.info("autopack return grabbed %s", filename)
-        return filename
-    # if no folder provided, use the current_recipe_folder
+            download_file(url, local_file_path, reporthook)
+        log.info(f"autopack downloaded and stored file: {local_file_path}")
+        return local_file_path
+    filename = Path(filename)
     if os.path.isfile(cache_dir[cache] / filename):
         return cache_dir[cache] / filename
     if os.path.isfile(current_recipe_path / filename):
+        # if no folder provided, use the current_recipe_folder
         return current_recipe_path / filename
-    if url_exists(autoPACKserver + "/" + cache + "/" + filename):
-        reporthook = None
-        if helper is not None:
-            reporthook = helper.reporthook
-        name = filename.split("/")[-1]  # the recipe name
-        local_file_path = cache_dir[cache] / destination + name
-        try:
-            urllib.urlretrieve(
-                autoPACKserver + "/" + cache + "/" + filename,
-                local_file_path,
-                reporthook=reporthook,
-            )
-            return local_file_path
-        except:  # noqa: E722
-            urllib.urlretrieve(
-                autoPACKserver_alt + "/" + cache + "/" + filename,
-                local_file_path,
-                reporthook=reporthook,
-            )
-            # check the file is not an error
-            return local_file_path
-    if url_exists(autoPACKserver_alt + "/" + cache + "/" + filename):
-        reporthook = None
-        if helper is not None:
-            reporthook = helper.reporthook
-        name = filename.split("/")[-1]  # the recipe name
-        local_file_path = cache_dir[cache] / destination + name
-        try:
-            urllib.urlretrieve(
-                autoPACKserver_alt + "/" + cache + "/" + filename,
-                local_file_path,
-                reporthook=reporthook,
-            )
-        except:  # noqa: E722
-            return None
-        # check the file is not an error
-        return local_file_path
-    log.error("not found %s", filename)
-    return filename
 
 def load_remote_file(filename, destination="", cache="geometries", force=None):
     local_file_path = retrieveFile(filename, destination=destination, cache=cache, force=force)
-    return json.load(open(local_file_path), "r")
+    return json.load(open(local_file_path, "r"))
 
 def fixPath(adict):  # , k, v):
     for key in list(adict.keys()):
@@ -433,7 +403,7 @@ def checkRecipeAvailable():
         print("problem accessing recipe " + fname)
 
 
-def updateRecipAvailableJSON(recipesfile):
+def updateRecipeAvailableJSON(recipesfile):
     if not os.path.isfile(recipesfile):
         print(recipesfile + " was not found")
         return
@@ -444,8 +414,7 @@ def updateRecipAvailableJSON(recipesfile):
     else:
         recipes = json.load(f)
     f.close()
-    RECIPES.update(recipes)
-    log.info("recipes updated %d" + str(len(RECIPES)))
+    log.info(f"recipes updated {len(RECIPES)}")
 
 
 def updateRecipAvailableXML(recipesfile):
@@ -495,7 +464,7 @@ def updateRecipAvailableXML(recipesfile):
                 if text[0] != "/" and text.find("http") == -1:
                     text = afdir / text
                 RECIPES[name][version][info] = str(text)
-    log.info("recipes updated %d" + str(len(RECIPES)))
+    log.info(f"recipes updated {RECIPES}")
 
 
 def updateRecipAvailable(recipesfile):
@@ -506,11 +475,11 @@ def updateRecipAvailable(recipesfile):
     if fileExtension.lower() == ".xml":
         updateRecipAvailableXML(recipesfile)
     elif fileExtension.lower() == ".json":
-        updateRecipAvailableJSON(recipesfile)
+        updateRecipeAvailableJSON(recipesfile)
     fixPath(RECIPES)
     #    fixPath(RECIPES,"wrkdir")#or autopackdata
     #    fixPath(RECIPES,"resultfile")
-    log.info("recipes updated and path fixed %d" + str(len(RECIPES)))
+    log.info(f"recipes updated and path fixed {RECIPES}")
 
 
 def saveRecipeAvailable(recipe_dictionary, recipefile):
@@ -569,7 +538,7 @@ if checkAtstartup:
     updateRecipAvailable(recipe_user_pref_file)
     updateRecipAvailable(recipe_dev_pref_file)
 
-log.info("currently nb recipes is %s" + str(len(RECIPES)))
+log.info(f"currently number recipes is {len(RECIPES)}")
 # check cache directory create if doesnt exit.abs//should be in user pref?
 # ?
 # need a distinction between autopackdir and cachdir
