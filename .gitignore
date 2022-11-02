@@ -111,4 +111,4 @@ ENV/
 
 /out
 *.simularium
-cellpack/test-recipes/**/converted/*
+**/converted/*
