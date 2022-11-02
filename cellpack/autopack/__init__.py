@@ -41,6 +41,7 @@ import os
 import re
 import shutil
 from os import path, environ
+from pathlib import Path
 
 import ssl
 import json
@@ -58,8 +59,12 @@ except ImportError:
 packageContainsVFCommands = 1
 ssl._create_default_https_context = ssl._create_unverified_context
 use_json_hook = True
-afdir = os.path.abspath(__path__[0])
+afdir = Path(os.path.abspath(__path__[0]))
 
+
+def make_directory_if_needed(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 # ==============================================================================
 # #Setup autopack data directory.
 # ==============================================================================
@@ -78,42 +83,15 @@ elif sys.platform == "win32":
     appdata = path.join(environ["APPDATA"], APPNAME)
 else:
     appdata = path.expanduser(path.join("~", "." + APPNAME))
-if not os.path.exists(appdata):
-    os.makedirs(appdata)
-    log.info("autoPACK data dir created", appdata)
+make_directory_if_needed(appdata)
+log.info("autoPACK data dir created", appdata)
 
-# ==============================================================================
-# setup Panda directory
-# ==============================================================================
-# PANDA_PATH = ""
-# if sys.platform == "darwin":
-#     PANDA_PATH = afdir + os.sep + ".." + os.sep + "Panda3D"
-#     sys.path.append("/Developer/Panda3D/")
-#     sys.path.append("/Developer/Panda3D/lib/")  # in case already installed
-#     # TODO need to fix the dependency that are locally set to /Developer/Panda3D/lib/
-# elif sys.platform == "win32":
-#     PANDA_PATH = afdir + os.sep + ".." + os.sep + "Panda3d-1.9.0-x64"
-#     PANDA_PATH_BIN = PANDA_PATH + os.sep + "bin"
-#     try:
-#         if PANDA_PATH_BIN not in os.environ.get("PATH", ""):
-#             os.environ["PATH"] = os.pathsep.join(
-#                 (PANDA_PATH_BIN, os.environ.get("PATH", ""))
-#             )
-#     except Exception:
-#         pass
-#     sys.path.append(PANDA_PATH_BIN)
-#     sys.path.append(PANDA_PATH)
-# elif sys.platform == "linux2":  # linux ? blender and maya ?
-#     PANDA_PATH = "/usr/lib/python2.7/dist-packages/"
-#     PANDA_PATH_BIN = "/usr/lib/panda3d/"
-# else:
-#     pass
-# sys.path.append(PANDA_PATH + os.sep + "lib")
+appdata = Path(appdata)
 
 
-def checkURL(URL):
+def url_exists(url):
     try:
-        response = urllib.urlopen(URL)
+        response = urllib.urlopen(url)
     except Exception:
         return False
     return response.code != 404
@@ -123,15 +101,12 @@ def checkURL(URL):
 # setup the cache directory inside the app data folder
 # ==============================================================================
 
-def make_directory_if_needed(directory):
-    if not os.path.exists(directory):
-        os.makedirs(directory)
 
-cache_results = appdata + os.sep + "cache_results"
-cache_geoms = appdata + os.sep + "cache_geometries"
-cache_sphere = appdata + os.sep + "cache_collisionTrees"
-cache_recipes = appdata + os.sep + "cache_recipes"
-preferences = appdata + os.sep + "preferences"
+cache_results = appdata / "cache_results"
+cache_geoms = appdata / "cache_geometries"
+cache_sphere = appdata / "cache_collisionTrees"
+cache_recipes = appdata / "cache_recipes"
+preferences = appdata / "preferences"
 # we can now use some json/xml file for storing preferences and options.
 # need others ?
 cache_dir = {
@@ -172,11 +147,11 @@ Please update to the latest version under the Help menu.
 # currated recipeList, and the dev recipeList
 # same for output and write theses file see below for the cache directories
 # all theses file will go in the pref folder ie cache_path
-recipe_web_pref_file = preferences + os.sep + "recipe_available.json"
-recipe_user_pref_file = preferences + os.sep + "user_recipe_available.json"
-recipe_dev_pref_file = preferences + os.sep + "autopack_serverDeveloper_recipeList.json"
-autopack_path_pref_file = preferences + os.sep + "path_preferences.json"
-autopack_user_path_pref_file = preferences + os.sep + "path_user_preferences.json"
+recipe_web_pref_file = preferences / "recipe_available.json"
+recipe_user_pref_file = preferences / "user_recipe_available.json"
+recipe_dev_pref_file = preferences / "autopack_serverDeveloper_recipeList.json"
+autopack_path_pref_file = preferences / "path_preferences.json"
+autopack_user_path_pref_file = preferences / "path_user_preferences.json"
 
 # Default values
 autoPACKserver = (
@@ -199,7 +174,7 @@ def checkPath():
             import urllib.request as urllib  # , urllib.parse, urllib.error
         except ImportError:
             import urllib
-        if checkURL(fileName):
+        if url_exists(fileName):
             urllib.urlretrieve(fileName, autopack_path_pref_file)
         else:
             log.error("problem accessing path %s", fileName)
@@ -235,21 +210,22 @@ if doit:
             if pref_path["autopackdir"] != "default":
                 autopackdir = pref_path["autopackdir"]
 
-replace_autoPACKserver = ["autoPACKserver", autoPACKserver]
-replace_autopackdir = ["autopackdir", autopackdir]
-replace_autopackdata = ["autopackdata", appdata]
+replace_path = {
+    "autoPACKserver": autoPACKserver,
+    "autopackdir": autopackdir,
+    "autopackdata": appdata
+}
 
-replace_path = [replace_autoPACKserver, replace_autopackdir, replace_autopackdata]
 global current_recipe_path
 current_recipe_path = appdata
 # we keep the file here, it come with the distribution
 # wonder if the cache shouldn't use the version like other appDAta
 # ie appData/AppName/Version/etc...
-if not os.path.isfile(afdir + os.sep + "version.txt"):
-    f = open(afdir + os.sep + "version.txt", "w")
+if not os.path.isfile(afdir / "version.txt"):
+    f = open(afdir / "version.txt", "w")
     f.write("0.0.0")
     f.close()
-f = open(afdir + os.sep + "version.txt", "r")
+f = open(afdir / "version.txt", "r")
 __version__ = f.readline()
 f.close()
 
@@ -273,7 +249,8 @@ def resetDefault():
 
 
 def revertOnePath(p):
-    for v in replace_path:
+    for _, v in enumerate(replace_path):
+        v = str(v)
         p = p.replace(v[1], v[0])
     return p
 
@@ -291,15 +268,16 @@ def checkErrorInPath(p, toreplace):
     return newpath[:-1]
 
 
-def fixOnePath(p):
-    for v in replace_path:
+def fixOnePath(path):
+    for old_value, new_value in replace_path.items():
         # fix before
-        if fixpath and re.findall("{0}".format(re.escape(v[0])), p):
-            p = checkErrorInPath(p, v[1])
+        new_value = str(new_value)
+        if fixpath and re.findall("{0}".format(re.escape(old_value)), path):
+            path = checkErrorInPath(path, new_value)
             # check for legacyServerautoPACK_database_1.0.0
-            p = checkErrorInPath(p, "autoPACK_database_1.0.0")
-        p = p.replace(v[0], v[1])
-    return p
+            path = checkErrorInPath(path, "autoPACK_database_1.0.0")
+        path = path.replace(old_value, new_value)
+    return path
 
 
 def updateReplacePath(newPaths):
@@ -311,6 +289,16 @@ def updateReplacePath(newPaths):
                 found = True
         if not found:
             replace_path.append(w)
+
+def download_file(url, local_file_path, reporthook):
+    if url_exists(url):
+        try:
+            urllib.urlretrieve(url, local_file_path, reporthook=reporthook)
+        except Exception as e:
+            log.error("error fetching file %r", e)
+    else:
+        raise Exception("Url does not exist")
+
 
 def is_full_url(file_path):
     return file_path.find("http") != -1 or file_path.find("ftp") != -1
@@ -329,43 +317,28 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
         if helper is not None:
             reporthook = helper.reporthook
 
+
         name = filename.split("/")[-1]  # the recipe name
-        local_file_directory = cache_dir[cache] + os.sep + destination
-        local_file_path = local_file_directory + name
+        local_file_directory = cache_dir[cache] / destination
+        local_file_path = local_file_directory / name
         make_directory_if_needed(local_file_directory)
         # check if exist first
         if not os.path.isfile(local_file_path) or force:
-            if checkURL(filename):
-                try:
-                    urllib.urlretrieve(filename, local_file_path, reporthook=reporthook)
-                except Exception as e:
-                    log.error("error fetching file %r", e)
-                    if useAPServer:
-                        log.info("try alternate server")
-                        urllib.urlretrieve(
-                            autoPACKserver_alt + "/" + cache + "/" + name,
-                            local_file_path,
-                            reporthook=reporthook,
-                        )
-            else:
-                if not os.path.isfile(local_file_path):
-                    log.error("not isfile %s", local_file_path)
-                    return None
+            download_file(filename, local_file_path, reporthook)
         filename = local_file_path
         log.info("autopack return grabbed %s", filename)
-        # check the file is not an error
         return filename
     # if no folder provided, use the current_recipe_folder
-    if os.path.isfile(cache_dir[cache] + os.sep + filename):
-        return cache_dir[cache] + os.sep + filename
-    if os.path.isfile(current_recipe_path + os.sep + filename):
-        return current_recipe_path + os.sep + filename
-    if checkURL(autoPACKserver + "/" + cache + "/" + filename):
+    if os.path.isfile(cache_dir[cache] / filename):
+        return cache_dir[cache] / filename
+    if os.path.isfile(current_recipe_path / filename):
+        return current_recipe_path / filename
+    if url_exists(autoPACKserver + "/" + cache + "/" + filename):
         reporthook = None
         if helper is not None:
             reporthook = helper.reporthook
         name = filename.split("/")[-1]  # the recipe name
-        local_file_path = cache_dir[cache] + os.sep + destination + name
+        local_file_path = cache_dir[cache] / destination + name
         try:
             urllib.urlretrieve(
                 autoPACKserver + "/" + cache + "/" + filename,
@@ -381,12 +354,12 @@ def retrieveFile(filename, destination="", cache="geometries", force=None):
             )
             # check the file is not an error
             return local_file_path
-    if checkURL(autoPACKserver_alt + "/" + cache + "/" + filename):
+    if url_exists(autoPACKserver_alt + "/" + cache + "/" + filename):
         reporthook = None
         if helper is not None:
             reporthook = helper.reporthook
         name = filename.split("/")[-1]  # the recipe name
-        local_file_path = cache_dir[cache] + os.sep + destination + name
+        local_file_path = cache_dir[cache] / destination + name
         try:
             urllib.urlretrieve(
                 autoPACKserver_alt + "/" + cache + "/" + filename,
@@ -424,7 +397,7 @@ def updatePathJSON():
     pref_path = json.load(f)
     f.close()
     autoPACKserver = pref_path["autoPACKserver"]
-    replace_autoPACKserver[1] = autoPACKserver
+    replace_path["autoPACKserver"] = autoPACKserver
     filespath = autoPACKserver + "/autoPACK_filePaths.json"
     if "filespath" in pref_path:
         if pref_path["filespath"] != "default":
@@ -436,7 +409,7 @@ def updatePathJSON():
     if "autopackdir" in pref_path:
         if pref_path["autopackdir"] != "default":
             autopackdir = pref_path["autopackdir"]  # noqa: F841
-            replace_autopackdir[1] = pref_path["autopackdir"]
+            replace_path["autoPACKserver"] = pref_path["autopackdir"]
 
 
 def updatePath():
@@ -454,7 +427,7 @@ def checkRecipeAvailable():
         import urllib.request as urllib  # , urllib.parse, urllib.error
     except ImportError:
         import urllib
-    if checkURL(fname):
+    if url_exists(fname):
         urllib.urlretrieve(fname, recipe_web_pref_file)
     else:
         print("problem accessing recipe " + fname)
@@ -495,7 +468,7 @@ def updateRecipAvailableXML(recipesfile):
                         .replace("\t", "")
                     )
                     if text[0] != "/" and text.find("http") == -1:
-                        text = afdir + os.sep + text
+                        text = afdir / text
                     RECIPES[name][version][info] = str(text)
             else:
                 RECIPES[name][version] = {}
@@ -507,7 +480,7 @@ def updateRecipAvailableXML(recipesfile):
                         .replace("\t", "")
                     )
                     if text[0] != "/" and text.find("http") == -1:
-                        text = afdir + os.sep + text
+                        text = afdir / text
                     RECIPES[name][version][info] = str(text)
         else:  # append to the dictionary
             RECIPES[name] = {}
@@ -520,7 +493,7 @@ def updateRecipAvailableXML(recipesfile):
                     .replace("\t", "")
                 )
                 if text[0] != "/" and text.find("http") == -1:
-                    text = afdir + os.sep + text
+                    text = afdir / text
                 RECIPES[name][version][info] = str(text)
     log.info("recipes updated %d" + str(len(RECIPES)))
 
