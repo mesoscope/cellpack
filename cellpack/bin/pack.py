@@ -1,4 +1,5 @@
 import fire
+from os import path
 import logging
 import logging.config
 
@@ -10,7 +11,11 @@ from cellpack.autopack.Environment import Environment
 from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
-log = logging.getLogger(__name__)
+###############################################################################
+log_file_path = path.abspath(path.join(__file__, "../../../logging.conf"))
+logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
+log = logging.getLogger()
+###############################################################################
 
 
 def pack(recipe, config):
@@ -33,15 +38,15 @@ def pack(recipe, config):
 
     afviewer = None
     if config_data["save_analyze_result"]:
-        output = env.out_folder
         analyze = AnalyseAP(env=env, viewer=afviewer, result_file=None)
-        log.info(f"saving to {output}")
+        log.info(f"saving to {env.out_folder}")
         analyze.doloop(
-            1,
+            config_data["num_trials"],
             env.boundingBox,
-            output,
             plot=True,
             show_grid=config_data["show_grid_plot"],
+            seeds_i=config_data["randomness_seed"],
+            config_name=config_data["name"],
         )
     else:
         env.buildGrid(rebuild=True)
