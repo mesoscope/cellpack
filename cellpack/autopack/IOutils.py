@@ -1548,7 +1548,7 @@ def setupFromJsonDic(
 def load_MixedasJson(env, resultfilename=None, transpose=True):
     #        from upy.hostHelper import Helper as helper
     if resultfilename is None:
-        resultfilename = env.resultfile
+        resultfilename = env.result_file
     # use the current dictionary ?jsondic
     with open(resultfilename, "r") as fp:  # doesnt work with symbol link ?
         if autopack.use_json_hook:
@@ -1608,12 +1608,12 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                     name_ingr = ingr.name
                     # replace number by name ?
                     if (
-                        orga.name + "_surf__" + ingr.o_name
+                        orga.name + "_surf_" + ingr.o_name
                         in env.result_json["compartments"][orga.name]["surface"][
                             "ingredients"
                         ]
                     ):
-                        name_ingr = orga.name + "_surf__" + ingr.o_name
+                        name_ingr = orga.name + "_surf_" + ingr.o_name
                     if (
                         name_ingr
                         not in env.result_json["compartments"][orga.name]["surface"][
@@ -1661,12 +1661,12 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                 for ingr in ri.ingredients:
                     name_ingr = ingr.name
                     if (
-                        orga.name + "_int__" + ingr.o_name
+                        orga.name + "_int_" + ingr.o_name
                         in env.result_json["compartments"][orga.name]["interior"][
                             "ingredients"
                         ]
                     ):
-                        name_ingr = orga.name + "_int__" + ingr.o_name
+                        name_ingr = orga.name + "_int_" + ingr.o_name
                     if (
                         name_ingr
                         not in env.result_json["compartments"][orga.name]["interior"][
@@ -1709,7 +1709,7 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                         )
     freePoint = []  # pickle.load(rfile)
     try:
-        rfile = open(resultfilename + "freePoints", "rb")
+        rfile = open(resultfilename + "free_points", "rb")
         freePoint = pickle.load(rfile)
         rfile.close()
     except:  # noqa: E722

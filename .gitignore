@@ -109,6 +109,12 @@ ENV/
 # VSCode
 .vscode
 
-/out
+out/
 *.simularium
 **/converted/*
+
+# test outputs
+cellpack/tests/outputs/
+
+# data
+data/

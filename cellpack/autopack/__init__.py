@@ -242,7 +242,7 @@ f.close()
 
 # should we check filespath
 
-info_dic = ["setupfile", "resultfile", "wrkdir"]
+info_dic = ["setupfile", "result_file", "wrkdir"]
 # change the setupfile access to online in recipe_available.xml
 # change the result access to online in recipe_available.xml
 

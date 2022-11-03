@@ -8,7 +8,7 @@ class Grid(BaseGrid):
     The Grid class
     ==========================
     This class handle the use of grid to control the packing. The grid keep information
-    of 3d positions, distances, freePoints and inside/surface points from organelles.
+    of 3d positions, distances, free_points and inside/surface points from organelles.
     NOTE : this class could be completely replaced if openvdb is wrapped to python.
     """
 
@@ -24,16 +24,16 @@ class Grid(BaseGrid):
             boundingBox, space
         )
         self.create3DPointLookup()
-        self.freePoints = list(range(self.gridVolume))
-        self.nbFreePoints = len(self.freePoints)
+        self.free_points = list(range(self.gridVolume))
+        self.nbFreePoints = len(self.free_points)
 
     def reset(self):
-        # reset the  distToClosestSurf and the freePoints
+        # reset the  distToClosestSurf and the free_points
         # boundingBox shoud be the same otherwise why keeping the grid
 
         self.distToClosestSurf[:] = self.diag
-        self.freePoints = list(range(len(self.freePoints)))
-        self.nbFreePoints = len(self.freePoints)
+        self.free_points = list(range(len(self.free_points)))
+        self.nbFreePoints = len(self.free_points)
         self.distancesAfterFill = []
         self.freePointsAfterFill = []
         self.nbFreePointsAfterFill = []

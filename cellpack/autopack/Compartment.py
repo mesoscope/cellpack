@@ -1898,7 +1898,7 @@ class Compartment(CompartmentList):
                 )
             ptId = numpy.ones(number_off_grid_pts, "i") * self.number  # surface point
             env.grid.compartment_ids = numpy.hstack((env.grid.compartment_ids, ptId))
-            env.grid.freePoints = numpy.arange(nbGridPoints + number_off_grid_pts)
+            env.grid.free_points = numpy.arange(nbGridPoints + number_off_grid_pts)
             surfacePoints = list(
                 range(nbGridPoints, nbGridPoints + number_off_grid_pts)
             )
@@ -2049,7 +2049,7 @@ class Compartment(CompartmentList):
 
         env.grid.compartment_ids.extend([number] * length)
         surfacePoints = list(range(nbGridPoints, nbGridPoints + length))
-        env.grid.freePoints.extend(surfacePoints)
+        env.grid.free_points.extend(surfacePoints)
 
         surfacePointsNormals = {}
         for i, n in enumerate(surfPtsBBNorms):
