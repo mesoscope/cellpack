@@ -1699,7 +1699,7 @@ class Ingredient(Agent):
                 success, jtrans, rotMatj, insidePoints, newDistPoints = self.grow_place(
                     env,
                     ptInd,
-                    env.grid.freePoints,
+                    env.grid.free_points,
                     env.grid.nbFreePoints,
                     grid_point_distances,
                     dpad,
@@ -2548,6 +2548,7 @@ class Ingredient(Agent):
         # create the rb only once and not at ever jitter
         # rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMat,),{"rtype":self.type},)
         # jitter loop
+        # level = self.collisionLevel
         for attempt_number in range(self.jitter_attempts):
             insidePoints = {}
             newDistPoints = {}

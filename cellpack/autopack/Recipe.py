@@ -120,7 +120,7 @@ class Recipe:
     def addIngredient(self, ingr):
         """add the given ingredient from the recipe"""
         if ingr.name.find(self.name) == -1:
-            ingr.name = self.name + "__" + ingr.name
+            ingr.name = self.name + "_" + ingr.name
         # I'd like to turn this off but it breaks the GUI's ability to turn off
         # ingredients with the checkboxes and packs everything everytime if this is off.
         # Right now the ingredients become way too long with it on.
