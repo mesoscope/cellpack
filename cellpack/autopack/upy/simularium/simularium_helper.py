@@ -337,6 +337,7 @@ class simulariumHelper(hostHelper.Helper):
     def add_compartment_to_scene(
         self,
         compartment,
+        grid_positions
     ):
         display_type = DISPLAY_TYPE.SPHERE
         url = ""
@@ -362,6 +363,35 @@ class simulariumHelper(hostHelper.Helper):
             compartment.position,
             np.identity(4),
         )
+
+        if grid_positions is not None:
+            distances = compartment.surface_distances
+            max_distance = np.max(distances)
+            for index in range(len(distances)):
+                name = f"{compartment.name}-surface-distances-{index}"
+                distance = distances[index]
+                self.display_data[name] = DisplayData(
+                    name=name,
+                    display_type=DISPLAY_TYPE.SPHERE,
+                    url="",
+                    color=simulariumHelper.format_rgb_color([
+                        0,
+                        distance / max_distance,
+                        compartment.number - 1])
+                )
+
+                point_pos = grid_positions[index]
+                self.add_instance(
+                    name,
+                    None,
+                    f"{name}-{index}",
+                    0.5,
+                    point_pos + np.array([(compartment.number - 1) * 2, 0, 0]),
+                    np.identity(4),
+                    None,
+                )
+
+
 
     def add_object_to_scene(
         self,

@@ -479,7 +479,7 @@ def save_as_simularium(env, setupfile, all_ingr_as_array, compartments):
     )
     if compartments is not None:
         for compartment in compartments:
-            autopack.helper.add_compartment_to_scene(compartment)
+            autopack.helper.add_compartment_to_scene(compartment, grid_positions)
     autopack.helper.writeToFile(None, f"{setupfile}_results", env.boundingBox)
 
 

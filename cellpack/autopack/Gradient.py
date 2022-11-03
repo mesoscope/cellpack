@@ -234,7 +234,6 @@ class Gradient:
         """
         degree = number_of_points / 2.0
         weightGauss = []
-        import ipdb; ipdb.set_trace()
 
         for i in range(int(number_of_points)):
             i = i - degree + 1

@@ -902,12 +902,15 @@ class Compartment(CompartmentList):
         else:
             self.createSurfacePoints(maxl=env.grid.gridSpacing)
         # Graham Sum the SurfaceArea for each polyhedron
+        # the distance is initialized to the largest possible value
+        # (diagonal of the bounding box)
         distances = env.grid.distToClosestSurf
         compartment_ids = env.grid.compartment_ids
         diag = env.grid.diag
         self.log.info("distance %d", len(distances))
 
         # build search tree for off grid surface points
+        # off grid points are the vertexes of the mesh
         off_grid_surface_points = self.ogsurfacePoints
         self.OGsrfPtsBht = ctree = spatial.cKDTree(
             tuple(off_grid_surface_points), leafsize=10
@@ -1007,9 +1010,28 @@ class Compartment(CompartmentList):
             )
         else:
             self.log.error("Not a recognized inner grid method", env.innerGridMethod)
+
         self.compute_volume_and_set_count(
             env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
+
+        surface_mask = numpy.equal(self.number, env.grid.compartment_ids)
+        surface_ids = numpy.nonzero(surface_mask)
+        surface_positions = master_grid_positions[surface_ids]
+
+        # non_surface_ids = numpy.nonzero(not surface_mask)
+        # non_surface_positions = master_grid_positions[non_surface_ids]
+
+        surface_tree = spatial.cKDTree(
+            tuple(surface_positions), leafsize=10
+        )
+
+        surface_distances, indexes = ctree.query(
+            tuple(master_grid_positions)
+        )
+
+        self.surface_distances = surface_distances
+
         return inside_points, surface_points
 
     def build_grid_sphere(self, env):
@@ -1263,9 +1285,11 @@ class Compartment(CompartmentList):
             surface_points_in_bounding_box,
             surfPtsBBNorms,
         ) = self.filter_surface_pts_to_fill_box(srfPts, env)
+
         srfPts = surface_points_in_bounding_box
 
-        ex = True  # True if nbGridPoints == len(idarray) else False
+        ex = False  # True if nbGridPoints == len(idarray) else False
+
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
             nbGridPoints,
             srfPts,
