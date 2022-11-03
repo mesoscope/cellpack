@@ -121,7 +121,9 @@ def split_ingredient_data(object_key, ingredient_data):
 
 def get_and_store_v2_object(ingredient_key, ingredient_data, region_list, objects_dict):
     if "include" in ingredient_data:
-        ingredient_data = autopack.load_remote_file(ingredient_data["include"], cache="recipes")
+        ingredient_data = autopack.load_remote_file(
+            ingredient_data["include"], cache="recipes"
+        )
     check_required_attributes(ingredient_data)
     converted_ingredient = migrate_ingredient(ingredient_data)
     object_info, composition_info = split_ingredient_data(
@@ -151,6 +153,7 @@ def convert(recipe_data):
                 outer_most_region_array,
                 objects_dict,
             )
+            print("get and store")
     if "compartments" in recipe_data:
         for compartment_name in recipe_data["compartments"]:
             # add the compartment to composition

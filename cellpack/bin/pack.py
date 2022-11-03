@@ -1,5 +1,4 @@
 import fire
-from os import path
 import logging
 import logging.config
 
@@ -12,6 +11,7 @@ from cellpack.autopack.loaders.config_loader import ConfigLoader
 from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 log = logging.getLogger(__name__)
+
 
 def pack(recipe, config):
     """

@@ -68,13 +68,18 @@ log = logging.getLogger("autopack")
 log.propagate = False
 ###############################################################################
 
+
 def make_directory_if_needed(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
+
+
 # ==============================================================================
 # #Setup autopack data directory.
 # ==============================================================================
 # the dir will have all the recipe + cache.
+
+
 APPNAME = "autoPACK"
 # log = logging.getLogger("autopack")
 # log.propagate = False
@@ -219,7 +224,7 @@ if doit:
 replace_path = {
     "autoPACKserver": autoPACKserver,
     "autopackdir": autopackdir,
-    "autopackdata": appdata
+    "autopackdata": appdata,
 }
 
 global current_recipe_path
@@ -290,6 +295,7 @@ def updateReplacePath(newPaths):
         if not found:
             replace_path.append(w)
 
+
 def download_file(url, local_file_path, reporthook):
     if url_exists(url):
         try:
@@ -303,12 +309,13 @@ def download_file(url, local_file_path, reporthook):
 def is_full_url(file_path):
     return file_path.find("http") != -1 or file_path.find("ftp") != -1
 
+
 def retrieveFile(filename, destination="", cache="geometries", force=False):
     """
-        Options:
-        1. Find file locally, return the file path
-        2. Download file to local cache, return path (might involve replacing short-code in url)
-        3. Force download even though you have a local copy 
+    Options:
+    1. Find file locally, return the file path
+    2. Download file to local cache, return path (might involve replacing short-code in url)
+    3. Force download even though you have a local copy
     """
     if not is_full_url(filename):
         # replace short code, ie 'autoPACKserver' with full url
@@ -339,24 +346,28 @@ def retrieveFile(filename, destination="", cache="geometries", force=False):
     # construct url using just the file name
     url = autoPACKserver + "/" + str(cache) + "/" + str(filename)
     if url_exists(url):
-            reporthook = None
-            if helper is not None:
-                reporthook = helper.reporthook
-            name = filename
-            local_file_path = cache_dir[cache] / destination / name
-            download_file(url, local_file_path, reporthook)
-            return local_file_path
+        reporthook = None
+        if helper is not None:
+            reporthook = helper.reporthook
+        name = filename
+        local_file_path = cache_dir[cache] / destination / name
+        download_file(url, local_file_path, reporthook)
+        return local_file_path
+
 
 def load_remote_file(filename, destination="", cache="geometries", force=None):
-    local_file_path = retrieveFile(filename, destination=destination, cache=cache, force=force)
+    local_file_path = retrieveFile(
+        filename, destination=destination, cache=cache, force=force
+    )
     return json.load(open(local_file_path, "r"))
+
 
 def fixPath(adict):  # , k, v):
     for key in list(adict.keys()):
         if type(adict[key]) is dict or type(adict[key]) is OrderedDict:
             fixPath(adict[key])
         else:
-            #        if key == k:
+            # if key == k:
             adict[key] = fixOnePath(adict[key])
 
 
