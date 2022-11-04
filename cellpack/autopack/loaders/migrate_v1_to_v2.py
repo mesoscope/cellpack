@@ -153,7 +153,6 @@ def convert(recipe_data):
                 outer_most_region_array,
                 objects_dict,
             )
-            print("get and store")
     if "compartments" in recipe_data:
         for compartment_name in recipe_data["compartments"]:
             # add the compartment to composition

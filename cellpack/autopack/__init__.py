@@ -353,6 +353,7 @@ def retrieveFile(filename, destination="", cache="geometries", force=False):
         local_file_path = cache_dir[cache] / destination / name
         download_file(url, local_file_path, reporthook)
         return local_file_path
+    return filename
 
 
 def load_remote_file(filename, destination="", cache="geometries", force=None):
