@@ -1061,6 +1061,8 @@ class AnalyseAP:
                 self.inner_mesh_path = mesh_paths["inner"]
             if "outer" in mesh_paths:
                 self.outer_mesh_path = mesh_paths["outer"]
+        else:
+            self.inner_mesh_path = self.outer_mesh_path = None
 
         all_objs, all_pos_list = self.get_obj_dict(self.input_path)
         self.ingr_key = ingr_key
@@ -1201,6 +1203,10 @@ class AnalyseAP:
         get_correlations=False,
     ):
         print("creating parametrized representations...")
+        if self.inner_mesh_path is None or self.outer_mesh_path is None:
+            raise ValueError(
+                "Provide inner and outer mesh paths to create parametrized representations."
+            )
         theta_vals = numpy.linspace(0, numpy.pi, 1 + int(numpy.pi / angular_spacing))
         phi_vals = numpy.linspace(
             0, 2 * numpy.pi, 1 + int(2 * numpy.pi / angular_spacing)
