@@ -1,0 +1,16 @@
+{
+    "version": "1.0.0",
+    "format_version": "1.0",
+    "input_path": "out/analyze/test_analyze/jitter/",
+    "output_path": "out/analyze/test_analyze/jitter/",
+    "ingredient_key" : "membrane_interior_peroxisome",
+    "mesh_paths" : {
+        "inner": "data/mean-nuc.obj",
+        "outer": "data/mean-membrane.obj"
+    },
+    "run_similarity_analysis": true,
+    "get_parametrized_representation": true,
+    "save_plots": true,
+    "get_correlations": true,
+    "max_plots_to_save": 1
+}
