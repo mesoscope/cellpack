@@ -1792,7 +1792,7 @@ class Ingredient(Agent):
                 env, target_grid_point_position, rotation_matrix
             )
             (insidePoints, newDistPoints) = self.pack_at_grid_pt_location(
-                env, jtrans, rotMatj, dpad, grid_point_distances
+                env, jtrans, rotMatj, dpad, grid_point_distances, insidePoints, newDistPoints
             )
         if success:
             if is_realtime:
@@ -2450,21 +2450,14 @@ class Ingredient(Agent):
                     self.env.rIngr.append(self)
                     self.env.result.append([pt, packing_rotation, self, ptInd])
 
-                    new_inside_points, new_dist_points = self.get_new_distance_values(
+                    self.pack_at_grid_pt_location(
+                        env,
                         pt,
                         packing_rotation,
-                        gridPointsCoords,
-                        distance,
                         dpad,
-                        self.deepest_level,
-                    )
-                    insidePoints = self.merge_place_results(
-                        new_inside_points,
+                        distance,
                         insidePoints,
-                    )
-                    newDistPoints = self.merge_place_results(
-                        new_dist_points,
-                        newDistPoints,
+                        newDistPoints
                     )
                 self.log.info("compute distance loop %d", time() - t3)
 
