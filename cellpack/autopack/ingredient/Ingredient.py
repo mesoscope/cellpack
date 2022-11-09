@@ -2442,8 +2442,8 @@ class Ingredient(Agent):
 
             # got all the way through the checks with no collision
             if True not in collision_results:
-                insidePoints = {}
-                newDistPoints = {}
+                inside_points = {}
+                new_dist_points = {}
                 t3 = time()
 
                 # self.update_data_tree(jtrans,rotMatj,ptInd=ptInd)?
@@ -2462,8 +2462,8 @@ class Ingredient(Agent):
                         packing_rotation,
                         dpad,
                         distance,
-                        insidePoints,
-                        newDistPoints,
+                        inside_points,
+                        new_dist_points,
                     )
                 self.log.info("compute distance loop %d", time() - t3)
 
@@ -2485,8 +2485,8 @@ class Ingredient(Agent):
                     success,
                     packing_location,
                     packing_rotation,
-                    insidePoints,
-                    newDistPoints,
+                    inside_points,
+                    new_dist_points,
                 )
 
         # never found a place to pack
