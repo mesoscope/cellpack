@@ -1,17 +1,17 @@
 {
-    "name": "default-run",
+    "name": "grid_spacing_4",
     "format": "simularium",
     "inner_grid_method": "trimesh",
     "live_packing": false,
     "ordered_packing": false,
-    "out": "out/",
+    "num_trials": 10,
+    "out": "out/analyze",
     "overwrite_place_method": false,
-    "place_method": "jitter",
-    "save_analyze_result": false,
+    "place_method": "spheresSST",
+    "save_analyze_result": true,
     "show_grid_plot": false,
-    "spacing": null,
+    "spacing": 4,
     "use_periodicity": false,
     "show_sphere_trees": false,
-    "load_from_grid_file": true,
-    "save_converted_recipe": true
+    "load_from_grid_file": true
 }
