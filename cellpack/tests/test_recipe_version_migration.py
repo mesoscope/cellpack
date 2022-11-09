@@ -328,7 +328,8 @@ def test_convert_v1_to_v2(
     assert objects_dict == expected_object_dict
     assert composition == expected_composition_dict
 
-#to-do: fix duplicate / 
+
+# to-do: fix duplicate /
 @pytest.mark.parametrize(
     "converted_data, expected_data",
     [

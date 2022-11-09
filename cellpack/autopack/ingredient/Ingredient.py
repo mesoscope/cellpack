@@ -1792,7 +1792,13 @@ class Ingredient(Agent):
                 env, target_grid_point_position, rotation_matrix
             )
             (insidePoints, newDistPoints) = self.pack_at_grid_pt_location(
-                env, jtrans, rotMatj, dpad, grid_point_distances, insidePoints, newDistPoints
+                env,
+                jtrans,
+                rotMatj,
+                dpad,
+                grid_point_distances,
+                insidePoints,
+                newDistPoints,
             )
         if success:
             if is_realtime:
@@ -2457,7 +2463,7 @@ class Ingredient(Agent):
                         dpad,
                         distance,
                         insidePoints,
-                        newDistPoints
+                        newDistPoints,
                     )
                 self.log.info("compute distance loop %d", time() - t3)
 

@@ -424,10 +424,10 @@ def updateRecipeAvailableJSON(recipesfile):
         return
     # replace shortcut pathby hard path
     f = open(recipesfile, "r")
-    if use_json_hook:
-        recipes = json.load(f, object_pairs_hook=OrderedDict)
-    else:
-        recipes = json.load(f)
+    # if use_json_hook:
+    #     recipes = json.load(f, object_pairs_hook=OrderedDict)
+    # else:
+    #     recipes = json.load(f)
     f.close()
     log.info(f"recipes updated {len(RECIPES)}")
 
