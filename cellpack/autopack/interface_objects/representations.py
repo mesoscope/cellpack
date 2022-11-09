@@ -38,9 +38,11 @@ class Representations:
         # of spheres in next level covererd by this sphere
         # ...
         # int: number of spheres in second level
+        print(f"in read_sphere {file}")
         f = open(file)
-        print(file)
+        print(f"f -- {f}")
         sphere_data = f.readlines()
+        print(f"sphere_data -- {sphere_data}")
         f.close()
 
         # strip comments
@@ -74,13 +76,19 @@ class Representations:
     def _get_spheres(self):
         if "path" in self.packing:
             sphere_file = f"{self.packing['path']}/{self.packing['name']}"
+            print(self.packing['path'])
+            print(self.packing['name'])
+            print(f"sphere_file-- {sphere_file}")
+
             sphere_file_path = autopack.retrieveFile(
                 sphere_file, cache="collisionTrees"
             )
+            print(f"load retrieveFile-- {sphere_file_path}")
             (
                 positions,
                 radii,
             ) = Representations._read_sphere_file(sphere_file_path)
+            print(sphere_file_path)
             self.packing["positions"] = positions
             self.packing["radii"] = radii
         # can be passed in directly, or they were just read from a file

@@ -145,6 +145,7 @@ class RecipeLoader(object):
         return new_recipe
 
     def _read(self):
+        print(f"self.file_path -- {self.file_path}")
         new_values = autopack.load_remote_file(self.file_path, cache="recipes")
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
