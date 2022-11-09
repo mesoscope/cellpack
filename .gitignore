@@ -117,4 +117,5 @@ cellpack/tests/outputs/
 
 # data
 data/
-cellpack/test-recipes/**/converted/*
+**/converted/*
+

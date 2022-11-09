@@ -81,7 +81,7 @@ class RecipeLoader(object):
                 # destination = recipe+os.sep+"recipe"+os.sep+"ingredients"+os.sep,
                 cache="recipes",
             )
-            with open(filename, "r") as fp:  # doesnt work with symbol link ?
+            with open(filename, "r") as fp:  # doesn't work with symbol link ?
                 data = json.load(fp)
         elif inode is not None:
             data = inode
@@ -110,7 +110,7 @@ class RecipeLoader(object):
             format_version = "1.0"  # all recipes before we introduced versioning
         elif len(recipe_data["format_version"].split(".")) > 2:
             # We only use two places for format version, but people
-            # might accidently include a third number
+            # might accidentally include a third number
             # ie 2.0.0 instead of 2.0
             split_numbers = recipe_data["format_version"].split(".")
             format_version = f"{split_numbers[0]}.{split_numbers[1]}"
@@ -145,7 +145,8 @@ class RecipeLoader(object):
         return new_recipe
 
     def _read(self):
-        new_values = json.load(open(self.file_path, "r"))
+        local_path = autopack.retrieveFile(self.file_path, cache="recipes")
+        new_values = json.load(open(local_path, "r"))
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
         recipe_data["format_version"] = RecipeLoader._sanitize_format_version(
