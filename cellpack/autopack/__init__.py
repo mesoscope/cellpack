@@ -317,7 +317,6 @@ def retrieveFile(filename, destination="", cache="geometries", force=False):
     2. Download file to local cache, return path (might involve replacing short-code in url)
     3. Force download even though you have a local copy
     """
-    print("1", filename)
     if not is_full_url(filename):
         # replace short code, ie 'autoPACKserver' with full url
         filename = fixOnePath(filename)
@@ -329,7 +328,6 @@ def retrieveFile(filename, destination="", cache="geometries", force=False):
             reporthook = helper.reporthook
 
         name = url.split("/")[-1]  # the recipe name
-        print("name", name)
         local_file_directory = cache_dir[cache] / destination
         local_file_path = local_file_directory / name
         make_directory_if_needed(local_file_directory)
@@ -337,19 +335,15 @@ def retrieveFile(filename, destination="", cache="geometries", force=False):
         if not os.path.isfile(local_file_path) or force:
             download_file(url, local_file_path, reporthook)
         log.info(f"autopack downloaded and stored file: {local_file_path}")
-        print("2", filename, local_file_path)
         return local_file_path
     filename = Path(filename)
-    print("filename Path --- ", filename)
     if os.path.isfile(cache_dir[cache] / filename):
         return cache_dir[cache] / filename
     if os.path.isfile(current_recipe_path / filename):
         # if no folder provided, use the current_recipe_folder
-        print("3", current_recipe_path / filename)
         return current_recipe_path / filename
 
     url = autoPACKserver + "/" + str(cache) + "/" + str(filename)
-    print(f"url -- {url}")
     if url_exists(url):
         reporthook = None
         if helper is not None:
@@ -357,9 +351,7 @@ def retrieveFile(filename, destination="", cache="geometries", force=False):
         name = filename
         local_file_path = cache_dir[cache] / destination / name
         download_file(url, local_file_path, reporthook)
-        print("4", local_file_path)
         return local_file_path
-    print("5", filename)
     return filename
 
 

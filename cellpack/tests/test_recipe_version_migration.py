@@ -344,7 +344,7 @@ def test_convert_v1_to_v2(
                 "objects": {
                     "A": {
                         "orient_bias_range": [6, 12],
-                        "radius": 10,
+                        "radius": 20,
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
                         ),
@@ -353,7 +353,7 @@ def test_convert_v1_to_v2(
                     "B": {
                         "orient_bias_range": [6, pi],
                         "packing_mode": "random",
-                        "radius": 12,
+                        "radius": 40,
                         "representations": Representations(
                             **RecipeLoader.default_values["representations"]
                         ),
@@ -361,15 +361,11 @@ def test_convert_v1_to_v2(
                     },
                     "C": {
                         "type": INGREDIENT_TYPE.SINGLE_SPHERE.value,
-                        "radius": 100,
+                        "radius": 200,
                         "partners": {"probability_binding": 0.5},
                         "orient_bias_range": [-pi, 12],
                         "representations": Representations(
-                            packing={
-                                "name": "fibrinogen.sph",
-                                "format": ".sph",
-                                "path": "/",
-                            }
+                            **RecipeLoader.default_values["representations"]
                         ),
                     },
                 },
