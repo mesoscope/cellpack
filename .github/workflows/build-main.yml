@@ -30,7 +30,7 @@ jobs:
         pip install .[test]
     - name: Test with pytest
       run: |
-        pytest --cov-report xml --cov=cellpack cellpack/tests/
+        pytest --cov-report xml --cov=cellpack cellpack/tests/ --import-mode=importlib
     - name: Upload codecov
       uses: codecov/codecov-action@v1
 
