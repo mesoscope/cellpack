@@ -193,7 +193,7 @@ def checkPath():
 
 # get user / default value
 if not os.path.isfile(autopack_path_pref_file):
-    log.error(autopack_path_pref_file + " file is not found")
+    log.error(str(autopack_path_pref_file) + "file is not found")
     checkPath()
 
 doit = False
