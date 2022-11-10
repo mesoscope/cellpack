@@ -6,6 +6,7 @@ Created on Mon May  6 22:58:44 2013
 """
 import os
 import math
+from typing import Dict, Optional
 
 import numpy
 import scipy
@@ -145,8 +146,6 @@ class AnalyseAP:
         result_file=None,
         input_path=None,
         output_path=None,
-        inner_mesh_path=None,
-        outer_mesh_path=None,
     ):
         self.env = None
         self.smallest = 99999.0
@@ -168,8 +167,6 @@ class AnalyseAP:
         self.plotly = PlotlyAnalysis()
         self.input_path = input_path
         self.output_path = output_path
-        self.inner_mesh_path = inner_mesh_path
-        self.outer_mesh_path = outer_mesh_path
 
         autopack._colors = None
 
@@ -1051,15 +1048,29 @@ class AnalyseAP:
 
     def run_analysis_workflow(
         self,
-        input_path,
-        ingr_key,
-        run_similarity_analysis=True,
-        get_parametrized_representation=True,
-        save_plots=False,
-        get_correlations=False,
+        ingr_key: str,
+        run_similarity_analysis: Optional[bool] = True,
+        get_parametrized_representation: Optional[bool] = True,
+        mesh_paths: Optional[Dict[str, str]] = None,
+        save_plots: Optional[bool] = False,
+        get_correlations: Optional[bool] = False,
+        max_plots_to_save: Optional[int] = 1,
     ):
-        all_objs, all_pos_list = self.get_obj_dict(input_path)
+        if mesh_paths is not None:
+            if "inner" in mesh_paths:
+                self.inner_mesh_path = mesh_paths["inner"]
+            if "outer" in mesh_paths:
+                self.outer_mesh_path = mesh_paths["outer"]
+        else:
+            self.inner_mesh_path = self.outer_mesh_path = None
+
+        all_objs, all_pos_list = self.get_obj_dict(self.input_path)
         self.ingr_key = ingr_key
+
+        if ingr_key not in all_objs:
+            raise ValueError(
+                f"Ingredient key {ingr_key} not found at {self.input_path}"
+            )
 
         print(f"Saving analysis outputs to {self.output_path}")
 
@@ -1075,6 +1086,7 @@ class AnalyseAP:
                 inner_mesh_path=self.inner_mesh_path,
                 outer_mesh_path=self.outer_mesh_path,
                 save_plots=save_plots,
+                max_plots_to_save=max_plots_to_save,
                 get_correlations=get_correlations,
             )
 
@@ -1191,6 +1203,10 @@ class AnalyseAP:
         get_correlations=False,
     ):
         print("creating parametrized representations...")
+        if self.inner_mesh_path is None or self.outer_mesh_path is None:
+            raise ValueError(
+                "Provide inner and outer mesh paths to create parametrized representations."
+            )
         theta_vals = numpy.linspace(0, numpy.pi, 1 + int(numpy.pi / angular_spacing))
         phi_vals = numpy.linspace(
             0, 2 * numpy.pi, 1 + int(2 * numpy.pi / angular_spacing)
