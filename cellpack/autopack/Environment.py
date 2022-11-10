@@ -285,8 +285,18 @@ class Environment(CompartmentList):
             gradients = self.recipe_data["gradients"]
             for gradient_name in gradients:
                 gradient_data = gradients[gradient_name]
-            for gradient_name in gradients:
+                if "surface_name" in gradient_data:
+                    gradient_data["object"] = self.get_compartment_object_by_name(gradient_data["surface_name"])
                 self.set_gradient(gradient_name, gradient_data)
+
+
+    def get_compartment_object_by_name(self, compartment_name):
+        """
+        Returns compartment object by name
+        """ 
+        for compartment in self.compartments:
+            if compartment.name == compartment_name:
+                return compartment
 
     def setSeed(self, seedNum):
         SEED = int(seedNum)
@@ -359,9 +369,6 @@ class Environment(CompartmentList):
                         self.create_ingredient(external_recipe, ingredient_info)
             self.setExteriorRecipe(external_recipe)
 
-        if "gradients" in self.recipe_data:
-            # TODO: deal with gradients here
-            pass
 
     def reportprogress(self, label=None, progress=None):
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):
@@ -1267,11 +1274,7 @@ class Environment(CompartmentList):
                 c.setCount()
         else:
             self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
-        if self.use_gradient and len(self.gradients) and rebuild:
-            for g in self.gradients:
-                self.gradients[g].buildWeightMap(
-                    boundingBox, self.grid.masterGridPositions
-                )
+
         if self.previous_grid_file is not None:
             distance = self.grid.distToClosestSurf  # [:]
             nbFreePoints = nbPoints  # -1              #Graham turned this off on 5/16/12 to match August Repair for May Hybrid
@@ -1289,6 +1292,12 @@ class Environment(CompartmentList):
                         i, mingrs, distance, nbFreePoints, organelle.molecules
                     )
             self.grid.nbFreePoints = nbFreePoints
+
+        if self.use_gradient and len(self.gradients) and rebuild:
+            for g in self.gradients:
+                self.gradients[g].buildWeightMap(
+                    boundingBox, self.grid.masterGridPositions
+                )            
 
     def onePrevIngredient(self, i, mingrs, distance, nbFreePoints, marray):
         """

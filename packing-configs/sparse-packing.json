@@ -8,8 +8,8 @@
     "overwrite_place_method": false,
     "place_method": "spheresSST",
     "save_analyze_result": false,
-    "show_grid_plot": true,
-    "spacing": 10,
+    "show_grid_plot": false,
+    "spacing": 4,
     "use_periodicity": false,
     "show_sphere_trees": false,
     "load_from_grid_file": false

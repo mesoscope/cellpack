@@ -73,7 +73,7 @@ class Gradient:
             self.computeStartEnd()
         self.function = self.defaultFunction  # lambda ?
         self.weight = None
-        self.list_mode = ["X", "Y", "Z", "-X", "-Y", "-Z", "direction", "radial"]
+        self.available_modes = ["X", "Y", "Z", "-X", "-Y", "-Z", "direction", "radial", "surface"]
         self.mode = mode  # can X,Y,Z,-X,-Y,-Z,"direction" custom vector
         self.weight_mode = (
             "gauss"  # "linear" #linear mode for weight generation linearpos linearneg
@@ -96,10 +96,11 @@ class Gradient:
         if "radius" in kw:
             self.radius = kw["radius"]
         self.weight_threshold = 0.0
-        if direction is None:
+        if (direction is None) and (self.mode not in ["surface", "radial"]):
             self.direction = self.directions[self.mode]
         else:
             self.direction = direction  # from direction get start and end point
+        self.object = kw.get("object")
         self.distance = 0.0
         self.gblob = 4.0
         # Note : theses functions could also be used to pick an ingredient
@@ -124,7 +125,7 @@ class Gradient:
         self.OPTIONS = {
             "mode": {
                 "name": "mode",
-                "values": self.list_mode,
+                "values": self.available_modes,
                 "default": "X",
                 "type": "list",
                 "description": "gradient direction",
@@ -227,6 +228,8 @@ class Gradient:
             self.buildWeightMapDirection(bb, master_grid_positions)
         elif self.mode == "radial":
             self.buildWeightMapRadial(bb, master_grid_positions)
+        elif self.mode == "surface":
+            self.build_surface_distance_weight_map()
 
     def get_gauss_weights(self, number_of_points, degree=5):
         """
@@ -314,6 +317,42 @@ class Gradient:
                 weight = abs(distances_from_center) / self.radius if abs(distances_from_center) < self.radius else 1.0
                 i = int(weight * number_of_grid_points / 3) if int(weight * number_of_grid_points / 3) < len(d) else len(d) - 1
                 self.weight.append(d[i])
+
+    def set_weights_by_mode(self, scaled_distances):
+        if self.weight_mode == "linear":
+            self.weight = (1.0 - scaled_distances)
+        elif self.weight_mode == "square":
+            self.weight = (1.0 - scaled_distances) ** 2
+        elif self.weight_mode == "cube":
+            self.weight = (1.0 - scaled_distances) ** 3
+
+
+    def build_surface_distance_weight_map(self):
+        """
+        build a map of weights based on the distance from a surface
+        assumes self.distances include surface distances
+        """      
+        if self.object.surface_distances is None:
+            raise ValueError("Map created without specifying distances")
+        else:
+            self.distances = self.object.surface_distances
+        self.set_weights_by_mode(self.distances / max(self.distances))
+        
+        # TODO: talk to Ludo about calculating gaussian weights
+        # elif self.weight_mode == "gauss":
+        #     number_of_weight_points = number_of_grid_points / 3.0
+        #     d = self.get_gauss_weights(
+        #         number_of_weight_points
+        #     )
+        #     weight = abs(surface_distances) / self.radius if abs(surface_distances) < self.radius else 1.0
+        #     i = int(weight * number_of_grid_points / 3) if int(weight * number_of_grid_points / 3) < len(d) else len(d) - 1
+        #     self.weight.append(d[i])
+        # elif self.weight_mode == "half-gauss":
+        #     number_of_weight_points = number_of_grid_points / 3.0
+        #     d = self.get_gauss_weights(number_of_weight_points * 2)[number_of_weight_points:]
+        #     weight = abs(surface_distances) / self.radius if abs(surface_distances) < self.radius else 1.0
+        #     i = int(weight * number_of_grid_points / 3) if int(weight * number_of_grid_points / 3) < len(d) else len(d) - 1
+        #     self.weight.append(d[i])
 
     def buildWeightMapDirection(self, bb, master_grid_positions):
         """

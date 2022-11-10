@@ -8,7 +8,7 @@
     "overwrite_place_method": false,
     "place_method": "jitter",
     "save_analyze_result": false,
-    "show_grid_plot": false,
+    "show_grid_plot": true,
     "spacing": null,
     "use_periodicity": false,
     "show_sphere_trees": false,
