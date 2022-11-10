@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.8]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-20.04, windows-latest, macOS-latest]
 
     steps:
     - uses: actions/checkout@v1
@@ -30,7 +30,7 @@ jobs:
         pip install .[test]
     - name: Test with pytest
       run: |
-        pytest --cov-report xml --cov=cellpack cellpack/tests/ --import-mode=importlib
+        pytest --cov-report xml --cov=cellpack cellpack/tests/
     - name: Upload codecov
       uses: codecov/codecov-action@v1
 
