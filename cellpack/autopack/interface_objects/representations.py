@@ -39,12 +39,12 @@ class Representations:
         # ...
         # int: number of spheres in second level
         f = open(file)
+        print(file)
         sphere_data = f.readlines()
         f.close()
 
         # strip comments
         data = [x for x in sphere_data if x[0] != "#" and len(x) > 1 and x[0] != "\r"]
-
         rmin, rmax = list(map(float, data[0].split()))
         nblevels = int(data[1])
         radii = []

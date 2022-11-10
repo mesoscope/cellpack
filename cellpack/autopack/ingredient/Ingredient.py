@@ -1699,7 +1699,7 @@ class Ingredient(Agent):
                 success, jtrans, rotMatj, insidePoints, newDistPoints = self.grow_place(
                     env,
                     ptInd,
-                    env.grid.freePoints,
+                    env.grid.free_points,
                     env.grid.nbFreePoints,
                     grid_point_distances,
                     dpad,
@@ -1819,7 +1819,7 @@ class Ingredient(Agent):
             # aligns the principal_vector with the surface normal
             v1 = self.principal_vector
             v2 = compartment.get_normal_for_point(
-                pt_ind, env.masterGridPositions[pt_ind], env.mesh_store
+                pt_ind, env.grid.masterGridPositions[pt_ind], env.mesh_store
             )
             try:
                 rot_mat = numpy.array(rotVectToVect(v1, v2), "f")
@@ -1834,7 +1834,7 @@ class Ingredient(Agent):
                 elif (
                     self.use_orient_bias and self.packing_mode == "gradient"
                 ):  # you need a gradient here
-                    rot_mat = self.alignRotation(env.masterGridPositions[pt_ind])
+                    rot_mat = self.alignRotation(env.grid.masterGridPositions[pt_ind])
                 else:
                     rot_mat = autopack.helper.rotation_matrix(
                         random() * self.rotation_range, self.rotation_axis
@@ -2548,6 +2548,7 @@ class Ingredient(Agent):
         # create the rb only once and not at ever jitter
         # rbnode = histoVol.callFunction(self.env.addRB,(self, jtrans, rotMat,),{"rtype":self.type},)
         # jitter loop
+        # level = self.collisionLevel
         for attempt_number in range(self.jitter_attempts):
             insidePoints = {}
             newDistPoints = {}

@@ -32,7 +32,7 @@ _Optional `boolean`_. Default: `false`.
 
 Save packing result to .apr file.
 
-### resultfile
+### result_file
 _Optional `string`_.
 
 Location of publicly hosted packing result 
@@ -189,7 +189,7 @@ no free point update
     "ingrLookForNeighbours": false,
     "pickRandPt": false,
     "largestProteinSize": 200,
-    "resultfile": "autoPACKserver/results/NM_Analysis_FigureA1.0.apr.json",
+    "result_file": "autoPACKserver/results/NM_Analysis_FigureA1.0.apr.json",
     "use_periodicity": false,
     "EnviroOnly": false
 },
