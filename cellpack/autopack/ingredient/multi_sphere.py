@@ -264,7 +264,7 @@ class MultiSphereIngr(Ingredient):
         for radius_of_sphere_in_tree, pos_of_sphere in zip(radii, transformed_centers):
             radius_of_area_to_check = (
                 radius_of_sphere_in_tree + dpad
-            )  # extends the packing ingredient's bounding box to be large enough to include masked gridpoints of the largest possible ingrdient in the receipe
+            )  # extends the packing ingredient's bounding box to be large enough to include masked grid points of the largest possible ingredient in the recipe
 
             points_to_check = env.grid.getPointsInSphere(
                 pos_of_sphere, radius_of_area_to_check
@@ -310,7 +310,7 @@ class MultiSphereIngr(Ingredient):
     ):
         """
         Check spheres for collision
-        TODO improve the testwhen grid stepSize is larger that size of the ingredient
+        TODO improve the test when grid stepSize is larger that size of the ingredient
         """
         level = self.deepest_level
         centers = self.positions[level]
@@ -323,73 +323,3 @@ class MultiSphereIngr(Ingredient):
             if len(wrongPt):
                 return True
         return False
-
-    # def calculate_distance(
-    #     self,
-    #     sphere_position,
-    #     gridPointsCoords,
-    #     distance,
-    #     dpad,
-    #     radius,
-    #     inside_points,
-    #     new_dist_points,
-    # ):
-    #     padded_sphere = radius + dpad
-    #     ptsInSphere = self.env.grid.getPointsInSphere(sphere_position, padded_sphere)
-    #     delta = numpy.take(gridPointsCoords, ptsInSphere, 0) - sphere_position
-    #     delta *= delta
-    #     distA = numpy.sqrt(delta.sum(1))
-    #     for pti in range(len(ptsInSphere)):
-    #         pt = ptsInSphere[pti]
-    #         dist = distA[pti]
-    #         d = dist - radius
-    #         if d <= 0:  # point is inside dropped sphere
-    #             if pt in inside_points:
-    #                 if abs(d) < abs(inside_points[pt]):
-    #                     inside_points[pt] = d
-    #             else:
-    #                 inside_points[pt] = d
-    #         elif d < distance[pt]:  # point in region of influence
-    #             if pt in new_dist_points:
-    #                 if d < new_dist_points[pt]:
-    #                     new_dist_points[pt] = d
-    #             else:
-    #                 new_dist_points[pt] = d
-    #     return inside_points, new_dist_points
-
-    # def get_new_distance_values(
-    #     self, jtrans, rotation_matrix, grid_points_coords, distance, dpad, level=0
-    # ):
-    #     level = self.deepest_level
-    #     centers = self.positions[level]
-    #     radii = self.radii[level]
-    #     transformed_centers = self.transformPoints(jtrans, rotation_matrix, centers)
-    #     inside_points = {}
-    #     new_dist_points = {}
-    #     for sphere_radius, sphere_position in zip(radii, transformed_centers):
-    #         # grid_points_to_update = self.env.grid.getPointsInSphere(
-    #         #     posc, radius_of_area_to_check
-    #         # )
-    #         # # check for collisions by looking at grid points in the sphere of radius radc
-    #         # delta = numpy.take(grid_points_coords, grid_points_to_update, 0) - posc
-    #         # delta *= delta
-    #         # distA = numpy.sqrt(delta.sum(1))
-
-    #         # for pti in range(len(grid_points_to_update)):
-    #         #     grid_point_index = grid_points_to_update[
-    #         #         pti
-    #         #     ]  # index of master grid point that is inside the sphere
-    #         #     distance_to_packing_location = distA[
-    #         #         pti
-    #         #     ]  # is that point's distance from the center of the sphere (packing location)
-    #         # distance is an array of distance of closest contact to anything currently in the grid
-    #         inside_points, new_dist_points = self.calculate_distance(
-    #             sphere_position,
-    #             grid_points_coords,
-    #             distance,
-    #             dpad,
-    #             sphere_radius,
-    #             inside_points,
-    #             new_dist_points,
-    #         )
-    #     return inside_points, new_dist_points
