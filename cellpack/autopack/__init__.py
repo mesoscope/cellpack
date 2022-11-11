@@ -120,8 +120,6 @@ cache_geoms = appdata / "cache_geometries"
 cache_sphere = appdata / "cache_collisionTrees"
 cache_recipes = appdata / "cache_recipes"
 preferences = appdata / "preferences"
-if not os.path.exists(preferences):
-    os.makedirs(preferences)
 # we can now use some json/xml file for storing preferences and options.
 # need others ?
 cache_dir = {
@@ -132,7 +130,7 @@ cache_dir = {
     "prefs": preferences,
 }
 
-for _, dir in enumerate(cache_dir):
+for _, dir in cache_dir.items():
     make_directory_if_needed(dir)
 
 usePP = False
