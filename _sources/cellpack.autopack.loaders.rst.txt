@@ -4,6 +4,14 @@ cellpack.autopack.loaders package
 Submodules
 ----------
 
+cellpack.autopack.loaders.analysis\_config\_loader module
+---------------------------------------------------------
+
+.. automodule:: cellpack.autopack.loaders.analysis_config_loader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 cellpack.autopack.loaders.config\_loader module
 -----------------------------------------------
 
