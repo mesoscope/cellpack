@@ -18,6 +18,19 @@ log = logging.getLogger()
 ###############################################################################
 
 
+def initialize_environment(config_data, recipe):
+    recipe_data = RecipeLoader.load_recipe(recipe)
+
+    helper_class = upy.getHelperClass()
+    helper = helper_class(vi="nogui")
+    autopack.helper = helper
+
+    env = Environment(config=config_data, recipe=recipe_data)
+    env.helper = helper
+
+    return env
+
+
 def pack(recipe, config):
     """
     Initializes an autopack packing from the command line
@@ -26,15 +39,7 @@ def pack(recipe, config):
 
     :return: void
     """
-    config_data = ConfigLoader(config).config
-    recipe_data = RecipeLoader(recipe, config_data["save_converted_recipe"]).recipe_data
-
-    helper_class = upy.getHelperClass()
-    helper = helper_class(vi="nogui")
-    autopack.helper = helper
-
-    env = Environment(config=config_data, recipe=recipe_data)
-    env.helper = helper
+    env = initialize_environment(config, recipe)
 
     afviewer = None
     if config_data["save_analyze_result"]:

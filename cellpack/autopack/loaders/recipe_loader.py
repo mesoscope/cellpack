@@ -90,7 +90,8 @@ class RecipeLoader(object):
             return None
         return data
 
-    def _save_converted_recipe(self, data):
+    @staticmethod
+    def save_converted_recipe(self, data, current_version):
         """
         Save converted recipe into a json file
         """
@@ -99,7 +100,7 @@ class RecipeLoader(object):
         out_directory = f"{path}/converted/"
         if not os.path.exists(out_directory):
             os.makedirs(out_directory)
-        full_path = f"{out_directory}/{filename}_fv{self.current_version}.json"
+        full_path = f"{out_directory}/{filename}_fv{current_version}.json"
         with open(full_path, "w") as f:
             json.dump(data, f, indent=4)
         f.close()
@@ -124,37 +125,42 @@ class RecipeLoader(object):
             format_version = recipe_data["format_version"]
         return format_version
 
-    def _migrate_version(self, recipe):
+    @staticmethod
+    def migrate_version(recipe, current_version, save_converted_recipe=False):
         new_recipe = {}
 
         if recipe["format_version"] == "1.0":
             new_recipe["version"] = recipe["recipe"]["version"]
-            new_recipe["format_version"] = self.current_version
+            new_recipe["format_version"] = current_version
             new_recipe["name"] = recipe["recipe"]["name"]
             new_recipe["bounding_box"] = recipe["options"]["boundingBox"]
             (
                 new_recipe["objects"],
                 new_recipe["composition"],
             ) = convert(recipe)
-            if self.save_converted_recipe:
-                self._save_converted_recipe(new_recipe)
+
+            if save_converted_recipe:
+                RecipeLoader.save_converted_recipe(new_recipe)
         else:
             raise ValueError(
                 f"{recipe['format_version']} is not a format version we support"
             )
         return new_recipe
 
-    def _read(self):
-        local_path = autopack.retrieveFile(self.file_path, cache="recipes")
-        new_values = json.load(open(local_path, "r"))
+    @staticmethod
+    def load_recipe(recipe, current_version=None, save_converted_recipe=False):
         recipe_data = RecipeLoader.default_values.copy()
-        recipe_data = deep_merge(recipe_data, new_values)
+        recipe_data = deep_merge(recipe_data, recipe)
         recipe_data["format_version"] = RecipeLoader._sanitize_format_version(
             recipe_data
         )
 
-        if recipe_data["format_version"] != self.current_version:
-            recipe_data = self._migrate_version(recipe_data)
+        if current_version is not None and recipe_data[
+                "format_version"] != current_version:
+            recipe_data = RecipeLoader.migrate_version(
+                recipe_data,
+                current_version,
+                save_converted_recipe)
 
         # TODO: request any external data before returning
         if "objects" in recipe_data:
@@ -170,6 +176,13 @@ class RecipeLoader(object):
                 )
             if not INGREDIENT_TYPE.is_member(obj["type"]):
                 raise TypeError(f"{obj['type']} is not an allowed type")
+
+        return recipe_data
+
+    def _read(self):
+        local_path = autopack.retrieveFile(self.file_path, cache="recipes")
+        new_values = json.load(open(local_path, "r"))
+        recipe_data = RecipeLoader.load_recipe(new_values)
 
         return recipe_data
 
