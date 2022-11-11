@@ -161,7 +161,7 @@ Please update to the latest version under the Help menu.
 recipe_web_pref_file = preferences / "recipe_available.json"
 recipe_user_pref_file = preferences / "user_recipe_available.json"
 recipe_dev_pref_file = preferences / "autopack_serverDeveloper_recipeList.json"
-autopack_path_pref_file = preferences / "path_preferences.json"
+autopack_path_pref_file = preferences + os.sep + "path_preferences.json"
 autopack_user_path_pref_file = preferences / "path_user_preferences.json"
 
 # Default values
@@ -186,6 +186,7 @@ def checkPath():
         except ImportError:
             import urllib
         if url_exists(fileName):
+            print("autopack_path_pref_file", autopack_path_pref_file)
             urllib.urlretrieve(fileName, autopack_path_pref_file)
         else:
             log.error("problem accessing path %s", fileName)
