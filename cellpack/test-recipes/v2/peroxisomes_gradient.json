@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "format_version": "2.0.0",
-    "name": "peroxisomes",
+    "name": "peroxisomes-with-gradients",
     "bounding_box": [
         [
             -110,

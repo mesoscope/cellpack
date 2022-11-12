@@ -477,6 +477,11 @@ def save_as_simularium(env, setupfile, all_ingr_as_array, compartments):
     autopack.helper.init_scene_with_objects(
         all_ingr_as_array, grid_positions, compartment_ids, env.show_sphere_trees
     )
+    if grid_positions is not None and len(env.gradients):
+        for _, gradient in env.gradients.items():
+            values = gradient.distances
+            autopack.helper.add_grid_data_to_scene(f"{gradient.name}-distances", grid_positions, values)
+
     if compartments is not None:
         for compartment in compartments:
             autopack.helper.add_compartment_to_scene(compartment, grid_positions)
