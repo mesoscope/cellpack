@@ -1787,6 +1787,52 @@ class Environment(CompartmentList):
                 self.set_partners_ingredient(ingr)
         return totalNbIngr
 
+    def place_molecules(self, distances, free_points, nbFreePoints, t1, vAnalysis, vTestid, seedNum):
+        self.distancesAfterFill = distances[:]
+        self.freePointsAfterFill = free_points[:]
+        self.nbFreePointsAfterFill = nbFreePoints
+        self.distanceAfterFill = distances[:]
+        t2 = time()
+        self.log.info("time to fill %d", t2 - t1)
+        if self.runTimeDisplay and autopack.helper.host == "simularium":
+            autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
+
+        if self.afviewer is not None and hasattr(self.afviewer, "vi"):
+            self.afviewer.vi.progressBar(label="Filling Complete")
+            self.afviewer.vi.resetProgressBar()
+        ingredients = {}
+        all_ingr_as_array = self.molecules
+        for pos, rot, ingr, ptInd in self.molecules:
+            if ingr.name not in ingredients:
+                ingredients[ingr.name] = [ingr, [], [], []]
+            mat = rot.copy()
+            mat[:3, 3] = pos
+            ingredients[ingr.name][1].append(pos)
+            ingredients[ingr.name][2].append(rot)
+            ingredients[ingr.name][3].append(numpy.array(mat))
+        for compartment in self.compartments:
+            for pos, rot, ingr, ptInd in compartment.molecules:
+                if ingr.name not in ingredients:
+                    ingredients[ingr.name] = [ingr, [], [], []]
+                mat = rot.copy()
+                mat[:3, 3] = pos
+                ingredients[ingr.name][1].append(pos)
+                ingredients[ingr.name][2].append(rot)
+                ingredients[ingr.name][3].append(numpy.array(mat))
+                all_ingr_as_array.append([pos, rot, ingr, ptInd])
+        self.ingr_result = ingredients
+        print(f"placed {len(self.molecules)}")
+        if self.saveResult:
+            self.save_result(
+                free_points,
+                distances=distances,
+                t0=t2,
+                vAnalysis=vAnalysis,
+                vTestid=vTestid,
+                seedNum=seedNum,
+                all_ingr_as_array=all_ingr_as_array,
+            )
+
     def pack_grid(
         self,
         seedNum=14,
@@ -2112,52 +2158,10 @@ class Environment(CompartmentList):
                 # self.collectResultPerIngredient()
                 print("SAVING", self.result_file)
                 # TODO: save out intermediate simularium files
+                self.place_molecules(distances, free_points, nbFreePoints, t1, vAnalysis, vTestid, seedNum)
                 stime = time()
-
-        self.distancesAfterFill = distances[:]
-        self.freePointsAfterFill = free_points[:]
-        self.nbFreePointsAfterFill = nbFreePoints
-        self.distanceAfterFill = distances[:]
-        t2 = time()
-        self.log.info("time to fill %d", t2 - t1)
-        if self.runTimeDisplay and autopack.helper.host == "simularium":
-            autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
-
-        if self.afviewer is not None and hasattr(self.afviewer, "vi"):
-            self.afviewer.vi.progressBar(label="Filling Complete")
-            self.afviewer.vi.resetProgressBar()
-        ingredients = {}
-        all_ingr_as_array = self.molecules
-        for pos, rot, ingr, ptInd in self.molecules:
-            if ingr.name not in ingredients:
-                ingredients[ingr.name] = [ingr, [], [], []]
-            mat = rot.copy()
-            mat[:3, 3] = pos
-            ingredients[ingr.name][1].append(pos)
-            ingredients[ingr.name][2].append(rot)
-            ingredients[ingr.name][3].append(numpy.array(mat))
-        for compartment in self.compartments:
-            for pos, rot, ingr, ptInd in compartment.molecules:
-                if ingr.name not in ingredients:
-                    ingredients[ingr.name] = [ingr, [], [], []]
-                mat = rot.copy()
-                mat[:3, 3] = pos
-                ingredients[ingr.name][1].append(pos)
-                ingredients[ingr.name][2].append(rot)
-                ingredients[ingr.name][3].append(numpy.array(mat))
-                all_ingr_as_array.append([pos, rot, ingr, ptInd])
-        self.ingr_result = ingredients
-        print(f"placed {len(self.molecules)}")
-        if self.saveResult:
-            self.save_result(
-                free_points,
-                distances=distances,
-                t0=t2,
-                vAnalysis=vAnalysis,
-                vTestid=vTestid,
-                seedNum=seedNum,
-                all_ingr_as_array=all_ingr_as_array,
-            )
+                
+        self.place_molecules(distances, free_points, nbFreePoints, t1, vAnalysis, vTestid, seedNum)
 
     def displayCancelDialog(self):
         print(
