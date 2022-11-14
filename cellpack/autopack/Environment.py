@@ -76,6 +76,7 @@ from cellpack.autopack.utils import (
     ingredient_compare1,
     ingredient_compare2,
 )
+from cellpack.autopack.writers import Writer
 from .Compartment import CompartmentList, Compartment
 from .Recipe import Recipe
 from .ingredient import GrowIngredient, ActinIngredient
@@ -408,16 +409,14 @@ class Environment(CompartmentList):
         self.collectResultPerIngredient()
         self.store()
         self.store_asTxt()
-        IOutils.save(
-            self,
+        Writer(format=self.format_output).save(self,
             self.result_file,
-            format_output=self.format_output,
             kwds=["compNum"],
             result=True,
             quaternion=True,
             all_ingr_as_array=all_ingr_as_array,
-            compartments=self.compartments,
-        )  # pdb ?
+            compartments=self.compartments)
+
         self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
             #    START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
@@ -590,19 +589,6 @@ class Environment(CompartmentList):
 
             #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
         self.log.info("time to save end %d", time() - t0)
-
-    def saveNewRecipe(self, filename):
-        djson, all_pos, all_rot = IOutils.serializedRecipe(
-            self, False, True
-        )  # transpose, use_quaternion, result=False, lefthand=False
-        with open(filename + "_serialized.json", "w") as f:
-            f.write(djson)
-        IOutils.saveResultBinary(
-            self, filename + "_serialized.bin", False, True, lefthand=True
-        )
-        IOutils.saveResultBinary(
-            self, filename + "_serialized_tr.bin", True, True, lefthand=True
-        )  # transpose, quaternio, left hand
 
     def loadResult(
         self, resultfilename=None, restore_grid=True, backward=False, transpose=True
