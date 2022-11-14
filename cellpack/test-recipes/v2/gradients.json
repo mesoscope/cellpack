@@ -23,10 +23,10 @@
             ],
             "radius": 100,
             "description": "'Direction' is center of radial gradient (we think)",
-            "weight_mode": "linear",
+            "weight_mode": "cube",
             "pick_mode": "rnd",
             "gblob": 4,
-            "mode": "surface"
+            "mode": "radial"
         }
     },
     "objects": {
