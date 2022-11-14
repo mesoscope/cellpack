@@ -200,6 +200,10 @@ class AnalyseAP:
         sph_pts[:, 2] = numpy.arctan2(xyz[:, 1], xyz[:, 0]) + numpy.pi
 
         return sph_pts
+    
+    @staticmethod
+    def get_list_of_dims():
+        return(["x", "y", "z", "r", "theta", "phi"])
 
     def getMinMaxProteinSize(self):
         smallest = 999999.0
@@ -1042,6 +1046,9 @@ class AnalyseAP:
                         all_objs[obj][seed_key] = {}
                     for ct, dim in enumerate(["x", "y", "z"]):
                         all_objs[obj][seed_key][dim] = positions[:, ct]
+                    sph_pts = self.cartesian_to_sph(positions)
+                    for ct, dim in enumerate(["r", "theta", "phi"]):
+                        all_objs[obj][seed_key][dim] = sph_pts[:,ct]
         self.all_objs = all_objs
         self.all_pos_list = all_pos_list
         return all_objs, all_pos_list
@@ -1095,16 +1102,16 @@ class AnalyseAP:
         key_list = list(all_objs[ingr_key].keys())
         similarity_df = pd.DataFrame(
             index=key_list,
-            columns=pd.MultiIndex.from_product([["x", "y", "z"], key_list]),
+            columns=pd.MultiIndex.from_product([self.get_list_of_dims(), key_list]),
             dtype=float,
         )
         print("Running similarity analysis...")
         similarity_df["packing_id"] = 0
 
         for rc, (seed1, pos_dict1) in enumerate(all_objs[ingr_key].items()):
-            similarity_df.loc[seed1, "packing_id"] = seed1.split("_")[-1]
+            similarity_df.loc[seed1, "packing_id"] = int(seed1.split("_")[-1])
             for cc, (seed2, pos_dict2) in enumerate(all_objs[ingr_key].items()):
-                for dc, dim in enumerate(["x", "y", "z"]):
+                for dc, dim in enumerate(self.get_list_of_dims()):
                     arr1 = pos_dict1[dim]
                     arr2 = pos_dict2[dim]
                     if len(arr1) == 1 or len(arr2) == 1:
@@ -1120,7 +1127,7 @@ class AnalyseAP:
         lut = dict(zip(df_packing.unique(), sns.color_palette()))
         row_colors = df_packing.map(lut)
 
-        for dim in ["x", "y", "z"]:
+        for dim in self.get_list_of_dims():
             g = sns.clustermap(
                 similarity_df[dim],
                 row_colors=row_colors,

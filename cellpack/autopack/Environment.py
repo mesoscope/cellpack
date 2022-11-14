@@ -911,6 +911,7 @@ class Environment(CompartmentList):
                 self, compartment.surfacePoints, compartment.insidePoints, areas=None
             )
         f.close()
+        # TODO: restore surface distances on loading from grid
         self.grid.aInteriorGrids = aInteriorGrids
         self.grid.aSurfaceGrids = aSurfaceGrids
 

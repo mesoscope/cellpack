@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
-    "format_version": "2.0.0",
-    "name": "peroxisomes",
+    "format_version": "2.0",
+    "name": "peroxisomes_gradient",
     "bounding_box": [
         [
             -110,
@@ -20,7 +20,8 @@
             "surface_name": "nucleus",
             "weight_mode": "cube",
             "pick_mode": "rnd",
-            "mode": "surface"
+            "mode": "surface",
+            "direction" : [0,0,0]
         }
     },
     "objects": {

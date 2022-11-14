@@ -2,6 +2,7 @@ import fire
 from os import path
 import logging
 import logging.config
+import time
 
 from cellpack import autopack
 from cellpack.autopack import upy
@@ -54,7 +55,10 @@ def pack(recipe, config):
 
 
 def main():
+    start_time = time.time()
     fire.Fire(pack)
+    execution_time = time.time() - start_time
+    print("The workflow took " + str(execution_time) + "s to run.")
 
 
 if __name__ == "__main__":
