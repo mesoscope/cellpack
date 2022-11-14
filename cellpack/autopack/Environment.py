@@ -1297,7 +1297,7 @@ class Environment(CompartmentList):
 
         if self.use_gradient and len(self.gradients) and rebuild:
             for g in self.gradients:
-                self.gradients[g].buildWeightMap(
+                self.gradients[g].build_weight_map(
                     boundingBox, self.grid.masterGridPositions
                 )            
 

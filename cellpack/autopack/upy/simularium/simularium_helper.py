@@ -334,11 +334,29 @@ class simulariumHelper(hostHelper.Helper):
     def GetAbsPosUntilRoot(self, obj):
         return [0, 0.0, 0.0]
 
-    def add_compartment_to_scene(
-        self,
-        compartment,
-        grid_positions
-    ):
+    def add_grid_data_to_scene(self, name, positions, values):
+        max_value = np.max(values)
+        colormap = matplotlib.cm.viridis(values / max_value)
+        for index in range(len(values)):
+            name = f"{name}#{index}"
+            self.display_data[name] = DisplayData(
+                name=name,
+                display_type=DISPLAY_TYPE.SPHERE,
+                url="",
+                color=simulariumHelper.format_rgb_color(colormap[index]),
+            )
+            point_pos = positions[index]
+            self.add_instance(
+                name,
+                None,
+                f"{name}#{index}",
+                0.5,
+                point_pos,
+                np.identity(4),
+                None,
+            )
+
+    def add_compartment_to_scene(self, compartment, grid_positions):
         display_type = DISPLAY_TYPE.SPHERE
         url = ""
         radius = compartment.encapsulating_radius
@@ -363,31 +381,6 @@ class simulariumHelper(hostHelper.Helper):
             compartment.position,
             np.identity(4),
         )
-
-        if grid_positions is not None:
-            distances = compartment.surface_distances
-            max_distance = np.max(distances)
-            colormap = matplotlib.cm.viridis(distances / max_distance)
-            for index in range(len(distances)):
-                name = f"{compartment.name}-surface-distances#{index}"
-                self.display_data[name] = DisplayData(
-                    name=name,
-                    display_type=DISPLAY_TYPE.SPHERE,
-                    url="",
-                    color=simulariumHelper.format_rgb_color(colormap[index])
-                )
-                point_pos = grid_positions[index]
-                self.add_instance(
-                    name,
-                    None,
-                    f"{name}#{index}",
-                    0.5,
-                    point_pos + np.array([(compartment.number - 1) * 2, 0, 0]),
-                    np.identity(4),
-                    None,
-                )
-
-
 
     def add_object_to_scene(
         self,
