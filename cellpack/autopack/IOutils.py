@@ -4,31 +4,23 @@ Created on Sun Jan 27 09:04:10 2013
 
 @author: Ludovic Autin
 """
+import json
 import os
 import pickle
+from collections import OrderedDict
+from json import JSONEncoder, encoder
 
 import numpy
-import json
-from json import JSONEncoder
-from json import encoder
-from collections import OrderedDict
-
 from numpy.core.arrayprint import printoptions
 
 import cellpack.autopack as autopack
 import cellpack.autopack.transformation as tr
-from .ingredient.Ingredient import Ingredient
-from cellpack.autopack.Serializable import (
-    sCompartment,
-    sIngredientGroup,
-    sIngredient,
-    sIngredientFiber,
-)
 from cellpack.autopack.Recipe import Recipe
-from .ingredient import (
-    ActinIngredient,
-    GrowIngredient,
-)
+from cellpack.autopack.Serializable import (sCompartment, sIngredient,
+                                            sIngredientFiber, sIngredientGroup)
+
+from .ingredient import ActinIngredient, GrowIngredient
+from .ingredient.Ingredient import Ingredient
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 

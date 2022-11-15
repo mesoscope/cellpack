@@ -143,7 +143,7 @@ class Environment(CompartmentList):
         self.saveResult = "out" in config
         self.out_folder = create_output_dir(config["out"], name, config["place_method"])
         self.result_file = f"{self.out_folder}/{self.name}_{config['name']}"
-        self.grid_file_out = f"{self.out_folder}/{self.name}_{config['name']}_grid"
+        self.grid_file_out = f"{self.out_folder}/{self.name}_{config['name']}_grid.dat"
 
         should_load_grid_file = (
             os.path.isfile(self.grid_file_out) and self.load_from_grid_file
@@ -896,6 +896,7 @@ class Environment(CompartmentList):
         """
         Read and setup the grid from the given filename. (pickle)
         """
+        print(f"Loading grid from {gridFileName}")
         aInteriorGrids = []
         aSurfaceGrids = []
         f = open(gridFileName, "rb")
@@ -1211,6 +1212,10 @@ class Environment(CompartmentList):
             fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
             if not fits:
                 self.boundingBox = bb
+    
+    def get_size_of_bounding_box(self):
+        box_boundary = numpy.array(self.boundingBox)
+        return numpy.linalg.norm(box_boundary[1] - box_boundary[0])
 
     def buildGrid(
         self,
