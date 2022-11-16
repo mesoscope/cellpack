@@ -504,7 +504,9 @@ def save_Mixed_asJson(
     env.setupfile = setupfile  # +".json"provide the server?
     # the output path for this recipes files
     if env.setupfile.find("http") != -1 or env.setupfile.find("ftp") != -1:
-        pathout = os.path.dirname(os.path.abspath(autopack.retrieve_file(env.setupfile)))
+        pathout = os.path.dirname(
+            os.path.abspath(autopack.retrieve_file(env.setupfile))
+        )
     else:
         pathout = os.path.dirname(os.path.abspath(env.setupfile))
     if env.version is None:
