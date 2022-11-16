@@ -121,7 +121,7 @@ def split_ingredient_data(object_key, ingredient_data):
 
 def get_and_store_v2_object(ingredient_key, ingredient_data, region_list, objects_dict):
     if "include" in ingredient_data:
-        ingredient_data = autopack.load_remote_file(
+        ingredient_data = autopack.load_file(
             ingredient_data["include"], cache="recipes"
         )
     check_required_attributes(ingredient_data)

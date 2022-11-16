@@ -244,7 +244,7 @@ class IOingredientTool(object):
             if "overwrite" in inode:
                 overwrite_dic = inode["overwrite"]
         if filename is not None:
-            filename = autopack.retrieveFile(
+            filename = autopack.retrieve_file(
                 filename,
                 # destination = recipe+os.sep+"recipe"+os.sep+"ingredients"+os.sep,
                 cache="recipes",
@@ -393,7 +393,7 @@ def addCompartments(env, compdic, i, io_ingr):
 
     fname = compdic["from"]
     # retrievet the file
-    filename = autopack.retrieveFile(fname, cache="recipes")
+    filename = autopack.retrieve_file(fname, cache="recipes")
     ninstance = len(compdic["positions"])
     with open(filename, "r") as fp:  # doesnt work with symbol link ?
         if autopack.use_json_hook:
@@ -504,7 +504,7 @@ def save_Mixed_asJson(
     env.setupfile = setupfile  # +".json"provide the server?
     # the output path for this recipes files
     if env.setupfile.find("http") != -1 or env.setupfile.find("ftp") != -1:
-        pathout = os.path.dirname(os.path.abspath(autopack.retrieveFile(env.setupfile)))
+        pathout = os.path.dirname(os.path.abspath(autopack.retrieve_file(env.setupfile)))
     else:
         pathout = os.path.dirname(os.path.abspath(env.setupfile))
     if env.version is None:

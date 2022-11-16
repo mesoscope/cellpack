@@ -73,7 +73,7 @@ class Representations:
     def _get_spheres(self):
         if "path" in self.packing:
             sphere_file = f"{self.packing['path']}/{self.packing['name']}"
-            sphere_file_path = autopack.retrieveFile(
+            sphere_file_path = autopack.retrieve_file(
                 sphere_file, cache="collisionTrees"
             )
             (

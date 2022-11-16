@@ -310,7 +310,7 @@ def is_full_url(file_path):
     return file_path.find("http") != -1 or file_path.find("ftp") != -1
 
 
-def retrieveFile(filename, destination="", cache="geometries", force=False):
+def retrieve_file(filename, destination="", cache="geometries", force=False):
     """
     Options:
     1. Find file locally, return the file path
@@ -355,8 +355,8 @@ def retrieveFile(filename, destination="", cache="geometries", force=False):
     return filename
 
 
-def load_remote_file(filename, destination="", cache="geometries", force=None):
-    local_file_path = retrieveFile(
+def load_file(filename, destination="", cache="geometries", force=None):
+    local_file_path = retrieve_file(
         filename, destination=destination, cache=cache, force=force
     )
     return json.load(open(local_file_path, "r"))
