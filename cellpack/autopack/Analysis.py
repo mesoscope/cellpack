@@ -1135,12 +1135,10 @@ class AnalyseAP:
         print("Running similarity analysis...")
         similarity_df["packing_id"] = 0
 
-        for rc, (seed1, pos_dict1) in enumerate(all_objs[ingr_key].items()):
+        for seed1, pos_dict1 in all_objs[ingr_key].items():
             similarity_df.loc[seed1, "packing_id"] = int(seed1.split("_")[-1])
-            for cc, (seed2, pos_dict2) in enumerate(
-                all_objs[ingr_key].items()
-            ):
-                for dc, dim in enumerate(self.get_list_of_dims()):
+            for seed2, pos_dict2 in all_objs[ingr_key].items():
+                for dim in self.get_list_of_dims():
                     arr1 = pos_dict1[dim]
                     arr2 = pos_dict2[dim]
                     if len(arr1) == 1 or len(arr2) == 1:
@@ -1163,6 +1161,7 @@ class AnalyseAP:
                 dendrogram_ratio=(0.15, 0.16),
                 cbar_kws={"label": "similarity score"},
             )
+            g.ax_col_dendrogram.set_visible(False)
             g.ax_heatmap.set_xlabel(f"{ingr_key}_{dim}")
             g.savefig(
                 f"{self.output_path}clustermap_{ingr_key}_{dim}", dpi=300
@@ -1222,17 +1221,18 @@ class AnalyseAP:
         )
 
     def save_spilr_heatmap(self, input_dict, file_path, label_str=None):
+        fig, ax = plt.subplots()
         g = sns.heatmap(
             input_dict,
             cbar=False,
             xticklabels=False,
             yticklabels=False,
+            ax=ax,
         )
         g.set_xlabel("Angular coordinates")
         g.set_ylabel(label_str)
         g.invert_yaxis()
 
-        fig = g.get_figure()
         fig.savefig(
             file_path,
             dpi=300,
