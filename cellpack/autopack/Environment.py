@@ -409,17 +409,19 @@ class Environment(CompartmentList):
         self.collectResultPerIngredient()
         self.store()
         self.store_asTxt()
-        Writer(format=self.format_output).save(self,
+        Writer(format=self.format_output).save(
+            self,
             self.result_file,
             kwds=["compNum"],
             result=True,
             quaternion=True,
             all_ingr_as_array=all_ingr_as_array,
-            compartments=self.compartments)
+            compartments=self.compartments,
+        )
 
         self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
-            #    START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
+            # START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
             # totalVolume = self.grid.gridVolume*unitVol
             unitVol = self.grid.gridSpacing**3
             wrkDirRes = self.result_file + "_analyze_"
@@ -1773,13 +1775,14 @@ class Environment(CompartmentList):
                 self.set_partners_ingredient(ingr)
         return totalNbIngr
 
-    def place_molecules(self, distances, free_points, nbFreePoints, t1, vAnalysis, vTestid, seedNum):
+    def prep_molecules_for_save(
+        self, distances, free_points, nbFreePoints
+    ):
         self.distancesAfterFill = distances[:]
         self.freePointsAfterFill = free_points[:]
         self.nbFreePointsAfterFill = nbFreePoints
         self.distanceAfterFill = distances[:]
-        t2 = time()
-        self.log.info("time to fill %d", t2 - t1)
+
         if self.runTimeDisplay and autopack.helper.host == "simularium":
             autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
 
@@ -1807,17 +1810,7 @@ class Environment(CompartmentList):
                 ingredients[ingr.name][3].append(numpy.array(mat))
                 all_ingr_as_array.append([pos, rot, ingr, ptInd])
         self.ingr_result = ingredients
-        print(f"placed {len(self.molecules)}")
-        if self.saveResult:
-            self.save_result(
-                free_points,
-                distances=distances,
-                t0=t2,
-                vAnalysis=vAnalysis,
-                vTestid=vTestid,
-                seedNum=seedNum,
-                all_ingr_as_array=all_ingr_as_array,
-            )
+        return all_ingr_as_array
 
     def pack_grid(
         self,
@@ -2141,13 +2134,41 @@ class Environment(CompartmentList):
                     previousThresh = np + float(previousThresh)
                 self.activeIngr = self.activeIngr0 + self.activeIngr12
             if dump and ((time() - stime) > dump_freq):
-                # self.collectResultPerIngredient()
                 print("SAVING", self.result_file)
-                # TODO: save out intermediate simularium files
-                self.place_molecules(distances, free_points, nbFreePoints, t1, vAnalysis, vTestid, seedNum)
+                all_ingr_as_array = self.prep_molecules_for_save(
+                    distances,
+                    free_points,
+                    nbFreePoints,
+                )
                 stime = time()
-                
-        self.place_molecules(distances, free_points, nbFreePoints, t1, vAnalysis, vTestid, seedNum)
+                print(f"placed {len(self.molecules)}")
+                if self.saveResult:
+                    self.save_result(
+                        free_points,
+                        distances=distances,
+                        t0=stime,
+                        vAnalysis=vAnalysis,
+                        vTestid=vTestid,
+                        seedNum=seedNum,
+                        all_ingr_as_array=all_ingr_as_array,
+                    )
+
+        t2 = time()
+        self.log.info("time to fill %d", t2 - t1)
+        all_ingr_as_array = self.prep_molecules_for_save(
+            distances, free_points, nbFreePoints
+        )
+        print(f"placed {len(self.molecules)}")
+        if self.saveResult:
+            self.save_result(
+                free_points,
+                distances=distances,
+                t0=time(),
+                vAnalysis=vAnalysis,
+                vTestid=vTestid,
+                seedNum=seedNum,
+                all_ingr_as_array=all_ingr_as_array,
+            )
 
     def displayCancelDialog(self):
         print(
