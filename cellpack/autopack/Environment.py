@@ -1775,9 +1775,7 @@ class Environment(CompartmentList):
                 self.set_partners_ingredient(ingr)
         return totalNbIngr
 
-    def prep_molecules_for_save(
-        self, distances, free_points, nbFreePoints
-    ):
+    def prep_molecules_for_save(self, distances, free_points, nbFreePoints):
         self.distancesAfterFill = distances[:]
         self.freePointsAfterFill = free_points[:]
         self.nbFreePointsAfterFill = nbFreePoints

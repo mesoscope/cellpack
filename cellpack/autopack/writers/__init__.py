@@ -10,6 +10,7 @@ from collections import OrderedDict
 
 from cellpack import autopack
 
+
 class IOingredientTool(object):
     # parser that can return an ingredient
     def __init__(self, env=None):
@@ -35,11 +36,13 @@ class IOingredientTool(object):
             f.write(ingrnode)
             f.close()
 
+
 class NumpyArrayEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, numpy.ndarray):
             return obj.tolist()
         return json.JSONEncoder.default(self, obj)
+
 
 class Writer(object):
     def __init__(self, format="simularium"):
@@ -109,12 +112,16 @@ class Writer(object):
         env.setupfile = setupfile  # +".json"provide the server?
         # the output path for this recipes files
         if env.setupfile.find("http") != -1 or env.setupfile.find("ftp") != -1:
-            pathout = os.path.dirname(os.path.abspath(autopack.retrieveFile(env.setupfile)))
+            pathout = os.path.dirname(
+                os.path.abspath(autopack.retrieveFile(env.setupfile))
+            )
         else:
             pathout = os.path.dirname(os.path.abspath(env.setupfile))
         if env.version is None:
             env.version = "1.0"
-        env.jsondic = OrderedDict({"recipe": {"name": env.name, "version": env.version}})
+        env.jsondic = OrderedDict(
+            {"recipe": {"name": env.name, "version": env.version}}
+        )
         if env.custom_paths:
             # this was the used path at loading time
             env.jsondic["recipe"]["paths"] = env.custom_paths
@@ -135,7 +142,10 @@ class Writer(object):
         if grid:
             # grid path information
             if env.grid is not None:
-                if env.grid.filename is not None or env.grid.result_filename is not None:
+                if (
+                    env.grid.filename is not None
+                    or env.grid.result_filename is not None
+                ):
                     env.jsondic["grid"] = {
                         "grid_storage": str(env.grid.filename),
                         "grid_result": str(env.grid.result_filename),
@@ -217,18 +227,21 @@ class Writer(object):
                             transpose=transpose,
                         )
                         # use reference file
-                        env.jsondic["compartments"][str(o.name)]["surface"]["ingredients"][
-                            ingr.o_name
-                        ] = {"name": ingr.o_name, "include": str(ingr.o_name + ".json")}
+                        env.jsondic["compartments"][str(o.name)]["surface"][
+                            "ingredients"
+                        ][ingr.o_name] = {
+                            "name": ingr.o_name,
+                            "include": str(ingr.o_name + ".json"),
+                        }
                     else:
-                        env.jsondic["compartments"][str(o.name)]["surface"]["ingredients"][
-                            ingr.o_name
-                        ] = io_ingr.ingrJsonNode(
+                        env.jsondic["compartments"][str(o.name)]["surface"][
+                            "ingredients"
+                        ][ingr.o_name] = io_ingr.ingrJsonNode(
                             ingr, result=result, kwds=kwds, transpose=transpose
                         )  # {"name":ingr.o_name}
-                        env.jsondic["compartments"][str(o.name)]["surface"]["ingredients"][
-                            ingr.o_name
-                        ]["name"] = ingr.o_name
+                        env.jsondic["compartments"][str(o.name)]["surface"][
+                            "ingredients"
+                        ][ingr.o_name]["name"] = ingr.o_name
             ri = o.innerRecipe
             if ri:
                 env.jsondic["compartments"][str(o.name)]["interior"] = {}
@@ -245,23 +258,30 @@ class Writer(object):
                             transpose=transpose,
                         )
                         # use reference file
-                        env.jsondic["compartments"][str(o.name)]["interior"]["ingredients"][
-                            ingr.o_name
-                        ] = {"name": ingr.o_name, "include": str(ingr.o_name + ".json")}
+                        env.jsondic["compartments"][str(o.name)]["interior"][
+                            "ingredients"
+                        ][ingr.o_name] = {
+                            "name": ingr.o_name,
+                            "include": str(ingr.o_name + ".json"),
+                        }
                     else:
-                        env.jsondic["compartments"][str(o.name)]["interior"]["ingredients"][
-                            ingr.o_name
-                        ] = io_ingr.ingrJsonNode(
+                        env.jsondic["compartments"][str(o.name)]["interior"][
+                            "ingredients"
+                        ][ingr.o_name] = io_ingr.ingrJsonNode(
                             ingr, result=result, kwds=kwds, transpose=transpose
                         )  # {"name":ingr.o_name}
-                        env.jsondic["compartments"][str(o.name)]["interior"]["ingredients"][
-                            ingr.o_name
-                        ]["name"] = ingr.o_name
+                        env.jsondic["compartments"][str(o.name)]["interior"][
+                            "ingredients"
+                        ][ingr.o_name]["name"] = ingr.o_name
         with open(setupfile, "w") as fp:  # doesnt work with symbol link ?
 
             if indent:
                 json.dump(
-                    env.jsondic, fp, indent=1, separators=(",", ":"), cls=NumpyArrayEncoder
+                    env.jsondic,
+                    fp,
+                    indent=1,
+                    separators=(",", ":"),
+                    cls=NumpyArrayEncoder,
                 )  # ,indent=4, separators=(',', ': ')
             else:
                 json.dump(

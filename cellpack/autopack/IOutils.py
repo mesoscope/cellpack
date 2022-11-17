@@ -12,8 +12,6 @@ import json
 from json import encoder
 from collections import OrderedDict
 
-from numpy.core.arrayprint import printoptions
-
 import cellpack.autopack as autopack
 import cellpack.autopack.transformation as tr
 from .ingredient.Ingredient import Ingredient
@@ -24,15 +22,13 @@ from cellpack.autopack.Serializable import (
     sIngredientFiber,
 )
 from cellpack.autopack.Recipe import Recipe
+from cellpack.autopack.writers import Writer
 from .ingredient import (
     ActinIngredient,
     GrowIngredient,
 )
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
-
-
-
 
 
 def setValueToPythonStr(value, attrname):
@@ -142,7 +138,6 @@ class IOingredientTool(object):
         elif fileExtension == ".json":
             pass  # return IOutils.load_Json(env,setupfile)
 
-
     def makeIngredientFromJson(self, env, inode=None, filename=None, recipe="Generic"):
         overwrite_dic = {}
         ingr_dic = {}
@@ -182,7 +177,7 @@ class IOingredientTool(object):
             #                v=v.tolist()
             #            ingdic[k] = v
             if v is not None:
-                ingdic.update(setValueToJsonNode(v, str(k)))
+                ingdic.update(Writer.setValueToJsonNode(v, str(k)))
         # if sphereTree file present should not use the pos-radii keyword
         # if ingr.sphereFile is not None and not result:
         # remove the position and radii key
@@ -376,9 +371,6 @@ def addCompartments(env, compdic, i, io_ingr):
                         rMatrix.addIngredient(ingr)
                         # setup recipe
                     compartment.setInnerRecipe(rMatrix)
-
-
-
 
 
 def save_asPython(env, setupfile, useXref=True):
