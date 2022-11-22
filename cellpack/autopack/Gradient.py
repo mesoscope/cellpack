@@ -278,11 +278,11 @@ class Gradient:
         """
         build a map of weights based on the distance from a surface
         assumes self.distances include surface distances
-        """      
+        """
         if self.object.surface_distances is None:
             raise ValueError("Map created without specifying distances")
         else:
-            self.distances = self.object.surface_distances / max(self.object.surface_distances)
+            self.distances = self.object.surface_distances / self.object.max_distance
         self.set_weights_by_mode()
         
     def build_directional_weight_map(self, bb, master_grid_positions):
@@ -318,8 +318,9 @@ class Gradient:
     def set_weights_by_mode(self):
         scaled_distances = self.distances
         if (max(scaled_distances) > 1.0): 
-            print("MAX TOO BIG", max(scaled_distances))
+            self.log.error("MAX TOO BIG", max(scaled_distances))
             # raise ValueError("distances have not been scaled to be from 0.0 to 1.0")
+        scaled_distances[numpy.isnan(scaled_distances)] = 1
         if self.weight_mode == "linear":
             self.weight = (1.0 - scaled_distances)
         elif self.weight_mode == "square":

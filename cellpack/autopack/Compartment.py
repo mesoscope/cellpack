@@ -97,6 +97,13 @@ class CompartmentList:
     Handle a list of compartments.
     """
 
+    @staticmethod
+    def add_compartment(parent, compartment):
+        """add a new compartment to the list"""
+        assert compartment.parent is None
+        assert isinstance(compartment, Compartment)
+        compartment.parent = parent
+
     def __init__(self):
         self.log = logging.getLogger("compartment")
         self.log.propagate = False
@@ -106,13 +113,6 @@ class CompartmentList:
 
         # point to parent compartment or Environment
         self.parent = None
-
-    def _add_compartment(self, compartment):
-        """add a new compartment to the list"""
-        assert compartment.parent is None
-        assert isinstance(compartment, Compartment)
-        self.compartments.append(compartment)
-        compartment.parent = self
 
 
 class Compartment(CompartmentList):
@@ -267,13 +267,13 @@ class Compartment(CompartmentList):
                 self.encapsulating_radius = radius
                 self.radius = mesh_store.get_smallest_radius(self.gname, center)
 
-    def addShapeRB(self):
+    def addShapeRB(self, env):
         # in case our shape is a regular primitive
         if self.stype == "capsule":
             shape = BulletCapsuleShape(self.radius, self.height, self.axis)
         else:
             shape = self.addMeshRB()
-        inodenp = self.parent.worldNP.attachNewNode(BulletRigidBodyNode(self.name))
+        inodenp = env.worldNP.attachNewNode(BulletRigidBodyNode(self.name))
         inodenp.node().setMass(1.0)
         inodenp.node().addShape(
             shape, TransformState.makePos(Point3(0, 0, 0))
@@ -282,7 +282,7 @@ class Compartment(CompartmentList):
         inodenp.setCollideMask(BitMask32.allOn())
         inodenp.node().setAngularDamping(1.0)
         inodenp.node().setLinearDamping(1.0)
-        self.parent.world.attachRigidBody(inodenp.node())
+        env.world.attachRigidBody(inodenp.node())
         inodenp = inodenp.node()
         return inodenp
 
@@ -1015,23 +1015,6 @@ class Compartment(CompartmentList):
             env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
 
-        surface_mask = numpy.equal(self.number, env.grid.compartment_ids)
-        surface_ids = numpy.nonzero(surface_mask)
-        surface_positions = master_grid_positions[surface_ids]
-
-        # non_surface_ids = numpy.nonzero(not surface_mask)
-        # non_surface_positions = master_grid_positions[non_surface_ids]
-
-        surface_tree = spatial.cKDTree(
-            tuple(surface_positions), leafsize=10
-        )
-
-        surface_distances, indexes = ctree.query(
-            tuple(master_grid_positions)
-        )
-
-        self.surface_distances = surface_distances
-
         return inside_points, surface_points
 
     def build_grid_sphere(self, env):
@@ -1073,6 +1056,21 @@ class Compartment(CompartmentList):
             len(a),
             len(env.grid.masterGridPositions),
         )
+
+    def get_surface_distances(self, env, master_grid_positions):
+        surface_mask = numpy.equal(self.number, env.grid.compartment_ids)
+        surface_ids = numpy.nonzero(surface_mask)
+        surface_positions = master_grid_positions[surface_ids]
+        surface_tree = spatial.cKDTree(tuple(surface_positions), leafsize=10)
+        parent_id = self.parent.number
+        grid_pt_indexes = numpy.equal(numpy.abs(env.grid.compartment_ids), self.number) | numpy.equal(numpy.abs(env.grid.compartment_ids), parent_id)
+        grid_pt_to_calc = master_grid_positions[grid_pt_indexes]
+
+        surface_distances, indexes = surface_tree.query(tuple(grid_pt_to_calc))
+        all_surface_distances = numpy.full(master_grid_positions.shape[0], numpy.nan)
+        all_surface_distances[grid_pt_indexes] = surface_distances
+        self.max_distance = max(surface_distances)
+        self.surface_distances = all_surface_distances
 
     def BuildGrid_box(self, env, vSurfaceArea):
         nbGridPoints = len(env.grid.masterGridPositions)

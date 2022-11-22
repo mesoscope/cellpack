@@ -169,7 +169,7 @@ class Environment(CompartmentList):
         # 0 is the exterior, 1 is compartment 1 surface, -1 is compartment 1 interior
         self.nbCompartments = 1
         self.name = "out"
-
+        self.number = 0 # TODO: call this 'id' consistent with container
         self.order = {}  # give the order of drop ingredient by ptInd from molecules
         self.lastrank = 0
 
@@ -317,9 +317,10 @@ class Environment(CompartmentList):
         )
         return ingredient_info
 
-    def _step_down(self, compartment_key):
+    def _step_down(self, compartment_key, prev_compartment=None):
+        parent = prev_compartment if prev_compartment is not None else self
         composition_dict = self.recipe_data["composition"]
-        compartment = self.create_compartment(compartment_key)
+        compartment = self.create_compartment(compartment_key, parent)
         compartment_info = composition_dict[compartment_key]
         for region_name, obj_keys in compartment_info.get(
             "regions", {}
@@ -329,7 +330,7 @@ class Environment(CompartmentList):
                 is_key, composition_info = Recipe.is_key(key_or_dict, composition_dict)
                 if is_key and key_or_dict in self.compartment_keys:
                     key = key_or_dict
-                    self._step_down(key)
+                    self._step_down(key, prev_compartment=compartment)
                 else:
                     key = key_or_dict if is_key else None
                     ingredient_info = self._prep_ingredient_info(composition_info, key)
@@ -346,7 +347,6 @@ class Environment(CompartmentList):
         composition_dict = self.recipe_data["composition"]
 
         if self.root_compartment is not None:
-            # create cytoplasme and set as exterior recipe
             root_compartment = composition_dict[self.root_compartment]
             # self.create_compartment(self.root_compartment)
             external_recipe = Recipe()
@@ -359,6 +359,7 @@ class Environment(CompartmentList):
                     )
                     if is_key and key_or_dict in self.compartment_keys:
                         # key is pointing to another container
+                        # make compartment and add ingredients inside it
                         key = key_or_dict
                         self._step_down(key)
                     else:
@@ -1010,7 +1011,7 @@ class Environment(CompartmentList):
         recipe.addIngredient(ingr)
         self.update_largest_smallest_size(ingr)
 
-    def create_compartment(self, compartment_key):
+    def create_compartment(self, compartment_key, parent):
         comp_dic = self.recipe_data["composition"]
         obj_dic = self.recipe_data["objects"]
 
@@ -1026,17 +1027,19 @@ class Environment(CompartmentList):
             object_info=object_info,
         )
         compartment.initialize_shape(self.mesh_store)
-        self._add_compartment(compartment)
+        self._add_compartment(compartment, parent)
         return compartment
 
-    def _add_compartment(self, compartment):
+    def _add_compartment(self, compartment, parent):
         """
         Add the given compartment to the environment.
         Extend the main bounding box if needed
         """
         compartment.setNumber(self.nbCompartments)
         self.nbCompartments += 1
-        CompartmentList._add_compartment(self, compartment)
+        self.compartments.append(compartment)
+
+        CompartmentList.add_compartment(parent, compartment)
 
     def compartment_id_for_nearest_grid_point(self, point):
         # check if point inside  of the compartments
@@ -1294,7 +1297,11 @@ class Environment(CompartmentList):
             self.grid.nbFreePoints = nbFreePoints
 
         if self.use_gradient and len(self.gradients) and rebuild:
+
             for g in self.gradients:
+                gradient = self.gradients[g]
+                if gradient.mode == "surface":
+                    gradient.object.get_surface_distances(self, self.grid.masterGridPositions)
                 self.gradients[g].build_weight_map(
                     boundingBox, self.grid.masterGridPositions
                 )            
@@ -2771,7 +2778,7 @@ class Environment(CompartmentList):
             self.rb_panda = []
         for o in self.compartments:
             if o.rbnode is None:
-                o.rbnode = o.addShapeRB()  # addMeshRBOrganelle(o)
+                o.rbnode = o.addShapeRB(self)  # addMeshRBOrganelle(o)
 
     def add_rb_node(self, ingr, trans, mat):
         if ingr.type == "Mesh":
