@@ -334,11 +334,10 @@ class simulariumHelper(hostHelper.Helper):
     def GetAbsPosUntilRoot(self, obj):
         return [0, 0.0, 0.0]
 
-    def add_grid_data_to_scene(self, name, positions, values):
-        max_value = np.max(values)
-        colormap = matplotlib.cm.viridis(values / max_value)
+    def add_grid_data_to_scene(self, incoming_name, positions, values):
+        colormap = matplotlib.cm.viridis(values)
         for index in range(len(values)):
-            name = f"{name}#{index}"
+            name = f"{incoming_name}#{values[index]}"
             self.display_data[name] = DisplayData(
                 name=name,
                 display_type=DISPLAY_TYPE.SPHERE,
@@ -349,7 +348,7 @@ class simulariumHelper(hostHelper.Helper):
             self.add_instance(
                 name,
                 None,
-                f"{name}#{index}",
+                f"{incoming_name}-{index}",
                 0.5,
                 point_pos,
                 np.identity(4),
