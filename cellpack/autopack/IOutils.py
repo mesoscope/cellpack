@@ -1708,7 +1708,7 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                         )
     freePoint = []  # pickle.load(rfile)
     try:
-        rfile = open(resultfilename + "free_points", "rb")
+        rfile = open(resultfilename + "_free_points", "rb")
         freePoint = pickle.load(rfile)
         rfile.close()
     except:  # noqa: E722
