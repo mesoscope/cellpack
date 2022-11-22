@@ -1295,6 +1295,7 @@ class AnalyseAP:
             file_path,
             dpi=300,
         )
+        plt.close()
 
     def get_parametrized_representation(
         self,
@@ -1347,25 +1348,25 @@ class AnalyseAP:
                 inner_loc = numpy.zeros(pos_list.shape)
                 outer_loc = numpy.zeros(pos_list.shape)
 
-                for i in range(inner_loc.shape[0]):
-                    inner_loc[i], _, _ = inner_mesh.ray.intersects_location(
-                        ray_origins=[[0, 0, 0]], ray_directions=[pos_list[i]]
-                    )
-                    outer_loc[i], _, _ = outer_mesh.ray.intersects_location(
-                        ray_origins=[[0, 0, 0]], ray_directions=[pos_list[i]]
-                    )
+                query = trimesh.proximity.ProximityQuery(inner_mesh)
+                
+                # closest points on the inner mesh surface
+                inner_loc, inner_surface_distances, _ = query.on_surface(pos_list)
 
-                inner_sph_pts = self.cartesian_to_sph(inner_loc)
-                outer_sph_pts = self.cartesian_to_sph(outer_loc)
-                scaled_rad = (sph_pts[:, 0] - inner_sph_pts[:, 0]) / (
-                    outer_sph_pts[:, 0] - inner_sph_pts[:, 0]
+                # intersecting points on the outer surface
+                outer_loc, _, _ = outer_mesh.ray.intersects_location(
+                    ray_origins=inner_loc, ray_directions=(pos_list - inner_loc)
                 )
+
+                distance_between_surfaces = numpy.linalg.norm(outer_loc - inner_loc, axis=1)
+
+                scaled_rad = inner_surface_distances / distance_between_surfaces
 
                 trial_spilr = {}
                 for scaled_val in ["raw", "scaled"]:
                     rad_array = (
                         numpy.linspace(
-                            0, outer_sph_pts[:, 0].max(), len(rad_vals)
+                            0, distance_between_surfaces.max(), len(rad_vals)
                         )
                         if scaled_val == "raw"
                         else rad_vals
@@ -1376,7 +1377,7 @@ class AnalyseAP:
                     )
 
                     max_rad = (
-                        outer_sph_pts[:, 0].max() if scaled_val == "raw" else 1
+                        distance_between_surfaces.max() if scaled_val == "raw" else 1
                     )
 
                     if numpy.any(rad_array > max_rad) or numpy.any(
@@ -1385,11 +1386,11 @@ class AnalyseAP:
                         raise ValueError("Check ray-mesh intersections!")
 
                     rad_pos = (
-                        sph_pts[:, 0] if scaled_val == "raw" else scaled_rad
+                        inner_surface_distances if scaled_val == "raw" else scaled_rad
                     )
-                    rad_inds = numpy.digitize(rad_pos, rad_array)
-                    theta_inds = numpy.digitize(sph_pts[:, 1], theta_vals)
-                    phi_inds = numpy.digitize(sph_pts[:, 2], phi_vals)
+                    rad_inds = numpy.digitize(rad_pos, rad_array) - 1
+                    theta_inds = numpy.digitize(sph_pts[:, 1], theta_vals) - 1
+                    phi_inds = numpy.digitize(sph_pts[:, 2], phi_vals) - 1
 
                     trial_spilr[scaled_val][rad_inds, theta_inds, phi_inds] = 1
 
