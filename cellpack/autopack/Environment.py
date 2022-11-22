@@ -2257,7 +2257,7 @@ class Environment(CompartmentList):
         self.distancesAfterFill = self.grid.distToClosestSurf
 
     def loadFreePoint(self, resultfilename):
-        rfile = open(resultfilename + "free_points", "rb")
+        rfile = open(resultfilename + "_free_points", "rb")
         freePoint = pickle.load(rfile)
         rfile.close()
         return freePoint
@@ -2282,7 +2282,7 @@ class Environment(CompartmentList):
             pickle.dump(result, orfile)
             #            pickle.dump(orga.molecules, orfile)
             orfile.close()
-        rfile = open(resultfilename + "free_points", "wb")
+        rfile = open(resultfilename + "_free_points", "wb")
         pickle.dump(self.grid.free_points, rfile)
         rfile.close()
 
@@ -2370,7 +2370,7 @@ class Environment(CompartmentList):
             #        rfile = open(resultfilename+"free_points",'rb')
         freePoint = []  # pickle.load(rfile)
         try:
-            rfile = open(resultfilename + "free_points", "rb")
+            rfile = open(resultfilename + "_free_points", "rb")
             freePoint = pickle.load(rfile)
             rfile.close()
         except:  # noqa: E722
@@ -2522,7 +2522,7 @@ class Environment(CompartmentList):
                             )
         freePoint = []  # pickle.load(rfile)
         try:
-            rfile = open(resultfilename + "free_points", "rb")
+            rfile = open(resultfilename + "_free_points", "rb")
             freePoint = pickle.load(rfile)
             rfile.close()
         except:  # noqa: E722
@@ -2652,7 +2652,7 @@ class Environment(CompartmentList):
             orgaresult.append(pickle.load(orfile))
             orfile.close()
         rfile.close()
-        rfile = open(resultfilename + "free_points")
+        rfile = open(resultfilename + "_free_points")
         rfile.close()
         rfile = open(resultfilename + ".txt", "w")
         line = ""

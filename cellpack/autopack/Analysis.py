@@ -164,7 +164,7 @@ class AnalyseAP:
         self.current_distance = None
         self.plotly = PlotlyAnalysis()
         self.input_path = None
-        self.output_path = None
+        self.output_path = Path("out/")
         if input_path is not None:
             self.input_path = Path(input_path)
         if output_path is not None:
@@ -1098,6 +1098,10 @@ class AnalyseAP:
 
         all_objs, all_pos_list = self.get_obj_dict(self.input_path)
         self.ingr_key = ingr_key
+        self.num_packings = len(all_pos_list)
+        self.num_seeds_per_packing = numpy.array(
+            [len(packing_dict) for packing_dict in all_pos_list]
+        )
 
         if ingr_key not in all_objs:
             raise ValueError(
@@ -1122,6 +1126,32 @@ class AnalyseAP:
                 get_correlations=get_correlations,
             )
 
+    def calc_avg_similarity_values_for_dim(self, similarity_vals_for_dim):
+        packing_inds = numpy.cumsum(
+            numpy.hstack([0, self.num_seeds_per_packing])
+        )  # returns the indices where packings start and end
+        avg_similarity_values = -numpy.ones(
+            (self.num_packings, self.num_packings)
+        )
+
+        for p1_id in range(self.num_packings):
+            for p2_id in range(self.num_packings):
+                if avg_similarity_values[p1_id, p2_id] >= 0:
+                    continue
+                p1_inds = numpy.arange(
+                    packing_inds[p1_id], packing_inds[p1_id + 1]
+                )  # indices corresponding to packing p1_id
+                p2_inds = numpy.arange(
+                    packing_inds[p2_id], packing_inds[p2_id + 1]
+                )
+                avg_similarity_values[p1_id, p2_id] = numpy.mean(
+                    similarity_vals_for_dim[p1_inds, p2_inds]
+                )
+                avg_similarity_values[p2_id, p1_id] = avg_similarity_values[
+                    p1_id, p2_id
+                ]
+        return avg_similarity_values
+
     def run_similarity_analysis(self, all_objs):
         ingr_key = self.ingr_key
         key_list = list(all_objs[ingr_key].keys())
@@ -1142,7 +1172,26 @@ class AnalyseAP:
                     arr1 = pos_dict1[dim]
                     arr2 = pos_dict2[dim]
                     if len(arr1) == 1 or len(arr2) == 1:
+                        # cannot determine similarity when only one instance is packed
                         scaled_sig = 0
+                    elif (
+                        len(numpy.unique(arr1)) == 1
+                        or len(numpy.unique(arr2)) == 1
+                    ):
+                        # if there is only one unique value, compare the value
+                        if (
+                            len(numpy.unique(arr1)) == 1
+                            and len(numpy.unique(arr2)) == 1
+                        ):
+                            # both packings have only one unique value, compare the value
+                            scaled_sig = (
+                                1
+                                if numpy.unique(arr1) == numpy.unique(arr2)
+                                else 0
+                            )
+                        else:
+                            # one of the packings has more than one unique value, cannot compare
+                            scaled_sig = 0
                     else:
                         ad_stat = scipy.stats.anderson_ksamp([arr1, arr2])
                         scaled_sig = (ad_stat.significance_level - 0.001) / (
@@ -1155,6 +1204,15 @@ class AnalyseAP:
         row_colors = df_packing.map(lut)
 
         for dim in self.get_list_of_dims():
+
+            avg_similarity_values = self.calc_avg_similarity_values_for_dim(
+                similarity_df[dim].values
+            )
+            numpy.savetxt(
+                self.output_path / f"avg_similarity_{ingr_key}_{dim}.txt",
+                avg_similarity_values,
+            )
+
             g = sns.clustermap(
                 similarity_df[dim],
                 row_colors=row_colors,
@@ -1164,19 +1222,19 @@ class AnalyseAP:
             g.ax_col_dendrogram.set_visible(False)
             g.ax_heatmap.set_xlabel(f"{ingr_key}_{dim}")
             g.savefig(
-                f"{self.output_path}clustermap_{ingr_key}_{dim}", dpi=300
+                self.output_path / f"clustermap_{ingr_key}_{dim}", dpi=300
             )
+
+        return similarity_df
 
     def calc_and_save_correlations(
         self,
-        num_packings,
-        num_seeds,
         all_spilr_scaled,
     ):
         key_list = [
             f"{pc}_{sc}"
-            for pc in range(num_packings)
-            for sc in range(num_seeds[pc])
+            for pc in range(self.num_packings)
+            for sc in range(self.num_seeds_per_packing[pc])
         ]
         corr_df = pd.DataFrame(
             index=key_list,
@@ -1184,10 +1242,10 @@ class AnalyseAP:
             dtype=float,
         )
         corr_df["packing_id"] = numpy.nan
-        for pc1 in range(num_packings):
-            for sc1 in tqdm(range(num_seeds[pc1])):
-                for pc2 in range(num_packings):
-                    for sc2 in range(num_seeds[pc2]):
+        for pc1 in range(self.num_packings):
+            for sc1 in tqdm(range(self.num_seeds_per_packing[pc1])):
+                for pc2 in range(self.num_packings):
+                    for sc2 in range(self.num_seeds_per_packing[pc2]):
                         corr_df.loc[f"{pc1}_{sc1}", "packing_id"] = pc1
                         # do not calculate if:
                         # a) already calculated
@@ -1217,7 +1275,7 @@ class AnalyseAP:
             cbar_kws={"label": "spilr correlation"},
         )
         g.savefig(
-            f"{self.output_path}spilr_correlation_{self.ingr_key}", dpi=300
+            self.output_path / f"spilr_correlation_{self.ingr_key}", dpi=300
         )
 
     def save_spilr_heatmap(self, input_dict, file_path, label_str=None):
@@ -1264,16 +1322,12 @@ class AnalyseAP:
         inner_mesh = trimesh.load_mesh(inner_mesh_path)
         outer_mesh = trimesh.load_mesh(outer_mesh_path)
 
-        num_packings = len(all_pos_list)
-        num_seeds = numpy.array(
-            [len(packing_dict) for packing_dict in all_pos_list]
-        )
         all_spilr = {}
         for scaled_val in ["raw", "scaled"]:
             all_spilr[scaled_val] = numpy.full(
                 (
-                    num_packings,
-                    numpy.max(num_seeds),
+                    self.num_packings,
+                    numpy.max(self.num_seeds_per_packing),
                     len(rad_vals),
                     len(theta_vals) * len(phi_vals),
                 ),
@@ -1281,7 +1335,7 @@ class AnalyseAP:
             )
 
         if save_plots:
-            save_dir = f"{self.output_path}/heatmaps/"
+            save_dir = self.output_path / "heatmaps"
             os.makedirs(save_dir, exist_ok=True)
 
         for pc, packing_dict in enumerate(all_pos_list):
@@ -1345,7 +1399,10 @@ class AnalyseAP:
 
                     if save_plots and (num_saved_plots <= max_plots_to_save):
                         label_str = f"Distance from Nuclear Surface, {pc}_{sc}, {scaled_val}"
-                        file_path = f"{save_dir}heatmap_{scaled_val}_{pc}_{sc}_{self.ingr_key}"
+                        file_path = (
+                            save_dir
+                            / f"heatmap_{scaled_val}_{pc}_{sc}_{self.ingr_key}"
+                        )
                         self.save_spilr_heatmap(
                             all_spilr[scaled_val][pc, sc], file_path, label_str
                         )
@@ -1354,8 +1411,6 @@ class AnalyseAP:
         if get_correlations:
             print("calculating correlations...")
             self.calc_and_save_correlations(
-                num_packings,
-                num_seeds,
                 all_spilr["scaled"],
             )
 
@@ -1364,7 +1419,10 @@ class AnalyseAP:
                 average_spilr = numpy.nanmean(all_spilr[scaled_val], axis=1)
                 for pc in range(average_spilr.shape[0]):
                     label_str = f"Distance from Nuclear Surface, avg {pc}, {scaled_val}"
-                    file_path = f"{save_dir}avg_heatmap_{scaled_val}_{pc}_{self.ingr_key}"
+                    file_path = (
+                        save_dir
+                        / f"avg_heatmap_{scaled_val}_{pc}_{self.ingr_key}"
+                    )
                     self.save_spilr_heatmap(
                         average_spilr[pc], file_path, label_str
                     )
