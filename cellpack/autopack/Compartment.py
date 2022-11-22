@@ -1063,7 +1063,9 @@ class Compartment(CompartmentList):
         surface_positions = master_grid_positions[surface_ids]
         surface_tree = spatial.cKDTree(tuple(surface_positions), leafsize=10)
         parent_id = self.parent.number
-        grid_pt_indexes = numpy.equal(numpy.abs(env.grid.compartment_ids), self.number) | numpy.equal(numpy.abs(env.grid.compartment_ids), parent_id)
+        # clacluate the distances for the points inside the surface, and outside the surface
+        # up to the next boundary (not including the parent's surface points)
+        grid_pt_indexes = numpy.equal(numpy.abs(env.grid.compartment_ids), self.number) | numpy.equal(env.grid.compartment_ids, -parent_id)
         grid_pt_to_calc = master_grid_positions[grid_pt_indexes]
 
         surface_distances, indexes = surface_tree.query(tuple(grid_pt_to_calc))
