@@ -221,7 +221,7 @@ if doit:
             if pref_path["autopackdir"] != "default":
                 autopackdir = pref_path["autopackdir"]
 
-replace_path = {
+REPLACE_PATH = {
     "autoPACKserver": autoPACKserver,
     "autopackdir": autopackdir,
     "autopackdata": appdata,
@@ -274,7 +274,7 @@ def checkErrorInPath(p, toreplace):
 
 def fixOnePath(path):
     path = str(path)
-    for old_value, new_value in replace_path.items():
+    for old_value, new_value in REPLACE_PATH.items():
         # fix before
         new_value = str(new_value)
         if fixpath and re.findall("{0}".format(re.escape(old_value)), path):
@@ -288,12 +288,12 @@ def fixOnePath(path):
 def updateReplacePath(newPaths):
     for w in newPaths:
         found = False
-        for i, v in enumerate(replace_path):
+        for i, v in enumerate(REPLACE_PATH):
             if v[0] == w[0]:
-                replace_path[i][1] = w[1]
+                REPLACE_PATH[i][1] = w[1]
                 found = True
         if not found:
-            replace_path.append(w)
+            REPLACE_PATH.append(w)
 
 
 def download_file(url, local_file_path, reporthook):
@@ -382,7 +382,7 @@ def updatePathJSON():
     pref_path = json.load(f)
     f.close()
     autoPACKserver = pref_path["autoPACKserver"]
-    replace_path["autoPACKserver"] = autoPACKserver
+    REPLACE_PATH["autoPACKserver"] = autoPACKserver
     filespath = autoPACKserver + "/autoPACK_filePaths.json"
     if "filespath" in pref_path:
         if pref_path["filespath"] != "default":
@@ -394,7 +394,7 @@ def updatePathJSON():
     if "autopackdir" in pref_path:
         if pref_path["autopackdir"] != "default":
             autopackdir = pref_path["autopackdir"]  # noqa: F841
-            replace_path["autoPACKserver"] = pref_path["autopackdir"]
+            REPLACE_PATH["autoPACKserver"] = pref_path["autopackdir"]
 
 
 def updatePath():
