@@ -11,6 +11,6 @@
     "run_similarity_analysis": true,
     "get_parametrized_representation": true,
     "save_plots": true,
-    "get_correlations": true,
+    "get_correlations": false,
     "max_plots_to_save": 5
 }

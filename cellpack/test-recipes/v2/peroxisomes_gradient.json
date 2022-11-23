@@ -18,7 +18,7 @@
         "nucleus_surface_gradient": {
             "description": "gradient based on distance from the surface of a mesh",
             "surface_name": "nucleus",
-            "weight_mode": "cube",
+            "weight_mode": "linear",
             "pick_mode": "rnd",
             "mode": "surface",
             "direction" : [0,0,0]

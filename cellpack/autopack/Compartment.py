@@ -470,7 +470,6 @@ class Compartment(CompartmentList):
         pickle.dump(self.surfacePoints, f)
         pickle.dump(self.surfacePointsNormals, f)
         pickle.dump(self.surfacePointsCoords, f)
-        pickle.dump(self.surface_distances, f)
 
     def readGridFromFile(self, f):
         """read insidePoints and surfacePoints from file"""
@@ -478,8 +477,8 @@ class Compartment(CompartmentList):
         self.surfacePoints = surfacePoints = pickle.load(f)
         self.surfacePointsNormals = surfacePointsNormals = pickle.load(f)
         self.surfacePointsCoords = surfacePointsCoords = pickle.load(f)
-        self.surface_distances = surface_distances = pickle.load(f)
-        return surfacePoints, insidePoints, surfacePointsNormals, surfacePointsCoords, surface_distances
+
+        return surfacePoints, insidePoints, surfacePointsNormals, surfacePointsCoords
 
     def setNumber(self, num):
         """set compartment uniq id"""

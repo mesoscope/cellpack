@@ -1805,7 +1805,7 @@ class AnalyseAP:
                                 seed_distances, distance_file, seed_index
                             )
 
-                            distances_dict[ingr.name] = seed_distances
+                            distances_dict[ingr.name] = seed_distances.tolist()
                             ingredient_positions_dict[
                                 ingr.name
                             ] = seed_ingredient_positions.tolist()
@@ -1929,14 +1929,14 @@ class AnalyseAP:
                             if use_file:
 
                                 self.save_array_to_file(
-                                    seed_ingredient_positions, position_file
+                                    seed_ingredient_positions, position_file, seed_index,
                                 )
 
                                 self.save_array_to_file(
-                                    seed_distances, distance_file
+                                    seed_distances, distance_file, seed_index,
                                 )
 
-                                distances_dict[ingr.name] = seed_distances
+                                distances_dict[ingr.name] = seed_distances.tolist()
                                 ingredient_positions_dict[
                                     ingr.name
                                 ] = seed_ingredient_positions.tolist()
@@ -1989,14 +1989,16 @@ class AnalyseAP:
                                 self.save_array_to_file(
                                     seed_ingredient_positions,
                                     position_file,
+                                    seed_index,
                                 )
 
                                 self.save_array_to_file(
                                     seed_distances,
                                     distance_file,
+                                    seed_index,
                                 )
 
-                                distances_dict[ingr.name] = seed_distances
+                                distances_dict[ingr.name] = seed_distances.tolist()
                                 ingredient_positions_dict[
                                     ingr.name
                                 ] = seed_ingredient_positions.tolist()
