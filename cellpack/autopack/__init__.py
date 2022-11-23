@@ -42,6 +42,7 @@ import re
 import shutil
 from os import path, environ
 from pathlib import Path
+import urllib.request as urllib
 
 import ssl
 import json
@@ -181,10 +182,6 @@ autopackdir = str(afdir)  # copy
 def checkPath():
     fileName = filespath  # autoPACKserver+"/autoPACK_filePaths.json"
     if fileName.find("http") != -1 or fileName.find("ftp") != -1:
-        try:
-            import urllib.request as urllib  # , urllib.parse, urllib.error
-        except ImportError:
-            import urllib
         if url_exists(fileName):
             urllib.urlretrieve(fileName, autopack_path_pref_file)
         else:
