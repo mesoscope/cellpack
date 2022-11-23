@@ -47,6 +47,7 @@ attributes_move_to_composition = [
 required_attributes = {
     "SingleSphere": ["radii"],
     "MultiSphere": ["sphereFile"],
+    "SingleCylinder": [],
     "mesh": [],
 }
 
