@@ -1,17 +1,15 @@
 {
-    "name": "default-run",
+    "name": "test_config",
     "format": "simularium",
-    "inner_grid_method": "trimesh",
+    "inner_grid_method": "raytrace",
     "live_packing": false,
     "ordered_packing": false,
-    "out": "out/",
+    "out": "cellpack/tests/outputs/",
     "overwrite_place_method": false,
     "place_method": "jitter",
-    "save_analyze_result": false,
+    "save_analyze_result": true,
     "show_grid_plot": false,
     "spacing": null,
     "use_periodicity": false,
-    "show_sphere_trees": false,
-    "load_from_grid_file": true,
-    "save_converted_recipe": true
+    "show_sphere_trees": true
 }

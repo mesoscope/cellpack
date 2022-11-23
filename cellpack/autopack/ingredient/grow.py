@@ -42,6 +42,7 @@ class GrowIngredient(MultiCylindersIngr):
 
     def __init__(
         self,
+        available_regions=None,
         type="Grow",
         biased=1.0,
         closed=False,
@@ -64,10 +65,10 @@ class GrowIngredient(MultiCylindersIngr):
         count=0,
         orientation=(1, 0, 0),
         orient_bias_range=[-pi, pi],
-        packing_priority=0,
+        priority=0,
         partners=None,
         perturb_axis_amplitude=0.1,
-        place_type="jitter",
+        place_method="jitter",
         positions=None,
         positions2=None,
         principal_vector=(1, 0, 0),
@@ -99,10 +100,10 @@ class GrowIngredient(MultiCylindersIngr):
             jitter_attempts=jitter_attempts,
             count=count,
             orient_bias_range=orient_bias_range,
-            packing_priority=packing_priority,
+            priority=priority,
             partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
-            place_type=place_type,
+            place_method=place_method,
             principal_vector=principal_vector,
             representations=representations,
             rejection_threshold=rejection_threshold,
@@ -518,7 +519,7 @@ class GrowIngredient(MultiCylindersIngr):
         self.currentLength = 0.0  # snakelength
         # update he cylinder ?
 
-    def getNextPtIndCyl(self, jtrans, rotMatj, freePoints, histoVol):
+    def getNextPtIndCyl(self, jtrans, rotMatj, free_points, histoVol):
         #        print jtrans, rotMatj
         cent2T = self.transformPoints(jtrans, rotMatj, self.positions[-1])
         jx, jy, jz = self.max_jitter
@@ -1561,7 +1562,7 @@ class GrowIngredient(MultiCylindersIngr):
         listePtLinear,
         histoVol,
         ptInd,
-        freePoints,
+        free_points,
         nbFreePoints,
         distance,
         dpad,
@@ -1597,7 +1598,7 @@ class GrowIngredient(MultiCylindersIngr):
             print("attempt K ", k)
             if k > safetycutoff:
                 print("break safetycutoff", k)
-                return success, nbFreePoints, freePoints
+                return success, nbFreePoints, free_points
             if runTimeDisplay:  # or histoVol.afviewer.doSpheres:
                 name = str(len(listePtLinear)) + "sp" + self.name + str(ptInd)
                 if r:
@@ -1611,7 +1612,7 @@ class GrowIngredient(MultiCylindersIngr):
                 self.vi.update()
             # pick next point and test collision.
             if self.walkingMode == "sphere":
-                if self.place_type == "pandaBullet":
+                if self.place_method == "pandaBullet":
                     secondPoint, success = self.walkSpherePanda(
                         previousPoint,
                         startingPoint,
@@ -1622,7 +1623,7 @@ class GrowIngredient(MultiCylindersIngr):
                         usePP=usePP,
                     )
                     if secondPoint is None:
-                        return False, nbFreePoints, freePoints
+                        return False, nbFreePoints, free_points
                 else:
                     secondPoint, success = self.walkSphere(
                         previousPoint,
@@ -1754,7 +1755,7 @@ class GrowIngredient(MultiCylindersIngr):
                     nbFreePoints = BaseGrid.updateDistances(
                         insidePoints,
                         newDistPoints,
-                        freePoints,
+                        free_points,
                         nbFreePoints,
                         distance,
                     )
@@ -1790,14 +1791,14 @@ class GrowIngredient(MultiCylindersIngr):
             else:
                 secondPoint = startingPoint
                 break
-        return success, nbFreePoints, freePoints
+        return success, nbFreePoints, free_points
 
     def updateGrid(
         self,
         rg,
         histoVol,
         dpad,
-        freePoints,
+        free_points,
         nbFreePoints,
         distance,
         gridPointsCoords,
@@ -1820,9 +1821,9 @@ class GrowIngredient(MultiCylindersIngr):
             newDistPoints = self.merge_place_results(new_dist_points, newDistPoints)
             # update free points
             nbFreePoints = BaseGrid.updateDistances(
-                new_inside_pts, new_dist_points, freePoints, nbFreePoints, distance
+                new_inside_pts, new_dist_points, free_points, nbFreePoints, distance
             )
-        return insidePoints, newDistPoints, nbFreePoints, freePoints
+        return insidePoints, newDistPoints, nbFreePoints, free_points
 
     def getFirstPoint(self, ptInd, seed=0):
         if self.compNum > 0:  # surfacegrowing: first point is aling to the normal:
@@ -1919,7 +1920,7 @@ class GrowIngredient(MultiCylindersIngr):
         self,
         env,
         ptInd,
-        freePoints,
+        free_points,
         nbFreePoints,
         distance,
         dpad,
@@ -1975,7 +1976,7 @@ class GrowIngredient(MultiCylindersIngr):
         # test for collision
         # return success, nbFreePoints
         self.results.append([jtrans, rotMatj])
-        if self.place_type == "pandaBullet":
+        if self.place_method == "pandaBullet":
             self.env.nb_ingredient += 1
             self.env.rTrans.append(numpy.array(startingPoint).flatten())
             self.env.rRot.append(numpy.array(numpy.identity(4)))  # rotMatj
@@ -1996,7 +1997,7 @@ class GrowIngredient(MultiCylindersIngr):
         listePtLinear = [startingPoint, secondPoint]
         # grow until reach self.currentLength >= self.length
         # or attempt > safety
-        success, nbFreePoints, freePoints = self.grow(
+        success, nbFreePoints, free_points = self.grow(
             previousPoint,
             startingPoint,
             secondPoint,
@@ -2004,24 +2005,24 @@ class GrowIngredient(MultiCylindersIngr):
             listePtLinear,
             env,
             ptInd,
-            freePoints,
+            free_points,
             nbFreePoints,
             distance,
             dpad,
             stepByStep=False,
             usePP=usePP,
         )
-        insidePoints, newDistPoints, nbFreePoints, freePoints = self.updateGrid(
+        insidePoints, newDistPoints, nbFreePoints, free_points = self.updateGrid(
             2,
             env,
             dpad,
-            freePoints,
+            free_points,
             nbFreePoints,
             distance,
             gridPointsCoords,
         )
         if self.seedOnMinus:
-            success, nbFreePoints, freePoints = self.grow(
+            success, nbFreePoints, free_points = self.grow(
                 previousPoint,
                 listePtLinear[1],
                 listePtLinear[0],
@@ -2029,18 +2030,18 @@ class GrowIngredient(MultiCylindersIngr):
                 listePtLinear,
                 env,
                 ptInd,
-                freePoints,
+                free_points,
                 nbFreePoints,
                 distance,
                 dpad,
                 stepByStep=False,
                 r=True,
             )
-            insidePoints, newDistPoints, nbFreePoints, freePoints = self.updateGrid(
+            insidePoints, newDistPoints, nbFreePoints, free_points = self.updateGrid(
                 2,
                 env,
                 dpad,
-                freePoints,
+                free_points,
                 nbFreePoints,
                 distance,
                 gridPointsCoords,
@@ -2331,7 +2332,7 @@ class ActinIngredient(GrowIngredient):
         radii=[[50.0]],
         positions=None,
         positions2=None,
-        packing_priority=0,
+        priority=0,
         name=None,
         pdb=None,
         color=None,
@@ -2346,7 +2347,7 @@ class ActinIngredient(GrowIngredient):
         principal_vector=(1, 0, 0),
         meshFile=None,
         packing=None,
-        place_type="jitter",
+        place_method="jitter",
         marge=35.0,
         influenceRad=100.0,
         meshObject=None,
@@ -2361,7 +2362,7 @@ class ActinIngredient(GrowIngredient):
             radii,
             positions,
             positions2,
-            packing_priority,
+            priority,
             name,
             pdb,
             color,
@@ -2375,7 +2376,7 @@ class ActinIngredient(GrowIngredient):
             principal_vector,
             meshFile,
             packing,
-            place_type,
+            place_method,
             marge,
             meshObject,
             orientation,

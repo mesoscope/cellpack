@@ -111,6 +111,8 @@ class simulariumHelper(hostHelper.Helper):
 
     @staticmethod
     def format_rgb_color(color):
+        if color is None:
+            return
         need_to_divide = False
         for ele in color:
             if ele > 1:
@@ -339,7 +341,7 @@ class simulariumHelper(hostHelper.Helper):
         display_type = DISPLAY_TYPE.SPHERE
         url = ""
         radius = compartment.encapsulating_radius
-        if compartment.meshType == "file":
+        if compartment.type == "mesh":
             _, extension = os.path.splitext(compartment.path)
             if extension == ".obj":
                 display_type = DISPLAY_TYPE.OBJ
@@ -432,6 +434,7 @@ class simulariumHelper(hostHelper.Helper):
         show_sphere_trees=False,
     ):
         self.time = 0
+        instance_number = 0
         for position, rotation, ingredient, ptInd in objects:
             ingr_name = ingredient.name
             sub_points = None
@@ -461,12 +464,13 @@ class simulariumHelper(hostHelper.Helper):
             self.add_instance(
                 ingr_name,
                 ingredient,
-                f"{ingr_name}-{ptInd}",
+                f"{ingr_name}-{ptInd}-{instance_number}",
                 radius,
                 adj_pos,
                 rotation,
                 sub_points,
             )
+            instance_number += 1
             if show_sphere_trees and hasattr(ingredient, "positions"):
                 if len(ingredient.positions) > 0:
                     for level in range(len(ingredient.positions)):
@@ -488,15 +492,17 @@ class simulariumHelper(hostHelper.Helper):
         if grid_point_positions is not None:
 
             for index in range(len(grid_point_compartment_ids)):
-                if index % 10 == 0:
+                if index % 1 == 0:
                     compartment_id = grid_point_compartment_ids[index]
                     point_pos = grid_point_positions[index]
+
                     if compartment_id < 0:
-                        name = "inside"
+                        name = f"inside-{abs(compartment_id)}"
                     elif compartment_id > 0:
-                        name = "surface"
+                        name = f"surface-{compartment_id}"
                     else:
                         name = "outside"
+                        continue
                     self.display_data[name] = DisplayData(
                         name=name, display_type=DISPLAY_TYPE.SPHERE, url=""
                     )
@@ -505,7 +511,7 @@ class simulariumHelper(hostHelper.Helper):
                         name,
                         None,
                         f"{name}-{index}",
-                        10,
+                        0.5,
                         point_pos,
                         np.identity(4),
                         None,

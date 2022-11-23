@@ -1,22 +1,12 @@
 # -*- coding: utf-8 -*-
-from enum import Enum
 import os
 
 import json
 from json import encoder
 
+from cellpack.autopack.interface_objects.meta_enum import MetaEnum
+
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
-
-
-class MetaEnum(Enum):
-    @classmethod
-    def values(cls):
-        return [member.value for member in cls]
-
-    @classmethod
-    def is_member(cls, item):
-        values = cls.values()
-        return item in values
 
 
 class Place_Methods(MetaEnum):
@@ -35,23 +25,27 @@ class Inner_Grid_Methods(MetaEnum):
 
 class ConfigLoader(object):
     default_values = {
-        "version": 1.0,
-        "name": "default",
         "format": "simularium",
-        "inner_grid_method": "raytrace",
+        "load_from_grid_file": False,
+        "inner_grid_method": "trimesh",
         "live_packing": False,
         "num_trials": 1,
+        "name": "default",
         "ordered_packing": False,
         "out": "out/",
         "overwrite_place_method": False,
         "place_method": "jitter",
+        "randomness_seed": None,
         "save_analyze_result": False,
+        "save_converted_recipe": False,
         "show_grid_plot": False,
+        "show_sphere_trees": False,
         "spacing": None,
         "use_periodicity": False,
-        "show_sphere_trees": False,
+        "version": 1.0,
     }
 
+    # TODO: fall back to default values if config file is not provided
     def __init__(self, input_file_path):
         _, file_extension = os.path.splitext(input_file_path)
         self.latest_version = 1.0

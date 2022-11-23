@@ -1,17 +1,16 @@
 {
-    "name": "default-run",
+    "name": "sparse-packing",
     "format": "simularium",
     "inner_grid_method": "trimesh",
     "live_packing": false,
     "ordered_packing": false,
     "out": "out/",
     "overwrite_place_method": false,
-    "place_method": "jitter",
+    "place_method": "spheresSST",
     "save_analyze_result": false,
     "show_grid_plot": false,
-    "spacing": null,
+    "spacing": 4,
     "use_periodicity": false,
     "show_sphere_trees": false,
-    "load_from_grid_file": true,
-    "save_converted_recipe": true
+    "load_from_grid_file": true
 }

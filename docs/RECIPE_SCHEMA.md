@@ -32,7 +32,7 @@ _Optional `boolean`_. Default: `false`.
 
 Save packing result to .apr file.
 
-### resultfile
+### result_file
 _Optional `string`_.
 
 Location of publicly hosted packing result 
@@ -63,7 +63,7 @@ Look for ingredients attractor and partner.
 ### overwritePlaceMethod
 _Optional `boolean`_. Default: `true`. 
 
-If `true`, the Enviro-level placeMethod will overwrite all of the ingredient-level place method in a recipe
+If `true`, the Enviro-level place_method will overwrite all of the ingredient-level place method in a recipe
 
 
 ### boundingBox 
@@ -92,11 +92,11 @@ _Optional `boolean`_. Default: `false`.
 
 Display packing in realtime (slow)
 
-### placeMethod
+### place_method
 
 _Optional `enum`_. One of `"jitter"`, `"spheresSST"`, `"pandaBullet"`.. Default: `"jitter"`.
 
-Will be use if placeMethod isn't in an ingredient setup
+Will be use if place_method isn't in an ingredient setup
 
 `"jitter"` uses a simple algorithm developed by GJ, M-A-A, MS, and LA to test if a single sphere, sphere-tree, or other primative (box and cylinder) are colliding with masked/unallowed points on the grid... I can't recall all of the allowed types, but check the input parameters that it accepts. I believe there is also an option to perform simple collisions directly between primatives, e.g. sphere-sphere, sphere-box, sphere-cylinder, cylinder-box, and spheretree-others
 
@@ -174,7 +174,7 @@ no free point update
     "\_hackFreepts": false,
     "windowsSize": 10,
     "use_gradient": false,
-    "placeMethod": "jitter",
+    "place_method": "jitter",
     "saveResult": false,
     "runTimeDisplay": false,
     "overwritePlaceMethod": true,
@@ -189,7 +189,7 @@ no free point update
     "ingrLookForNeighbours": false,
     "pickRandPt": false,
     "largestProteinSize": 200,
-    "resultfile": "autoPACKserver/results/NM_Analysis_FigureA1.0.apr.json",
+    "result_file": "autoPACKserver/results/NM_Analysis_FigureA1.0.apr.json",
     "use_periodicity": false,
     "EnviroOnly": false
 },
@@ -235,7 +235,7 @@ _Optional `string`_
 
 Location of sphere file 
 
-### packing_priority
+### priority
 _Optional `number`_ Default to `0.0`.
 
 Order to pack, largest negative number gets packed first. 
@@ -320,7 +320,7 @@ The amount this ingredient can move in x, y and z. If z is set to 0, will be a 2
 ### cutoff_surface
 _Optional `number`_. Default: `5.0`.
 
-### place_type
+### place_method
 _Optional enum. One of `"jitter"`, `"spheresSST"`, `"pandaBullet"`_. Default: `"jitter"`.
 
 
@@ -405,9 +405,9 @@ _Optional `string`_
     "type": "SingleSphere", 
     "excluded_partners_name": [],
     "rejection_threshold": 60,
-    "place_type": "jitter",
+    "place_method": "jitter",
     "cutoff_surface": 100,
-    "packing_priority": 0, 
+    "priority": 0, 
     "proba_binding": 0.5,
     "rotation_axis": null,
     "positions": [ [ [ 0, 0, 0] ] ],

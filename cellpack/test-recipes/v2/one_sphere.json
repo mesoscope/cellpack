@@ -1,6 +1,6 @@
 {
     "version": "1.0.0",
-    "format_version": "2.0.0",
+    "format_version": "2.0",
     "name": "one_sphere",
     "bounding_box": [
         [
@@ -29,16 +29,14 @@
                 0.01
             ],
             "perturb_axis_amplitude": 0.1,
-            "packing": {
-                "mode": "random"
-            },
+            "packing_mode": "random",
             "principal_vector": [
                 0,
                 0,
                 1
             ],
             "rejection_threshold": 50,
-            "place_type": "jitter",
+            "place_method": "jitter",
             "cutoff_surface": 42,
             "rotation_axis": [
                 0,

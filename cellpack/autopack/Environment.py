@@ -46,7 +46,6 @@
 # TODO: fix the save/restore grid
 """
 
-import copy
 import os
 from time import time
 from random import random, uniform, seed
@@ -68,11 +67,11 @@ from panda3d.bullet import BulletRigidBodyNode
 
 import cellpack.autopack as autopack
 from cellpack.autopack.MeshStore import MeshStore
-from cellpack.autopack.ingredient import Ingredient
-from cellpack.autopack.loaders.recipe_loader import RecipeLoader
+import cellpack.autopack.ingredient as ingredient
+from cellpack.autopack.loaders.utils import create_output_dir
 from cellpack.autopack.utils import (
     cmp_to_key,
-    deep_merge,
+    expand_object_using_key,
     ingredient_compare0,
     ingredient_compare1,
     ingredient_compare2,
@@ -84,13 +83,6 @@ from cellpack.autopack import IOutils
 from .octree import Octree
 from .Gradient import Gradient
 from .transformation import euler_from_matrix
-from .ingredient import (
-    MultiSphereIngr,
-    MultiCylindersIngr,
-    SingleSphereIngr,
-    SingleCubeIngr,
-    SingleCylinderIngr,
-)
 
 # backward compatibility with kevin method
 from cellpack.autopack.BaseGrid import BaseGrid as BaseGrid
@@ -105,7 +97,7 @@ except ImportError:
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
 
-SEED = 14
+SEED = 15
 LOG = False
 verbose = 0
 
@@ -129,30 +121,34 @@ class Environment(CompartmentList):
 
         self.config_data = config
         self.recipe_data = recipe
-
         name = recipe["name"]
         self.log = logging.getLogger("env")
         self.log.propagate = False
 
         # From config file
         self.runTimeDisplay = config["live_packing"]
-        self.placeMethod = config["place_method"]
+        self.place_method = config["place_method"]
         self.innerGridMethod = config["inner_grid_method"]
         self.format_output = config["format"]
         self.use_periodicity = config["use_periodicity"]
         self.pickRandPt = not config["ordered_packing"]
         self.show_sphere_trees = config["show_sphere_trees"]
-
+        self.show_grid_spheres = config["show_grid_plot"]
         self.boundingBox = numpy.array(recipe["bounding_box"])
+        self.spacing = config["spacing"]
+        self.load_from_grid_file = config["load_from_grid_file"]
         self.name = name
 
         # saving/pickle option
         self.saveResult = "out" in config
-        self.out_folder = RecipeLoader.create_output_dir(
-            config["out"], name, config["place_method"]
-        )
-        self.resultfile = self.out_folder + "/" + config["name"]
+        self.out_folder = create_output_dir(config["out"], name, config["place_method"])
+        self.result_file = f"{self.out_folder}/{self.name}_{config['name']}"
+        self.grid_file_out = f"{self.out_folder}/{self.name}_{config['name']}_grid"
 
+        should_load_grid_file = (
+            os.path.isfile(self.grid_file_out) and self.load_from_grid_file
+        )
+        self.previous_grid_file = self.grid_file_out if should_load_grid_file else None
         self.setupfile = ""
         self.current_path = None  # the path of the recipe file
         self.custom_paths = None
@@ -160,7 +156,6 @@ class Environment(CompartmentList):
         self.grid_result_filename = None  # str(gridn.getAttribute("grid_result"))
 
         self.timeUpDistLoopTotal = 0
-        self.name = name
         self.exteriorRecipe = None
         self.hgrid = []
         self.world = None  # panda world for collision
@@ -171,7 +166,6 @@ class Environment(CompartmentList):
         )
         # 0 is the exterior, 1 is compartment 1 surface, -1 is compartment 1 interior
         self.nbCompartments = 1
-        self.name = "out"
 
         self.order = {}  # give the order of drop ingredient by ptInd from molecules
         self.lastrank = 0
@@ -297,8 +291,9 @@ class Environment(CompartmentList):
     def _prep_ingredient_info(self, composition_info, ingredient_name=None):
         objects_dict = self.recipe_data["objects"]
         object_key = composition_info["object"]
-        base_object = objects_dict[object_key]
-        ingredient_info = deep_merge(copy.deepcopy(base_object), composition_info)
+        ingredient_info = expand_object_using_key(
+            composition_info, "object", objects_dict
+        )
         ingredient_info["name"] = (
             ingredient_name if ingredient_name is not None else object_key
         )
@@ -313,9 +308,7 @@ class Environment(CompartmentList):
         ).items():  # check if entry in compositions has regions
             recipe = Recipe(name=f"{compartment_key}_{region_name}")
             for key_or_dict in obj_keys:
-                is_key, composition_info = RecipeLoader.is_key(
-                    key_or_dict, composition_dict
-                )
+                is_key, composition_info = Recipe.is_key(key_or_dict, composition_dict)
                 if is_key and key_or_dict in self.compartment_keys:
                     key = key_or_dict
                     self._step_down(key)
@@ -343,7 +336,7 @@ class Environment(CompartmentList):
                 "regions", {}
             ).items():  # check if entry in compositions has regions
                 for key_or_dict in obj_keys:
-                    is_key, composition_info = RecipeLoader.is_key(
+                    is_key, composition_info = Recipe.is_key(
                         key_or_dict, composition_dict
                     )
                     if is_key and key_or_dict in self.compartment_keys:
@@ -402,20 +395,22 @@ class Environment(CompartmentList):
     #     for key, value in objects.items():
 
     def save_result(
-        self, freePoints, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array
+        self, free_points, distances, t0, vAnalysis, vTestid, seedNum, all_ingr_as_array
     ):
-        self.grid.freePoints = freePoints[:]
+        self.grid.free_points = free_points[:]
         self.grid.distToClosestSurf = distances[:]
         # should check extension filename for type of saved file
-        self.saveGridToFile(self.resultfile + "grid")
-        self.saveGridLogsAsJson(self.resultfile + "_grid-data.json")
-        self.grid.result_filename = self.resultfile + "grid"
+        if not os.path.isfile(self.grid_file_out) and self.load_from_grid_file:
+            # do not overwrite if grid was loaded from file
+            self.grid.result_filename = self.grid_file_out
+            self.saveGridToFile(self.grid_file_out)
+        self.saveGridLogsAsJson(self.result_file + "_grid-data.json")
         self.collectResultPerIngredient()
         self.store()
         self.store_asTxt()
         IOutils.save(
             self,
-            self.resultfile,
+            self.result_file,
             format_output=self.format_output,
             kwds=["compNum"],
             result=True,
@@ -428,7 +423,7 @@ class Environment(CompartmentList):
             #    START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
             # totalVolume = self.grid.gridVolume*unitVol
             unitVol = self.grid.gridSpacing**3
-            wrkDirRes = self.resultfile + "_analyze_"
+            wrkDirRes = self.result_file + "_analyze_"
             for o in self.compartments:  # only for compartment ?
                 # totalVolume -= o.surfaceVolume
                 # totalVolume -= o.interiorVolume
@@ -471,7 +466,7 @@ class Environment(CompartmentList):
 
                 # result is [pos,rot,ingr.name,ingr.compNum,ptInd]
                 # if resultfilename == None:
-                # resultfilename = self.resultfile
+                # resultfilename = self.result_file
                 resultfilenameT = (
                     wrkDirRes
                     + "vResultMatrix1"
@@ -561,7 +556,7 @@ class Environment(CompartmentList):
         self.log.info("self.compartments In Environment = %d", len(self.compartments))
         if self.compartments == []:
             unitVol = self.grid.gridSpacing**3
-            innerPointNum = len(freePoints)
+            innerPointNum = len(free_points)
             self.log.info("  .  .  .  . ")
             self.log.info("inner Point Count = %d", innerPointNum)
             self.log.info("innerVolume temp Confirm = %d", innerPointNum * unitVol)
@@ -570,7 +565,7 @@ class Environment(CompartmentList):
             # fpts = self.freePointsAfterFill
             vDistanceString = ""
             for i in range(innerPointNum):
-                pt = freePoints[i]  # fpts[i]
+                pt = free_points[i]  # fpts[i]
                 # for pt in self.histo.freePointsAfterFill:#[:self.histo.nbFreePointsAfterFill]:
                 d = self.distancesAfterFill[pt]
                 vDistanceString += str(d) + "\n"
@@ -614,7 +609,7 @@ class Environment(CompartmentList):
     ):
         result = [], [], []
         if resultfilename is None:
-            resultfilename = self.resultfile
+            resultfilename = self.result_file
             # check the extension of the filename none, txt or json
             # resultfilename = autopack.retrieveFile(resultfilename,cache="results")
         fileName, fileExtension = os.path.splitext(resultfilename)
@@ -844,13 +839,14 @@ class Environment(CompartmentList):
         self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
         if len(dist):
             self.grid.distToClosestSurf = dist  # grid+organelle+surf
-        self.grid.freePoints = list(range(len(id)))
+        self.grid.free_points = list(range(len(id)))
 
     def saveGridToFile(self, gridFileOut):
         """
         Save the current grid and the compartment grid information in a file. (pickle)
         """
         d = os.path.dirname(gridFileOut)
+        print("SAVED GRID TO ", gridFileOut)
         if not os.path.exists(d):
             print("gridfilename path problem", gridFileOut)
             return
@@ -877,6 +873,7 @@ class Environment(CompartmentList):
                     str(self.grid.masterGridPositions[i][2]),
                 ],
                 "distance": str(self.grid.distToClosestSurf[i]),
+                "compartment": str(self.grid.compartment_ids[i]),
             }
         # data = {
         #     # "gridPositions": json.loads(self.grid.masterGridPositions),
@@ -901,7 +898,7 @@ class Environment(CompartmentList):
             compartment.OGsrfPtsBht = spatial.cKDTree(
                 tuple(compartment.vertices), leafsize=10
             )
-            compartment.computeVolumeAndSetNbMol(
+            compartment.compute_volume_and_set_count(
                 self, compartment.surfacePoints, compartment.insidePoints, areas=None
             )
         f.close()
@@ -986,47 +983,11 @@ class Environment(CompartmentList):
             self.smallestProteinSize = ingr.min_radius
 
     def create_ingredient(self, recipe, arguments):
+        if "place_method" not in arguments:
+            arguments["place_method"] = self.place_method
         ingredient_type = arguments["type"]
-
-        if ingredient_type == "single_sphere":
-            radius = arguments["radius"]
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                Ingredient.ARGUMENTS, **arguments
-            )
-            ingr = SingleSphereIngr(radius, **arguments)
-        elif ingredient_type == "multi_sphere":
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                Ingredient.ARGUMENTS, **arguments
-            )
-            ingr = MultiSphereIngr(**arguments)
-        elif ingredient_type == "multi_cylinder":
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                Ingredient.ARGUMENTS, **arguments
-            )
-            ingr = MultiCylindersIngr(**arguments)
-        elif ingredient_type == "single_cube":
-            bounds = arguments["bounds"]
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                Ingredient.ARGUMENTS, **arguments
-            )
-            ingr = SingleCubeIngr(bounds, **arguments)
-        elif ingredient_type == "single_cylinder":
-            radius = arguments["radius"]
-            bounds = arguments["bounds"]
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                Ingredient.ARGUMENTS, **arguments
-            )
-            ingr = SingleCylinderIngr(bounds, radius, **arguments)
-        elif ingredient_type == "grow":
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                GrowIngredient.ARGUMENTS, **arguments
-            )
-            ingr = GrowIngredient(**arguments)
-        elif ingredient_type == "actine":
-            arguments = IOutils.IOingredientTool.clean_arguments(
-                GrowIngredient.ARGUMENTS, **arguments
-            )
-            ingr = ActinIngredient(**arguments)
+        ingredient_class = ingredient.get_ingredient_class(ingredient_type)
+        ingr = ingredient_class(**arguments)
         if (
             "gradient" in arguments
             and arguments["gradient"] != ""
@@ -1065,11 +1026,6 @@ class Environment(CompartmentList):
         """
         compartment.setNumber(self.nbCompartments)
         self.nbCompartments += 1
-
-        fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
-
-        if not fits:
-            self.boundingBox = bb
         CompartmentList._add_compartment(self, compartment)
 
     def compartment_id_for_nearest_grid_point(self, point):
@@ -1239,20 +1195,24 @@ class Environment(CompartmentList):
                 verts.tolist()
             )  # should do it only on inside grid point
 
+    def extend_bounding_box_for_compartments(self):
+        for _, compartment in enumerate(self.compartments):
+            fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
+            if not fits:
+                self.boundingBox = bb
+
     def buildGrid(
         self,
-        gridFileIn=None,
         rebuild=True,
-        gridFileOut=None,
-        previousFill=False,
-        previousfreePoint=None,
-        lookup=2,
+        lookup=0,
     ):
         """
         The main build grid function. Setup the main grid and merge the
         compartment grid. The setup is de novo or using previously built grid
         or restored using given file.
         """
+        self.extend_bounding_box_for_compartments()
+
         boundingBox = self.boundingBox
         if self.use_halton:
             from cellpack.autopack.BaseGrid import HaltonGrid as Grid
@@ -1262,13 +1222,10 @@ class Environment(CompartmentList):
             from cellpack.autopack.BaseGrid import BaseGrid as Grid
 
         self.sortIngredient(reset=True)
-        if gridFileIn is not None:
-            if not os.path.isfile(gridFileIn):
-                gridFileIn = None
         if self.grid is None or self.nFill == 0:
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
-            spacing = self.smallestProteinSize
+            spacing = self.spacing or self.smallestProteinSize
             self.grid = Grid(boundingBox=boundingBox, spacing=spacing, lookup=lookup)
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
@@ -1276,18 +1233,17 @@ class Environment(CompartmentList):
                 self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
                 nbPoints = self.grid.gridVolume
 
-        else:
+        elif self.grid is not None:
             self.log.info("$$$$$$$$  reset the grid")
             self.grid.reset()
-            nbPoints = len(self.grid.freePoints)
+            nbPoints = len(self.grid.free_points)
             self.log.info("$$$$$$$$  reset the grid")
 
-        if gridFileIn is not None:
-            self.log.warning("file in for building grid but it doesnt work well")
-            self.grid.filename = gridFileIn
+        if self.previous_grid_file is not None:
+            self.grid.filename = self.previous_grid_file
             if self.nFill == 0:  # first fill, after we can just reset
                 self.log.info("restore from file")
-                self.restoreGridFromFile(gridFileIn)
+                self.restoreGridFromFile(self.previous_grid_file)
         else:
             self.build_compartment_grids()
 
@@ -1296,9 +1252,10 @@ class Environment(CompartmentList):
             space=self.smallestProteinSize,
             fbox_bb=self.fbox_bb,
         )
-        if gridFileOut is not None and gridFileIn is None:
-            self.saveGridToFile(gridFileOut)
-            self.grid.filename = gridFileOut
+        if self.previous_grid_file is None:
+            self.saveGridToFile(self.grid_file_out)
+            self.grid.filename = self.grid_file_out
+            self.previous_grid_file = self.grid_file_out
 
         r = self.exteriorRecipe
         if r:
@@ -1313,7 +1270,7 @@ class Environment(CompartmentList):
                 self.gradients[g].buildWeigthMap(
                     boundingBox, self.grid.masterGridPositions
                 )
-        if previousFill:
+        if self.previous_grid_file is not None:
             distance = self.grid.distToClosestSurf  # [:]
             nbFreePoints = nbPoints  # -1              #Graham turned this off on 5/16/12 to match August Repair for May Hybrid
             for i, mingrs in enumerate(
@@ -1353,7 +1310,7 @@ class Environment(CompartmentList):
             rotMatj=rotMatj,
         )
         # update free points
-        if len(insidePoints) and self.placeMethod.find("panda") != -1:
+        if len(insidePoints) and self.place_method.find("panda") != -1:
             print(ingr.name, " is inside")
             self.checkPtIndIngr(ingr, insidePoints, i, ptInd, marray)
             # ingr.inside_current_grid = True
@@ -1369,7 +1326,7 @@ class Environment(CompartmentList):
             self,
             insidePoints,
             newDistPoints,
-            self.grid.freePoints,
+            self.grid.free_points,
             nbFreePoints,
             distance,
             self.grid.masterGridPositions,
@@ -1440,21 +1397,21 @@ class Environment(CompartmentList):
         priorities1 = []
         ingr2 = []  # priority = 0 or none and will be assigned based on complexity
         priorities2 = []
-        ingr0 = []  # negative values will pack first in order of abs[packing_priority]
+        ingr0 = []  # negative values will pack first in order of abs[priority]
         priorities0 = []
         for ing in allIngredients:
             if ing.completion >= 1.0:
                 continue  # ignore completed ingredients
-            if ing.packing_priority is None or ing.packing_priority == 0:
+            if ing.priority is None or ing.priority == 0:
                 ingr2.append(ing)
-                priorities2.append(ing.packing_priority)
-            elif ing.packing_priority > 0:
+                priorities2.append(ing.priority)
+            elif ing.priority > 0:
                 ingr1.append(ing)
-                priorities1.append(ing.packing_priority)
+                priorities1.append(ing.priority)
             else:
-                # ing.packing_priority    = -ing.packing_priority
+                # ing.priority    = -ing.priority
                 ingr0.append(ing)
-                priorities0.append(ing.packing_priority)
+                priorities0.append(ing.priority)
 
         if self.pickWeightedIngr:
             try:
@@ -1466,7 +1423,7 @@ class Environment(CompartmentList):
         # GrahamAdded this stuff in summer 2011, beware!
         if len(ingr1) != 0:
             lowestIng = ingr1[len(ingr1) - 1]
-            self.lowestPriority = lowestIng.packing_priority
+            self.lowestPriority = lowestIng.priority
         else:
             self.lowestPriority = 1.0
         self.log.info("self.lowestPriority for Ing1 = %d", self.lowestPriority)
@@ -1492,7 +1449,7 @@ class Environment(CompartmentList):
                 r = priors2.min_radius
             np = float(r) / float(self.totalRadii) * self.lowestPriority
             self.normalizedPriorities0.append(np)
-            priors2.packing_priority = np
+            priors2.priority = np
             self.log.info("self.normalizedPriorities0 = %r", self.normalizedPriorities0)
         activeIngr0 = ingr0  # +ingr1+ingr2  #cropped to 0 on 7/20/10
 
@@ -1674,7 +1631,7 @@ class Environment(CompartmentList):
     def getPointToDrop(
         self,
         ingr,
-        freePoints,
+        free_points,
         nbFreePoints,
         distance,
         spacing,
@@ -1689,7 +1646,7 @@ class Environment(CompartmentList):
         """
         allIngrPts, allIngrDist = ingr.get_list_of_free_indices(
             distance,
-            freePoints,
+            free_points,
             nbFreePoints,
             spacing,
             compId,
@@ -1723,7 +1680,7 @@ class Environment(CompartmentList):
 
             self.totalPriorities = 0  # 0.00001
             for priors in self.activeIngr12:
-                pp = priors.packing_priority
+                pp = priors.priority
                 self.totalPriorities = self.totalPriorities + pp
             previousThresh = 0
             self.normalizedPriorities = []
@@ -1737,7 +1694,7 @@ class Environment(CompartmentList):
                     self.thresholdPriorities.append(2)
             for priors in self.activeIngr12:
                 # pp1 = 0
-                pp = priors.packing_priority
+                pp = priors.priority
                 if self.totalPriorities != 0:
                     np = float(pp) / float(self.totalPriorities)
                 else:
@@ -1805,14 +1762,14 @@ class Environment(CompartmentList):
             ptInd = allIngrPts[0]
         return True, ptInd
 
-    def removeOnePoint(self, pt, freePoints, nbFreePoints):
+    def removeOnePoint(self, pt, free_points, nbFreePoints):
         try:
             # New system replaced by Graham on Aug 18, 2012
             nbFreePoints -= 1
-            vKill = freePoints[pt]
-            vLastFree = freePoints[nbFreePoints]
-            freePoints[vKill] = vLastFree
-            freePoints[vLastFree] = vKill
+            vKill = free_points[pt]
+            vLastFree = free_points[nbFreePoints]
+            free_points[vKill] = vLastFree
+            free_points[vLastFree] = vKill
             # End New replaced by Graham on Aug 18, 2012
         except:  # noqa: E722
             pass
@@ -1837,7 +1794,6 @@ class Environment(CompartmentList):
         name=None,
         vTestid=3,
         vAnalysis=0,
-        show_grid_spheres=False,
         **kw,
     ):
         """
@@ -1847,7 +1803,6 @@ class Environment(CompartmentList):
         # set periodicity
         autopack.testPeriodicity = self.use_periodicity
         t1 = time()
-        self.show_grid_spheres = show_grid_spheres
         self.timeUpDistLoopTotal = 0
         self.static = []
         if self.grid is None:
@@ -1872,8 +1827,8 @@ class Environment(CompartmentList):
         self.setSeed(seedNum)
         # create copies of the distance array as they change when molecules
         # are added, this array can be restored/saved before filling
-        freePoints = self.grid.freePoints[:]
-        self.grid.nbFreePoints = nbFreePoints = len(freePoints)  # -1
+        free_points = self.grid.free_points[:]
+        self.grid.nbFreePoints = nbFreePoints = len(free_points)  # -1
         if "fbox" in kw:
             self.fbox = kw["fbox"]
         if self.fbox is not None and not self.EnviroOnly:
@@ -1885,7 +1840,7 @@ class Environment(CompartmentList):
         compartment_ids = self.grid.compartment_ids
         # why a copy? --> can we split ?
         distances = self.grid.distToClosestSurf[:]
-        spacing = self.smallestProteinSize
+        spacing = self.spacing or self.smallestProteinSize
 
         # DEBUG stuff, should be removed later
         self.jitterVectors = []
@@ -1907,7 +1862,7 @@ class Environment(CompartmentList):
 
         self.totalPriorities = 0  # 0.00001
         for priors in self.activeIngr12:
-            pp = priors.packing_priority
+            pp = priors.priority
             self.totalPriorities = self.totalPriorities + pp
             self.log.info("totalPriorities = %d", self.totalPriorities)
         previousThresh = 0
@@ -1922,7 +1877,7 @@ class Environment(CompartmentList):
                 self.thresholdPriorities.append(2)
         for priors in self.activeIngr12:
             # pp1 = 0
-            pp = priors.packing_priority
+            pp = priors.priority
             if self.totalPriorities != 0:
                 np = float(pp) / float(self.totalPriorities)
             else:
@@ -1961,7 +1916,7 @@ class Environment(CompartmentList):
         vThreshStart = 0.0  # Added back by Graham on July 5, 2012 from Sept 25, 2011 thesis version
 
         # if bullet build the organel rbnode
-        if self.placeMethod == "pandaBullet":
+        if self.place_method == "pandaBullet":
             self.setupPanda()
 
         # ==============================================================================
@@ -2034,7 +1989,7 @@ class Environment(CompartmentList):
             else:
                 res = self.getPointToDrop(
                     ingr,
-                    freePoints,
+                    free_points,
                     nbFreePoints,
                     distances,
                     spacing,
@@ -2057,7 +2012,7 @@ class Environment(CompartmentList):
             # NOTE: should we do the close partner check here instead of in the place functions?
             # place the ingredient
             if self.overwritePlaceMethod:
-                ingr.place_type = self.placeMethod
+                ingr.place_method = self.place_method
 
             if ingr.encapsulating_radius > self.largestProteinSize:
                 self.largestProteinSize = ingr.encapsulating_radius
@@ -2083,15 +2038,15 @@ class Environment(CompartmentList):
                 "after place attempt, placed: %r, number of free points:%d, length of free points=%d",
                 success,
                 nbFreePoints,
-                len(freePoints),
+                len(free_points),
             )
             if success:
                 nbFreePoints = BaseGrid.updateDistances(
-                    insidePoints, newDistPoints, freePoints, nbFreePoints, distances
+                    insidePoints, newDistPoints, free_points, nbFreePoints, distances
                 )
                 self.grid.distToClosestSurf = numpy.array(distances[:])
-                self.grid.freePoints = numpy.array(freePoints[:])
-                self.grid.nbFreePoints = len(freePoints)  # -1
+                self.grid.free_points = numpy.array(free_points[:])
+                self.grid.nbFreePoints = len(free_points)  # -1
                 # update largest protein size
                 # problem when the encapsulating_radius is actually wrong
                 if ingr.encapsulating_radius > self.largestProteinSize:
@@ -2129,7 +2084,7 @@ class Environment(CompartmentList):
 
                 self.totalPriorities = 0  # 0.00001
                 for priors in self.activeIngr12:
-                    pp = priors.packing_priority
+                    pp = priors.priority
                     self.totalPriorities = self.totalPriorities + pp
                 #                    print ('totalPriorities = ', self.totalPriorities)
                 previousThresh = 0
@@ -2144,7 +2099,7 @@ class Environment(CompartmentList):
                         self.thresholdPriorities.append(2)
                 for priors in self.activeIngr12:
                     # pp1 = 0
-                    pp = priors.packing_priority
+                    pp = priors.priority
                     if self.totalPriorities != 0:
                         np = float(pp) / float(self.totalPriorities)
                     else:
@@ -2156,12 +2111,12 @@ class Environment(CompartmentList):
                 self.activeIngr = self.activeIngr0 + self.activeIngr12
             if dump and ((time() - stime) > dump_freq):
                 # self.collectResultPerIngredient()
-                print("SAVING", self.resultfile)
+                print("SAVING", self.result_file)
                 # TODO: save out intermediate simularium files
                 stime = time()
 
         self.distancesAfterFill = distances[:]
-        self.freePointsAfterFill = freePoints[:]
+        self.freePointsAfterFill = free_points[:]
         self.nbFreePointsAfterFill = nbFreePoints
         self.distanceAfterFill = distances[:]
         t2 = time()
@@ -2193,9 +2148,10 @@ class Environment(CompartmentList):
                 ingredients[ingr.name][3].append(numpy.array(mat))
                 all_ingr_as_array.append([pos, rot, ingr, ptInd])
         self.ingr_result = ingredients
+        print(f"placed {len(self.molecules)}")
         if self.saveResult:
             self.save_result(
-                freePoints,
+                free_points,
                 distances=distances,
                 t0=t2,
                 vAnalysis=vAnalysis,
@@ -2277,20 +2233,20 @@ class Environment(CompartmentList):
         return ingredients
 
     def restoreFreePoints(self, freePoint):
-        self.freePoints = self.freePointsAfterFill = freePoint
+        self.free_points = self.freePointsAfterFill = freePoint
         self.nbFreePointsAfterFill = len(freePoint)
         self.distanceAfterFill = self.grid.distToClosestSurf
         self.distancesAfterFill = self.grid.distToClosestSurf
 
     def loadFreePoint(self, resultfilename):
-        rfile = open(resultfilename + "freePoints", "rb")
+        rfile = open(resultfilename + "free_points", "rb")
         freePoint = pickle.load(rfile)
         rfile.close()
         return freePoint
 
     def store(self, resultfilename=None):
         if resultfilename is None:
-            resultfilename = self.resultfile
+            resultfilename = self.result_file
         resultfilename = autopack.fixOnePath(resultfilename)
         rfile = open(resultfilename, "wb")
         # pickle.dump(self.molecules, rfile)
@@ -2301,15 +2257,15 @@ class Environment(CompartmentList):
         pickle.dump(result, rfile)
         rfile.close()
         for i, orga in enumerate(self.compartments):
-            orfile = open(resultfilename + "ogra" + str(i), "wb")
+            orfile = open(resultfilename + "organelle" + str(i), "wb")
             result = []
             for pos, rot, ingr, ptInd in orga.molecules:
                 result.append([pos, rot, ingr.name, ingr.compNum, ptInd])
             pickle.dump(result, orfile)
             #            pickle.dump(orga.molecules, orfile)
             orfile.close()
-        rfile = open(resultfilename + "freePoints", "wb")
-        pickle.dump(self.grid.freePoints, rfile)
+        rfile = open(resultfilename + "free_points", "wb")
+        pickle.dump(self.grid.free_points, rfile)
         rfile.close()
 
     @classmethod
@@ -2359,7 +2315,7 @@ class Environment(CompartmentList):
 
     def load_asTxt(self, resultfilename=None):
         if resultfilename is None:
-            resultfilename = self.resultfile
+            resultfilename = self.result_file
         rfile = open(resultfilename, "r")
         # needto parse
         result = []
@@ -2393,10 +2349,10 @@ class Environment(CompartmentList):
             #            orgaresult.append(pickle.load(orfile))
             #            orfile.close()
             #        rfile.close()
-            #        rfile = open(resultfilename+"freePoints",'rb')
+            #        rfile = open(resultfilename+"free_points",'rb')
         freePoint = []  # pickle.load(rfile)
         try:
-            rfile = open(resultfilename + "freePoints", "rb")
+            rfile = open(resultfilename + "free_points", "rb")
             freePoint = pickle.load(rfile)
             rfile.close()
         except:  # noqa: E722
@@ -2424,7 +2380,7 @@ class Environment(CompartmentList):
 
     def load_asJson(self, resultfilename=None):
         if resultfilename is None:
-            resultfilename = self.resultfile
+            resultfilename = self.result_file
         with open(resultfilename, "r") as fp:  # doesnt work with symbol link ?
             if autopack.use_json_hook:
                 self.result_json = json.load(
@@ -2469,10 +2425,10 @@ class Environment(CompartmentList):
                         name_ingr = ingr.name
                         # replace number by name ?
                         if (
-                            orga.name + "_surf__" + ingr.o_name
+                            orga.name + "_surf_" + ingr.o_name
                             in self.result_json[orga.name + "_surfaceRecipe"]
                         ):
-                            name_ingr = orga.name + "_surf__" + ingr.o_name
+                            name_ingr = orga.name + "_surf_" + ingr.o_name
                         if (
                             name_ingr
                             not in self.result_json[orga.name + "_surfaceRecipe"]
@@ -2511,10 +2467,10 @@ class Environment(CompartmentList):
                     for ingr in ri.ingredients:
                         name_ingr = ingr.name
                         if (
-                            orga.name + "_int__" + ingr.o_name
+                            orga.name + "_int_" + ingr.o_name
                             in self.result_json[orga.name + "_innerRecipe"]
                         ):
-                            name_ingr = orga.name + "_int__" + ingr.o_name
+                            name_ingr = orga.name + "_int_" + ingr.o_name
                         if (
                             name_ingr
                             not in self.result_json[orga.name + "_innerRecipe"]
@@ -2548,7 +2504,7 @@ class Environment(CompartmentList):
                             )
         freePoint = []  # pickle.load(rfile)
         try:
-            rfile = open(resultfilename + "freePoints", "rb")
+            rfile = open(resultfilename + "free_points", "rb")
             freePoint = pickle.load(rfile)
             rfile.close()
         except:  # noqa: E722
@@ -2577,7 +2533,7 @@ class Environment(CompartmentList):
 
     def store_asJson(self, resultfilename=None, indent=True):
         if resultfilename is None:
-            resultfilename = self.resultfile
+            resultfilename = self.result_file
             resultfilename = autopack.fixOnePath(resultfilename)  # retireve?
         # if result file_name start with http?
         if resultfilename.find("http") != -1 or resultfilename.find("ftp") != -1:
@@ -2631,7 +2587,7 @@ class Environment(CompartmentList):
 
     def store_asTxt(self, resultfilename=None):
         if resultfilename is None:
-            resultfilename = self.resultfile
+            resultfilename = self.result_file
         resultfilename = autopack.fixOnePath(resultfilename)
         rfile = open(resultfilename + ".txt", "w")  # doesnt work with symbol link ?
         # pickle.dump(self.molecules, rfile)
@@ -2648,7 +2604,7 @@ class Environment(CompartmentList):
 
         rfile.close()
         for i, orga in enumerate(self.compartments):
-            orfile = open(resultfilename + "ogra" + str(i) + ".txt", "w")
+            orfile = open(resultfilename + "_organelle_" + str(i) + ".txt", "w")
             line = ""
             for pos, rot, ingr, ptInd in orga.molecules:
                 line += self.dropOneIngr(
@@ -2662,23 +2618,23 @@ class Environment(CompartmentList):
             orfile.write(line)
             #            pickle.dump(orga.molecules, orfile)
             orfile.close()
-        #        rfile = open(resultfilename+"freePoints", 'w')
-        #        pickle.dump(self.freePoints, rfile)
+        #        rfile = open(resultfilename+"free_points", 'w')
+        #        pickle.dump(self.free_points, rfile)
         #        rfile.close()
 
     @classmethod
     def convertPickleToText(self, resultfilename=None, norga=0):
         if resultfilename is None:
-            resultfilename = self.resultfile
+            resultfilename = self.result_file
         rfile = open(resultfilename)
         result = pickle.load(rfile)
         orgaresult = []
         for i in range(norga):
-            orfile = open(resultfilename + "ogra" + str(i))
+            orfile = open(resultfilename + "_organelle_" + str(i))
             orgaresult.append(pickle.load(orfile))
             orfile.close()
         rfile.close()
-        rfile = open(resultfilename + "freePoints")
+        rfile = open(resultfilename + "free_points")
         rfile.close()
         rfile = open(resultfilename + ".txt", "w")
         line = ""
@@ -2688,7 +2644,7 @@ class Environment(CompartmentList):
         rfile.write(line)
         rfile.close()
         for i in range(norga):
-            orfile = open(resultfilename + "ogra" + str(i) + ".txt", "w")
+            orfile = open(resultfilename + "_organelle_" + str(i) + ".txt", "w")
             result = []
             line = ""
             for pos, rot, ingrName, compNum, ptInd in orgaresult[i]:
@@ -2707,11 +2663,11 @@ class Environment(CompartmentList):
         for o in self.compartments:
             o.printFillInfo()
 
-    def finishWithWater(self, freePoints=None, nbFreePoints=None):
+    def finishWithWater(self, free_points=None, nbFreePoints=None):
         # self.freePointsAfterFill[:self.nbFreePointsAfterFill]
         # sphere sphere of 2.9A
-        if freePoints is None:
-            freePoints = self.freePointsAfterFill
+        if free_points is None:
+            free_points = self.freePointsAfterFill
         if nbFreePoints is None:
             nbFreePoints = self.nbFreePointsAfterFill
         # a freepoint is a voxel, how many water in the voxel
@@ -3057,7 +3013,7 @@ class Environment(CompartmentList):
         else:
             from bd_box import rigid_box as bd_box
         if res_filename is None:
-            res_filename = self.resultfile
+            res_filename = self.result_file
         self.bd = bd_box(res_filename, bounding_box=self.boundingBox)
         self.bd.makePrmFile()
         self.collectResultPerIngredient()
@@ -3085,7 +3041,7 @@ class Environment(CompartmentList):
         from tem_sim import tem_sim
 
         if res_filename is None:
-            res_filename = self.resultfile
+            res_filename = self.result_file
         self.tem = tem_sim(res_filename, bounding_box=self.boundingBox)
         self.tem.setup()
         self.collectResultPerIngredient()

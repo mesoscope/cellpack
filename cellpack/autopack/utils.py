@@ -1,4 +1,5 @@
 import collections
+import copy
 import numpy
 
 
@@ -12,8 +13,8 @@ def ingredient_compare1(x, y):
     priority ties and decreasing completion for radii ties
     for priority > 0
     """
-    p1 = x.packing_priority
-    p2 = y.packing_priority
+    p1 = x.priority
+    p2 = y.priority
     if p1 < p2:  # p1 > p2
         return 1
     elif p1 == p2:  # p1 == p1
@@ -42,8 +43,8 @@ def ingredient_compare0(x, y):
     priority ties and decreasing completion for radii ties
     for priority < 0
     """
-    p1 = x.packing_priority
-    p2 = y.packing_priority
+    p1 = x.priority
+    p2 = y.priority
     if p1 > p2:  # p1 > p2
         return 1
     elif p1 == p2:  # p1 == p1
@@ -137,3 +138,11 @@ def deep_merge(dct, merge_dct):
         else:
             dct[k] = merge_dct[k]
     return dct
+
+
+def expand_object_using_key(current_object, expand_on, lookup_dict):
+    object_key = current_object[expand_on]
+    base_object = lookup_dict[object_key]
+    new_object = deep_merge(copy.deepcopy(base_object), current_object)
+    del new_object[expand_on]
+    return new_object

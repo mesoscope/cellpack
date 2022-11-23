@@ -1,6 +1,6 @@
 {
     "version": "2.2.2",
-    "format_version": "2.0.0",
+    "format_version": "2.0",
     "name": "nested_compartment_test",
     "bounding_box": [
         [
@@ -65,7 +65,7 @@
                 1
             ],
             "rejection_threshold": 50,
-            "place_type": "panda_bullet",
+            "place_method": "panda_bullet",
             "cutoff_surface": 42,
             "rotation_axis": [
                 0,

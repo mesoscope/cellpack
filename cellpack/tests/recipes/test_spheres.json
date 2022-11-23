@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
-    "format_version": "2.0",
-    "name": "sphere_tree",
+    "format_version": "2.0.0",
+    "name": "test_spheres",
     "bounding_box": [
         [
             0,
@@ -9,16 +9,25 @@
             0
         ],
         [
-            1000,
-            1000,
-            1000
+            100,
+            100,
+            100
         ]
     ],
     "objects": {
         "base": {
             "jitter_attempts": 10,
+            "orient_bias_range": [
+                -3.1415927,
+                3.1415927
+            ],
             "rotation_range": 6.2831,
             "cutoff_boundary": 0,
+            "max_jitter": [
+                1,
+                1,
+                1
+            ],
             "perturb_axis_amplitude": 0.1,
             "packing": {
                 "mode": "random"
@@ -29,11 +38,11 @@
                 1
             ],
             "rejection_threshold": 50,
-            "place_method": "jitter",
+            "place_type": "jitter",
             "cutoff_surface": 42,
             "rotation_axis": [
-                1,
-                1,
+                0,
+                0,
                 1
             ],
             "available_regions": {
@@ -44,22 +53,14 @@
             }
         },
         "sphere_25": {
-            "type": "multi_sphere",
+            "type": "single_sphere",
             "inherit": "base",
             "color": [
                 0.5,
                 0.5,
                 0.5
             ],
-            "weight": 0.25,
-            "coordinate_system": "left",
-            "representations": {
-                "packing":{
-                    "path": "../",
-                    "name": "test.sph",
-                    "format": "sph"
-                }
-            },
+            "radius": 25,
             "max_jitter": [
                 1,
                 1,
@@ -77,7 +78,7 @@
         },
         "A": {
             "object": "sphere_25",
-            "count": 100
+            "count": 25
         }
     }
 }

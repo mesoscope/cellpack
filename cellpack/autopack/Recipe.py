@@ -60,6 +60,22 @@ class Recipe:
         self.name = name
 
     @staticmethod
+    def is_key(key_or_dict, composition_dict):
+        """
+        Helper function to find if data in composition list
+        is a key or an object
+        """
+        is_key = not isinstance(key_or_dict, dict)
+        if is_key:
+            key = key_or_dict
+            if key not in composition_dict:
+                raise ValueError(f"{key} is not in composition dictionary")
+            composition_info = composition_dict[key]
+        else:
+            composition_info = key_or_dict
+        return is_key, composition_info
+
+    @staticmethod
     def resolve_composition(recipe_data):
         composition_dict = recipe_data["composition"]
         # keys in reference_dict are downstream objects,
@@ -87,6 +103,8 @@ class Recipe:
         root = set(composition_dict.keys()).difference(set(reference_dict.keys()))
 
         if len(root) > 1:
+            root = list(root)
+            root.sort()  # alphabetize for consisent testing
             raise Exception(f"Composition has multiple roots {root}")
 
         return (list(root)[0], compartment_keys, reference_dict, referenced_objects)
@@ -102,7 +120,7 @@ class Recipe:
     def addIngredient(self, ingr):
         """add the given ingredient from the recipe"""
         if ingr.name.find(self.name) == -1:
-            ingr.name = self.name + "__" + ingr.name
+            ingr.name = self.name + "_" + ingr.name
         # I'd like to turn this off but it breaks the GUI's ability to turn off
         # ingredients with the checkboxes and packs everything everytime if this is off.
         # Right now the ingredients become way too long with it on.

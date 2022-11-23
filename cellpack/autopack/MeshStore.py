@@ -212,6 +212,9 @@ class MeshStore:
         mesh = self.get_object(geomname)
         if mesh is not None:
             return trimesh.nsphere.minimum_nsphere(mesh)
+        else:
+            print(f"didnt find mesh, {geomname}")
+            return None, None
 
     def create_sphere(self, name, iterations, radius):
         """
@@ -276,6 +279,7 @@ class MeshStore:
             query = trimesh.proximity.ProximityQuery(mesh)
             (closet_point, distance, triangle_id) = query.on_surface([center])
             return distance[0]
+        return 1.0
 
     def get_normal(self, geomname, point_pos):
         mesh = self.get_object(geomname)

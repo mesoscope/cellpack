@@ -18,6 +18,7 @@ class MultiSphereIngr(Ingredient):
     def __init__(
         self,
         representations,  # required because the representations.packing dictionary will have the spheres
+        available_regions=None,
         color=None,
         count=0,
         cutoff_boundary=None,
@@ -32,11 +33,12 @@ class MultiSphereIngr(Ingredient):
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
         packing_mode="random",
-        packing_priority=0,
+        packing=0,
         partners=None,
         perturb_axis_amplitude=0.1,
-        place_type="jitter",
+        place_method="jitter",
         principal_vector=(1, 0, 0),
+        priority=0,
         rejection_threshold=30,
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=0,
@@ -59,10 +61,10 @@ class MultiSphereIngr(Ingredient):
             offset=offset,
             orient_bias_range=orient_bias_range,
             packing_mode=packing_mode,
-            packing_priority=packing_priority,
+            priority=priority,
             partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
-            place_type=place_type,
+            place_method=place_method,
             principal_vector=principal_vector,
             representations=representations,
             rotation_axis=rotation_axis,
@@ -292,3 +294,25 @@ class MultiSphereIngr(Ingredient):
                 )
 
         return insidePoints, newDistPoints
+
+    def collides_with_compartment(
+        self,
+        env,
+        jtrans,
+        rotation_matrix,
+    ):
+        """
+        Check spheres for collision
+        TODO improve the testwhen grid stepSize is larger that size of the ingredient
+        """
+        level = self.deepest_level
+        centers = self.positions[level]
+        radii = (self.radii[level],)
+        centT = self.transformPoints(jtrans, rotation_matrix, centers)
+        for radc, posc in zip(radii, centT):
+            ptsInSphere = env.grid.getPointsInSphere(posc, radc[0])  # indices
+            compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphere, 0)
+            wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
+            if len(wrongPt):
+                return True
+        return False

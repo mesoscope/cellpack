@@ -112,8 +112,10 @@ ENV/
 out/
 *.simularium
 
-# test recipes
-test-recipes/
+# test outputs
+cellpack/tests/outputs/
 
-# packing configs
-packing-configs/
+# data
+data/
+**/converted/*
+

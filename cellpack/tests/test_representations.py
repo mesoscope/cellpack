@@ -14,7 +14,7 @@ from cellpack.autopack.interface_objects.representations import Representations
 
 pdb_id = "1234"
 
-test_mesh_obj = {"path": "test_path/", "name": "test.obj", "format": "obj"}
+test_mesh_obj = {"path": "test_path", "name": "test.obj", "format": "obj"}
 
 test_pdb_id_obj = {
     "id": pdb_id,
