@@ -52,11 +52,6 @@ try:
 except ImportError:
     from ordereddict import OrderedDict
 
-try:
-    import urllib.request as urllib  # , urllib.parse, urllib.error
-except ImportError:
-    import urllib
-
 packageContainsVFCommands = 1
 ssl._create_default_https_context = ssl._create_unverified_context
 use_json_hook = True

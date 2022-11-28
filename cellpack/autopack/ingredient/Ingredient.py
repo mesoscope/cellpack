@@ -1558,7 +1558,14 @@ class Ingredient(Agent):
                 )
 
     def pack_at_grid_pt_location(
-        self, env, jtrans, rotation_matrix, dpad, grid_point_distances,inside_points, new_dist_points
+        self,
+        env,
+        jtrans,
+        rotation_matrix,
+        dpad,
+        grid_point_distances,
+        inside_points,
+        new_dist_points,
     ):
         packing_location = jtrans
         radius_of_area_to_check = self.encapsulating_radius + dpad
