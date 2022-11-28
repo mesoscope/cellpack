@@ -1558,11 +1558,8 @@ class Ingredient(Agent):
                 )
 
     def pack_at_grid_pt_location(
-        self, env, jtrans, rotMatj, dpad, grid_point_distances
+        self, env, jtrans, rotation_matrix, dpad, grid_point_distances,inside_points, new_dist_points
     ):
-
-        newDistPoints = {}
-        insidePoints = {}
         packing_location = jtrans
         radius_of_area_to_check = self.encapsulating_radius + dpad
 
@@ -1575,18 +1572,18 @@ class Ingredient(Agent):
             )
             for grid_point_index in grid_points_to_update:
                 (
-                    insidePoints,
-                    newDistPoints,
+                    inside_points,
+                    new_dist_points,
                 ) = self.get_new_distances_and_inside_points(
                     env,
                     bounding_point_position,
-                    rotMatj,
+                    rotation_matrix,
                     grid_point_index,
                     grid_point_distances,
-                    newDistPoints,
-                    insidePoints,
+                    new_dist_points,
+                    inside_points,
                 )
-        return insidePoints, newDistPoints
+        return inside_points, new_dist_points
 
     def remove_from_realtime_display(env, moving):
         pass
