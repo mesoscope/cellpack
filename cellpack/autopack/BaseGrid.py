@@ -676,7 +676,7 @@ class BaseGrid:
         ptIndices = self.tree.query_ball_point(pt, radius)  # , n_jobs=-1)
         return ptIndices
 
-    def getPointsInCubeFillBB(self, bb, pt, radius, addSP=True, info=False):
+    def getPointsInCubeFillBB(self, bb, pt, radius, addSP=True):
         """
         Return all grid points indices inside the given bounding box.
         NOTE : need to fix with grid build with numpy arrange
@@ -750,17 +750,17 @@ class BaseGrid:
             inside = False
         return inside
 
-    def getPointsInCube(self, bb, pt, radius, addSP=True, info=False):
+    def getPointsInCube(self, bounding_box, pt, radius, add_surface_points=True):
         """
-        Return all grid points indicesinside the given bounding box.
+        Return all grid points indices inside the given bounding box.
         """
         spacing1 = 1.0 / self.gridSpacing
         NX, NY, NZ = self.nbGridPoints
         OX, OY, OZ = self.boundingBox[
             0
         ]  # origin of Pack grid-> bottom lef corner not origin
-        ox, oy, oz = bb[0]
-        ex, ey, ez = bb[1]
+        ox, oy, oz = bounding_box[0]
+        ex, ey, ez = bounding_box[1]
 
         i0 = int(max(0, floor((ox - OX) * spacing1)))
         i1 = int(min(NX, int((ex - OX) * spacing1) + 1))
@@ -780,10 +780,9 @@ class BaseGrid:
                     ptIndices.append(x + off)
 
         # add surface points
-        if addSP and self.nbSurfacePoints != 0:
+        if add_surface_points and self.nbSurfacePoints != 0:
             result = numpy.zeros((self.nbSurfacePoints,), "i")
             nb = self.surfPtsBht.closePoints(tuple(pt), radius, result)
-            dimx, dimy, dimz = self.nbGridPoints
             ptIndices.extend(
                 list(map(lambda x, length=self.gridVolume: x + length, result[:nb]))
             )

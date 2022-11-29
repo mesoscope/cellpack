@@ -4,7 +4,9 @@ import numpy
 
 
 def get_distance(pt1, pt2):
-    return numpy.linalg.norm(pt2 - pt1)
+    # returns the euclidean distance between pt1 and pt2
+    # pt1 and pt2 should be numpy arrays
+    return numpy.linalg.norm((pt1 - pt2), axis=((pt1 - pt2).ndim - 1))
 
 
 def ingredient_compare1(x, y):

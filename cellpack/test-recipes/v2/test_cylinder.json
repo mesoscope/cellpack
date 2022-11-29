@@ -1,0 +1,83 @@
+{
+    "version": "1.0.0",
+    "format_version": "2.0",
+    "name": "test_cylinder",
+    "bounding_box": [
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            100,
+            100,
+            100
+        ]
+    ],
+    "objects": {
+        "base": {
+            "jitter_attempts": 10,
+            "orient_bias_range": [
+                -3.1415927,
+                3.1415927
+            ],
+            "rotation_range": 6.2831,
+            "cutoff_boundary": 0,
+            "max_jitter": [
+                0.2,
+                0.2,
+                0.01
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "packing_mode": "random",
+            "principal_vector": [
+                1,
+                0,
+                0
+            ],
+            "rejection_threshold": 50,
+            "place_method": "jitter",
+            "cutoff_surface": 42,
+            "rotation_axis": [
+                0,
+                0,
+                1
+            ],
+            "available_regions": {
+                "interior": {},
+                "surface": {},
+                "outer_leaflet": {},
+                "inner_leaflet": {}
+            }
+        },
+        "cylinder_l20_r5": {
+            "type": "single_cylinder",
+            "inherit": "base",
+            "color": [
+                0.5,
+                0,
+                0.5
+            ],
+            "radius": 5,
+            "length": 20,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ]
+        }
+    },
+    "composition": {
+        "space": {
+            "regions": {
+                "interior": [
+                    "A"
+                ]
+            }
+        },
+        "A": {
+            "object": "cylinder_l20_r5",
+            "count": 100
+        }
+    }
+}

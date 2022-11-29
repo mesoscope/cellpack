@@ -1,10 +1,7 @@
 import numpy
-import math
 from math import pi, sqrt
 from panda3d.core import Point3, TransformState
 from panda3d.bullet import BulletCylinderShape, BulletRigidBodyNode
-
-from cellpack.autopack.utils import get_distance
 
 from .Ingredient import Ingredient
 import cellpack.autopack as autopack
@@ -22,8 +19,8 @@ class SingleCylinderIngr(Ingredient):
 
     def __init__(
         self,
-        bounds,
         radius,
+        length,
         available_regions=None,
         type="single_cylinder",
         color=None,
@@ -45,7 +42,7 @@ class SingleCylinderIngr(Ingredient):
         partners=None,
         perturb_axis_amplitude=0.1,
         place_method="jitter",
-        principal_vector=(1, 0, 0),
+        principal_vector=[1, 0, 0],
         representations=None,
         rotation_axis=[0.0, 0.0, 0.0],
         rotation_range=6.2831,
@@ -89,31 +86,40 @@ class SingleCylinderIngr(Ingredient):
         if name is None:
             name = "%s_%f" % (str(radius), molarity)
         self.name = name
+
         self.model_type = "Cylinders"
         self.collisionLevel = 0
+
+        self.radius = radius
+        self.length = length
+
         self.min_radius = radius
         self.nbCurve = 2
-        self.bottom_cent = numpy.array(bounds[0])
-        self.top_cent = numpy.array(bounds[1])
-        self.length = get_distance(self.top_cent, self.bottom_cent)
-        self.radius = radius
-        self.axis = self.top_cent - self.bottom_cent
-        self.principal_vector = self.axis / self.length
+
+        self.bottom_center = numpy.array([0, 0, 0])
+        self.top_center = self.bottom_center + self.length * numpy.array(
+            self.principal_vector
+        )
+
         self.center = (
-            self.bottom_cent + (self.top_cent - self.bottom_cent) / 2
+            self.bottom_center + (self.top_center - self.bottom_center) / 2
         )  # location of center based on top and bottom
 
-        self.encapsulating_radius = numpy.sqrt(radius**2 + (self.length / 2.0) ** 2)
+        self.encapsulating_radius = numpy.sqrt(
+            radius**2 + (self.length / 2.0) ** 2
+        )
 
         self.listePtLinear = [
-            self.bottom_cent,
-            self.bottom_cent + self.axis,
+            self.bottom_center,
+            self.top_center,
         ]
 
     def initialize_mesh(self, mesh_store):
         if self.mesh is None:
             self.mesh = mesh_store.create_cylinder(
-                self.name + "_basic", radius=self.radius, height=self.length,
+                self.name + "_basic",
+                radius=self.radius,
+                height=self.length,
             )
 
             self.getData()
@@ -143,7 +149,9 @@ class SingleCylinderIngr(Ingredient):
     def getBigBB(self):
         # one level for cylinder
         bbs = []
-        for radc, p1, p2 in zip(self.radii[0], self.positions[0], self.positions2[0]):
+        for radc, p1, p2 in zip(
+            self.radii[0], self.positions[0], self.positions2[0]
+        ):
             bb = self.correctBB(p1, p2, radc)
             bbs.append(bb)
         # get min and max from all bbs
@@ -169,47 +177,60 @@ class SingleCylinderIngr(Ingredient):
         rotation_matrix=None,
     ):
         """
-        Check cylinders for collision
+        Check single cylinder for collision with compartments
+
         """
-        level = self.deepest_level
-        centers1 = (self.positions[level],)
-        centers2 = (self.positions2[level],)
-        radii = (self.radii[level],)
-        cent1T = self.transformPoints(jtrans, rotation_matrix, centers1)
-        cent2T = self.transformPoints(jtrans, rotation_matrix, centers2)
+        bottom_center_transformed = self.transformPoints(
+            jtrans, rotation_matrix, [self.bottom_center]
+        )[0]
+        top_center_transformed = self.transformPoints(
+            jtrans, rotation_matrix, [self.top_center]
+        )[0]
+        cylinder_axis = top_center_transformed - bottom_center_transformed
+        center_transformed = bottom_center_transformed + 0.5 * cylinder_axis
+        search_radius = self.length + self.radius
 
-        cylNum = 0
-        for radc, p1, p2 in zip(radii, cent1T, cent2T):
-            x1, y1, z1 = p1
-            x2, y2, z2 = p2
-            vx, vy, vz = vect = (x2 - x1, y2 - y1, z2 - z1)
-            lengthsq = vx * vx + vy * vy + vz * vz
-            length = math.sqrt(lengthsq)
-            cx, cy, cz = posc = x1 + vx * 0.5, y1 + vy * 0.5, z1 + vz * 0.5
-            radt = length + radc
-
-            bb = self.correctBB(p1, p2, radc)
-            pointsInCube = env.grid.getPointsInCube(bb, posc, radt, info=True)
-
-            # check for collisions with cylinder
-            pd = numpy.take(env.grid.gridPointsCoords, pointsInCube, 0) - p1
-            dotp = numpy.dot(pd, vect)
-            #            rad2 = radc*radc
-            #            dsq = numpy.sum(pd*pd, 1) - dotp*dotp/lengthsq
-            ptsWithinCaps = numpy.nonzero(
-                numpy.logical_and(
-                    numpy.greater_equal(dotp, 0.0), numpy.less_equal(dotp, lengthsq)
-                )
+        # get grid points to check for collisions
+        bounding_box = self.correctBB(
+            bottom_center_transformed, top_center_transformed, self.radius
+        )
+        grid_points_in_bounding_box = numpy.array(
+            env.grid.getPointsInCube(
+                bounding_box, center_transformed, search_radius
             )
+        )
 
-            ptsInSphereId = numpy.take(pointsInCube, ptsWithinCaps[0], 0)
-            compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphereId, 0)
-            if self.compNum <= 0:
-                wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
-                if len(wrongPt):
-                    #                        print wrongPt
-                    return True
-            cylNum += 1
+        # relative position of grid_points
+        points_to_check = (
+            env.grid.masterGridPositions[grid_points_in_bounding_box]
+            - bottom_center_transformed
+        )
+
+        # signed_distance to cylinder surface
+        dot_product = numpy.dot(points_to_check, cylinder_axis)
+        grid_point_distances_sq = numpy.sum(points_to_check**2, axis=1)
+        perpendicular_distances_sq = (
+            grid_point_distances_sq - dot_product**2 / self.length**2
+        )
+
+        index_in_cylinder = (dot_product >= 0) & (
+            perpendicular_distances_sq <= self.radius**2
+        )
+
+        if not any(index_in_cylinder):
+            return False
+
+        grid_points_in_cylinder = grid_points_in_bounding_box[
+            index_in_cylinder
+        ]
+
+        if any(
+            env.grid.compartment_ids[grid_points_in_cylinder] != self.compNum
+        ):
+            # check if compartment id of grid points inside the cylinder matches
+            # the compartment id of the ingredient
+            return True
+
         return False
 
     def collision_jitter(
@@ -227,54 +248,54 @@ class SingleCylinderIngr(Ingredient):
         positions denotes the center of the cylinder base surface
         positions2 denotes the center of the cylinder top surface
         """
-        bottom_cent = numpy.array(
-            self.transformPoints(packing_location, rotation_matrix, [self.bottom_cent])[0]
-        )
-        top_cent = numpy.array(
-            self.transformPoints(packing_location, rotation_matrix, [self.top_cent])[0]
-        )
-
-        center_trans = (top_cent + bottom_cent) / 2
+        bottom_center_transformed = self.transformPoints(
+            packing_location, rotation_matrix, [self.bottom_center]
+        )[0]
+        top_center_transformed = self.transformPoints(
+            packing_location, rotation_matrix, [self.top_center]
+        )[0]
+        center_transformed = (
+            top_center_transformed + bottom_center_transformed
+        ) / 2
 
         insidePoints = {}
         newDistPoints = {}
 
         search_radius = 2 * self.encapsulating_radius + dpad
 
-        bb = self.correctBB(
-            bottom_cent, top_cent, search_radius
-        )  # bounding box in world space
+        # get grid points to check for collisions
+        bounding_box = self.correctBB(
+            bottom_center_transformed, top_center_transformed, self.radius
+        )
+        grid_points_in_bounding_box = env.grid.getPointsInCube(
+            bounding_box, center_transformed, search_radius
+        )
 
         if env.runTimeDisplay:  # > 1:
             box = self.vi.getObject("collBox")
             if box is None:
                 box = self.vi.Box(
-                    "collBox", cornerPoints=bb, visible=1
+                    "collBox", cornerPoints=bounding_box, visible=1
                 )  # cornerPoints=bb,visible=1)
             else:
-                self.vi.updateBox(box, cornerPoints=bb)
+                self.vi.updateBox(box, cornerPoints=bounding_box)
             self.vi.update()
 
-        points_to_check = env.grid.getPointsInCube(
-            bb, center_trans, search_radius
-        )  # indices of all grid points within padded distance from cube center
+        # relative position of grid_points
+        points_to_check = (
+            env.grid.masterGridPositions[grid_points_in_bounding_box]
+            - bottom_center_transformed
+        )
 
-        grid_point_vectors = numpy.take(gridPointsCoords, points_to_check, 0)
+        # signed distances of grid points from the cylinder surface
+        grid_point_distances = self.get_signed_distance(
+            points_to_check, bottom_center_transformed, top_center_transformed
+        )
 
-        # signed distances of grid points from the cube surface
-        grid_point_distances = []
-        for grid_point in grid_point_vectors:
-            grid_point_distance = self.get_signed_distance(
-                center_trans,
-                grid_point,
-                rotation_matrix,
-            )
-            grid_point_distances.append(grid_point_distance)
-
-        for pti in range(len(points_to_check)):
+        for pti in range(len(grid_points_in_bounding_box)):
             # pti = point index
 
-            grid_point_index = points_to_check[pti]
+            grid_point_index = grid_points_in_bounding_box[pti]
             signed_distance_to_cyl_surface = grid_point_distances[pti]
 
             collision = (
@@ -284,7 +305,9 @@ class SingleCylinderIngr(Ingredient):
             )
 
             if collision:
-                self.log.info("grid point already occupied %f", grid_point_index)
+                self.log.info(
+                    "grid point already occupied %f", grid_point_index
+                )
                 return True, {}, {}
 
             # check if grid point lies inside the cube
@@ -292,7 +315,9 @@ class SingleCylinderIngr(Ingredient):
                 if grid_point_index not in insidePoints or abs(
                     signed_distance_to_cyl_surface
                 ) < abs(insidePoints[grid_point_index]):
-                    insidePoints[grid_point_index] = signed_distance_to_cyl_surface
+                    insidePoints[
+                        grid_point_index
+                    ] = signed_distance_to_cyl_surface
             elif (
                 signed_distance_to_cyl_surface
                 <= current_grid_distances[grid_point_index]
@@ -300,10 +325,13 @@ class SingleCylinderIngr(Ingredient):
                 # update grid distances if no collision was detected
                 if grid_point_index in newDistPoints:
                     newDistPoints[grid_point_index] = min(
-                        signed_distance_to_cyl_surface, newDistPoints[grid_point_index]
+                        signed_distance_to_cyl_surface,
+                        newDistPoints[grid_point_index],
                     )
                 else:
-                    newDistPoints[grid_point_index] = signed_distance_to_cyl_surface
+                    newDistPoints[
+                        grid_point_index
+                    ] = signed_distance_to_cyl_surface
         return False, insidePoints, newDistPoints
 
     def add_rb_node(self, worldNP):
@@ -409,7 +437,8 @@ class SingleCylinderIngr(Ingredient):
 
             ptsWithinCaps = numpy.nonzero(
                 numpy.logical_and(
-                    numpy.greater_equal(dotp, 0.0), numpy.less_equal(dotp, lengthsq)
+                    numpy.greater_equal(dotp, 0.0),
+                    numpy.less_equal(dotp, lengthsq),
                 )
             )
             if not len(ptsWithinCaps[0]):
@@ -417,10 +446,14 @@ class SingleCylinderIngr(Ingredient):
                 return False, insidePoints, newDistPoints
             if self.compareCompartment:
                 ptsInSphereId = numpy.take(pointsInCube, ptsWithinCaps[0], 0)
-                compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphereId, 0)
+                compIdsSphere = numpy.take(
+                    env.grid.compartment_ids, ptsInSphereId, 0
+                )
                 #                print "compId",compIdsSphere
                 if self.compNum <= 0:
-                    wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
+                    wrongPt = [
+                        cid for cid in compIdsSphere if cid != self.compNum
+                    ]
                     if len(wrongPt):
                         return True, insidePoints, newDistPoints
 
@@ -466,65 +499,126 @@ class SingleCylinderIngr(Ingredient):
 
     def get_signed_distance(
         self,
-        packing_location,
-        grid_point_location,
-        rotation_matrix,
+        points_to_check,
+        bottom_center,
+        top_center,
     ):
-        # returns the distance to 'grid_point_location' from the nearest cylinder surface
-        # the cylinder center is located at packing_location
-        # a rotation matrix rotation_matrix is applied to the cylinder
-        # bottom_cent = center point of cylinder bottom surface (positions)
-        # top_cent = center point of cylinder top surface (positions2)
-        radius = self.radius
+        # returns the distance to 'points_to_check' from the nearest cylinder surface
+        # note that these vectors must be transformed into a coordinate axis where
+        # the origin is at the bottom center of the cylinder, and the one of the axes
+        # points in the direction of the cylinder axis
+        # points to check is a numpy array
 
-        length = self.length 
-
-        bottom_cent = numpy.array(
-            self.transformPoints(packing_location, rotation_matrix, [self.bottom_cent])[0]
-        )
-        top_cent = numpy.array(
-            self.transformPoints(packing_location, rotation_matrix, [self.top_cent])[0]
-        )
-
-        axis_vect = top_cent - bottom_cent
+        cylinder_axis = top_center - bottom_center
 
         # check where point lies relative to cylinder
-        bottom_vect = grid_point_location - bottom_cent
-        top_vect = grid_point_location - top_cent
+        bottom_vect = points_to_check - bottom_center
+        top_vect = points_to_check - top_center
 
-        dist_to_bottom = numpy.linalg.norm(bottom_vect)
-        dist_to_top = numpy.linalg.norm(top_vect)
+        distance_to_bottom = numpy.linalg.norm(bottom_vect, axis=1)
+        distance_to_top = numpy.linalg.norm(top_vect, axis=1)
 
-        bottom_cos = numpy.dot(bottom_vect, axis_vect) / length / dist_to_bottom
-        top_cos = numpy.dot(top_vect, axis_vect) / length / dist_to_top
+        bottom_cos = (
+            numpy.dot(bottom_vect, cylinder_axis)
+            / self.length
+            / distance_to_bottom
+        )
+        top_cos = (
+            numpy.dot(top_vect, cylinder_axis) / self.length / distance_to_top
+        )
 
         bottom_sin = numpy.sqrt(1 - bottom_cos**2)
         perp_dist = (
-            dist_to_bottom * bottom_sin
+            distance_to_bottom * bottom_sin
         )  # perpendicular distance to cylinder axis
 
-        if bottom_cos >= 0 and top_cos <= 0:
-            # point lies within top and bottom faces
-            if perp_dist > radius:
-                return perp_dist - radius
-            else:
-                top_surf_dist = numpy.abs(dist_to_top * top_cos)
-                bottom_surf_dist = numpy.abs(dist_to_bottom * bottom_cos)
-                curved_surf_dist = numpy.abs(perp_dist - radius)
-                return -min(top_surf_dist, bottom_surf_dist, curved_surf_dist)
-        elif bottom_cos >= 0 and top_cos >= 0:
-            # point lies beyond top face
-            if perp_dist <= radius:
-                return dist_to_top * top_cos
-            else:
-                x_dist = dist_to_top * top_cos
-                y_dist = perp_dist - radius
-                return numpy.sqrt(x_dist**2 + y_dist**2)
-        elif bottom_cos <= 0 and top_cos <= 0:
-            # point lies beyond bottom face
-            if perp_dist <= radius:
-                return numpy.abs(dist_to_bottom * bottom_cos)
-            else:
-                x_dist = dist_to_bottom * bottom_cos
-                y_dist = perp_dist - radius
-                return numpy.sqrt(x_dist**2 + y_dist**2)
+        signed_distances = 9999.0 * numpy.ones(len(points_to_check))
+
+        # the cylinder divides space into 6 regions as follows:
+
+        between_inds = (bottom_cos > 0) & (top_cos <= 0)
+        # region 1: inside the cylinder
+        region_1_indices = between_inds & (perp_dist <= self.radius)
+        if any(region_1_indices):
+            signed_distances[region_1_indices] = (
+                perp_dist[region_1_indices] - self.radius
+            )
+        # region 2: outside the cylinder, between the ends (curved surface is closest)
+        region_2_indices = between_inds & (perp_dist > self.radius)
+        if any(region_2_indices):
+            top_surf_dist = numpy.abs(
+                distance_to_top[region_2_indices] * top_cos[region_2_indices]
+            )
+            bottom_surf_dist = numpy.abs(
+                distance_to_bottom[region_2_indices] * bottom_cos[region_2_indices]
+            )
+            curved_surf_dist = numpy.abs(perp_dist[region_2_indices] - self.radius)
+            signed_distances[region_2_indices] = -numpy.amin(
+                [top_surf_dist, bottom_surf_dist, curved_surf_dist]
+            )
+
+        beyond_top_inds = (bottom_cos > 0) & (top_cos > 0)
+        # region 3: outside the cylinder, beyond top end (flat top is closest)
+        region_3_indices = beyond_top_inds & (perp_dist <= self.radius)
+        if any(region_3_indices):
+            signed_distances[region_3_indices] = (
+                distance_to_top[region_3_indices] * top_cos[region_3_indices]
+            )
+        # region 4: outside the cylinder, beyond top end (top circular edge is closest)
+        region_4_indices = beyond_top_inds & (perp_dist > self.radius)
+        if any(region_4_indices):
+            x_dist = distance_to_top[region_4_indices] * top_cos[region_4_indices]
+            y_dist = perp_dist[region_4_indices] - self.radius
+            signed_distances[region_4_indices] = numpy.sqrt(
+                x_dist**2 + y_dist**2
+            )
+
+        beyond_bottom_inds = (bottom_cos <= 0) & (top_cos <= 0)
+        # region 5: outside the cylinder, beyond bottom end (flat bottom is closest)
+        region_5_indices = beyond_bottom_inds & (perp_dist <= self.radius)
+        if any(region_5_indices):
+            signed_distances[region_5_indices] = numpy.abs(
+                distance_to_bottom[region_5_indices] * bottom_cos[region_5_indices]
+            )
+        # region 6: outside the cylinder, beyond bottom end (bottom circular edge is closest)
+        region_6_indices = beyond_bottom_inds & (perp_dist > self.radius)
+        if any(region_6_indices):
+            x_dist = (
+                distance_to_bottom[region_6_indices] * bottom_cos[region_6_indices]
+            )
+            y_dist = perp_dist[region_6_indices] - self.radius
+            signed_distances[region_6_indices] = numpy.sqrt(
+                x_dist**2 + y_dist**2
+            )
+
+        return signed_distances
+
+        # slower implementation, only calculates one point at a time
+        # if bottom_cos >= 0 and top_cos <= 0:
+        #     # point lies within top and bottom faces
+        #     if perp_dist > self.radius:
+        #         # curved surface is closest
+        #         return perp_dist - self.radius
+        #     else:
+        #         top_surf_dist = numpy.abs(distance_to_top * top_cos)
+        #         bottom_surf_dist = numpy.abs(distance_to_bottom * bottom_cos)
+        #         curved_surf_dist = numpy.abs(perp_dist - self.radius)
+        #         return -min(top_surf_dist, bottom_surf_dist, curved_surf_dist)
+        # elif bottom_cos >= 0 and top_cos >= 0:
+        #     # point lies beyond top face
+        #     if perp_dist <= self.radius:
+        #         # top surface is closest
+        #         return distance_to_top * top_cos
+        #     else:
+        #         # circular edge is closest
+        #         x_dist = distance_to_top * top_cos
+        #         y_dist = perp_dist - self.radius
+        #         return numpy.sqrt(x_dist**2 + y_dist**2)
+        # elif bottom_cos <= 0 and top_cos <= 0:
+        #     # point lies beyond bottom face
+        #     if perp_dist <= self.radius:
+        #         return numpy.abs(distance_to_bottom * bottom_cos)
+        #     else:
+        #         x_dist = distance_to_bottom * bottom_cos
+        #         y_dist = perp_dist - self.radius
+        #         return numpy.sqrt(x_dist**2 + y_dist**2)
