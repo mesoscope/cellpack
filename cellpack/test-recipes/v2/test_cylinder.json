@@ -11,7 +11,7 @@
         [
             100,
             100,
-            100
+            1
         ]
     ],
     "objects": {
@@ -50,7 +50,7 @@
                 "inner_leaflet": {}
             }
         },
-        "cylinder_l20_r5": {
+        "cylinder_l10_r2pt5": {
             "type": "single_cylinder",
             "inherit": "base",
             "color": [
@@ -58,8 +58,8 @@
                 0,
                 0.5
             ],
-            "radius": 5,
-            "length": 20,
+            "radius": 2.5,
+            "length": 10,
             "max_jitter": [
                 1,
                 1,
@@ -76,7 +76,7 @@
             }
         },
         "A": {
-            "object": "cylinder_l20_r5",
+            "object": "cylinder_l10_r2pt5",
             "count": 100
         }
     }

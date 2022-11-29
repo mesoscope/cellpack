@@ -201,14 +201,17 @@ class SingleCylinderIngr(Ingredient):
         )
 
         # relative position of grid_points
-        points_to_check = (
+        points_to_check = numpy.array(
             env.grid.masterGridPositions[grid_points_in_bounding_box]
-            - bottom_center_transformed
         )
 
         # signed_distance to cylinder surface
-        dot_product = numpy.dot(points_to_check, cylinder_axis)
-        grid_point_distances_sq = numpy.sum(points_to_check**2, axis=1)
+        dot_product = numpy.dot(
+            points_to_check - bottom_center_transformed, cylinder_axis
+        )
+        grid_point_distances_sq = numpy.sum(
+            (points_to_check - bottom_center_transformed) ** 2, axis=1
+        )
         perpendicular_distances_sq = (
             grid_point_distances_sq - dot_product**2 / self.length**2
         )
@@ -282,10 +285,9 @@ class SingleCylinderIngr(Ingredient):
             self.vi.update()
 
         # relative position of grid_points
-        points_to_check = (
-            env.grid.masterGridPositions[grid_points_in_bounding_box]
-            - bottom_center_transformed
-        )
+        points_to_check = env.grid.masterGridPositions[
+            grid_points_in_bounding_box
+        ]
 
         # signed distances of grid points from the cylinder surface
         grid_point_distances = self.get_signed_distance(
@@ -310,9 +312,9 @@ class SingleCylinderIngr(Ingredient):
                 )
                 return True, {}, {}
 
-            # check if grid point lies inside the cube
+            # check if grid point lies inside the cylinder
             if signed_distance_to_cyl_surface <= 0:
-                if grid_point_index not in insidePoints or abs(
+                if (grid_point_index not in insidePoints) or abs(
                     signed_distance_to_cyl_surface
                 ) < abs(insidePoints[grid_point_index]):
                     insidePoints[
@@ -504,9 +506,6 @@ class SingleCylinderIngr(Ingredient):
         top_center,
     ):
         # returns the distance to 'points_to_check' from the nearest cylinder surface
-        # note that these vectors must be transformed into a coordinate axis where
-        # the origin is at the bottom center of the cylinder, and the one of the axes
-        # points in the direction of the cylinder axis
         # points to check is a numpy array
 
         cylinder_axis = top_center - bottom_center
@@ -537,59 +536,69 @@ class SingleCylinderIngr(Ingredient):
         # the cylinder divides space into 6 regions as follows:
 
         between_inds = (bottom_cos > 0) & (top_cos <= 0)
-        # region 1: inside the cylinder
-        region_1_indices = between_inds & (perp_dist <= self.radius)
-        if any(region_1_indices):
-            signed_distances[region_1_indices] = (
-                perp_dist[region_1_indices] - self.radius
-            )
-        # region 2: outside the cylinder, between the ends (curved surface is closest)
-        region_2_indices = between_inds & (perp_dist > self.radius)
-        if any(region_2_indices):
-            top_surf_dist = numpy.abs(
-                distance_to_top[region_2_indices] * top_cos[region_2_indices]
-            )
-            bottom_surf_dist = numpy.abs(
-                distance_to_bottom[region_2_indices] * bottom_cos[region_2_indices]
-            )
-            curved_surf_dist = numpy.abs(perp_dist[region_2_indices] - self.radius)
-            signed_distances[region_2_indices] = -numpy.amin(
-                [top_surf_dist, bottom_surf_dist, curved_surf_dist]
-            )
+        if any(between_inds):
+            # region 1: inside the cylinder
+            region_1_indices = between_inds & (perp_dist <= self.radius)
+            if any(region_1_indices):
+                signed_distances[region_1_indices] = (
+                    perp_dist[region_1_indices] - self.radius
+                )
+            # region 2: outside the cylinder, between the ends (curved surface is closest)
+            region_2_indices = between_inds & (perp_dist > self.radius)
+            if any(region_2_indices):
+                top_surf_dist = numpy.abs(
+                    distance_to_top[region_2_indices] * top_cos[region_2_indices]
+                )
+                bottom_surf_dist = numpy.abs(
+                    distance_to_bottom[region_2_indices]
+                    * bottom_cos[region_2_indices]
+                )
+                curved_surf_dist = numpy.abs(
+                    perp_dist[region_2_indices] - self.radius
+                )
+                signed_distances[region_2_indices] = -numpy.amin(
+                    [top_surf_dist, bottom_surf_dist, curved_surf_dist]
+                )
 
         beyond_top_inds = (bottom_cos > 0) & (top_cos > 0)
-        # region 3: outside the cylinder, beyond top end (flat top is closest)
-        region_3_indices = beyond_top_inds & (perp_dist <= self.radius)
-        if any(region_3_indices):
-            signed_distances[region_3_indices] = (
-                distance_to_top[region_3_indices] * top_cos[region_3_indices]
-            )
-        # region 4: outside the cylinder, beyond top end (top circular edge is closest)
-        region_4_indices = beyond_top_inds & (perp_dist > self.radius)
-        if any(region_4_indices):
-            x_dist = distance_to_top[region_4_indices] * top_cos[region_4_indices]
-            y_dist = perp_dist[region_4_indices] - self.radius
-            signed_distances[region_4_indices] = numpy.sqrt(
-                x_dist**2 + y_dist**2
-            )
+        if any(beyond_top_inds):
+            # region 3: outside the cylinder, beyond top end (flat top is closest)
+            region_3_indices = beyond_top_inds & (perp_dist <= self.radius)
+            if any(region_3_indices):
+                signed_distances[region_3_indices] = (
+                    distance_to_top[region_3_indices] * top_cos[region_3_indices]
+                )
+            # region 4: outside the cylinder, beyond top end (top circular edge is closest)
+            region_4_indices = beyond_top_inds & (perp_dist > self.radius)
+            if any(region_4_indices):
+                x_dist = (
+                    distance_to_top[region_4_indices] * top_cos[region_4_indices]
+                )
+                y_dist = perp_dist[region_4_indices] - self.radius
+                signed_distances[region_4_indices] = numpy.sqrt(
+                    x_dist**2 + y_dist**2
+                )
 
         beyond_bottom_inds = (bottom_cos <= 0) & (top_cos <= 0)
-        # region 5: outside the cylinder, beyond bottom end (flat bottom is closest)
-        region_5_indices = beyond_bottom_inds & (perp_dist <= self.radius)
-        if any(region_5_indices):
-            signed_distances[region_5_indices] = numpy.abs(
-                distance_to_bottom[region_5_indices] * bottom_cos[region_5_indices]
-            )
-        # region 6: outside the cylinder, beyond bottom end (bottom circular edge is closest)
-        region_6_indices = beyond_bottom_inds & (perp_dist > self.radius)
-        if any(region_6_indices):
-            x_dist = (
-                distance_to_bottom[region_6_indices] * bottom_cos[region_6_indices]
-            )
-            y_dist = perp_dist[region_6_indices] - self.radius
-            signed_distances[region_6_indices] = numpy.sqrt(
-                x_dist**2 + y_dist**2
-            )
+        if any(beyond_bottom_inds):
+            # region 5: outside the cylinder, beyond bottom end (flat bottom is closest)
+            region_5_indices = beyond_bottom_inds & (perp_dist <= self.radius)
+            if any(region_5_indices):
+                signed_distances[region_5_indices] = numpy.abs(
+                    distance_to_bottom[region_5_indices]
+                    * bottom_cos[region_5_indices]
+                )
+            # region 6: outside the cylinder, beyond bottom end (bottom circular edge is closest)
+            region_6_indices = beyond_bottom_inds & (perp_dist > self.radius)
+            if any(region_6_indices):
+                x_dist = (
+                    distance_to_bottom[region_6_indices]
+                    * bottom_cos[region_6_indices]
+                )
+                y_dist = perp_dist[region_6_indices] - self.radius
+                signed_distances[region_6_indices] = numpy.sqrt(
+                    x_dist**2 + y_dist**2
+                )
 
         return signed_distances
 

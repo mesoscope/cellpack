@@ -502,7 +502,7 @@ class simulariumHelper(hostHelper.Helper):
                         name = f"surface-{compartment_id}"
                     else:
                         name = "outside"
-                        continue
+
                     self.display_data[name] = DisplayData(
                         name=name, display_type=DISPLAY_TYPE.SPHERE, url=""
                     )
