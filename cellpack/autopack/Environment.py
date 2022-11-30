@@ -1225,7 +1225,7 @@ class Environment(CompartmentList):
         if self.grid is None or self.nFill == 0:
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
-            spacing = self.spacing or self.smallestProteinSize
+            spacing = self.spacing or 2 / numpy.sqrt(3) * self.smallestProteinSize
             self.grid = Grid(boundingBox=boundingBox, spacing=spacing, lookup=lookup)
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
