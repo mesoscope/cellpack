@@ -76,6 +76,7 @@ from cellpack.autopack.utils import (
     ingredient_compare1,
     ingredient_compare2,
 )
+from cellpack.autopack.writers import Writer
 from .Compartment import CompartmentList, Compartment
 from .Recipe import Recipe
 from .ingredient import GrowIngredient, ActinIngredient
@@ -408,19 +409,19 @@ class Environment(CompartmentList):
         self.collectResultPerIngredient()
         self.store()
         self.store_asTxt()
-        IOutils.save(
+        Writer(format=self.format_output).save(
             self,
             self.result_file,
-            format_output=self.format_output,
             kwds=["compNum"],
             result=True,
             quaternion=True,
             all_ingr_as_array=all_ingr_as_array,
             compartments=self.compartments,
-        )  # pdb ?
+        )
+
         self.log.info("time to save result file %d", time() - t0)
         if vAnalysis == 1:
-            #    START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
+            # START Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
             # totalVolume = self.grid.gridVolume*unitVol
             unitVol = self.grid.gridSpacing**3
             wrkDirRes = self.result_file + "_analyze_"
@@ -591,19 +592,6 @@ class Environment(CompartmentList):
             #    END Analysis Tools: Graham added back this big chunk of code for analysis tools and graphic on 5/16/12 Needs to be cleaned up into a function and proper uPy code
         self.log.info("time to save end %d", time() - t0)
 
-    def saveNewRecipe(self, filename):
-        djson, all_pos, all_rot = IOutils.serializedRecipe(
-            self, False, True
-        )  # transpose, use_quaternion, result=False, lefthand=False
-        with open(filename + "_serialized.json", "w") as f:
-            f.write(djson)
-        IOutils.saveResultBinary(
-            self, filename + "_serialized.bin", False, True, lefthand=True
-        )
-        IOutils.saveResultBinary(
-            self, filename + "_serialized_tr.bin", True, True, lefthand=True
-        )  # transpose, quaternio, left hand
-
     def loadResult(
         self, resultfilename=None, restore_grid=True, backward=False, transpose=True
     ):
@@ -611,7 +599,6 @@ class Environment(CompartmentList):
         if resultfilename is None:
             resultfilename = self.result_file
             # check the extension of the filename none, txt or json
-            # resultfilename = autopack.retrieveFile(resultfilename,cache="results")
         fileName, fileExtension = os.path.splitext(resultfilename)
         if fileExtension == "":
             try:
@@ -1788,6 +1775,41 @@ class Environment(CompartmentList):
                 self.set_partners_ingredient(ingr)
         return totalNbIngr
 
+    def prep_molecules_for_save(self, distances, free_points, nbFreePoints):
+        self.distancesAfterFill = distances[:]
+        self.freePointsAfterFill = free_points[:]
+        self.nbFreePointsAfterFill = nbFreePoints
+        self.distanceAfterFill = distances[:]
+
+        if self.runTimeDisplay and autopack.helper.host == "simularium":
+            autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
+
+        if self.afviewer is not None and hasattr(self.afviewer, "vi"):
+            self.afviewer.vi.progressBar(label="Filling Complete")
+            self.afviewer.vi.resetProgressBar()
+        ingredients = {}
+        all_ingr_as_array = self.molecules
+        for pos, rot, ingr, ptInd in self.molecules:
+            if ingr.name not in ingredients:
+                ingredients[ingr.name] = [ingr, [], [], []]
+            mat = rot.copy()
+            mat[:3, 3] = pos
+            ingredients[ingr.name][1].append(pos)
+            ingredients[ingr.name][2].append(rot)
+            ingredients[ingr.name][3].append(numpy.array(mat))
+        for compartment in self.compartments:
+            for pos, rot, ingr, ptInd in compartment.molecules:
+                if ingr.name not in ingredients:
+                    ingredients[ingr.name] = [ingr, [], [], []]
+                mat = rot.copy()
+                mat[:3, 3] = pos
+                ingredients[ingr.name][1].append(pos)
+                ingredients[ingr.name][2].append(rot)
+                ingredients[ingr.name][3].append(numpy.array(mat))
+                all_ingr_as_array.append([pos, rot, ingr, ptInd])
+        self.ingr_result = ingredients
+        return all_ingr_as_array
+
     def pack_grid(
         self,
         seedNum=14,
@@ -2110,50 +2132,36 @@ class Environment(CompartmentList):
                     previousThresh = np + float(previousThresh)
                 self.activeIngr = self.activeIngr0 + self.activeIngr12
             if dump and ((time() - stime) > dump_freq):
-                # self.collectResultPerIngredient()
                 print("SAVING", self.result_file)
-                # TODO: save out intermediate simularium files
+                all_ingr_as_array = self.prep_molecules_for_save(
+                    distances,
+                    free_points,
+                    nbFreePoints,
+                )
                 stime = time()
+                print(f"placed {len(self.molecules)}")
+                if self.saveResult:
+                    self.save_result(
+                        free_points,
+                        distances=distances,
+                        t0=stime,
+                        vAnalysis=vAnalysis,
+                        vTestid=vTestid,
+                        seedNum=seedNum,
+                        all_ingr_as_array=all_ingr_as_array,
+                    )
 
-        self.distancesAfterFill = distances[:]
-        self.freePointsAfterFill = free_points[:]
-        self.nbFreePointsAfterFill = nbFreePoints
-        self.distanceAfterFill = distances[:]
         t2 = time()
         self.log.info("time to fill %d", t2 - t1)
-        if self.runTimeDisplay and autopack.helper.host == "simularium":
-            autopack.helper.writeToFile(None, "./realtime", self.boundingBox)
-
-        if self.afviewer is not None and hasattr(self.afviewer, "vi"):
-            self.afviewer.vi.progressBar(label="Filling Complete")
-            self.afviewer.vi.resetProgressBar()
-        ingredients = {}
-        all_ingr_as_array = self.molecules
-        for pos, rot, ingr, ptInd in self.molecules:
-            if ingr.name not in ingredients:
-                ingredients[ingr.name] = [ingr, [], [], []]
-            mat = rot.copy()
-            mat[:3, 3] = pos
-            ingredients[ingr.name][1].append(pos)
-            ingredients[ingr.name][2].append(rot)
-            ingredients[ingr.name][3].append(numpy.array(mat))
-        for compartment in self.compartments:
-            for pos, rot, ingr, ptInd in compartment.molecules:
-                if ingr.name not in ingredients:
-                    ingredients[ingr.name] = [ingr, [], [], []]
-                mat = rot.copy()
-                mat[:3, 3] = pos
-                ingredients[ingr.name][1].append(pos)
-                ingredients[ingr.name][2].append(rot)
-                ingredients[ingr.name][3].append(numpy.array(mat))
-                all_ingr_as_array.append([pos, rot, ingr, ptInd])
-        self.ingr_result = ingredients
+        all_ingr_as_array = self.prep_molecules_for_save(
+            distances, free_points, nbFreePoints
+        )
         print(f"placed {len(self.molecules)}")
         if self.saveResult:
             self.save_result(
                 free_points,
                 distances=distances,
-                t0=t2,
+                t0=time(),
                 vAnalysis=vAnalysis,
                 vTestid=vTestid,
                 seedNum=seedNum,

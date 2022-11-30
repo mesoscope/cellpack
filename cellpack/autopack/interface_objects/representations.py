@@ -1,6 +1,7 @@
 from math import sqrt
 import cellpack.autopack as autopack
 import numpy as np
+import sys
 
 
 class Representations:
@@ -39,7 +40,6 @@ class Representations:
         # ...
         # int: number of spheres in second level
         f = open(file)
-        print(file)
         sphere_data = f.readlines()
         f.close()
 
@@ -88,7 +88,6 @@ class Representations:
         radii = self.packing["radii"]
         if positions is None or positions[0] is None or positions[0][0] is None:
             positions = [[[0, 0, 0]]]
-
         if radii is None:
             radii = [[0]]
         return positions, radii
@@ -140,8 +139,10 @@ class Representations:
 
     def get_adjusted_position(self, position, rotation):
         active_data = self.get_active_data()
-        if "transform" in active_data:
+        if "transform" in active_data and "translate" in active_data["transform"]:
             offset = np.array(active_data["transform"]["translate"])
+        elif "transform" in active_data:
+            sys.exit("Missing 'translate' data in recipe")
         else:
             offset = np.array([0, 0, 0])
         rot_mat = np.array(rotation[0:3, 0:3])

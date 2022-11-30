@@ -145,8 +145,7 @@ class RecipeLoader(object):
         return new_recipe
 
     def _read(self):
-        local_path = autopack.retrieveFile(self.file_path, cache="recipes")
-        new_values = json.load(open(local_path, "r"))
+        new_values = autopack.load_remote_file(self.file_path, cache="recipes")
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
         recipe_data["format_version"] = RecipeLoader._sanitize_format_version(

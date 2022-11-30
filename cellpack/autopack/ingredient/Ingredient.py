@@ -1792,7 +1792,13 @@ class Ingredient(Agent):
                 env, target_grid_point_position, rotation_matrix
             )
             (insidePoints, newDistPoints) = self.pack_at_grid_pt_location(
-                env, jtrans, rotMatj, dpad, grid_point_distances
+                env,
+                jtrans,
+                rotMatj,
+                dpad,
+                grid_point_distances,
+                insidePoints,
+                newDistPoints,
             )
         if success:
             if is_realtime:
@@ -2436,8 +2442,8 @@ class Ingredient(Agent):
 
             # got all the way through the checks with no collision
             if True not in collision_results:
-                insidePoints = {}
-                newDistPoints = {}
+                inside_points = {}
+                new_dist_points = {}
                 t3 = time()
 
                 # self.update_data_tree(jtrans,rotMatj,ptInd=ptInd)?
@@ -2450,21 +2456,14 @@ class Ingredient(Agent):
                     self.env.rIngr.append(self)
                     self.env.result.append([pt, packing_rotation, self, ptInd])
 
-                    new_inside_points, new_dist_points = self.get_new_distance_values(
+                    self.pack_at_grid_pt_location(
+                        env,
                         pt,
                         packing_rotation,
-                        gridPointsCoords,
-                        distance,
                         dpad,
-                        self.deepest_level,
-                    )
-                    insidePoints = self.merge_place_results(
-                        new_inside_points,
-                        insidePoints,
-                    )
-                    newDistPoints = self.merge_place_results(
+                        distance,
+                        inside_points,
                         new_dist_points,
-                        newDistPoints,
                     )
                 self.log.info("compute distance loop %d", time() - t3)
 
@@ -2486,8 +2485,8 @@ class Ingredient(Agent):
                     success,
                     packing_location,
                     packing_rotation,
-                    insidePoints,
-                    newDistPoints,
+                    inside_points,
+                    new_dist_points,
                 )
 
         # never found a place to pack
