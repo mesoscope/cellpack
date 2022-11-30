@@ -1805,7 +1805,7 @@ class AnalyseAP:
                                 seed_distances, distance_file, seed_index
                             )
 
-                            distances_dict[ingr.name] = seed_distances.tolist()
+                            distances_dict[ingr.name] = seed_distances
                             ingredient_positions_dict[
                                 ingr.name
                             ] = seed_ingredient_positions.tolist()
@@ -1936,7 +1936,7 @@ class AnalyseAP:
                                     seed_distances, distance_file, seed_index,
                                 )
 
-                                distances_dict[ingr.name] = seed_distances.tolist()
+                                distances_dict[ingr.name] = seed_distances
                                 ingredient_positions_dict[
                                     ingr.name
                                 ] = seed_ingredient_positions.tolist()
@@ -1998,7 +1998,7 @@ class AnalyseAP:
                                     seed_index,
                                 )
 
-                                distances_dict[ingr.name] = seed_distances.tolist()
+                                distances_dict[ingr.name] = seed_distances
                                 ingredient_positions_dict[
                                     ingr.name
                                 ] = seed_ingredient_positions.tolist()
