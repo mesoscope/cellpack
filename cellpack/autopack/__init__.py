@@ -42,6 +42,7 @@ import re
 import shutil
 from os import path, environ
 from pathlib import Path
+import urllib.request as urllib
 
 import ssl
 import json
@@ -50,11 +51,6 @@ try:
     from collections import OrderedDict
 except ImportError:
     from ordereddict import OrderedDict
-
-try:
-    import urllib.request as urllib  # , urllib.parse, urllib.error
-except ImportError:
-    import urllib
 
 packageContainsVFCommands = 1
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -181,10 +177,6 @@ autopackdir = str(afdir)  # copy
 def checkPath():
     fileName = filespath  # autoPACKserver+"/autoPACK_filePaths.json"
     if fileName.find("http") != -1 or fileName.find("ftp") != -1:
-        try:
-            import urllib.request as urllib  # , urllib.parse, urllib.error
-        except ImportError:
-            import urllib
         if url_exists(fileName):
             urllib.urlretrieve(fileName, autopack_path_pref_file)
         else:
@@ -221,14 +213,14 @@ if doit:
             if pref_path["autopackdir"] != "default":
                 autopackdir = pref_path["autopackdir"]
 
-replace_path = {
+REPLACE_PATH = {
     "autoPACKserver": autoPACKserver,
     "autopackdir": autopackdir,
     "autopackdata": appdata,
 }
 
-global current_recipe_path
-current_recipe_path = appdata
+global CURRENT_RECIPE_PATH
+CURRENT_RECIPE_PATH = appdata
 # we keep the file here, it come with the distribution
 # wonder if the cache shouldn't use the version like other appDAta
 # ie appData/AppName/Version/etc...
@@ -274,7 +266,7 @@ def checkErrorInPath(p, toreplace):
 
 def fixOnePath(path):
     path = str(path)
-    for old_value, new_value in replace_path.items():
+    for old_value, new_value in REPLACE_PATH.items():
         # fix before
         new_value = str(new_value)
         if fixpath and re.findall("{0}".format(re.escape(old_value)), path):
@@ -288,12 +280,12 @@ def fixOnePath(path):
 def updateReplacePath(newPaths):
     for w in newPaths:
         found = False
-        for i, v in enumerate(replace_path):
+        for i, v in enumerate(REPLACE_PATH):
             if v[0] == w[0]:
-                replace_path[i][1] = w[1]
+                REPLACE_PATH[i][1] = w[1]
                 found = True
         if not found:
-            replace_path.append(w)
+            REPLACE_PATH.append(w)
 
 
 def download_file(url, local_file_path, reporthook):
@@ -312,7 +304,7 @@ def is_full_url(file_path):
 def is_remote_path(file_path):
     return ":" in file_path;
 
-def retrieveFile(filename, destination="", cache="geometries", force=False):
+def retrieve_file(filename, destination="", cache="geometries", force=False):
     """
     Options:
     1. Find file locally, return the file path
@@ -332,37 +324,36 @@ def retrieveFile(filename, destination="", cache="geometries", force=False):
             if helper is not None:
                 reporthook = helper.reporthook
 
-            name = url.split("/")[-1]  # the recipe name
-            local_file_directory = cache_dir[cache] / destination
-            local_file_path = local_file_directory / name
-            make_directory_if_needed(local_file_directory)
-            # check if exist first
-            if not os.path.isfile(local_file_path) or force:
-                download_file(url, local_file_path, reporthook)
-            log.info(f"autopack downloaded and stored file: {local_file_path}")
-    else:
-
- 
-        filename = Path(filename)
-        if os.path.isfile(cache_dir[cache] / filename):
-            return cache_dir[cache] / filename
-        if os.path.isfile(current_recipe_path / filename):
-            # if no folder provided, use the current_recipe_folder
-            return current_recipe_path / filename
-        
-        url = autoPACKserver + "/" + str(cache) + "/" + str(filename)
-        if url_exists(url):
-            reporthook = None
-            if helper is not None:
-                reporthook = helper.reporthook
-            name = filename
-            local_file_path = cache_dir[cache] / destination / name
+        name = url.split("/")[-1]  # the recipe name
+        local_file_directory = cache_dir[cache] / destination
+        local_file_path = local_file_directory / name
+        make_directory_if_needed(local_file_directory)
+        # check if exist first
+        if not os.path.isfile(local_file_path) or force:
             download_file(url, local_file_path, reporthook)
-    return local_file_path
+        log.info(f"autopack downloaded and stored file: {local_file_path}")
+        return local_file_path
+    filename = Path(filename)
+    if os.path.isfile(cache_dir[cache] / filename):
+        return cache_dir[cache] / filename
+    if os.path.isfile(CURRENT_RECIPE_PATH / filename):
+        # if no folder provided, use the current_recipe_folder
+        return CURRENT_RECIPE_PATH / filename
+
+    url = autoPACKserver + "/" + str(cache) + "/" + str(filename)
+    if url_exists(url):
+        reporthook = None
+        if helper is not None:
+            reporthook = helper.reporthook
+        name = filename
+        local_file_path = cache_dir[cache] / destination / name
+        download_file(url, local_file_path, reporthook)
+        return local_file_path
+    return filename
 
 
-def load_remote_file(filename, destination="", cache="geometries", force=None):
-    local_file_path = retrieveFile(
+def load_file(filename, destination="", cache="geometries", force=None):
+    local_file_path = retrieve_file(
         filename, destination=destination, cache=cache, force=force
     )
     return json.load(open(local_file_path, "r"))
@@ -388,7 +379,7 @@ def updatePathJSON():
     pref_path = json.load(f)
     f.close()
     autoPACKserver = pref_path["autoPACKserver"]
-    replace_path["autoPACKserver"] = autoPACKserver
+    REPLACE_PATH["autoPACKserver"] = autoPACKserver
     filespath = autoPACKserver + "/autoPACK_filePaths.json"
     if "filespath" in pref_path:
         if pref_path["filespath"] != "default":
@@ -400,7 +391,7 @@ def updatePathJSON():
     if "autopackdir" in pref_path:
         if pref_path["autopackdir"] != "default":
             autopackdir = pref_path["autopackdir"]  # noqa: F841
-            replace_path["autoPACKserver"] = pref_path["autopackdir"]
+            REPLACE_PATH["autoPACKserver"] = pref_path["autopackdir"]
 
 
 def updatePath():
