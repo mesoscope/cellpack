@@ -29,11 +29,13 @@ class ConfigLoader(object):
         "load_from_grid_file": False,
         "inner_grid_method": "trimesh",
         "live_packing": False,
+        "num_trials": 1,
         "name": "default",
         "ordered_packing": False,
         "out": "out/",
         "overwrite_place_method": False,
         "place_method": "jitter",
+        "randomness_seed": None,
         "save_analyze_result": False,
         "save_converted_recipe": False,
         "show_grid_plot": False,
@@ -43,6 +45,7 @@ class ConfigLoader(object):
         "version": 1.0,
     }
 
+    # TODO: fall back to default values if config file is not provided
     def __init__(self, input_file_path):
         _, file_extension = os.path.splitext(input_file_path)
         self.latest_version = 1.0

@@ -70,7 +70,7 @@ class BaseGrid:
     The Grid class
     ==========================
     This class handle the use of grid to control the packing. The grid keep information of
-    3d positions, distances, freePoints and inside/surface points from organelles.
+    3d positions, distances, free_points and inside/surface points from organelles.
     NOTE : thi class could be completely replace if openvdb is wrapped to python.
     """
 
@@ -82,29 +82,29 @@ class BaseGrid:
         # so any future swaps will still result in the correct index being move into the range
         # of nbFreePoints
         nbFreePoints -= 1
-        vKill = freePoints[pt]
-        vLastFree = freePoints[nbFreePoints]
-        freePoints[vKill] = vLastFree
-        freePoints[vLastFree] = vKill
+        vKill = free_points[pt]
+        vLastFree = free_points[nbFreePoints]
+        free_points[vKill] = vLastFree
+        free_points[vLastFree] = vKill
         # Turn on these printlines if there is a problem with incorrect points showing in display points
         # self.log.debug("*************pt = masterGridPointValue = %d", pt)
         # self.log.debug("nbFreePointAfter = %d", nbFreePoints)
         # self.log.debug("vKill = %d", vKill)
         # self.log.debug("vLastFree = %d", vLastFree)
-        # self.log.debug("freePoints[vKill] = %d", freePoints[vKill])
-        # self.log.debug("freePoints[vLastFree] = %d", freePoints[vLastFree])
+        # self.log.debug("free_points[vKill] = %d", free_points[vKill])
+        # self.log.debug("free_points[vLastFree] = %d", free_points[vLastFree])
         # self.log.debug("pt = masterGridPointValue = %d", pt)
-        # self.log.debug("freePoints[nbFreePoints-1] = %d", freePoints[nbFreePoints])
-        # self.log.debug("freePoints[pt] = %d", freePoints[pt])
-        # freePoints will now have all the available indices between 0 and nbFreePoints in
-        # freePoints[nbFreePoints:] won't necessarily be the indices of inside points
-        return freePoints, nbFreePoints
+        # self.log.debug("free_points[nbFreePoints-1] = %d", free_points[nbFreePoints])
+        # self.log.debug("free_points[pt] = %d", free_points[pt])
+        # free_points will now have all the available indices between 0 and nbFreePoints in
+        # free_points[nbFreePoints:] won't necessarily be the indices of inside points
+        return free_points, nbFreePoints
 
     @staticmethod
     def updateDistances(
         insidePoints,
         newDistPoints,
-        freePoints,
+        free_points,
         nbFreePoints,
         distance,
     ):
@@ -117,8 +117,8 @@ class BaseGrid:
         # distChanges = {}
         for pt, dist in list(insidePoints.items()):
             try:
-                freePoints, nbFreePoints = BaseGrid.reorder_free_points(
-                    pt, freePoints, nbFreePoints
+                free_points, nbFreePoints = BaseGrid.reorder_free_points(
+                    pt, free_points, nbFreePoints
                 )
             except Exception:
                 print(pt, "not in freeePoints********************************")
@@ -153,9 +153,9 @@ class BaseGrid:
         # entries are removed from this list as grid points are used up
         # during hte fill. This list is used to pick points randomly during
         # the fill
-        self.freePoints = []
+        self.free_points = []
         self.nbFreePoints = 0
-        # this list evolves in parallel with self.freePoints and provides
+        # this list evolves in parallel with self.free_points and provides
         # the distance to the closest surface (either an already placed
         # object (or an compartment surface NOT IMPLEMENTED)
         self.distToClosestSurf = []
@@ -212,8 +212,8 @@ class BaseGrid:
         self.distToClosestSurf = (
             numpy.ones(self.gridVolume) * self.diag
         )  # (self.distToClosestSurf)
-        self.freePoints = list(range(self.gridVolume))
-        self.nbFreePoints = len(self.freePoints)
+        self.free_points = list(range(self.gridVolume))
+        self.nbFreePoints = len(self.free_points)
         self.log.info(
             "Lookup: %d, bounding box: %r, gridSpacing %r, length compartment_ids %r",
             self.lookup,
@@ -227,20 +227,20 @@ class BaseGrid:
     def reset(
         self,
     ):
-        # reset the  distToClosestSurf and the freePoints
+        # reset the  distToClosestSurf and the free_points
         # boundingBox should be the same otherwise why keeping the grid
-        self.log.info("reset Grid distance to closest surface and freePoints")
+        self.log.info("reset Grid distance to closest surface and free_points")
         self.distToClosestSurf = (
             numpy.array(self.distToClosestSurf[:]) * 0.0
         ) + self.diag
         # self.distToClosestSurf[:] = self.diag  # numpy.array([self.diag]*len(self.distToClosestSurf))#surface point too?
-        self.freePoints = list(range(len(self.freePoints)))
-        self.nbFreePoints = len(self.freePoints)
+        self.free_points = list(range(len(self.free_points)))
+        self.nbFreePoints = len(self.free_points)
 
     def removeFreePoint(self, pti):
-        tmp = self.freePoints[self.nbFreePoints]  # last one
-        self.freePoints[self.nbFreePoints] = pti
-        self.freePoints[pti] = tmp
+        tmp = self.free_points[self.nbFreePoints]  # last one
+        self.free_points[self.nbFreePoints] = pti
+        self.free_points[pti] = tmp
         self.nbFreePoints -= 1
 
     def getDiagonal(self, boundingBox=None):
@@ -384,7 +384,7 @@ class BaseGrid:
     def getClosestFreeGridPoint(
         self, pt3d, compId=None, updateTree=True, ball=0.0, distance=0.0
     ):
-        free_indices = self.freePoints[: self.nbFreePoints]
+        free_indices = self.free_points[: self.nbFreePoints]
         arr = numpy.array(self.masterGridPositions[free_indices])
         indices = numpy.nonzero(numpy.equal(self.compartment_ids[free_indices], compId))
         distances = self.distToClosestSurf[free_indices]
@@ -412,7 +412,7 @@ class BaseGrid:
         ]  # randomly pick free surface point at given distance
         return targetPoint
 
-        free_indices = self.freePoints[: self.nbFreePoints]
+        free_indices = self.free_points[: self.nbFreePoints]
         arr = numpy.array(self.masterGridPositions[free_indices])
         if self.tree_free is None or updateTree:
             if compId is not None:
