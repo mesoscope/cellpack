@@ -56,6 +56,7 @@ packageContainsVFCommands = 1
 ssl._create_default_https_context = ssl._create_unverified_context
 use_json_hook = True
 afdir = Path(os.path.abspath(__path__[0]))
+os.environ["NUMEXPR_MAX_THREADS"] = "32"
 
 ###############################################################################
 log_file_path = path.join(path.dirname(path.abspath(__file__)), "../../logging.conf")
@@ -279,13 +280,7 @@ def fixOnePath(path):
 
 def updateReplacePath(newPaths):
     for w in newPaths:
-        found = False
-        for i, v in enumerate(REPLACE_PATH):
-            if v[0] == w[0]:
-                REPLACE_PATH[i][1] = w[1]
-                found = True
-        if not found:
-            REPLACE_PATH.append(w)
+        REPLACE_PATH[w[0]] = w[1]
 
 
 def download_file(url, local_file_path, reporthook):
