@@ -1422,7 +1422,7 @@ def setupFromJsonDic(
         ]  # list(env.jsondic["recipe"]["paths"].items())
         #        autopack.replace_path.extend(env.custom_paths)#keyWordPAth,valuePath
         autopack.updateReplacePath(env.custom_paths)
-    autopack.current_recipe_path = env.current_path
+    autopack.CURRENT_RECIPE_PATH = env.current_path
 
     if "gradients" in env.jsondic:
         env.gradients = {}

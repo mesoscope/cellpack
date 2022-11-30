@@ -219,8 +219,8 @@ REPLACE_PATH = {
     "autopackdata": appdata,
 }
 
-global current_recipe_path
-current_recipe_path = appdata
+global CURRENT_RECIPE_PATH
+CURRENT_RECIPE_PATH = appdata
 # we keep the file here, it come with the distribution
 # wonder if the cache shouldn't use the version like other appDAta
 # ie appData/AppName/Version/etc...
@@ -331,9 +331,9 @@ def retrieve_file(filename, destination="", cache="geometries", force=False):
     filename = Path(filename)
     if os.path.isfile(cache_dir[cache] / filename):
         return cache_dir[cache] / filename
-    if os.path.isfile(current_recipe_path / filename):
+    if os.path.isfile(CURRENT_RECIPE_PATH / filename):
         # if no folder provided, use the current_recipe_folder
-        return current_recipe_path / filename
+        return CURRENT_RECIPE_PATH / filename
 
     url = autoPACKserver + "/" + str(cache) + "/" + str(filename)
     if url_exists(url):

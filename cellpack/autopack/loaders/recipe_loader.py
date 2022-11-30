@@ -27,7 +27,7 @@ class RecipeLoader(object):
         self.ingredient_list = []
         self.compartment_list = []
         self.save_converted_recipe = save_converted_recipe
-        autopack.current_recipe_path = os.path.dirname(self.file_path)
+        autopack.CURRENT_RECIPE_PATH = os.path.dirname(self.file_path)
         self.recipe_data = self._read()
 
     @staticmethod
@@ -94,7 +94,7 @@ class RecipeLoader(object):
         """
         Save converted recipe into a json file
         """
-        path = autopack.current_recipe_path
+        path = autopack.CURRENT_RECIPE_PATH
         filename = data["name"]
         out_directory = f"{path}/converted/"
         if not os.path.exists(out_directory):
@@ -186,7 +186,7 @@ class RecipeLoader(object):
             custom_paths = recipe_data["recipe"]["paths"]
             autopack.updateReplacePath(custom_paths)
 
-        autopack.current_recipe_path = self.file_path
+        autopack.CURRENT_RECIPE_PATH = self.file_path
         if (
             "format_version" not in recipe_data
             or recipe_data["format_version"] != self.current_version
