@@ -309,6 +309,8 @@ def download_file(url, local_file_path, reporthook):
 def is_full_url(file_path):
     return file_path.find("http") != -1 or file_path.find("ftp") != -1
 
+def is_remote_path(file_path):
+    return ":" in file_path;
 
 def retrieveFile(filename, destination="", cache="geometries", force=False):
     """
@@ -316,43 +318,47 @@ def retrieveFile(filename, destination="", cache="geometries", force=False):
     1. Find file locally, return the file path
     2. Download file to local cache, return path (might involve replacing short-code in url)
     3. Force download even though you have a local copy
+
+    Returns location of file (either already there or newly downloaded)
     """
-    if not is_full_url(filename):
-        # replace short code, ie 'autoPACKserver' with full url
-        filename = fixOnePath(filename)
-    log.info(f"autopack retrieve file {filename}")
-    if is_full_url(str(filename)):
-        url = filename
-        reporthook = None
-        if helper is not None:
-            reporthook = helper.reporthook
+    local_file_path = filename
 
-        name = url.split("/")[-1]  # the recipe name
-        local_file_directory = cache_dir[cache] / destination
-        local_file_path = local_file_directory / name
-        make_directory_if_needed(local_file_directory)
-        # check if exist first
-        if not os.path.isfile(local_file_path) or force:
+    if is_remote_path(filename):
+        # deal with remote db
+        # get url from path
+        if is_full_url(str(filename)):
+            url = filename
+            reporthook = None
+            if helper is not None:
+                reporthook = helper.reporthook
+
+            name = url.split("/")[-1]  # the recipe name
+            local_file_directory = cache_dir[cache] / destination
+            local_file_path = local_file_directory / name
+            make_directory_if_needed(local_file_directory)
+            # check if exist first
+            if not os.path.isfile(local_file_path) or force:
+                download_file(url, local_file_path, reporthook)
+            log.info(f"autopack downloaded and stored file: {local_file_path}")
+    else:
+
+ 
+        filename = Path(filename)
+        if os.path.isfile(cache_dir[cache] / filename):
+            return cache_dir[cache] / filename
+        if os.path.isfile(current_recipe_path / filename):
+            # if no folder provided, use the current_recipe_folder
+            return current_recipe_path / filename
+        
+        url = autoPACKserver + "/" + str(cache) + "/" + str(filename)
+        if url_exists(url):
+            reporthook = None
+            if helper is not None:
+                reporthook = helper.reporthook
+            name = filename
+            local_file_path = cache_dir[cache] / destination / name
             download_file(url, local_file_path, reporthook)
-        log.info(f"autopack downloaded and stored file: {local_file_path}")
-        return local_file_path
-    filename = Path(filename)
-    if os.path.isfile(cache_dir[cache] / filename):
-        return cache_dir[cache] / filename
-    if os.path.isfile(current_recipe_path / filename):
-        # if no folder provided, use the current_recipe_folder
-        return current_recipe_path / filename
-
-    url = autoPACKserver + "/" + str(cache) + "/" + str(filename)
-    if url_exists(url):
-        reporthook = None
-        if helper is not None:
-            reporthook = helper.reporthook
-        name = filename
-        local_file_path = cache_dir[cache] / destination / name
-        download_file(url, local_file_path, reporthook)
-        return local_file_path
-    return filename
+    return local_file_path
 
 
 def load_remote_file(filename, destination="", cache="geometries", force=None):
