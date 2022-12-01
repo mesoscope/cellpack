@@ -1,5 +1,5 @@
 {
-    "name": "grid_spacing_4",
+    "name": "grid_spacing_10",
     "format": "simularium",
     "inner_grid_method": "trimesh",
     "live_packing": false,
@@ -10,7 +10,7 @@
     "place_method": "spheresSST",
     "save_analyze_result": true,
     "show_grid_plot": false,
-    "spacing": 4,
+    "spacing": 10,
     "use_periodicity": false,
     "show_sphere_trees": false,
     "load_from_grid_file": true

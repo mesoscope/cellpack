@@ -147,7 +147,7 @@ class IOingredientTool(object):
             if "overwrite" in inode:
                 overwrite_dic = inode["overwrite"]
         if filename is not None:
-            filename = autopack.retrieveFile(
+            filename = autopack.retrieve_file(
                 filename,
                 # destination = recipe+os.sep+"recipe"+os.sep+"ingredients"+os.sep,
                 cache="recipes",
@@ -296,7 +296,7 @@ def addCompartments(env, compdic, i, io_ingr):
 
     fname = compdic["from"]
     # retrievet the file
-    filename = autopack.retrieveFile(fname, cache="recipes")
+    filename = autopack.retrieve_file(fname, cache="recipes")
     ninstance = len(compdic["positions"])
     with open(filename, "r") as fp:  # doesnt work with symbol link ?
         if autopack.use_json_hook:
@@ -1130,7 +1130,7 @@ def setupFromJsonDic(
         ]  # list(env.jsondic["recipe"]["paths"].items())
         #        autopack.replace_path.extend(env.custom_paths)#keyWordPAth,valuePath
         autopack.updateReplacePath(env.custom_paths)
-    autopack.current_recipe_path = env.current_path
+    autopack.CURRENT_RECIPE_PATH = env.current_path
 
     if "gradients" in env.jsondic:
         env.gradients = {}
