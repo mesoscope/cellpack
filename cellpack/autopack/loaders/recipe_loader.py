@@ -27,7 +27,7 @@ class RecipeLoader(object):
         self.ingredient_list = []
         self.compartment_list = []
         self.save_converted_recipe = save_converted_recipe
-        autopack.current_recipe_path = os.path.dirname(self.file_path)
+        autopack.CURRENT_RECIPE_PATH = os.path.dirname(self.file_path)
         self.recipe_data = self._read()
 
     @staticmethod
@@ -76,7 +76,7 @@ class RecipeLoader(object):
             if "include" in inode:
                 filename = inode["include"]
         if filename is not None:
-            filename = autopack.retrieveFile(
+            filename = autopack.retrieve_file(
                 filename,
                 # destination = recipe+os.sep+"recipe"+os.sep+"ingredients"+os.sep,
                 cache="recipes",
@@ -94,7 +94,7 @@ class RecipeLoader(object):
         """
         Save converted recipe into a json file
         """
-        path = autopack.current_recipe_path
+        path = autopack.CURRENT_RECIPE_PATH
         filename = data["name"]
         out_directory = f"{path}/converted/"
         if not os.path.exists(out_directory):
@@ -145,7 +145,7 @@ class RecipeLoader(object):
         return new_recipe
 
     def _read(self):
-        new_values = autopack.load_remote_file(self.file_path, cache="recipes")
+        new_values = autopack.load_file(self.file_path, cache="recipes")
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
         recipe_data["format_version"] = RecipeLoader._sanitize_format_version(
@@ -186,7 +186,7 @@ class RecipeLoader(object):
             custom_paths = recipe_data["recipe"]["paths"]
             autopack.updateReplacePath(custom_paths)
 
-        autopack.current_recipe_path = self.file_path
+        autopack.CURRENT_RECIPE_PATH = self.file_path
         if (
             "format_version" not in recipe_data
             or recipe_data["format_version"] != self.current_version
