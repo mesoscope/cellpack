@@ -1728,7 +1728,7 @@ class Ingredient(Agent):
                     rotMatj,
                     insidePoints,
                     newDistPoints,
-                ) = self.pandaBullet_placeBHT(
+                ) = self.spheres_SST_place(
                     env,
                     compartment,
                     ptInd,
@@ -2498,7 +2498,7 @@ class Ingredient(Agent):
 
         return success, None, None, {}, {}
 
-    def pandaBullet_placeBHT(
+    def spheres_SST_place(
         self,
         env,
         compartment,
