@@ -39,7 +39,6 @@ class Representations:
         # ...
         # int: number of spheres in second level
         f = open(file)
-        print(file)
         sphere_data = f.readlines()
         f.close()
 
@@ -74,7 +73,7 @@ class Representations:
     def _get_spheres(self):
         if "path" in self.packing:
             sphere_file = f"{self.packing['path']}/{self.packing['name']}"
-            sphere_file_path = autopack.retrieveFile(
+            sphere_file_path = autopack.retrieve_file(
                 sphere_file, cache="collisionTrees"
             )
             (
@@ -88,7 +87,6 @@ class Representations:
         radii = self.packing["radii"]
         if positions is None or positions[0] is None or positions[0][0] is None:
             positions = [[[0, 0, 0]]]
-
         if radii is None:
             radii = [[0]]
         return positions, radii

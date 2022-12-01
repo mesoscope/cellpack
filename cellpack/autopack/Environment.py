@@ -611,7 +611,6 @@ class Environment(CompartmentList):
         if resultfilename is None:
             resultfilename = self.result_file
             # check the extension of the filename none, txt or json
-            # resultfilename = autopack.retrieveFile(resultfilename,cache="results")
         fileName, fileExtension = os.path.splitext(resultfilename)
         if fileExtension == "":
             try:
