@@ -1331,7 +1331,6 @@ class Compartment(CompartmentList):
                         if inside:
                             insidePoints.append(ptInd)
                             idarray.itemset(ptInd, -number)
-                    p = (ptInd / float(len(grdPos))) * 100.0
         nbGridPoints = len(env.grid.masterGridPositions)
 
         surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
