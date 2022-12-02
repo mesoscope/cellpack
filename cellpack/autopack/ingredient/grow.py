@@ -90,7 +90,7 @@ class GrowIngredient(MultiCylindersIngr):
     ):
         # TODO: need to fix multi_bounds and radii settings
         super().__init__(
-            multi_bounds=[[],[]],
+            multi_bounds=[[], []],
             radii=radii,
             type=type,
             color=color,

@@ -190,9 +190,10 @@ if doit:
             if pref_path["autopackdir"] != "default":
                 autopackdir = pref_path["autopackdir"]
 
-class DATABASE_NAME (MetaEnum):
-    GITHUB="github:",
-    FIREBASE="firebase:"
+
+class DATABASE_NAME(MetaEnum):
+    GITHUB = "github:"
+    FIREBASE = "firebase:"
 
 
 REPLACE_PATH = {
@@ -226,6 +227,7 @@ info_dic = ["setupfile", "result_file", "wrkdir"]
 global RECIPES
 RECIPES = OrderedDict()
 USER_RECIPES = {}
+
 
 def resetDefault():
     if os.path.isfile(autopack_user_path_pref_file):
@@ -272,16 +274,18 @@ def download_file(url, local_file_path, reporthook):
 def is_full_url(file_path):
     return file_path.find("http") != -1 or file_path.find("ftp") != -1
 
+
 def is_remote_path(file_path):
     """
-        @param file_path: str
+    @param file_path: str
     """
     for ele in DATABASE_NAME:
         return ele in file_path
 
+
 def convert_db_shortname_to_url(file_location):
     """
-        @param file_path: str
+    @param file_path: str
     """
     database_name, file_path = file_location.split(":")
     database_url = REPLACE_PATH[f"{database_name}:"]
@@ -289,17 +293,21 @@ def convert_db_shortname_to_url(file_location):
         return database_name, f"{database_url}/{file_path}"
     return database_name, file_path
 
+
 def get_cache_location(name, cache, destination):
     """
-     name: str
-     destination: str
+    name: str
+    destination: str
     """
     local_file_directory = cache_dir[cache] / destination
     local_file_path = local_file_directory / name
     make_directory_if_needed(local_file_directory)
     return local_file_path
 
-def get_local_file_location(input_file_location, destination="", cache="geometries", force=False):
+
+def get_local_file_location(
+    input_file_location, destination="", cache="geometries", force=False
+):
     """
     Options:
     1. Find file locally, return the file path
@@ -310,10 +318,10 @@ def get_local_file_location(input_file_location, destination="", cache="geometri
     """
     if is_remote_path(input_file_location):
         database_name, file_path = convert_db_shortname_to_url(input_file_location)
-        if (database_name == "firebase"):
+        if database_name == "firebase":
             pass
         else:
-            input_file_location = file_path 
+            input_file_location = file_path
     if is_full_url(input_file_location):
         url = input_file_location
         reporthook = None
@@ -349,17 +357,18 @@ def get_local_file_location(input_file_location, destination="", cache="geometri
         return local_file_path
     return input_file_location
 
+
 def read_text_file(filename, destination="", cache="collisionTrees", force=None):
     if is_remote_path(filename):
         database_name, file_path = convert_db_shortname_to_url(filename)
-        if (database_name == "firebase"):
+        if database_name == "firebase":
             # TODO: read from firebase
             # return data
             pass
         else:
             local_file_path = get_local_file_location(
                 file_path, destination=destination, cache=cache, force=force
-            )           
+            )
     else:
         local_file_path = get_local_file_location(
             filename, destination=destination, cache=cache, force=force
@@ -369,17 +378,18 @@ def read_text_file(filename, destination="", cache="collisionTrees", force=None)
     f.close()
     return sphere_data
 
+
 def load_file(filename, destination="", cache="geometries", force=None):
     if is_remote_path(filename):
         database_name, file_path = convert_db_shortname_to_url(filename)
-        if (database_name == "firebase"):
+        if database_name == "firebase":
             # TODO: read from firebase
             # return data
             pass
         else:
             local_file_path = get_local_file_location(
                 file_path, destination=destination, cache=cache, force=force
-            )           
+            )
     else:
         local_file_path = get_local_file_location(
             filename, destination=destination, cache=cache, force=force
@@ -430,6 +440,7 @@ def updatePath():
 def checkRecipeAvailable():
     load_file(list_of_available_recipes)
 
+
 def updateRecipAvailableXML(recipesfile):
     if not os.path.isfile(recipesfile):
         return
@@ -478,6 +489,7 @@ def updateRecipAvailableXML(recipesfile):
                     text = afdir / text
                 RECIPES[name][version][info] = str(text)
     log.info(f"recipes updated {RECIPES}")
+
 
 def saveRecipeAvailable(recipe_dictionary, recipefile):
     from xml.dom.minidom import getDOMImplementation
