@@ -12,10 +12,10 @@ class Grid(BaseGrid):
     NOTE : this class could be completely replaced if openvdb is wrapped to python.
     """
 
-    def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=10.0, lookup=0):
+    def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=10.0):
         # a grid is attached to an environnement
         BaseGrid.__init__(
-            self, boundingBox=boundingBox, spacing=space, setup=False, lookup=lookup
+            self, boundingBox=boundingBox, spacing=space, setup=False
         )
 
         self.gridSpacing = space

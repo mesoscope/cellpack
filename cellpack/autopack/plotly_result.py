@@ -60,7 +60,7 @@ class PlotlyAnalysis:
 
     def add_ingredient_positions(self, env):
         for pos, rot, ingr, ptInd in env.molecules:
-            if len(ingr.positions) > 1:
+            if hasattr(ingr, "positions") and len(ingr.positions) > 1:
                 for level in range(len(ingr.positions)):
                     for i in range(len(ingr.positions[level])):
                         position = ingr.apply_rotation(
