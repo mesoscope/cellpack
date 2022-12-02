@@ -73,7 +73,7 @@ class GrowIngredient(MultiCylindersIngr):
         positions=None,
         positions2=None,
         principal_vector=(1, 0, 0),
-        radii=[],
+        radii=None,
         representations=None,
         rejection_threshold=30,
         rotation_axis=[0.0, 0.0, 0.0],
