@@ -147,7 +147,7 @@ class IOingredientTool(object):
             if "overwrite" in inode:
                 overwrite_dic = inode["overwrite"]
         if filename is not None:
-            filename = autopack.retrieve_file(
+            filename = autopack.get_local_file_location(
                 filename,
                 # destination = recipe+os.sep+"recipe"+os.sep+"ingredients"+os.sep,
                 cache="recipes",
@@ -296,7 +296,7 @@ def addCompartments(env, compdic, i, io_ingr):
 
     fname = compdic["from"]
     # retrievet the file
-    filename = autopack.retrieve_file(fname, cache="recipes")
+    filename = autopack.get_local_file_location(fname, cache="recipes")
     ninstance = len(compdic["positions"])
     with open(filename, "r") as fp:  # doesnt work with symbol link ?
         if autopack.use_json_hook:

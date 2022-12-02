@@ -1153,7 +1153,7 @@ class Compartment(CompartmentList):
         # create surface points
         # check if file already exist, otherwise rebuild it
         number = self.number
-        fileName = autopack.retrieve_file(self.filename, cache="geometries")
+        fileName = autopack.get_local_file_location(self.filename, cache="geometries")
         filename, file_extension = os.path.splitext(fileName)
         binvox_filename = filename + ".binvox"
         bb = env.grid.boundingBox

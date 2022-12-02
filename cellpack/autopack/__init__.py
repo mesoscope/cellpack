@@ -43,14 +43,10 @@ import shutil
 from os import path, environ
 from pathlib import Path
 import urllib.request as urllib
-
+from collections import OrderedDict
 import ssl
 import json
 
-try:
-    from collections import OrderedDict
-except ImportError:
-    from ordereddict import OrderedDict
 
 packageContainsVFCommands = 1
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -75,10 +71,7 @@ def make_directory_if_needed(directory):
 # ==============================================================================
 # the dir will have all the recipe + cache.
 
-
 APPNAME = "autoPACK"
-# log = logging.getLogger("autopack")
-# log.propagate = False
 
 if sys.platform == "darwin":
     # from AppKit import NSSearchPathForDirectoriesInDomains
@@ -93,8 +86,7 @@ elif sys.platform == "win32":
 else:
     appdata = path.expanduser(path.join("~", "." + APPNAME))
 make_directory_if_needed(appdata)
-log.info("autoPACK data dir created", appdata)
-
+log.info(f"autoPACK data dir created {appdata}")
 appdata = Path(appdata)
 
 
@@ -180,7 +172,7 @@ def checkPath():
         if url_exists(fileName):
             urllib.urlretrieve(fileName, autopack_path_pref_file)
         else:
-            log.error("problem accessing path %s", fileName)
+            log.error(f"problem accessing path {fileName}")
 
 
 # get user / default value
@@ -196,19 +188,16 @@ elif os.path.isfile(autopack_path_pref_file):
     f = open(autopack_path_pref_file, "r")
     doit = True
 if doit:
-    log.info("autopack_path_pref_file %s", autopack_path_pref_file)
+    log.info(f"autopack_path_pref_file {autopack_path_pref_file}")
     pref_path = json.load(f)
     f.close()
     if "autoPACKserver" not in pref_path:
-        log.warning("problem with autopack_path_pref_file %s", autopack_path_pref_file)
+        log.warning(f"problem with autopack_path_pref_file {autopack_path_pref_file}")
     else:
         autoPACKserver = pref_path["autoPACKserver"]
         if "filespath" in pref_path:
             if pref_path["filespath"] != "default":
                 filespath = pref_path["filespath"]
-        if "recipeslistes" in pref_path:
-            if pref_path["recipeslistes"] != "default":
-                list_of_available_recipes = pref_path["recipeslistes"]
         if "autopackdir" in pref_path:
             if pref_path["autopackdir"] != "default":
                 autopackdir = pref_path["autopackdir"]
@@ -267,7 +256,6 @@ def checkErrorInPath(p, toreplace):
 
 
 def fixOnePath(path):
-    import ipdb; ipdb.set_trace()
     path = str(path)
     for old_value, new_value in REPLACE_PATH.items():
         # fix before
@@ -317,7 +305,6 @@ def convert_db_shortname_to_url(file_location):
     database_name, file_path = file_location.split(":")
     database_url = REPLACE_PATH[database_name]
     if database_url is not None:
-        print("URL", f"{database_url}/{file_path}")
         return database_name, f"{database_url}/{file_path}"
     return database_name, file_path
 
@@ -331,7 +318,7 @@ def get_cache_location(name, cache, destination):
     make_directory_if_needed(local_file_directory)
     return local_file_path
 
-def retrieve_file(input_file_location, destination="", cache="geometries", force=False):
+def get_local_file_location(input_file_location, destination="", cache="geometries", force=False):
     """
     Options:
     1. Find file locally, return the file path
@@ -354,6 +341,8 @@ def retrieve_file(input_file_location, destination="", cache="geometries", force
             download_file(url, local_file_path, reporthook)
         log.info(f"autopack downloaded and stored file: {local_file_path}")
         return local_file_path
+
+    # not url, use pathlib
     input_file_location = Path(input_file_location)
     if os.path.isfile(cache_dir[cache] / input_file_location):
         return cache_dir[cache] / input_file_location
@@ -361,6 +350,7 @@ def retrieve_file(input_file_location, destination="", cache="geometries", force
         # if no folder provided, use the current_recipe_folder
         return CURRENT_RECIPE_PATH / input_file_location
 
+    # didn't find the file locally, finally check db
     url = autoPACKserver + "/" + str(cache) + "/" + str(input_file_location)
     if url_exists(url):
         reporthook = None
@@ -376,17 +366,16 @@ def retrieve_file(input_file_location, destination="", cache="geometries", force
 def load_file(filename, destination="", cache="geometries", force=None):
     if is_remote_path(filename):
         database_name, file_path = convert_db_shortname_to_url(filename)
-        print("DB NAME:", database_name, "FILE OR URL", file_path)
         if (database_name == "firebase"):
-            # read from firebase
+            # TODO: read from firebase
             # return data
             pass
         else:
-            local_file_path = retrieve_file(
+            local_file_path = get_local_file_location(
                 file_path, destination=destination, cache=cache, force=force
             )           
     else:
-        local_file_path = retrieve_file(
+        local_file_path = get_local_file_location(
             filename, destination=destination, cache=cache, force=force
         )
     return json.load(open(local_file_path, "r"))
@@ -402,7 +391,6 @@ def fixPath(adict):  # , k, v):
 
 
 def updatePathJSON():
-    import ipdb; ipdb.set_trace()
     if not os.path.isfile(autopack_path_pref_file):
         log.error(autopack_path_pref_file + " file is not found")
         return
