@@ -49,8 +49,7 @@
 import numpy
 from random import random
 import bisect
-from math import exp, cos, pow
-from cellpack.autopack.upy.hostHelper import vdistance
+from math import cos
 from cellpack.autopack.transformation import angle_between_vectors
 from cellpack.autopack.utils import get_distances_from_point
 
@@ -261,14 +260,11 @@ class Gradient:
             direction = self.direction
         bb = self.bb
         # assume grid orthogonal
-        bounding_box_edges = []
         angles = []
         axes = ["X", "Y", "Z"]
         for i, axis_name in enumerate(axes):
             angle = angle_between_vectors(self.directions[axis_name], direction)
             angles.append(angle)
-            maxi = max(bb[1][i], bb[0][i])
-            mini = min(bb[1][i], bb[0][i])
         min_angle = min(angles)
         axis_with_smallest_angle = angles.index(min_angle)
         min_bounds_length = (
