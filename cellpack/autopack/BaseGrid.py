@@ -50,9 +50,7 @@ class gridPoint:
     def __init__(self, i, globalC, isPolyhedron):
         self.index = int(i)
         self.isOutside = None
-        self.minDistance = (
-            99999  # Only store a number here if within certain distance from polyhedron
-        )
+        self.minDistance = 99999  # Only store a number here if within certain distance from polyhedron
         self.representsPolyhedron = isPolyhedron
         self.closeFaces = []
         self.closestFaceIndex = 0
@@ -202,7 +200,9 @@ class BaseGrid:
         self.getDiagonal()
         self.nbSurfacePoints = 0
         self.log.info(f"SETUP BASE GRID {self.gridVolume} {self.gridSpacing}")
-        self.compartment_ids = numpy.zeros(self.gridVolume, "i")  # [0]*nbPoints
+        self.compartment_ids = numpy.zeros(
+            self.gridVolume, "i"
+        )  # [0]*nbPoints
         # self.distToClosestSurf = [self.diag]*self.gridVolume#surface point too?
         self.distToClosestSurf = (
             numpy.ones(self.gridVolume) * self.diag
@@ -258,7 +258,9 @@ class BaseGrid:
         )
         nx, ny, nz = self.nbGridPoints
         pointArrayRaw = numpy.zeros((nx * ny * nz, 3), "f")
-        self.ijkPtIndice = numpy.zeros((nx * ny * nz, 3), "i")  # this is unused
+        self.ijkPtIndice = numpy.zeros(
+            (nx * ny * nz, 3), "i"
+        )  # this is unused
         space = self.gridSpacing
         # Vector for lower left broken into real of only the z coord.
         i = 0
@@ -286,19 +288,20 @@ class BaseGrid:
         """
         if boundingBox is None:
             boundingBox = self.boundingBox
+
         space = self.gridSpacing
         padding = space / 2.0
-        S = numpy.array(boundingBox[1]) - (numpy.array(boundingBox[0] + padding))
-        stops = numpy.around(S / (self.gridSpacing))
+
         grid_dimensions = [[], [], []]
-        for i in range(len(grid_dimensions)):
-            axis = i
-            start=boundingBox[0][axis] + padding
-            stop=boundingBox[1][axis]
-            if (stop < start):
+        for axis in range(len(grid_dimensions)):
+            start = boundingBox[0][axis] + padding
+            stop = boundingBox[1][axis]
+            if stop < start:
                 # bounding box is smaller than grid spacing, ie in 2D packings
-                grid_dimensions[axis] = numpy.linspace(start, stop, int(stops[axis]) + 1)
-            else: 
+                grid_dimensions[axis] = numpy.array(
+                    [(boundingBox[0][axis] + boundingBox[1][axis]) / 2]
+                )
+            else:
                 grid_dimensions[axis] = numpy.arange(start, stop, space)
 
         self.log.info("using create_grid_point_positions")
@@ -306,7 +309,7 @@ class BaseGrid:
         self._x = x = grid_dimensions[0]
         self._y = y = grid_dimensions[1]
         self._z = z = grid_dimensions[2]
-    
+
         xyz = numpy.meshgrid(x, y, z, copy=False)
         nx = len(
             x
@@ -314,7 +317,7 @@ class BaseGrid:
         ny = len(y)
         nz = len(z)
         self.gridSpacing = x[1] - x[0]
-        print(self.gridSpacing)
+
         self.nbGridPoints = [nx, ny, nz]
         self.gridVolume = nx * ny * nz
         self.ijkPtIndice = numpy.ndindex(nx, ny, nz)
@@ -331,7 +334,9 @@ class BaseGrid:
     ):
         free_indices = self.free_points[: self.nbFreePoints]
         arr = numpy.array(self.masterGridPositions[free_indices])
-        indices = numpy.nonzero(numpy.equal(self.compartment_ids[free_indices], compId))
+        indices = numpy.nonzero(
+            numpy.equal(self.compartment_ids[free_indices], compId)
+        )
         distances = self.distToClosestSurf[free_indices]
         if not len(indices):
             return None
@@ -456,7 +461,12 @@ class BaseGrid:
         get i,j,k (3d) indices from u (1d)
         only work for grid point, not compartments points
         """
-        if ptInd > self.nbGridPoints[0] * self.nbGridPoints[1] * self.nbGridPoints[2]:
+        if (
+            ptInd
+            > self.nbGridPoints[0]
+            * self.nbGridPoints[1]
+            * self.nbGridPoints[2]
+        ):
             return [0, 0, 0]
         return self.ijkPtIndice[ptInd]
 
@@ -537,7 +547,9 @@ class BaseGrid:
 
         for i in indices_non_zero:
             # i is the axis that is close to the point
-            tr.append(pt3d + (self.periodic_table["left"][i] * p_xyz[i]))  # 0,1,2
+            tr.append(
+                pt3d + (self.periodic_table["left"][i] * p_xyz[i])
+            )  # 0,1,2
             corner[0] += self.periodic_table["left"][i] * p_xyz[i]  # 1
             # the corner are
             # X+Y+Z corner[0]
@@ -591,7 +603,9 @@ class BaseGrid:
                 d2 = (edge - packing_location) * jitter
                 s2 = min(x for x in d2[d2 != 0] if x != 0)
                 if s1 <= dist or s2 <= dist:
-                    self.log.info("s1 s2 smaller than dist %d %d %d", s1, s2, dist)
+                    self.log.info(
+                        "s1 s2 smaller than dist %d %d %d", s1, s2, dist
+                    )
                     return False
             return True
 
@@ -602,7 +616,9 @@ class BaseGrid:
         if self.center is None:
             self.center = [0.0, 0.0, 0.0]
             for i in range(3):
-                self.center[i] = (self.boundingBox[0][i] + self.boundingBox[1][i]) / 2.0
+                self.center[i] = (
+                    self.boundingBox[0][i] + self.boundingBox[1][i]
+                ) / 2.0
         return self.center
 
     def getRadius(self):
@@ -677,7 +693,12 @@ class BaseGrid:
             nb = self.surfPtsBht.closePoints(tuple(pt), radius, result)
             #            nb = self.surfPtsBht.query(tuple(pt),k=self.nbSurfacePoints)
             ptIndices.extend(
-                list(map(lambda x, length=self.gridVolume: x + length, result[:nb]))
+                list(
+                    map(
+                        lambda x, length=self.gridVolume: x + length,
+                        result[:nb],
+                    )
+                )
             )
         return ptIndices
 
@@ -728,7 +749,12 @@ class BaseGrid:
             result = numpy.zeros((self.nbSurfacePoints,), "i")
             nb = self.surfPtsBht.closePoints(tuple(pt), radius, result)
             ptIndices.extend(
-                list(map(lambda x, length=self.gridVolume: x + length, result[:nb]))
+                list(
+                    map(
+                        lambda x, length=self.gridVolume: x + length,
+                        result[:nb],
+                    )
+                )
             )
         return ptIndices
 
@@ -761,7 +787,9 @@ class BaseGrid:
             self.surfPtsBht = spatial.cKDTree(verts, leafsize=10)
         self.nbSurfacePoints = len(verts)
 
-    def computeExteriorVolume(self, compartments=None, space=None, fbox_bb=None):
+    def computeExteriorVolume(
+        self, compartments=None, space=None, fbox_bb=None
+    ):
         # compute exterior volume, totalVolume without compartments volume
         unitVol = self.gridSpacing**3
         totalVolume = self.gridVolume * unitVol
@@ -796,7 +824,9 @@ class BaseGrid:
 
 # don't forget to use spatial.distance.cdist
 class HaltonGrid(BaseGrid):
-    def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=False):
+    def __init__(
+        self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=False
+    ):
         BaseGrid.__init__(
             self, boundingBox=boundingBox, spacing=space, setup=setup
         )
@@ -847,7 +877,11 @@ class HaltonGrid(BaseGrid):
                 for xi in range(nx):
                     self.haltonseq.inc()
                     pointArrayRaw[i] = numpy.array(
-                        [self.haltonseq.mX, self.haltonseq.mY, self.haltonseq.mZ]
+                        [
+                            self.haltonseq.mX,
+                            self.haltonseq.mY,
+                            self.haltonseq.mZ,
+                        ]
                     )
                     self.ijkPtIndice[i] = (xi, yi, zi)
                     i += 1

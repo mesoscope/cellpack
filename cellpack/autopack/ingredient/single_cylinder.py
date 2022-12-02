@@ -110,8 +110,8 @@ class SingleCylinderIngr(Ingredient):
         )
 
         self.listePtLinear = [
-            self.bottom_center,
-            self.top_center,
+            self.bottom_center - self.center,
+            self.top_center - self.center,
         ]
 
     def initialize_mesh(self, mesh_store):
@@ -507,7 +507,6 @@ class SingleCylinderIngr(Ingredient):
     ):
         # returns the distance to 'points_to_check' from the nearest cylinder surface
         # points to check is a numpy array
-
         cylinder_axis = top_center - bottom_center
 
         # check where point lies relative to cylinder
@@ -522,9 +521,12 @@ class SingleCylinderIngr(Ingredient):
             / self.length
             / distance_to_bottom
         )
+        bottom_surf_dist = numpy.abs(distance_to_bottom * bottom_cos)
+
         top_cos = (
             numpy.dot(top_vect, cylinder_axis) / self.length / distance_to_top
         )
+        top_surf_dist = numpy.abs(distance_to_top * top_cos)
 
         bottom_sin = numpy.sqrt(1 - bottom_cos**2)
         perp_dist = (
@@ -534,30 +536,28 @@ class SingleCylinderIngr(Ingredient):
         signed_distances = 9999.0 * numpy.ones(len(points_to_check))
 
         # the cylinder divides space into 6 regions as follows:
-
         between_inds = (bottom_cos > 0) & (top_cos <= 0)
         if any(between_inds):
             # region 1: inside the cylinder
             region_1_indices = between_inds & (perp_dist <= self.radius)
             if any(region_1_indices):
-                signed_distances[region_1_indices] = (
-                    perp_dist[region_1_indices] - self.radius
+                signed_distances[region_1_indices] = -numpy.amin(
+                    numpy.vstack(
+                        [
+                            numpy.abs(
+                                (perp_dist[region_1_indices] - self.radius)
+                            ),
+                            bottom_surf_dist[region_1_indices],
+                            top_surf_dist[region_1_indices],
+                        ]
+                    ),
+                    axis=0,
                 )
             # region 2: outside the cylinder, between the ends (curved surface is closest)
             region_2_indices = between_inds & (perp_dist > self.radius)
             if any(region_2_indices):
-                top_surf_dist = numpy.abs(
-                    distance_to_top[region_2_indices] * top_cos[region_2_indices]
-                )
-                bottom_surf_dist = numpy.abs(
-                    distance_to_bottom[region_2_indices]
-                    * bottom_cos[region_2_indices]
-                )
-                curved_surf_dist = numpy.abs(
+                signed_distances[region_2_indices] = -numpy.abs(
                     perp_dist[region_2_indices] - self.radius
-                )
-                signed_distances[region_2_indices] = -numpy.amin(
-                    [top_surf_dist, bottom_surf_dist, curved_surf_dist]
                 )
 
         beyond_top_inds = (bottom_cos > 0) & (top_cos > 0)
@@ -565,15 +565,13 @@ class SingleCylinderIngr(Ingredient):
             # region 3: outside the cylinder, beyond top end (flat top is closest)
             region_3_indices = beyond_top_inds & (perp_dist <= self.radius)
             if any(region_3_indices):
-                signed_distances[region_3_indices] = (
-                    distance_to_top[region_3_indices] * top_cos[region_3_indices]
-                )
+                signed_distances[region_3_indices] = top_surf_dist[
+                    region_3_indices
+                ]
             # region 4: outside the cylinder, beyond top end (top circular edge is closest)
             region_4_indices = beyond_top_inds & (perp_dist > self.radius)
             if any(region_4_indices):
-                x_dist = (
-                    distance_to_top[region_4_indices] * top_cos[region_4_indices]
-                )
+                x_dist = top_surf_dist[region_4_indices]
                 y_dist = perp_dist[region_4_indices] - self.radius
                 signed_distances[region_4_indices] = numpy.sqrt(
                     x_dist**2 + y_dist**2
@@ -584,50 +582,16 @@ class SingleCylinderIngr(Ingredient):
             # region 5: outside the cylinder, beyond bottom end (flat bottom is closest)
             region_5_indices = beyond_bottom_inds & (perp_dist <= self.radius)
             if any(region_5_indices):
-                signed_distances[region_5_indices] = numpy.abs(
-                    distance_to_bottom[region_5_indices]
-                    * bottom_cos[region_5_indices]
-                )
+                signed_distances[region_5_indices] = bottom_surf_dist[
+                    region_5_indices
+                ]
             # region 6: outside the cylinder, beyond bottom end (bottom circular edge is closest)
             region_6_indices = beyond_bottom_inds & (perp_dist > self.radius)
             if any(region_6_indices):
-                x_dist = (
-                    distance_to_bottom[region_6_indices]
-                    * bottom_cos[region_6_indices]
-                )
+                x_dist = bottom_surf_dist[region_6_indices]
                 y_dist = perp_dist[region_6_indices] - self.radius
                 signed_distances[region_6_indices] = numpy.sqrt(
                     x_dist**2 + y_dist**2
                 )
 
         return signed_distances
-
-        # slower implementation, only calculates one point at a time
-        # if bottom_cos >= 0 and top_cos <= 0:
-        #     # point lies within top and bottom faces
-        #     if perp_dist > self.radius:
-        #         # curved surface is closest
-        #         return perp_dist - self.radius
-        #     else:
-        #         top_surf_dist = numpy.abs(distance_to_top * top_cos)
-        #         bottom_surf_dist = numpy.abs(distance_to_bottom * bottom_cos)
-        #         curved_surf_dist = numpy.abs(perp_dist - self.radius)
-        #         return -min(top_surf_dist, bottom_surf_dist, curved_surf_dist)
-        # elif bottom_cos >= 0 and top_cos >= 0:
-        #     # point lies beyond top face
-        #     if perp_dist <= self.radius:
-        #         # top surface is closest
-        #         return distance_to_top * top_cos
-        #     else:
-        #         # circular edge is closest
-        #         x_dist = distance_to_top * top_cos
-        #         y_dist = perp_dist - self.radius
-        #         return numpy.sqrt(x_dist**2 + y_dist**2)
-        # elif bottom_cos <= 0 and top_cos <= 0:
-        #     # point lies beyond bottom face
-        #     if perp_dist <= self.radius:
-        #         return numpy.abs(distance_to_bottom * bottom_cos)
-        #     else:
-        #         x_dist = distance_to_bottom * bottom_cos
-        #         y_dist = perp_dist - self.radius
-        #         return numpy.sqrt(x_dist**2 + y_dist**2)

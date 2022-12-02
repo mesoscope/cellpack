@@ -34,7 +34,7 @@ class PlotlyAnalysis:
             opacity=opacity,
         )
 
-    def add_square(self, side_length, pos, rotMat, color, opacity=1):
+    def add_rectangle(self, side_length, pos, rotMat, color, opacity=1):
         # side_length is the length of each side
         x0 = -side_length[0][0] / 2.0
         y0 = -side_length[0][1] / 2.0
@@ -76,12 +76,12 @@ class PlotlyAnalysis:
                 if ingr.model_type == "Spheres":
                     self.add_circle(ingr.encapsulating_radius, pos, ingr.color)
                 elif ingr.model_type == "Cube":
-                    self.add_square(ingr.radii, pos, rot, ingr.color)
+                    self.add_rectangle(ingr.radii, pos, rot, ingr.color)
                 elif ingr.model_type == "Cylinders":
                     length = ingr.length
-                    width = 2 * ingr.radii[0][0]
-                    side_lengths = [[width, length, 1.0]]
-                    self.add_square(side_lengths, pos, rot, ingr.color)
+                    width = 2 * ingr.radius
+                    side_lengths = [[length, width, 1.0]]
+                    self.add_rectangle(side_lengths, pos, rot, ingr.color)
 
     def make_grid_heatmap(self, env):
         ids = []
