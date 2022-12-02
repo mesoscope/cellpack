@@ -974,7 +974,6 @@ class Environment(CompartmentList):
             arguments["place_method"] = self.place_method
         ingredient_type = arguments["type"]
         ingredient_class = ingredient.get_ingredient_class(ingredient_type)
-        import ipdb; ipdb.set_trace()
         ingr = ingredient_class(**arguments)
         if (
             "gradient" in arguments
