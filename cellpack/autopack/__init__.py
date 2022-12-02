@@ -47,6 +47,8 @@ from collections import OrderedDict
 import ssl
 import json
 
+from cellpack.autopack.interface_objects.meta_enum import MetaEnum
+
 
 packageContainsVFCommands = 1
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -202,6 +204,11 @@ if doit:
             if pref_path["autopackdir"] != "default":
                 autopackdir = pref_path["autopackdir"]
 
+class DATABASE_NAME (MetaEnum):
+    GITHUB="github:",
+    FIREBASE="firebase:"
+
+
 REPLACE_PATH = {
     "autoPACKserver": autoPACKserver,
     "autopackdir": autopackdir,
@@ -296,7 +303,8 @@ def is_remote_path(file_path):
     """
         @param file_path: str
     """
-    return ":" in file_path;
+    for ele in DATABASE_NAME:
+        return ele in file_path
 
 def convert_db_shortname_to_url(file_location):
     """
@@ -327,6 +335,12 @@ def get_local_file_location(input_file_location, destination="", cache="geometri
 
     Returns location of file (either already there or newly downloaded)
     """
+    if is_remote_path(input_file_location):
+        database_name, file_path = convert_db_shortname_to_url(input_file_location)
+        if (database_name == "firebase"):
+            pass
+        else:
+            input_file_location = file_path 
     if is_full_url(input_file_location):
         url = input_file_location
         reporthook = None
@@ -362,6 +376,25 @@ def get_local_file_location(input_file_location, destination="", cache="geometri
         return local_file_path
     return input_file_location
 
+def read_text_file(filename, destination="", cache="collisionTrees", force=None):
+    if is_remote_path(filename):
+        database_name, file_path = convert_db_shortname_to_url(filename)
+        if (database_name == "firebase"):
+            # TODO: read from firebase
+            # return data
+            pass
+        else:
+            local_file_path = get_local_file_location(
+                file_path, destination=destination, cache=cache, force=force
+            )           
+    else:
+        local_file_path = get_local_file_location(
+            filename, destination=destination, cache=cache, force=force
+        )
+    f = open(local_file_path)
+    sphere_data = f.readlines()
+    f.close()
+    return sphere_data
 
 def load_file(filename, destination="", cache="geometries", force=None):
     if is_remote_path(filename):
