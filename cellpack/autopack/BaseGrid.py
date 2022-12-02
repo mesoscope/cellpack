@@ -293,12 +293,14 @@ class BaseGrid:
         grid_dimensions = [[], [], []]
         for i in range(len(grid_dimensions)):
             axis = i
-            start=boundingBox[0][axis] + padding
-            stop=boundingBox[1][axis]
-            if (stop < start):
+            start = boundingBox[0][axis] + padding
+            stop = boundingBox[1][axis]
+            if stop < start:
                 # bounding box is smaller than grid spacing, ie in 2D packings
-                grid_dimensions[axis] = numpy.linspace(start, stop, int(stops[axis]) + 1)
-            else: 
+                grid_dimensions[axis] = numpy.linspace(
+                    start, stop, int(stops[axis]) + 1
+                )
+            else:
                 grid_dimensions[axis] = numpy.arange(start, stop, space)
 
         self.log.info("using create_grid_point_positions")
@@ -306,7 +308,7 @@ class BaseGrid:
         self._x = x = grid_dimensions[0]
         self._y = y = grid_dimensions[1]
         self._z = z = grid_dimensions[2]
-    
+
         xyz = numpy.meshgrid(x, y, z, copy=False)
         nx = len(
             x
@@ -798,9 +800,7 @@ class BaseGrid:
 # don't forget to use spatial.distance.cdist
 class HaltonGrid(BaseGrid):
     def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=False):
-        BaseGrid.__init__(
-            self, boundingBox=boundingBox, spacing=space, setup=setup
-        )
+        BaseGrid.__init__(self, boundingBox=boundingBox, spacing=space, setup=setup)
         self.haltonseq = cHaltonSequence3()
         self.tree = None
         self.gridSpacing = space

@@ -1201,10 +1201,7 @@ class Environment(CompartmentList):
             if not fits:
                 self.boundingBox = bb
 
-    def buildGrid(
-        self,
-        rebuild=True
-    ):
+    def buildGrid(self, rebuild=True):
         """
         The main build grid function. Setup the main grid and merge the
         compartment grid. The setup is de novo or using previously built grid
