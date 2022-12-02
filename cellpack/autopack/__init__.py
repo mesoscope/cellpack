@@ -213,8 +213,8 @@ REPLACE_PATH = {
     "autoPACKserver": autoPACKserver,
     "autopackdir": autopackdir,
     "autopackdata": appdata,
-    "github": autoPACKserver,
-    "firebase": None,
+    DATABASE_NAME.GITHUB: autoPACKserver,
+    DATABASE_NAME.FIREBASE: None,
 }
 
 global CURRENT_RECIPE_PATH
@@ -311,7 +311,7 @@ def convert_db_shortname_to_url(file_location):
         @param file_path: str
     """
     database_name, file_path = file_location.split(":")
-    database_url = REPLACE_PATH[database_name]
+    database_url = REPLACE_PATH[f"{database_name}:"]
     if database_url is not None:
         return database_name, f"{database_url}/{file_path}"
     return database_name, file_path
