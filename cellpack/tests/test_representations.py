@@ -57,14 +57,14 @@ def test_pdb_url():
 
 
 def test_sphere_tree():
-    autopack.current_recipe_path = os.path.dirname(".")
+    autopack.CURRENT_RECIPE_PATH = os.path.dirname(".")
     representations = Representations(packing=test_sphere_tree_obj)
     assert len(representations.get_positions()) > 0
     assert len(representations.get_radii()) > 0
 
 
 def test_unpacked_sphere_tree():
-    autopack.current_recipe_path = os.path.dirname(".")
+    autopack.CURRENT_RECIPE_PATH = os.path.dirname(".")
     representations = Representations(packing=test_sphere_tree_unpacked_obj)
     assert len(representations.get_positions()) > 0
     assert len(representations.get_radii()) > 0

@@ -111,6 +111,7 @@ ENV/
 
 out/
 *.simularium
+**/converted/*
 
 # test outputs
 cellpack/tests/outputs/
