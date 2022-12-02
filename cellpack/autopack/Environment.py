@@ -167,7 +167,7 @@ class Environment(CompartmentList):
         # 0 is the exterior, 1 is compartment 1 surface, -1 is compartment 1 interior
         self.nbCompartments = 1
         self.name = "out"
-        self.number = 0 # TODO: call this 'id' consistent with container
+        self.number = 0  # TODO: call this 'id' consistent with container
         self.order = {}  # give the order of drop ingredient by ptInd from molecules
         self.lastrank = 0
 
@@ -284,14 +284,15 @@ class Environment(CompartmentList):
             for gradient_name in gradients:
                 gradient_data = gradients[gradient_name]
                 if "surface_name" in gradient_data:
-                    gradient_data["object"] = self.get_compartment_object_by_name(gradient_data["surface_name"])
+                    gradient_data["object"] = self.get_compartment_object_by_name(
+                        gradient_data["surface_name"]
+                    )
                 self.set_gradient(gradient_name, gradient_data)
-
 
     def get_compartment_object_by_name(self, compartment_name):
         """
         Returns compartment object by name
-        """ 
+        """
         for compartment in self.compartments:
             if compartment.name == compartment_name:
                 return compartment
@@ -367,7 +368,6 @@ class Environment(CompartmentList):
                         )
                         self.create_ingredient(external_recipe, ingredient_info)
             self.setExteriorRecipe(external_recipe)
-
 
     def reportprogress(self, label=None, progress=None):
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):
@@ -1303,10 +1303,12 @@ class Environment(CompartmentList):
             for g in self.gradients:
                 gradient = self.gradients[g]
                 if gradient.mode == "surface":
-                    gradient.object.get_surface_distances(self, self.grid.masterGridPositions)
+                    gradient.object.get_surface_distances(
+                        self, self.grid.masterGridPositions
+                    )
                 self.gradients[g].build_weight_map(
                     boundingBox, self.grid.masterGridPositions
-                )            
+                )
 
     def onePrevIngredient(self, i, mingrs, distance, nbFreePoints, marray):
         """
