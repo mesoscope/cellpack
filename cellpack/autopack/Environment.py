@@ -1203,8 +1203,7 @@ class Environment(CompartmentList):
 
     def buildGrid(
         self,
-        rebuild=True,
-        lookup=0,
+        rebuild=True
     ):
         """
         The main build grid function. Setup the main grid and merge the
@@ -1226,7 +1225,7 @@ class Environment(CompartmentList):
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
             spacing = self.spacing or self.smallestProteinSize
-            self.grid = Grid(boundingBox=boundingBox, spacing=spacing, lookup=lookup)
+            self.grid = Grid(boundingBox=boundingBox, spacing=spacing)
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
             if self.nFill == 0:
