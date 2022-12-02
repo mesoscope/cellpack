@@ -2877,8 +2877,6 @@ class Environment(CompartmentList):
         # Sphere
         if panda3d is None:
             return None
-        if autopack.verbose > 1:
-            print("add RB bullet ", ingr.name)
         mat = rotMat.copy()
         #        mat[:3, 3] = trans
         #        mat = mat.transpose()

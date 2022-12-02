@@ -1332,15 +1332,6 @@ class Compartment(CompartmentList):
                             insidePoints.append(ptInd)
                             idarray.itemset(ptInd, -number)
                     p = (ptInd / float(len(grdPos))) * 100.0
-                    if (ptInd % 1000) == 0 and autopack.verbose:
-                        helper.progressBar(
-                            progress=int(p),
-                            label=str(ptInd)
-                            + "/"
-                            + str(len(grdPos))
-                            + " inside "
-                            + str(inside),
-                        )
         nbGridPoints = len(env.grid.masterGridPositions)
 
         surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
@@ -1830,16 +1821,6 @@ class Compartment(CompartmentList):
                     gridPoints[i].isOutside = isOutsideTracker
                 # Because we have filled in all the unknowns, we can reset that counter.
                 emptyPointIndicies = []
-            if (g.index % 100) == 0:
-                if autopack.verbose:
-                    print(
-                        str(g.index)
-                        + "/"
-                        + str(len(gridPoints))
-                        + " inside "
-                        + str(g.isOutside)
-                    )
-
         # Final pass through for sanity checks.
         for g in gridPoints:
             if g.representsPolyhedron:

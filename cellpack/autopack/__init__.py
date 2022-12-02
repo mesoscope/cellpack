@@ -125,24 +125,10 @@ for _, dir in cache_dir.items():
 
 usePP = False
 helper = None
-LISTPLACEMETHOD = ["jitter", "spheresBHT"]
-try:
-    from panda3d.core import Mat4  # noqa: F401
-
-    LISTPLACEMETHOD = ["jitter", "spheresBHT", "pandaBullet"]
-except ImportError:
-    LISTPLACEMETHOD = ["jitter", "spheresBHT"]
-
-
 ncpus = 2
 checkAtstartup = True
 testPeriodicity = False
 biasedPeriodicity = None  # [1,1,1]
-fixpath = False
-verbose = 0
-messag = """Welcome to autoPACK.
-Please update to the latest version under the Help menu.
-"""
 
 # we have to change the name of theses files. and decide how to handle the
 # currated recipeList, and the dev recipeList
@@ -158,7 +144,6 @@ autopack_user_path_pref_file = preferences / "path_user_preferences.json"
 autoPACKserver = (
     "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0"
 )
-autoPACKserver_default = "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0"  # XML # noqa: E501
 autoPACKserver_alt = "http://mgldev.scripps.edu/projects/autoPACK/data/cellPACK_data/cellPACK_database_1.1.0"  # noqa: E501
 filespath = (
     "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/autoPACK_filePaths.json"
@@ -239,10 +224,7 @@ info_dic = ["setupfile", "result_file", "wrkdir"]
 # hard code recipe here is possible
 global RECIPES
 RECIPES = OrderedDict()
-
-
 USER_RECIPES = {}
-
 
 def resetDefault():
     if os.path.isfile(autopack_user_path_pref_file):
@@ -267,10 +249,6 @@ def fixOnePath(path):
     for old_value, new_value in REPLACE_PATH.items():
         # fix before
         new_value = str(new_value)
-        if fixpath and re.findall("{0}".format(re.escape(old_value)), path):
-            path = checkErrorInPath(path, new_value)
-            # check for legacyServerautoPACK_database_1.0.0
-            path = checkErrorInPath(path, "autoPACK_database_1.0.0")
         path = path.replace(old_value, new_value)
     return path
 
@@ -439,9 +417,6 @@ def updatePathJSON():
     if "filespath" in pref_path:
         if pref_path["filespath"] != "default":
             filespath = pref_path["filespath"]  # noqa: F841
-    if "recipeslistes" in pref_path:
-        if pref_path["recipeslistes"] != "default":
-            recipeslistes = pref_path["recipeslistes"]  # noqa: F841
     if "autopackdir" in pref_path:
         if pref_path["autopackdir"] != "default":
             autopackdir = pref_path["autopackdir"]  # noqa: F841
@@ -459,21 +434,6 @@ def updatePath():
 
 def checkRecipeAvailable():
     load_file(list_of_available_recipes)
-
-
-def updateRecipeAvailableJSON(recipesfile):
-    if not os.path.isfile(recipesfile):
-        print(recipesfile + " was not found")
-        return
-    # replace shortcut pathby hard path
-    f = open(recipesfile, "r")
-    # if use_json_hook:
-    #     recipes = json.load(f, object_pairs_hook=OrderedDict)
-    # else:
-    #     recipes = json.load(f)
-    f.close()
-    log.info(f"recipes updated {len(RECIPES)}")
-
 
 def updateRecipAvailableXML(recipesfile):
     if not os.path.isfile(recipesfile):
@@ -524,22 +484,6 @@ def updateRecipAvailableXML(recipesfile):
                 RECIPES[name][version][info] = str(text)
     log.info(f"recipes updated {RECIPES}")
 
-
-def updateRecipAvailable(recipesfile):
-    if not os.path.isfile(recipesfile):
-        return
-    # check format xml or json
-    fileName, fileExtension = os.path.splitext(recipesfile)
-    if fileExtension.lower() == ".xml":
-        updateRecipAvailableXML(recipesfile)
-    elif fileExtension.lower() == ".json":
-        updateRecipeAvailableJSON(recipesfile)
-    fixPath(RECIPES)
-    #    fixPath(RECIPES,"wrkdir")#or autopackdata
-    #    fixPath(RECIPES,"resultfile")
-    log.info(f"recipes updated and path fixed {RECIPES}")
-
-
 def saveRecipeAvailable(recipe_dictionary, recipefile):
     from xml.dom.minidom import getDOMImplementation
 
@@ -586,15 +530,8 @@ def clearCaches(*args):
 if checkAtstartup:
     checkPath()
     updatePathJSON()
-    log.info("path are updated ")
-
-if checkAtstartup:
-    # get from server the list of recipe
-    # recipe_web_pref_file
     checkRecipeAvailable()
-    updateRecipAvailable(recipe_web_pref_file)
-    updateRecipAvailable(recipe_user_pref_file)
-    updateRecipAvailable(recipe_dev_pref_file)
+    log.info("path are updated ")
 
 log.info(f"currently number recipes is {len(RECIPES)}")
 # check cache directory create if doesnt exit.abs//should be in user pref?
