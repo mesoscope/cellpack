@@ -155,8 +155,7 @@ class RecipeLoader(object):
         )
         collection = "recipes"
         id = recipe_data["name"]
-        data = json.dumps(recipe_data)
-        save_to_firestore(collection,id,data)
+        recipe_data = save_to_firestore(collection,id,recipe_data)
 
         if recipe_data["format_version"] != self.current_version:
             recipe_data = self._migrate_version(recipe_data)
@@ -166,10 +165,9 @@ class RecipeLoader(object):
             recipe_data["objects"] = RecipeLoader.resolve_inheritance(
                 recipe_data["objects"]
             )
-            collection = "objects"
-            data = recipe_data["objects"]
+            # collection = "objects"
+            # data = recipe_data["objects"]
             # save_to_firestore(collection,id,data)
-            # get_all_docs_from_firestore(collection)
             for _, obj in recipe_data["objects"].items():
                 reps = obj["representations"] if "representations" in obj else {}
                 obj["representations"] = Representations(
@@ -179,10 +177,10 @@ class RecipeLoader(object):
                 )
             if not INGREDIENT_TYPE.is_member(obj["type"]):
                 raise TypeError(f"{obj['type']} is not an allowed type")
-        if "composition" in recipe_data:
-            collection = "composition"
-            data = recipe_data["composition"]
-            # save_to_firestore(collection, id, data)
+        # if "composition" in recipe_data:
+        #     collection = "composition"
+        #     data = recipe_data["composition"]
+        #     save_to_firestore(collection, id, data)
         return recipe_data
 
     def _load_json(self):

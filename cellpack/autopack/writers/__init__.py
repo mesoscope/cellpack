@@ -316,8 +316,13 @@ class Writer(object):
                 quaternion=quaternion,
                 transpose=transpose,
             )
-
         elif output_format == "simularium":
+            # print("writers", repr(all_ingr_as_array[0][-2]))
+            # json.dumps(all_ingr_as_array[0][-2], default=lambda x: x.__dict__)
+            # env.jsondic = OrderedDict(
+            # {"recipe": {"name": env.name, "version": env.version}}
+            # )
+            # print(env.jsondic)
             self.save_as_simularium(env, setupfile, all_ingr_as_array, compartments)
         else:
             print("format output " + output_format + " not recognized (json,python)")
