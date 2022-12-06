@@ -315,7 +315,7 @@ class BaseGrid:
         ny = len(y)
         nz = len(z)
         self.gridSpacing = x[1] - x[0]
-        
+
         self.nbGridPoints = [nx, ny, nz]
         self.gridVolume = nx * ny * nz
         self.ijkPtIndice = numpy.ndindex(nx, ny, nz)
