@@ -291,7 +291,7 @@ class BaseGrid:
         S = numpy.array(boundingBox[1]) - (numpy.array(boundingBox[0] + padding))
         stops = numpy.around(S / (self.gridSpacing))
         grid_dimensions = [[], [], []]
-        for i in range(len(grid_dimensions)):
+        for axis in range(len(grid_dimensions)):
             axis = i
             start = boundingBox[0][axis] + padding
             stop = boundingBox[1][axis]
