@@ -292,7 +292,6 @@ class BaseGrid:
         stops = numpy.around(S / (self.gridSpacing))
         grid_dimensions = [[], [], []]
         for axis in range(len(grid_dimensions)):
-            axis = i
             start = boundingBox[0][axis] + padding
             stop = boundingBox[1][axis]
             if stop < start:
