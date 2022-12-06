@@ -294,7 +294,9 @@ class BaseGrid:
             stop = boundingBox[1][axis]
             if stop < start:
                 # bounding box is smaller than grid spacing, ie in 2D packings
-                grid_dimensions[axis] = numpy.array([(boundingBox[0][axis] + boundingBox[1][axis])/2])
+                grid_dimensions[axis] = numpy.array(
+                    [(boundingBox[0][axis] + boundingBox[1][axis]) / 2]
+                )
             else:
                 grid_dimensions[axis] = numpy.arange(start, stop, space)
 
