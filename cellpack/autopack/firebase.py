@@ -16,89 +16,19 @@ firebase_admin.initialize_app(login)
 # connect to db
 db = firestore.client()
 
-d = {
-    "version": "1.0.0",
-    "format_version": "2.0",
-    "name": "one_sphere",
-    "bounding_box": [
-        [0, 0, 0],
-        [100, 100, 100],
-    ],
-    # "objects": {
-    #     "base": {
-    #         "jitter_attempts": 10,
-    #         "orient_bias_range": [
-    #             -3.1415927,
-    #             3.1415927
-    #         ],
-    #         "rotation_range": 6.2831,
-    #         "cutoff_boundary": 0,
-    #         "max_jitter": [
-    #             0.2,
-    #             0.2,
-    #             0.01
-    #         ],
-    #         "perturb_axis_amplitude": 0.1,
-    #         "packing_mode": "random",
-    #         "principal_vector": [
-    #             0,
-    #             0,
-    #             1
-    #         ],
-    #         "rejection_threshold": 50,
-    #         "place_method": "jitter",
-    #         "cutoff_surface": 42,
-    #         "rotation_axis": [
-    #             0,
-    #             0,
-    #             1
-    #         ],
-    #         "available_regions": {
-    #             "interior": {},
-    #             "surface": {},
-    #             "outer_leaflet": {},
-    #             "inner_leaflet": {}
-    #         }
-    #     },
-    #     "sphere_25": {
-    #         "type": "single_sphere",
-    #         "inherit": "base",
-    #         "color": [
-    #             0.5,
-    #             0.5,
-    #             0.5
-    #         ],
-    #         "radius": 25,
-    #         "max_jitter": [
-    #             1,
-    #             1,
-    #             0
-    #         ]
-    #     }
-    # },
-    "composition": {
-        "space": {
-            "regions": {
-                "interior": [[["A", "B", "C"], ["A"], ["C"]], [["foo"], ["bar"]]]
-            }
-        },
-        "A": {"object": "sphere_25", "count": 1},
-    },
-}
 
-
-
-
-def reconstruct_dict(d):
+def reconstruct_dict(data):
     modified_d = {}
-    for key, value in d.items():
+    for key, value in data.items():
         # If the value is a list, convert it to a dictionary with keys "array_0", "array_1", etc.
         if isinstance(value, list):
             arr_dict = {}
             for i, element in enumerate(value):
                 # Check if element is a nested list
                 #TODO use recursion to convert nested lists too, an inner func?
-                if any(isinstance(ele, list) for ele in element):
+                if not isinstance(element, list):
+                    continue
+                elif any(isinstance(ele, list) for ele in element):
                     nested_arr_dict = {}
                     for j, nested_element in enumerate(element):
                         nested_arr_dict["array_{}".format(j)] = nested_element
@@ -107,6 +37,9 @@ def reconstruct_dict(d):
                 else:
                     arr_dict["array_{}".format(i)] = element
             modified_d[key] = arr_dict
+        # If the value is an object, we want to convert it to dict 
+        elif isinstance(value, object) and "__dict__" in dir(value):
+            modified_d[key] = vars(value)
         # If the value is a dictionary, recursively convert its nested lists to dictionaries
         elif isinstance(value, dict):
             modified_d[key] = reconstruct_dict(value)
@@ -115,29 +48,13 @@ def reconstruct_dict(d):
 
     return modified_d
 
-print(reconstruct_dict(d))
-
-
-
-
-# helper function -- we need to convert 2d array(bbox) into dict before storing in firestore
-# def convert_nested_array_to_dict(data):
-#     for k, v in data.items():
-#         if isinstance(v, list):
-#             if any(isinstance(ele, list) for ele in v):
-#                 converted_dict = dict(zip(["array_" + str(i) for i in range(len(v))], v))
-#                 data[k] = converted_dict
-#     print(data)
-#     return data
-
-# convert_nested_array_to_dict(data)
 
 # add documents with known IDs
-# def save_to_firestore(collection,id,data):
-#     original_data = copy.deepcopy(data)
-#     convert_nested_array_to_dict(data)
-#     db.collection(collection).document(id).set(data)
-#     return original_data
+def save_to_firestore(collection,id,data):
+    original_data = copy.deepcopy(data)
+    modified_data = reconstruct_dict(data)
+    db.collection(collection).document(id).set(modified_data)
+    return original_data
 
 
 # get a document with a known ID
