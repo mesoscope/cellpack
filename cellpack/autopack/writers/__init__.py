@@ -9,6 +9,7 @@ import numpy
 from collections import OrderedDict
 
 from cellpack import autopack
+from cellpack.autopack.firebase import save_to_firestore
 
 
 class IOingredientTool(object):
@@ -288,6 +289,16 @@ class Writer(object):
                     env.jsondic, fp, separators=(",", ":"), cls=NumpyArrayEncoder
                 )  # ,indent=4, separators=(',', ': ')
 
+    def return_object_value(data):
+        for key, value in data.items():
+            if isinstance(value, object):
+                data[key] = vars(value)
+            elif isinstance(value, dict): 
+                return_object_value(value)
+            else:
+                data[key] = value
+        return data
+
     def save(
         self,
         env,
@@ -317,12 +328,9 @@ class Writer(object):
                 transpose=transpose,
             )
         elif output_format == "simularium":
-            # print("writers", repr(all_ingr_as_array[0][-2]))
-            # json.dumps(all_ingr_as_array[0][-2], default=lambda x: x.__dict__)
-            # env.jsondic = OrderedDict(
-            # {"recipe": {"name": env.name, "version": env.version}}
-            # )
-            # print(env.jsondic)
             self.save_as_simularium(env, setupfile, all_ingr_as_array, compartments)
+            collection = "recipes"
+            id = env.name + "_" + env.recipe_data["format_version"]
+            save_to_firestore(collection,id,env.recipe_data)
         else:
             print("format output " + output_format + " not recognized (json,python)")
