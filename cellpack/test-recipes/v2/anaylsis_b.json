@@ -1,0 +1,158 @@
+{
+    "version": "1.0.0",
+    "format_version": "2.0",
+    "name": "analysis_b",
+    "bounding_box": [
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            1000,
+            1000,
+            1
+        ]
+    ],
+    "objects": {
+        "base": {
+            "jitter_attempts": 10,
+            "orient_bias_range": [
+                -3.1415927,
+                3.1415927
+            ],
+            "rotation_range": 6.2831,
+            "cutoff_boundary": 0,
+            "max_jitter": [
+                0.2,
+                0.2,
+                0.01
+            ],
+            "perturb_axis_amplitude": 0.1,
+            "packing_mode": "random",
+            "principal_vector": [
+                0,
+                0,
+                1
+            ],
+            "rejection_threshold": 50,
+            "place_method": "jitter",
+            "cutoff_surface": 42,
+            "rotation_axis": [
+                0,
+                0,
+                1
+            ],
+            "available_regions": {
+                "interior": {},
+                "surface": {},
+                "outer_leaflet": {},
+                "inner_leaflet": {}
+            }
+        },
+        "sphere_100": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.498,
+                0.498,
+                0.498
+            ],
+            "radius": 100,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ]
+        },
+        "sphere_200": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.827,
+                0.82700002,
+                0.82700002
+            ],
+            "radius": 200,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ]
+        },
+        "sphere_50": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.306,
+                0.45100001,
+                0.81599998
+            ],
+            "radius": 50,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ]
+        },
+        "sphere_25": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                0.467,
+                0.23899999,
+                0.972
+            ],
+            "radius": 25,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ]
+        },
+        "sphere_125": {
+            "type": "single_sphere",
+            "inherit": "base",
+            "color": [
+                1,
+                0,
+                0
+            ],
+            "radius": 12.5,
+            "max_jitter": [
+                1,
+                1,
+                0
+            ]
+        }
+    },
+    "composition": {
+        "space": {
+            "regions": {
+                "interior": [
+                    "A", "B", "C", "D", "E"
+                ]
+            }
+        },
+        "A": {
+            "object": "sphere_100",
+            "count": 6
+        },
+        "B": {
+            "object": "sphere_200",
+            "count": 2
+        },
+        "C": {
+            "object": "sphere_50",
+            "count": 15
+        },
+        "D": {
+            "object": "sphere_25",
+            "count": 40
+        },
+        "E": {
+            "object": "sphere_125",
+            "count": 40
+        }
+    }
+}

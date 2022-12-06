@@ -132,6 +132,7 @@ class Environment(CompartmentList):
         self.innerGridMethod = config["inner_grid_method"]
         self.format_output = config["format"]
         self.use_periodicity = config["use_periodicity"]
+        self.overwrite_place_method = config["overwrite_place_method"]
         self.pickRandPt = not config["ordered_packing"]
         self.show_sphere_trees = config["show_sphere_trees"]
         self.show_grid_spheres = config["show_grid_plot"]
@@ -210,7 +211,6 @@ class Environment(CompartmentList):
         self.windowsSize_overwrite = False
 
         self.orthogonalBoxType = 0
-        self.overwritePlaceMethod = False
         self.rejection_threshold = None
         # if use C4D RB dynamics, should be genralized
         self.springOptions = {}
@@ -1188,11 +1188,7 @@ class Environment(CompartmentList):
             if not fits:
                 self.boundingBox = bb
 
-    def buildGrid(
-        self,
-        rebuild=True,
-        lookup=0,
-    ):
+    def buildGrid(self, rebuild=True):
         """
         The main build grid function. Setup the main grid and merge the
         compartment grid. The setup is de novo or using previously built grid
@@ -1213,7 +1209,7 @@ class Environment(CompartmentList):
             self.log.info("####BUILD GRID - step %r", self.smallestProteinSize)
             self.fillBB = boundingBox
             spacing = self.spacing or self.smallestProteinSize
-            self.grid = Grid(boundingBox=boundingBox, spacing=spacing, lookup=lookup)
+            self.grid = Grid(boundingBox=boundingBox, spacing=spacing)
             nbPoints = self.grid.gridVolume
             self.log.info("new Grid with %r %r", boundingBox, self.grid.gridVolume)
             if self.nFill == 0:
@@ -2033,7 +2029,7 @@ class Environment(CompartmentList):
                 continue
             # NOTE: should we do the close partner check here instead of in the place functions?
             # place the ingredient
-            if self.overwritePlaceMethod:
+            if self.overwrite_place_method:
                 ingr.place_method = self.place_method
 
             if ingr.encapsulating_radius > self.largestProteinSize:
