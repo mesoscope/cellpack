@@ -1,6 +1,7 @@
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
+import numpy as np
 import copy
 
 # testing path for setup
@@ -23,58 +24,58 @@ d = {
         [0, 0, 0],
         [100, 100, 100],
     ],
-    "objects": {
-        "base": {
-            "jitter_attempts": 10,
-            "orient_bias_range": [
-                -3.1415927,
-                3.1415927
-            ],
-            "rotation_range": 6.2831,
-            "cutoff_boundary": 0,
-            "max_jitter": [
-                0.2,
-                0.2,
-                0.01
-            ],
-            "perturb_axis_amplitude": 0.1,
-            "packing_mode": "random",
-            "principal_vector": [
-                0,
-                0,
-                1
-            ],
-            "rejection_threshold": 50,
-            "place_method": "jitter",
-            "cutoff_surface": 42,
-            "rotation_axis": [
-                0,
-                0,
-                1
-            ],
-            "available_regions": {
-                "interior": {},
-                "surface": {},
-                "outer_leaflet": {},
-                "inner_leaflet": {}
-            }
-        },
-        "sphere_25": {
-            "type": "single_sphere",
-            "inherit": "base",
-            "color": [
-                0.5,
-                0.5,
-                0.5
-            ],
-            "radius": 25,
-            "max_jitter": [
-                1,
-                1,
-                0
-            ]
-        }
-    },
+    # "objects": {
+    #     "base": {
+    #         "jitter_attempts": 10,
+    #         "orient_bias_range": [
+    #             -3.1415927,
+    #             3.1415927
+    #         ],
+    #         "rotation_range": 6.2831,
+    #         "cutoff_boundary": 0,
+    #         "max_jitter": [
+    #             0.2,
+    #             0.2,
+    #             0.01
+    #         ],
+    #         "perturb_axis_amplitude": 0.1,
+    #         "packing_mode": "random",
+    #         "principal_vector": [
+    #             0,
+    #             0,
+    #             1
+    #         ],
+    #         "rejection_threshold": 50,
+    #         "place_method": "jitter",
+    #         "cutoff_surface": 42,
+    #         "rotation_axis": [
+    #             0,
+    #             0,
+    #             1
+    #         ],
+    #         "available_regions": {
+    #             "interior": {},
+    #             "surface": {},
+    #             "outer_leaflet": {},
+    #             "inner_leaflet": {}
+    #         }
+    #     },
+    #     "sphere_25": {
+    #         "type": "single_sphere",
+    #         "inherit": "base",
+    #         "color": [
+    #             0.5,
+    #             0.5,
+    #             0.5
+    #         ],
+    #         "radius": 25,
+    #         "max_jitter": [
+    #             1,
+    #             1,
+    #             0
+    #         ]
+    #     }
+    # },
     "composition": {
         "space": {
             "regions": {
@@ -89,33 +90,29 @@ d = {
 
 
 def reconstruct_dict(d):
-    # Initialize an empty dictionary to store the modified version of d
     modified_d = {}
-
-    # Iterate over the key-value pairs in d
-    for k, v in d.items():
+    for key, value in d.items():
         # If the value is a list, convert it to a dictionary with keys "array_0", "array_1", etc.
-        if isinstance(v, list):
+        if isinstance(value, list):
             arr_dict = {}
-            for i, element in enumerate(v):
-                # Check if element is a list, in which case we need to convert it to a dictionary as well
-                if isinstance(element, list):
+            for i, element in enumerate(value):
+                # Check if element is a nested list
+                #TODO use recursion to convert nested lists too, an inner func?
+                if any(isinstance(ele, list) for ele in element):
                     nested_arr_dict = {}
                     for j, nested_element in enumerate(element):
                         nested_arr_dict["array_{}".format(j)] = nested_element
                     arr_dict["array_{}".format(i)] = nested_arr_dict
-                # Otherwise, element is not a list, so we can just add it to arr_dict
+                # Otherwise, element is a flat list or a non-list, so we can just add it to arr_dict
                 else:
                     arr_dict["array_{}".format(i)] = element
-            modified_d[k] = arr_dict
+            modified_d[key] = arr_dict
         # If the value is a dictionary, recursively convert its nested lists to dictionaries
-        elif isinstance(v, dict):
-            modified_d[k] = reconstruct_dict(v)
-        # Otherwise, the value is not a list or a dictionary, so we can just add it to modified_d
+        elif isinstance(value, dict):
+            modified_d[key] = reconstruct_dict(value)
         else:
-            modified_d[k] = v
+            modified_d[key] = value
 
-    # Return the modified dictionary
     return modified_d
 
 print(reconstruct_dict(d))
