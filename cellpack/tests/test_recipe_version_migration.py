@@ -29,7 +29,7 @@ from cellpack.autopack.loaders.migrate_v1_to_v2 import (
                 "packing": {
                     "name": "fibrinogen.sph",
                     "format": ".sph",
-                    "path": "autoPACKserver/collisionTrees",
+                    "path": "github:collisionTrees",
                 },
                 "atomic": None,
                 "mesh": None,
@@ -77,7 +77,7 @@ def test_create_packing_sphere_representation(sphereFile_data, sphereFile_result
                 "mesh": {
                     "name": "test.obj",
                     "format": ".obj",
-                    "path": "autoPACKserver/collisionTrees",
+                    "path": "github:collisionTrees",
                 },
                 "atomic": None,
                 "packing": None,
