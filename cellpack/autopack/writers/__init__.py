@@ -329,8 +329,5 @@ class Writer(object):
             )
         elif output_format == "simularium":
             self.save_as_simularium(env, setupfile, all_ingr_as_array, compartments)
-            collection = "recipes"
-            id = env.name + "_" + env.recipe_data["format_version"]
-            save_to_firestore(collection,id,env.recipe_data)
         else:
             print("format output " + output_format + " not recognized (json,python)")
