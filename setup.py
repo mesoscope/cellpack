@@ -45,6 +45,7 @@ dev_requirements = [
 
 requirements = [
     "fire>=0.4.0",
+    "firebase_admin>=6.0.1",
     "matplotlib>=3.3.4",
     "numpy>=1.19.2",
     "panda3d==1.10.10",
@@ -86,7 +87,8 @@ setup(
         "console_scripts": [
             "analyze=cellpack.bin.analyze:main",
             "convert=cellpack.bin.simularium_converter:main",
-            "pack=cellpack.bin.pack:main"
+            "upload=cellpack.bin.upload:main",
+            "pack=cellpack.bin.pack:main",
         ]
     },
     install_requires=requirements,
