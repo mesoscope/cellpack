@@ -55,7 +55,11 @@ class MeshStore:
 
     @staticmethod
     def get_midpoint(p1, p2):
-        return [(p1[0] + p2[0]) / 2.0, (p1[1] + p2[1]) / 2.0, (p1[2] + p2[2]) / 2.0]
+        return [
+            (p1[0] + p2[0]) / 2.0,
+            (p1[1] + p2[1]) / 2.0,
+            (p1[2] + p2[2]) / 2.0,
+        ]
 
     @staticmethod
     def norm(a, b, c):
@@ -118,7 +122,9 @@ class MeshStore:
         self.scene.add_geometry(mesh, geom_name=name)
 
     def read_mesh_file(self, filename):
-        file_name, file_extension = MeshStore.get_mesh_filepath_and_extension(filename)
+        file_name, file_extension = MeshStore.get_mesh_filepath_and_extension(
+            filename
+        )
         data = trimesh.exchange.load.load(
             f"{file_name}{file_extension}"
         )  # , ignore=[collada.DaeUnsupportedError,
@@ -166,9 +172,21 @@ class MeshStore:
         allfacets = int(math.pow(4, iterations))
         facets = numpy.zeros((allfacets, 3), "int")
         facets[0] = [0, 1, 2]  # p1; facets[0].p2 = p2; facets[0].p3 = p3;
-        facets[1] = [0, 1, 3]  # .p1 = p2; facets[1].p2 = p1; facets[1].p3 = p4;
-        facets[2] = [1, 3, 2]  # .p1 = p2; facets[2].p2 = p4; facets[2].p3 = p3;
-        facets[3] = [0, 2, 3]  # .p1 = p1; facets[3].p2 = p3; facets[3].p3 = p4;
+        facets[1] = [
+            0,
+            1,
+            3,
+        ]  # .p1 = p2; facets[1].p2 = p1; facets[1].p3 = p4;
+        facets[2] = [
+            1,
+            3,
+            2,
+        ]  # .p1 = p2; facets[2].p2 = p4; facets[2].p3 = p3;
+        facets[3] = [
+            0,
+            2,
+            3,
+        ]  # .p1 = p1; facets[3].p2 = p3; facets[3].p3 = p4;
 
         n = 4
         for i in range(1, iterations):  # (i=1;i<iterations;i++) {
@@ -295,7 +313,9 @@ class MeshStore:
             autopack.cache_geoms + os.sep + geomname, self.vertices, self.faces
         )
         autopack.helper.saveObjMesh(
-            autopack.cache_geoms + os.sep + geomname + ".obj", self.vertices, self.faces
+            autopack.cache_geoms + os.sep + geomname + ".obj",
+            self.vertices,
+            self.faces,
         )
         # self.saveObjMesh(autopack.cache_geoms + os.sep + geomname + ".obj")
         return geom, vertices, faces, vnormals
@@ -307,7 +327,37 @@ class MeshStore:
             self.add_mesh_to_scene(geometry, mesh_name)
         return geometry
 
-    def decompose_mesh(self, poly, edit=True, copy=True, tri=True, transform=True):
+    def get_scaled_distances_between_surfaces(
+        self, position_list, inner_mesh_name, outer_mesh_name
+    ):
+        """
+        Calculate scaled distances from inner mesh for position_list
+        Inner mesh surface is 0
+        Outer mesh surface is 1
+        """
+
+        inner_mesh = self.get_mesh(inner_mesh_name)
+        outer_mesh = self.get_mesh(outer_mesh_name)
+
+        query = trimesh.proximity.ProximityQuery(inner_mesh)
+
+        # closest points on the inner mesh surface
+        inner_loc, inner_surface_distances, _ = query.on_surface(position_list)
+
+        # intersecting points on the outer surface
+        outer_loc, _, _ = outer_mesh.ray.intersects_location(
+            ray_origins=inner_loc, ray_directions=(position_list - inner_loc)
+        )
+
+        scaled_distance_between_surfaces = inner_surface_distances / (
+            numpy.linalg.norm(outer_loc - inner_loc, axis=1)
+        )
+
+        return scaled_distance_between_surfaces
+
+    def decompose_mesh(
+        self, poly, edit=True, copy=True, tri=True, transform=True
+    ):
         if not isinstance(poly, trimesh.Trimesh):
             return [], [], []
         return poly.faces, poly.vertices, poly.vertex_normals

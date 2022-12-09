@@ -144,7 +144,9 @@ class Compartment(CompartmentList):
             self.filename = self.representations.get_mesh_path()
             self.path = autopack.fixOnePath(self.filename)
         self.stype = "mesh"
-        self.radius = object_info["radius"] if "radius" in object_info else 200.0
+        self.radius = (
+            object_info["radius"] if "radius" in object_info else 200.0
+        )
         self.height = 0.0
         self.axis = [0, 1, 0]
         self.area = 0.0
@@ -184,12 +186,17 @@ class Compartment(CompartmentList):
         self.is_sphere = object_info["type"] == "single_sphere"
         self.type = object_info["type"]
         self.is_box = (
-            "bounding_box" in object_info and object_info["bounding_box"] is not None
+            "bounding_box" in object_info
+            and object_info["bounding_box"] is not None
         )
         self.bounding_box = (
-            object_info["bounding_box"] if "bounding_box" in object_info else None
+            object_info["bounding_box"]
+            if "bounding_box" in object_info
+            else None
         )
-        self.is_orthogonal_bounding_box = 1 if "bounding_box" in object_info else None
+        self.is_orthogonal_bounding_box = (
+            1 if "bounding_box" in object_info else None
+        )
 
         self.grid_type = "regular"
         self.grid_distances = None  # signed closest distance for each point
@@ -215,7 +222,9 @@ class Compartment(CompartmentList):
         m = numpy.identity(4)
         m[:3, :3] = rot[:3, :3]
         m[3, :3] = pos
-        self.vertices = autopack.helper.ApplyMatrix(self.vertices, m.transpose())
+        self.vertices = autopack.helper.ApplyMatrix(
+            self.vertices, m.transpose()
+        )
         # Recompute the normal ?
         # self.vnormals = autopack.helper.ApplyMatrix(self.vnormals,m.transpose())
         self.vnormals = self.getVertexNormals(self.vertices, self.faces)
@@ -233,7 +242,9 @@ class Compartment(CompartmentList):
         """
         Create a polygon mesh object from a dictionary verts,faces,normals
         """
-        geom, vertices, faces, vnormals = mesh_store.build_mesh(data, self.gname)
+        geom, vertices, faces, vnormals = mesh_store.build_mesh(
+            data, self.gname
+        )
         self.vertices = vertices
         self.faces = faces
         self.vnormals = vnormals
@@ -265,7 +276,9 @@ class Compartment(CompartmentList):
                 center, radius = mesh_store.get_nsphere(self.gname)
                 self.center = center
                 self.encapsulating_radius = radius
-                self.radius = mesh_store.get_smallest_radius(self.gname, center)
+                self.radius = mesh_store.get_smallest_radius(
+                    self.gname, center
+                )
 
     def addShapeRB(self, env):
         # in case our shape is a regular primitive
@@ -289,7 +302,9 @@ class Compartment(CompartmentList):
     def setGeomFaces(self, tris, face):
         # have to add vertices one by one since they are not in order
         if len(face) == 2:
-            face = numpy.array([face[0], face[1], face[1], face[1]], dtype="int")
+            face = numpy.array(
+                [face[0], face[1], face[1], face[1]], dtype="int"
+            )
         for i in face:
             tris.addVertex(i)
         tris.closePrimitive()
@@ -358,7 +373,9 @@ class Compartment(CompartmentList):
         # else :
         mesh = BulletTriangleMesh()
         mesh.addGeom(geom)
-        shape = BulletTriangleMeshShape(mesh, dynamic=False)  # BulletConvexHullShape
+        shape = BulletTriangleMeshShape(
+            mesh, dynamic=False
+        )  # BulletConvexHullShape
         self.log.info("shape ok %r", shape)
         # inodenp = self.worldNP.attachNewNode(BulletRigidBodyNode(ingr.name))
         # inodenp.node().setMass(1.0)
@@ -373,7 +390,15 @@ class Compartment(CompartmentList):
         rotMat = mat = numpy.identity(4)
         mat = mat.transpose().reshape((16,))
         mat3x3 = Mat3(
-            mat[0], mat[1], mat[2], mat[4], mat[5], mat[6], mat[8], mat[9], mat[10]
+            mat[0],
+            mat[1],
+            mat[2],
+            mat[4],
+            mat[5],
+            mat[6],
+            mat[8],
+            mat[9],
+            mat[10],
         )
         pmat = Mat4(
             mat[0],
@@ -436,7 +461,9 @@ class Compartment(CompartmentList):
             return faces, vertices, vnormals
         return [], [], []
 
-    def setMesh(self, filename=None, vertices=None, faces=None, vnormals=None, **kw):
+    def setMesh(
+        self, filename=None, vertices=None, faces=None, vnormals=None, **kw
+    ):
         """
         Set the 3d mesh from the given filename or the given mesh data (v,f,n)
 
@@ -477,7 +504,12 @@ class Compartment(CompartmentList):
         self.surfacePoints = surfacePoints = pickle.load(f)
         self.surfacePointsNormals = surfacePointsNormals = pickle.load(f)
         self.surfacePointsCoords = surfacePointsCoords = pickle.load(f)
-        return surfacePoints, insidePoints, surfacePointsNormals, surfacePointsCoords
+        return (
+            surfacePoints,
+            insidePoints,
+            surfacePointsNormals,
+            surfacePointsCoords,
+        )
 
     def setNumber(self, num):
         """set compartment uniq id"""
@@ -661,7 +693,11 @@ class Compartment(CompartmentList):
             else:
                 n1 = 1.0 / n
             for i in range(3):
-                vnormals[f[i]] = [normal[0] * n1, normal[1] * n1, normal[2] * n1]
+                vnormals[f[i]] = [
+                    normal[0] * n1,
+                    normal[1] * n1,
+                    normal[2] * n1,
+                ]
         return vnormals  # areas added by Graham
 
     def getFaceNormals(self, vertices, faces, fillBB=None):
@@ -772,7 +808,11 @@ class Compartment(CompartmentList):
             x, y, z = p1
             nx1, ny1, nz1 = vnormals[s1]
             nx2, ny2, nz2 = vnormals[s2]
-            edgeNorm = ((nx1 + nx2) * 0.5, (ny1 + ny2) * 0.5, (nz1 + nz2) * 0.5)
+            edgeNorm = (
+                (nx1 + nx2) * 0.5,
+                (ny1 + ny2) * 0.5,
+                (nz1 + nz2) * 0.5,
+            )
             for i in range(1, nbp1 + 1):
                 points.append((x + i * dx1, y + i * dy1, z + i * dz1))
                 normals.append(edgeNorm)
@@ -888,7 +928,9 @@ class Compartment(CompartmentList):
             self.faces
         )  # Should be able to use self.ogsurfacePoints and collect faces too from above
 
-        normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
+        normalList2, areas = self.getFaceNormals(
+            vertices, faces, fillBB=env.fillBB
+        )
         vSurfaceArea = sum(areas)
         if self.is_box:
             self.overwriteSurfacePts = True
@@ -930,12 +972,16 @@ class Compartment(CompartmentList):
         distances[grid_point_indexes] = new_distances[grid_point_indexes]
 
         if (
-            env.innerGridMethod == "sdf" and self.is_orthogonal_bounding_box != 1
+            env.innerGridMethod == "sdf"
+            and self.is_orthogonal_bounding_box != 1
         ):  # A fillSelection can now be a mesh too... it can use either of these methods
             inside_points, surface_points = self.BuildGrid_utsdf(
                 env
             )  # to make the outer most selection from the master and then the compartment
-        elif env.innerGridMethod == "bhtree" and self.is_orthogonal_bounding_box != 1:
+        elif (
+            env.innerGridMethod == "bhtree"
+            and self.is_orthogonal_bounding_box != 1
+        ):
             inside_points, surface_points = self.BuildGrid_bhtree(
                 env,
                 ctree,
@@ -947,7 +993,8 @@ class Compartment(CompartmentList):
                 distances,
             )
         elif (
-            env.innerGridMethod == "raytrace" and self.is_orthogonal_bounding_box != 1
+            env.innerGridMethod == "raytrace"
+            and self.is_orthogonal_bounding_box != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_ray(
                 env,
@@ -958,7 +1005,8 @@ class Compartment(CompartmentList):
                 mesh_store,
             )
         elif (
-            env.innerGridMethod == "pyray" and self.is_orthogonal_bounding_box != 1
+            env.innerGridMethod == "pyray"
+            and self.is_orthogonal_bounding_box != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_pyray(
                 env,
@@ -971,11 +1019,13 @@ class Compartment(CompartmentList):
                 compartment_ids,
             )
         elif (
-            env.innerGridMethod == "floodfill" and self.is_orthogonal_bounding_box != 1
+            env.innerGridMethod == "floodfill"
+            and self.is_orthogonal_bounding_box != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_kevin(env)
         elif (
-            env.innerGridMethod == "binvox" and self.is_orthogonal_bounding_box != 1
+            env.innerGridMethod == "binvox"
+            and self.is_orthogonal_bounding_box != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_binvox(
                 env,
@@ -985,7 +1035,8 @@ class Compartment(CompartmentList):
                 compartment_ids,
             )
         elif (
-            env.innerGridMethod == "trimesh" and self.is_orthogonal_bounding_box != 1
+            env.innerGridMethod == "trimesh"
+            and self.is_orthogonal_bounding_box != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_trimesh(
                 env,
@@ -996,7 +1047,8 @@ class Compartment(CompartmentList):
                 mesh_store,
             )
         elif (
-            env.innerGridMethod == "scanline" and self.is_orthogonal_bounding_box != 1
+            env.innerGridMethod == "scanline"
+            and self.is_orthogonal_bounding_box != 1
         ):  # surfaces and interiors will be subtracted from it as normal!
             inside_points, surface_points = self.BuildGrid_scanline(
                 env,
@@ -1009,7 +1061,9 @@ class Compartment(CompartmentList):
                 mesh_store,
             )
         else:
-            self.log.error("Not a recognized inner grid method", env.innerGridMethod)
+            self.log.error(
+                "Not a recognized inner grid method", env.innerGridMethod
+            )
 
         self.compute_volume_and_set_count(
             env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
@@ -1044,7 +1098,9 @@ class Compartment(CompartmentList):
         AreaXplane = (bb1y - bb0y) * (bb1z - bb0z)
         AreaYplane = (bb1x - bb0x) * (bb1z - bb0z)
         AreaZplane = (bb1y - bb0y) * (bb1x - bb0x)
-        vSurfaceArea = abs(AreaXplane) * 2 + abs(AreaYplane) * 2 + abs(AreaZplane) * 2
+        vSurfaceArea = (
+            abs(AreaXplane) * 2 + abs(AreaYplane) * 2 + abs(AreaZplane) * 2
+        )
         self.log.info("vSurfaceArea = %r", vSurfaceArea)
         self.insidePoints = a
         self.surfacePoints = []
@@ -1070,15 +1126,33 @@ class Compartment(CompartmentList):
         ) | numpy.equal(env.grid.compartment_ids, -parent_id)
         grid_pt_to_calc = master_grid_positions[grid_pt_indexes]
 
-        surface_distances, indexes = surface_tree.query(tuple(grid_pt_to_calc))
-        all_surface_distances = numpy.full(master_grid_positions.shape[0], numpy.nan)
+        surface_distances, _ = surface_tree.query(tuple(grid_pt_to_calc))
+        all_surface_distances = numpy.full(
+            master_grid_positions.shape[0], numpy.nan
+        )
         all_surface_distances[grid_pt_indexes] = surface_distances
+
+        if self.parent is not None:
+            grid_pts_between_surfaces = numpy.equal(env.grid.compartment_ids, -parent_id)
+            grid_pt_to_calc = master_grid_positions[grid_pts_between_surfaces]
+            scaled_distance_to_next_surface = numpy.full(
+                master_grid_positions.shape[0], numpy.nan
+            )
+            scaled_distance_to_next_surface[grid_pts_between_surfaces] = (
+                env.mesh_store.get_scaled_distances_between_surfaces(
+                    grid_pt_to_calc, self.gname, self.parent.gname,
+                )
+            )
+            self.scaled_distance_to_next_surface = scaled_distance_to_next_surface
+
         self.max_distance = max(surface_distances)
         self.surface_distances = all_surface_distances
 
     def BuildGrid_box(self, env, vSurfaceArea):
         nbGridPoints = len(env.grid.masterGridPositions)
-        insidePoints = env.grid.getPointsInCube(self.bb, None, None, addSP=False)
+        insidePoints = env.grid.getPointsInCube(
+            self.bb, None, None, addSP=False
+        )
         for p in insidePoints:
             env.grid.compartment_ids[p] = -self.number
         surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(
@@ -1131,12 +1205,16 @@ class Compartment(CompartmentList):
             inside = mesh_store.contains_points_slow(self.gname, positions)
 
         # set inside points in data
-        inside_indexes = numpy.array(points_in_encap_sphere)[numpy.nonzero(inside)]
+        inside_indexes = numpy.array(points_in_encap_sphere)[
+            numpy.nonzero(inside)
+        ]
         insidePoints.extend(inside_indexes)
         idarray[inside_indexes] = -compartment_id
 
         # find missing surface points
-        outside_points_positions = grdPos[numpy.nonzero(idarray != -compartment_id)]
+        outside_points_positions = grdPos[
+            numpy.nonzero(idarray != -compartment_id)
+        ]
         inside_points_positions = grdPos[inside_indexes]
         inside_tree = spatial.cKDTree(inside_points_positions, leafsize=10)
         surface_i = inside_tree.query_ball_point(
@@ -1165,7 +1243,9 @@ class Compartment(CompartmentList):
         all_surface_pt_pos = on_grid_surface_point_positions
         all_surface_pt_pos.extend(off_grid_surface_pt_pos)
 
-        all_surface_pt_ids = numpy.nonzero(idarray == compartment_id)[0].tolist()
+        all_surface_pt_ids = numpy.nonzero(idarray == compartment_id)[
+            0
+        ].tolist()
         all_surface_pt_ids.extend(surface_point_ids)
         self.insidePoints = insidePoints
         self.surfacePoints = all_surface_pt_ids
@@ -1173,7 +1253,9 @@ class Compartment(CompartmentList):
         self.surfacePointsNormals = surfacePointsNormals
         return self.insidePoints, self.surfacePoints
 
-    def BuildGrid_binvox(self, env, grdPos, vSurfaceArea, srfPts, idarray, ray=1):
+    def BuildGrid_binvox(
+        self, env, grdPos, vSurfaceArea, srfPts, idarray, ray=1
+    ):
         # create surface points
         # check if file already exist, otherwise rebuild it
         number = self.number
@@ -1231,7 +1313,9 @@ class Compartment(CompartmentList):
         idarray[inside_points] = -number
         nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(
+            srfPts, env
+        )
         srfPts = surfPtsBB
 
         ex = True  # True if nbGridPoints == len(idarray) else False
@@ -1246,7 +1330,9 @@ class Compartment(CompartmentList):
 
         return self.insidePoints, self.surfacePoints
 
-    def BuildGrid_trimesh(self, env, grdPos, vSurfaceArea, srfPts, idarray, mesh_store):
+    def BuildGrid_trimesh(
+        self, env, grdPos, vSurfaceArea, srfPts, idarray, mesh_store
+    ):
         """Build the compartment grid ie surface and inside points"""
         insidePoints = []
         number = self.number
@@ -1369,7 +1455,9 @@ class Compartment(CompartmentList):
                         )
         nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(
+            srfPts, env
+        )
         srfPts = surfPtsBB
 
         ex = True  # True if nbGridPoints == len(idarray) else False
@@ -1389,12 +1477,23 @@ class Compartment(CompartmentList):
         return self.insidePoints, self.surfacePoints
 
     def BuildGrid_pyray(
-        self, env, ctree, distances, grdPos, diag, vSurfaceArea, srfPts, idarray, ray=1
+        self,
+        env,
+        ctree,
+        distances,
+        grdPos,
+        diag,
+        vSurfaceArea,
+        srfPts,
+        idarray,
+        ray=1,
     ):
 
         if self.is_box:
             nbGridPoints = len(env.grid.masterGridPositions)
-            insidePoints = env.grid.getPointsInCube(self.bb, None, None, addSP=False)
+            insidePoints = env.grid.getPointsInCube(
+                self.bb, None, None, addSP=False
+            )
             for p in insidePoints:
                 env.grid.compartment_ids[p] = -self.number
             surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(
@@ -1424,7 +1523,9 @@ class Compartment(CompartmentList):
         center = helper.getCenter(srfPts)
         for ptInd in range(len(grdPos)):
             inside = False
-            insideBB = self.checkPointInsideBB(grdPos[ptInd], dist=distances[ptInd])
+            insideBB = self.checkPointInsideBB(
+                grdPos[ptInd], dist=distances[ptInd]
+            )
             r = False
             if insideBB:
                 # should use an optional direction for the ray, which will help for unclosed surface....
@@ -1478,7 +1579,9 @@ class Compartment(CompartmentList):
 
         nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(
+            srfPts, env
+        )
         srfPts = surfPtsBB
         ex = True  # True if nbGridPoints == len(idarray) else False
         # back to list type
@@ -1528,7 +1631,9 @@ class Compartment(CompartmentList):
                 )
             else:
                 try:
-                    n = ctree.closePointsDist2(tuple(grdPos[ptInd]), diag, res, dist2)
+                    n = ctree.closePointsDist2(
+                        tuple(grdPos[ptInd]), diag, res, dist2
+                    )
                     d = min(dist2[0:n])
                     new_distance = res[tuple(dist2).index(d)]
                 except Exception:
@@ -1570,7 +1675,9 @@ class Compartment(CompartmentList):
 
         nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(
+            srfPts, env
+        )
         srfPts = surfPtsBB
         ex = True  # True if nbGridPoints == len(idarray) else False
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
@@ -1598,7 +1705,9 @@ class Compartment(CompartmentList):
         faces = self.faces[
             :
         ]  # Should be able to use self.ogsurfacePoints and collect faces too from above
-        normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
+        normalList2, areas = self.getFaceNormals(
+            vertices, faces, fillBB=env.fillBB
+        )
 
         srfPts = self.ogsurfacePoints
         self.OGsrfPtsBht = spatial.cKDTree(tuple(srfPts), leafsize=10)
@@ -1629,7 +1738,9 @@ class Compartment(CompartmentList):
         assert len(gridPoints) == len(grid_point_positions)
 
         # Make a precomputed cube of coordinates and corresponding distances
-        distanceCube, distX, distY, distZ = makeMarchingCube(gridSpacing, radius)
+        distanceCube, distX, distY, distZ = makeMarchingCube(
+            gridSpacing, radius
+        )
         # Flatten and combine these arrays. This is easier to iterate over.
         distanceCubeF, distXF, distYF, distZF = (
             distanceCube.flatten(),
@@ -1701,7 +1812,9 @@ class Compartment(CompartmentList):
                     # the distance from the origin to the hypotenuse point, as such:
                     # if vlen(interpolatedPoint) < vlen(h):
                     # Wouldn't it be a better idea to measure distance to the u position instead? This is implemented below.
-                    if vlen(interpolatedPoint - percentU * u) < vlen(h - percentU * u):
+                    if vlen(interpolatedPoint - percentU * u) < vlen(
+                        h - percentU * u
+                    ):
                         allCoordinates.append(interpolatedPoint + pos)
                         thisFaceFineCoords.append(interpolatedPoint + pos)
                     else:
@@ -1749,7 +1862,9 @@ class Compartment(CompartmentList):
                     ):
                         continue
                     # Get the point index that this coordinate corresponds to.
-                    desiredPointIndex = int(round(newK * NX * NY + newJ * NX + newI))
+                    desiredPointIndex = int(
+                        round(newK * NX * NY + newJ * NX + newI)
+                    )
                     desiredPoint = gridPoints[desiredPointIndex]
                     if desiredPoint.representsPolyhedron:
                         continue
@@ -1782,7 +1897,9 @@ class Compartment(CompartmentList):
             # Check if we've started a new line. If so, then we reset everything.
             # This test should precede all other test, because we don't want old knowldge
             # to carry over to the new line, since we don't know if the polygon is only partially encapsulated by the bounding box.
-            if g.index > 0:  # We can't check the first element, so we can skip it.
+            if (
+                g.index > 0
+            ):  # We can't check the first element, so we can skip it.
                 coordDiff = g.globalCoord - gridPoints[g.index - 1].globalCoord
                 coordDiffNonzero = [x != 0 for x in coordDiff]
                 if sum(coordDiffNonzero) > 1:
@@ -1837,7 +1954,11 @@ class Compartment(CompartmentList):
                         uniquePointsCoords2 = vertices[uniquePoints2]
                         endPoint2 = findPointsCenter(uniquePointsCoords2)
                         numHits2, thisBackFace2 = f_ray_intersect_polyhedron(
-                            g.globalCoord, endPoint2, g.closeFaces, vertices, False
+                            g.globalCoord,
+                            endPoint2,
+                            g.closeFaces,
+                            vertices,
+                            False,
                         )
                     if len(g.closeFaces) == 1 or thisBackFace != thisBackFace2:
                         mismatchCounter += 1
@@ -1874,7 +1995,9 @@ class Compartment(CompartmentList):
                 if g.isOutside is None:
                     g.isOutside = True
 
-        insidePoints = [g.globalCoord for g in gridPoints if g.isOutside is False]
+        insidePoints = [
+            g.globalCoord for g in gridPoints if g.isOutside is False
+        ]
         # outsidePoints = [g.index for g in gridPoints if g.isOutside == True]
         #        surfacePoints = [g.globalCoord for g in gridPoints if g.representsPolyhedron == True]
 
@@ -1907,7 +2030,9 @@ class Compartment(CompartmentList):
         """Extend the environment grd using the compartment point"""
         if extended:
             number_off_grid_pts = len(off_grid_surface_pts)
-            pointArrayRaw = numpy.zeros((nbGridPoints + number_off_grid_pts, 3), "f")
+            pointArrayRaw = numpy.zeros(
+                (nbGridPoints + number_off_grid_pts, 3), "f"
+            )
             pointArrayRaw[:nbGridPoints] = env.grid.masterGridPositions
             pointArrayRaw[nbGridPoints:] = off_grid_surface_pts
             env.grid.nbSurfacePoints += number_off_grid_pts
@@ -1922,9 +2047,15 @@ class Compartment(CompartmentList):
                 env.grid.distToClosestSurf.extend(
                     (numpy.ones(number_off_grid_pts) * env.grid.diag).tolist()
                 )
-            ptId = numpy.ones(number_off_grid_pts, "i") * self.number  # surface point
-            env.grid.compartment_ids = numpy.hstack((env.grid.compartment_ids, ptId))
-            env.grid.free_points = numpy.arange(nbGridPoints + number_off_grid_pts)
+            ptId = (
+                numpy.ones(number_off_grid_pts, "i") * self.number
+            )  # surface point
+            env.grid.compartment_ids = numpy.hstack(
+                (env.grid.compartment_ids, ptId)
+            )
+            env.grid.free_points = numpy.arange(
+                nbGridPoints + number_off_grid_pts
+            )
             surfacePoints = list(
                 range(nbGridPoints, nbGridPoints + number_off_grid_pts)
             )
@@ -1938,7 +2069,9 @@ class Compartment(CompartmentList):
                 range(nbGridPoints - number_off_grid_pts, nbGridPoints)
             )
             for i, n in enumerate(surfPtsBBNorms):
-                surfacePointsNormals[nbGridPoints - number_off_grid_pts + i] = n
+                surfacePointsNormals[
+                    nbGridPoints - number_off_grid_pts + i
+                ] = n
         return surfacePoints, surfacePointsNormals
 
     def filter_surface_pts_to_fill_box(self, off_grid_pos, env):
@@ -1953,7 +2086,14 @@ class Compartment(CompartmentList):
         off_grid_normals = self.ogsurfacePointsNormals
         for i, p in enumerate(off_grid_pos):
             x, y, z = p
-            if x >= mx and x <= Mx and y >= my and y <= My and z >= mz and z <= Mz:
+            if (
+                x >= mx
+                and x <= Mx
+                and y >= my
+                and y <= My
+                and z >= mz
+                and z <= Mz
+            ):
                 surface_points_positions.append(p)
                 surfPtsBBNorms.append(off_grid_normals[i])
         return surface_points_positions, surfPtsBBNorms
@@ -1971,7 +2111,9 @@ class Compartment(CompartmentList):
         faces = (
             self.faces
         )  # Should be able to use self.ogsurfacePoints and collect faces too from above
-        normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
+        normalList2, areas = self.getFaceNormals(
+            vertices, faces, fillBB=env.fillBB
+        )
 
         distances = env.grid.distToClosestSurf
         idarray = env.grid.compartment_ids
@@ -2009,7 +2151,9 @@ class Compartment(CompartmentList):
 
             # update distance field
             d = math.sqrt(
-                (gx - sx) * (gx - sx) + (gy - sy) * (gy - sy) + (gz - sz) * (gz - sz)
+                (gx - sx) * (gx - sx)
+                + (gy - sy) * (gy - sy)
+                + (gz - sz) * (gz - sz)
             )
             if distances[ptInd] > d:
                 distances[ptInd] = d
@@ -2057,11 +2201,20 @@ class Compartment(CompartmentList):
         ogNorms = self.ogsurfacePointsNormals
         for i, p in enumerate(srfPts):
             x, y, z = p
-            if x >= mx and x <= Mx and y >= my and y <= My and z >= mz and z <= Mz:
+            if (
+                x >= mx
+                and x <= Mx
+                and y >= my
+                and y <= My
+                and z >= mz
+                and z <= Mz
+            ):
                 surfPtsBB.append(p)
                 surfPtsBBNorms.append(ogNorms[i])
 
-        self.log.info("surf points going from to %d %d", len(srfPts), len(surfPtsBB))
+        self.log.info(
+            "surf points going from to %d %d", len(srfPts), len(surfPtsBB)
+        )
         srfPts = surfPtsBB
         length = len(srfPts)
 
@@ -2099,7 +2252,9 @@ class Compartment(CompartmentList):
         self.ogsurfacePointsNormals = self.vnormals[:]
         vertices = self.vertices
         faces = self.faces
-        normalList2, areas = self.getFaceNormals(vertices, faces, fillBB=env.fillBB)
+        normalList2, areas = self.getFaceNormals(
+            vertices, faces, fillBB=env.fillBB
+        )
         #        labels = numpy.ones(len(faces), 'i')
 
         # FIXME .. dimensions on SDF should addapt to compartment size
@@ -2140,7 +2295,9 @@ class Compartment(CompartmentList):
             1.0 / (sizex[2] / dim),
         )
         origin = self.bb[0]
-        distFromSurf = trilinterp(env.grid.masterGridPositions, volarr, invstep, origin)
+        distFromSurf = trilinterp(
+            env.grid.masterGridPositions, volarr, invstep, origin
+        )
 
         # update histoVol.distToClosestSurf
         distance = env.grid.distToClosestSurf
@@ -2162,7 +2319,9 @@ class Compartment(CompartmentList):
         env.grid.compartment_ids[indice] = -self.number
         nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
+        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(
+            srfPts, env
+        )
         srfPts = surfPtsBB
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
             nbGridPoints, srfPts, surfPtsBBNorms, env
@@ -2261,7 +2420,9 @@ class Compartment(CompartmentList):
 
         invstep = (1.0 / gridSpacing, 1.0 / gridSpacing, 1.0 / gridSpacing)
         origin = (xmin, ymin, zmin)
-        distFromSurf = trilinterp(histoVol.masterGridPositions, volarr, invstep, origin)
+        distFromSurf = trilinterp(
+            histoVol.masterGridPositions, volarr, invstep, origin
+        )
 
         # save SDF
         self.sdfData = volarr
@@ -2326,7 +2487,9 @@ class Compartment(CompartmentList):
         """
         unitVol = env.grid.gridSpacing**3
         if surfacePoints:
-            self.log.info("%d surface points %.2f unitVol", len(surfacePoints), unitVol)
+            self.log.info(
+                "%d surface points %.2f unitVol", len(surfacePoints), unitVol
+            )
             # FIXME .. should be surface per surface point instead of unitVol
             self.surfaceVolume = len(surfacePoints) * unitVol
         if areas is not None:
@@ -2387,7 +2550,9 @@ class Compartment(CompartmentList):
             n.append(self.normals[ind])
         return n
 
-    def create3DPointLookup(self, nbGridPoints, gridSpacing, dim, boundingBox=None):
+    def create3DPointLookup(
+        self, nbGridPoints, gridSpacing, dim, boundingBox=None
+    ):
         """
         Fill the orthogonal bounding box described by two global corners
          with an array of points spaces pGridSpacing apart. Duplicate from grid class
@@ -2543,7 +2708,9 @@ class Compartment(CompartmentList):
         assert len(gridPoints) == len(points)
 
         # Make a precomputed cube of coordinates and corresponding distances
-        distanceCube, distX, distY, distZ = makeMarchingCube(gridSpacing, radius)
+        distanceCube, distX, distY, distZ = makeMarchingCube(
+            gridSpacing, radius
+        )
         # Flatten and combine these arrays. This is easier to iterate over.
         distanceCubeF, distXF, distYF, distZF = (
             distanceCube.flatten(),
@@ -2615,7 +2782,9 @@ class Compartment(CompartmentList):
                     # the distance from the origin to the hypotenuse point, as such:
                     # if vlen(interpolatedPoint) < vlen(h):
                     # Wouldn't it be a better idea to measure distance to the u position instead? This is implemented below.
-                    if vlen(interpolatedPoint - percentU * u) < vlen(h - percentU * u):
+                    if vlen(interpolatedPoint - percentU * u) < vlen(
+                        h - percentU * u
+                    ):
                         allCoordinates.append(interpolatedPoint + pos)
                         thisFaceFineCoords.append(interpolatedPoint + pos)
                     else:
@@ -2663,7 +2832,9 @@ class Compartment(CompartmentList):
                     ):
                         continue
                     # Get the point index that this coordinate corresponds to.
-                    desiredPointIndex = int(round(newK * NX * NY + newJ * NX + newI))
+                    desiredPointIndex = int(
+                        round(newK * NX * NY + newJ * NX + newI)
+                    )
                     desiredPoint = gridPoints[desiredPointIndex]
                     if desiredPoint.representsPolyhedron:
                         continue
@@ -2702,7 +2873,9 @@ class Compartment(CompartmentList):
             # Check if we've started a new line. If so, then we reset everything.
             # This test should precede all other test, because we don't want old knowldge
             # to carry over to the new line, since we don't know if the polygon is only partially encapsulated by the bounding box.
-            if g.index > 0:  # We can't check the first element, so we can skip it.
+            if (
+                g.index > 0
+            ):  # We can't check the first element, so we can skip it.
                 coordDiff = g.globalCoord - gridPoints[g.index - 1].globalCoord
                 coordDiffNonzero = [x != 0 for x in coordDiff]
                 if sum(coordDiffNonzero) > 1:
@@ -2757,7 +2930,11 @@ class Compartment(CompartmentList):
                         uniquePointsCoords2 = vertices[uniquePoints2]
                         endPoint2 = findPointsCenter(uniquePointsCoords2)
                         numHits2, thisBackFace2 = f_ray_intersect_polyhedron(
-                            g.globalCoord, endPoint2, g.closeFaces, vertices, False
+                            g.globalCoord,
+                            endPoint2,
+                            g.closeFaces,
+                            vertices,
+                            False,
                         )
                     if len(g.closeFaces) == 1 or thisBackFace != thisBackFace2:
                         mismatchCounter += 1
@@ -2791,7 +2968,9 @@ class Compartment(CompartmentList):
         )
         insidePoints = [g.globalCoord for g in gridPoints if not g.isOutside]
         # outsidePoints = [g.index for g in gridPoints if g.isOutside == True]
-        surfacePoints = [g.globalCoord for g in gridPoints if g.representsPolyhedron]
+        surfacePoints = [
+            g.globalCoord for g in gridPoints if g.representsPolyhedron
+        ]
         # distance ?
         if superFine:
             print(
@@ -2822,7 +3001,9 @@ class Compartment(CompartmentList):
 
         self.grid = grid = Grid()
         grid.boundingBox = boundingBox
-        grid.gridSpacing = spacing  # = self.smallestProteinSize*1.1547  # 2/sqrt(3)????
+        grid.gridSpacing = (
+            spacing  # = self.smallestProteinSize*1.1547  # 2/sqrt(3)????
+        )
         helper.progressBar(label="BuildGRid")
         grid.gridVolume, grid.nbGridPoints = grid.computeGridNumberOfPoint(
             boundingBox, spacing
@@ -2865,7 +3046,9 @@ class Compartment(CompartmentList):
             1.0 / (sizex[0] / dim),
         )
         origin = self.bb[0]
-        distFromSurf = trilinterp(grid.masterGridPositions, volarr, invstep, origin)
+        distFromSurf = trilinterp(
+            grid.masterGridPositions, volarr, invstep, origin
+        )
         # update histoVol.distToClosestSurf
         distance = grid.distToClosestSurf
         for i, d in enumerate(distFromSurf):
@@ -2878,7 +3061,9 @@ class Compartment(CompartmentList):
         # need to update the surface. need to create a aligned grid
         return pointinside[0], self.vertices
 
-    def getSurfaceInnerPoints(self, boundingBox, spacing, display=True, useFix=False):
+    def getSurfaceInnerPoints(
+        self, boundingBox, spacing, display=True, useFix=False
+    ):
         """
         Only compute the inner point. No grid.
         This is independant from the packing. Help build ingredient sphere tree and representation
@@ -2887,7 +3072,9 @@ class Compartment(CompartmentList):
 
         self.grid = grid = Grid()
         grid.boundingBox = boundingBox
-        grid.gridSpacing = spacing  # = self.smallestProteinSize*1.1547  # 2/sqrt(3)????
+        grid.gridSpacing = (
+            spacing  # = self.smallestProteinSize*1.1547  # 2/sqrt(3)????
+        )
         helper.progressBar(label="BuildGRid")
         grid.gridVolume, grid.nbGridPoints = grid.computeGridNumberOfPoint(
             boundingBox, spacing
@@ -2945,7 +3132,9 @@ class Compartment(CompartmentList):
             cylN = helper.oneCylinder(
                 "normal", [0.0, 0.0, 0.0], [1.0, 1.0, 1.0], radius=20.0
             )
-            helper.oneCylinder("V", [0.0, 0.0, 0.0], [1.0, 1.0, 1.0], radius=20.0)
+            helper.oneCylinder(
+                "V", [0.0, 0.0, 0.0], [1.0, 1.0, 1.0], radius=20.0
+            )
             helper.changeObjColorMat(sph2, (0.0, 0.0, 1.0))
         for ptInd in range(len(grdPos)):  # len(grdPos)):
             # find closest OGsurfacepoint
@@ -3000,7 +3189,8 @@ class Compartment(CompartmentList):
             #            vnpos = numpy.array(npost[sptInd])
             facesN = self.getVNfromF(sptInd)
             d1 = helper.measure_distance(
-                numpy.array(grdPos[ptInd]), numpy.array(srfPts[sptInd]) + (n * 0.00001)
+                numpy.array(grdPos[ptInd]),
+                numpy.array(srfPts[sptInd]) + (n * 0.00001),
             )
             d2 = helper.measure_distance(
                 numpy.array(grdPos[ptInd]), numpy.array(srfPts[sptInd])
@@ -3076,7 +3266,11 @@ class Compartment(CompartmentList):
             p = (ptInd / float(len(grdPos))) * 100.0
             helper.progressBar(
                 progress=int(p),
-                label=str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(inside),
+                label=str(ptInd)
+                + "/"
+                + str(len(grdPos))
+                + " inside "
+                + str(inside),
             )
 
         print("total time", time() - t1)
@@ -3098,7 +3292,9 @@ class Compartment(CompartmentList):
 
         self.grid = grid = Grid()
         grid.boundingBox = boundingBox
-        grid.gridSpacing = spacing  # = self.smallestProteinSize*1.1547  # 2/sqrt(3)????
+        grid.gridSpacing = (
+            spacing  # = self.smallestProteinSize*1.1547  # 2/sqrt(3)????
+        )
         helper.progressBar(label="BuildGRid")
         grid.gridVolume, grid.nbGridPoints = grid.computeGridNumberOfPoint(
             boundingBox, spacing
@@ -3154,13 +3350,19 @@ class Compartment(CompartmentList):
             sph = helper.Sphere("gPts", res=10, radius=20.0)[0]
             sph2 = helper.Sphere("sPts", res=10, radius=20.0)[0]
             sph3 = helper.Sphere("hitPos", res=10, radius=20.0)[0]
-            helper.oneCylinder("normal", [0.0, 0.0, 0.0], [1.0, 1.0, 1.0], radius=20.0)
-            helper.oneCylinder("V", [0.0, 0.0, 0.0], [1.0, 1.0, 1.0], radius=20.0)
+            helper.oneCylinder(
+                "normal", [0.0, 0.0, 0.0], [1.0, 1.0, 1.0], radius=20.0
+            )
+            helper.oneCylinder(
+                "V", [0.0, 0.0, 0.0], [1.0, 1.0, 1.0], radius=20.0
+            )
             helper.changeObjColorMat(sph2, (0.0, 0.0, 1.0))
         for ptInd in range(len(grdPos)):  # len(grdPos)):
             inside = False
             sptInd = closest[ptInd]
-            v = -numpy.array(grdPos[ptInd]) + numpy.array(srfPts[closest[ptInd]])
+            v = -numpy.array(grdPos[ptInd]) + numpy.array(
+                srfPts[closest[ptInd]]
+            )
             an = nx, ny, nz = numpy.array(ogNormals[sptInd])
             #            start = Point3(grdPos[i][0],grdPos[i][1],grdPos[i][2])
             if display:
@@ -3171,7 +3373,9 @@ class Compartment(CompartmentList):
             # raycats and see what it it on the mesh
             # or result = world.sweepTestClosest(shape, tsFrom, tsTo, penetration)
             res = pud.rayCast(
-                grdPos[ptInd], (numpy.array(grdPos[ptInd]) + v) * 99999, closest=True
+                grdPos[ptInd],
+                (numpy.array(grdPos[ptInd]) + v) * 99999,
+                closest=True,
             )  # world.rayTestAll(start, end)
             # can we get the number of hit?
             if res.hasHit():
@@ -3185,7 +3389,15 @@ class Compartment(CompartmentList):
                 dot = numpy.dot(v, n)
                 dot2 = numpy.dot(an, v)
                 a2 = helper.angle_between_vectors(-v, an)
-                print("hit with ", a, math.degrees(a), a2, math.degrees(a2), dot, dot2)
+                print(
+                    "hit with ",
+                    a,
+                    math.degrees(a),
+                    a2,
+                    math.degrees(a2),
+                    dot,
+                    dot2,
+                )
                 if display:
                     helper.setTranslation(sph3, numpy.array(h.getHitPos()))
                     helper.updateOneCylinder(
@@ -3223,7 +3435,11 @@ class Compartment(CompartmentList):
             p = (ptInd / float(len(grdPos))) * 100.0
             helper.progressBar(
                 progress=int(p),
-                label=str(ptInd) + "/" + str(len(grdPos)) + " inside " + str(inside),
+                label=str(ptInd)
+                + "/"
+                + str(len(grdPos))
+                + " inside "
+                + str(inside),
             )
 
         return insidePoints, surfacePoints
@@ -3243,7 +3459,9 @@ class Compartment(CompartmentList):
 
         self.grid = grid = Grid()
         grid.boundingBox = boundingBox
-        grid.gridSpacing = spacing  # = self.smallestProteinSize*1.1547  # 2/sqrt(3)????
+        grid.gridSpacing = (
+            spacing  # = self.smallestProteinSize*1.1547  # 2/sqrt(3)????
+        )
         t = time()
         helper.progressBar(label="BuildGRid")
         grid.gridVolume, grid.nbGridPoints = grid.computeGridNumberOfPoint(
@@ -3272,7 +3490,8 @@ class Compartment(CompartmentList):
             node = pud.addSingleSphereRB(r, name=str(i))
             node.setPos(pos[0], pos[1], pos[2])
             helper.progressBar(
-                progress=int((i / float(NPT)) * 100.0), label=str(i) + "/" + str(NPT)
+                progress=int((i / float(NPT)) * 100.0),
+                label=str(i) + "/" + str(NPT),
             )
             return node
 
