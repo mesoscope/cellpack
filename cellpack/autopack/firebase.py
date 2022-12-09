@@ -14,58 +14,43 @@ class FirebaseHandler(object):
         firebase_admin.initialize_app(login)
         # connect to db
         self.db = firestore.client()
+        
+    def reconstruct_dict(self, data):
+        modified_data = {}
+        for key, value in data.items():
+            # convert bonding_box 2d array to dict
+            if key == "bounding_box":
+                bb_dict = dict(zip([str(i) for i in range(len(value))], value))
+                modified_data[key] = bb_dict
+            # If the value is an object, we want to convert it to dict 
+            elif isinstance(value, object) and "__dict__" in dir(value):
+                modified_data[key] = vars(value)
+            # If the value is a dictionary, recursively convert its nested lists to dictionaries
+            elif isinstance(value, dict):
+                modified_data[key] = self.reconstruct_dict(value)
+            else:
+                modified_data[key] = value
 
-def reconstruct_dict(data):
-    modified_d = {}
-    for key, value in data.items():
-        # If the value is a list, convert it to a dictionary with keys "array_0", "array_1", etc.
-        if isinstance(value, list):
-            arr_dict = {}
-            for i, element in enumerate(value):
-                # Check if element is a nested list
-                #TODO use recursion to convert nested lists too, an inner func?
-                if not isinstance(element, list):
-                    continue
-                elif any(isinstance(ele, list) for ele in element):
-                    nested_arr_dict = {}
-                    for j, nested_element in enumerate(element):
-                        nested_arr_dict["array_{}".format(j)] = nested_element
-                    arr_dict["array_{}".format(i)] = nested_arr_dict
-                # Otherwise, element is a flat list or a non-list, so we can just add it to arr_dict
-                else:
-                    arr_dict["array_{}".format(i)] = element
-            modified_d[key] = arr_dict
-        # If the value is an object, we want to convert it to dict 
-        elif isinstance(value, object) and "__dict__" in dir(value):
-            modified_d[key] = vars(value)
-        # If the value is a dictionary, recursively convert its nested lists to dictionaries
-        elif isinstance(value, dict):
-            modified_d[key] = reconstruct_dict(value)
-        else:
-            modified_d[key] = value
-
-    return modified_d
+        return modified_data
 
 
-    def convert_to_firebase_data(self, data):
-        modified_data = reconstruct_dict(data)
-
-    # add documents with known IDs
-    def save_to_firestore(self, collection, data, id=None):
-        if id is None:
-            # use random id
+    # add documents with auto IDs
+    def to_firestore(self, collection, data, id=None):
+        # check if the incoming new data exists in db
+        if id is None: 
+            data_ref = self.db.collection(collection)
             name = data["name"]
-            # but first check db for same name
-            # ref = self.db.collection(collection)
-            # "query" query_ref = cities_ref.where(u'name', u'==', name)
-            # then check if all data is the same, (deep equals)
-            # if all data the same, don't upload
-            # else, upload with new id 
-            id = create_random_id
-            self.db.collection(collection).document(id).set(modified_data)
+            query_ref = data_ref.where("name", "==", name)
+            docs = query_ref.get()
+            if docs and data.isEqual(docs):
+                print("this data already exists in firestore")
+            else: 
+                doc_ref = self.db.collection(collection).add(data)
+        #>>>check: when the id will not be None
         else:
-            self.db.collection(collection).document(id).set(modified_data)
-        return f"firebase:{collection}/{id}"
+            doc_ref = self.db.collection(collection).add(data)
+            
+        return doc_ref
 
     def upload_recipe(self, recipe_data):
         key = f"{recipe_data["name"]}_v{recipe_data["version"]}"
@@ -78,64 +63,62 @@ def reconstruct_dict(data):
         path = self.save_to_firestore("recipes", recipe_data, id=key)
         # log("successfully uploaded to path:", path)
 
-def divide_recipe_into_collections(self, recipe_meta_data, recipe_data):
-    recipe_to_save = recipe_meta_data.copy.deepcopy()
-    objects = recipe_data["objects"]
-    composition = recipe_data["composition"]
-    gradients = recipe_data.get("gradients")
-    objects_to_path_map = {}
-    for obj_name in objects:
-        version = 1.0
-        if "version" in objects[obj_name]:
-            version = objects[obj_name]["version"]
-        objects[obj_name]["version"] = version
-        path = self.save_to_firestore("objects", f"{obj_name}/{version}", objects[obj_name])
-        objects_to_path_map[obj_name] = path
+    def divide_recipe_into_collections(self, recipe_meta_data, recipe_data):
+        recipe_to_save = copy.deepcopy(recipe_meta_data)
+        objects = recipe_data["objects"]
+        composition = recipe_data["composition"]
+        gradients = recipe_data.get("gradients")
+        path_map = {}
+        for obj_name in objects:
+            object_doc = objects[obj_name]
+            object_doc["name"] = obj_name
+            collection = "objects"
+            doc_ref = self.to_firestore(collection, object_doc)
+            path_map[obj_name] = doc_ref.path
 
-    for comp_name in composition:
-        comp_obj = composition[comp_name]
-        if "regions" in comp_obj:
-            for region_name, region_array in comp_obj["regions"].items():
-                for index in range(len(region_array)):
-                    region_item = region_array[index]
-                    is_dict = isinstance(region_item, dict)
-                    if (is_dict):
-                        # if it is a dictionary we want to update the refeence
-                        # to the object in the database
-                        obj_name = region_item["object"]
-                        region_item["object"] = objects_to_path_map[obj_name]
-                        
-        else: 
-            obj_name = comp_obj["object"]
-            obj_path = objects_to_path_map[obj_name]
-            comp_obj["object"] = obj_path
-            path_to_comp = self.save_to_firestore("composition", comp_obj)
-            recipe_to_save["composition"][comp_name] = { "inherit" : path_to_comp }
+        for comp_name in composition:
+            comp_obj = composition[comp_name]
+            if "regions" in comp_obj:
+                for region_name, region_array in comp_obj["regions"].items():
+                    for region_item in region_array:
+                        if isinstance(region_item, dict):
+                            obj_name = region_item["object"]
+                            region_item["object"] = path_map[obj_name]
+                        else: 
+                            #if it's a string, we find its comp path 
+                            pass
+                            
+            else: 
+                obj_name = comp_obj["object"]
+                obj_path = path_map[obj_name]
+                comp_obj["object"] = obj_path
+                path_to_comp = self.to_firestore("composition", comp_obj)
+                recipe_to_save["composition"][comp_name] = { "inherit" : path_to_comp }
 
 
-        self.upload_recipe(recipe_to_save)
-# get a document with a known ID
-# def get_doc_from_firestore(collection, id):
-#     doc = db.collection(collection).document(id).get()
-#     if doc.exists:
-#         return doc.to_dict()
-#     else:
-#         return "requested doc doesn't exist in firestore"
-    get_collection_id_from_path(self )
+            self.upload_recipe(recipe_to_save)
+    # get a document with a known ID
+    # def get_doc_from_firestore(collection, id):
+    #     doc = db.collection(collection).document(id).get()
+    #     if doc.exists:
+    #         return doc.to_dict()
+    #     else:
+    #         return "requested doc doesn't exist in firestore"
+        get_collection_id_from_path(self )
 
-# # get all documents in a collection
-# def get_all_docs_from_firestore(collection):
-#     docs = db.collection(collection).get()
-#     docs_list = []
-#     for doc in docs:
-#         docs_list.append(doc.to_dict())
-#     print(docs_list)
-#     return docs_list
-    def read(self, collection, id):
-        return self.db.collection(collection).get(id)
+    # # get all documents in a collection
+    # def get_all_docs_from_firestore(collection):
+    #     docs = db.collection(collection).get()
+    #     docs_list = []
+    #     for doc in docs:
+    #         docs_list.append(doc.to_dict())
+    #     print(docs_list)
+    #     return docs_list
+        def read(self, collection, id):
+            return self.db.collection(collection).get(id)
 
-    def read_recipe(self, path_to_recipe):
-        collection, id = self.get_collection_id_from_path(path_to_recipe)
-        data_from_firebase = self.read(collection, id)
-        # TODO: convert to recipe that looks like it was read from a file
-        # return converted data
+        def read_recipe(self, path_to_recipe):
+            collection, id = self.get_collection_id_from_path(path_to_recipe)
+            data_from_firebase = self.read(collection, id)
+            # TODO: convert to recipe that looks like it was read from a file
+            # return converted data
