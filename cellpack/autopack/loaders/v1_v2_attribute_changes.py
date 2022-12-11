@@ -49,6 +49,7 @@ required_attributes = {
     "MultiSphere": ["sphereFile"],
     "SingleCylinder": [],
     "mesh": [],
+    "Grow": [],
 }
 
 ingredient_types_map = {

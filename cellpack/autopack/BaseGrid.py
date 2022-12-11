@@ -291,7 +291,6 @@ class BaseGrid:
 
         space = self.gridSpacing
         padding = space / 2.0
-
         grid_dimensions = [[], [], []]
         for axis in range(len(grid_dimensions)):
             start = boundingBox[0][axis] + padding
@@ -824,12 +823,8 @@ class BaseGrid:
 
 # don't forget to use spatial.distance.cdist
 class HaltonGrid(BaseGrid):
-    def __init__(
-        self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=False
-    ):
-        BaseGrid.__init__(
-            self, boundingBox=boundingBox, spacing=space, setup=setup
-        )
+    def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=False):
+        BaseGrid.__init__(self, boundingBox=boundingBox, spacing=space, setup=setup)
         self.haltonseq = cHaltonSequence3()
         self.tree = None
         self.gridSpacing = space
