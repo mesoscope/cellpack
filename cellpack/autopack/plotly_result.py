@@ -1,4 +1,6 @@
-from cellpack.autopack.upy.colors import create_divergent_color_map_with_scaled_values
+from cellpack.autopack.upy.colors import (
+    create_divergent_color_map_with_scaled_values,
+)
 import plotly.graph_objects as go
 import plotly.colors as pcolors
 import numpy
@@ -14,6 +16,19 @@ class PlotlyAnalysis:
 
     def update_title(self, title):
         self.plot.update_layout(title=title)
+
+    def adjust_plot_limits(self, bounding_box, adj_factor=0.1):
+        """
+        Adjusts limits of the plot
+        bounding_box provides two corners of the plot
+        adj_factor provides the fraction of extra space to pad
+        """
+        x_lims = numpy.array([bounding_box[0][0], bounding_box[1][0]])
+        y_lims = numpy.array([bounding_box[0][1], bounding_box[1][1]])
+        adj_x = adj_factor * (x_lims[1] - x_lims[0])
+        adj_y = adj_factor * (y_lims[1] - y_lims[0])
+        self.plot.update_xaxes(range=[x_lims[0] - adj_x, x_lims[1] + adj_x])
+        self.plot.update_yaxes(range=[y_lims[0] - adj_y, y_lims[1] + adj_y])
 
     @staticmethod
     def format_color(color):

@@ -1387,6 +1387,7 @@ class AnalyseAP:
             )
             self.plotly.make_grid_heatmap(self.env)
             self.plotly.add_ingredient_positions(self.env)
+            self.plotly.adjust_plot_limits(bounding_box=self.env.boundingBox)
             self.plotly.show()
 
     def calcDistanceMatrixFastEuclidean2(self, nDimPoints):
