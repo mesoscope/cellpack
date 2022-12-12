@@ -80,7 +80,7 @@ class Writer(object):
 
     def save_as_simularium(self, env, setupfile, all_ingr_as_array, compartments):
         autopack.helper.clear()
-        
+
         grid_positions = env.grid.masterGridPositions if env.show_grid_spheres else None
         compartment_ids = env.grid.compartment_ids if env.show_grid_spheres else None
         autopack.helper.init_scene_with_objects(
@@ -96,10 +96,11 @@ class Writer(object):
         if grid_positions is not None and len(env.gradients):
             for _, gradient in env.gradients.items():
                 values = gradient.distances
-                autopack.helper.add_grid_data_to_scene(f"{gradient.name}-distances", grid_positions, values)
+                autopack.helper.add_grid_data_to_scene(
+                    f"{gradient.name}-distances", grid_positions, values
+                )
 
         autopack.helper.writeToFile(None, f"{setupfile}_results", env.boundingBox)
-
 
     def save_Mixed_asJson(
         self,

@@ -122,9 +122,7 @@ class MeshStore:
         self.scene.add_geometry(mesh, geom_name=name)
 
     def read_mesh_file(self, filename):
-        file_name, file_extension = MeshStore.get_mesh_filepath_and_extension(
-            filename
-        )
+        file_name, file_extension = MeshStore.get_mesh_filepath_and_extension(filename)
         data = trimesh.exchange.load.load(
             f"{file_name}{file_extension}"
         )  # , ignore=[collada.DaeUnsupportedError,
@@ -355,9 +353,7 @@ class MeshStore:
 
         return scaled_distance_between_surfaces
 
-    def decompose_mesh(
-        self, poly, edit=True, copy=True, tri=True, transform=True
-    ):
+    def decompose_mesh(self, poly, edit=True, copy=True, tri=True, transform=True):
         if not isinstance(poly, trimesh.Trimesh):
             return [], [], []
         return poly.faces, poly.vertices, poly.vertex_normals
