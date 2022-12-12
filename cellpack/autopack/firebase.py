@@ -46,57 +46,60 @@ class FirebaseHandler(object):
                 print("this data already exists in firestore")
             else: 
                 doc_ref = self.db.collection(collection).add(data)
-        #>>>check: when the id will not be None
+                print(f"successfully uploaded to path: {doc_ref.path}")
+        #TODO: check when the id will not be None
         else:
             doc_ref = self.db.collection(collection).add(data)
-            
         return doc_ref
 
     def upload_recipe(self, recipe_data):
-        key = f"{recipe_data["name"]}_v{recipe_data["version"]}"
-        # check if recipe exists
-        # doc = self.db.collection(collection).document(id)
+        recipe_name = recipe_data["name"]
+        recipe_version = recipe_data["version"]
+        key = f"{recipe_name}_v{recipe_version}"
+        # TODO: check we want to use version or format_version 
         # if doc.exists()
             # if it already does, throw error, tell user to version the recipe
             # if they still want to upload it 
         # LONGER TERM: could check to see if all the data is the same and let the user know 
-        path = self.save_to_firestore("recipes", recipe_data, id=key)
-        # log("successfully uploaded to path:", path)
+        recipe_ref = self.to_firestore("recipes", recipe_data, key)
+        print(f"successfully uploaded recipe to path: {recipe_ref.path}")
 
     def divide_recipe_into_collections(self, recipe_meta_data, recipe_data):
         recipe_to_save = copy.deepcopy(recipe_meta_data)
         objects = recipe_data["objects"]
         composition = recipe_data["composition"]
         gradients = recipe_data.get("gradients")
-        path_map = {}
+        objects_to_path_map = {}
+        comp_to_path_map = {}
         for obj_name in objects:
             object_doc = objects[obj_name]
             object_doc["name"] = obj_name
-            collection = "objects"
-            doc_ref = self.to_firestore(collection, object_doc)
-            path_map[obj_name] = doc_ref.path
+            obj_ref = self.to_firestore("objects", object_doc)
+            objects_to_path_map[obj_name] = obj_ref.path
 
         for comp_name in composition:
             comp_obj = composition[comp_name]
+            if "object" in comp_obj: 
+                obj_name = comp_obj["object"]
+                obj_path = objects_to_path_map.get(obj_name)
+                comp_obj["object"] = obj_path
             if "regions" in comp_obj:
                 for region_name, region_array in comp_obj["regions"].items():
                     for region_item in region_array:
                         if isinstance(region_item, dict):
                             obj_name = region_item["object"]
-                            region_item["object"] = path_map[obj_name]
+                            region_item["object"] = objects_to_path_map.get(obj_name)
                         else: 
-                            #if it's a string, we find its comp path 
+                            #what cases are for else? 
                             pass
-                            
-            else: 
-                obj_name = comp_obj["object"]
-                obj_path = path_map[obj_name]
-                comp_obj["object"] = obj_path
-                path_to_comp = self.to_firestore("composition", comp_obj)
-                recipe_to_save["composition"][comp_name] = { "inherit" : path_to_comp }
-
+            comp_obj["name"] = comp_name
+            comp_ref = self.to_firestore("composition", comp_obj)
+            comp_to_path_map[comp_name] = comp_ref.path
+            recipe_to_save["composition"][comp_name] = { "inherit" : comp_to_path_map[comp_name] }
+            #TODO: update comp path -- i.e. replace "nucleus" with nucleus comp path in membrane comp              
 
             self.upload_recipe(recipe_to_save)
+
     # get a document with a known ID
     # def get_doc_from_firestore(collection, id):
     #     doc = db.collection(collection).document(id).get()
