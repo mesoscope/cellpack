@@ -112,7 +112,7 @@ class FirebaseHandler(object):
                             })
 
         #this query will get all docs that have "regions"          
-        # docs = self.db.collection("composition").where("regions", ">", "").get()
+        # docs = self.db.collection("composition").where("regions", ">", "").stream()
             
         
     def get_collection_id_from_path(self, path_to_recipe):
@@ -138,4 +138,25 @@ class FirebaseHandler(object):
         collection, id = self.get_collection_id_from_path(path_to_recipe)
         data_from_firebase = self.read_from_firestore(collection, id)
         # TODO: convert to recipe that looks like it was read from a file
-        # return converted data
+        for k, v in data_from_firebase.items():
+            if k == "composition":
+                # convert comp_path
+                for comp_name in v:
+                    comp_path = comp_name["inherit"]
+                    comp_doc = (self.db.document(comp_path).get()).to_dict()
+                    if "name" in comp_doc:
+                        del comp_doc["name"]
+                    #convert obj_path here 
+        return data_from_firebase
+                    
+    def convert_obj_in_comp(self, comp_doc):
+        for k, v in comp_doc.items():
+            pass
+
+
+                        
+
+
+        
+            
+        
