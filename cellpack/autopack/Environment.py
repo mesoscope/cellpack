@@ -2785,7 +2785,9 @@ class Environment(CompartmentList):
             self.rb_panda = []
         for compartment in self.compartments:
             if compartment.rbnode is None:
-                compartment.rbnode = compartment.addShapeRB(self)  # addMeshRBOrganelle(o)
+                compartment.rbnode = compartment.addShapeRB(
+                    self
+                )  # addMeshRBOrganelle(o)
 
     def add_rb_node(self, ingr, trans, mat):
         if ingr.type == "Mesh":
