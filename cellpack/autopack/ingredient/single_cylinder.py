@@ -96,22 +96,22 @@ class SingleCylinderIngr(Ingredient):
         self.min_radius = radius
         self.nbCurve = 2
 
-        self.bottom_center = numpy.array([0, 0, 0])
-        self.top_center = self.bottom_center + self.length * numpy.array(
-            self.principal_vector
-        )
+        self.center = numpy.array([0, 0, 0])
 
-        self.center = (
-            self.bottom_center + (self.top_center - self.bottom_center) / 2
-        )  # location of center based on top and bottom
+        self.bottom_center = (
+            self.center - self.length * numpy.array(self.principal_vector) / 2
+        )
+        self.top_center = (
+            self.center + self.length * numpy.array(self.principal_vector) / 2
+        )
 
         self.encapsulating_radius = numpy.sqrt(
             radius**2 + (self.length / 2.0) ** 2
         )
 
         self.listePtLinear = [
-            self.bottom_center - self.center,
-            self.top_center - self.center,
+            self.bottom_center,
+            self.top_center,
         ]
 
     def initialize_mesh(self, mesh_store):
@@ -264,11 +264,11 @@ class SingleCylinderIngr(Ingredient):
         insidePoints = {}
         newDistPoints = {}
 
-        search_radius = 2 * self.encapsulating_radius + dpad
+        search_radius = self.encapsulating_radius + dpad
 
         # get grid points to check for collisions
         bounding_box = self.correctBB(
-            bottom_center_transformed, top_center_transformed, self.radius
+            bottom_center_transformed, top_center_transformed, search_radius
         )
         grid_points_in_bounding_box = env.grid.getPointsInCube(
             bounding_box, center_transformed, search_radius
@@ -289,6 +289,7 @@ class SingleCylinderIngr(Ingredient):
             grid_points_in_bounding_box
         ]
 
+        import ipdb; ipdb.set_trace()
         # signed distances of grid points from the cylinder surface
         grid_point_distances = self.get_signed_distance(
             points_to_check, bottom_center_transformed, top_center_transformed
@@ -529,7 +530,7 @@ class SingleCylinderIngr(Ingredient):
         top_surf_dist = numpy.abs(distance_to_top * top_cos)
 
         bottom_sin = numpy.sqrt(1 - bottom_cos**2)
-        perp_dist = (
+        perp_dist = numpy.abs(
             distance_to_bottom * bottom_sin
         )  # perpendicular distance to cylinder axis
 
@@ -553,10 +554,13 @@ class SingleCylinderIngr(Ingredient):
                     ),
                     axis=0,
                 )
+            else:
+                # pass
+                import ipdb; ipdb.set_trace()
             # region 2: outside the cylinder, between the ends (curved surface is closest)
             region_2_indices = between_inds & (perp_dist > self.radius)
             if any(region_2_indices):
-                signed_distances[region_2_indices] = -numpy.abs(
+                signed_distances[region_2_indices] = numpy.abs(
                     perp_dist[region_2_indices] - self.radius
                 )
 
