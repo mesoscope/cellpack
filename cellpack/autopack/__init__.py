@@ -57,7 +57,7 @@ afdir = Path(os.path.abspath(__path__[0]))
 os.environ["NUMEXPR_MAX_THREADS"] = "32"
 
 ###############################################################################
-log_file_path = path.join(path.dirname(path.abspath(__file__)), "../../logging.conf")
+log_file_path = path.join(path.dirname(path.abspath(__file__)), "../logging.conf")
 logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
 log = logging.getLogger("autopack")
 log.propagate = False
