@@ -233,7 +233,7 @@ class MeshStore:
         mesh = trimesh.creation.icosphere(radius=radius)
         self.add_mesh_to_scene(mesh, name)
         return mesh
-    
+
     def create_cylinder(self, name, radius, height):
         """
         Create the mesh data and the mesh object of a cylinder of a given radius

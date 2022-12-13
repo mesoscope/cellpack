@@ -464,7 +464,9 @@ class simulariumHelper(hostHelper.Helper):
                     self.max_fiber_length = ingredient.nbCurve
                 sub_points = ingredient.listePtLinear
                 if "cylinder" in ingredient.type:
-                    sub_points = ingredient.transformPoints(position, rotation, ingredient.listePtLinear)
+                    sub_points = ingredient.transformPoints(
+                        position, rotation, ingredient.listePtLinear
+                    )
             if ingr_name not in self.display_data:
                 display_type, url = self.get_display_data(ingredient)
                 self.display_data[ingredient.name] = DisplayData(
@@ -1288,7 +1290,9 @@ class simulariumHelper(hostHelper.Helper):
                     viz_types[t][n] = obj.viz_type
                     positions[t][n] = [0, 0, 0]
                     rotations[t][n] = [0, 0, 0]
-                    scaled_control_points = np.array(curve) * self.scale_factor - box_adjustment
+                    scaled_control_points = (
+                        np.array(curve) * self.scale_factor - box_adjustment
+                    )
                     subpoints[t][n] = scaled_control_points.tolist()
                     n_subpoints[t][n] = len(curve)
                 else:

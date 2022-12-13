@@ -105,9 +105,7 @@ class SingleCylinderIngr(Ingredient):
             self.center + self.length * numpy.array(self.principal_vector) / 2
         )
 
-        self.encapsulating_radius = numpy.sqrt(
-            radius**2 + (self.length / 2.0) ** 2
-        )
+        self.encapsulating_radius = numpy.sqrt(radius**2 + (self.length / 2.0) ** 2)
 
         self.listePtLinear = [
             self.bottom_center,
@@ -149,9 +147,7 @@ class SingleCylinderIngr(Ingredient):
     def getBigBB(self):
         # one level for cylinder
         bbs = []
-        for radc, p1, p2 in zip(
-            self.radii[0], self.positions[0], self.positions2[0]
-        ):
+        for radc, p1, p2 in zip(self.radii[0], self.positions[0], self.positions2[0]):
             bb = self.correctBB(p1, p2, radc)
             bbs.append(bb)
         # get min and max from all bbs
@@ -187,17 +183,14 @@ class SingleCylinderIngr(Ingredient):
             jtrans, rotation_matrix, [self.top_center]
         )[0]
         cylinder_axis = top_center_transformed - bottom_center_transformed
-        center_transformed = bottom_center_transformed + 0.5 * cylinder_axis
         search_radius = self.length + self.radius
 
         # get grid points to check for collisions
         bounding_box = self.correctBB(
-            bottom_center_transformed, top_center_transformed, self.radius
+            bottom_center_transformed, top_center_transformed, search_radius
         )
         grid_points_in_bounding_box = numpy.array(
-            env.grid.getPointsInCube(
-                bounding_box, center_transformed, search_radius
-            )
+            env.grid.get_grid_points_in_bounding_box(bounding_box)
         )
 
         # relative position of grid_points
@@ -223,13 +216,9 @@ class SingleCylinderIngr(Ingredient):
         if not any(index_in_cylinder):
             return False
 
-        grid_points_in_cylinder = grid_points_in_bounding_box[
-            index_in_cylinder
-        ]
+        grid_points_in_cylinder = grid_points_in_bounding_box[index_in_cylinder]
 
-        if any(
-            env.grid.compartment_ids[grid_points_in_cylinder] != self.compNum
-        ):
+        if any(env.grid.compartment_ids[grid_points_in_cylinder] != self.compNum):
             # check if compartment id of grid points inside the cylinder matches
             # the compartment id of the ingredient
             return True
@@ -257,9 +246,7 @@ class SingleCylinderIngr(Ingredient):
         top_center_transformed = self.transformPoints(
             packing_location, rotation_matrix, [self.top_center]
         )[0]
-        center_transformed = (
-            top_center_transformed + bottom_center_transformed
-        ) / 2
+        center_transformed = (top_center_transformed + bottom_center_transformed) / 2
 
         insidePoints = {}
         newDistPoints = {}
@@ -270,8 +257,8 @@ class SingleCylinderIngr(Ingredient):
         bounding_box = self.correctBB(
             bottom_center_transformed, top_center_transformed, search_radius
         )
-        grid_points_in_bounding_box = env.grid.getPointsInCube(
-            bounding_box, center_transformed, search_radius
+        grid_points_in_bounding_box = env.grid.get_grid_points_in_bounding_box(
+            bounding_box
         )
 
         if env.runTimeDisplay:  # > 1:
@@ -285,11 +272,8 @@ class SingleCylinderIngr(Ingredient):
             self.vi.update()
 
         # relative position of grid_points
-        points_to_check = env.grid.masterGridPositions[
-            grid_points_in_bounding_box
-        ]
+        points_to_check = env.grid.masterGridPositions[grid_points_in_bounding_box]
 
-        import ipdb; ipdb.set_trace()
         # signed distances of grid points from the cylinder surface
         grid_point_distances = self.get_signed_distance(
             points_to_check, bottom_center_transformed, top_center_transformed
@@ -308,9 +292,7 @@ class SingleCylinderIngr(Ingredient):
             )
 
             if collision:
-                self.log.info(
-                    "grid point already occupied %f", grid_point_index
-                )
+                self.log.info("grid point already occupied %f", grid_point_index)
                 return True, {}, {}
 
             # check if grid point lies inside the cylinder
@@ -318,9 +300,7 @@ class SingleCylinderIngr(Ingredient):
                 if (grid_point_index not in insidePoints) or abs(
                     signed_distance_to_cyl_surface
                 ) < abs(insidePoints[grid_point_index]):
-                    insidePoints[
-                        grid_point_index
-                    ] = signed_distance_to_cyl_surface
+                    insidePoints[grid_point_index] = signed_distance_to_cyl_surface
             elif (
                 signed_distance_to_cyl_surface
                 <= current_grid_distances[grid_point_index]
@@ -332,9 +312,7 @@ class SingleCylinderIngr(Ingredient):
                         newDistPoints[grid_point_index],
                     )
                 else:
-                    newDistPoints[
-                        grid_point_index
-                    ] = signed_distance_to_cyl_surface
+                    newDistPoints[grid_point_index] = signed_distance_to_cyl_surface
         return False, insidePoints, newDistPoints
 
     def add_rb_node(self, worldNP):
@@ -449,14 +427,10 @@ class SingleCylinderIngr(Ingredient):
                 return False, insidePoints, newDistPoints
             if self.compareCompartment:
                 ptsInSphereId = numpy.take(pointsInCube, ptsWithinCaps[0], 0)
-                compIdsSphere = numpy.take(
-                    env.grid.compartment_ids, ptsInSphereId, 0
-                )
+                compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphereId, 0)
                 #                print "compId",compIdsSphere
                 if self.compNum <= 0:
-                    wrongPt = [
-                        cid for cid in compIdsSphere if cid != self.compNum
-                    ]
+                    wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]
                     if len(wrongPt):
                         return True, insidePoints, newDistPoints
 
@@ -518,15 +492,11 @@ class SingleCylinderIngr(Ingredient):
         distance_to_top = numpy.linalg.norm(top_vect, axis=1)
 
         bottom_cos = (
-            numpy.dot(bottom_vect, cylinder_axis)
-            / self.length
-            / distance_to_bottom
+            numpy.dot(bottom_vect, cylinder_axis) / self.length / distance_to_bottom
         )
         bottom_surf_dist = numpy.abs(distance_to_bottom * bottom_cos)
 
-        top_cos = (
-            numpy.dot(top_vect, cylinder_axis) / self.length / distance_to_top
-        )
+        top_cos = numpy.dot(top_vect, cylinder_axis) / self.length / distance_to_top
         top_surf_dist = numpy.abs(distance_to_top * top_cos)
 
         bottom_sin = numpy.sqrt(1 - bottom_cos**2)
@@ -545,18 +515,13 @@ class SingleCylinderIngr(Ingredient):
                 signed_distances[region_1_indices] = -numpy.amin(
                     numpy.vstack(
                         [
-                            numpy.abs(
-                                (perp_dist[region_1_indices] - self.radius)
-                            ),
+                            numpy.abs((perp_dist[region_1_indices] - self.radius)),
                             bottom_surf_dist[region_1_indices],
                             top_surf_dist[region_1_indices],
                         ]
                     ),
                     axis=0,
                 )
-            else:
-                # pass
-                import ipdb; ipdb.set_trace()
             # region 2: outside the cylinder, between the ends (curved surface is closest)
             region_2_indices = between_inds & (perp_dist > self.radius)
             if any(region_2_indices):
@@ -569,9 +534,7 @@ class SingleCylinderIngr(Ingredient):
             # region 3: outside the cylinder, beyond top end (flat top is closest)
             region_3_indices = beyond_top_inds & (perp_dist <= self.radius)
             if any(region_3_indices):
-                signed_distances[region_3_indices] = top_surf_dist[
-                    region_3_indices
-                ]
+                signed_distances[region_3_indices] = top_surf_dist[region_3_indices]
             # region 4: outside the cylinder, beyond top end (top circular edge is closest)
             region_4_indices = beyond_top_inds & (perp_dist > self.radius)
             if any(region_4_indices):
@@ -586,9 +549,7 @@ class SingleCylinderIngr(Ingredient):
             # region 5: outside the cylinder, beyond bottom end (flat bottom is closest)
             region_5_indices = beyond_bottom_inds & (perp_dist <= self.radius)
             if any(region_5_indices):
-                signed_distances[region_5_indices] = bottom_surf_dist[
-                    region_5_indices
-                ]
+                signed_distances[region_5_indices] = bottom_surf_dist[region_5_indices]
             # region 6: outside the cylinder, beyond bottom end (bottom circular edge is closest)
             region_6_indices = beyond_bottom_inds & (perp_dist > self.radius)
             if any(region_6_indices):
