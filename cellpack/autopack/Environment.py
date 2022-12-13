@@ -168,7 +168,7 @@ class Environment(CompartmentList):
         )
         # 0 is the exterior, 1 is compartment 1 surface, -1 is compartment 1 interior
         self.nbCompartments = 1
-
+        self.number = 0  # TODO: call this 'id' consistent with container
         self.order = {}  # give the order of drop ingredient by ptInd from molecules
         self.lastrank = 0
 
@@ -237,8 +237,7 @@ class Environment(CompartmentList):
 
         # gradient
         self.gradients = {}
-
-        self.use_gradient = False  # gradient control is also per ingredient
+        self.use_gradient = len(recipe.get("gradients", {})) > 0
         self.use_halton = False  # use halton for grid point distribution
 
         self.ingrLookForNeighbours = False  # Old Features to be test
@@ -280,6 +279,23 @@ class Environment(CompartmentList):
                 self.referenced_objects,
             ) = Recipe.resolve_composition(self.recipe_data)
             self.create_objects()
+        if self.use_gradient:
+            gradients = self.recipe_data["gradients"]
+            for gradient_name in gradients:
+                gradient_data = gradients[gradient_name]
+                if "surface_name" in gradient_data:
+                    gradient_data["object"] = self.get_compartment_object_by_name(
+                        gradient_data["surface_name"]
+                    )
+                self.set_gradient(gradient_name, gradient_data)
+
+    def get_compartment_object_by_name(self, compartment_name):
+        """
+        Returns compartment object by name
+        """
+        for compartment in self.compartments:
+            if compartment.name == compartment_name:
+                return compartment
 
     def setSeed(self, seedNum):
         SEED = int(seedNum)
@@ -300,9 +316,10 @@ class Environment(CompartmentList):
         )
         return ingredient_info
 
-    def _step_down(self, compartment_key):
+    def _step_down(self, compartment_key, prev_compartment=None):
+        parent = prev_compartment if prev_compartment is not None else self
         composition_dict = self.recipe_data["composition"]
-        compartment = self.create_compartment(compartment_key)
+        compartment = self.create_compartment(compartment_key, parent)
         compartment_info = composition_dict[compartment_key]
         for region_name, obj_keys in compartment_info.get(
             "regions", {}
@@ -312,7 +329,7 @@ class Environment(CompartmentList):
                 is_key, composition_info = Recipe.is_key(key_or_dict, composition_dict)
                 if is_key and key_or_dict in self.compartment_keys:
                     key = key_or_dict
-                    self._step_down(key)
+                    self._step_down(key, prev_compartment=compartment)
                 else:
                     key = key_or_dict if is_key else None
                     ingredient_info = self._prep_ingredient_info(composition_info, key)
@@ -329,7 +346,6 @@ class Environment(CompartmentList):
         composition_dict = self.recipe_data["composition"]
 
         if self.root_compartment is not None:
-            # create cytoplasme and set as exterior recipe
             root_compartment = composition_dict[self.root_compartment]
             # self.create_compartment(self.root_compartment)
             external_recipe = Recipe()
@@ -342,6 +358,7 @@ class Environment(CompartmentList):
                     )
                     if is_key and key_or_dict in self.compartment_keys:
                         # key is pointing to another container
+                        # make compartment and add ingredients inside it
                         key = key_or_dict
                         self._step_down(key)
                     else:
@@ -351,10 +368,6 @@ class Environment(CompartmentList):
                         )
                         self.create_ingredient(external_recipe, ingredient_info)
             self.setExteriorRecipe(external_recipe)
-
-        if "gradients" in self.recipe_data:
-            # TODO: deal with gradients here
-            pass
 
     def reportprogress(self, label=None, progress=None):
         if self.afviewer is not None and hasattr(self.afviewer, "vi"):
@@ -684,19 +697,16 @@ class Environment(CompartmentList):
             if o.surfaceRecipe:
                 o.surfaceRecipe.sort()
 
-    def setGradient(self, **kw):
+    def set_gradient(self, name, gradient_data):
         """
         create a grdaient
         assign weight to point
         listorganelle influenced
         listingredient influenced
         """
-        if "name" not in kw:
-            print("name kw is required")
-            return
-        gradient = Gradient(**kw)
+        gradient = Gradient(name=name, **gradient_data)
         # default gradient 1-linear Decoy X
-        self.gradients[kw["name"]] = gradient
+        self.gradients[name] = gradient
 
     def callFunction(self, function, args=[], kw={}):
         """
@@ -981,13 +991,14 @@ class Environment(CompartmentList):
             and arguments["gradient"] != "None"
         ):
             ingr.gradient = arguments["gradient"]
+            # TODO: allow ingrdients to have multiple gradients
         if "results" in arguments:
             ingr.results = arguments["results"]
         ingr.initialize_mesh(self.mesh_store)
         recipe.addIngredient(ingr)
         self.update_largest_smallest_size(ingr)
 
-    def create_compartment(self, compartment_key):
+    def create_compartment(self, compartment_key, parent):
         comp_dic = self.recipe_data["composition"]
         obj_dic = self.recipe_data["objects"]
 
@@ -1003,17 +1014,19 @@ class Environment(CompartmentList):
             object_info=object_info,
         )
         compartment.initialize_shape(self.mesh_store)
-        self._add_compartment(compartment)
+        self._add_compartment(compartment, parent)
         return compartment
 
-    def _add_compartment(self, compartment):
+    def _add_compartment(self, compartment, parent):
         """
         Add the given compartment to the environment.
         Extend the main bounding box if needed
         """
         compartment.setNumber(self.nbCompartments)
         self.nbCompartments += 1
-        CompartmentList._add_compartment(self, compartment)
+        self.compartments.append(compartment)
+
+        CompartmentList.add_compartment(parent, compartment)
 
     def compartment_id_for_nearest_grid_point(self, point):
         # check if point inside  of the compartments
@@ -1248,11 +1261,7 @@ class Environment(CompartmentList):
                 c.setCount()
         else:
             self.grid.distToClosestSurf_store = self.grid.distToClosestSurf[:]
-        if self.use_gradient and len(self.gradients) and rebuild:
-            for g in self.gradients:
-                self.gradients[g].buildWeigthMap(
-                    boundingBox, self.grid.masterGridPositions
-                )
+
         if self.previous_grid_file is not None:
             distance = self.grid.distToClosestSurf  # [:]
             nbFreePoints = nbPoints  # -1              #Graham turned this off on 5/16/12 to match August Repair for May Hybrid
@@ -1270,6 +1279,18 @@ class Environment(CompartmentList):
                         i, mingrs, distance, nbFreePoints, organelle.molecules
                     )
             self.grid.nbFreePoints = nbFreePoints
+
+        if self.use_gradient and len(self.gradients) and rebuild:
+
+            for g in self.gradients:
+                gradient = self.gradients[g]
+                if gradient.mode == "surface":
+                    gradient.object.get_surface_distances(
+                        self, self.grid.masterGridPositions
+                    )
+                self.gradients[g].build_weight_map(
+                    boundingBox, self.grid.masterGridPositions
+                )
 
     def onePrevIngredient(self, i, mingrs, distance, nbFreePoints, marray):
         """
@@ -2762,9 +2783,11 @@ class Environment(CompartmentList):
             self.static = []
             self.moving = None
             self.rb_panda = []
-        for o in self.compartments:
-            if o.rbnode is None:
-                o.rbnode = o.addShapeRB()  # addMeshRBOrganelle(o)
+        for compartment in self.compartments:
+            if compartment.rbnode is None:
+                compartment.rbnode = compartment.addShapeRB(
+                    self
+                )  # addMeshRBOrganelle(o)
 
     def add_rb_node(self, ingr, trans, mat):
         if ingr.type == "Mesh":

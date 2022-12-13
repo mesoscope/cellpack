@@ -49,9 +49,9 @@
 import numpy
 from random import random
 import bisect
-from math import exp, cos, pow as mathPow
-from cellpack.autopack.upy.hostHelper import vdistance
+from math import cos
 from cellpack.autopack.transformation import angle_between_vectors
+from cellpack.autopack.utils import get_distances_from_point
 
 
 class Gradient:
@@ -73,7 +73,17 @@ class Gradient:
             self.computeStartEnd()
         self.function = self.defaultFunction  # lambda ?
         self.weight = None
-        self.list_mode = ["X", "Y", "Z", "-X", "-Y", "-Z", "direction", "radial"]
+        self.available_modes = [
+            "X",
+            "Y",
+            "Z",
+            "-X",
+            "-Y",
+            "-Z",
+            "direction",
+            "radial",
+            "surface",
+        ]
         self.mode = mode  # can X,Y,Z,-X,-Y,-Z,"direction" custom vector
         self.weight_mode = (
             "gauss"  # "linear" #linear mode for weight generation linearpos linearneg
@@ -96,10 +106,11 @@ class Gradient:
         if "radius" in kw:
             self.radius = kw["radius"]
         self.weight_threshold = 0.0
-        if direction is None:
+        if (direction is None) and (self.mode not in ["surface", "radial"]):
             self.direction = self.directions[self.mode]
         else:
             self.direction = direction  # from direction get start and end point
+        self.object = kw.get("object")
         self.distance = 0.0
         self.gblob = 4.0
         # Note : theses functions could also be used to pick an ingredient
@@ -124,7 +135,7 @@ class Gradient:
         self.OPTIONS = {
             "mode": {
                 "name": "mode",
-                "values": self.list_mode,
+                "values": self.available_modes,
                 "default": "X",
                 "type": "list",
                 "description": "gradient direction",
@@ -217,189 +228,121 @@ class Gradient:
         """
         return self.pick_functions[self.pick_mode](listPts)
 
-    def buildWeigthMap(self, bb, MasterPosition):
+    def build_weight_map(self, bb, master_grid_positions):
         """
-        build the actual gradient value according the gradint mode
+        build the actual gradient value according the gradient mode
         """
         if self.mode in self.axes:
-            self.buildWeigthMapAxe(bb, MasterPosition)
+            self.build_axis_weight_map(bb, master_grid_positions)
         elif self.mode == "direction":
-            self.buildWeigthMapDirection(bb, MasterPosition)
+            self.build_directional_weight_map(bb, master_grid_positions)
         elif self.mode == "radial":
-            self.buildWeigthMapRadial(bb, MasterPosition)
+            self.build_radial_weight_map(bb, master_grid_positions)
+        elif self.mode == "surface":
+            self.build_surface_distance_weight_map()
 
-    def get_gauss_weights(self, N, degree=5):
+    def get_gauss_weights(self, number_of_points, degree=5):
         """
-        given a number of point compute the gaussian weight for each
+        given a number of points compute the gaussian weight for each
         """
-        degree = N / 2
-        window = N  # degree*2#-1
-        weight = numpy.array([1.0]) * window
+        degree = number_of_points / 2.0
         weightGauss = []
-        for i in range(int(window)):
+
+        for i in range(int(number_of_points)):
             i = i - degree + 1
-            frac = i / float(window)
-            gauss = 1 / (numpy.exp((self.gblob * (frac)) ** 2))
+            frac = i / number_of_points
+            gauss = numpy.exp(-((self.gblob * (frac)) ** 2))
             weightGauss.append(gauss)
-        return numpy.array(weightGauss) * weight
+        return numpy.array(weightGauss) * number_of_points
 
-    def get_gauss_weights1(self, N):
-        """
-        given a number of point compute the gaussian weight for each
-        (alternative function)
-        """
-        support_points = [(float(3 * i) / float(N)) ** 2.0 for i in range(-N, N + 1)]
-        gii_factors = [exp(-(i / 2.0)) for i in support_points]
-        ki = float(sum(gii_factors))
-        return [giin / ki for giin in gii_factors]
-
-    def getDirectionLength(self, bb=None, direction=None):
+    def get_direction_length(self, direction=None):
         if direction is None:
             direction = self.direction
-        if bb is None:
-            bb = self.bb
+        bb = self.bb
         # assume grid orthogonal
-        maxinmini = []
-        a = []
+        angles = []
         axes = ["X", "Y", "Z"]
-        for i, ax in enumerate(axes):
-            angle = angle_between_vectors(self.directions[ax], direction)
-            a.append(angle)
-            maxi = max(bb[1][i], bb[0][i])
-            mini = min(bb[1][i], bb[0][i])
-            maxinmini.append([mini, maxi])
-        m = min(a)
-        axi = a.index(m)
-        L = maxinmini[axi][1] - maxinmini[axi][0]
-        vdot = numpy.dot(
-            numpy.array(self.directions[axes[axi]]), numpy.array(direction)
-        )  # cos a * |A|*|B|
-        Ld = (1.0 / vdot) * (cos(m) * L)
-        return Ld, maxinmini
+        for i, axis_name in enumerate(axes):
+            angle = angle_between_vectors(self.directions[axis_name], direction)
+            angles.append(angle)
+        min_angle = min(angles)
+        axis_with_smallest_angle = angles.index(min_angle)
+        min_bounds_length = (
+            bb[1][axis_with_smallest_angle] - bb[0][axis_with_smallest_angle]
+        )
+        dot_product = numpy.dot(
+            self.directions[axes[axis_with_smallest_angle]], direction
+        )
+        length = (1.0 / dot_product) * (cos(min_angle) * min_bounds_length)
+        return length
 
-    def buildWeigthMapRadial(self, bb, MasterPosition):
-        """
-        from a given point (self.direction) build a radial weight
-        according the chosen mode
-        (linear, gauss, etc...)
-        """
-        N = len(MasterPosition)
+    def build_radial_weight_map(self, bb, master_grid_positions):
         self.bb = bb
-        radial_point = self.direction
-        NW = N / 3
-        self.weight = []
-        xl, yl, zl = bb[0]
-        xr, yr, zr = bb[1]
+        center = self.direction
+        max_distance = self.radius
+        distances = get_distances_from_point(master_grid_positions, center)
+        self.distances = (
+            numpy.where(distances < max_distance, distances, max_distance)
+            / max_distance
+        )
+        self.set_weights_by_mode()
 
-        if self.weight_mode == "gauss":  # 0-1-0
-            d = self.get_gauss_weights(
-                NW
-            )  # numpy.random.normal(0.5, 0.1, NW) #one dimension
-        elif self.weight_mode == "half-gauss":  # 0-1
-            d = self.get_gauss_weights(NW * 2)[NW:]
-        for ptid in range(N):
-            dist = vdistance(MasterPosition[ptid], radial_point)
-            if self.weight_mode == "linear":
-                w = (
-                    (1.0 - (abs(dist) / self.radius))
-                    if abs(dist) < self.radius
-                    else 0.0
-                )
-                self.weight.append(w)  #
-            elif self.weight_mode == "square":
-                w = (
-                    mathPow((1.0 - (abs(dist) / self.radius)), 2)
-                    if abs(dist) < self.radius
-                    else 0.0
-                )
-                self.weight.append(w)  #
-            elif self.weight_mode == "cube":
-                w = (
-                    mathPow((1.0 - (abs(dist) / self.radius)), 3)
-                    if abs(dist) < self.radius
-                    else 0.0
-                )
-                self.weight.append(w)  #
-            elif self.weight_mode == "gauss":
-                w = abs(dist) / self.radius if abs(dist) < self.radius else 1.0
-                i = int(w * N / 3) if int(w * N / 3) < len(d) else len(d) - 1
-                self.weight.append(d[i])
-            elif self.weight_mode == "half-gauss":
-                w = abs(dist) / self.radius if abs(dist) < self.radius else 1.0
-                i = int(w * N / 3) if int(w * N / 3) < len(d) else len(d) - 1
-                self.weight.append(d[i])
+    def build_surface_distance_weight_map(self):
+        """
+        build a map of weights based on the distance from a surface
+        assumes self.distances include surface distances
+        """
+        if self.object.surface_distances is None:
+            raise ValueError("Map created without specifying distances")
+        else:
+            self.distances = self.object.surface_distances / self.object.max_distance
+        self.set_weights_by_mode()
 
-    def buildWeigthMapDirection(self, bb, MasterPosition):
+    def build_directional_weight_map(self, bb, master_grid_positions):
         """
         from a given direction build a linear weight according the chosen mode
         (linear, gauss, etc...)
         """
-        N = len(MasterPosition)
         self.bb = bb
-        axe = self.direction
-        NW = N / 3
+        axis = self.direction
         self.weight = []
         center = self.getCenter()
-        L, maxinmini = self.getDirectionLength(bb)
-        if self.weight_mode == "gauss":
-            d = self.get_gauss_weights(
-                NW
-            )  # numpy.random.normal(0.5, 0.1, NW) #one dimension
-        elif self.weight_mode == "half-gauss":  # 0-1
-            d = self.get_gauss_weights(NW * 2)[NW:]
-        for ptid in range(N):
-            pt = numpy.array(MasterPosition[ptid]) - numpy.array(
-                center
-            )  # [maxinmini[0][0],maxinmini[1][0],maxinmini[2][0]])
-            vdot = numpy.dot(pt, numpy.array(axe))
-            p = ((L / 2.0) + vdot) / L
-            if self.weight_mode == "linear":
-                self.weight.append(p)  # -0.5->0.5 axe value normalized?
-            elif self.weight_mode == "square":
-                self.weight.append(mathPow(p, 2))  #
-            elif self.weight_mode == "cube":
-                self.weight.append(mathPow(p, 3))  #
-            elif self.weight_mode == "gauss":
-                #                p goes from 0.0 to 1.0
-                if p < 0.1:
-                    p = 0.0
-                i = int(p * NW) if int(p * NW) < len(d) else len(d) - 1
-                # w = d[i] if d[i] > 0.9 else 0.0
-                self.weight.append(d[i])
+        length = self.get_direction_length()
+        distances = (
+            (length / 2) + numpy.dot(master_grid_positions - center, axis)
+        ) / length
+        max_d = max(distances)
+        min_d = min(distances)
+        self.distances = 1 - (distances - min_d) / (max_d - min_d)
+        print(self.distances)
+        self.set_weights_by_mode()
 
-    def buildWeigthMapAxe(self, bb, MasterPosition, Axe="X"):
+    def build_axis_weight_map(self, bb, master_grid_positions, axis="X"):
         """
         from a given axe (X,Y,Z) build a linear weight according the chosen mode
         (linear, gauss, etc...)
         """
-        N = len(MasterPosition)
-        NW = N / 3
         self.bb = bb
         ind = self.axes[self.mode]
         maxi = max(bb[1][ind], bb[0][ind])
         mini = min(bb[1][ind], bb[0][ind])
         self.weight = []
-        if self.weight_mode == "gauss":
-            d = self.get_gauss_weights(
-                N / 3
-            )  # d = numpy.random.normal(0.5, 0.1, N/3) #one dimension
-        elif self.weight_mode == "half-gauss":  # 0-1
-            d = self.get_gauss_weights(NW * 2)[NW:]  # TODO: fix error here
-        for ptid in range(N):
-            p = (MasterPosition[ptid][ind] - mini) / (maxi - mini)
-            if self.weight_mode == "linear":
-                self.weight.append(p)  # -0.5->0.5 axe value normalized?
-            elif self.weight_mode == "square":
-                self.weight.append(mathPow(p, 2))  #
-            elif self.weight_mode == "cube":
-                self.weight.append(mathPow(p, 3))  #
-            elif self.weight_mode == "gauss":
-                vax = p  # (MasterPosition[ptid][ind]-mini)/(maxi-mini) #0-1 on the axes
-                i = int(vax * N / 3) if int(vax * N / 3) < len(d) else len(d) - 1
-                self.weight.append(d[i])
-            elif self.weight_mode == "half-gauss":
-                i = int(p * N / 3) if int(p * N / 3) < len(d) else len(d) - 1
-                self.weight.append(d[i])
+        self.distances = (master_grid_positions[:, ind] - mini) / (maxi - mini)
+        self.set_weights_by_mode(self.distances)
+
+    def set_weights_by_mode(self):
+        scaled_distances = self.distances
+        if max(scaled_distances) > 1.0:
+            self.log.error("MAX TOO BIG", max(scaled_distances))
+            # raise ValueError("distances have not been scaled to be from 0.0 to 1.0")
+        scaled_distances[numpy.isnan(scaled_distances)] = 1
+        if self.weight_mode == "linear":
+            self.weight = 1.0 - scaled_distances
+        elif self.weight_mode == "square":
+            self.weight = (1.0 - scaled_distances) ** 2
+        elif self.weight_mode == "cube":
+            self.weight = (1.0 - scaled_distances) ** 3
+        # TODO: talk to Ludo about calculating gaussian weights
 
     def getMaxWeight(self, listPts):
         """
@@ -429,7 +372,7 @@ class Gradient:
             return None
         return ptInd
 
-    def getRndWeighted(self, listPts):
+    def getRndWeighted(self, list_of_pts):
         """
         From http://glowingpython.blogspot.com/2012/09/weighted-random-choice.html
         Weighted random selection
@@ -437,11 +380,11 @@ class Gradient:
         the chance to pick the index i
         is give by the weight weights[i].
         """
-        weight = numpy.take(self.weight, listPts)
+        weight = numpy.take(self.weight, list_of_pts)
         t = numpy.cumsum(weight)
         s = numpy.sum(weight)
         i = numpy.searchsorted(t, numpy.random.rand(1) * s)[0]
-        return listPts[i]
+        return list_of_pts[i]
 
     def getLinearWeighted(self, listPts):
         """

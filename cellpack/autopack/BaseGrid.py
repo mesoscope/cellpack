@@ -74,7 +74,6 @@ class BaseGrid:
 
     @staticmethod
     def reorder_free_points(pt, free_points, nbFreePoints):
-        # TODO: move this to env class, ing shouldn't aware of the whole grid
         # Swap the newly inside point value with the value of the last free point
         # Point will no longer be considered "free" because it will be beyond the range of
         # nbFreePoints. The value of the point itself is the history of it's original index

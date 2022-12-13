@@ -9,6 +9,10 @@ def get_distance(pt1, pt2):
     return numpy.linalg.norm((pt1 - pt2), axis=((pt1 - pt2).ndim - 1))
 
 
+def get_distances_from_point(np_array_of_pts, pt):
+    return numpy.linalg.norm(np_array_of_pts - pt, axis=1)
+
+
 def ingredient_compare1(x, y):
     """
     sort ingredients using decreasing priority and decreasing radii for
