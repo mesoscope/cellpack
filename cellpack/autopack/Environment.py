@@ -168,7 +168,6 @@ class Environment(CompartmentList):
         )
         # 0 is the exterior, 1 is compartment 1 surface, -1 is compartment 1 interior
         self.nbCompartments = 1
-        self.name = "out"
         self.number = 0  # TODO: call this 'id' consistent with container
         self.order = {}  # give the order of drop ingredient by ptInd from molecules
         self.lastrank = 0
@@ -2784,9 +2783,11 @@ class Environment(CompartmentList):
             self.static = []
             self.moving = None
             self.rb_panda = []
-        for o in self.compartments:
-            if o.rbnode is None:
-                o.rbnode = o.addShapeRB(self)  # addMeshRBOrganelle(o)
+        for compartment in self.compartments:
+            if compartment.rbnode is None:
+                compartment.rbnode = compartment.addShapeRB(
+                    self
+                )  # addMeshRBOrganelle(o)
 
     def add_rb_node(self, ingr, trans, mat):
         if ingr.type == "Mesh":
@@ -2895,8 +2896,6 @@ class Environment(CompartmentList):
         # Sphere
         if panda3d is None:
             return None
-        if autopack.verbose > 1:
-            print("add RB bullet ", ingr.name)
         mat = rotMat.copy()
         #        mat[:3, 3] = trans
         #        mat = mat.transpose()

@@ -43,14 +43,12 @@ import shutil
 from os import path, environ
 from pathlib import Path
 import urllib.request as urllib
-
+from collections import OrderedDict
 import ssl
 import json
 
-try:
-    from collections import OrderedDict
-except ImportError:
-    from ordereddict import OrderedDict
+from cellpack.autopack.interface_objects.meta_enum import MetaEnum
+
 
 packageContainsVFCommands = 1
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -59,7 +57,7 @@ afdir = Path(os.path.abspath(__path__[0]))
 os.environ["NUMEXPR_MAX_THREADS"] = "32"
 
 ###############################################################################
-log_file_path = path.join(path.dirname(path.abspath(__file__)), "../../logging.conf")
+log_file_path = path.join(path.dirname(path.abspath(__file__)), "../logging.conf")
 logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
 log = logging.getLogger("autopack")
 log.propagate = False
@@ -76,10 +74,7 @@ def make_directory_if_needed(directory):
 # ==============================================================================
 # the dir will have all the recipe + cache.
 
-
 APPNAME = "autoPACK"
-# log = logging.getLogger("autopack")
-# log.propagate = False
 
 if sys.platform == "darwin":
     # from AppKit import NSSearchPathForDirectoriesInDomains
@@ -94,8 +89,7 @@ elif sys.platform == "win32":
 else:
     appdata = path.expanduser(path.join("~", "." + APPNAME))
 make_directory_if_needed(appdata)
-log.info("autoPACK data dir created", appdata)
-
+log.info(f"autoPACK data dir created {appdata}")
 appdata = Path(appdata)
 
 
@@ -132,24 +126,10 @@ for _, dir in cache_dir.items():
 
 usePP = False
 helper = None
-LISTPLACEMETHOD = ["jitter", "spheresBHT"]
-try:
-    from panda3d.core import Mat4  # noqa: F401
-
-    LISTPLACEMETHOD = ["jitter", "spheresBHT", "pandaBullet"]
-except ImportError:
-    LISTPLACEMETHOD = ["jitter", "spheresBHT"]
-
-
 ncpus = 2
 checkAtstartup = True
 testPeriodicity = False
 biasedPeriodicity = None  # [1,1,1]
-fixpath = False
-verbose = 0
-messag = """Welcome to autoPACK.
-Please update to the latest version under the Help menu.
-"""
 
 # we have to change the name of theses files. and decide how to handle the
 # currated recipeList, and the dev recipeList
@@ -165,12 +145,11 @@ autopack_user_path_pref_file = preferences / "path_user_preferences.json"
 autoPACKserver = (
     "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0"
 )
-autoPACKserver_default = "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/cellPACK_database_1.1.0"  # XML # noqa: E501
 autoPACKserver_alt = "http://mgldev.scripps.edu/projects/autoPACK/data/cellPACK_data/cellPACK_database_1.1.0"  # noqa: E501
 filespath = (
     "https://cdn.rawgit.com/mesoscope/cellPACK_data/master/autoPACK_filePaths.json"
 )
-recipeslistes = autoPACKserver + "/autopack_recipe.json"
+list_of_available_recipes = "github:autopack_recipe.json"
 
 autopackdir = str(afdir)  # copy
 
@@ -181,7 +160,7 @@ def checkPath():
         if url_exists(fileName):
             urllib.urlretrieve(fileName, autopack_path_pref_file)
         else:
-            log.error("problem accessing path %s", fileName)
+            log.error(f"problem accessing path {fileName}")
 
 
 # get user / default value
@@ -197,27 +176,32 @@ elif os.path.isfile(autopack_path_pref_file):
     f = open(autopack_path_pref_file, "r")
     doit = True
 if doit:
-    log.info("autopack_path_pref_file %s", autopack_path_pref_file)
+    log.info(f"autopack_path_pref_file {autopack_path_pref_file}")
     pref_path = json.load(f)
     f.close()
     if "autoPACKserver" not in pref_path:
-        log.warning("problem with autopack_path_pref_file %s", autopack_path_pref_file)
+        log.warning(f"problem with autopack_path_pref_file {autopack_path_pref_file}")
     else:
         autoPACKserver = pref_path["autoPACKserver"]
         if "filespath" in pref_path:
             if pref_path["filespath"] != "default":
                 filespath = pref_path["filespath"]
-        if "recipeslistes" in pref_path:
-            if pref_path["recipeslistes"] != "default":
-                recipeslistes = pref_path["recipeslistes"]
         if "autopackdir" in pref_path:
             if pref_path["autopackdir"] != "default":
                 autopackdir = pref_path["autopackdir"]
+
+
+class DATABASE_NAME(MetaEnum):
+    GITHUB = "github:"
+    FIREBASE = "firebase:"
+
 
 REPLACE_PATH = {
     "autoPACKserver": autoPACKserver,
     "autopackdir": autopackdir,
     "autopackdata": appdata,
+    DATABASE_NAME.GITHUB: autoPACKserver,
+    DATABASE_NAME.FIREBASE: None,
 }
 
 global CURRENT_RECIPE_PATH
@@ -242,8 +226,6 @@ info_dic = ["setupfile", "result_file", "wrkdir"]
 # hard code recipe here is possible
 global RECIPES
 RECIPES = OrderedDict()
-
-
 USER_RECIPES = {}
 
 
@@ -270,10 +252,6 @@ def fixOnePath(path):
     for old_value, new_value in REPLACE_PATH.items():
         # fix before
         new_value = str(new_value)
-        if fixpath and re.findall("{0}".format(re.escape(old_value)), path):
-            path = checkErrorInPath(path, new_value)
-            # check for legacyServerautoPACK_database_1.0.0
-            path = checkErrorInPath(path, "autoPACK_database_1.0.0")
         path = path.replace(old_value, new_value)
     return path
 
@@ -297,55 +275,125 @@ def is_full_url(file_path):
     return file_path.find("http") != -1 or file_path.find("ftp") != -1
 
 
-def retrieve_file(filename, destination="", cache="geometries", force=False):
+def is_remote_path(file_path):
+    """
+    @param file_path: str
+    """
+    for ele in DATABASE_NAME:
+        return ele in file_path
+
+
+def convert_db_shortname_to_url(file_location):
+    """
+    @param file_path: str
+    """
+    database_name, file_path = file_location.split(":")
+    database_url = REPLACE_PATH[f"{database_name}:"]
+    if database_url is not None:
+        return database_name, f"{database_url}/{file_path}"
+    return database_name, file_path
+
+
+def get_cache_location(name, cache, destination):
+    """
+    name: str
+    destination: str
+    """
+    local_file_directory = cache_dir[cache] / destination
+    local_file_path = local_file_directory / name
+    make_directory_if_needed(local_file_directory)
+    return local_file_path
+
+
+def get_local_file_location(
+    input_file_location, destination="", cache="geometries", force=False
+):
     """
     Options:
     1. Find file locally, return the file path
     2. Download file to local cache, return path (might involve replacing short-code in url)
     3. Force download even though you have a local copy
+
+    Returns location of file (either already there or newly downloaded)
     """
-    if not is_full_url(filename):
-        # replace short code, ie 'autoPACKserver' with full url
-        filename = fixOnePath(filename)
-    log.info(f"autopack retrieve file {filename}")
-    if is_full_url(str(filename)):
-        url = filename
+    if is_remote_path(input_file_location):
+        database_name, file_path = convert_db_shortname_to_url(input_file_location)
+        if database_name == "firebase":
+            pass
+        else:
+            input_file_location = file_path
+    if is_full_url(input_file_location):
+        url = input_file_location
         reporthook = None
         if helper is not None:
             reporthook = helper.reporthook
 
         name = url.split("/")[-1]  # the recipe name
-        local_file_directory = cache_dir[cache] / destination
-        local_file_path = local_file_directory / name
-        make_directory_if_needed(local_file_directory)
-        # check if exist first
+        local_file_path = get_cache_location(name, cache, destination)
+        # check if the file is already downloaded
+        # if not, OR force==True, download file
         if not os.path.isfile(local_file_path) or force:
             download_file(url, local_file_path, reporthook)
         log.info(f"autopack downloaded and stored file: {local_file_path}")
         return local_file_path
-    filename = Path(filename)
-    if os.path.isfile(cache_dir[cache] / filename):
-        return cache_dir[cache] / filename
-    if os.path.isfile(CURRENT_RECIPE_PATH / filename):
-        # if no folder provided, use the current_recipe_folder
-        return CURRENT_RECIPE_PATH / filename
 
-    url = autoPACKserver + "/" + str(cache) + "/" + str(filename)
+    # not url, use pathlib
+    input_file_location = Path(input_file_location)
+    if os.path.isfile(cache_dir[cache] / input_file_location):
+        return cache_dir[cache] / input_file_location
+    if os.path.isfile(CURRENT_RECIPE_PATH / input_file_location):
+        # if no folder provided, use the current_recipe_folder
+        return CURRENT_RECIPE_PATH / input_file_location
+
+    # didn't find the file locally, finally check db
+    url = autoPACKserver + "/" + str(cache) + "/" + str(input_file_location)
     if url_exists(url):
         reporthook = None
         if helper is not None:
             reporthook = helper.reporthook
-        name = filename
+        name = input_file_location
         local_file_path = cache_dir[cache] / destination / name
         download_file(url, local_file_path, reporthook)
         return local_file_path
-    return filename
+    return input_file_location
+
+
+def read_text_file(filename, destination="", cache="collisionTrees", force=None):
+    if is_remote_path(filename):
+        database_name, file_path = convert_db_shortname_to_url(filename)
+        if database_name == "firebase":
+            # TODO: read from firebase
+            # return data
+            pass
+        else:
+            local_file_path = get_local_file_location(
+                file_path, destination=destination, cache=cache, force=force
+            )
+    else:
+        local_file_path = get_local_file_location(
+            filename, destination=destination, cache=cache, force=force
+        )
+    f = open(local_file_path)
+    sphere_data = f.readlines()
+    f.close()
+    return sphere_data
 
 
 def load_file(filename, destination="", cache="geometries", force=None):
-    local_file_path = retrieve_file(
-        filename, destination=destination, cache=cache, force=force
-    )
+    if is_remote_path(filename):
+        database_name, file_path = convert_db_shortname_to_url(filename)
+        if database_name == "firebase":
+            # TODO: read from firebase
+            # return data
+            pass
+        else:
+            local_file_path = get_local_file_location(
+                file_path, destination=destination, cache=cache, force=force
+            )
+    else:
+        local_file_path = get_local_file_location(
+            filename, destination=destination, cache=cache, force=force
+        )
     return json.load(open(local_file_path, "r"))
 
 
@@ -374,10 +422,6 @@ def updatePathJSON():
     if "filespath" in pref_path:
         if pref_path["filespath"] != "default":
             filespath = pref_path["filespath"]  # noqa: F841
-    recipeslistes = autoPACKserver + "/autopack_recipe.json"
-    if "recipeslistes" in pref_path:
-        if pref_path["recipeslistes"] != "default":
-            recipeslistes = pref_path["recipeslistes"]  # noqa: F841
     if "autopackdir" in pref_path:
         if pref_path["autopackdir"] != "default":
             autopackdir = pref_path["autopackdir"]  # noqa: F841
@@ -394,29 +438,7 @@ def updatePath():
 
 
 def checkRecipeAvailable():
-    fname = fixOnePath(recipeslistes)  # autoPACKserver+"/autopack_recipe.json"
-    try:
-        import urllib.request as urllib  # , urllib.parse, urllib.error
-    except ImportError:
-        import urllib
-    if url_exists(fname):
-        urllib.urlretrieve(fname, recipe_web_pref_file)
-    else:
-        print("problem accessing recipe " + fname)
-
-
-def updateRecipeAvailableJSON(recipesfile):
-    if not os.path.isfile(recipesfile):
-        print(recipesfile + " was not found")
-        return
-    # replace shortcut pathby hard path
-    f = open(recipesfile, "r")
-    # if use_json_hook:
-    #     recipes = json.load(f, object_pairs_hook=OrderedDict)
-    # else:
-    #     recipes = json.load(f)
-    f.close()
-    log.info(f"recipes updated {len(RECIPES)}")
+    load_file(list_of_available_recipes)
 
 
 def updateRecipAvailableXML(recipesfile):
@@ -469,21 +491,6 @@ def updateRecipAvailableXML(recipesfile):
     log.info(f"recipes updated {RECIPES}")
 
 
-def updateRecipAvailable(recipesfile):
-    if not os.path.isfile(recipesfile):
-        return
-    # check format xml or json
-    fileName, fileExtension = os.path.splitext(recipesfile)
-    if fileExtension.lower() == ".xml":
-        updateRecipAvailableXML(recipesfile)
-    elif fileExtension.lower() == ".json":
-        updateRecipeAvailableJSON(recipesfile)
-    fixPath(RECIPES)
-    #    fixPath(RECIPES,"wrkdir")#or autopackdata
-    #    fixPath(RECIPES,"resultfile")
-    log.info(f"recipes updated and path fixed {RECIPES}")
-
-
 def saveRecipeAvailable(recipe_dictionary, recipefile):
     from xml.dom.minidom import getDOMImplementation
 
@@ -530,15 +537,8 @@ def clearCaches(*args):
 if checkAtstartup:
     checkPath()
     updatePathJSON()
-    log.info("path are updated ")
-
-if checkAtstartup:
-    # get from server the list of recipe
-    # recipe_web_pref_file
     checkRecipeAvailable()
-    updateRecipAvailable(recipe_web_pref_file)
-    updateRecipAvailable(recipe_user_pref_file)
-    updateRecipAvailable(recipe_dev_pref_file)
+    log.info("path are updated ")
 
 log.info(f"currently number recipes is {len(RECIPES)}")
 # check cache directory create if doesnt exit.abs//should be in user pref?
