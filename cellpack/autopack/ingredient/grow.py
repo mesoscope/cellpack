@@ -66,6 +66,7 @@ class GrowIngredient(MultiCylindersIngr):
         orientation=(1, 0, 0),
         orient_bias_range=[-pi, pi],
         priority=0,
+        packing_mode="random",
         partners=None,
         perturb_axis_amplitude=0.1,
         place_method="jitter",
@@ -87,8 +88,10 @@ class GrowIngredient(MultiCylindersIngr):
         walkingMode="sphere",
         weight=0.2,
     ):
-
+        # TODO: need to fix multi_bounds and radii settings
         super().__init__(
+            multi_bounds=[[], []],
+            radii=radii,
             type=type,
             color=color,
             cutoff_surface=cutoff_surface,

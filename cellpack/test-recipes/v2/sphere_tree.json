@@ -52,10 +52,9 @@
                 0.5
             ],
             "weight": 0.25,
-            "coordinate_system": "left",
             "representations": {
                 "packing":{
-                    "path": "../",
+                    "path": "../../test-geometry",
                     "name": "test.sph",
                     "format": "sph"
                 }

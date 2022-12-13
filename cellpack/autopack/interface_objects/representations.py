@@ -1,6 +1,7 @@
 from math import sqrt
 import cellpack.autopack as autopack
 import numpy as np
+import sys
 
 
 class Representations:
@@ -38,11 +39,8 @@ class Representations:
         # of spheres in next level covererd by this sphere
         # ...
         # int: number of spheres in second level
-        f = open(file)
-        print(file)
-        sphere_data = f.readlines()
-        f.close()
 
+        sphere_data = autopack.read_text_file(file)
         # strip comments
         data = [x for x in sphere_data if x[0] != "#" and len(x) > 1 and x[0] != "\r"]
         rmin, rmax = list(map(float, data[0].split()))
@@ -74,13 +72,11 @@ class Representations:
     def _get_spheres(self):
         if "path" in self.packing:
             sphere_file = f"{self.packing['path']}/{self.packing['name']}"
-            sphere_file_path = autopack.retrieveFile(
-                sphere_file, cache="collisionTrees"
-            )
+
             (
                 positions,
                 radii,
-            ) = Representations._read_sphere_file(sphere_file_path)
+            ) = Representations._read_sphere_file(sphere_file)
             self.packing["positions"] = positions
             self.packing["radii"] = radii
         # can be passed in directly, or they were just read from a file
@@ -88,7 +84,6 @@ class Representations:
         radii = self.packing["radii"]
         if positions is None or positions[0] is None or positions[0][0] is None:
             positions = [[[0, 0, 0]]]
-
         if radii is None:
             radii = [[0]]
         return positions, radii
@@ -140,8 +135,10 @@ class Representations:
 
     def get_adjusted_position(self, position, rotation):
         active_data = self.get_active_data()
-        if "transform" in active_data:
+        if "transform" in active_data and "translate" in active_data["transform"]:
             offset = np.array(active_data["transform"]["translate"])
+        elif "transform" in active_data:
+            sys.exit("Missing 'translate' data in recipe")
         else:
             offset = np.array([0, 0, 0])
         rot_mat = np.array(rotation[0:3, 0:3])

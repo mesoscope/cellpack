@@ -49,8 +49,7 @@
 import numpy
 from random import random
 import bisect
-from math import exp, cos, pow
-from cellpack.autopack.upy.hostHelper import vdistance
+from math import cos
 from cellpack.autopack.transformation import angle_between_vectors
 from cellpack.autopack.utils import get_distances_from_point
 
@@ -74,7 +73,17 @@ class Gradient:
             self.computeStartEnd()
         self.function = self.defaultFunction  # lambda ?
         self.weight = None
-        self.available_modes = ["X", "Y", "Z", "-X", "-Y", "-Z", "direction", "radial", "surface"]
+        self.available_modes = [
+            "X",
+            "Y",
+            "Z",
+            "-X",
+            "-Y",
+            "-Z",
+            "direction",
+            "radial",
+            "surface",
+        ]
         self.mode = mode  # can X,Y,Z,-X,-Y,-Z,"direction" custom vector
         self.weight_mode = (
             "gauss"  # "linear" #linear mode for weight generation linearpos linearneg
@@ -242,7 +251,7 @@ class Gradient:
         for i in range(int(number_of_points)):
             i = i - degree + 1
             frac = i / number_of_points
-            gauss = numpy.exp(-(self.gblob * (frac)) ** 2)
+            gauss = numpy.exp(-((self.gblob * (frac)) ** 2))
             weightGauss.append(gauss)
         return numpy.array(weightGauss) * number_of_points
 
@@ -251,18 +260,19 @@ class Gradient:
             direction = self.direction
         bb = self.bb
         # assume grid orthogonal
-        bounding_box_edges = []
         angles = []
         axes = ["X", "Y", "Z"]
         for i, axis_name in enumerate(axes):
             angle = angle_between_vectors(self.directions[axis_name], direction)
             angles.append(angle)
-            maxi = max(bb[1][i], bb[0][i])
-            mini = min(bb[1][i], bb[0][i])
         min_angle = min(angles)
         axis_with_smallest_angle = angles.index(min_angle)
-        min_bounds_length = bb[1][axis_with_smallest_angle] - bb[0][axis_with_smallest_angle]
-        dot_product = numpy.dot(self.directions[axes[axis_with_smallest_angle]], direction)
+        min_bounds_length = (
+            bb[1][axis_with_smallest_angle] - bb[0][axis_with_smallest_angle]
+        )
+        dot_product = numpy.dot(
+            self.directions[axes[axis_with_smallest_angle]], direction
+        )
         length = (1.0 / dot_product) * (cos(min_angle) * min_bounds_length)
         return length
 
@@ -271,7 +281,10 @@ class Gradient:
         center = self.direction
         max_distance = self.radius
         distances = get_distances_from_point(master_grid_positions, center)
-        self.distances = numpy.where(distances < max_distance, distances, max_distance) / max_distance
+        self.distances = (
+            numpy.where(distances < max_distance, distances, max_distance)
+            / max_distance
+        )
         self.set_weights_by_mode()
 
     def build_surface_distance_weight_map(self):
@@ -284,7 +297,7 @@ class Gradient:
         else:
             self.distances = self.object.surface_distances / self.object.max_distance
         self.set_weights_by_mode()
-        
+
     def build_directional_weight_map(self, bb, master_grid_positions):
         """
         from a given direction build a linear weight according the chosen mode
@@ -295,7 +308,9 @@ class Gradient:
         self.weight = []
         center = self.getCenter()
         length = self.get_direction_length()
-        distances = ((length/2) + numpy.dot(master_grid_positions - center, axis)) / length
+        distances = (
+            (length / 2) + numpy.dot(master_grid_positions - center, axis)
+        ) / length
         max_d = max(distances)
         min_d = min(distances)
         self.distances = 1 - (distances - min_d) / (max_d - min_d)
@@ -312,17 +327,17 @@ class Gradient:
         maxi = max(bb[1][ind], bb[0][ind])
         mini = min(bb[1][ind], bb[0][ind])
         self.weight = []
-        self.distances = (master_grid_positions[:,ind] - mini) / (maxi - mini)
-        self.set_weights_by_mode()
+        self.distances = (master_grid_positions[:, ind] - mini) / (maxi - mini)
+        self.set_weights_by_mode(self.distances)
 
     def set_weights_by_mode(self):
         scaled_distances = self.distances
-        if (max(scaled_distances) > 1.0): 
+        if max(scaled_distances) > 1.0:
             self.log.error("MAX TOO BIG", max(scaled_distances))
             # raise ValueError("distances have not been scaled to be from 0.0 to 1.0")
         scaled_distances[numpy.isnan(scaled_distances)] = 1
         if self.weight_mode == "linear":
-            self.weight = (1.0 - scaled_distances)
+            self.weight = 1.0 - scaled_distances
         elif self.weight_mode == "square":
             self.weight = (1.0 - scaled_distances) ** 2
         elif self.weight_mode == "cube":

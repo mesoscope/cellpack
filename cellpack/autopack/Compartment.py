@@ -1066,7 +1066,9 @@ class Compartment(CompartmentList):
         parent_id = self.parent.number
         # clacluate the distances for the points inside the surface, and outside the surface
         # up to the next boundary (not including the parent's surface points)
-        grid_pt_indexes = numpy.equal(numpy.abs(env.grid.compartment_ids), self.number) | numpy.equal(env.grid.compartment_ids, -parent_id)
+        grid_pt_indexes = numpy.equal(
+            numpy.abs(env.grid.compartment_ids), self.number
+        ) | numpy.equal(env.grid.compartment_ids, -parent_id)
         grid_pt_to_calc = master_grid_positions[grid_pt_indexes]
 
         surface_distances, indexes = surface_tree.query(tuple(grid_pt_to_calc))
@@ -1176,7 +1178,7 @@ class Compartment(CompartmentList):
         # create surface points
         # check if file already exist, otherwise rebuild it
         number = self.number
-        fileName = autopack.retrieveFile(self.filename, cache="geometries")
+        fileName = autopack.get_local_file_location(self.filename, cache="geometries")
         filename, file_extension = os.path.splitext(fileName)
         binvox_filename = filename + ".binvox"
         bb = env.grid.boundingBox
@@ -1356,16 +1358,6 @@ class Compartment(CompartmentList):
                         if inside:
                             insidePoints.append(ptInd)
                             idarray.itemset(ptInd, -number)
-                    p = (ptInd / float(len(grdPos))) * 100.0
-                    if (ptInd % 1000) == 0 and autopack.verbose:
-                        helper.progressBar(
-                            progress=int(p),
-                            label=str(ptInd)
-                            + "/"
-                            + str(len(grdPos))
-                            + " inside "
-                            + str(inside),
-                        )
         nbGridPoints = len(env.grid.masterGridPositions)
 
         surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
@@ -1855,16 +1847,6 @@ class Compartment(CompartmentList):
                     gridPoints[i].isOutside = isOutsideTracker
                 # Because we have filled in all the unknowns, we can reset that counter.
                 emptyPointIndicies = []
-            if (g.index % 100) == 0:
-                if autopack.verbose:
-                    print(
-                        str(g.index)
-                        + "/"
-                        + str(len(gridPoints))
-                        + " inside "
-                        + str(g.isOutside)
-                    )
-
         # Final pass through for sanity checks.
         for g in gridPoints:
             if g.representsPolyhedron:
