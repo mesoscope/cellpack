@@ -19,6 +19,7 @@ class SingleCubeIngr(Ingredient):
     def __init__(
         self,
         bounds,
+        available_regions=None,
         type="single_cube",
         color=None,
         count=0,
@@ -36,10 +37,10 @@ class SingleCubeIngr(Ingredient):
         offset=None,
         orient_bias_range=[-pi, pi],
         overwrite_distance_function=True,  # overWrite
-        packing_priority=0,
+        priority=0,
         partners=None,
         perturb_axis_amplitude=0.1,
-        place_type="jitter",
+        place_method="jitter",
         principal_vector=(1, 0, 0),
         representations=None,
         rejection_threshold=30,
@@ -66,10 +67,10 @@ class SingleCubeIngr(Ingredient):
             name=name,
             jitter_attempts=jitter_attempts,
             overwrite_distance_function=overwrite_distance_function,
-            packing_priority=packing_priority,
+            priority=priority,
             partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
-            place_type=place_type,
+            place_method=place_method,
             principal_vector=principal_vector,
             representations=representations,
             rotation_axis=rotation_axis,
@@ -209,10 +210,9 @@ class SingleCubeIngr(Ingredient):
 
     def collides_with_compartment(
         self,
-        jtrans,
-        rotMat,
-        gridPointsCoords,
         env,
+        jtrans,
+        rotation_matrix,
     ):
         """
         Check cube for collision
@@ -222,9 +222,9 @@ class SingleCubeIngr(Ingredient):
         centers1 = self.lower_bound
         centers2 = self.upper_bound
         edges = self.edges
-        cent1T = self.transformPoints(jtrans, rotMat, centers1)[0]  # bb1
-        cent2T = self.transformPoints(jtrans, rotMat, centers2)[0]  # bb2
-        center = self.transformPoints(jtrans, rotMat, [self.center])[0]
+        cent1T = self.transformPoints(jtrans, rotation_matrix, centers1)[0]  # bb1
+        cent2T = self.transformPoints(jtrans, rotation_matrix, centers2)[0]  # bb2
+        center = self.transformPoints(jtrans, rotation_matrix, [self.center])[0]
 
         x1, y1, z1 = cent1T
         x2, y2, z2 = cent2T
@@ -238,8 +238,8 @@ class SingleCubeIngr(Ingredient):
 
         pointsInCube = env.grid.getPointsInCube(bb, posc, radt)
 
-        pd = numpy.take(gridPointsCoords, pointsInCube, 0) - center
-        m = numpy.matrix(numpy.array(rotMat).reshape(4, 4))  #
+        pd = numpy.take(env.grid.gridPointsCoords, pointsInCube, 0) - center
+        m = numpy.matrix(numpy.array(rotation_matrix).reshape(4, 4))  #
         mat = m.I
         rpd = ApplyMatrix(pd, mat)
         res = numpy.less_equal(numpy.fabs(rpd), edges / 2.0)

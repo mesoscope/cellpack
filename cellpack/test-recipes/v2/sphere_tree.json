@@ -1,6 +1,6 @@
 {
     "version": "1.0.0",
-    "format_version": "2.0.0",
+    "format_version": "2.0",
     "name": "sphere_tree",
     "bounding_box": [
         [
@@ -29,7 +29,7 @@
                 1
             ],
             "rejection_threshold": 50,
-            "place_type": "jitter",
+            "place_method": "jitter",
             "cutoff_surface": 42,
             "rotation_axis": [
                 1,
@@ -52,10 +52,9 @@
                 0.5
             ],
             "weight": 0.25,
-            "coordinate_system": "left",
             "representations": {
                 "packing":{
-                    "path": "../",
+                    "path": "../../test-geometry",
                     "name": "test.sph",
                     "format": "sph"
                 }

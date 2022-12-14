@@ -1,64 +1,39 @@
 # -*- coding: utf-8 -*-
-import copy
 import os
 
 import json
 from json import encoder
 
 import cellpack.autopack as autopack
-from cellpack.autopack.utils import deep_merge
+from cellpack.autopack.interface_objects.ingredient_types import INGREDIENT_TYPE
+from cellpack.autopack.utils import deep_merge, expand_object_using_key
 from cellpack.autopack.interface_objects.representations import Representations
+from cellpack.autopack.interface_objects.default_values import default_recipe_values
+from cellpack.autopack.loaders.migrate_v1_to_v2 import convert
 
 encoder.FLOAT_REPR = lambda o: format(o, ".8g")
+CURRENT_VERSION = "2.0"
 
 
 class RecipeLoader(object):
     # TODO: add all default values here
-    default_values = {
-        "bounding_box": [[0, 0, 0], [100, 100, 100]],
-    }
+    default_values = default_recipe_values.copy()
 
-    def __init__(self, input_file_path):
+    def __init__(self, input_file_path, save_converted_recipe=False):
         _, file_extension = os.path.splitext(input_file_path)
-        self.latest_version = 1.0
+        self.current_version = CURRENT_VERSION
         self.file_path = input_file_path
         self.file_extension = file_extension
         self.ingredient_list = []
         self.compartment_list = []
-        autopack.current_recipe_path = os.path.dirname(self.file_path)
+        self.save_converted_recipe = save_converted_recipe
+        autopack.CURRENT_RECIPE_PATH = os.path.dirname(self.file_path)
         self.recipe_data = self._read()
-
-    @staticmethod
-    def is_key(key_or_dict, composition_dict):
-        """
-        Helper function to find if data in composition list
-        is a key or an object
-        """
-        is_key = not isinstance(key_or_dict, dict)
-        if is_key:
-            key = key_or_dict
-            if key not in composition_dict:
-                raise ValueError(f"{key} is not in composition dictionary")
-            composition_info = composition_dict[key]
-        else:
-            composition_info = key_or_dict
-        return is_key, composition_info
-
-    @staticmethod
-    def create_output_dir(out_base_folder, recipe_name, sub_dir=None):
-        os.makedirs(out_base_folder, exist_ok=True)
-        output_folder = os.path.join(out_base_folder, recipe_name)
-        if sub_dir is not None:
-            output_folder = os.path.join(output_folder, sub_dir)
-        os.makedirs(output_folder, exist_ok=True)
-        return output_folder
 
     @staticmethod
     def _resolve_object(key, objects):
         current_object = objects[key]
-        inherit_key = current_object["inherit"]
-        base_object = objects[inherit_key]
-        new_object = deep_merge(copy.deepcopy(base_object), current_object)
+        new_object = expand_object_using_key(current_object, "inherit", objects)
         objects[key] = new_object
 
     @staticmethod
@@ -95,16 +70,90 @@ class RecipeLoader(object):
                 RecipeLoader._resolve_object(key, objects)
         return objects
 
+    def _request_sub_recipe(self, inode):
+        filename = None
+        if inode is not None:
+            if "include" in inode:
+                filename = inode["include"]
+        if filename is not None:
+            filename = autopack.get_local_file_location(
+                filename,
+                # destination = recipe+os.sep+"recipe"+os.sep+"ingredients"+os.sep,
+                cache="recipes",
+            )
+            with open(filename, "r") as fp:  # doesn't work with symbol link ?
+                data = json.load(fp)
+        elif inode is not None:
+            data = inode
+        else:
+            print("filename is None and not ingredient dictionary provided")
+            return None
+        return data
+
+    def _save_converted_recipe(self, data):
+        """
+        Save converted recipe into a json file
+        """
+        path = autopack.CURRENT_RECIPE_PATH
+        filename = data["name"]
+        out_directory = f"{path}/converted/"
+        if not os.path.exists(out_directory):
+            os.makedirs(out_directory)
+        full_path = f"{out_directory}/{filename}_fv{self.current_version}.json"
+        with open(full_path, "w") as f:
+            json.dump(data, f, indent=4)
+        f.close()
+
+    @staticmethod
+    def _sanitize_format_version(recipe_data):
+        if "format_version" not in recipe_data:
+            format_version = "1.0"  # all recipes before we introduced versioning
+        elif len(recipe_data["format_version"].split(".")) > 2:
+            # We only use two places for format version, but people
+            # might accidentally include a third number
+            # ie 2.0.0 instead of 2.0
+            split_numbers = recipe_data["format_version"].split(".")
+            format_version = f"{split_numbers[0]}.{split_numbers[1]}"
+        elif len(recipe_data["format_version"].split(".")) == 1:
+            # We only use two places for format version, but people
+            # might accidently include a third number
+            # ie 2.0.0 instead of 2.0
+            split_numbers = recipe_data["format_version"].split(".")
+            format_version = f"{split_numbers[0]}.0"
+        else:
+            format_version = recipe_data["format_version"]
+        return format_version
+
+    def _migrate_version(self, recipe):
+        new_recipe = {}
+
+        if recipe["format_version"] == "1.0":
+            new_recipe["version"] = recipe["recipe"]["version"]
+            new_recipe["format_version"] = self.current_version
+            new_recipe["name"] = recipe["recipe"]["name"]
+            new_recipe["bounding_box"] = recipe["options"]["boundingBox"]
+            (
+                new_recipe["objects"],
+                new_recipe["composition"],
+            ) = convert(recipe)
+            if self.save_converted_recipe:
+                self._save_converted_recipe(new_recipe)
+        else:
+            raise ValueError(
+                f"{recipe['format_version']} is not a format version we support"
+            )
+        return new_recipe
+
     def _read(self):
-        new_values = json.load(open(self.file_path, "r"))
+        new_values = autopack.load_file(self.file_path, cache="recipes")
         recipe_data = RecipeLoader.default_values.copy()
         recipe_data = deep_merge(recipe_data, new_values)
+        recipe_data["format_version"] = RecipeLoader._sanitize_format_version(
+            recipe_data
+        )
 
-        if (
-            "format_version" not in recipe_data
-            or recipe_data["format_version"] != self.latest_version
-        ):
-            recipe_data = RecipeLoader._migrate_version(recipe_data)
+        if recipe_data["format_version"] != self.current_version:
+            recipe_data = self._migrate_version(recipe_data)
 
         # TODO: request any external data before returning
         if "objects" in recipe_data:
@@ -118,33 +167,10 @@ class RecipeLoader(object):
                     atomic=reps.get("atomic", None),
                     packing=reps.get("packing", None),
                 )
+            if not INGREDIENT_TYPE.is_member(obj["type"]):
+                raise TypeError(f"{obj['type']} is not an allowed type")
+
         return recipe_data
-
-    def _request_sub_recipe(self, inode):
-        filename = None
-        if inode is not None:
-            if "include" in inode:
-                filename = inode["include"]
-        if filename is not None:
-            filename = autopack.retrieveFile(
-                filename,
-                # destination = recipe+os.sep+"recipe"+os.sep+"ingredients"+os.sep,
-                cache="recipes",
-            )
-            with open(filename, "r") as fp:  # doesnt work with symbol link ?
-                data = json.load(fp)
-        elif inode is not None:
-            data = inode
-        else:
-            print("filename is None and not ingredient dictionary provided")
-            return None
-        return data
-
-    @staticmethod
-    def _migrate_version(recipe):
-        if "format_version" not in recipe:
-            recipe["bounding_box"] = recipe["options"]["boundingBox"]
-        return recipe
 
     def _load_json(self):
         """
@@ -160,10 +186,10 @@ class RecipeLoader(object):
             custom_paths = recipe_data["recipe"]["paths"]
             autopack.updateReplacePath(custom_paths)
 
-        autopack.current_recipe_path = self.file_path
+        autopack.CURRENT_RECIPE_PATH = self.file_path
         if (
             "format_version" not in recipe_data
-            or recipe_data["format_version"] != self.latest_version
+            or recipe_data["format_version"] != self.current_version
         ):
             recipe_data = RecipeLoader._migrate_version(recipe_data)
 

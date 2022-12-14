@@ -5,11 +5,12 @@
     "live_packing": false,
     "ordered_packing": false,
     "out": "out/",
-    "overwrite_place_method": false,
+    "overwrite_place_method": true,
     "place_method": "jitter",
     "save_analyze_result": true,
-    "show_grid_plot": false,
+    "show_grid_plot": true,
     "spacing": null,
     "use_periodicity": false,
-    "show_sphere_trees": true
+    "show_sphere_trees": true,
+    "load_from_grid_file": false
 }

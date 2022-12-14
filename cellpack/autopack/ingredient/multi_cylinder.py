@@ -40,10 +40,10 @@ class MultiCylindersIngr(Ingredient):
         jitter_attempts=5,
         orient_bias_range=[-pi, pi],
         packing_mode="random",
-        packing_priority=0,
+        priority=0,
         partners=None,
         perturb_axis_amplitude=0.1,
-        place_type="jitter",
+        place_method="jitter",
         principal_vector=(1, 0, 0),
         representations=None,
         rotation_axis=[0.0, 0.0, 0.0],
@@ -72,10 +72,10 @@ class MultiCylindersIngr(Ingredient):
             jitter_attempts=jitter_attempts,
             orient_bias_range=orient_bias_range,
             packing_mode=packing_mode,
-            packing_priority=packing_priority,
+            priority=priority,
             partners=partners,
             perturb_axis_amplitude=perturb_axis_amplitude,
-            place_type=place_type,
+            place_method=place_method,
             principal_vector=principal_vector,
             rejection_threshold=rejection_threshold,
             representations=representations,
@@ -164,20 +164,19 @@ class MultiCylindersIngr(Ingredient):
 
     def collides_with_compartment(
         self,
-        jtrans,
-        rotMat,
-        level,
-        gridPointsCoords,
         env,
+        jtrans,
+        rotation_matrix,
     ):
         """
         Check cylinders for collision
         """
+        level = self.deepest_level
         centers1 = (self.positions[level],)
         centers2 = (self.positions2[level],)
         radii = (self.radii[level],)
-        cent1T = self.transformPoints(jtrans, rotMat, centers1)
-        cent2T = self.transformPoints(jtrans, rotMat, centers2)
+        cent1T = self.transformPoints(jtrans, rotation_matrix, centers1)
+        cent2T = self.transformPoints(jtrans, rotation_matrix, centers2)
 
         cylNum = 0
         for radc, p1, p2 in zip(radii, cent1T, cent2T):
@@ -193,7 +192,7 @@ class MultiCylindersIngr(Ingredient):
             pointsInCube = env.grid.getPointsInCube(bb, posc, radt, info=True)
 
             # check for collisions with cylinder
-            pd = numpy.take(gridPointsCoords, pointsInCube, 0) - p1
+            pd = numpy.take(env.grid.gridPointsCoords, pointsInCube, 0) - p1
             dotp = numpy.dot(pd, vect)
             #            rad2 = radc*radc
             #            dsq = numpy.sum(pd*pd, 1) - dotp*dotp/lengthsq

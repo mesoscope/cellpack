@@ -8,15 +8,13 @@ class Grid(BaseGrid):
     The Grid class
     ==========================
     This class handle the use of grid to control the packing. The grid keep information
-    of 3d positions, distances, freePoints and inside/surface points from organelles.
+    of 3d positions, distances, free_points and inside/surface points from organelles.
     NOTE : this class could be completely replaced if openvdb is wrapped to python.
     """
 
-    def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=10.0, lookup=0):
+    def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=10.0):
         # a grid is attached to an environnement
-        BaseGrid.__init__(
-            self, boundingBox=boundingBox, spacing=space, setup=False, lookup=lookup
-        )
+        BaseGrid.__init__(self, boundingBox=boundingBox, spacing=space, setup=False)
 
         self.gridSpacing = space
         self.encapsulatingGrid = 1
@@ -24,16 +22,16 @@ class Grid(BaseGrid):
             boundingBox, space
         )
         self.create3DPointLookup()
-        self.freePoints = list(range(self.gridVolume))
-        self.nbFreePoints = len(self.freePoints)
+        self.free_points = list(range(self.gridVolume))
+        self.nbFreePoints = len(self.free_points)
 
     def reset(self):
-        # reset the  distToClosestSurf and the freePoints
+        # reset the  distToClosestSurf and the free_points
         # boundingBox shoud be the same otherwise why keeping the grid
 
         self.distToClosestSurf[:] = self.diag
-        self.freePoints = list(range(len(self.freePoints)))
-        self.nbFreePoints = len(self.freePoints)
+        self.free_points = list(range(len(self.free_points)))
+        self.nbFreePoints = len(self.free_points)
         self.distancesAfterFill = []
         self.freePointsAfterFill = []
         self.nbFreePointsAfterFill = []

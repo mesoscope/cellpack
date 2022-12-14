@@ -97,6 +97,13 @@ class CompartmentList:
     Handle a list of compartments.
     """
 
+    @staticmethod
+    def add_compartment(parent, compartment):
+        """add a new compartment to the list"""
+        assert compartment.parent is None
+        assert isinstance(compartment, Compartment)
+        compartment.parent = parent
+
     def __init__(self):
         self.log = logging.getLogger("compartment")
         self.log.propagate = False
@@ -106,13 +113,6 @@ class CompartmentList:
 
         # point to parent compartment or Environment
         self.parent = None
-
-    def _add_compartment(self, compartment):
-        """add a new compartment to the list"""
-        assert compartment.parent is None
-        assert isinstance(compartment, Compartment)
-        self.compartments.append(compartment)
-        compartment.parent = self
 
 
 class Compartment(CompartmentList):
@@ -143,7 +143,6 @@ class Compartment(CompartmentList):
             self.meshType = self.representations.get_mesh_format()
             self.filename = self.representations.get_mesh_path()
             self.path = autopack.fixOnePath(self.filename)
-
         self.stype = "mesh"
         self.radius = object_info["radius"] if "radius" in object_info else 200.0
         self.height = 0.0
@@ -183,6 +182,7 @@ class Compartment(CompartmentList):
         # not the one provides
         # to compute inside points.
         self.is_sphere = object_info["type"] == "single_sphere"
+        self.type = object_info["type"]
         self.is_box = (
             "bounding_box" in object_info and object_info["bounding_box"] is not None
         )
@@ -249,31 +249,31 @@ class Compartment(CompartmentList):
         if self.is_sphere:
             # one sphere, geom is a dictionary
             self.buildSphere(mesh_store)
-        if self.vertices is None and self.meshType == "file":
+        if self.vertices is None and self.type == "mesh":
             self.faces, self.vertices, self.vnormals = self.getMesh(mesh_store)
             self.ref_obj = self.name
         if self.meshType == "raw":
             # need to build the mesh from v,f,n
             self.buildMesh(self.meshFile, mesh_store)
-        if self.meshType == "mb":
+        if self.type == "mb":
             # one sphere, geom is a dictionary
             self.buildSphere(mesh_store)
         if self.vertices is not None and len(self.vertices):
             # can be dae/fbx file, object name that have to be in the scene or dejaVu indexedpolygon file
             self.bb = self.getBoundingBox()
             if not self.is_sphere:
-                center, radius = mesh_store.get_nsphere(self.name)
+                center, radius = mesh_store.get_nsphere(self.gname)
                 self.center = center
                 self.encapsulating_radius = radius
-                self.radius = mesh_store.get_smallest_radius(self.name, center)
+                self.radius = mesh_store.get_smallest_radius(self.gname, center)
 
-    def addShapeRB(self):
+    def addShapeRB(self, env):
         # in case our shape is a regular primitive
         if self.stype == "capsule":
             shape = BulletCapsuleShape(self.radius, self.height, self.axis)
         else:
             shape = self.addMeshRB()
-        inodenp = self.parent.worldNP.attachNewNode(BulletRigidBodyNode(self.name))
+        inodenp = env.worldNP.attachNewNode(BulletRigidBodyNode(self.name))
         inodenp.node().setMass(1.0)
         inodenp.node().addShape(
             shape, TransformState.makePos(Point3(0, 0, 0))
@@ -282,7 +282,7 @@ class Compartment(CompartmentList):
         inodenp.setCollideMask(BitMask32.allOn())
         inodenp.node().setAngularDamping(1.0)
         inodenp.node().setLinearDamping(1.0)
-        self.parent.world.attachRigidBody(inodenp.node())
+        env.world.attachRigidBody(inodenp.node())
         inodenp = inodenp.node()
         return inodenp
 
@@ -571,6 +571,7 @@ class Compartment(CompartmentList):
         if self.ghost:
             return False, None
         bb = self.bb
+
         xm, ym, zm = box[0]
         xM, yM, zM = box[1]
         # padding 50 shows problem
@@ -901,12 +902,15 @@ class Compartment(CompartmentList):
         else:
             self.createSurfacePoints(maxl=env.grid.gridSpacing)
         # Graham Sum the SurfaceArea for each polyhedron
+        # the distance is initialized to the largest possible value
+        # (diagonal of the bounding box)
         distances = env.grid.distToClosestSurf
         compartment_ids = env.grid.compartment_ids
         diag = env.grid.diag
         self.log.info("distance %d", len(distances))
 
         # build search tree for off grid surface points
+        # off grid points are the vertexes of the mesh
         off_grid_surface_points = self.ogsurfacePoints
         self.OGsrfPtsBht = ctree = spatial.cKDTree(
             tuple(off_grid_surface_points), leafsize=10
@@ -920,14 +924,11 @@ class Compartment(CompartmentList):
         )  # return both indices and distances
 
         self.closestId = indexes
+        # TODO: do this to the actual closest point on the mesh, not the closet vertex
         mask = distances[: len(master_grid_positions)] > new_distances
         grid_point_indexes = numpy.nonzero(mask)
         distances[grid_point_indexes] = new_distances[grid_point_indexes]
-        # set all grid points close to the surface as surface points
-        # indexes_of_grid_surface_points = numpy.nonzero(
-        #     new_distances < env.grid.gridSpacing
-        # )
-        # compartment_ids[indexes_of_grid_surface_points] = self.number
+
         if (
             env.innerGridMethod == "sdf" and self.is_orthogonal_bounding_box != 1
         ):  # A fillSelection can now be a mesh too... it can use either of these methods
@@ -939,7 +940,6 @@ class Compartment(CompartmentList):
                 env,
                 ctree,
                 master_grid_positions,
-                new_distances,
                 diag,
                 vSurfaceArea,
                 off_grid_surface_points,
@@ -1010,9 +1010,11 @@ class Compartment(CompartmentList):
             )
         else:
             self.log.error("Not a recognized inner grid method", env.innerGridMethod)
+
         self.compute_volume_and_set_count(
             env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
+
         return inside_points, surface_points
 
     def build_grid_sphere(self, env):
@@ -1054,6 +1056,25 @@ class Compartment(CompartmentList):
             len(a),
             len(env.grid.masterGridPositions),
         )
+
+    def get_surface_distances(self, env, master_grid_positions):
+        surface_mask = numpy.equal(self.number, env.grid.compartment_ids)
+        surface_ids = numpy.nonzero(surface_mask)
+        surface_positions = master_grid_positions[surface_ids]
+        surface_tree = spatial.cKDTree(tuple(surface_positions), leafsize=10)
+        parent_id = self.parent.number
+        # clacluate the distances for the points inside the surface, and outside the surface
+        # up to the next boundary (not including the parent's surface points)
+        grid_pt_indexes = numpy.equal(
+            numpy.abs(env.grid.compartment_ids), self.number
+        ) | numpy.equal(env.grid.compartment_ids, -parent_id)
+        grid_pt_to_calc = master_grid_positions[grid_pt_indexes]
+
+        surface_distances, indexes = surface_tree.query(tuple(grid_pt_to_calc))
+        all_surface_distances = numpy.full(master_grid_positions.shape[0], numpy.nan)
+        all_surface_distances[grid_pt_indexes] = surface_distances
+        self.max_distance = max(surface_distances)
+        self.surface_distances = all_surface_distances
 
     def BuildGrid_box(self, env, vSurfaceArea):
         nbGridPoints = len(env.grid.masterGridPositions)
@@ -1156,7 +1177,7 @@ class Compartment(CompartmentList):
         # create surface points
         # check if file already exist, otherwise rebuild it
         number = self.number
-        fileName = autopack.retrieveFile(self.filename, cache="geometries")
+        fileName = autopack.get_local_file_location(self.filename, cache="geometries")
         filename, file_extension = os.path.splitext(fileName)
         binvox_filename = filename + ".binvox"
         bb = env.grid.boundingBox
@@ -1232,10 +1253,11 @@ class Compartment(CompartmentList):
         # build trimer mesh
         mesh = mesh_store.get_mesh(self.gname)
         # voxelized
-        self.log.info("CREATED MESH")
-        trimesh_grid = creation.voxelize(mesh, pitch=env.grid.gridSpacing).hollow()
+        self.log.info(f"{self.name}: CREATED MESH")
+        trimesh_grid_surface = creation.voxelize(
+            mesh, pitch=env.grid.gridSpacing / 2
+        ).hollow()
         self.log.info("VOXELIZED MESH")
-
         # the main loop
         tree = spatial.cKDTree(grdPos, leafsize=10)
         points_in_encap_sphere = tree.query_ball_point(
@@ -1243,25 +1265,33 @@ class Compartment(CompartmentList):
             self.encapsulating_radius + env.grid.gridSpacing * 2,
             return_sorted=True,
         )
-        self.log.info("GOT POINTS IN SPHERE")
+        self.log.info(f"GOT POINTS IN SPHERE {len(points_in_encap_sphere)}")
         for ptInd in points_in_encap_sphere:
             coord = [
                 grdPos.item((ptInd, 0)),
                 grdPos.item((ptInd, 1)),
                 grdPos.item((ptInd, 2)),
             ]
-            if trimesh_grid.is_filled(coord):
+            if idarray[ptInd] > 0:
+                continue
+            if trimesh_grid_surface.is_filled(coord):
                 idarray.itemset(ptInd, number)
             elif mesh_store.contains_point(self.gname, coord):
                 insidePoints.append(ptInd)
                 idarray.itemset(ptInd, -number)
+        self.log.info("ASSIGNED INSIDE OUTSIDE")
 
         nbGridPoints = len(env.grid.masterGridPositions)
 
-        surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
-        srfPts = surfPtsBB
+        (
+            surface_points_in_bounding_box,
+            surfPtsBBNorms,
+        ) = self.filter_surface_pts_to_fill_box(srfPts, env)
 
-        ex = True  # True if nbGridPoints == len(idarray) else False
+        srfPts = surface_points_in_bounding_box
+
+        ex = False  # True if nbGridPoints == len(idarray) else False
+
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
             nbGridPoints,
             srfPts,
@@ -1273,7 +1303,7 @@ class Compartment(CompartmentList):
 
         self.insidePoints = insidePoints
         self.surfacePoints = surfacePoints
-        self.surfacePointsCoords = surfPtsBB
+        self.surfacePointsCoords = surface_points_in_bounding_box
         self.surfacePointsNormals = surfacePointsNormals
         return self.insidePoints, self.surfacePoints
 
@@ -1327,16 +1357,6 @@ class Compartment(CompartmentList):
                         if inside:
                             insidePoints.append(ptInd)
                             idarray.itemset(ptInd, -number)
-                    p = (ptInd / float(len(grdPos))) * 100.0
-                    if (ptInd % 1000) == 0 and autopack.verbose:
-                        helper.progressBar(
-                            progress=int(p),
-                            label=str(ptInd)
-                            + "/"
-                            + str(len(grdPos))
-                            + " inside "
-                            + str(inside),
-                        )
         nbGridPoints = len(env.grid.masterGridPositions)
 
         surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
@@ -1826,16 +1846,6 @@ class Compartment(CompartmentList):
                     gridPoints[i].isOutside = isOutsideTracker
                 # Because we have filled in all the unknowns, we can reset that counter.
                 emptyPointIndicies = []
-            if (g.index % 100) == 0:
-                if autopack.verbose:
-                    print(
-                        str(g.index)
-                        + "/"
-                        + str(len(gridPoints))
-                        + " inside "
-                        + str(g.isOutside)
-                    )
-
         # Final pass through for sanity checks.
         for g in gridPoints:
             if g.representsPolyhedron:
@@ -1894,7 +1904,7 @@ class Compartment(CompartmentList):
                 )
             ptId = numpy.ones(number_off_grid_pts, "i") * self.number  # surface point
             env.grid.compartment_ids = numpy.hstack((env.grid.compartment_ids, ptId))
-            env.grid.freePoints = numpy.arange(nbGridPoints + number_off_grid_pts)
+            env.grid.free_points = numpy.arange(nbGridPoints + number_off_grid_pts)
             surfacePoints = list(
                 range(nbGridPoints, nbGridPoints + number_off_grid_pts)
             )
@@ -2045,7 +2055,7 @@ class Compartment(CompartmentList):
 
         env.grid.compartment_ids.extend([number] * length)
         surfacePoints = list(range(nbGridPoints, nbGridPoints + length))
-        env.grid.freePoints.extend(surfacePoints)
+        env.grid.free_points.extend(surfacePoints)
 
         surfacePointsNormals = {}
         for i, n in enumerate(surfPtsBBNorms):
@@ -2253,9 +2263,6 @@ class Compartment(CompartmentList):
         allNormals = {}
         idarray = histoVol.compartment_ids
         # surfaceCutOff = histoVol.gridSpacing*.5
-        # print 'BBBBBBBBBBBBBB', surfaceCutOff, min(distFromSurf), max(distFromSurf)
-        # print 'We should get', len(filter(lambda x:fabs(x)<surfaceCutOff, distance))
-
         # import pdb
         # pdb.set_trace()
 
@@ -2311,7 +2318,9 @@ class Compartment(CompartmentList):
                 self.surfaceVolume,
                 self.interiorVolume,
             )
-        self.log.info("%.2f interior volume", self.interiorVolume)
+        self.log.info(
+            f"{self.name}: {self.interiorVolume} interior volume",
+        )
         self.setCount()
 
     def setCount(self):
@@ -2400,7 +2409,6 @@ class Compartment(CompartmentList):
         Only compute the inner point. No grid.
         This is independant from the packing. Help build ingredient sphere tree and representation
         """
-        print("beforea import")
         from autopack.Environment import Grid
 
         self.grid = grid = Grid()

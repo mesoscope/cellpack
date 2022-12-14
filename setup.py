@@ -22,9 +22,16 @@ test_requirements = [
     "pytest-raises>=0.11",
 ]
 
+analysis_requirements = [
+    "tqdm>=4.64.1",
+    "scikit-learn>=1.1.3",
+    "seaborn>=0.12.1",
+]
+
 dev_requirements = [
     *setup_requirements,
     *test_requirements,
+    *analysis_requirements,
     "bump2version>=1.0.1",
     "coverage>=5.1",
     "ipython>=7.15.0",
@@ -59,6 +66,7 @@ extra_requirements = {
     "all": [
         *requirements,
         *dev_requirements,
+        *analysis_requirements,
     ],
 }
 
