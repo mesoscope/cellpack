@@ -246,12 +246,11 @@ class SingleCylinderIngr(Ingredient):
         top_center_transformed = self.transformPoints(
             packing_location, rotation_matrix, [self.top_center]
         )[0]
-        center_transformed = (top_center_transformed + bottom_center_transformed) / 2
 
         insidePoints = {}
         newDistPoints = {}
 
-        search_radius = self.encapsulating_radius + dpad
+        search_radius = self.length + self.radius
 
         # get grid points to check for collisions
         bounding_box = self.correctBB(
