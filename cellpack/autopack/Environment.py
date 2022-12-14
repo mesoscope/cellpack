@@ -1202,7 +1202,7 @@ class Environment(CompartmentList):
             fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
             if not fits:
                 self.boundingBox = bb
-    
+
     def get_size_of_bounding_box(self):
         box_boundary = numpy.array(self.boundingBox)
         return numpy.linalg.norm(box_boundary[1] - box_boundary[0])
