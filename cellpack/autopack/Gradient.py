@@ -328,7 +328,7 @@ class Gradient:
         mini = min(bb[1][ind], bb[0][ind])
         self.weight = []
         self.distances = (master_grid_positions[:, ind] - mini) / (maxi - mini)
-        self.set_weights_by_mode(self.distances)
+        self.set_weights_by_mode()
 
     def set_weights_by_mode(self):
         scaled_distances = self.distances
