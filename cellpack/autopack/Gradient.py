@@ -292,8 +292,8 @@ class Gradient:
         build a map of weights based on the distance from a surface
         assumes self.distances include surface distances
         """
-        if self.object.surface_distances is None:
-            raise ValueError("Map created without specifying distances")
+        if getattr(self.object, "surface_distances", None) is None:
+            raise ValueError("Surface distances are not set")
         else:
             self.distances = self.object.surface_distances / self.object.max_distance
         self.set_weights_by_mode()
@@ -317,7 +317,7 @@ class Gradient:
         print(self.distances)
         self.set_weights_by_mode()
 
-    def build_axis_weight_map(self, bb, master_grid_positions, axis="X"):
+    def build_axis_weight_map(self, bb, master_grid_positions):
         """
         from a given axe (X,Y,Z) build a linear weight according the chosen mode
         (linear, gauss, etc...)
@@ -328,7 +328,7 @@ class Gradient:
         mini = min(bb[1][ind], bb[0][ind])
         self.weight = []
         self.distances = (master_grid_positions[:, ind] - mini) / (maxi - mini)
-        self.set_weights_by_mode(self.distances)
+        self.set_weights_by_mode()
 
     def set_weights_by_mode(self):
         scaled_distances = self.distances

@@ -145,7 +145,7 @@ class Environment(CompartmentList):
         self.saveResult = "out" in config
         self.out_folder = create_output_dir(config["out"], name, config["place_method"])
         self.result_file = f"{self.out_folder}/{self.name}_{config['name']}"
-        self.grid_file_out = f"{self.out_folder}/{self.name}_{config['name']}_grid"
+        self.grid_file_out = f"{self.out_folder}/{self.name}_{config['name']}_grid.dat"
 
         should_load_grid_file = (
             os.path.isfile(self.grid_file_out) and self.load_from_grid_file
@@ -884,6 +884,7 @@ class Environment(CompartmentList):
         """
         Read and setup the grid from the given filename. (pickle)
         """
+        print(f"Loading grid from {gridFileName}")
         aInteriorGrids = []
         aSurfaceGrids = []
         f = open(gridFileName, "rb")
@@ -899,6 +900,7 @@ class Environment(CompartmentList):
                 self, compartment.surfacePoints, compartment.insidePoints, areas=None
             )
         f.close()
+        # TODO: restore surface distances on loading from grid
         self.grid.aInteriorGrids = aInteriorGrids
         self.grid.aSurfaceGrids = aSurfaceGrids
 
@@ -1200,6 +1202,10 @@ class Environment(CompartmentList):
             fits, bb = compartment.inBox(self.boundingBox, self.smallestProteinSize)
             if not fits:
                 self.boundingBox = bb
+
+    def get_size_of_bounding_box(self):
+        box_boundary = numpy.array(self.boundingBox)
+        return numpy.linalg.norm(box_boundary[1] - box_boundary[0])
 
     def buildGrid(self, rebuild=True):
         """
@@ -2264,7 +2270,7 @@ class Environment(CompartmentList):
         self.distancesAfterFill = self.grid.distToClosestSurf
 
     def loadFreePoint(self, resultfilename):
-        rfile = open(resultfilename + "free_points", "rb")
+        rfile = open(resultfilename + "_free_points", "rb")
         freePoint = pickle.load(rfile)
         rfile.close()
         return freePoint
@@ -2289,7 +2295,7 @@ class Environment(CompartmentList):
             pickle.dump(result, orfile)
             #            pickle.dump(orga.molecules, orfile)
             orfile.close()
-        rfile = open(resultfilename + "free_points", "wb")
+        rfile = open(resultfilename + "_free_points", "wb")
         pickle.dump(self.grid.free_points, rfile)
         rfile.close()
 
@@ -2377,7 +2383,7 @@ class Environment(CompartmentList):
             #        rfile = open(resultfilename+"free_points",'rb')
         freePoint = []  # pickle.load(rfile)
         try:
-            rfile = open(resultfilename + "free_points", "rb")
+            rfile = open(resultfilename + "_free_points", "rb")
             freePoint = pickle.load(rfile)
             rfile.close()
         except:  # noqa: E722
@@ -2529,7 +2535,7 @@ class Environment(CompartmentList):
                             )
         freePoint = []  # pickle.load(rfile)
         try:
-            rfile = open(resultfilename + "free_points", "rb")
+            rfile = open(resultfilename + "_free_points", "rb")
             freePoint = pickle.load(rfile)
             rfile.close()
         except:  # noqa: E722
@@ -2659,7 +2665,7 @@ class Environment(CompartmentList):
             orgaresult.append(pickle.load(orfile))
             orfile.close()
         rfile.close()
-        rfile = open(resultfilename + "free_points")
+        rfile = open(resultfilename + "_free_points")
         rfile.close()
         rfile = open(resultfilename + ".txt", "w")
         line = ""

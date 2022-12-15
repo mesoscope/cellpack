@@ -477,6 +477,7 @@ class Compartment(CompartmentList):
         self.surfacePoints = surfacePoints = pickle.load(f)
         self.surfacePointsNormals = surfacePointsNormals = pickle.load(f)
         self.surfacePointsCoords = surfacePointsCoords = pickle.load(f)
+
         return surfacePoints, insidePoints, surfacePointsNormals, surfacePointsCoords
 
     def setNumber(self, num):
