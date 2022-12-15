@@ -1,7 +1,7 @@
 {
     "name": "test_config",
     "format": "simularium",
-    "inner_grid_method": "raytrace",
+    "inner_grid_method": "trimesh",
     "live_packing": false,
     "ordered_packing": false,
     "out": "cellpack/tests/outputs/",

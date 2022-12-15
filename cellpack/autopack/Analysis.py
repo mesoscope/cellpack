@@ -1556,7 +1556,7 @@ class AnalyseAP:
         ingredient_positions = {}
         ingredient_angles = {}
         occurences = {}
-        self.all_pos_dict = {}
+        all_pos_dict = {}
         total_positions = []
         total_distances = []
         total_angles = []
