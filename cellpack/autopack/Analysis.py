@@ -1726,19 +1726,19 @@ class AnalyseAP:
                                 seed_distances, distance_file, seed_index
                             )
 
-                            distances_dict[ingr.name] = seed_distances
+                            distances_dict[ingr.name] = seed_distances.tolist()
                             ingredient_positions_dict[
                                 ingr.name
                             ] = seed_ingredient_positions.tolist()
 
                         else:
-                            distances_dict[ingr.name].extend(seed_distances)
+                            distances_dict[ingr.name].extend(seed_distances.tolist())
                             ingredient_positions_dict[ingr.name].extend(
-                                seed_ingredient_positions
+                                seed_ingredient_positions.tolist()
                             )
 
-                            total_positions.extend(seed_ingredient_positions)
-                            total_distances.extend(seed_distances)
+                            total_positions.extend(seed_ingredient_positions.tolist())
+                            total_distances.extend(seed_distances.tolist())
 
                         if plot and two_d:
                             for i, p in enumerate(seed_ingredient_positions):
@@ -1850,17 +1850,17 @@ class AnalyseAP:
                                     seed_index,
                                 )
 
-                                distances_dict[ingr.name] = seed_distances
+                                distances_dict[ingr.name] = seed_distances.tolist()
                                 ingredient_positions_dict[
                                     ingr.name
                                 ] = seed_ingredient_positions.tolist()
                             else:
-                                distances_dict[ingr.name].extend(seed_distances)
+                                distances_dict[ingr.name].extend(seed_distances.tolist())
                                 ingredient_positions_dict[ingr.name].extend(
-                                    seed_ingredient_positions
+                                    seed_ingredient_positions.tolist()
                                 )
-                                total_positions.extend(seed_ingredient_positions)
-                                total_distances.extend(seed_distances)
+                                total_positions.extend(seed_ingredient_positions.tolist())
+                                total_distances.extend(seed_distances.tolist())
 
                             if plot and two_d:
                                 for p in seed_ingredient_positions:
@@ -1904,17 +1904,17 @@ class AnalyseAP:
                                     seed_index,
                                 )
 
-                                distances_dict[ingr.name] = seed_distances
+                                distances_dict[ingr.name] = seed_distances.tolist()
                                 ingredient_positions_dict[
                                     ingr.name
                                 ] = seed_ingredient_positions.tolist()
                             else:
-                                distances_dict[ingr.name].extend(seed_distances)
+                                distances_dict[ingr.name].extend(seed_distances.tolist())
                                 ingredient_positions_dict[ingr.name].extend(
-                                    seed_ingredient_positions
+                                    seed_ingredient_positions.tolist()
                                 )
-                                total_positions.extend(seed_ingredient_positions)
-                                total_distances.extend(seed_distances)
+                                total_positions.extend(seed_ingredient_positions.tolist())
+                                total_distances.extend(seed_distances.tolist())
 
                             if plot and two_d:
                                 for p in seed_ingredient_positions:
