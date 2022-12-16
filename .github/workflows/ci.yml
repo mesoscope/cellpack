@@ -37,7 +37,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install .[test]
+        pip install .[all]
     - name: Test with pytest
       run: |
         pytest cellpack/tests/
