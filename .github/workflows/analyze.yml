@@ -35,8 +35,9 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/download-artifact@v3
     - name: Display structure of downloaded files
-      run: ls -R
-      run: cat ./results/analysis_report.md
+      run: |
+        ls -R
+        cat ./results/analysis_report.md
     - uses: iterative/setup-cml@v1
     - name: Report
       env:
