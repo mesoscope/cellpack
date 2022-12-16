@@ -1067,8 +1067,9 @@ class AnalyseAP:
             mdFile.new_line("Actual minimum distance: ")
 
             distance_histo_path = results_path.glob("total_distances_*.png")
-
+            print("Path to results: {results_path}")
             for img_path in distance_histo_path:
+                print(f"Path to distance distrbution: {img_path}")
                 mdFile.new_line(
                     mdFile.new_inline_image(
                         text="Distance distribution",
