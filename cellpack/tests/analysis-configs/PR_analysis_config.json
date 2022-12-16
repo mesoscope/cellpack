@@ -6,6 +6,6 @@
     "ingredient_key" : "ext_A",
     "create_report": {
         "run_distance_analysis": true,
-        "path_to_github_results": "./results/jitter"
+        "path_to_github_results": "cellpack/tests/outputs/test_spheres/jitter"
     }
 }

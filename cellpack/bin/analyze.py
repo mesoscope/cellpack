@@ -20,7 +20,6 @@ from cellpack.autopack.loaders.analysis_config_loader import (
 
 ###############################################################################
 log_file_path = path.abspath(path.join(__file__, "../../logging.conf"))
-print(log_file_path)
 logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
 log = logging.getLogger()
 ###############################################################################
