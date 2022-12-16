@@ -11,7 +11,6 @@ import math
 import os
 from pathlib import Path
 from time import time
-from typing import Dict, Optional
 
 import matplotlib
 import numpy
@@ -21,6 +20,7 @@ import seaborn as sns
 import trimesh
 from matplotlib import pyplot as plt
 from matplotlib.patches import Circle
+from mdutils.mdutils import MdUtils
 from PIL import Image
 from sklearn.metrics import matthews_corrcoef
 from tqdm import tqdm
@@ -1047,53 +1047,69 @@ class AnalyseAP:
         self.all_pos_list = all_pos_list
         return all_objs, all_pos_list
 
+    def create_report(self, report_options):
+        """
+        Creates a markdown file report to publish on github
+        """
+        mdFile = MdUtils(
+            file_name=str(self.output_path / "analysis_report"), title="Analysis report"
+        )
+        if "run_distance_analysis" in report_options:
+            distance_histo_path = self.input_path.glob("total_distances*.png")
+            mdFile.new_header(level=1, title="Distance analysis")
+            for img_path in distance_histo_path:
+                mdFile.new_line(
+                    mdFile.new_inline_image(
+                        text="Distance distribution", path=str(img_path.resolve())
+                    )
+                )
+        mdFile.create_md_file()
+
     def run_analysis_workflow(
         self,
-        ingr_key: str,
-        run_similarity_analysis: Optional[bool] = True,
-        get_parametrized_representation: Optional[bool] = True,
-        mesh_paths: Optional[Dict[str, str]] = None,
-        save_plots: Optional[bool] = False,
-        get_correlations: Optional[bool] = False,
-        max_plots_to_save: Optional[int] = 1,
+        analysis_config: dict,
     ):
-        if mesh_paths is not None:
-            if "inner" in mesh_paths:
-                self.inner_mesh_path = mesh_paths["inner"]
-            if "outer" in mesh_paths:
-                self.outer_mesh_path = mesh_paths["outer"]
+        self.ingr_key = analysis_config.get("ingredient_key")
+
+        if analysis_config.get("mesh_paths"):
+            if "inner" in analysis_config["mesh_paths"]:
+                self.inner_mesh_path = analysis_config["mesh_paths"]["inner"]
+            if "outer" in analysis_config["mesh_paths"]:
+                self.outer_mesh_path = analysis_config["mesh_paths"]["outer"]
         else:
             self.inner_mesh_path = self.outer_mesh_path = None
 
         all_objs, all_pos_list = self.get_obj_dict(self.input_path)
-        self.ingr_key = ingr_key
         self.num_packings = len(all_pos_list)
         self.num_seeds_per_packing = numpy.array(
             [len(packing_dict) for packing_dict in all_pos_list]
         )
 
-        if ingr_key not in all_objs:
+        if self.ingr_key not in all_objs:
             raise ValueError(
-                f"Ingredient key {ingr_key} not found at {self.input_path}"
+                f"Ingredient key {self.ingr_key} not found at {self.input_path}"
             )
 
         print(f"Saving analysis outputs to {self.output_path}")
 
-        if run_similarity_analysis:
+        if analysis_config.get("run_similarity_analysis"):
             self.run_similarity_analysis(
                 all_objs,
             )
 
-        if get_parametrized_representation:
+        if analysis_config.get("get_parametrized_representation"):
             self.get_parametrized_representation(
                 all_pos_list=all_pos_list,
                 angular_spacing=numpy.pi / 64,
                 inner_mesh_path=self.inner_mesh_path,
                 outer_mesh_path=self.outer_mesh_path,
-                save_plots=save_plots,
-                max_plots_to_save=max_plots_to_save,
-                get_correlations=get_correlations,
+                save_plots=analysis_config.get("save_plots"),
+                max_plots_to_save=analysis_config.get("max_plots_to_save"),
+                get_correlations=analysis_config.get("get_correlations"),
             )
+
+        if analysis_config.get("create_report"):
+            self.create_report(analysis_config["create_report"])
 
     def calc_avg_similarity_values_for_dim(self, similarity_vals_for_dim):
         packing_inds = numpy.cumsum(
@@ -1303,7 +1319,8 @@ class AnalyseAP:
 
                 # intersecting points on the outer surface
                 outer_loc, _, _ = outer_mesh.ray.intersects_location(
-                    ray_origins=inner_loc, ray_directions=(pos_list - inner_loc)
+                    ray_origins=inner_loc,
+                    ray_directions=(pos_list - inner_loc),
                 )
 
                 distance_between_surfaces = numpy.linalg.norm(
@@ -1855,11 +1872,15 @@ class AnalyseAP:
                                     ingr.name
                                 ] = seed_ingredient_positions.tolist()
                             else:
-                                distances_dict[ingr.name].extend(seed_distances.tolist())
+                                distances_dict[ingr.name].extend(
+                                    seed_distances.tolist()
+                                )
                                 ingredient_positions_dict[ingr.name].extend(
                                     seed_ingredient_positions.tolist()
                                 )
-                                total_positions.extend(seed_ingredient_positions.tolist())
+                                total_positions.extend(
+                                    seed_ingredient_positions.tolist()
+                                )
                                 total_distances.extend(seed_distances.tolist())
 
                             if plot and two_d:
@@ -1909,11 +1930,15 @@ class AnalyseAP:
                                     ingr.name
                                 ] = seed_ingredient_positions.tolist()
                             else:
-                                distances_dict[ingr.name].extend(seed_distances.tolist())
+                                distances_dict[ingr.name].extend(
+                                    seed_distances.tolist()
+                                )
                                 ingredient_positions_dict[ingr.name].extend(
                                     seed_ingredient_positions.tolist()
                                 )
-                                total_positions.extend(seed_ingredient_positions.tolist())
+                                total_positions.extend(
+                                    seed_ingredient_positions.tolist()
+                                )
                                 total_distances.extend(seed_distances.tolist())
 
                             if plot and two_d:
@@ -1968,6 +1993,7 @@ class AnalyseAP:
 
         if use_file:
             total_positions = numpy.genfromtxt(position_file, delimiter=",")
+            total_distances = numpy.genfromtxt(distance_file, delimiter=",")
             try:
                 total_angles = numpy.genfromtxt(angle_file, delimiter=",")
             except Exception:
@@ -2009,6 +2035,11 @@ class AnalyseAP:
         self.env.loopThroughIngr(self.axis_distribution)
         self.env.loopThroughIngr(self.occurence_distribution)
         self.axis_distribution_total(total_positions)
+        # plot the distances
+        self.histo(
+            total_distances,
+            self.env.out_folder / f"total_distances_{self.env.basename}.png",
+        )
         # plot the angle
         if len(total_angles):
             self.histo(

@@ -22,11 +22,12 @@ jobs:
     - name: Analyze packing
       run: |
         pack -r cellpack/tests/recipes/test_spheres.json -c cellpack/tests/packing-configs/test_config.json
+        analyze -a cellpack/tests/analysis-configs/PR_analysis_config.json
     - name: Upload
       uses: actions/upload-artifact@v3
       with:
         name: results
-        path: cellpack/tests/outputs/test_spheres/jitter/
+        path: cellpack/tests/outputs/test_spheres/
   Comment:
     runs-on: ubuntu-latest
     needs: [Analyze]
@@ -40,6 +41,4 @@ jobs:
       env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: | 
-        echo "## Metrics report"  >> report.md
-        cml publish ./results/results_seed_0ext__A_histo_X.png --md >> report.md
-        cml send-comment report.md --pr
+        cml send-comment analysis_report.md --pr
