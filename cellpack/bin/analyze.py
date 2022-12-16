@@ -14,10 +14,13 @@ from time import time
 
 # Relative
 from cellpack.autopack.Analysis import AnalyseAP
-from cellpack.autopack.loaders.analysis_config_loader import AnalysisConfigLoader
+from cellpack.autopack.loaders.analysis_config_loader import (
+    AnalysisConfigLoader,
+)
 
 ###############################################################################
-log_file_path = path.join(path.dirname(path.abspath(__file__)), "../../logging.conf")
+log_file_path = path.abspath(path.join(__file__, "../../logging.conf"))
+print(log_file_path)
 logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
 log = logging.getLogger()
 ###############################################################################
@@ -43,15 +46,7 @@ def analyze(
         output_path=analysis_config["output_path"],
     )
     analysis.run_analysis_workflow(
-        ingr_key=analysis_config["ingredient_key"],
-        run_similarity_analysis=analysis_config["run_similarity_analysis"],
-        get_parametrized_representation=analysis_config[
-            "get_parametrized_representation"
-        ],
-        mesh_paths=analysis_config["mesh_paths"],
-        save_plots=analysis_config["save_plots"],
-        get_correlations=analysis_config["get_correlations"],
-        max_plots_to_save=analysis_config["max_plots_to_save"],
+        analysis_config=analysis_config,
     )
     t2 = time()
     print(f"time to run analysis: {t2 - t1}")
