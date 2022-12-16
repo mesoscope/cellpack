@@ -1057,12 +1057,15 @@ class AnalyseAP:
         if "run_distance_analysis" in report_options:
             distance_histo_path = self.input_path.glob("total_distances*.png")
             mdFile.new_header(level=1, title="Distance analysis")
-            for img_path in distance_histo_path:
-                mdFile.new_line(
-                    mdFile.new_inline_image(
-                        text="Distance distribution", path=str(img_path.resolve())
-                    )
-                )
+            mdFile.new_line("Expected minimum distance: ")
+            mdFile.new_line("Actual minimum distance: ")
+           
+            # for img_path in distance_histo_path:
+            #     mdFile.new_line(
+            #         mdFile.new_inline_image(
+            #             text="Distance distribution", path=str(img_path.resolve())
+            #         )
+            #     )
         mdFile.create_md_file()
 
     def run_analysis_workflow(
