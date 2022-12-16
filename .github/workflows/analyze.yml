@@ -41,5 +41,5 @@ jobs:
       env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: | 
-        cml publish ./results/total_distances_test_spheres_test_config.png --md >> analysis_report.md
+        cml asset publish ./results/total_distances_test_spheres_test_config.png --md >> analysis_report.md
         cml comment create ./results/analysis_report.md --pr
