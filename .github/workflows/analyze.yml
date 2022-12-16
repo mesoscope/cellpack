@@ -41,4 +41,4 @@ jobs:
       env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: | 
-        cml comment create analysis_report.md --pr
+        cml comment create ./results/analysis_report.md --pr
