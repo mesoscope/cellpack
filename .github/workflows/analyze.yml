@@ -41,5 +41,4 @@ jobs:
       env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: | 
-        cml asset publish ./results/jitter/total_distances_test_spheres_test_config.png --md >> ./results/analysis_report.md
         cml comment create ./results/analysis_report.md --pr

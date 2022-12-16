@@ -1054,18 +1054,28 @@ class AnalyseAP:
         mdFile = MdUtils(
             file_name=str(self.output_path / "analysis_report"), title="Analysis report"
         )
+
+        if "path_to_github_results" not in report_options:
+            raise ValueError("Path to github results is required to generate report")
+
+        results_path = Path(report_options["path_to_github_results"])
+
         if "run_distance_analysis" in report_options:
-            distance_histo_path = self.input_path.glob("total_distances*.png")
+
             mdFile.new_header(level=1, title="Distance analysis")
             mdFile.new_line("Expected minimum distance: ")
             mdFile.new_line("Actual minimum distance: ")
-           
-            # for img_path in distance_histo_path:
-            #     mdFile.new_line(
-            #         mdFile.new_inline_image(
-            #             text="Distance distribution", path=str(img_path.resolve())
-            #         )
-            #     )
+
+            distance_histo_path = results_path.glob("total_distances_*.png")
+
+            for img_path in distance_histo_path:
+                mdFile.new_line(
+                    mdFile.new_inline_image(
+                        text="Distance distribution",
+                        path=str(img_path),
+                    )
+                )
+
         mdFile.create_md_file()
 
     def run_analysis_workflow(

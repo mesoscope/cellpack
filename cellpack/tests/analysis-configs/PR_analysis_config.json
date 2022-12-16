@@ -5,6 +5,7 @@
     "output_path": "cellpack/tests/outputs/test_spheres/",
     "ingredient_key" : "ext_A",
     "create_report": {
-        "run_distance_analysis": true
+        "run_distance_analysis": true,
+        "path_to_github_results": "./results"
     }
 }
