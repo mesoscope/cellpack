@@ -32,6 +32,7 @@ from cellpack.autopack.plotly_result import PlotlyAnalysis
 from cellpack.autopack.transformation import signed_angle_between_vectors
 from cellpack.autopack.upy import colors as col
 from cellpack.autopack.upy.colors import map_colors
+from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 
 def autolabel(rects, ax):
@@ -578,13 +579,17 @@ class AnalyseAP:
                 if self.env.molecules[i][2].name == ingrname
             ]
         )
+
         if len(ingredient_positions):
-            distances = numpy.linalg.norm(
+            distances_from_center = numpy.linalg.norm(
                 ingredient_positions - numpy.array(center), axis=1
             )
+            distances_between_ingredients = scipy.spatial.distance.pdist(ingredient_positions)
         else:
-            distances = numpy.array([])
-        return ingredient_positions, distances
+            distances_from_center = numpy.array([])
+            distances_between_ingredients = numpy.array([])
+
+        return ingredient_positions, distances_from_center, distances_between_ingredients
 
     def getDistanceAngle(self, ingr, center):
         # need matrix to euler? then access and plot them?
@@ -1047,6 +1052,30 @@ class AnalyseAP:
         self.all_pos_list = all_pos_list
         return all_objs, all_pos_list
 
+    def get_minimum_expected_distance_from_recipe(self, recipe_data):
+        """
+        Returns 2x the smallest radius of objects in the recipe
+        """
+        minimum_distance = 9999
+        for object_values in recipe_data.get("objects").values():
+            if "radius" in object_values:
+                if 2 * object_values["radius"] < minimum_distance:
+                    minimum_distance = 2 * object_values["radius"]
+        return minimum_distance
+
+    def get_packed_minimum_distance(self, glob_to_distance_files):
+        """
+        Returns the minimum distance between packed objects
+        """
+        minimum_packed_distance = 9999
+        for path_to_distance_file in glob_to_distance_files:
+            distance_values = numpy.genfromtxt(path_to_distance_file)
+            current_minimum_distance = numpy.min(distance_values)
+            if current_minimum_distance < minimum_packed_distance:
+                minimum_packed_distance = current_minimum_distance
+
+        return minimum_packed_distance
+
     def create_report(self, report_options):
         """
         Creates a markdown file report to publish on github
@@ -1058,18 +1087,47 @@ class AnalyseAP:
         if "path_to_github_results" not in report_options:
             raise ValueError("Path to github results is required to generate report")
 
+        if "path_to_test_recipe" not in report_options:
+            raise ValueError("Path to test recipe is required to generate report")
+
         results_path = Path(report_options["path_to_github_results"])
+        test_recipe_path = report_options["path_to_test_recipe"]
+        recipe_data = RecipeLoader(test_recipe_path).recipe_data
+
+        mdFile.new_header(level=1, title="Packing image")
+        glob_to_packing_image = results_path.glob("packing_image_*.png")
+        for img_path in glob_to_packing_image:
+            mdFile.new_line(
+                mdFile.new_inline_image(
+                    text="Packing image",
+                    path=str(img_path),
+                )
+            )
+        mdFile.new_line("")
 
         if "run_distance_analysis" in report_options:
 
-            mdFile.new_header(level=1, title="Distance analysis")
-            mdFile.new_line("Expected minimum distance: ")
-            mdFile.new_line("Actual minimum distance: ")
+            expected_minimum_distance = self.get_minimum_expected_distance_from_recipe(
+                recipe_data
+            )
+            glob_to_distance_file = results_path.glob("ingredient_distances_*.txt")
 
-            distance_histo_path = results_path.glob("total_distances_*.png")
-            print(f"Path to results: {results_path}")
+            packed_minimum_distance = self.get_packed_minimum_distance(
+                glob_to_distance_file
+            )
+
+            mdFile.new_header(level=1, title="Distance analysis")
+            mdFile.new_line(f"Expected minimum distance: {expected_minimum_distance}")
+            mdFile.new_line(f"Actual minimum distance: {packed_minimum_distance}")
+            if expected_minimum_distance > packed_minimum_distance:
+                mdFile.new_line(
+                    f"Packed minimum distance {packed_minimum_distance:.2f} is less than expected minimum distance {expected_minimum_distance:.2f}!",
+                    color="red",
+                )
+
+            distance_histo_path = results_path.glob("total_ingredient_distances_*.png")
+
             for img_path in distance_histo_path:
-                print(f"Path to distance distrbution: {img_path}")
                 mdFile.new_line(
                     mdFile.new_inline_image(
                         text="Distance distribution",
@@ -1644,16 +1702,18 @@ class AnalyseAP:
         angle_file = self.env.out_folder / f"angles_{packing_basename}.txt"
         position_file = self.env.out_folder / f"positions_{packing_basename}.txt"
         all_pos_file = self.env.out_folder / f"all_positions_{packing_basename}.json"
-        distance_file = self.env.out_folder / f"distances_{packing_basename}.txt"
+        center_distance_file = self.env.out_folder / f"center_distances_{packing_basename}.txt"
+        ingredient_distance_file = self.env.out_folder / f"ingredient_distances_{packing_basename}.txt"
         occurences_file = self.env.out_folder / f"occurence_{packing_basename}.json"
         rangeseed = range(num_seeds)
-        distances_dict = {}
+        center_distances_dict = {}
+        ingredient_distances_dict = {}
         ingredient_positions_dict = {}
         ingredient_angles_dict = {}
         occurences = {}
         all_positions_dict = {}
         total_positions = []
-        total_distances = []
+        total_center_distances = []
         total_angles = []
         rebuild = True
 
@@ -1709,8 +1769,8 @@ class AnalyseAP:
                         else:
                             color = None
 
-                        if ingr.name not in distances_dict:
-                            distances_dict[ingr.name] = []
+                        if ingr.name not in center_distances_dict:
+                            center_distances_dict[ingr.name] = []
                             ingredient_positions_dict[ingr.name] = []
                             ingredient_angles_dict[ingr.name] = []
                             occurences[ingr.name] = []
@@ -1723,7 +1783,7 @@ class AnalyseAP:
                             # get angles wrt gradient
                             (
                                 seed_ingredient_positions,
-                                seed_distances,
+                                seed_distances_from_center,
                                 seed_angles,
                             ) = self.getDistanceAngle(ingr, center)
 
@@ -1739,7 +1799,8 @@ class AnalyseAP:
                         else:
                             (
                                 seed_ingredient_positions,
-                                seed_distances,
+                                seed_distances_from_center,
+                                seed_distances_between_ingredients,
                             ) = self.getDistance(ingr.name, center)
 
                         occurences[ingr.name].append(len(seed_ingredient_positions))
@@ -1754,22 +1815,28 @@ class AnalyseAP:
                             )
 
                             self.save_array_to_file(
-                                seed_distances, distance_file, seed_index
+                                seed_distances_from_center, center_distance_file, seed_index
                             )
 
-                            distances_dict[ingr.name] = seed_distances.tolist()
+                            self.save_array_to_file(
+                                seed_distances_between_ingredients, ingredient_distance_file, seed_index
+                            )
+
+                            center_distances_dict[ingr.name] = seed_distances_from_center.tolist()
+                            ingredient_distances_dict[ingr.name] = seed_distances_between_ingredients.tolist()
                             ingredient_positions_dict[
                                 ingr.name
                             ] = seed_ingredient_positions.tolist()
 
                         else:
-                            distances_dict[ingr.name].extend(seed_distances.tolist())
+                            center_distances_dict[ingr.name].extend(seed_distances_from_center.tolist())
+                            ingredient_distances_dict[ingr.name].extend(seed_distances_between_ingredients.tolist())
                             ingredient_positions_dict[ingr.name].extend(
                                 seed_ingredient_positions.tolist()
                             )
 
                             total_positions.extend(seed_ingredient_positions.tolist())
-                            total_distances.extend(seed_distances.tolist())
+                            total_center_distances.extend(seed_distances_from_center.tolist())
 
                         if plot and two_d:
                             for i, p in enumerate(seed_ingredient_positions):
@@ -1853,8 +1920,9 @@ class AnalyseAP:
                     surface_recipe = comparment.surfaceRecipe
                     if surface_recipe:
                         for ingr in surface_recipe.ingredients:
-                            if ingr.name not in distances_dict:
-                                distances_dict[ingr.name] = []
+                            if ingr.name not in center_distances_dict:
+                                center_distances_dict[ingr.name] = []
+                                ingredient_distances_dict[ingr.name] = []
                                 ingredient_positions_dict[ingr.name] = []
                                 occurences[ingr.name] = []
                             if (
@@ -1864,7 +1932,8 @@ class AnalyseAP:
                                 center = self.env.gradients[ingr.gradient].direction
                             (
                                 seed_ingredient_positions,
-                                seed_distances,
+                                seed_distances_from_center,
+                                seed_distances_between_ingredients,
                             ) = self.getDistance(ingr.name, center)
                             occurences[ingr.name].append(len(seed_ingredient_positions))
                             if use_file:
@@ -1876,18 +1945,26 @@ class AnalyseAP:
                                 )
 
                                 self.save_array_to_file(
-                                    seed_distances,
-                                    distance_file,
+                                    seed_distances_from_center,
+                                    center_distance_file,
                                     seed_index,
                                 )
 
-                                distances_dict[ingr.name] = seed_distances.tolist()
+                                self.save_array_to_file(
+                                    seed_distances_between_ingredients, ingredient_distance_file, seed_index
+                                )
+
+                                center_distances_dict[ingr.name] = seed_distances_from_center.tolist()
+                                ingredient_distances_dict[ingr.name] = seed_distances_between_ingredients.tolist()
                                 ingredient_positions_dict[
                                     ingr.name
                                 ] = seed_ingredient_positions.tolist()
                             else:
-                                distances_dict[ingr.name].extend(
-                                    seed_distances.tolist()
+                                center_distances_dict[ingr.name].extend(
+                                    seed_distances_from_center.tolist()
+                                )
+                                ingredient_distances_dict[ingr.name].extend(
+                                    seed_distances_between_ingredients.tolist()
                                 )
                                 ingredient_positions_dict[ingr.name].extend(
                                     seed_ingredient_positions.tolist()
@@ -1895,7 +1972,7 @@ class AnalyseAP:
                                 total_positions.extend(
                                     seed_ingredient_positions.tolist()
                                 )
-                                total_distances.extend(seed_distances.tolist())
+                                total_center_distances.extend(seed_distances_from_center.tolist())
 
                             if plot and two_d:
                                 for p in seed_ingredient_positions:
@@ -1911,8 +1988,9 @@ class AnalyseAP:
                     inner_recipe = comparment.innerRecipe
                     if inner_recipe:
                         for ingr in inner_recipe.ingredients:
-                            if ingr.name not in distances_dict:
-                                distances_dict[ingr.name] = []
+                            if ingr.name not in center_distances_dict:
+                                center_distances_dict[ingr.name] = []
+                                ingredient_distances_dict[ingr.name] = []
                                 ingredient_positions_dict[ingr.name] = []
                                 occurences[ingr.name] = []
 
@@ -1923,7 +2001,8 @@ class AnalyseAP:
                                 center = self.env.gradients[ingr.gradient].direction
                             (
                                 seed_ingredient_positions,
-                                seed_distances,
+                                seed_distances_from_center,
+                                seed_distances_between_ingredients,
                             ) = self.getDistance(ingr.name, center)
                             occurences[ingr.name].append(len(seed_ingredient_positions))
                             if use_file:
@@ -1934,18 +2013,26 @@ class AnalyseAP:
                                 )
 
                                 self.save_array_to_file(
-                                    seed_distances,
-                                    distance_file,
+                                    seed_distances_from_center,
+                                    center_distance_file,
                                     seed_index,
                                 )
 
-                                distances_dict[ingr.name] = seed_distances.tolist()
+                                self.save_array_to_file(
+                                    seed_distances_between_ingredients, ingredient_distance_file, seed_index
+                                )
+
+                                center_distances_dict[ingr.name] = seed_distances_from_center.tolist()
+                                ingredient_distances_dict[ingr.name] = seed_distances_between_ingredients.tolist()
                                 ingredient_positions_dict[
                                     ingr.name
                                 ] = seed_ingredient_positions.tolist()
                             else:
-                                distances_dict[ingr.name].extend(
-                                    seed_distances.tolist()
+                                center_distances_dict[ingr.name].extend(
+                                    seed_distances_from_center.tolist()
+                                )
+                                ingredient_distances_dict[ingr.name].extend(
+                                    seed_distances_between_ingredients.tolist()
                                 )
                                 ingredient_positions_dict[ingr.name].extend(
                                     seed_ingredient_positions.tolist()
@@ -1953,7 +2040,7 @@ class AnalyseAP:
                                 total_positions.extend(
                                     seed_ingredient_positions.tolist()
                                 )
-                                total_distances.extend(seed_distances.tolist())
+                                total_center_distances.extend(seed_distances_from_center.tolist())
 
                             if plot and two_d:
                                 for p in seed_ingredient_positions:
@@ -1978,8 +2065,13 @@ class AnalyseAP:
                     )
                     self.writeJSON(
                         self.env.out_folder
+                        / f"center_distances_{seed_basename}.json",
+                        center_distances_dict,
+                    )
+                    self.writeJSON(
+                        self.env.out_folder
                         / f"ingredient_distances_{seed_basename}.json",
-                        distances_dict,
+                        ingredient_distances_dict,
                     )
                     self.writeJSON(
                         self.env.out_folder / f"ingredient_angles_{seed_basename}.json",
@@ -2007,7 +2099,8 @@ class AnalyseAP:
 
         if use_file:
             total_positions = numpy.genfromtxt(position_file, delimiter=",")
-            total_distances = numpy.genfromtxt(distance_file, delimiter=",")
+            total_center_distances = numpy.genfromtxt(center_distance_file, delimiter=",")
+            total_ingredient_distances = numpy.genfromtxt(ingredient_distance_file, delimiter=",")
             try:
                 total_angles = numpy.genfromtxt(angle_file, delimiter=",")
             except Exception:
@@ -2051,8 +2144,13 @@ class AnalyseAP:
         self.axis_distribution_total(total_positions)
         # plot the distances
         self.histo(
-            total_distances,
-            self.env.out_folder / f"total_distances_{self.env.basename}.png",
+            total_center_distances,
+            self.env.out_folder / f"total_center_distances_{self.env.basename}.png",
+        )
+
+        self.histo(
+            total_ingredient_distances,
+            self.env.out_folder / f"total_ingredient_distances_{self.env.basename}.png",
         )
         # plot the angle
         if len(total_angles):
