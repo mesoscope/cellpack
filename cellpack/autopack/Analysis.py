@@ -584,12 +584,18 @@ class AnalyseAP:
             distances_from_center = numpy.linalg.norm(
                 ingredient_positions - numpy.array(center), axis=1
             )
-            distances_between_ingredients = scipy.spatial.distance.pdist(ingredient_positions)
+            distances_between_ingredients = scipy.spatial.distance.pdist(
+                ingredient_positions
+            )
         else:
             distances_from_center = numpy.array([])
             distances_between_ingredients = numpy.array([])
 
-        return ingredient_positions, distances_from_center, distances_between_ingredients
+        return (
+            ingredient_positions,
+            distances_from_center,
+            distances_between_ingredients,
+        )
 
     def getDistanceAngle(self, ingr, center):
         # need matrix to euler? then access and plot them?
@@ -1702,8 +1708,12 @@ class AnalyseAP:
         angle_file = self.env.out_folder / f"angles_{packing_basename}.txt"
         position_file = self.env.out_folder / f"positions_{packing_basename}.txt"
         all_pos_file = self.env.out_folder / f"all_positions_{packing_basename}.json"
-        center_distance_file = self.env.out_folder / f"center_distances_{packing_basename}.txt"
-        ingredient_distance_file = self.env.out_folder / f"ingredient_distances_{packing_basename}.txt"
+        center_distance_file = (
+            self.env.out_folder / f"center_distances_{packing_basename}.txt"
+        )
+        ingredient_distance_file = (
+            self.env.out_folder / f"ingredient_distances_{packing_basename}.txt"
+        )
         occurences_file = self.env.out_folder / f"occurence_{packing_basename}.json"
         rangeseed = range(num_seeds)
         center_distances_dict = {}
@@ -1815,28 +1825,42 @@ class AnalyseAP:
                             )
 
                             self.save_array_to_file(
-                                seed_distances_from_center, center_distance_file, seed_index
+                                seed_distances_from_center,
+                                center_distance_file,
+                                seed_index,
                             )
 
                             self.save_array_to_file(
-                                seed_distances_between_ingredients, ingredient_distance_file, seed_index
+                                seed_distances_between_ingredients,
+                                ingredient_distance_file,
+                                seed_index,
                             )
 
-                            center_distances_dict[ingr.name] = seed_distances_from_center.tolist()
-                            ingredient_distances_dict[ingr.name] = seed_distances_between_ingredients.tolist()
+                            center_distances_dict[
+                                ingr.name
+                            ] = seed_distances_from_center.tolist()
+                            ingredient_distances_dict[
+                                ingr.name
+                            ] = seed_distances_between_ingredients.tolist()
                             ingredient_positions_dict[
                                 ingr.name
                             ] = seed_ingredient_positions.tolist()
 
                         else:
-                            center_distances_dict[ingr.name].extend(seed_distances_from_center.tolist())
-                            ingredient_distances_dict[ingr.name].extend(seed_distances_between_ingredients.tolist())
+                            center_distances_dict[ingr.name].extend(
+                                seed_distances_from_center.tolist()
+                            )
+                            ingredient_distances_dict[ingr.name].extend(
+                                seed_distances_between_ingredients.tolist()
+                            )
                             ingredient_positions_dict[ingr.name].extend(
                                 seed_ingredient_positions.tolist()
                             )
 
                             total_positions.extend(seed_ingredient_positions.tolist())
-                            total_center_distances.extend(seed_distances_from_center.tolist())
+                            total_center_distances.extend(
+                                seed_distances_from_center.tolist()
+                            )
 
                         if plot and two_d:
                             for i, p in enumerate(seed_ingredient_positions):
@@ -1951,11 +1975,17 @@ class AnalyseAP:
                                 )
 
                                 self.save_array_to_file(
-                                    seed_distances_between_ingredients, ingredient_distance_file, seed_index
+                                    seed_distances_between_ingredients,
+                                    ingredient_distance_file,
+                                    seed_index,
                                 )
 
-                                center_distances_dict[ingr.name] = seed_distances_from_center.tolist()
-                                ingredient_distances_dict[ingr.name] = seed_distances_between_ingredients.tolist()
+                                center_distances_dict[
+                                    ingr.name
+                                ] = seed_distances_from_center.tolist()
+                                ingredient_distances_dict[
+                                    ingr.name
+                                ] = seed_distances_between_ingredients.tolist()
                                 ingredient_positions_dict[
                                     ingr.name
                                 ] = seed_ingredient_positions.tolist()
@@ -1972,7 +2002,9 @@ class AnalyseAP:
                                 total_positions.extend(
                                     seed_ingredient_positions.tolist()
                                 )
-                                total_center_distances.extend(seed_distances_from_center.tolist())
+                                total_center_distances.extend(
+                                    seed_distances_from_center.tolist()
+                                )
 
                             if plot and two_d:
                                 for p in seed_ingredient_positions:
@@ -2019,11 +2051,17 @@ class AnalyseAP:
                                 )
 
                                 self.save_array_to_file(
-                                    seed_distances_between_ingredients, ingredient_distance_file, seed_index
+                                    seed_distances_between_ingredients,
+                                    ingredient_distance_file,
+                                    seed_index,
                                 )
 
-                                center_distances_dict[ingr.name] = seed_distances_from_center.tolist()
-                                ingredient_distances_dict[ingr.name] = seed_distances_between_ingredients.tolist()
+                                center_distances_dict[
+                                    ingr.name
+                                ] = seed_distances_from_center.tolist()
+                                ingredient_distances_dict[
+                                    ingr.name
+                                ] = seed_distances_between_ingredients.tolist()
                                 ingredient_positions_dict[
                                     ingr.name
                                 ] = seed_ingredient_positions.tolist()
@@ -2040,7 +2078,9 @@ class AnalyseAP:
                                 total_positions.extend(
                                     seed_ingredient_positions.tolist()
                                 )
-                                total_center_distances.extend(seed_distances_from_center.tolist())
+                                total_center_distances.extend(
+                                    seed_distances_from_center.tolist()
+                                )
 
                             if plot and two_d:
                                 for p in seed_ingredient_positions:
@@ -2064,8 +2104,7 @@ class AnalyseAP:
                         ingredient_positions_dict,
                     )
                     self.writeJSON(
-                        self.env.out_folder
-                        / f"center_distances_{seed_basename}.json",
+                        self.env.out_folder / f"center_distances_{seed_basename}.json",
                         center_distances_dict,
                     )
                     self.writeJSON(
@@ -2099,8 +2138,12 @@ class AnalyseAP:
 
         if use_file:
             total_positions = numpy.genfromtxt(position_file, delimiter=",")
-            total_center_distances = numpy.genfromtxt(center_distance_file, delimiter=",")
-            total_ingredient_distances = numpy.genfromtxt(ingredient_distance_file, delimiter=",")
+            total_center_distances = numpy.genfromtxt(
+                center_distance_file, delimiter=","
+            )
+            total_ingredient_distances = numpy.genfromtxt(
+                ingredient_distance_file, delimiter=","
+            )
             try:
                 total_angles = numpy.genfromtxt(angle_file, delimiter=",")
             except Exception:
