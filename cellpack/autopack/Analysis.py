@@ -1106,7 +1106,7 @@ class AnalyseAP:
             mdFile.new_line(
                 mdFile.new_inline_image(
                     text="Packing image",
-                    path=str(img_path),
+                    path=str(img_path.resolve()),
                 )
             )
         mdFile.new_line("")
@@ -1123,12 +1123,17 @@ class AnalyseAP:
             )
 
             mdFile.new_header(level=1, title="Distance analysis")
-            mdFile.new_line(f"Expected minimum distance: {expected_minimum_distance}")
-            mdFile.new_line(f"Actual minimum distance: {packed_minimum_distance}")
+            mdFile.new_line(
+                f"Expected minimum distance: {expected_minimum_distance:.2f}"
+            )
+            mdFile.new_line(f"Actual minimum distance: {packed_minimum_distance:.2f}")
             if expected_minimum_distance > packed_minimum_distance:
                 mdFile.new_line(
-                    f"Packed minimum distance {packed_minimum_distance:.2f} is less than expected minimum distance {expected_minimum_distance:.2f}!",
-                    color="red",
+                    (
+                        f"Packed minimum distance {packed_minimum_distance:.2f}"
+                        " is less than "
+                        f"expected minimum distance {expected_minimum_distance:.2f}!"
+                    ),
                 )
 
             distance_histo_path = results_path.glob("total_ingredient_distances_*.png")
