@@ -1106,7 +1106,7 @@ class AnalyseAP:
             mdFile.new_line(
                 mdFile.new_inline_image(
                     text="Packing image",
-                    path=str(img_path.resolve()),
+                    path=str(img_path),
                 )
             )
         mdFile.new_line("")
@@ -1130,6 +1130,7 @@ class AnalyseAP:
             if expected_minimum_distance > packed_minimum_distance:
                 mdFile.new_line(
                     (
+                        "Possible error:\n"
                         f"Packed minimum distance {packed_minimum_distance:.2f}"
                         " is less than "
                         f"expected minimum distance {expected_minimum_distance:.2f}!"

@@ -43,4 +43,4 @@ jobs:
       env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: | 
-        cml comment create ./results/analysis_report.md --pr
+        cml comment update --watermark-title="{workflow} report" ./results/analysis_report.md --pr
