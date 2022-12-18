@@ -1130,9 +1130,9 @@ class AnalyseAP:
             if expected_minimum_distance > packed_minimum_distance:
                 mdFile.new_line(
                     (
-                        "Possible error:\n"
+                        "\n\nPossible error:\n"
                         f"Packed minimum distance {packed_minimum_distance:.2f}"
-                        " is less than "
+                        " is less than the "
                         f"expected minimum distance {expected_minimum_distance:.2f}!"
                     ),
                 )

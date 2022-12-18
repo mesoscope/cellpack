@@ -37,10 +37,11 @@ jobs:
     - name: Display structure of downloaded files
       run: |
         ls -R
-        cat ./results/analysis_report.md
     - uses: iterative/setup-cml@v1
     - name: Report
       env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: | 
+        cml asset publish ./results/jitter/total_distances_test_spheres_test_config.png --md >> ./results/analysis_report.md
         cml comment update --watermark-title="{workflow} report" ./results/analysis_report.md --pr
+        cat ./results/analysis_report.md
