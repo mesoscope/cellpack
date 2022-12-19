@@ -1084,20 +1084,25 @@ class AnalyseAP:
 
     def create_report(self, report_options):
         """
-        Creates a markdown file report to publish on github
+        Creates a markdown file report of various analyses
         """
         mdFile = MdUtils(
             file_name=str(self.output_path / "analysis_report"), title="Analysis report"
         )
 
-        if "path_to_github_results" not in report_options:
-            raise ValueError("Path to github results is required to generate report")
+        if "path_to_results" not in report_options:
+            raise ValueError("Path to results is required to generate report")
 
         if "path_to_test_recipe" not in report_options:
             raise ValueError("Path to test recipe is required to generate report")
 
-        results_path = Path(report_options["path_to_github_results"])
+        # actual path where results are stored
+        results_path = Path(report_options["path_to_results"])
+        # path to test recipe used for packing
         test_recipe_path = report_options["path_to_test_recipe"]
+        # results path to use in report
+        results_output_path = report_options["results_output_path"]
+
         recipe_data = RecipeLoader(test_recipe_path).recipe_data
 
         mdFile.new_header(level=1, title="Packing image")
@@ -1106,7 +1111,7 @@ class AnalyseAP:
             mdFile.new_line(
                 mdFile.new_inline_image(
                     text="Packing image",
-                    path=str(img_path),
+                    path=f"{results_output_path}/{img_path.name}",
                 )
             )
         mdFile.new_line("")
@@ -1128,22 +1133,24 @@ class AnalyseAP:
             )
             mdFile.new_line(f"Actual minimum distance: {packed_minimum_distance:.2f}")
             if expected_minimum_distance > packed_minimum_distance:
-                mdFile.new_line(
-                    (
-                        "\n\nPossible error:\n"
+                mdFile.new_line("\nPossible errors:")
+                mdFile.new_list(
+                    [
                         f"Packed minimum distance {packed_minimum_distance:.2f}"
                         " is less than the "
                         f"expected minimum distance {expected_minimum_distance:.2f}!"
-                    ),
+                    ]
                 )
 
             distance_histo_path = results_path.glob("total_ingredient_distances_*.png")
+            if distance_histo_path:
+                mdFile.new_line("Distance distribution:")
 
             for img_path in distance_histo_path:
                 mdFile.new_line(
                     mdFile.new_inline_image(
                         text="Distance distribution",
-                        path=str(img_path),
+                        path=f"{results_output_path}/{img_path.name}",
                     )
                 )
 
