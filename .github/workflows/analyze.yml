@@ -27,6 +27,9 @@ jobs:
       with:
         name: results
         path: cellpack/tests/outputs/test_spheres/
+    - name: Display structure of downloaded files
+      run: |
+        ls -R
     - name: Create analysis report
       run: |
         analyze -a cellpack/tests/analysis-configs/PR_analysis_config.json
@@ -36,9 +39,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: actions/download-artifact@v3
-    - name: Display structure of downloaded files
-      run: |
-        ls -R
     - uses: iterative/setup-cml@v1
     - name: Update comment
       env:
