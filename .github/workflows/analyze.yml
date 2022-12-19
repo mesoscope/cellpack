@@ -42,6 +42,6 @@ jobs:
       env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: | 
-        cml asset publish ./results/jitter/total_distances_test_spheres_test_config.png --md >> ./results/analysis_report.md
+        cml asset publish ./results/jitter/total_ingredient_distances_test_spheres_test_config.png --md >> ./results/analysis_report.md
         cml comment update --watermark-title="{workflow} report" ./results/analysis_report.md --pr
         cat ./results/analysis_report.md
