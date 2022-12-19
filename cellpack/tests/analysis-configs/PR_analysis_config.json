@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "format_version": "1.0",
-    "input_path": "./results/jitter",
+    "input_path": "./results/jitter/",
     "output_path": "./results",
     "ingredient_key" : "ext_A",
     "create_report": {
