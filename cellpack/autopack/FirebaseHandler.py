@@ -14,7 +14,7 @@ class FirebaseHandler(object):
         docs = data_ref.where("name", "==", name).get() #docs is an array
         if len(docs) == 1:
             doc = docs[0]
-            return doc.id, docs.to_dict()
+            return doc.id, docs
         else: 
             # TODO: what to do with duplicate docs
             return None, None
@@ -27,7 +27,8 @@ class FirebaseHandler(object):
 
     def upload_doc(self, collection, data):
         return self.db.collection(collection).add(data)
-
+    
+    @staticmethod
     def create_path(collection, doc_id):
         return  f"firebase:{collection}/{doc_id}"
 

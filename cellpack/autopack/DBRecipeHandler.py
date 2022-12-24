@@ -1,114 +1,5 @@
 import copy
 
-
-# default_creds = r"/Users/Ruge/Desktop/Allen Internship/cellPACK/cellpack-data-582d6-firebase-adminsdk-3pkkz-27a3ec0777.json"
-
-
-# # fetch the service key json file
-# login = credentials.Certificate(default_creds)
-# # initialize firebase
-# firebase_admin.initialize_app(login)
-# # connect to db
-# db = firestore.client()
-
-recipe_data = {
-    "version": "1.0.0",
-    "format_version": "2.0",
-    "name": "peroxisomes_test",
-    "bounding_box": [
-        [
-            -110,
-            -45,
-            -62
-        ],
-        [
-            110,
-            45,
-            62
-        ]
-    ],
-    "objects": {
-        "mean_membrane": {
-            "type": "mesh",
-            "color": [
-                0.5,
-                0.5,
-                0.5
-            ],
-            "representations": {
-                "mesh": {
-                    "path": "https://www.dl.dropboxusercontent.com/s/4d7rys8uwqz72xy/",
-                    "name": "mean-membrane.obj",
-                    "format": "obj"
-                }
-            }
-        },
-        "mean_nucleus": {
-            "type": "mesh",
-            "color": [
-                0.25,
-                0.25,
-                0.25
-            ],
-            "representations": {
-                "mesh": {
-                    "path": "https://www.dl.dropboxusercontent.com/s/3194r3t40ewypxh/",
-                    "name": "mean-nuc.obj",
-                    "format": "obj"
-                }
-            }
-        },
-        "peroxisome": {
-            "jitter_attempts": 300,
-            "type": "single_sphere",
-            "color": [
-                0.20,
-                0.70,
-                0.10
-            ],
-            "radius": 2.30
-        }
-    },
-    "composition": {
-        "bounding_area": {
-            "regions": {
-                "interior": [
-                    "membrane"
-                ]
-            }
-        },
-        "membrane": {
-            "object": "mean_membrane",
-            "count": 1,
-            "regions": {
-                "interior": [
-                    "nucleus",
-                    {
-                        "object": "peroxisome",
-                        "count": 121
-                    }
-                ]
-            }
-        },
-        "nucleus": {
-            "object": "mean_nucleus",
-            "count": 1,
-            "regions": {
-                "interior": []
-            }
-        }
-    }
-}
-
-
-recipe_meta_data = {
-            "format_version": recipe_data["format_version"],
-            "version": recipe_data["version"],
-            "name": recipe_data["name"],
-            "bounding_box": recipe_data["bounding_box"],
-            "composition": {},
-        }
-
 class DBRecipeHandler(object):
     def __init__(self, db_handler):
         self.db = db_handler
@@ -149,7 +40,6 @@ class DBRecipeHandler(object):
         if id is None: 
             # data_ref = db.collection(collection)
             name = modified_data["name"]
-            # docs = data_ref.where("name", "==", name).get() #docs is an array
             doc_id, doc = self.db.get_doc_by_name(collection, name)
             if not self.should_write(modified_data, doc):
                 print(f"{collection}/{name} is already exists in firestore")
@@ -190,13 +80,12 @@ class DBRecipeHandler(object):
         references_to_update = {}
         # {"nucleus": path in db }
         # save objects to db
-        upload_objects(objects, objects_to_path_map)
+        upload_objects(self, objects, objects_to_path_map)
         # save comps to db
-        # while not updated_all:
         for comp_name in composition:
             comp_obj = composition[comp_name]
             # replace with paths for outer objs in comp 
-            if "object" in comp_obj.keys(): 
+            if "object" in comp_obj: 
                 obj_name = comp_obj["object"]
                 obj_database_path = objects_to_path_map.get(obj_name)
                 comp_obj["object"] = obj_database_path
@@ -204,39 +93,36 @@ class DBRecipeHandler(object):
                 for region_name, region_array in comp_obj["regions"].items():
                     if len(region_array) == 0:
                         comp_obj["name"] = comp_name
-                        comp_path = self.db.to_db("composition", comp_obj)
+                        comp_path = self.to_db("composition", comp_obj)
                         comp_to_path_map[comp_name] = comp_path
                         continue
                     for region_item in region_array:
-                        # replace with paths for inner objs in comp["regions"]
+                        # replace nested objs in comp["regions"]
                         if isinstance(region_item, dict):
                             obj_name = region_item["object"]
                             region_item["object"] = objects_to_path_map.get(obj_name)
-                        # replace with paths for comps
+                        # replace comps
                         elif isinstance(region_item, str):
-                            # region item is a string 
+                            references_to_update[comp_name] = references_to_update.update({region_item:region_array.index(region_item)})
+                            #e.g.references_to_update = {"membrane": {"nucleus": 0}}
                             # if region_item in comp_to_path_map:
                             #     comp_obj["regions"][region_name][region_array.index(region_item)] = comp_to_path_map[region_item]
                             #     print(f"comp path of {region_item} updated in {comp_name}")
-                            #     comp_obj["name"] = comp_name
-                            references_to_update[region_item] = f"{comp_name}/regions/{region_name}"
-                        comp_path = self.db.to_db("composition", comp_obj)
-                        comp_to_path_map[comp_name] = comp_path
+            comp_obj["name"] = comp_name
+            comp_path = self.to_db("composition", comp_obj)
+                            # comp_to_path_map[comp_name] = comp_path
         
-        # once we are done uploading all the composition objects
-        # we need to go through each one and update the 
-        # reference to other db objects  
-        for comp_name in comp_to_path_map:
-            id, doc = self.db.get_doc_by_name("composition", comp_name)
-            ref_path_to_update = references_to_update[comp_name]
-            # should give us something like "bounding_area/regions/interior"
-            self.update_reference(comp_name)
+        for comp_name in references_to_update:
+            id, doc_ref = self.db.get_doc_by_name("composition", comp_name)
+            doc_path = doc_ref.path
+            index = references_to_update[comp_name]
+            # should give us something like "bounding_area/regions/interior/membrane"
+            self.update_reference(comp_name, doc_path)
             # comp_obj["name"] = comp_name
             # comp_obj_check_update[comp_name] = comp_obj
             # comp_path = to_firestore("composition_sun", comp_obj)
             # comp_to_path_map[comp_name] = comp_path
-            # recipe_to_save["composition"][comp_name] = { "inherit" : comp_to_path_map[comp_name] }  
-        # _update_comp_ref_in_comp_obj(comp_obj_check_update, comp_to_path_map)         
+        recipe_to_save["composition"][comp_name] = { "inherit" : comp_to_path_map[comp_name] }  
         self.upload_recipe(recipe_to_save)
         
 
@@ -249,19 +135,12 @@ def get_collection_id_from_path(path_to_recipe):
         return collection, id
 
 
-
-        
 def upload_objects(self, objects, objects_to_path_map):
     for obj_name in objects:
         object_doc = objects[obj_name]
         object_doc["name"] = obj_name
-        obj_path = to_firestore("objects", object_doc)
+        obj_path = self.to_db("objects", object_doc)
         objects_to_path_map[obj_name] = obj_path        
-
-
-    
-        
-
 
 
 # #example of using `Reference` class 
