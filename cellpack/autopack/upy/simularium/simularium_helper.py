@@ -355,7 +355,7 @@ class simulariumHelper(hostHelper.Helper):
                 None,
             )
 
-    def add_compartment_to_scene(self, compartment, grid_positions):
+    def add_compartment_to_scene(self, compartment):
         display_type = DISPLAY_TYPE.SPHERE
         url = ""
         radius = compartment.encapsulating_radius

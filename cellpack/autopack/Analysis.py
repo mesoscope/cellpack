@@ -1138,7 +1138,7 @@ class AnalyseAP:
                     [
                         f"Packed minimum distance {packed_minimum_distance:.2f}"
                         " is less than the "
-                        f"expected minimum distance {expected_minimum_distance:.2f}!"
+                        f"expected minimum distance {expected_minimum_distance:.2f}"
                     ]
                 )
 
@@ -1756,7 +1756,7 @@ class AnalyseAP:
                 forceBuild=rebuild,
             )
             two_d = self.env.is_two_d()
-            use_simularium = True
+            use_simularium = False
             self.pack(
                 seed=seed,
                 vTestid=seed_index,
