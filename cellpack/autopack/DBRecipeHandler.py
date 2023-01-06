@@ -1,4 +1,5 @@
 import copy
+# from cellpack.autopack.FirebaseHandler import FirebaseHandler
 
 class DBRecipeHandler(object):
     def __init__(self, db_handler):
@@ -44,6 +45,13 @@ class DBRecipeHandler(object):
         else:
             doc_path = f"{collection}/{id}"
             doc = self.db.set_doc(collection, id, modified_data)
+    
+    def upload_objects(self, objects, objects_to_path_map):
+        for obj_name in objects:
+            object_doc = objects[obj_name]
+            object_doc["name"] = obj_name
+            doc, obj_path = self.to_db("objects", object_doc)
+            objects_to_path_map[obj_name] = obj_path   
 
     def upload_recipe(self, recipe_data):
         recipe_name = recipe_data["name"]
@@ -51,15 +59,17 @@ class DBRecipeHandler(object):
         key = f"{recipe_name}_v{recipe_version}"
         self.to_db("recipes", recipe_data, key)
 
-    def update_reference(self, composition_id, referring_comp_id, index, remove_comp_name):
+    def update_reference(self, composition_id, referring_comp_id, index, remove_comp_name, update_in_array=False):
         doc = self.db.get_doc_by_id("composition", composition_id)
         if doc is None:
             return
         else:
             new_item_ref = self.db.get_doc_by_id("composition", referring_comp_id)
             update_ref_path = f"firebase:{new_item_ref.path}" 
-            #TODO use update_reference_on_doc func when the updating is not happening in an array
-            self.db.update_elements_in_array(doc, index, update_ref_path, remove_comp_name)
+            if update_in_array:
+                self.db.update_elements_in_array(doc, index, update_ref_path, remove_comp_name)
+            else:
+                self.db.update_reference_on_doc(doc, index, update_ref_path)
             
         
     def divide_recipe_into_collections(self, recipe_meta_data, recipe_data):
@@ -71,7 +81,7 @@ class DBRecipeHandler(object):
         comp_to_path_map = {}
         references_to_update = {}
         # save objects to db
-        upload_objects(self, objects, objects_to_path_map)
+        self.upload_objects(objects, objects_to_path_map)
         # save comps to db
         for comp_name in composition:
             comp_obj = composition[comp_name]
@@ -82,26 +92,19 @@ class DBRecipeHandler(object):
                 comp_obj["object"] = obj_database_path
             if "regions" in comp_obj:
                 for region_name, region_array in comp_obj["regions"].items():
-                    if len(region_array) == 0:
-                        comp_obj["name"] = comp_name
-                        doc, comp_path = self.to_db("composition", comp_obj)
-                        comp_to_path_map[comp_name] = {}
-                        comp_to_path_map[comp_name]["path"] = comp_path
-                        comp_to_path_map[comp_name]["id"] = doc.id
-                        continue
-                    for region_item in region_array:
-                        # replace nested objs in comp["regions"]
-                        if isinstance(region_item, dict):
-                            obj_name = region_item["object"]
-                            region_item["object"] = objects_to_path_map.get(obj_name)
-                        # replace comps
-                        elif isinstance(region_item, str):
-                            region_item_index = region_array.index(region_item)
-                            update_field_path = f"regions.{region_name}"
-                            if comp_name in references_to_update:
-                                references_to_update[comp_name].update({region_item:update_field_path})
-                            else:
-                                references_to_update[comp_name] ={region_item:update_field_path}
+                    if len(region_array) > 0:
+                        for region_item in region_array:
+                            # replace nested objs in comp["regions"]
+                            if isinstance(region_item, dict):
+                                obj_name = region_item["object"]
+                                region_item["object"] = objects_to_path_map.get(obj_name)
+                            # replace comps
+                            elif isinstance(region_item, str):
+                                update_field_path = f"regions.{region_name}"
+                                if comp_name in references_to_update:
+                                    references_to_update[comp_name].update({region_item:update_field_path})
+                                else:
+                                    references_to_update[comp_name] ={region_item:update_field_path}
             comp_obj["name"] = comp_name
             doc_id, comp_path = self.to_db("composition", comp_obj)
             comp_to_path_map[comp_name] = {}
@@ -110,60 +113,28 @@ class DBRecipeHandler(object):
             recipe_to_save["composition"][comp_name] = { "inherit" : comp_to_path_map[comp_name]["path"] } 
             if comp_name in references_to_update:
                 references_to_update[comp_name].update({"comp_id": doc_id})
-        
-        for comp_name in references_to_update:
-            # references_to_update = {'bounding_area': {'outer_sphere': 0, 'comp_id': 'GVp0qIrOeGKG2w9m7cAU'}}
-            # comp_to_path_map = {'bounding_area': {'path': 'firebase:composition/GVp0qIrOeGKG2w9m7cAU', 'id': 'GVp0qIrOeGKG2w9m7cAU'}}
-            comp_id = references_to_update[comp_name]["comp_id"]
-            for item in references_to_update[comp_name]:
-                if item != "comp_id" and item in comp_to_path_map:
-                    item_id = comp_to_path_map[item]["id"]
-                    index = references_to_update[comp_name][item]
-                    self.update_reference(comp_id, item_id, index, item)
+        #update nested comp in comp
+        if references_to_update:
+            for comp_name in references_to_update:
+                comp_id = references_to_update[comp_name]["comp_id"]
+                for item in references_to_update[comp_name]:
+                    if item != "comp_id" and item in comp_to_path_map:
+                        item_id = comp_to_path_map[item]["id"]
+                        index = references_to_update[comp_name][item]
+                        self.update_reference(comp_id, item_id, index, item, update_in_array=True)
         self.upload_recipe(recipe_to_save)
         
-
-
-def get_collection_id_from_path(path_to_recipe):
-        #path example = firebase:composition/uid_1
-        components = path_to_recipe.split(":")[1].split("/")
-        collection = components[0]
-        id = components[1]
-        return collection, id
-
-
-def upload_objects(self, objects, objects_to_path_map):
-    for obj_name in objects:
-        object_doc = objects[obj_name]
-        object_doc["name"] = obj_name
-        doc, obj_path = self.to_db("objects", object_doc)
-        objects_to_path_map[obj_name] = obj_path        
-
-
-# #example of using `Reference` class 
-# composition_ref = firestore.collection("composition")
-# nucleus_ref = composition_ref.document("uid_1")
-
-# membrane_comp_doc = {
-#                         "name": "membrane",
-#                         "object": "firebase:objects/uid_",
-#                         "count": 1,
-#                         "regions": {
-#                             "interior": {
-#                                 "0": Reference(nucleus_ref),
-#                                 "1": {
-#                                     "object": "firebase:objects/uid_",
-#                                     "count": 121
-#                                 }
-#                             }
-#                         },
-#                     }
-# membrane_comp_doc_ref = to_firestore("composition", membrane_comp_doc)
-
-# #example of getting data from the referenced doc 
-# nucleus_doc = membrane_comp_doc["regions"]["interior"]["0"].get()
-# print(nucleus_doc.to_dict())
         
+# def download_recipe(path_to_recipe):
+#     firebase_handler = FirebaseHandler()
+#     collection, id = firebase_handler.get_collection_id_from_path(path_to_recipe)
+#     data_ref = firebase_handler.get_doc_by_id(collection, id)
+#     data = data_ref.to_dict()
+#     print(data)
+
+# download_recipe("firebase:recipes/peroxisomes_test_v1.0.0")
+
+
 
 
 

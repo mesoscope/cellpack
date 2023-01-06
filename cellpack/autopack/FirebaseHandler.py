@@ -46,11 +46,16 @@ class FirebaseHandler(object):
         if doc.exists:
             return doc_ref
         else:
+            print("requested doc doesn't exist in firebase")
             return None
 
-    #returns a DocumentReference object to perform operations on the doc
-    # def get_doc_reference_by_id(self, collection, id):
-    #     return self.db.collection(collection).document(id)
+    @staticmethod
+    def get_collection_id_from_path(path):
+        #path example = firebase:composition/uid_1
+        components = path.split(":")[1].split("/")
+        collection = components[0]
+        id = components[1]
+        return collection, id
 
     @staticmethod
     def update_reference_on_doc(doc_ref, index, new_item_ref):
@@ -60,11 +65,3 @@ class FirebaseHandler(object):
     def update_elements_in_array(doc_ref, index, new_item_ref, remove_item):
         doc_ref.update({index: firestore.ArrayRemove([remove_item])})
         doc_ref.update({index: firestore.ArrayUnion([new_item_ref])})
-
-    # # get a document with a known ID
-    # def read_from_firestore(self, collection, id):
-    #     doc = self.db.collection(collection).document(id).get()
-    #     if doc.exists:
-    #         return doc.to_dict()
-    #     else:
-    #         return "requested doc doesn't exist in firestore"
