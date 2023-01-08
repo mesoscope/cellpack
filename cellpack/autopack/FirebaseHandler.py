@@ -12,14 +12,7 @@ class FirebaseHandler(object):
         db = self.db
         data_ref = db.collection(collection)
         docs = data_ref.where("name", "==", name).get() #docs is an array
-        if len(docs) == 1:
-            doc = docs[0]
-            return doc.id, doc
-        else: 
-            # same name but different content (e.g. "bounding_area" or "common_settings")
-            # same name and same content (duplicates)
-            # TODO: what to do with duplicate docs
-            return None, None
+        return docs
 
     def set_doc(self, collection, id, data):
         if not self.get_doc_by_id(collection, id):
@@ -46,7 +39,7 @@ class FirebaseHandler(object):
         if doc.exists:
             return doc_ref
         else:
-            print("requested doc doesn't exist in firebase")
+            print("doc doesn't exist in firebase")
             return None
 
     @staticmethod

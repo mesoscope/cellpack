@@ -24,6 +24,19 @@ class DBRecipeHandler(object):
 
         return modified_data
         
+    def should_write(self, collection, name, data):
+        docs = self.db.get_doc_by_name(collection, name)
+        if docs and len(docs) == 1:
+            doc = docs[0]
+            if doc.to_dict() == data:
+                return docs[0].id, False
+            else:
+                return None, True
+        elif isinstance(docs, list):
+            for doc in docs:
+                if doc.to_dict() == data:
+                    return doc.id, False
+        return None, True
 
     # add documents with auto IDs
     def to_db(self, collection, data, id=None):
@@ -31,10 +44,10 @@ class DBRecipeHandler(object):
         modified_data = DBRecipeHandler.reconstruct_dict(data)
         if id is None: 
             name = modified_data["name"]
-            doc_id, doc = self.db.get_doc_by_name(collection, name)
-            if doc:
+            doc_id, write = self.should_write(collection, name, modified_data)
+            if not write:
                 print(f"{collection}/{name} is already exists in firestore")
-                return doc.id, self.db.create_path(collection, doc.id)
+                return doc_id, self.db.create_path(collection, doc_id)
             else: 
                 doc = self.db.upload_doc(collection, modified_data)
                 # doc is a tuple, e.g (DatetimeWithNanoseconds, data_obj)
@@ -53,10 +66,14 @@ class DBRecipeHandler(object):
             doc, obj_path = self.to_db("objects", object_doc)
             objects_to_path_map[obj_name] = obj_path   
 
-    def upload_recipe(self, recipe_data):
+    def get_recipe_id(self, recipe_data):
         recipe_name = recipe_data["name"]
         recipe_version = recipe_data["version"]
         key = f"{recipe_name}_v{recipe_version}"
+        return key
+
+    def upload_recipe(self, recipe_data):
+        key = self.get_recipe_id(recipe_data)
         self.to_db("recipes", recipe_data, key)
 
     def update_reference(self, composition_id, referring_comp_id, index, remove_comp_name, update_in_array=False):
@@ -71,11 +88,33 @@ class DBRecipeHandler(object):
             else:
                 self.db.update_reference_on_doc(doc, index, update_ref_path)
             
-        
+    def check_comp_existence(self, composition, collection, name):
+        #TODO: we need to get contents in each layer and compare the actual content instead of comparing literal values (recursion)
+        comp_obj = composition[name]
+        docs = self.db.get_doc_by_name(collection, name)
+        if len(docs) == 1:
+            doc = docs[0]
+            comp_obj["name"] = name
+            if doc.to_dict() == comp_obj:
+                return doc.id
+        elif len(docs) > 1:
+            for doc in docs:
+                if doc.to_dict() == comp_obj:
+                    return doc.id
+        return None
+
+
+
     def divide_recipe_into_collections(self, recipe_meta_data, recipe_data):
         recipe_to_save = copy.deepcopy(recipe_meta_data)
+        recipe_id = self.get_recipe_id(recipe_data)
+        # if the recipe is already exists in db, we dont need to re-upload, just return 
+        if self.db.get_doc_by_id("recipes", recipe_id):
+            print(f"{recipe_id} is already exists in firestore")
+            return
         objects = recipe_data["objects"]
         composition = recipe_data["composition"]
+        # TODO: test gradients recipes
         # gradients = recipe_data.get("gradients")
         objects_to_path_map = {}
         comp_to_path_map = {}
@@ -100,11 +139,18 @@ class DBRecipeHandler(object):
                                 region_item["object"] = objects_to_path_map.get(obj_name)
                             # replace comps
                             elif isinstance(region_item, str):
-                                update_field_path = f"regions.{region_name}"
-                                if comp_name in references_to_update:
-                                    references_to_update[comp_name].update({region_item:update_field_path})
+                                index = region_array.index(region_item)
+                                #TODO-refine check_comp_existence func
+                                if self.check_comp_existence(composition, "composition", region_item):
+                                    doc_id = self.check_comp_existence(composition, "composition", region_item)
+                                    path = self.db.create_path("composition", doc_id)
+                                    region_array[index] = path
                                 else:
-                                    references_to_update[comp_name] ={region_item:update_field_path}
+                                    update_field_path = f"regions.{region_name}"
+                                    if comp_name in references_to_update:
+                                        references_to_update[comp_name].update({region_item:update_field_path})
+                                    else:
+                                        references_to_update[comp_name] ={region_item:update_field_path}
             comp_obj["name"] = comp_name
             doc_id, comp_path = self.to_db("composition", comp_obj)
             comp_to_path_map[comp_name] = {}
