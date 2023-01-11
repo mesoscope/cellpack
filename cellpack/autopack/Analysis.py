@@ -1087,7 +1087,11 @@ class AnalyseAP:
         Creates a markdown file report of various analyses
         """
         mdFile = MdUtils(
-            file_name=str(self.output_path / "analysis_report"), title="Analysis report"
+            file_name=str(self.output_path / "analysis_report"),
+            title="Packing analysis report"
+        )
+        mdFile.new_line(
+            f"Analysis for packing results located at {self.input_path}\n"
         )
 
         if "path_to_results" not in report_options:
@@ -1131,14 +1135,15 @@ class AnalyseAP:
             mdFile.new_line(
                 f"Expected minimum distance: {expected_minimum_distance:.2f}"
             )
-            mdFile.new_line(f"Actual minimum distance: {packed_minimum_distance:.2f}")
+            mdFile.new_line(f"Actual minimum distance: {packed_minimum_distance:.2f}\n")
+
             if expected_minimum_distance > packed_minimum_distance:
-                mdFile.new_line("\nPossible errors:")
+                mdFile.new_line("Possible errors:")
                 mdFile.new_list(
                     [
                         f"Packed minimum distance {packed_minimum_distance:.2f}"
                         " is less than the "
-                        f"expected minimum distance {expected_minimum_distance:.2f}"
+                        f"expected minimum distance {expected_minimum_distance:.2f}\n"
                     ]
                 )
 
@@ -1160,7 +1165,7 @@ class AnalyseAP:
         self,
         analysis_config: dict,
     ):
-        self.ingr_key = analysis_config.get("ingredient_key")
+        self.ingredient_key = analysis_config.get("ingredient_key")
 
         if analysis_config.get("mesh_paths"):
             if "inner" in analysis_config["mesh_paths"]:
@@ -1176,9 +1181,9 @@ class AnalyseAP:
             [len(packing_dict) for packing_dict in all_pos_list]
         )
 
-        if self.ingr_key not in all_objs:
+        if self.ingredient_key not in all_objs:
             raise ValueError(
-                f"Ingredient key {self.ingr_key} not found at {self.input_path}"
+                f"Ingredient key {self.ingredient_key} not found at {self.input_path}"
             )
 
         print(f"Saving analysis outputs to {self.output_path}")
@@ -1225,7 +1230,7 @@ class AnalyseAP:
         return avg_similarity_values
 
     def run_similarity_analysis(self, all_objs):
-        ingr_key = self.ingr_key
+        ingr_key = self.ingredient_key
         key_list = list(all_objs[ingr_key].keys())
         similarity_df = pd.DataFrame(
             index=key_list,
@@ -1333,7 +1338,7 @@ class AnalyseAP:
             row_colors=row_colors,
             cbar_kws={"label": "spilr correlation"},
         )
-        g.savefig(self.output_path / f"spilr_correlation_{self.ingr_key}", dpi=300)
+        g.savefig(self.output_path / f"spilr_correlation_{self.ingredient_key}", dpi=300)
 
     def save_spilr_heatmap(self, input_dict, file_path, label_str=None):
         fig, ax = plt.subplots()
@@ -1397,7 +1402,7 @@ class AnalyseAP:
         for pc, packing_dict in enumerate(all_pos_list):
             num_saved_plots = 0
             for sc, (_, pos_dict) in enumerate(packing_dict.items()):
-                pos_list = numpy.array(pos_dict[self.ingr_key])
+                pos_list = numpy.array(pos_dict[self.ingredient_key])
                 sph_pts = self.cartesian_to_sph(pos_list)
 
                 inner_loc = numpy.zeros(pos_list.shape)
@@ -1459,7 +1464,7 @@ class AnalyseAP:
                             f"Distance from Nuclear Surface, {pc}_{sc}, {scaled_val}"
                         )
                         file_path = (
-                            save_dir / f"heatmap_{scaled_val}_{pc}_{sc}_{self.ingr_key}"
+                            save_dir / f"heatmap_{scaled_val}_{pc}_{sc}_{self.ingredient_key}"
                         )
                         self.save_spilr_heatmap(
                             all_spilr[scaled_val][pc, sc], file_path, label_str
@@ -1478,7 +1483,7 @@ class AnalyseAP:
                 for pc in range(average_spilr.shape[0]):
                     label_str = f"Distance from Nuclear Surface, avg {pc}, {scaled_val}"
                     file_path = (
-                        save_dir / f"avg_heatmap_{scaled_val}_{pc}_{self.ingr_key}"
+                        save_dir / f"avg_heatmap_{scaled_val}_{pc}_{self.ingredient_key}"
                     )
                     self.save_spilr_heatmap(average_spilr[pc], file_path, label_str)
 
