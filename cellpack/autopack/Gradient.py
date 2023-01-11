@@ -338,7 +338,10 @@ class Gradient:
     def set_weights_by_mode(self):
         scaled_distances = self.distances
         if (max(scaled_distances) > 1.0) or (min(scaled_distances) < 0.0):
-            self.log.error("CHECK CALCULATED DISTANCES", f"Max: {max(scaled_distances)}, Min: {min(scaled_distances)}")
+            self.log.error(
+                "CHECK CALCULATED DISTANCES",
+                f"Max: {max(scaled_distances)}, Min: {min(scaled_distances)}",
+            )
         if self.weight_mode == "linear":
             self.weight = 1.0 - scaled_distances
         elif self.weight_mode == "square":
