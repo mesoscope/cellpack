@@ -120,33 +120,62 @@ class SingleSphereIngr(Ingredient):
             position, radius_of_area_to_check
         )  # indices
         # check for collisions by looking at grid points in the sphere of radius radc
-        distance_to_grid_points = numpy.linalg.norm(gridPointsCoords[pointsToCheck] - position, axis=1)
+        distance_to_grid_points = numpy.linalg.norm(
+            gridPointsCoords[pointsToCheck] - position, axis=1
+        )
 
-        for pti in range(len(pointsToCheck)):
-            grid_point_index = pointsToCheck[
-                pti
-            ]  # index of master grid point that is inside the sphere
+        for pti, grid_point_index in enumerate(pointsToCheck):
+
             distance_to_packing_location = distance_to_grid_points[
                 pti
             ]  # is that point's distance from the center of the sphere (packing location)
             # distance is an array of distance of closest contact to anything currently in the grid
-            collision = (
-                current_grid_distances[grid_point_index] + distance_to_packing_location
-                <= radius_of_ing_being_packed
-            )
+
+            # collision = (
+            #     numpy.abs(
+            #         distance_to_packing_location
+            #         - numpy.abs(current_grid_distances[grid_point_index])
+            #     )
+            #     <= radius_of_ing_being_packed
+            # )
+
+            if current_grid_distances[grid_point_index] <= 0:
+                collision = (
+                    current_grid_distances[grid_point_index]
+                    + distance_to_packing_location
+                    <= radius_of_ing_being_packed
+                )
+            else:
+                collision = (
+                    current_grid_distances[grid_point_index]
+                    + distance_to_packing_location
+                    <= radius_of_ing_being_packed
+                ) or (
+                    - current_grid_distances[grid_point_index]
+                    + distance_to_packing_location
+                    >= radius_of_ing_being_packed
+                )
 
             if collision:
                 # an object is too close to the sphere at this level
+                # import ipdb; ipdb.set_trace()
+                print(
+                    f"d: {distance_to_packing_location}, x: {current_grid_distances[grid_point_index]}, r: {radius_of_ing_being_packed}, d+x: {distance_to_packing_location + current_grid_distances[grid_point_index]}, d-x: {distance_to_packing_location - current_grid_distances[grid_point_index]}"
+                )
                 self.log.info(
                     "grid point already occupied %f",
                     current_grid_distances[grid_point_index],
                 )
                 return True, {}, {}
+
             signed_distance_to_sphere_surface = (
                 distance_to_packing_location - radius_of_ing_being_packed
             )
 
-            (insidePoints, newDistPoints) = self.get_new_distances_and_inside_points(
+            (
+                insidePoints,
+                newDistPoints,
+            ) = self.get_new_distances_and_inside_points(
                 env,
                 jtrans,
                 rotMat,
@@ -168,7 +197,9 @@ class SingleSphereIngr(Ingredient):
         Check spheres for collision
         TODO improve the testwhen grid stepSize is larger that size of the ingredient
         """
-        ptsInSphere = env.grid.getPointsInSphere(jtrans, self.radius)  # indices
+        ptsInSphere = env.grid.getPointsInSphere(
+            jtrans, self.radius
+        )  # indices
         compIdsSphere = numpy.take(env.grid.compartment_ids, ptsInSphere, 0)
         if self.compNum <= 0:
             wrongPt = [cid for cid in compIdsSphere if cid != self.compNum]

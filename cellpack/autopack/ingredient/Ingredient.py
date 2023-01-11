@@ -1885,6 +1885,23 @@ class Ingredient(Agent):
         return jitter_rotation
 
     def randomize_translation(self, env, translation, rotation):
+        # get a randomized position near a grid point
+        jitter = env.grid.gridSpacing / 2.0
+        jx, jy, jz = self.max_jitter
+        tx, ty, tz = translation
+        
+        dx = jx * jitter * uniform(-1.0, 1.0)
+        dy = jy * jitter * uniform(-1.0, 1.0)
+        dz = jz * jitter * uniform(-1.0, 1.0)
+
+        if self.compNum > 0:  # jitter less among normal
+            dx, dy, dz, _ = numpy.dot(rotation, (dx, dy, dz, 0))
+
+        jitter_trans = [tx + dx, ty + dy, tz + dz]
+
+        return jitter_trans
+
+    def randomize_translation_circ(self, env, translation, rotation):
         # jitter points location
         spacing = env.grid.gridSpacing
         jitter = spacing / 2.0
