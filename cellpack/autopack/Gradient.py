@@ -337,19 +337,15 @@ class Gradient:
 
     def set_weights_by_mode(self):
         scaled_distances = self.distances
-
-        # TODO: change this back to check distances are assigned correctly
-        scaled_distances[scaled_distances > 1] = 1
-        scaled_distances[scaled_distances < 0] = 0
-        # if max(scaled_distances) > 1.0:
-        #     self.log.error("MAX TOO BIG", max(scaled_distances))
-        scaled_distances[numpy.isnan(scaled_distances)] = 1
+        if (max(scaled_distances) > 1.0) or (min(scaled_distances) < 0.0):
+            self.log.error("CHECK CALCULATED DISTANCES", f"Max: {max(scaled_distances)}, Min: {min(scaled_distances)}")
         if self.weight_mode == "linear":
             self.weight = 1.0 - scaled_distances
         elif self.weight_mode == "square":
             self.weight = (1.0 - scaled_distances) ** 2
         elif self.weight_mode == "cube":
             self.weight = (1.0 - scaled_distances) ** 3
+        self.weight[numpy.isnan(self.weight)] = 0
         # TODO: talk to Ludo about calculating gaussian weights
 
     def getMaxWeight(self, listPts):
