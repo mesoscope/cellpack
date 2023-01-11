@@ -15,7 +15,8 @@ class FirebaseHandler(object):
         return docs
 
     def set_doc(self, collection, id, data):
-        if not self.get_doc_by_id(collection, id):
+        doc, doc_ref = self.get_doc_by_id(collection, id)
+        if not doc:
             doc_ref = self.db.collection(collection).document(id)
             doc_ref.set(data)
             print(f"successfully uploaded to path: {doc_ref.path}")
@@ -37,10 +38,9 @@ class FirebaseHandler(object):
         doc_ref = self.db.collection(collection).document(id)
         doc = doc_ref.get()
         if doc.exists:
-            return doc_ref
+            return doc.to_dict(), doc_ref
         else:
-            print("doc doesn't exist in firebase")
-            return None
+            return None, None
 
     @staticmethod
     def get_collection_id_from_path(path):
