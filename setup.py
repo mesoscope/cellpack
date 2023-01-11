@@ -66,7 +66,6 @@ extra_requirements = {
     "all": [
         *requirements,
         *dev_requirements,
-        *analysis_requirements,
     ],
 }
 
