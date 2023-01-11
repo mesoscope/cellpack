@@ -7,7 +7,8 @@ class DBRecipeHandler(object):
         self.db = db_handler
 
     @staticmethod
-    def reconstruct_dict(data):
+    # TODO: add checks for other nested arrays, e.g. positions in representation
+    def flatten_and_unpack(data):
         modified_data = {}
         for key, value in data.items():
             # convert bonding_box 2d array to dict
@@ -19,7 +20,7 @@ class DBRecipeHandler(object):
                 modified_data[key] = vars(value)
             # If the value is a dictionary, recursively convert its nested lists to dictionaries
             elif isinstance(value, dict):
-                modified_data[key] = DBRecipeHandler.reconstruct_dict(value)
+                modified_data[key] = DBRecipeHandler.flatten_and_unpack(value)
             else:
                 modified_data[key] = value
 
@@ -40,7 +41,7 @@ class DBRecipeHandler(object):
     # add documents with auto IDs
     def to_db(self, collection, data, id=None):
         # check if we need to convert part of the data(2d arrays and objs to dict)
-        modified_data = DBRecipeHandler.reconstruct_dict(data)
+        modified_data = DBRecipeHandler.flatten_and_unpack(data)
         if id is None:
             name = modified_data["name"]
             doc_id = self.should_write(collection, name, modified_data)
