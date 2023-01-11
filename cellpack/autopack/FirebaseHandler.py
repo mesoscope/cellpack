@@ -1,7 +1,7 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-    
+
 class FirebaseHandler(object):
     def __init__(self, cred_path):
         login = credentials.Certificate(cred_path)
@@ -11,7 +11,7 @@ class FirebaseHandler(object):
     def get_doc_by_name(self, collection, name):
         db = self.db
         data_ref = db.collection(collection)
-        docs = data_ref.where("name", "==", name).get() #docs is an array
+        docs = data_ref.where("name", "==", name).get()  # docs is an array
         return docs
 
     def set_doc(self, collection, id, data):
@@ -23,14 +23,14 @@ class FirebaseHandler(object):
             return doc_ref
         else:
             print(f"ERROR, already data at this path:{collection}/{id}")
-            return 
+            return
 
     def upload_doc(self, collection, data):
         return self.db.collection(collection).add(data)
-    
+
     @staticmethod
     def create_path(collection, doc_id):
-        return  f"firebase:{collection}/{doc_id}"
+        return f"firebase:{collection}/{doc_id}"
 
     # `doc` is a DocumentSnapshot object
     # `doc_ref` is a DocumentReference object to perform operations on the doc
@@ -44,7 +44,7 @@ class FirebaseHandler(object):
 
     @staticmethod
     def get_collection_id_from_path(path):
-        #path example = firebase:composition/uid_1
+        # path example = firebase:composition/uid_1
         components = path.split(":")[1].split("/")
         collection = components[0]
         id = components[1]
@@ -52,7 +52,7 @@ class FirebaseHandler(object):
 
     @staticmethod
     def update_reference_on_doc(doc_ref, index, new_item_ref):
-        doc_ref.update({ index: new_item_ref })
+        doc_ref.update({index: new_item_ref})
 
     @staticmethod
     def update_elements_in_array(doc_ref, index, new_item_ref, remove_item):

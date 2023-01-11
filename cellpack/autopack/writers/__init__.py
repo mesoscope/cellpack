@@ -9,7 +9,6 @@ import numpy
 from collections import OrderedDict
 
 from cellpack import autopack
-from cellpack.autopack.firebase import save_to_firestore
 
 
 class IOingredientTool(object):
@@ -289,12 +288,13 @@ class Writer(object):
                     env.jsondic, fp, separators=(",", ":"), cls=NumpyArrayEncoder
                 )  # ,indent=4, separators=(',', ': ')
 
+    @staticmethod
     def return_object_value(data):
         for key, value in data.items():
             if isinstance(value, object):
                 data[key] = vars(value)
-            elif isinstance(value, dict): 
-                return_object_value(value)
+            elif isinstance(value, dict):
+                Writer.return_object_value(value)
             else:
                 data[key] = value
         return data
