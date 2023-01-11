@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "format_version": "2.0",
-    "name": "one_sphere",
+    "name": "gradients",
     "bounding_box": [
         [
             0,
@@ -9,40 +9,36 @@
             0
         ],
         [
-            1000,
-            1000,
-            1
+            100,
+            100,
+            10
         ]
     ],
+    "gradients": {
+        "gR": {
+            "direction": [
+                0,
+                0,
+                0
+            ],
+            "radius": 100,
+            "description": "'Direction' is center of radial gradient (we think)",
+            "weight_mode": "linear",
+            "pick_mode": "rnd",
+            "gblob": 4,
+            "mode": "surface"
+        }
+    },
     "objects": {
         "base": {
-            "jitter_attempts": 10,
-            "orient_bias_range": [
-                -3.1415927,
-                3.1415927
-            ],
-            "rotation_range": 6.2831,
-            "cutoff_boundary": 0,
-            "max_jitter": [
-                0.2,
-                0.2,
-                0.01
-            ],
-            "perturb_axis_amplitude": 0.1,
-            "packing_mode": "random",
+            "packing_mode": "gradient",
             "principal_vector": [
                 0,
                 0,
                 1
             ],
-            "rejection_threshold": 50,
             "place_method": "jitter",
-            "cutoff_surface": 42,
-            "rotation_axis": [
-                0,
-                0,
-                1
-            ],
+            "jitter_attempts": 100,
             "available_regions": {
                 "interior": {},
                 "surface": {},
@@ -50,7 +46,7 @@
                 "inner_leaflet": {}
             }
         },
-        "sphere_25": {
+        "sphere": {
             "type": "single_sphere",
             "inherit": "base",
             "color": [
@@ -58,7 +54,8 @@
                 0.5,
                 0.5
             ],
-            "radius": 100,
+            "gradient": "gR",
+            "radius": 2.5,
             "max_jitter": [
                 1,
                 1,
@@ -75,8 +72,8 @@
             }
         },
         "A": {
-            "object": "sphere_25",
-            "count": 500
+            "object": "sphere",
+            "count": 100
         }
     }
 }

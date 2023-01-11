@@ -76,7 +76,6 @@ class BaseGrid:
 
     @staticmethod
     def reorder_free_points(pt, free_points, nbFreePoints):
-        # TODO: move this to env class, ing shouldn't aware of the whole grid
         # Swap the newly inside point value with the value of the last free point
         # Point will no longer be considered "free" because it will be beyond the range of
         # nbFreePoints. The value of the point itself is the history of it's original index
@@ -135,7 +134,7 @@ class BaseGrid:
         return nbFreePoints
 
     def __init__(
-        self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), spacing=20, setup=True, lookup=0
+        self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), spacing=20, setup=True
     ):
         self.log = logging.getLogger("grid")
         self.log.propagate = False
@@ -183,7 +182,6 @@ class BaseGrid:
         self.tree = None
         self.tree_free = None
         self.encapsulatingGrid = 0
-        self.lookup = lookup
         self.center = None
         self.backup = None
         if setup:
@@ -195,13 +193,8 @@ class BaseGrid:
         # TODO : verify the gridSpacing calculation / setup after reading the recipe
 
         self.boundingBox = boundingBox
-        if self.lookup == 0:
-            self.create3DPointLookupCover()
-        elif self.lookup == 1:
-            self.create3DPointLookup()
-        elif self.lookup == 2:
-            self.create3DPointLookup_loop()
 
+        self.create_grid_point_positions()
         nx, ny, nz = self.nbGridPoints
         self.ijkPtIndice = self.cartesian([range(nx), range(ny), range(nz)])
 
@@ -217,7 +210,6 @@ class BaseGrid:
         self.nbFreePoints = len(self.free_points)
         self.log.info(
             "Lookup: %d, bounding box: %r, gridSpacing %r, length compartment_ids %r",
-            self.lookup,
             boundingBox,
             self.gridSpacing,
             len(self.compartment_ids),
@@ -252,7 +244,7 @@ class BaseGrid:
         )
         return self.diag
 
-    def create3DPointLookup_loop(self, boundingBox=None):
+    def slow_box_fill(self, boundingBox=None):
         """
         Fill the orthogonal bounding box described by two global corners
         with an array of points spaces pGridSpacing apart.:
@@ -283,54 +275,9 @@ class BaseGrid:
         self.log.info(f"grid spacing {space}")
         self.masterGridPositions = pointArrayRaw
 
-    def create3DPointLookup(self, boundingBox=None):
-        """
-        Fill the orthogonal bounding box described by two global corners
-        with an array of points spaces pGridSpacing apart. Optimized version using
-        numpy broadcasting
-        """
-        if boundingBox is None:
-            boundingBox = self.boundingBox
-        space = self.gridSpacing
-        environmentBoxEqualFillBox = False
-
-        self.log.info("Using create3DPointLookup")
-        if environmentBoxEqualFillBox:  # environment.environmentBoxEqualFillBox:
-            self._x = x = numpy.arange(boundingBox[0][0], boundingBox[1][0], space)
-            self._y = y = numpy.arange(boundingBox[0][1], boundingBox[1][1], space)
-            self._z = z = numpy.arange(boundingBox[0][2], boundingBox[1][2], space)
-        else:
-            self._x = x = numpy.arange(
-                boundingBox[0][0] - space, boundingBox[1][0] + space, space
-            )
-            self._y = y = numpy.arange(
-                boundingBox[0][1] - space, boundingBox[1][1] + space, space
-            )
-            self._z = z = numpy.arange(
-                boundingBox[0][2] - space, boundingBox[1][2] + space, space
-            )
-        nx = len(
-            x
-        )  # sizes must be +1 or the right, top, and back edges don't get any points using this numpy.arange method
-        ny = len(y)
-        nz = len(z)
-        # Dec 5 2013, we need to confirm that the getPointsInBox function is also using +1, or potential neighbors will be missed
-        # This used to be fine, but it may have changed?
-
-        self.nbGridPoints = [nx, ny, nz]
-        self.gridVolume = nx * ny * nz
-        self.ijkPtIndice = numpy.ndindex(nx, ny, nz)
-        # this is 60% faster than the for loop
-        #        self.masterGridPositions = numpy.array(list(numpy.broadcast(*numpy.ix_(x, y, z))))
-        #        self.masterGridPositions = numpy.vstack(numpy.meshgrid(x,y,z)).reshape(3,-1).T
-        self.masterGridPositions = (
-            numpy.vstack(numpy.meshgrid(x, y, z, copy=False)).reshape(3, -1).T
-        )
-        # this ay be faster but don't know the implication
-
     # from http://stackoverflow.com/questions/18253210/creating-a-numpy-array-of-3d-coordinates-from-three-1d-arrays
 
-    def create3DPointLookupCover(self, boundingBox=None):
+    def create_grid_point_positions(self, boundingBox=None):
         """
         Fill the orthogonal bounding box described by two global corners
         with an array of points spaces pGridSpacing apart. Optimized version using
@@ -339,31 +286,25 @@ class BaseGrid:
         if boundingBox is None:
             boundingBox = self.boundingBox
         space = self.gridSpacing
-        S = numpy.array(boundingBox[1]) - numpy.array(boundingBox[0])
-        NX, NY, NZ = numpy.around(S / (self.gridSpacing))
-        if NX == 0:
-            NX = 1
-        if NY == 0:
-            NY = 1
-        if NZ == 0:
-            NZ = 1
-        self.log.info("using create3DPointLookupCover")
-        environmentBoxEqualFillBox = True
-        # np.linspace(2.0, 3.0, num=5)
-        if environmentBoxEqualFillBox:  # environment.environmentBoxEqualFillBox:
-            self._x = x = numpy.linspace(boundingBox[0][0], boundingBox[1][0], int(NX))
-            self._y = y = numpy.linspace(boundingBox[0][1], boundingBox[1][1], int(NY))
-            self._z = z = numpy.linspace(boundingBox[0][2], boundingBox[1][2], int(NZ))
-        else:
-            self._x = x = numpy.arange(
-                boundingBox[0][0], boundingBox[1][0] + space, space
-            )
-            self._y = y = numpy.arange(
-                boundingBox[0][1], boundingBox[1][1] + space, space
-            )
-            self._z = z = numpy.arange(
-                boundingBox[0][2], boundingBox[1][2] + space, space
-            )
+        padding = space / 2.0
+        grid_dimensions = [[], [], []]
+        for axis in range(len(grid_dimensions)):
+            start = boundingBox[0][axis] + padding
+            stop = boundingBox[1][axis]
+            if stop < start:
+                # bounding box is smaller than grid spacing, ie in 2D packings
+                grid_dimensions[axis] = numpy.array(
+                    [(boundingBox[0][axis] + boundingBox[1][axis]) / 2]
+                )
+            else:
+                grid_dimensions[axis] = numpy.arange(start, stop, space)
+
+        self.log.info("using create_grid_point_positions")
+
+        self._x = x = grid_dimensions[0]
+        self._y = y = grid_dimensions[1]
+        self._z = z = grid_dimensions[2]
+
         xyz = numpy.meshgrid(x, y, z, copy=False)
         nx = len(
             x
@@ -371,6 +312,7 @@ class BaseGrid:
         ny = len(y)
         nz = len(z)
         self.gridSpacing = x[1] - x[0]
+
         self.nbGridPoints = [nx, ny, nz]
         self.gridVolume = nx * ny * nz
         self.ijkPtIndice = numpy.ndindex(nx, ny, nz)
@@ -854,12 +796,9 @@ class BaseGrid:
 # don't forget to use spatial.distance.cdist
 class HaltonGrid(BaseGrid):
     def __init__(self, boundingBox=([0, 0, 0], [0.1, 0.1, 0.1]), space=1, setup=False):
-        BaseGrid.__init__(
-            self, boundingBox=boundingBox, spacing=space, setup=setup, lookup=1
-        )
+        BaseGrid.__init__(self, boundingBox=boundingBox, spacing=space, setup=setup)
         self.haltonseq = cHaltonSequence3()
         self.tree = None
-        self.lookup = 1
         self.gridSpacing = space
         if setup:
             self.setup(boundingBox, space)

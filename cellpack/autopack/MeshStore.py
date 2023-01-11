@@ -101,12 +101,12 @@ class MeshStore:
         name = filename.split("/")[-1]
         fileName, fileExtension = os.path.splitext(name)
         if fileExtension == "":
-            tmpFileName1 = autopack.retrieve_file(
+            tmpFileName1 = autopack.get_local_file_location(
                 filename + ".indpolface", cache="geometries"
             )
             filename = os.path.splitext(tmpFileName1)[0]
         else:
-            filename = autopack.retrieve_file(filename, cache="geometries")
+            filename = autopack.get_local_file_location(filename, cache="geometries")
         if filename is None:
             return None
         if not os.path.isfile(filename) and fileExtension != "":

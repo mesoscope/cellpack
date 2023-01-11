@@ -97,6 +97,13 @@ class CompartmentList:
     Handle a list of compartments.
     """
 
+    @staticmethod
+    def add_compartment(parent, compartment):
+        """add a new compartment to the list"""
+        assert compartment.parent is None
+        assert isinstance(compartment, Compartment)
+        compartment.parent = parent
+
     def __init__(self):
         self.log = logging.getLogger("compartment")
         self.log.propagate = False
@@ -106,13 +113,6 @@ class CompartmentList:
 
         # point to parent compartment or Environment
         self.parent = None
-
-    def _add_compartment(self, compartment):
-        """add a new compartment to the list"""
-        assert compartment.parent is None
-        assert isinstance(compartment, Compartment)
-        self.compartments.append(compartment)
-        compartment.parent = self
 
 
 class Compartment(CompartmentList):
@@ -267,13 +267,13 @@ class Compartment(CompartmentList):
                 self.encapsulating_radius = radius
                 self.radius = mesh_store.get_smallest_radius(self.gname, center)
 
-    def addShapeRB(self):
+    def addShapeRB(self, env):
         # in case our shape is a regular primitive
         if self.stype == "capsule":
             shape = BulletCapsuleShape(self.radius, self.height, self.axis)
         else:
             shape = self.addMeshRB()
-        inodenp = self.parent.worldNP.attachNewNode(BulletRigidBodyNode(self.name))
+        inodenp = env.worldNP.attachNewNode(BulletRigidBodyNode(self.name))
         inodenp.node().setMass(1.0)
         inodenp.node().addShape(
             shape, TransformState.makePos(Point3(0, 0, 0))
@@ -282,7 +282,7 @@ class Compartment(CompartmentList):
         inodenp.setCollideMask(BitMask32.allOn())
         inodenp.node().setAngularDamping(1.0)
         inodenp.node().setLinearDamping(1.0)
-        self.parent.world.attachRigidBody(inodenp.node())
+        env.world.attachRigidBody(inodenp.node())
         inodenp = inodenp.node()
         return inodenp
 
@@ -902,12 +902,15 @@ class Compartment(CompartmentList):
         else:
             self.createSurfacePoints(maxl=env.grid.gridSpacing)
         # Graham Sum the SurfaceArea for each polyhedron
+        # the distance is initialized to the largest possible value
+        # (diagonal of the bounding box)
         distances = env.grid.distToClosestSurf
         compartment_ids = env.grid.compartment_ids
         diag = env.grid.diag
         self.log.info("distance %d", len(distances))
 
         # build search tree for off grid surface points
+        # off grid points are the vertexes of the mesh
         off_grid_surface_points = self.ogsurfacePoints
         self.OGsrfPtsBht = ctree = spatial.cKDTree(
             tuple(off_grid_surface_points), leafsize=10
@@ -1007,9 +1010,11 @@ class Compartment(CompartmentList):
             )
         else:
             self.log.error("Not a recognized inner grid method", env.innerGridMethod)
+
         self.compute_volume_and_set_count(
             env, self.surfacePoints, self.insidePoints, areas=vSurfaceArea
         )
+
         return inside_points, surface_points
 
     def build_grid_sphere(self, env):
@@ -1051,6 +1056,25 @@ class Compartment(CompartmentList):
             len(a),
             len(env.grid.masterGridPositions),
         )
+
+    def get_surface_distances(self, env, master_grid_positions):
+        surface_mask = numpy.equal(self.number, env.grid.compartment_ids)
+        surface_ids = numpy.nonzero(surface_mask)
+        surface_positions = master_grid_positions[surface_ids]
+        surface_tree = spatial.cKDTree(tuple(surface_positions), leafsize=10)
+        parent_id = self.parent.number
+        # clacluate the distances for the points inside the surface, and outside the surface
+        # up to the next boundary (not including the parent's surface points)
+        grid_pt_indexes = numpy.equal(
+            numpy.abs(env.grid.compartment_ids), self.number
+        ) | numpy.equal(env.grid.compartment_ids, -parent_id)
+        grid_pt_to_calc = master_grid_positions[grid_pt_indexes]
+
+        surface_distances, indexes = surface_tree.query(tuple(grid_pt_to_calc))
+        all_surface_distances = numpy.full(master_grid_positions.shape[0], numpy.nan)
+        all_surface_distances[grid_pt_indexes] = surface_distances
+        self.max_distance = max(surface_distances)
+        self.surface_distances = all_surface_distances
 
     def BuildGrid_box(self, env, vSurfaceArea):
         nbGridPoints = len(env.grid.masterGridPositions)
@@ -1153,7 +1177,7 @@ class Compartment(CompartmentList):
         # create surface points
         # check if file already exist, otherwise rebuild it
         number = self.number
-        fileName = autopack.retrieve_file(self.filename, cache="geometries")
+        fileName = autopack.get_local_file_location(self.filename, cache="geometries")
         filename, file_extension = os.path.splitext(fileName)
         binvox_filename = filename + ".binvox"
         bb = env.grid.boundingBox
@@ -1263,9 +1287,11 @@ class Compartment(CompartmentList):
             surface_points_in_bounding_box,
             surfPtsBBNorms,
         ) = self.filter_surface_pts_to_fill_box(srfPts, env)
+
         srfPts = surface_points_in_bounding_box
 
-        ex = True  # True if nbGridPoints == len(idarray) else False
+        ex = False  # True if nbGridPoints == len(idarray) else False
+
         surfacePoints, surfacePointsNormals = self.extendGridArrays(
             nbGridPoints,
             srfPts,
@@ -1331,16 +1357,6 @@ class Compartment(CompartmentList):
                         if inside:
                             insidePoints.append(ptInd)
                             idarray.itemset(ptInd, -number)
-                    p = (ptInd / float(len(grdPos))) * 100.0
-                    if (ptInd % 1000) == 0 and autopack.verbose:
-                        helper.progressBar(
-                            progress=int(p),
-                            label=str(ptInd)
-                            + "/"
-                            + str(len(grdPos))
-                            + " inside "
-                            + str(inside),
-                        )
         nbGridPoints = len(env.grid.masterGridPositions)
 
         surfPtsBB, surfPtsBBNorms = self.filter_surface_pts_to_fill_box(srfPts, env)
@@ -1830,16 +1846,6 @@ class Compartment(CompartmentList):
                     gridPoints[i].isOutside = isOutsideTracker
                 # Because we have filled in all the unknowns, we can reset that counter.
                 emptyPointIndicies = []
-            if (g.index % 100) == 0:
-                if autopack.verbose:
-                    print(
-                        str(g.index)
-                        + "/"
-                        + str(len(gridPoints))
-                        + " inside "
-                        + str(g.isOutside)
-                    )
-
         # Final pass through for sanity checks.
         for g in gridPoints:
             if g.representsPolyhedron:

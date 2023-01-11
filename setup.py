@@ -25,6 +25,7 @@ test_requirements = [
 analysis_requirements = [
     "tqdm>=4.64.1",
     "scikit-learn>=1.1.3",
+    "seaborn>=0.12.1",
 ]
 
 dev_requirements = [

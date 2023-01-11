@@ -77,7 +77,7 @@ class RecipeLoader(object):
             if "include" in inode:
                 filename = inode["include"]
         if filename is not None:
-            filename = autopack.retrieve_file(
+            filename = autopack.get_local_file_location(
                 filename,
                 # destination = recipe+os.sep+"recipe"+os.sep+"ingredients"+os.sep,
                 cache="recipes",

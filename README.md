@@ -16,6 +16,7 @@ algorithm to pack molecular recipes
 
 ### Run pack code
 1. example pack recipe : `pack -r  cellpack/test-recipes/NM_Analysis_FigureB1.0.json  -c packing-configs/run.json`
+2. example pack from remote : `pack -r  github:recipes/NM_Analysis_FigureB1.0.json  -c packing-configs/run.json`
 
 ### Run conversion code 
 * To convert to simularium and view at https://staging.simularium.allencell.org/viewer

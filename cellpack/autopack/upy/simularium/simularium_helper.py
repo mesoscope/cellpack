@@ -334,10 +334,28 @@ class simulariumHelper(hostHelper.Helper):
     def GetAbsPosUntilRoot(self, obj):
         return [0, 0.0, 0.0]
 
-    def add_compartment_to_scene(
-        self,
-        compartment,
-    ):
+    def add_grid_data_to_scene(self, incoming_name, positions, values):
+        colormap = matplotlib.cm.viridis(values)
+        for index in range(len(values)):
+            name = f"{incoming_name}#{values[index]}"
+            self.display_data[name] = DisplayData(
+                name=name,
+                display_type=DISPLAY_TYPE.SPHERE,
+                url="",
+                color=simulariumHelper.format_rgb_color(colormap[index]),
+            )
+            point_pos = positions[index]
+            self.add_instance(
+                name,
+                None,
+                f"{incoming_name}-{index}",
+                0.5,
+                point_pos,
+                np.identity(4),
+                None,
+            )
+
+    def add_compartment_to_scene(self, compartment, grid_positions):
         display_type = DISPLAY_TYPE.SPHERE
         url = ""
         radius = compartment.encapsulating_radius
