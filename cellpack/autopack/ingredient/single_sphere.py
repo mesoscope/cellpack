@@ -131,37 +131,14 @@ class SingleSphereIngr(Ingredient):
             ]  # is that point's distance from the center of the sphere (packing location)
             # distance is an array of distance of closest contact to anything currently in the grid
 
-            # collision = (
-            #     numpy.abs(
-            #         distance_to_packing_location
-            #         - numpy.abs(current_grid_distances[grid_point_index])
-            #     )
-            #     <= radius_of_ing_being_packed
-            # )
-
-            if current_grid_distances[grid_point_index] <= 0:
-                collision = (
-                    current_grid_distances[grid_point_index]
-                    + distance_to_packing_location
-                    <= radius_of_ing_being_packed
-                )
-            else:
-                collision = (
-                    current_grid_distances[grid_point_index]
-                    + distance_to_packing_location
-                    <= radius_of_ing_being_packed
-                ) or (
-                    - current_grid_distances[grid_point_index]
-                    + distance_to_packing_location
-                    >= radius_of_ing_being_packed
-                )
+            collision = (
+                current_grid_distances[grid_point_index]
+                + distance_to_packing_location
+                <= radius_of_ing_being_packed
+            )
 
             if collision:
                 # an object is too close to the sphere at this level
-                # import ipdb; ipdb.set_trace()
-                print(
-                    f"d: {distance_to_packing_location}, x: {current_grid_distances[grid_point_index]}, r: {radius_of_ing_being_packed}, d+x: {distance_to_packing_location + current_grid_distances[grid_point_index]}, d-x: {distance_to_packing_location - current_grid_distances[grid_point_index]}"
-                )
                 self.log.info(
                     "grid point already occupied %f",
                     current_grid_distances[grid_point_index],

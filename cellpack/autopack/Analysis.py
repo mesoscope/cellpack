@@ -1141,6 +1141,12 @@ class AnalyseAP:
                         f"expected minimum distance {expected_minimum_distance:.2f}"
                     ]
                 )
+                print("Possible errors:")
+                print(
+                    f"Packed minimum distance {packed_minimum_distance:.2f}"
+                    " is less than the "
+                    f"expected minimum distance {expected_minimum_distance:.2f}"
+                )
 
             distance_histo_path = results_path.glob("total_ingredient_distances_*.png")
             if distance_histo_path:
