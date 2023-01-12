@@ -13,7 +13,7 @@ class DATABASE_IDS(Enum):
 
 def upload(
     recipe_path,
-    cred_path=r"/Users/Ruge/Desktop/Allen Internship/cellPACK/cellpack-data-582d6-firebase-adminsdk-3pkkz-27a3ec0777.json",
+    cred_path,
     db_id=DATABASE_IDS.FIREBASE,
 ):
     """
