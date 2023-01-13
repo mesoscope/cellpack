@@ -353,7 +353,9 @@ class MeshStore:
             numpy.linalg.norm(outer_loc - inner_loc, axis=1)
         )
 
-        if any(scaled_distance_between_surfaces > 1) or any(scaled_distance_between_surfaces < 0):
+        if any(scaled_distance_between_surfaces > 1) or any(
+            scaled_distance_between_surfaces < 0
+        ):
             raise ValueError("Check distances between surfaces")
 
         return scaled_distance_between_surfaces
