@@ -343,13 +343,18 @@ class MeshStore:
         inner_loc, inner_surface_distances, _ = query.on_surface(position_list)
 
         # intersecting points on the outer surface
-        outer_loc, _, _ = outer_mesh.ray.intersects_location(
-            ray_origins=inner_loc, ray_directions=(position_list - inner_loc)
-        )
+        outer_loc = numpy.zeros(inner_loc.shape)
+        for ind, position in enumerate(position_list):
+            outer_loc[ind], _, _ = outer_mesh.ray.intersects_location(
+                ray_origins=[inner_loc[ind]], ray_directions=[position - inner_loc[ind]]
+            )
 
         scaled_distance_between_surfaces = inner_surface_distances / (
             numpy.linalg.norm(outer_loc - inner_loc, axis=1)
         )
+
+        if any(scaled_distance_between_surfaces > 1) or any(scaled_distance_between_surfaces < 0):
+            raise ValueError("Check distances between surfaces")
 
         return scaled_distance_between_surfaces
 
