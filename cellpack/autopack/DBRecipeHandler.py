@@ -7,23 +7,30 @@ class DBRecipeHandler(object):
         self.db = db_handler
 
     @staticmethod
-    # TODO: add checks for other nested arrays, e.g. positions in representation
-    def flatten_and_unpack(data):
+    def flatten_and_unpack(data, max_depth=4):
         modified_data = {}
+        # added a depth check to prevent stack overflow, we can remove it if not necessary 
+        current_depth = 0
+        if current_depth > max_depth:
+            return modified_data
+        current_depth += 1
         for key, value in data.items():
-            # convert bonding_box 2d array to dict
-            if key == "bounding_box":
-                bb_dict = dict(zip([str(i) for i in range(len(value))], value))
-                modified_data[key] = bb_dict
+            # convert 2d array to dict
+            if isinstance(value, list) and len(value) > 0 and isinstance(value[0], (list, tuple)):
+                flatten_dict = dict(zip([str(i) for i in range(len(value))], value))
+                modified_data[key] = DBRecipeHandler.flatten_and_unpack(flatten_dict)
             # If the value is an object, we want to convert it to dict
             elif isinstance(value, object) and "__dict__" in dir(value):
-                modified_data[key] = vars(value)
+                unpacked_value = vars(value)
+                modified_data[key] = unpacked_value
+                if isinstance(unpacked_value, dict):
+                    modified_data[key] = DBRecipeHandler.flatten_and_unpack(unpacked_value)
             # If the value is a dictionary, recursively convert its nested lists to dictionaries
             elif isinstance(value, dict):
                 modified_data[key] = DBRecipeHandler.flatten_and_unpack(value)
             else:
                 modified_data[key] = value
-
+        current_depth -= 1
         return modified_data
 
     def should_write(self, collection, name, data):
