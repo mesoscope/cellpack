@@ -40,7 +40,6 @@ class DBRecipeHandler(object):
         return modified_data
 
     def should_write(self, collection, name, data):
-        # TODO: fix bugs in nested dictionary comparison
         docs = self.db.get_doc_by_name(collection, name)
         if docs and len(docs) >= 1:
             for doc in docs:
@@ -48,7 +47,7 @@ class DBRecipeHandler(object):
                 print("full_data", full_doc_data)
                 ddiff = DeepDiff(full_doc_data, data, ignore_order=True)
                 if not ddiff:
-                    return full_doc_data, doc.id
+                    return doc, doc.id
         return None, None
 
     # add documents with auto IDs
@@ -112,10 +111,36 @@ class DBRecipeHandler(object):
             else:
                 self.db.update_reference_on_doc(doc_ref, index, update_ref_path)
 
+    @staticmethod
+    def convert_positions_in_representation(data):
+        convert_data = {}
+        for key, value in data.items():
+            if isinstance(value, list):
+                convert_data[key] = tuple(value)
+            elif isinstance(value, dict):
+                convert_data[key] = DBRecipeHandler.convert_positions_in_representation(
+                    value
+                )
+            else:
+                data[key] = value
+        return convert_data
+
+    # get doc from database, convert it back to the original text
+    # i.e. in object, convert lists back to tuples in representations/packing/positions
+    # i.e. in comp, replace firebase link with the actual data
     def convert_sub_doc(self, doc_ref):
         doc = doc_ref.to_dict()
         convert_doc = copy.deepcopy(doc)
         for doc_key, doc_value in doc.items():
+            if (
+                doc_key == "representations"
+                and "packing" in doc_value
+                and doc_value["packing"] is not None
+            ):
+                position_value = doc_value["packing"]["positions"]
+                convert_doc["representations"]["packing"][
+                    "positions"
+                ] = DBRecipeHandler.convert_positions_in_representation(position_value)
             if doc_key == "object" and doc_value.startswith("firebase:"):
                 sub_doc_collection, sub_doc_id = self.db.get_collection_id_from_path(
                     doc_value
