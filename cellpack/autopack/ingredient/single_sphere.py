@@ -120,16 +120,17 @@ class SingleSphereIngr(Ingredient):
             position, radius_of_area_to_check
         )  # indices
         # check for collisions by looking at grid points in the sphere of radius radc
-        distance_to_grid_points = numpy.linalg.norm(gridPointsCoords[pointsToCheck] - position, axis=1)
+        distance_to_grid_points = numpy.linalg.norm(
+            gridPointsCoords[pointsToCheck] - position, axis=1
+        )
 
-        for pti in range(len(pointsToCheck)):
-            grid_point_index = pointsToCheck[
-                pti
-            ]  # index of master grid point that is inside the sphere
+        for pti, grid_point_index in enumerate(pointsToCheck):
+
             distance_to_packing_location = distance_to_grid_points[
                 pti
             ]  # is that point's distance from the center of the sphere (packing location)
             # distance is an array of distance of closest contact to anything currently in the grid
+
             collision = (
                 current_grid_distances[grid_point_index] + distance_to_packing_location
                 <= radius_of_ing_being_packed
@@ -142,11 +143,12 @@ class SingleSphereIngr(Ingredient):
                     current_grid_distances[grid_point_index],
                 )
                 return True, {}, {}
+
             signed_distance_to_sphere_surface = (
                 distance_to_packing_location - radius_of_ing_being_packed
             )
 
-            (insidePoints, newDistPoints) = self.get_new_distances_and_inside_points(
+            (insidePoints, newDistPoints,) = self.get_new_distances_and_inside_points(
                 env,
                 jtrans,
                 rotMat,

@@ -1088,11 +1088,9 @@ class AnalyseAP:
         """
         mdFile = MdUtils(
             file_name=str(self.output_path / "analysis_report"),
-            title="Packing analysis report"
+            title="Packing analysis report",
         )
-        mdFile.new_line(
-            f"Analysis for packing results located at {self.input_path}\n"
-        )
+        mdFile.new_line(f"Analysis for packing results located at {self.input_path}\n")
 
         if "path_to_results" not in report_options:
             raise ValueError("Path to results is required to generate report")
@@ -1338,7 +1336,9 @@ class AnalyseAP:
             row_colors=row_colors,
             cbar_kws={"label": "spilr correlation"},
         )
-        g.savefig(self.output_path / f"spilr_correlation_{self.ingredient_key}", dpi=300)
+        g.savefig(
+            self.output_path / f"spilr_correlation_{self.ingredient_key}", dpi=300
+        )
 
     def save_spilr_heatmap(self, input_dict, file_path, label_str=None):
         fig, ax = plt.subplots()
@@ -1464,7 +1464,8 @@ class AnalyseAP:
                             f"Distance from Nuclear Surface, {pc}_{sc}, {scaled_val}"
                         )
                         file_path = (
-                            save_dir / f"heatmap_{scaled_val}_{pc}_{sc}_{self.ingredient_key}"
+                            save_dir
+                            / f"heatmap_{scaled_val}_{pc}_{sc}_{self.ingredient_key}"
                         )
                         self.save_spilr_heatmap(
                             all_spilr[scaled_val][pc, sc], file_path, label_str
@@ -1483,7 +1484,8 @@ class AnalyseAP:
                 for pc in range(average_spilr.shape[0]):
                     label_str = f"Distance from Nuclear Surface, avg {pc}, {scaled_val}"
                     file_path = (
-                        save_dir / f"avg_heatmap_{scaled_val}_{pc}_{self.ingredient_key}"
+                        save_dir
+                        / f"avg_heatmap_{scaled_val}_{pc}_{self.ingredient_key}"
                     )
                     self.save_spilr_heatmap(average_spilr[pc], file_path, label_str)
 
