@@ -58,3 +58,9 @@ class FirebaseHandler(object):
     def update_elements_in_array(doc_ref, index, new_item_ref, remove_item):
         doc_ref.update({index: firestore.ArrayRemove([remove_item])})
         doc_ref.update({index: firestore.ArrayUnion([new_item_ref])})
+
+    @staticmethod
+    def is_firebase(path):
+        if path.startswith("firebase:"):
+            return True
+        return False

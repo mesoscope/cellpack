@@ -44,7 +44,6 @@ class DBRecipeHandler(object):
         if docs and len(docs) >= 1:
             for doc in docs:
                 full_doc_data = self.convert_sub_doc(doc)
-                print("full_data", full_doc_data)
                 ddiff = DeepDiff(full_doc_data, data, ignore_order=True)
                 if not ddiff:
                     return doc, doc.id
@@ -54,11 +53,9 @@ class DBRecipeHandler(object):
     def to_db(self, collection, data, id=None):
         # check if we need to convert part of the data(2d arrays and objs to dict)
         modified_data = DBRecipeHandler.flatten_and_unpack(data)
-        print("data=---", modified_data)
         if id is None:
             name = modified_data["name"]
             _, doc_id = self.should_write(collection, name, modified_data)
-            print("here", doc_id)
             if doc_id:
                 print(f"{collection}/{name} is already exists in firestore")
                 return doc_id, self.db.create_path(collection, doc_id)
@@ -141,7 +138,7 @@ class DBRecipeHandler(object):
                 convert_doc["representations"]["packing"][
                     "positions"
                 ] = DBRecipeHandler.convert_positions_in_representation(position_value)
-            if doc_key == "object" and doc_value.startswith("firebase:"):
+            if doc_key == "object" and self.db.is_firebase(doc_value):
                 sub_doc_collection, sub_doc_id = self.db.get_collection_id_from_path(
                     doc_value
                 )
@@ -151,9 +148,7 @@ class DBRecipeHandler(object):
                 for region_name, region_array in doc["regions"].items():
                     for region_item in region_array:
                         if isinstance(region_item, dict):
-                            if "object" in region_item and region_item[
-                                "object"
-                            ].startswith("firebase:"):
+                            if "object" in region_item and self.db.is_firebase(region_item["object"]):
                                 (
                                     sub_doc_collection,
                                     sub_doc_id,
@@ -166,14 +161,12 @@ class DBRecipeHandler(object):
                                 convert_doc["regions"][region_name][
                                     region_array.index(region_item)
                                 ]["object"] = sub_doc["name"]
-                        elif isinstance(region_item, str) and region_item.startswith(
-                            "firebase:"
-                        ):
+                        elif isinstance(region_item, str) and self.db.is_firebase(region_item):
                             (
                                 sub_doc_collection,
                                 sub_doc_id,
                             ) = self.db.get_collection_id_from_path(region_item)
-                            sub_doc, sub_doc_ref = self.db.get_doc_by_id(
+                            sub_doc, _ = self.db.get_doc_by_id(
                                 sub_doc_collection, sub_doc_id
                             )
                             convert_doc[doc_key][region_name][
