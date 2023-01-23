@@ -148,7 +148,9 @@ class DBRecipeHandler(object):
                 for region_name, region_array in doc["regions"].items():
                     for region_item in region_array:
                         if isinstance(region_item, dict):
-                            if "object" in region_item and self.db.is_firebase(region_item["object"]):
+                            if "object" in region_item and self.db.is_firebase(
+                                region_item["object"]
+                            ):
                                 (
                                     sub_doc_collection,
                                     sub_doc_id,
@@ -161,7 +163,9 @@ class DBRecipeHandler(object):
                                 convert_doc["regions"][region_name][
                                     region_array.index(region_item)
                                 ]["object"] = sub_doc["name"]
-                        elif isinstance(region_item, str) and self.db.is_firebase(region_item):
+                        elif isinstance(region_item, str) and self.db.is_firebase(
+                            region_item
+                        ):
                             (
                                 sub_doc_collection,
                                 sub_doc_id,
