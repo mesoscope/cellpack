@@ -106,6 +106,9 @@ class Gradient:
         if "radius" in kw:
             self.radius = kw["radius"]
         self.weight_threshold = 0.0
+        self.scale_to_next_surface = (
+            kw["scale_to_next_surface"] if "scale_to_next_surface" in kw else False
+        )
         if (direction is None) and (self.mode not in ["surface", "radial"]):
             self.direction = self.directions[self.mode]
         else:
@@ -294,6 +297,8 @@ class Gradient:
         """
         if self.object.surface_distances is None:
             raise ValueError("Map created without specifying distances")
+        elif self.scale_to_next_surface:
+            self.distances = self.object.scaled_distance_to_next_surface
         else:
             self.distances = self.object.surface_distances / self.object.max_distance
         self.set_weights_by_mode()
@@ -332,16 +337,18 @@ class Gradient:
 
     def set_weights_by_mode(self):
         scaled_distances = self.distances
-        if max(scaled_distances) > 1.0:
-            self.log.error("MAX TOO BIG", max(scaled_distances))
-            # raise ValueError("distances have not been scaled to be from 0.0 to 1.0")
-        scaled_distances[numpy.isnan(scaled_distances)] = 1
+        if (max(scaled_distances) > 1.0) or (min(scaled_distances) < 0.0):
+            self.log.error(
+                "CHECK CALCULATED DISTANCES",
+                f"Max: {max(scaled_distances)}, Min: {min(scaled_distances)}",
+            )
         if self.weight_mode == "linear":
             self.weight = 1.0 - scaled_distances
         elif self.weight_mode == "square":
             self.weight = (1.0 - scaled_distances) ** 2
         elif self.weight_mode == "cube":
             self.weight = (1.0 - scaled_distances) ** 3
+        self.weight[numpy.isnan(self.weight)] = 0
         # TODO: talk to Ludo about calculating gaussian weights
 
     def getMaxWeight(self, listPts):

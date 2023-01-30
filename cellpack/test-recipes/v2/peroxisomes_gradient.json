@@ -20,7 +20,8 @@
             "surface_name": "nucleus",
             "weight_mode": "cube",
             "pick_mode": "rnd",
-            "mode": "surface"
+            "mode": "surface",
+            "scale_to_next_surface": true
         }
     },
     "objects": {
