@@ -43,7 +43,8 @@ class DBRecipeHandler(object):
         docs = self.db.get_doc_by_name(collection, name)
         if docs and len(docs) >= 1:
             for doc in docs:
-                full_doc_data = self.convert_sub_doc(doc)
+                doc_data = doc.to_dict()
+                full_doc_data = self.convert_sub_doc(doc_data)
                 ddiff = DeepDiff(full_doc_data, data, ignore_order=True)
                 if not ddiff:
                     return doc, doc.id
@@ -52,7 +53,9 @@ class DBRecipeHandler(object):
     # add documents with auto IDs
     def to_db(self, collection, data, id=None):
         # check if we need to convert part of the data(2d arrays and objs to dict)
+        print("data to unpack>>", data )
         modified_data = DBRecipeHandler.flatten_and_unpack(data)
+        print("unpack_data>>", modified_data)
         if id is None:
             name = modified_data["name"]
             _, doc_id = self.should_write(collection, name, modified_data)
@@ -110,6 +113,7 @@ class DBRecipeHandler(object):
 
     @staticmethod
     def convert_positions_in_representation(data):
+        print("position data)))", data)
         convert_data = {}
         for key, value in data.items():
             if isinstance(value, list):
@@ -120,15 +124,16 @@ class DBRecipeHandler(object):
                 )
             else:
                 data[key] = value
+        print("position converted", convert_data)
         return convert_data
 
     # get doc from database, convert it back to the original text
     # i.e. in object, convert lists back to tuples in representations/packing/positions
     # i.e. in comp, replace firebase link with the actual data
-    def convert_sub_doc(self, doc_ref):
-        doc = doc_ref.to_dict()
-        convert_doc = copy.deepcopy(doc)
-        for doc_key, doc_value in doc.items():
+    def convert_sub_doc(self, doc_data):
+        print("db--", doc_data)
+        convert_doc = copy.deepcopy(doc_data)
+        for doc_key, doc_value in doc_data.items():
             if (
                 doc_key == "representations"
                 and "packing" in doc_value
@@ -145,7 +150,7 @@ class DBRecipeHandler(object):
                 sub_doc, _ = self.db.get_doc_by_id(sub_doc_collection, sub_doc_id)
                 convert_doc[doc_key] = sub_doc["name"]
             if doc_key == "regions":
-                for region_name, region_array in doc["regions"].items():
+                for region_name, region_array in doc_data["regions"].items():
                     for region_item in region_array:
                         if isinstance(region_item, dict):
                             if "object" in region_item and self.db.is_firebase(
@@ -176,6 +181,7 @@ class DBRecipeHandler(object):
                             convert_doc[doc_key][region_name][
                                 region_array.index(region_item)
                             ] = sub_doc["name"]
+        print("convert---", convert_doc)
         return convert_doc
 
     def divide_recipe_into_collections(
