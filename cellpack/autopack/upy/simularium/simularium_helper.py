@@ -335,9 +335,9 @@ class simulariumHelper(hostHelper.Helper):
         return [0, 0.0, 0.0]
 
     def add_grid_data_to_scene(self, incoming_name, positions, values):
-        colormap = matplotlib.cm.viridis(values)
-        for index in range(len(values)):
-            name = f"{incoming_name}#{values[index]}"
+        colormap = matplotlib.cm.Reds(values)
+        for index, value in enumerate(values):
+            name = f"{incoming_name}#{value}"
             self.display_data[name] = DisplayData(
                 name=name,
                 display_type=DISPLAY_TYPE.SPHERE,

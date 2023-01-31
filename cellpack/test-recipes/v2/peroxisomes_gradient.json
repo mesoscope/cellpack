@@ -21,6 +21,7 @@
             "weight_mode": "linear",
             "pick_mode": "rnd",
             "mode": "surface",
+            "scale_to_next_surface": true,
             "direction" : [0,0,0]
         }
     },
