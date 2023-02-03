@@ -14,6 +14,7 @@ from time import time
 
 import matplotlib
 import numpy
+from numpy import arange, average, histogram, pi, sqrt, where, zeros
 import pandas as pd
 import scipy
 import seaborn as sns
@@ -900,8 +901,6 @@ class AnalyseAP:
         interior_y y coordinates of reference particles
         interior_z z coordinates of reference particles
         """
-        from numpy import arange, average, histogram, pi, sqrt, where, zeros
-
         x = data[0]
         y = data[1]
         z = data[2]
@@ -982,8 +981,6 @@ class AnalyseAP:
             interior_x      x coordinates of reference particles
             interior_y      y coordinates of reference particles
         """
-        from numpy import arange, average, histogram, pi, sqrt, where, zeros
-
         # Number of particles in ring/area of ring/number of reference particles/number density
         # area of ring = pi*(r_outer**2 - r_inner**2)
         # Find particles which are close enough to the box center that a circle of radius
@@ -1073,7 +1070,7 @@ class AnalyseAP:
         """
         Returns the minimum distance between packed objects
         """
-        minimum_packed_distance = 9999
+        minimum_packed_distance = numpy.Inf
         for path_to_distance_file in glob_to_distance_files:
             distance_values = numpy.genfromtxt(path_to_distance_file)
             current_minimum_distance = numpy.min(distance_values)
