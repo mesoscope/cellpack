@@ -120,6 +120,3 @@ cellpack/tests/outputs/
 # data
 data/
 **/converted/*
-
-# test outputs
-cellpack/tests/outputs/
