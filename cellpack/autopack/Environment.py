@@ -144,7 +144,7 @@ class Environment(CompartmentList):
         # saving/pickle option
         self.saveResult = "out" in config
         self.out_folder = create_output_dir(config["out"], name, config["place_method"])
-        self.result_file = f"{self.out_folder}/{self.name}_{config['name']}"
+        self.result_file = f"{self.out_folder}/{self.name}_{config['name']}_{recipe['version']}"
         self.grid_file_out = f"{self.out_folder}/{self.name}_{config['name']}_grid.dat"
 
         should_load_grid_file = (

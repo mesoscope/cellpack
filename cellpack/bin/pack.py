@@ -44,10 +44,11 @@ def pack(recipe, config=None):
         analyze.doloop(
             config_data["num_trials"],
             env.boundingBox,
-            plot=True,
+            plot_figures=config_data["save_plot_figures"],
             show_grid=config_data["show_grid_plot"],
             seed_list=config_data["randomness_seed"],
             config_name=config_data["name"],
+            recipe_version=recipe_data["version"],
         )
     else:
         env.buildGrid(rebuild=True)
