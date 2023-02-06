@@ -1,6 +1,6 @@
 {
     "version": "1.0.0",
-    "format_version": "2.0.0",
+    "format_version": "2.0",
     "name": "test_spheres",
     "bounding_box": [
         [
@@ -9,9 +9,9 @@
             0
         ],
         [
-            100,
-            100,
-            100
+            1000,
+            1000,
+            1
         ]
     ],
     "objects": {
@@ -26,19 +26,17 @@
             "max_jitter": [
                 1,
                 1,
-                1
+                0
             ],
             "perturb_axis_amplitude": 0.1,
-            "packing": {
-                "mode": "random"
-            },
+            "packing_mode": "random",
             "principal_vector": [
                 0,
                 0,
                 1
             ],
             "rejection_threshold": 50,
-            "place_type": "jitter",
+            "place_method": "jitter",
             "cutoff_surface": 42,
             "rotation_axis": [
                 0,
@@ -64,7 +62,7 @@
             "max_jitter": [
                 1,
                 1,
-                1
+                0
             ]
         }
     },
@@ -78,7 +76,7 @@
         },
         "A": {
             "object": "sphere_25",
-            "count": 25
+            "count": 500
         }
     }
 }

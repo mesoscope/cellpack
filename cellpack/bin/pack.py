@@ -2,6 +2,7 @@ import fire
 from os import path
 import logging
 import logging.config
+import time
 
 from cellpack import autopack
 from cellpack.autopack import upy
@@ -18,7 +19,7 @@ log = logging.getLogger()
 ###############################################################################
 
 
-def pack(recipe, config):
+def pack(recipe, config=None):
     """
     Initializes an autopack packing from the command line
     :param recipe: string argument, path to recipe
@@ -45,7 +46,7 @@ def pack(recipe, config):
             env.boundingBox,
             plot=True,
             show_grid=config_data["show_grid_plot"],
-            seeds_i=config_data["randomness_seed"],
+            seed_list=config_data["randomness_seed"],
             config_name=config_data["name"],
         )
     else:
@@ -54,7 +55,10 @@ def pack(recipe, config):
 
 
 def main():
+    start_time = time.time()
     fire.Fire(pack)
+    execution_time = time.time() - start_time
+    print("The workflow took " + str(execution_time) + "s to run.")
 
 
 if __name__ == "__main__":

@@ -14,6 +14,8 @@ from collections import OrderedDict
 
 import cellpack.autopack as autopack
 import cellpack.autopack.transformation as tr
+from cellpack.autopack.Recipe import Recipe
+from cellpack.autopack.writers import Writer
 from .ingredient.Ingredient import Ingredient
 from cellpack.autopack.Serializable import (
     sCompartment,
@@ -21,9 +23,8 @@ from cellpack.autopack.Serializable import (
     sIngredient,
     sIngredientFiber,
 )
-from cellpack.autopack.Recipe import Recipe
-from cellpack.autopack.writers import Writer
-from .ingredient import (
+
+from .ingredient.grow import (
     ActinIngredient,
     GrowIngredient,
 )
@@ -1419,7 +1420,7 @@ def load_MixedasJson(env, resultfilename=None, transpose=True):
                         )
     freePoint = []  # pickle.load(rfile)
     try:
-        rfile = open(resultfilename + "free_points", "rb")
+        rfile = open(resultfilename + "_free_points", "rb")
         freePoint = pickle.load(rfile)
         rfile.close()
     except:  # noqa: E722

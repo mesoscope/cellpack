@@ -322,7 +322,7 @@ class Gradient:
         print(self.distances)
         self.set_weights_by_mode()
 
-    def build_axis_weight_map(self, bb, master_grid_positions, axis="X"):
+    def build_axis_weight_map(self, bb, master_grid_positions):
         """
         from a given axe (X,Y,Z) build a linear weight according the chosen mode
         (linear, gauss, etc...)
@@ -333,7 +333,7 @@ class Gradient:
         mini = min(bb[1][ind], bb[0][ind])
         self.weight = []
         self.distances = (master_grid_positions[:, ind] - mini) / (maxi - mini)
-        self.set_weights_by_mode(self.distances)
+        self.set_weights_by_mode()
 
     def set_weights_by_mode(self):
         scaled_distances = self.distances

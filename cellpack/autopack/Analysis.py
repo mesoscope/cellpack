@@ -4,38 +4,36 @@ Created on Mon May  6 22:58:44 2013
 
 @author: ludo
 """
-import os
-import math
-from typing import Dict, Optional
-
-import numpy
-import scipy
+import copy
 import csv
 import json
+import math
+import os
+from pathlib import Path
 from time import time
-from PIL import Image
-import copy
-from tqdm import tqdm
 
 import matplotlib
-from matplotlib import pylab
-from matplotlib import pyplot
-from matplotlib.patches import Circle
-from matplotlib import pyplot as plt
+import numpy
+from numpy import arange, average, histogram, pi, sqrt, where, zeros
+import pandas as pd
+import scipy
 import seaborn as sns
 import trimesh
-from pathlib import Path
-import pandas as pd
+from matplotlib import pyplot as plt
+from matplotlib.patches import Circle
+from mdutils.mdutils import MdUtils
+from PIL import Image
 from sklearn.metrics import matthews_corrcoef
+from tqdm import tqdm
 
-from cellpack.autopack.upy import colors as col
 import cellpack.autopack as autopack
-from cellpack.autopack.transformation import signed_angle_between_vectors
-from cellpack.autopack.ldSequence import halton
-
 from cellpack.autopack.GeometryTools import GeometryTools, Rectangle
-from cellpack.autopack.upy.colors import map_colors
+from cellpack.autopack.ldSequence import halton
 from cellpack.autopack.plotly_result import PlotlyAnalysis
+from cellpack.autopack.transformation import signed_angle_between_vectors
+from cellpack.autopack.upy import colors as col
+from cellpack.autopack.upy.colors import map_colors
+from cellpack.autopack.loaders.recipe_loader import RecipeLoader
 
 
 def autolabel(rects, ax):
@@ -165,8 +163,12 @@ class AnalyseAP:
         self.current_pos = None
         self.current_distance = None
         self.plotly = PlotlyAnalysis()
-        self.input_path = input_path
-        self.output_path = output_path
+        self.input_path = None
+        self.output_path = Path("out/")
+        if input_path is not None:
+            self.input_path = Path(input_path)
+        if output_path is not None:
+            self.output_path = Path(output_path)
 
         autopack._colors = None
 
@@ -197,9 +199,23 @@ class AnalyseAP:
         xy = xyz[:, 0] ** 2 + xyz[:, 1] ** 2
         sph_pts[:, 0] = numpy.sqrt(xy + xyz[:, 2] ** 2)
         sph_pts[:, 1] = numpy.arctan2(numpy.sqrt(xy), xyz[:, 2])
-        sph_pts[:, 2] = numpy.arctan2(xyz[:, 1], xyz[:, 0]) + numpy.pi
+        sph_pts[:, 2] = numpy.arctan2(xyz[:, 1], xyz[:, 0])
 
         return sph_pts
+
+    @staticmethod
+    def get_list_of_dims():
+        return ["x", "y", "z", "r", "theta", "phi"]
+
+    @staticmethod
+    def save_array_to_file(array_to_save, file_path, seed_index):
+        f_handle = open(file_path, "a" if seed_index else "w")
+        numpy.savetxt(
+            f_handle,
+            array_to_save,
+            delimiter=",",
+        )
+        f_handle.close()
 
     def getMinMaxProteinSize(self):
         smallest = 999999.0
@@ -492,9 +508,9 @@ class AnalyseAP:
                     numpy.array(e3[2]),
                     delimiter=",",
                 )
-                self.histo(e3[0], ingrname + "_euler_X.png", bins=12, size=max(e3[0]))
-                self.histo(e3[1], ingrname + "_euler_Y.png", bins=12, size=max(e3[1]))
-                self.histo(e3[2], ingrname + "_euler_Z.png", bins=12, size=max(e3[2]))
+                self.histo(e3[0], ingrname + "_euler_X.png")
+                self.histo(e3[1], ingrname + "_euler_Y.png")
+                self.histo(e3[2], ingrname + "_euler_Z.png")
         #                ingredient_positions,distA,angles3=self.getDistanceAngle(ingrpos3, ingrrot3)
         #                numpy.savetxt(ingrname+"_angle_X.csv", numpy.array(angles3[1]), delimiter=",")
         #                numpy.savetxt(ingrname+"_angle_Y.csv", numpy.array(angles3[2]), delimiter=",")
@@ -557,36 +573,51 @@ class AnalyseAP:
         return px, py, pz
 
     def getDistance(self, ingrname, center):
-        distA = []
-        ingredient_positions = [
-            self.env.molecules[i][0]
-            for i in range(len(self.env.molecules))
-            if self.env.molecules[i][2].name == ingrname
-        ]
-        ingredient_positions = numpy.array(ingredient_positions)
+        ingredient_positions = numpy.array(
+            [
+                self.env.molecules[i][0]
+                for i in range(len(self.env.molecules))
+                if self.env.molecules[i][2].name == ingrname
+            ]
+        )
+
         if len(ingredient_positions):
-            delta = numpy.array(ingredient_positions) - numpy.array(center)
-            delta *= delta
-            distA = numpy.sqrt(delta.sum(1)).tolist()
-        return ingredient_positions, distA
+            distances_from_center = numpy.linalg.norm(
+                ingredient_positions - numpy.array(center), axis=1
+            )
+            distances_between_ingredients = scipy.spatial.distance.pdist(
+                ingredient_positions
+            )
+        else:
+            distances_from_center = numpy.array([])
+            distances_between_ingredients = numpy.array([])
+
+        return (
+            ingredient_positions,
+            distances_from_center,
+            distances_between_ingredients,
+        )
 
     def getDistanceAngle(self, ingr, center):
         # need matrix to euler? then access and plot them?
         # also check the measure angle one
         angles = []
         distA = []
-        ingr_positions = [
-            self.env.molecules[i][0]
-            for i in range(len(self.env.molecules))
-            if self.env.molecules[i][2].name == ingr.name
-        ]
-        ingr_positions = numpy.array(ingr_positions)
-        ingr_rotation = [
-            self.env.molecules[i][1]
-            for i in range(len(self.env.molecules))
-            if self.env.molecules[i][2].name == ingr.name
-        ]
-        ingr_rotation = numpy.array(ingr_rotation)
+        ingr_positions = numpy.array(
+            [
+                self.env.molecules[i][0]
+                for i in range(len(self.env.molecules))
+                if self.env.molecules[i][2].name == ingr.name
+            ]
+        )
+        ingr_rotation = numpy.array(
+            [
+                self.env.molecules[i][1]
+                for i in range(len(self.env.molecules))
+                if self.env.molecules[i][2].name == ingr.name
+            ]
+        )
+
         if len(ingr_positions):
             delta = numpy.array(ingr_positions) - numpy.array(center)
             # lets do it on X,Y,Z and also per positions ?
@@ -807,56 +838,36 @@ class AnalyseAP:
 
     def axis_distribution_total(self, all_positions):
         numpy.savetxt(
-            f"{self.env.out_folder}/ingredient_positions_{self.env.basename}.csv",
+            self.env.out_folder / f"ingredient_positions_{self.env.basename}.csv",
             numpy.array(all_positions),
             delimiter=",",
         )
-        px, py, pz = self.getAxesValues(all_positions)
-        #        m1=numpy.nonzero( numpy.logical_and(
-        #               numpy.greater_equal(px, 0.), numpy.less_equal(px, 1000.0)))
-        #        m2=numpy.nonzero( numpy.logical_and(
-        #               numpy.greater_equal(py, 0.), numpy.less_equal(py, 1000.0)))
-        self.histo(
-            px,
-            f"{self.env.out_folder}/total_histo_X_{self.env.basename}.png",
-            bins=10,
-        )
-        self.histo(
-            py,
-            f"{self.env.out_folder}/total_histo_Y_{self.env.basename}.png",
-            bins=10,
-        )
-        self.histo(
-            pz,
-            f"{self.env.out_folder}/total_histo_Z_{self.env.basename}.png",
-            bins=10,
-        )
+        pos_xyz = numpy.array(all_positions)
+        pos_sph = self.cartesian_to_sph(pos_xyz)
+        all_pos = numpy.hstack([pos_xyz, pos_sph])
+        for ind, dim in enumerate(self.get_list_of_dims()):
+            self.histo(
+                all_pos[:, ind],
+                self.env.out_folder / f"total_histo_{dim}_{self.env.basename}.png",
+            )
 
     def axis_distribution(self, ingr):
-        px, py, pz = self.getAxesValues(self.env.ingredient_positions[ingr.name])
-        self.histo(
-            px,
-            f"{self.env.out_folder}/{ingr.name}_histo_X_{self.env.basename}.png",
-            bins=10,
-        )
-        self.histo(
-            py,
-            f"{self.env.out_folder}/{ingr.name}_histo_Y_{self.env.basename}.png",
-            bins=10,
-        )
-        self.histo(
-            pz,
-            f"{self.env.out_folder}/{ingr.name}_histo_Z_{self.env.basename}.png",
-            bins=10,
-        )
-        # do it for all ingredient cumulate?
+        pos_xyz = numpy.array(self.env.ingredient_positions[ingr.name])
+        pos_sph = self.cartesian_to_sph(pos_xyz)
+        all_pos = numpy.hstack([pos_xyz, pos_sph])
+        for ind, dim in enumerate(self.get_list_of_dims()):
+            self.histo(
+                all_pos[:, ind],
+                self.env.out_folder
+                / f"{ingr.name}_histo_{dim}_{self.env.basename}.png",
+            )
 
     def occurence_distribution(self, ingr):
         occ = self.env.occurences[ingr.name]
         self.simpleplot(
             range(len(occ)),
             occ,
-            f"{self.env.out_folder}/{ingr.name}_occurrence_{self.env.basename}.png",
+            self.env.out_folder / f"{ingr.name}_occurrence_{self.env.basename}.png",
         )
 
     def correlation(self, ingr):
@@ -890,8 +901,6 @@ class AnalyseAP:
         interior_y y coordinates of reference particles
         interior_z z coordinates of reference particles
         """
-        from numpy import zeros, sqrt, where, pi, average, arange, histogram
-
         x = data[0]
         y = data[1]
         z = data[2]
@@ -972,11 +981,8 @@ class AnalyseAP:
             interior_x      x coordinates of reference particles
             interior_y      y coordinates of reference particles
         """
-        from numpy import zeros, sqrt, where, pi, average, arange, histogram
-
         # Number of particles in ring/area of ring/number of reference particles/number density
         # area of ring = pi*(r_outer**2 - r_inner**2)
-
         # Find particles which are close enough to the box center that a circle of radius
         # rMax will not cross any edge of the box
         bools1 = x > 1.1 * rMax
@@ -1042,73 +1048,215 @@ class AnalyseAP:
                         all_objs[obj][seed_key] = {}
                     for ct, dim in enumerate(["x", "y", "z"]):
                         all_objs[obj][seed_key][dim] = positions[:, ct]
+                    sph_pts = self.cartesian_to_sph(positions)
+                    for ct, dim in enumerate(["r", "theta", "phi"]):
+                        all_objs[obj][seed_key][dim] = sph_pts[:, ct]
         self.all_objs = all_objs
         self.all_pos_list = all_pos_list
         return all_objs, all_pos_list
 
+    def get_minimum_expected_distance_from_recipe(self, recipe_data):
+        """
+        Returns 2x the smallest radius of objects in the recipe
+        """
+        minimum_distance = 9999
+        for object_values in recipe_data.get("objects").values():
+            if "radius" in object_values:
+                if 2 * object_values["radius"] < minimum_distance:
+                    minimum_distance = 2 * object_values["radius"]
+        return minimum_distance
+
+    def get_packed_minimum_distance(self, glob_to_distance_files):
+        """
+        Returns the minimum distance between packed objects
+        """
+        minimum_packed_distance = numpy.Inf
+        for path_to_distance_file in glob_to_distance_files:
+            distance_values = numpy.genfromtxt(path_to_distance_file)
+            current_minimum_distance = numpy.min(distance_values)
+            if current_minimum_distance < minimum_packed_distance:
+                minimum_packed_distance = current_minimum_distance
+
+        return minimum_packed_distance
+
+    def create_report(self, report_options):
+        """
+        Creates a markdown file report of various analyses
+        """
+        mdFile = MdUtils(
+            file_name=str(self.output_path / "analysis_report"),
+            title="Packing analysis report",
+        )
+        mdFile.new_line(f"Analysis for packing results located at {self.input_path}\n")
+
+        if "path_to_results" not in report_options:
+            raise ValueError("Path to results is required to generate report")
+
+        if "path_to_test_recipe" not in report_options:
+            raise ValueError("Path to test recipe is required to generate report")
+
+        # actual path where results are stored
+        results_path = Path(report_options["path_to_results"])
+        # path to test recipe used for packing
+        test_recipe_path = report_options["path_to_test_recipe"]
+        # results path to use in report
+        results_output_path = report_options["results_output_path"]
+
+        recipe_data = RecipeLoader(test_recipe_path).recipe_data
+
+        mdFile.new_header(level=1, title="Packing image")
+        glob_to_packing_image = results_path.glob("packing_image_*.png")
+        for img_path in glob_to_packing_image:
+            mdFile.new_line(
+                mdFile.new_inline_image(
+                    text="Packing image",
+                    path=f"{results_output_path}/{img_path.name}",
+                )
+            )
+        mdFile.new_line("")
+
+        if "run_distance_analysis" in report_options:
+
+            expected_minimum_distance = self.get_minimum_expected_distance_from_recipe(
+                recipe_data
+            )
+            glob_to_distance_file = results_path.glob("ingredient_distances_*.txt")
+
+            packed_minimum_distance = self.get_packed_minimum_distance(
+                glob_to_distance_file
+            )
+
+            mdFile.new_header(level=1, title="Distance analysis")
+            mdFile.new_line(
+                f"Expected minimum distance: {expected_minimum_distance:.2f}"
+            )
+            mdFile.new_line(f"Actual minimum distance: {packed_minimum_distance:.2f}\n")
+
+            if expected_minimum_distance > packed_minimum_distance:
+                mdFile.new_line("Possible errors:")
+                mdFile.new_list(
+                    [
+                        f"Packed minimum distance {packed_minimum_distance:.2f}"
+                        " is less than the "
+                        f"expected minimum distance {expected_minimum_distance:.2f}\n"
+                    ]
+                )
+
+            distance_histo_path = results_path.glob("total_ingredient_distances_*.png")
+            if distance_histo_path:
+                mdFile.new_line("Distance distribution:")
+
+            for img_path in distance_histo_path:
+                mdFile.new_line(
+                    mdFile.new_inline_image(
+                        text="Distance distribution",
+                        path=f"{results_output_path}/{img_path.name}",
+                    )
+                )
+
+        mdFile.create_md_file()
+
     def run_analysis_workflow(
         self,
-        ingr_key: str,
-        run_similarity_analysis: Optional[bool] = True,
-        get_parametrized_representation: Optional[bool] = True,
-        mesh_paths: Optional[Dict[str, str]] = None,
-        save_plots: Optional[bool] = False,
-        get_correlations: Optional[bool] = False,
-        max_plots_to_save: Optional[int] = 1,
+        analysis_config: dict,
     ):
-        if mesh_paths is not None:
-            if "inner" in mesh_paths:
-                self.inner_mesh_path = mesh_paths["inner"]
-            if "outer" in mesh_paths:
-                self.outer_mesh_path = mesh_paths["outer"]
+        self.ingredient_key = analysis_config.get("ingredient_key")
+
+        if analysis_config.get("mesh_paths"):
+            if "inner" in analysis_config["mesh_paths"]:
+                self.inner_mesh_path = analysis_config["mesh_paths"]["inner"]
+            if "outer" in analysis_config["mesh_paths"]:
+                self.outer_mesh_path = analysis_config["mesh_paths"]["outer"]
         else:
             self.inner_mesh_path = self.outer_mesh_path = None
 
         all_objs, all_pos_list = self.get_obj_dict(self.input_path)
-        self.ingr_key = ingr_key
+        self.num_packings = len(all_pos_list)
+        self.num_seeds_per_packing = numpy.array(
+            [len(packing_dict) for packing_dict in all_pos_list]
+        )
 
-        if ingr_key not in all_objs:
+        if self.ingredient_key not in all_objs:
             raise ValueError(
-                f"Ingredient key {ingr_key} not found at {self.input_path}"
+                f"Ingredient key {self.ingredient_key} not found at {self.input_path}"
             )
 
         print(f"Saving analysis outputs to {self.output_path}")
 
-        if run_similarity_analysis:
+        if analysis_config.get("run_similarity_analysis"):
             self.run_similarity_analysis(
                 all_objs,
             )
 
-        if get_parametrized_representation:
+        if analysis_config.get("get_parametrized_representation"):
             self.get_parametrized_representation(
                 all_pos_list=all_pos_list,
                 angular_spacing=numpy.pi / 64,
                 inner_mesh_path=self.inner_mesh_path,
                 outer_mesh_path=self.outer_mesh_path,
-                save_plots=save_plots,
-                max_plots_to_save=max_plots_to_save,
-                get_correlations=get_correlations,
+                save_plots=analysis_config.get("save_plots"),
+                max_plots_to_save=analysis_config.get("max_plots_to_save"),
+                get_correlations=analysis_config.get("get_correlations"),
             )
 
+        if analysis_config.get("create_report"):
+            self.create_report(analysis_config["create_report"])
+
+    def calc_avg_similarity_values_for_dim(self, similarity_vals_for_dim):
+        packing_inds = numpy.cumsum(
+            numpy.hstack([0, self.num_seeds_per_packing])
+        )  # returns the indices where packings start and end
+        avg_similarity_values = -numpy.ones((self.num_packings, self.num_packings))
+
+        for p1_id in range(self.num_packings):
+            for p2_id in range(self.num_packings):
+                if avg_similarity_values[p1_id, p2_id] >= 0:
+                    continue
+                p1_inds = numpy.arange(
+                    packing_inds[p1_id], packing_inds[p1_id + 1]
+                )  # indices corresponding to packing p1_id
+                p2_inds = numpy.arange(packing_inds[p2_id], packing_inds[p2_id + 1])
+                avg_similarity_values[p1_id, p2_id] = numpy.mean(
+                    similarity_vals_for_dim[p1_inds, p2_inds]
+                )
+                avg_similarity_values[p2_id, p1_id] = avg_similarity_values[
+                    p1_id, p2_id
+                ]
+        return avg_similarity_values
+
     def run_similarity_analysis(self, all_objs):
-        ingr_key = self.ingr_key
+        ingr_key = self.ingredient_key
         key_list = list(all_objs[ingr_key].keys())
         similarity_df = pd.DataFrame(
             index=key_list,
-            columns=pd.MultiIndex.from_product([["x", "y", "z"], key_list]),
+            columns=pd.MultiIndex.from_product([self.get_list_of_dims(), key_list]),
             dtype=float,
         )
         print("Running similarity analysis...")
         similarity_df["packing_id"] = 0
 
-        for rc, (seed1, pos_dict1) in enumerate(all_objs[ingr_key].items()):
-            similarity_df.loc[seed1, "packing_id"] = seed1.split("_")[-1]
-            for cc, (seed2, pos_dict2) in enumerate(all_objs[ingr_key].items()):
-                for dc, dim in enumerate(["x", "y", "z"]):
+        for seed1, pos_dict1 in all_objs[ingr_key].items():
+            similarity_df.loc[seed1, "packing_id"] = int(seed1.split("_")[-1])
+            for seed2, pos_dict2 in all_objs[ingr_key].items():
+                for dim in self.get_list_of_dims():
                     arr1 = pos_dict1[dim]
                     arr2 = pos_dict2[dim]
                     if len(arr1) == 1 or len(arr2) == 1:
+                        # cannot determine similarity when only one instance is packed
                         scaled_sig = 0
+                    elif len(numpy.unique(arr1)) == 1 or len(numpy.unique(arr2)) == 1:
+                        # if there is only one unique value, compare the value
+                        if (
+                            len(numpy.unique(arr1)) == 1
+                            and len(numpy.unique(arr2)) == 1
+                        ):
+                            # both packings have only one unique value, compare the value
+                            scaled_sig = (
+                                1 if numpy.unique(arr1) == numpy.unique(arr2) else 0
+                            )
+                        else:
+                            # one of the packings has more than one unique value, cannot compare
+                            scaled_sig = 0
                     else:
                         ad_stat = scipy.stats.anderson_ksamp([arr1, arr2])
                         scaled_sig = (ad_stat.significance_level - 0.001) / (
@@ -1120,24 +1268,36 @@ class AnalyseAP:
         lut = dict(zip(df_packing.unique(), sns.color_palette()))
         row_colors = df_packing.map(lut)
 
-        for dim in ["x", "y", "z"]:
+        for dim in self.get_list_of_dims():
+
+            avg_similarity_values = self.calc_avg_similarity_values_for_dim(
+                similarity_df[dim].values
+            )
+            numpy.savetxt(
+                self.output_path / f"avg_similarity_{ingr_key}_{dim}.txt",
+                avg_similarity_values,
+            )
+
             g = sns.clustermap(
                 similarity_df[dim],
                 row_colors=row_colors,
                 dendrogram_ratio=(0.15, 0.16),
                 cbar_kws={"label": "similarity score"},
             )
+            g.ax_col_dendrogram.set_visible(False)
             g.ax_heatmap.set_xlabel(f"{ingr_key}_{dim}")
-            g.savefig(f"{self.output_path}clustermap_{ingr_key}_{dim}", dpi=300)
+            g.savefig(self.output_path / f"clustermap_{ingr_key}_{dim}", dpi=300)
+
+        return similarity_df
 
     def calc_and_save_correlations(
         self,
-        num_packings,
-        num_seeds,
         all_spilr_scaled,
     ):
         key_list = [
-            f"{pc}_{sc}" for pc in range(num_packings) for sc in range(num_seeds[pc])
+            f"{pc}_{sc}"
+            for pc in range(self.num_packings)
+            for sc in range(self.num_seeds_per_packing[pc])
         ]
         corr_df = pd.DataFrame(
             index=key_list,
@@ -1145,10 +1305,10 @@ class AnalyseAP:
             dtype=float,
         )
         corr_df["packing_id"] = numpy.nan
-        for pc1 in range(num_packings):
-            for sc1 in tqdm(range(num_seeds[pc1])):
-                for pc2 in range(num_packings):
-                    for sc2 in range(num_seeds[pc2]):
+        for pc1 in range(self.num_packings):
+            for sc1 in tqdm(range(self.num_seeds_per_packing[pc1])):
+                for pc2 in range(self.num_packings):
+                    for sc2 in range(self.num_seeds_per_packing[pc2]):
                         corr_df.loc[f"{pc1}_{sc1}", "packing_id"] = pc1
                         # do not calculate if:
                         # a) already calculated
@@ -1173,24 +1333,28 @@ class AnalyseAP:
             row_colors=row_colors,
             cbar_kws={"label": "spilr correlation"},
         )
-        g.savefig(f"{self.output_path}spilr_correlation_{self.ingr_key}", dpi=300)
+        g.savefig(
+            self.output_path / f"spilr_correlation_{self.ingredient_key}", dpi=300
+        )
 
     def save_spilr_heatmap(self, input_dict, file_path, label_str=None):
+        fig, ax = plt.subplots()
         g = sns.heatmap(
             input_dict,
             cbar=False,
             xticklabels=False,
             yticklabels=False,
+            ax=ax,
         )
         g.set_xlabel("Angular coordinates")
         g.set_ylabel(label_str)
         g.invert_yaxis()
 
-        fig = g.get_figure()
         fig.savefig(
             file_path,
             dpi=300,
         )
+        plt.close()
 
     def get_parametrized_representation(
         self,
@@ -1216,14 +1380,12 @@ class AnalyseAP:
         inner_mesh = trimesh.load_mesh(inner_mesh_path)
         outer_mesh = trimesh.load_mesh(outer_mesh_path)
 
-        num_packings = len(all_pos_list)
-        num_seeds = numpy.array([len(packing_dict) for packing_dict in all_pos_list])
         all_spilr = {}
         for scaled_val in ["raw", "scaled"]:
             all_spilr[scaled_val] = numpy.full(
                 (
-                    num_packings,
-                    numpy.max(num_seeds),
+                    self.num_packings,
+                    numpy.max(self.num_seeds_per_packing),
                     len(rad_vals),
                     len(theta_vals) * len(phi_vals),
                 ),
@@ -1231,36 +1393,41 @@ class AnalyseAP:
             )
 
         if save_plots:
-            save_dir = f"{self.output_path}/heatmaps/"
+            save_dir = self.output_path / "heatmaps"
             os.makedirs(save_dir, exist_ok=True)
 
         for pc, packing_dict in enumerate(all_pos_list):
             num_saved_plots = 0
             for sc, (_, pos_dict) in enumerate(packing_dict.items()):
-                pos_list = numpy.array(pos_dict[self.ingr_key])
+                pos_list = numpy.array(pos_dict[self.ingredient_key])
                 sph_pts = self.cartesian_to_sph(pos_list)
 
                 inner_loc = numpy.zeros(pos_list.shape)
                 outer_loc = numpy.zeros(pos_list.shape)
 
-                for i in range(inner_loc.shape[0]):
-                    inner_loc[i], _, _ = inner_mesh.ray.intersects_location(
-                        ray_origins=[[0, 0, 0]], ray_directions=[pos_list[i]]
-                    )
-                    outer_loc[i], _, _ = outer_mesh.ray.intersects_location(
-                        ray_origins=[[0, 0, 0]], ray_directions=[pos_list[i]]
-                    )
+                query = trimesh.proximity.ProximityQuery(inner_mesh)
 
-                inner_sph_pts = self.cartesian_to_sph(inner_loc)
-                outer_sph_pts = self.cartesian_to_sph(outer_loc)
-                scaled_rad = (sph_pts[:, 0] - inner_sph_pts[:, 0]) / (
-                    outer_sph_pts[:, 0] - inner_sph_pts[:, 0]
+                # closest points on the inner mesh surface
+                inner_loc, inner_surface_distances, _ = query.on_surface(pos_list)
+
+                # intersecting points on the outer surface
+                outer_loc, _, _ = outer_mesh.ray.intersects_location(
+                    ray_origins=inner_loc,
+                    ray_directions=(pos_list - inner_loc),
                 )
+
+                distance_between_surfaces = numpy.linalg.norm(
+                    outer_loc - inner_loc, axis=1
+                )
+
+                scaled_rad = inner_surface_distances / distance_between_surfaces
 
                 trial_spilr = {}
                 for scaled_val in ["raw", "scaled"]:
                     rad_array = (
-                        numpy.linspace(0, outer_sph_pts[:, 0].max(), len(rad_vals))
+                        numpy.linspace(
+                            0, distance_between_surfaces.max(), len(rad_vals)
+                        )
                         if scaled_val == "raw"
                         else rad_vals
                     )
@@ -1269,15 +1436,19 @@ class AnalyseAP:
                         (len(rad_array), len(theta_vals), len(phi_vals))
                     )
 
-                    max_rad = outer_sph_pts[:, 0].max() if scaled_val == "raw" else 1
+                    max_rad = (
+                        distance_between_surfaces.max() if scaled_val == "raw" else 1
+                    )
 
                     if numpy.any(rad_array > max_rad) or numpy.any(rad_array < 0):
                         raise ValueError("Check ray-mesh intersections!")
 
-                    rad_pos = sph_pts[:, 0] if scaled_val == "raw" else scaled_rad
-                    rad_inds = numpy.digitize(rad_pos, rad_array)
-                    theta_inds = numpy.digitize(sph_pts[:, 1], theta_vals)
-                    phi_inds = numpy.digitize(sph_pts[:, 2], phi_vals)
+                    rad_pos = (
+                        inner_surface_distances if scaled_val == "raw" else scaled_rad
+                    )
+                    rad_inds = numpy.digitize(rad_pos, rad_array) - 1
+                    theta_inds = numpy.digitize(sph_pts[:, 1], theta_vals) - 1
+                    phi_inds = numpy.digitize(sph_pts[:, 2], phi_vals) - 1
 
                     trial_spilr[scaled_val][rad_inds, theta_inds, phi_inds] = 1
 
@@ -1290,7 +1461,8 @@ class AnalyseAP:
                             f"Distance from Nuclear Surface, {pc}_{sc}, {scaled_val}"
                         )
                         file_path = (
-                            f"{save_dir}heatmap_{scaled_val}_{pc}_{sc}_{self.ingr_key}"
+                            save_dir
+                            / f"heatmap_{scaled_val}_{pc}_{sc}_{self.ingredient_key}"
                         )
                         self.save_spilr_heatmap(
                             all_spilr[scaled_val][pc, sc], file_path, label_str
@@ -1300,8 +1472,6 @@ class AnalyseAP:
         if get_correlations:
             print("calculating correlations...")
             self.calc_and_save_correlations(
-                num_packings,
-                num_seeds,
                 all_spilr["scaled"],
             )
 
@@ -1311,44 +1481,51 @@ class AnalyseAP:
                 for pc in range(average_spilr.shape[0]):
                     label_str = f"Distance from Nuclear Surface, avg {pc}, {scaled_val}"
                     file_path = (
-                        f"{save_dir}avg_heatmap_{scaled_val}_{pc}_{self.ingr_key}"
+                        save_dir
+                        / f"avg_heatmap_{scaled_val}_{pc}_{self.ingredient_key}"
                     )
                     self.save_spilr_heatmap(average_spilr[pc], file_path, label_str)
 
         return all_spilr
 
-    def histo(self, distances, filename, bins=100, size=1000.0):
-        pylab.clf()
-        numpy.mean(distances), numpy.std(distances)
-        # the histogram of the data
-        #        b=numpy.arange(distances.min(), distances.max(), 2)
-        #        n, bins, patches = pyplot.hist(distances, bins=bins, normed=1, facecolor='green')#, alpha=0.75)
-        y, binEdges = numpy.histogram(distances, bins=bins)
-        bincenters = 0.5 * (binEdges[1:] + binEdges[:-1])
-        menStd = numpy.sqrt(y)  # or sigma?
-        width = bins
-        pyplot.bar(bincenters, y, width=width, color="r", yerr=menStd)
-        # add a 'best fit' line?
-        #        y = mlab.normpdf( bins, mu, sigma)#should be the excepted distribution
-        #        l = pyplot.plot(bins, y, 'r--', linewidth=3)
-        pyplot.savefig(filename)
+    def histo(self, distances, filename):
+        plt.clf()
+        # calculate histogram
 
-    #        pylab.close()     # closes the current figure
+        nbins = int(numpy.sqrt(len(distances)))
+        y, bin_edges = numpy.histogram(distances, bins=nbins)
+        bincenters = 0.5 * (bin_edges[1:] + bin_edges[:-1])
+
+        # calculate standard error for values in each bin
+        bin_inds = numpy.digitize(distances, bin_edges)
+        err_vals = numpy.zeros(y.shape)
+        for bc in range(nbins):
+            dist_vals = distances[bin_inds == (bc + 1)]
+            if len(dist_vals) > 1:
+                err_vals[bc] = numpy.std(dist_vals) / numpy.sqrt(len(dist_vals))
+            else:
+                err_vals[bc] = 0
+
+        # set bin width
+        dbin = 0.9 * (bincenters[1] - bincenters[0])
+        plt.bar(bincenters, y, width=dbin, color="r", yerr=err_vals)
+        plt.savefig(filename)
+        plt.close()
 
     def plot(self, rdf, radii, file_name):
-        pylab.clf()
+        plt.clf()
         matplotlib.rc("font", size=14)
         matplotlib.rc("figure", figsize=(5, 4))
-        #        pylab.clf()
-        pylab.plot(radii, rdf, linewidth=3)
-        pylab.xlabel(r"distance $r$ in $\AA$")
-        pylab.ylabel(r"radial distribution function $g(r)$")
-        pylab.savefig(file_name)
+        #        plt.clf()
+        plt.plot(radii, rdf, linewidth=3)
+        plt.xlabel(r"distance $r$ in $\AA$")
+        plt.ylabel(r"radial distribution function $g(r)$")
+        plt.savefig(file_name)
 
     def simpleplot(self, X, Y, filenameme, w=3):
-        pylab.clf()
-        pylab.plot(X, Y, linewidth=w)
-        pylab.savefig(filenameme)
+        plt.clf()
+        plt.plot(X, Y, linewidth=w)
+        plt.savefig(filenameme)
 
     def build_grid(
         self,
@@ -1409,7 +1586,6 @@ class AnalyseAP:
             print("Remaining Garbage:")
             pprint.pprint(gc.garbage)
             del gc.garbage[:]
-            print
 
     def merge(self, d1, d2, merge=lambda x, y: y):
         result = dict(d1)
@@ -1436,7 +1612,7 @@ class AnalyseAP:
         elif data is None and filename is not None:
             with open(filename) as data_file:
                 data = json.load(data_file)
-        fig = pyplot.figure()
+        fig = plt.figure()
         ax = fig.add_subplot(111)
         radius = {}
         ingrrot = {}
@@ -1463,13 +1639,13 @@ class AnalyseAP:
                     )
                 )
             ax.set_aspect(1.0)
-            pyplot.axhline(y=bbox[0][1], color="k")
-            pyplot.axhline(y=bbox[1][1], color="k")
-            pyplot.axvline(x=bbox[0][0], color="k")
-            pyplot.axvline(x=bbox[1][0], color="k")
-            pyplot.axis([bbox[0][0], bbox[1][0], bbox[0][1], bbox[1][1]])
-            pyplot.savefig("plot" + ingr + ".png")
-            pylab.close()  # closes the current figure
+            plt.axhline(y=bbox[0][1], color="k")
+            plt.axhline(y=bbox[1][1], color="k")
+            plt.axvline(x=bbox[0][0], color="k")
+            plt.axvline(x=bbox[1][0], color="k")
+            plt.axis([bbox[0][0], bbox[1][0], bbox[0][1], bbox[1][1]])
+            plt.savefig("plot" + ingr + ".png")
+            plt.close()  # closes the current figure
         return ingrpos
 
     #        res=plotOneResult(None,filename="results_seed_8.json")
@@ -1521,13 +1697,13 @@ class AnalyseAP:
         self,
         num_seeds,
         bounding_box,
-        rdf=True,
+        get_distance_distribution=True,
         render=False,
         plot=True,
         show_grid=True,
         fbox_bb=None,
         use_file=True,
-        seeds_i=None,
+        seed_list=None,
         config_name="default",
     ):
         # doLoop automatically produces result files, images, and documents from the recipe while adjusting parameters
@@ -1538,34 +1714,40 @@ class AnalyseAP:
         #    Results will appear in the result folder of your recipe path
         # where n is the number of loop, seed = i
         # analyse.doloop(n)
-        if seeds_i is None:
-            seeds_i = self.getHaltonUnique(num_seeds)
-        basename_all = f"{self.env.name}_{config_name}"
+        if seed_list is None:
+            seed_list = self.getHaltonUnique(num_seeds)
+        packing_basename = f"{self.env.name}_{config_name}"
         numpy.savetxt(
-            f"{self.env.out_folder}/seeds_{basename_all}",
-            seeds_i,
+            self.env.out_folder / f"seeds_{packing_basename}.txt",
+            seed_list,
             delimiter=",",
         )
-        angle_file = f"{self.env.out_folder}/angles_{basename_all}"
-        position_file = f"{self.env.out_folder}/positions_{basename_all}"
-        all_pos_file = f"{self.env.out_folder}/all_positions_{basename_all}"
-        distance_file = f"{self.env.out_folder}/distances_{basename_all}"
-        occurences_file = f"{self.env.out_folder}/occurence_{basename_all}"
+        angle_file = self.env.out_folder / f"angles_{packing_basename}.txt"
+        position_file = self.env.out_folder / f"positions_{packing_basename}.txt"
+        all_pos_file = self.env.out_folder / f"all_positions_{packing_basename}.json"
+        center_distance_file = (
+            self.env.out_folder / f"center_distances_{packing_basename}.txt"
+        )
+        ingredient_distance_file = (
+            self.env.out_folder / f"ingredient_distances_{packing_basename}.txt"
+        )
+        occurences_file = self.env.out_folder / f"occurence_{packing_basename}.json"
         rangeseed = range(num_seeds)
-        distances = {}
-        ingredient_positions = {}
-        ingredient_angles = {}
+        center_distances_dict = {}
+        ingredient_distances_dict = {}
+        ingredient_positions_dict = {}
+        ingredient_angles_dict = {}
         occurences = {}
-        all_pos_dict = {}
+        all_positions_dict = {}
         total_positions = []
-        total_distances = []
+        total_center_distances = []
         total_angles = []
-        angles = None
         rebuild = True
+
         for seed_index in range(num_seeds):
-            basename = f"seed{seed_index}_{basename_all}"
-            self.env.result_file = (
-                f"{self.env.out_folder}/seed_{seed_index}_{basename_all}"
+            seed_basename = f"seed{seed_index}_{packing_basename}"
+            self.env.result_file = str(
+                self.env.out_folder / f"seed_{seed_index}_{packing_basename}"
             )
             # Clear
             if self.afviewer:
@@ -1573,35 +1755,38 @@ class AnalyseAP:
             else:
                 self.env.reset()
             self.env.saveResult = True
-            seed = seeds_i[seed_index]  # int(time())
+            seed = seed_list[seed_index]  # int(time())
             self.build_grid(
                 forceBuild=rebuild,
             )
             two_d = self.env.is_two_d()
+            use_simularium = False
             self.pack(
                 seed=seed,
                 vTestid=seed_index,
                 vAnalysis=0,
                 fbox_bb=fbox_bb,
-                show_plotly_plot=(show_grid and two_d),
+                # TODO: fix this to disable plotly if using simularium
+                show_plotly_plot=(show_grid and two_d) and not use_simularium,
             )
             self.center = self.env.grid.getCenter()
             if render:
                 # render/save scene if hosted otherwise nothing
-                self.helper.render(basename + ".jpg", 640, 480)
-                self.helper.write(basename + ".c4d", [])
+                self.helper.render(seed_basename + ".jpg", 640, 480)
+                self.helper.write(seed_basename + ".c4d", [])
 
             if plot and two_d:
-                width = 1000.0  # should be the boundary here ?
-                fig = pyplot.figure()
+                width = self.env.get_size_of_bounding_box()
+                fig = plt.figure()
                 ax = fig.add_subplot(111)
 
-            if rdf:
-                center = self.env.grid.getCenter()  # [500,500,0.5]#center of the grid
-                r = self.env.exteriorRecipe
-                d = {}
-                if r:
-                    for ingr in r.ingredients:
+            if get_distance_distribution:
+                center = self.env.grid.getCenter()  # center of the grid
+                ext_recipe = self.env.exteriorRecipe
+                if ext_recipe:
+                    for ingr in ext_recipe.ingredients:
+
+                        # set ingredient color
                         if ingr.color is not None:
                             color = (
                                 ingr.color
@@ -1610,44 +1795,92 @@ class AnalyseAP:
                             )
                         else:
                             color = None
-                        if ingr.name not in distances:
-                            distances[ingr.name] = []
-                            ingredient_positions[ingr.name] = []
-                            ingredient_angles[ingr.name] = []
+
+                        if ingr.name not in center_distances_dict:
+                            center_distances_dict[ingr.name] = []
+                            ingredient_positions_dict[ingr.name] = []
+                            ingredient_angles_dict[ingr.name] = []
                             occurences[ingr.name] = []
+
                         if ingr.packing_mode == "gradient" and self.env.use_gradient:
                             self.center = center = self.env.gradients[
                                 ingr.gradient
                             ].direction
-                            # also mesure the angle pos>center pcpalVector
-                            ingrpos, d, angles = self.getDistanceAngle(ingr, center)
+
+                            # get angles wrt gradient
+                            (
+                                seed_ingredient_positions,
+                                seed_distances_from_center,
+                                seed_angles,
+                            ) = self.getDistanceAngle(ingr, center)
+
                             if use_file:
-                                f_handle = open(angle_file, "a" if seed_index else "w")
-                                numpy.savetxt(f_handle, angles, delimiter=",")
-                                f_handle.close()
+                                self.save_array_to_file(
+                                    seed_angles, angle_file, seed_index
+                                )
+
+                                ingredient_angles_dict[ingr.name] = seed_angles.tolist()
                             else:
-                                ingredient_angles[ingr.name].extend(angles)
-                                total_angles.extend(angles)
+                                ingredient_angles_dict[ingr.name].extend(seed_angles)
+                                total_angles.extend(seed_angles)
                         else:
-                            ingrpos, d = self.getDistance(ingr.name, center)
-                        occurences[ingr.name].append(len(ingrpos))
+                            (
+                                seed_ingredient_positions,
+                                seed_distances_from_center,
+                                seed_distances_between_ingredients,
+                            ) = self.getDistance(ingr.name, center)
+
+                        occurences[ingr.name].append(len(seed_ingredient_positions))
+
                         if use_file:
-                            f_handle = open(position_file, "a" if seed_index else "w")
-                            numpy.savetxt(f_handle, ingrpos, delimiter=",")
-                            f_handle.close()
-                            f_handle = open(distance_file, "a" if seed_index else "w")
-                            numpy.savetxt(f_handle, d, delimiter=",")
-                            f_handle.close()
-                            distances[ingr.name] = d
-                            ingredient_positions[ingr.name] = ingrpos.tolist()
+                            # overwrite files if this is the first seed,
+                            # otherwise, append
+                            self.save_array_to_file(
+                                seed_ingredient_positions,
+                                position_file,
+                                seed_index,
+                            )
+
+                            self.save_array_to_file(
+                                seed_distances_from_center,
+                                center_distance_file,
+                                seed_index,
+                            )
+
+                            self.save_array_to_file(
+                                seed_distances_between_ingredients,
+                                ingredient_distance_file,
+                                seed_index,
+                            )
+
+                            center_distances_dict[
+                                ingr.name
+                            ] = seed_distances_from_center.tolist()
+                            ingredient_distances_dict[
+                                ingr.name
+                            ] = seed_distances_between_ingredients.tolist()
+                            ingredient_positions_dict[
+                                ingr.name
+                            ] = seed_ingredient_positions.tolist()
+
                         else:
-                            distances[ingr.name].extend(d)
-                            ingredient_positions[ingr.name].extend(ingrpos)
-                            total_positions.extend(ingrpos)
-                            total_distances.extend(d)
+                            center_distances_dict[ingr.name].extend(
+                                seed_distances_from_center.tolist()
+                            )
+                            ingredient_distances_dict[ingr.name].extend(
+                                seed_distances_between_ingredients.tolist()
+                            )
+                            ingredient_positions_dict[ingr.name].extend(
+                                seed_ingredient_positions.tolist()
+                            )
+
+                            total_positions.extend(seed_ingredient_positions.tolist())
+                            total_center_distances.extend(
+                                seed_distances_from_center.tolist()
+                            )
 
                         if plot and two_d:
-                            for i, p in enumerate(ingrpos):
+                            for i, p in enumerate(seed_ingredient_positions):
                                 ax.add_patch(
                                     Circle(
                                         (p[0], p[1]),
@@ -1657,53 +1890,62 @@ class AnalyseAP:
                                     )
                                 )
                                 #  Plot "image" particles to verify that periodic boundary conditions are working
-                                r = ingr.encapsulating_radius
+                                radius = ingr.encapsulating_radius
                                 if autopack.testPeriodicity:
-                                    if p[0] < r:
+                                    if p[0] < radius:
                                         ax.add_patch(
                                             Circle(
-                                                (p[0] + width, p[1]),
-                                                r,
+                                                (p[0] + width[0], p[1]),
+                                                radius,
                                                 facecolor=color,
                                             )
                                         )
-                                    elif p[0] > (width - r):
+                                    elif p[0] > (width[0] - radius):
                                         ax.add_patch(
                                             Circle(
-                                                (p[0] - width, p[1]),
-                                                r,
+                                                (p[0] - width[0], p[1]),
+                                                radius,
                                                 facecolor=color,
                                             )
                                         )
-                                    if p[1] < r:
+                                    if p[1] < radius:
                                         ax.add_patch(
                                             Circle(
-                                                (p[0], p[1] + width),
-                                                r,
+                                                (p[0], p[1] + width[1]),
+                                                radius,
                                                 facecolor=color,
                                             )
                                         )
-                                    elif p[1] > (width - r):
+                                    elif p[1] > (width[1] - radius):
                                         ax.add_patch(
                                             Circle(
-                                                (p[0], p[1] - width),
-                                                r,
+                                                (p[0], p[1] - width[1]),
+                                                radius,
                                                 facecolor=color,
                                             )
                                         )
+
                                 if i == 0:  # len(ingrpos)-1:
                                     continue
+
                                 if ingr.type == "Grow":
-                                    pyplot.plot(
-                                        [ingrpos[-i][0], ingrpos[-i - 1][0]],
-                                        [ingrpos[-i][1], ingrpos[-i - 1][1]],
+                                    plt.plot(
+                                        [
+                                            seed_ingredient_positions[-i][0],
+                                            seed_ingredient_positions[-i - 1][0],
+                                        ],
+                                        [
+                                            seed_ingredient_positions[-i][1],
+                                            seed_ingredient_positions[-i - 1][1],
+                                        ],
                                         "k-",
                                         lw=2,
                                     )
                                     # plot the sphere
                                     if ingr.use_rbsphere:
-                                        r, pts = ingr.getInterpolatedSphere(
-                                            ingrpos[-i - 1], ingrpos[-i]
+                                        (ext_recipe, pts,) = ingr.getInterpolatedSphere(
+                                            seed_ingredient_positions[-i - 1],
+                                            seed_ingredient_positions[-i],
                                         )
                                         for pt in pts:
                                             ax.add_patch(
@@ -1714,37 +1956,75 @@ class AnalyseAP:
                                                     facecolor=color,
                                                 )
                                             )
-                for o in self.env.compartments:
-                    rs = o.surfaceRecipe
-                    if rs:
-                        for ingr in rs.ingredients:
-                            if ingr.name not in distances:
-                                distances[ingr.name] = []
-                                ingredient_positions[ingr.name] = []
+
+                for comparment in self.env.compartments:
+                    surface_recipe = comparment.surfaceRecipe
+                    if surface_recipe:
+                        for ingr in surface_recipe.ingredients:
+                            if ingr.name not in center_distances_dict:
+                                center_distances_dict[ingr.name] = []
+                                ingredient_distances_dict[ingr.name] = []
+                                ingredient_positions_dict[ingr.name] = []
                                 occurences[ingr.name] = []
                             if (
                                 ingr.packing_mode == "gradient"
                                 and self.env.use_gradient
                             ):
                                 center = self.env.gradients[ingr.gradient].direction
-                            ingrpos, d = self.getDistance(ingr.name, center)
-                            occurences[ingr.name].append(len(ingrpos))
+                            (
+                                seed_ingredient_positions,
+                                seed_distances_from_center,
+                                seed_distances_between_ingredients,
+                            ) = self.getDistance(ingr.name, center)
+                            occurences[ingr.name].append(len(seed_ingredient_positions))
                             if use_file:
-                                f_handle = open(position_file, "a")
-                                numpy.savetxt(f_handle, ingrpos, delimiter=",")
-                                f_handle.close()
-                                f_handle = open(distance_file, "a")
-                                numpy.savetxt(f_handle, d, delimiter=",")
-                                f_handle.close()
-                                distances[ingr.name] = d
-                                ingredient_positions[ingr.name] = ingrpos.tolist()
+
+                                self.save_array_to_file(
+                                    seed_ingredient_positions,
+                                    position_file,
+                                    seed_index,
+                                )
+
+                                self.save_array_to_file(
+                                    seed_distances_from_center,
+                                    center_distance_file,
+                                    seed_index,
+                                )
+
+                                self.save_array_to_file(
+                                    seed_distances_between_ingredients,
+                                    ingredient_distance_file,
+                                    seed_index,
+                                )
+
+                                center_distances_dict[
+                                    ingr.name
+                                ] = seed_distances_from_center.tolist()
+                                ingredient_distances_dict[
+                                    ingr.name
+                                ] = seed_distances_between_ingredients.tolist()
+                                ingredient_positions_dict[
+                                    ingr.name
+                                ] = seed_ingredient_positions.tolist()
                             else:
-                                distances[ingr.name].extend(d)
-                                ingredient_positions[ingr.name].extend(ingrpos)
-                                total_positions.extend(ingrpos)
-                                total_distances.extend(d)
+                                center_distances_dict[ingr.name].extend(
+                                    seed_distances_from_center.tolist()
+                                )
+                                ingredient_distances_dict[ingr.name].extend(
+                                    seed_distances_between_ingredients.tolist()
+                                )
+                                ingredient_positions_dict[ingr.name].extend(
+                                    seed_ingredient_positions.tolist()
+                                )
+                                total_positions.extend(
+                                    seed_ingredient_positions.tolist()
+                                )
+                                total_center_distances.extend(
+                                    seed_distances_from_center.tolist()
+                                )
+
                             if plot and two_d:
-                                for p in ingrpos:
+                                for p in seed_ingredient_positions:
                                     ax.add_patch(
                                         Circle(
                                             (p[0], p[1]),
@@ -1753,36 +2033,74 @@ class AnalyseAP:
                                             facecolor=ingr.color,
                                         )
                                     )
-                    ri = o.innerRecipe
-                    if ri:
-                        for ingr in ri.ingredients:
-                            if ingr.name not in distances:
-                                distances[ingr.name] = []
-                                ingredient_positions[ingr.name] = []
+
+                    inner_recipe = comparment.innerRecipe
+                    if inner_recipe:
+                        for ingr in inner_recipe.ingredients:
+                            if ingr.name not in center_distances_dict:
+                                center_distances_dict[ingr.name] = []
+                                ingredient_distances_dict[ingr.name] = []
+                                ingredient_positions_dict[ingr.name] = []
                                 occurences[ingr.name] = []
+
                             if (
                                 ingr.packing_mode == "gradient"
                                 and self.env.use_gradient
                             ):
                                 center = self.env.gradients[ingr.gradient].direction
-                            ingrpos, d = self.getDistance(ingr.name, center)
-                            occurences[ingr.name].append(len(ingrpos))
+                            (
+                                seed_ingredient_positions,
+                                seed_distances_from_center,
+                                seed_distances_between_ingredients,
+                            ) = self.getDistance(ingr.name, center)
+                            occurences[ingr.name].append(len(seed_ingredient_positions))
                             if use_file:
-                                f_handle = open(position_file, "a")
-                                numpy.savetxt(f_handle, ingrpos, delimiter=",")
-                                f_handle.close()
-                                f_handle = open(distance_file, "a")
-                                numpy.savetxt(f_handle, d, delimiter=",")
-                                f_handle.close()
-                                distances[ingr.name] = d
-                                ingredient_positions[ingr.name] = ingrpos.tolist()
+                                self.save_array_to_file(
+                                    seed_ingredient_positions,
+                                    position_file,
+                                    seed_index,
+                                )
+
+                                self.save_array_to_file(
+                                    seed_distances_from_center,
+                                    center_distance_file,
+                                    seed_index,
+                                )
+
+                                self.save_array_to_file(
+                                    seed_distances_between_ingredients,
+                                    ingredient_distance_file,
+                                    seed_index,
+                                )
+
+                                center_distances_dict[
+                                    ingr.name
+                                ] = seed_distances_from_center.tolist()
+                                ingredient_distances_dict[
+                                    ingr.name
+                                ] = seed_distances_between_ingredients.tolist()
+                                ingredient_positions_dict[
+                                    ingr.name
+                                ] = seed_ingredient_positions.tolist()
                             else:
-                                distances[ingr.name].extend(d)
-                                ingredient_positions[ingr.name].extend(ingrpos)
-                                total_positions.extend(ingrpos)
-                                total_distances.extend(d)
+                                center_distances_dict[ingr.name].extend(
+                                    seed_distances_from_center.tolist()
+                                )
+                                ingredient_distances_dict[ingr.name].extend(
+                                    seed_distances_between_ingredients.tolist()
+                                )
+                                ingredient_positions_dict[ingr.name].extend(
+                                    seed_ingredient_positions.tolist()
+                                )
+                                total_positions.extend(
+                                    seed_ingredient_positions.tolist()
+                                )
+                                total_center_distances.extend(
+                                    seed_distances_from_center.tolist()
+                                )
+
                             if plot and two_d:
-                                for p in ingrpos:
+                                for p in seed_ingredient_positions:
                                     ax.add_patch(
                                         Circle(
                                             (p[0], p[1]),
@@ -1791,29 +2109,38 @@ class AnalyseAP:
                                             facecolor=ingr.color,
                                         )
                                     )
-                # write
-                all_pos_dict[seed_index] = copy.deepcopy(ingredient_positions)
+
+                # write to file
+                all_positions_dict[seed_index] = copy.deepcopy(
+                    ingredient_positions_dict
+                )
                 if use_file:
                     self.writeJSON(
-                        f"{self.env.out_folder}/ingredient_positions_{basename}.json",
-                        ingredient_positions,
+                        self.env.out_folder
+                        / f"ingredient_positions_{seed_basename}.json",
+                        ingredient_positions_dict,
                     )
                     self.writeJSON(
-                        f"{self.env.out_folder}/ingredient_distances_{basename}.json",
-                        distances,
+                        self.env.out_folder / f"center_distances_{seed_basename}.json",
+                        center_distances_dict,
                     )
                     self.writeJSON(
-                        f"{self.env.out_folder}/ingredient_angles_{basename}.json",
-                        ingredient_angles,
+                        self.env.out_folder
+                        / f"ingredient_distances_{seed_basename}.json",
+                        ingredient_distances_dict,
+                    )
+                    self.writeJSON(
+                        self.env.out_folder / f"ingredient_angles_{seed_basename}.json",
+                        ingredient_angles_dict,
                     )
 
                 if plot and two_d:
                     ax.set_aspect(1.0)
-                    pyplot.axhline(y=bounding_box[0][1], color="k")
-                    pyplot.axhline(y=bounding_box[1][1], color="k")
-                    pyplot.axvline(x=bounding_box[0][0], color="k")
-                    pyplot.axvline(x=bounding_box[1][0], color="k")
-                    pyplot.axis(
+                    plt.axhline(y=bounding_box[0][1], color="k")
+                    plt.axhline(y=bounding_box[1][1], color="k")
+                    plt.axvline(x=bounding_box[0][0], color="k")
+                    plt.axvline(x=bounding_box[1][0], color="k")
+                    plt.axis(
                         [
                             bounding_box[0][0],
                             bounding_box[1][0],
@@ -1821,13 +2148,19 @@ class AnalyseAP:
                             bounding_box[1][1],
                         ]
                     )
-                    pyplot.savefig(
-                        f"{self.env.out_folder}/packing_image_{basename}.png"
+                    plt.savefig(
+                        self.env.out_folder / f"packing_image_{seed_basename}.png"
                     )
-                    pylab.close()  # closes the current figure
+                    plt.close()  # closes the current figure
 
         if use_file:
             total_positions = numpy.genfromtxt(position_file, delimiter=",")
+            total_center_distances = numpy.genfromtxt(
+                center_distance_file, delimiter=","
+            )
+            total_ingredient_distances = numpy.genfromtxt(
+                ingredient_distance_file, delimiter=","
+            )
             try:
                 total_angles = numpy.genfromtxt(angle_file, delimiter=",")
             except Exception:
@@ -1837,54 +2170,59 @@ class AnalyseAP:
             all_ingredient_distances = {}
             all_ingredient_angles = {}
             for seed_index in rangeseed:
-                basename = f"seed{seed_index}_{basename_all}"
+                seed_basename = f"seed{seed_index}_{packing_basename}"
                 dict1 = self.loadJSON(
-                    f"{self.env.out_folder}/ingredient_positions_{basename}.json"
+                    self.env.out_folder / f"ingredient_positions_{seed_basename}.json"
                 )
                 all_ingredient_positions = dict(
                     self.merge(all_ingredient_positions, dict1)
                 )
+
                 dict1 = self.loadJSON(
-                    f"{self.env.out_folder}/ingredient_distances_{basename}.json"
+                    self.env.out_folder / f"ingredient_distances_{seed_basename}.json"
                 )
                 all_ingredient_distances = dict(
                     self.merge(all_ingredient_distances, dict1)
                 )
+
                 dict1 = self.loadJSON(
-                    f"{self.env.out_folder}/ingredient_angles_{basename}.json"
+                    self.env.out_folder / f"ingredient_angles_{seed_basename}.json"
                 )
                 all_ingredient_angles = dict(self.merge(all_ingredient_angles, dict1))
 
-        self.writeJSON(all_pos_file + ".json", all_pos_dict)
+        self.writeJSON(all_pos_file, all_positions_dict)
         self.writeJSON(occurences_file, occurences)
 
         self.env.ingredient_positions = all_ingredient_positions
         self.env.distances = all_ingredient_distances
-        self.env.basename = basename_all
+        self.env.basename = packing_basename
         self.env.occurences = occurences
         self.env.angles = total_angles
-
         # if plot and two_d:
         self.env.loopThroughIngr(self.axis_distribution)
         self.env.loopThroughIngr(self.occurence_distribution)
         self.axis_distribution_total(total_positions)
+        # plot the distances
+        self.histo(
+            total_center_distances,
+            self.env.out_folder / f"total_center_distances_{self.env.basename}.png",
+        )
+
+        self.histo(
+            total_ingredient_distances,
+            self.env.out_folder / f"total_ingredient_distances_{self.env.basename}.png",
+        )
         # plot the angle
         if len(total_angles):
             self.histo(
                 total_angles[1],
-                f"{self.env.out_folder}/total_angles_X_{self.env.basename}.png",
-                bins=12,
-                size=max(total_angles[2]),
+                self.env.out_folder / f"total_angles_X_{self.env.basename}.png",
             )
             self.histo(
                 total_angles[2],
-                f"{self.env.out_folder}/total_angles_Y_{self.env.basename}.png",
-                bins=12,
-                size=max(total_angles[2]),
+                self.env.out_folder / f"total_angles_Y_{self.env.basename}.png",
             )
             self.histo(
                 total_angles[3],
-                f"{self.env.out_folder}/total_angles_Z_{self.env.basename}.png",
-                bins=12,
-                size=max(total_angles[2]),
+                self.env.out_folder / f"total_angles_Z_{self.env.basename}.png",
             )

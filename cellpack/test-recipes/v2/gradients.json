@@ -4,14 +4,14 @@
     "name": "gradients",
     "bounding_box": [
         [
-            0,
-            0,
+            -100,
+            -100,
             0
         ],
         [
             100,
             100,
-            10
+            1
         ]
     ],
     "gradients": {
@@ -23,10 +23,10 @@
             ],
             "radius": 100,
             "description": "'Direction' is center of radial gradient (we think)",
-            "weight_mode": "linear",
+            "weight_mode": "cube",
             "pick_mode": "rnd",
             "gblob": 4,
-            "mode": "surface"
+            "mode": "radial"
         }
     },
     "objects": {
@@ -73,7 +73,7 @@
         },
         "A": {
             "object": "sphere",
-            "count": 100
+            "count": 1000
         }
     }
 }
